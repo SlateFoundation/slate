@@ -1,0 +1,3 @@
+This directory is for standalone Sass files, not the main app theme.
+
+Files here are to be compiled by /compile_standalone_sass.php

@@ -1,0 +1,21 @@
+.subhead {
+	float: left;
+	@include trailer;
+	width: 20%;
+	
+	small {
+		display: block;
+		line-height: inherit;
+		margin: 0;
+	}
+}
+
+dl {
+	float: right;
+	margin-top: 0;
+	width: 80%;
+}
+
+dt {
+	padding: 0 rhythm(1);
+}

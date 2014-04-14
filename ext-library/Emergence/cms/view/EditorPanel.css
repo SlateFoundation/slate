@@ -1,0 +1,97 @@
+.emergence-content-editor {
+	border: 1px solid;
+}
+
+.emergence-content-editor .x-portal-body {
+	background: transparent;
+}
+
+.emergence-content-editor .field-title .x-form-text {
+	font-size: 2em;
+	height: auto !important;
+	line-height: 1.3;
+	padding: .3em;
+}
+
+.x-boxselect-input,
+.x-boxselect-item {
+	display: inline-block;
+	position: relative;
+	zoom: 1;
+}
+
+.icon-content-save {
+	background-image: url(/img/icons/fatcow/page_save.16.png) !important;
+}
+.icon-content-save-large {
+	background-image: url(/img/icons/fatcow/page_save.32.png) !important;
+}
+.icon-content-text, .icon-content-embed {
+	background-image: url(/img/icons/oxygen/text.32.png) !important;
+}
+.icon-content-richtext {
+	background-image: url(/img/icons/oxygen/opendocument.32.png) !important;
+}
+.icon-content-multimedia {
+	background-image: url(/img/icons/fatcow/photo.32.png) !important;
+}
+.icon-content-album {
+	background-image: url(/img/icons/stroke/photo_album.32.png) !important;
+}
+
+.icon-content-tags {
+	background-image: url(/img/icons/fugue/tags.png) !important;
+}
+
+.icon-content-published {
+	background-image: url(/img/icons/fugue/calendar.png) !important;
+}
+
+.icon-status-Draft {
+	background-image: url(/img/icons/mealkeeper/note_16.png) !important;
+}
+.icon-status-Published {
+	background-image: url(/img/icons/mealkeeper/publish_16.png) !important;
+}
+
+.icon-visibility-Private {
+	background-image: url(/img/icons/silk/shield.png) !important;
+}
+
+.icon-visibility-Public {
+	background-image: url(/img/icons/silk/eye.png) !important;
+}
+
+/*
+.instructionBox {
+	text-align: center;
+	font-style: italic;
+}
+*/
+
+.icon-content-add {
+	background-image: url(/img/icons/silk/add.png) !important;
+}
+.icon-content-delete {
+	background-image: url(/img/icons/silk/delete.png) !important;
+}
+
+/*
+.emergence-content-editor .progress-bar-ct {
+	background: #444;
+	@include border-radius(3px);
+	height: 1em;
+	margin: 10px 0;
+	width: 300;
+}
+
+.emergence-content-editor .progress-bar {
+	background: #3299CC;
+	@include background( linear-gradient(hsl(40, 100%, 80%), hsl(40, 100%, 40%)) );
+	border: 2px solid #444;
+	@include border-radius(3px);
+	border-width: 1px 2px 2px;
+	height: 100%;
+	@include single-transition(width, $transition-length);
+	width: 0;
+}*/

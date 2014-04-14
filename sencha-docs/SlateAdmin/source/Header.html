@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*jslint browser: true, undef: true *//*global Ext*/
+Ext.define('SlateAdmin.view.Header', {
+    extend: 'Ext.Container',
+    xtype: 'slateadmin-header',
+
+    cls: 'app-header',
+    height: 50,
+    layout: {
+        type: 'hbox',
+        align: 'middle'
+    },
+    defaultType: 'component',
+    items: [{
+        html: '&lt;a class=&quot;header-link&quot; href=&quot;/&quot;&gt;&lt;img class=&quot;header-logo&quot; src=&quot;resources/images/slate-header-logo.png&quot; width=54 height=40 alt=&quot;Slate&quot;&gt;&lt;/a&gt;'
+    },{
+        flex: 1
+    },{
+        cls: 'user-tools',
+        tpl: [
+            '&lt;a class=&quot;user-link&quot; href=&quot;/profile&quot;&gt;',
+                '&lt;img class=&quot;user-avatar&quot; src=&quot;&lt;tpl if=&quot;PrimaryPhotoID&quot;&gt;/thumbnail/{PrimaryPhotoID}/72x72/cropped&lt;tpl else&gt;/img/blank-avatar.png&lt;/tpl&gt;&quot; width=32 height=32&gt;',
+                '&lt;span class=&quot;user-name&quot;&gt;{FirstName} {LastName}&lt;/span&gt;',
+            '&lt;/a&gt;',
+            '&lt;div class=&quot;header-separator&quot;&gt;&lt;/div&gt;',
+            '&lt;a class=&quot;logout-link&quot; href=&quot;/logout&quot;&gt;Log Out&lt;/a&gt;'
+        ],
+        // TDOO: read &amp; set from controller
+        data: window.SiteUser
+    }]  
+});</pre>
+</body>
+</html>

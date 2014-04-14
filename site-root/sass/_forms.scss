@@ -1,0 +1,212 @@
+// default control sizes in ems
+$tiny-control-size: 3em;
+$small-control-size: 8em;
+$medium-control-size: 12em;
+$large-control-size: 18em;
+$xlarge-control-size: 27em;
+
+// basic styles
+// ========================================================================
+
+form {
+	@include reset-box-model;
+}
+
+fieldset {
+	@extend .well;
+}
+
+label {
+	cursor: pointer;
+}
+
+.field {
+	display: block;
+	margin-bottom: 1em;
+	width: $large-control-size;
+	
+	@media #{$mq-phone}{
+		width: 100%;
+	}
+}
+
+.field-label {
+
+}
+
+.field-control {
+	// by default, fill available space
+	@include box-sizing(border-box);
+	width: 100%;
+}
+
+// combining selectors seems to break this, so use a mixin
+@mixin placeholder-style {
+	font-weight: 300;
+}
+
+.submit-area {
+	.button {
+		@media #{$mq-phone} {
+			margin: .5em 0;
+			padding: .4em .75em;
+			width: 100%;
+		}
+		
+		@media #{$mq-tablet} {
+			margin-right: .5em;
+		}
+	}
+	
+	.submit-text {
+		@media #{$mq-phone} {
+			display: block;
+			margin: .5em 0 0;
+			text-align: center;
+		}
+	}
+}
+
+::-webkit-input-placeholder { @include placeholder-style; }
+          :-moz-placeholder { @include placeholder-style; }
+         ::-moz-placeholder { @include placeholder-style; }
+     :-ms-input-placeholder { @include placeholder-style; }
+
+// field control types
+// ========================================================================
+
+input,
+textarea { // styles for text-box-like controls
+	border: 1px solid $border-color;
+	@include border-radius(0);
+	@include box-shadow(inset 0 1px 0 rgba(black, .15));
+	@include box-sizing(border-box);
+	padding: .4em;
+	width: $large-control-size;
+	
+	&:focus {
+    	border-color: $base-color;
+	}
+}
+
+textarea {
+	min-height: $small-control-size;
+}
+
+// special form types
+// ========================================================================
+
+// special fieldset types
+// ========================================================================
+
+.stretch {
+    .field {
+        width: 100%;
+    }
+    
+    input,
+    textarea {
+        width: 100%;
+    }
+    
+    .button {
+        width: auto;
+    }
+}
+
+.page-tools {
+	@media #{$mq-phone} {
+		input,
+		textarea,
+		.button {
+			display: block;
+			margin: .75em 0;
+			width: 100%;
+			
+			&:first-child { margin-top: 0; }
+			&:last-child  { margin-bottom: 0; }
+		}
+	}
+}
+
+@media #{$mq-tablet}{
+	.left-labels {
+		display: table;
+		
+		.field {
+			display: table-row;
+			
+			& > * {
+				max-width: ($large-control-size / 1em) * $font-size;
+			}
+		}
+		
+		.field-label,
+		.field-control {
+			display: table-cell;
+		}
+		
+		.field-label {
+			padding: 0 1em 1em 0;
+			text-align: right;
+		}
+		
+		.field-control {
+			width: $large-control-size;
+		}
+		
+		.submit-area {
+			margin-top: 1em;
+			text-align: right;
+		}
+	}
+	
+	.inline-fields {
+		.field {
+			display: inline-block;
+			
+			& + .field {
+				margin-left: 1em;
+			}
+		}
+	}
+}
+
+// special conditions for fields
+// ========================================================================
+
+.has-error {
+	color: mix($text-color, $warning-color);
+	
+	.field-control {
+		border-color: $warning-color;
+	}
+}
+
+.show-required { // per fieldset or form
+	.is-required {
+		.field-label::before {
+			content: '*\00a0';
+		}
+	}
+	
+	.submit-area::before {
+		color: $muted-color;
+		content: '* Required';
+		float: left;
+	}
+}
+
+// explanatory text
+// ========================================================================
+
+.hint {
+	color: $muted-color;
+	font-size: small;
+	margin-top: .25em;
+}
+
+.error-text {
+	@extend .hint;
+	color: mix($muted-color, red, 75%);
+}

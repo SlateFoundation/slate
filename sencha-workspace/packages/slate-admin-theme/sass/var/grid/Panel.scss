@@ -1,0 +1,9 @@
+$grid-cell-inner-padding: 5px 10px;
+
+$grid-header-padding: 5px 10px;
+
+$grid-row-cell-focus-border-color: tint($accent-color, 40%);
+$grid-row-cell-focus-border-style: solid;
+$grid-row-cell-selected-background-color: tint($accent-color, 85%);
+
+$panel-include-border-management-rules: true;

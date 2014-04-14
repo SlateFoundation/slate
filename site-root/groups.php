@@ -1,0 +1,3 @@
+<?php
+
+GroupsRequestHandler::handleRequest();

@@ -1,0 +1,25 @@
+.course-section-details {
+    margin: 1em -1em;
+    padding: 1em;
+    
+    p {
+        margin: 0 0 1em;
+    }
+    
+    h3 {
+        margin-bottom: 0;
+    }
+    
+    dd p {
+        margin: 0;
+    }
+}
+
+.course-section-tools {
+    padding: 0;
+    
+    li {
+        list-style: none;
+        margin-bottom: .25em;
+    }
+}

@@ -1,0 +1,181 @@
+// vertical rhythm
+@include establish-baseline;
+
+// improve baseliner bookmarklet
+#baseline-overlay { opacity: .4 !important; pointer-events: none; }
+
+body {
+	box-sizing: border-box;
+	color: $color;
+	font-family: $font-family;
+	margin: auto;
+	orphans: 3;
+	padding: .25in .5in;
+	width: 8.5in;
+	widows: 3;
+}
+
+h1 {
+	@include adjust-font-size-to($h1-size);
+	margin: rhythm(1, $h1-size) 0;
+}
+
+h2 {
+	@include adjust-font-size-to($h2-size);
+	margin: 0;
+}
+
+h3 {
+	@include adjust-font-size-to($h3-size, 1);
+	margin: 0;
+}
+
+h4 {
+	@include adjust-font-size-to($base-font-size);
+	margin: 0;
+}
+
+small, aside {
+    @include adjust-font-size-to($sm-size, 0);
+    color: $muted-color;
+}
+
+p, ul, ol {
+	margin: 0 0 rhythm(1);
+}
+
+a {
+	color: $link-color;
+	text-decoration: none;
+	
+	&:hover, &:focus { color: lighten($link-color, 10); }
+	        &:active { color:  darken($link-color, 5); }
+}
+
+.print-url {
+	&::after {
+		content: ' <' attr(href) '>';
+		font-size: 90%;
+	}
+}
+
+.doc-group {
+	@include leading-border;
+}
+
+.group-title {
+	margin: 0 0 rhythm(1, $h2-size);
+	page-break-after: avoid;
+}
+
+.doc-item {
+	@include leading-border;
+	@include trailer;
+	border-color: #ccc;
+	clear: both;
+}
+
+.item-header {
+	@include trailer;
+	page-break-after: avoid;
+	page-break-inside: avoid;
+}
+
+.item-title {
+	font-weight: normal;
+	
+	small {
+		line-height: 1;
+		margin-left: .25em;
+		margin-top: .3em;
+	}
+}
+
+.meta {
+	color: $muted-color;
+}
+
+.item-datetime {
+	float: right;
+}
+
+.item-body {
+	margin: rhythm(1);
+//	font-family: Palatino, Book Antiqua, Georgia, serif;
+}
+
+.subsection {
+	clear: both;
+	overflow: hidden;
+	
+	& + .subsection {
+		@include leading-border($border-style: dotted);
+		border-color: #ccc;
+	}
+}
+
+.subhead {
+	margin-bottom: 0;
+
+	small {
+		font-weight: normal;
+		margin-left: .5em;
+		text-transform: uppercase;
+	}
+	
+	&.float-left,
+	&.float-right {
+		float: left;
+		@include trailer;
+		width: 20%;
+		
+		small {
+			display: block;
+			line-height: inherit;
+			margin: 0;
+		}		
+	}
+	
+	&.float-right {
+		float: right;
+		padding-left: rhythm(1);
+	}
+}
+
+.grade {
+	@include h-borders;
+	border-color: #ccc;
+	margin: rhythm(1) 0;
+	text-align: center;
+}
+
+.freetext {
+	&, * {
+		font-family: inherit !important;
+		font-size: inherit !important;
+		line-height: inherit !important;
+	}
+}
+
+dl {
+	display: table;
+	margin: rhythm(1) 0;
+	width: 100%;
+}
+
+.dli {
+	display: table-row;
+}
+
+dd, dt {
+	display: table-cell;
+}
+
+dt {
+	color: $muted-color;
+	@include adjust-font-size-to($sm-size, 0);
+	padding-right: rhythm(1);
+	text-align: right;
+	text-transform: uppercase;
+	width: percentage(1/6);
+}

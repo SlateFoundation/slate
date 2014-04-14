@@ -1,0 +1,7 @@
+$tip-background-color: #fec;
+$tip-border-color: darken($tip-background-color, 20);
+$tip-border-radius: 3px;
+$tip-body-font-size: floor($font-size * .9);
+
+$tip-error-border-radius: $tip-border-radius;
+$tip-error-body-padding: .5em .5em .5em 2.5em;

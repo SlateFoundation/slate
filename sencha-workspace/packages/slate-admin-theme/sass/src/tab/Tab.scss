@@ -1,0 +1,17 @@
+$tab-shadow: rgba(black, .2);
+$tab-highlight: rgba(white, .3);
+
+.x-tab {
+    border-left-color: $tab-shadow;
+    border-right-color: $tab-highlight;
+    border-width: 0 1px;
+    outline: none; // get rid of ugly focus ring
+    
+    &.x-tab-active {
+        border-color: $tab-shadow;
+        
+        & + .x-tab {
+            border-left-color: $tab-highlight;
+        }
+    }
+}

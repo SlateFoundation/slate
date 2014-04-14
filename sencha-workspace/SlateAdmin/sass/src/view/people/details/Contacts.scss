@@ -1,0 +1,87 @@
+.slate-people-details-contacts {
+
+    .contact-type-header {
+        > .fa {
+            margin-right: .125em;
+        }
+    }
+    
+    .contact-cell-label {
+        padding-left: 1.75em;
+    }
+    
+    .contact-phantom {
+        .contact-cell-label {
+            cursor: pointer;
+        }
+
+        .fa-plus-circle {
+            color: $success-color;
+            margin-right: .125em;
+        }
+    }
+
+    .contact-cell-class {
+        background-repeat: no-repeat;
+        background-position: center center;
+
+        .x-grid-cell-inner {
+            display: none;
+        }
+    }
+
+    .contact-cell-value {
+        &.x-grid-invalid-cell {
+            background: rgba($danger-color, .2);
+        }
+    }
+    
+    .relationship-nonguardian {
+        .glyph-shield {
+            color: $glyph-inactive-color;
+            
+            &:hover,
+            &:focus {
+                color: mix($glyph-inactive-color, $glyph-shield-color);
+            }
+        }
+    }
+    
+    
+
+    .contact-point-primary {
+        color: $glyph-inactive-color;
+        visibility: hidden;
+        
+        &:hover,
+        &:focus {
+            color: mix($glyph-inactive-color, $glyph-star-color);
+        }
+    }
+    
+    .contact-postal,
+    .contact-phone,
+    .contact-email {
+        .contact-point-primary {
+            visibility: visible;
+        }
+    }
+
+    .contact-primary {
+        .x-grid-cell-inner {
+            font-weight: bold;
+        }
+
+        .contact-point-primary {
+            color: #daa520;
+        }
+    }
+
+    .contact-phantom {
+        color: #888;
+
+        .x-action-col-icon {
+            display: none;
+        }
+    }
+}

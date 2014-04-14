@@ -1,0 +1,19 @@
+$tab-base-color: change-color($accent-color, $lightness: 85%, $saturation: 30%);
+$tab-base-color-active: $dark-ui-color;
+$tab-base-color-over: saturate($tab-base-color, 80%);
+$tab-base-color-disabled: $base-color;
+
+$tab-background-gradient: 'matte';
+$tab-background-gradient-active: 'recessed';
+$tab-background-gradient-disabled: 'matte';
+$tab-background-gradient-over: 'matte';
+
+$tab-border-radius: 0;
+$tab-border-width: 1px;
+$tab-inner-border-width: 0;
+
+$tab-color-active: white;
+
+$tab-font-weight: normal;
+$tab-padding: 0;
+$tab-text-padding: $font-size * .9;

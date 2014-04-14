@@ -1,0 +1,131 @@
+.site-search {
+    margin: 1em 0;
+    position: relative;
+
+    @media #{$mq-wide} {
+        bottom: 1em;
+        margin: 0;
+        position: absolute;
+        right: 0;        
+    }
+
+    .search-results {
+        background: rgba($page-bg-color, .95);
+        border: 1px solid $border-color;
+    	@include box-shadow(0 .25em .5em rgba(black, .2));
+        @include box-sizing(border-box);
+        margin: 0;
+        min-height: 2.75em;
+        min-width: 100%;
+        overflow: auto;
+        @include experimental('overflow-scrolling', touch);
+        padding: 0 0 .5em;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        z-index: 1;
+    }
+    
+    &.no-results {
+        .search-results {
+            padding: .5em 1em;
+        }
+
+        .empty-text {
+            color: $muted-color;
+            font-style: italic;
+            text-align: center;
+        }
+    }
+    
+    &.waiting {
+        .results-group {
+            opacity: .5;
+        }
+    }
+    
+    &.loading {
+        .search-results {
+            background-image: image-url('loaders/spinner.gif');
+            background-position: center .75em;
+            background-repeat: no-repeat;
+        }
+
+        .results-group {
+            opacity: .5;
+        }
+        
+        &.no-results {
+            .empty-text {
+                display: none;
+            }
+        }
+    }
+}
+
+.search-field {
+    width: 100%;
+
+    @media #{$mq-wide} {
+        width: $large-control-size;       
+    }
+}
+
+.results-group {
+    border-bottom: 1px solid $border-color;
+    padding-bottom: .5em;
+
+    h1 {
+        font-size: small;
+        letter-spacing: 0;
+        margin-bottom: 0;
+        padding: .25em 1.25em .5em;
+        text-transform: uppercase;
+    }
+    
+    .more-link {
+        color: $muted-color;
+        text-align: center;
+    }
+}
+
+.search-result {
+    line-height: 1.2;
+    list-style: none;
+    
+    .result-image {
+        background-position: center;
+        @include background-size(cover);
+        float: right;
+        height: 2.25em;
+        margin-left: .25em;
+        width: 2.25em;
+    }
+
+    .result-title {
+        display: block;
+        font-weight: normal;
+    }
+
+    .result-info {
+        color: $muted-color;
+        font-size: small;
+    }
+
+    a {
+        color: $text-color;
+        display: block;
+        padding: .5em 1em;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+			@include background(linear-gradient( lighten($link-color, 5%), $link-color ));
+			color: white;
+			
+			.result-info {
+    			color: mix(white, $link-color, 60%);
+			}
+        }
+    }
+}

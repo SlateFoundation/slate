@@ -1,0 +1,4 @@
+- Setup abstract store type for enumerations that supportings global caching and prepopulation from HTML data
+- Port login controller from Slate2013 prototype
+- Have login controller globally intercept 401 exceptions in SlateAdmin.API and continue after login
+- Interrupt viewport instantiation to validate session or handle login, accept sessions from prepopulated HTML data
