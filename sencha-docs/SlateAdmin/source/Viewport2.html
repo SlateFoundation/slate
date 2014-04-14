@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*jslint browser: true, undef: true *//*global Ext*/
+Ext.define('SlateAdmin.view.Viewport', {
+    extend: 'Ext.container.Viewport',
+    requires: [
+        'SlateAdmin.view.Header',
+        'SlateAdmin.view.Navigation',
+        'Ext.layout.container.Card'
+    ],
+
+    layout: 'border',
+    items: [{
+        xtype: 'slateadmin-header',
+        region: 'north'
+    },{
+        xtype: 'slateadmin-navigation',
+        region: 'west',
+        split: true,
+        collapsible: false
+    },{
+        xtype: 'container',
+        itemId: 'cardCt',
+        region: 'center',
+        layout: 'card',
+        items: {
+            xtype:'component',
+            html:'Welcome to SLATE!'
+        }
+    }]
+});
+</pre>
+</body>
+</html>

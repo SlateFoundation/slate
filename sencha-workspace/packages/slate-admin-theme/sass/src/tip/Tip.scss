@@ -1,0 +1,27 @@
+.x-tip-body {
+    ul {
+        margin: 0;
+        padding: 0 0 0 1.2em;
+    }
+    
+    li {
+        margin: 0;
+    }
+}
+
+.x-tip-body-form-invalid {
+    background-image: none;
+    
+    &::before {
+        color: $danger-color;
+        content: '\f071'; // fa-exclamation-triangle
+        font-family: 'FontAwesome';
+        font-size: $glyph-size;
+        left: .67em;
+        position: absolute;
+        top: .67em;
+
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}

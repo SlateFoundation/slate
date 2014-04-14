@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*jslint browser: true, undef: true *//*global Ext*/
+Ext.define('SlateAdmin.view.people.details.Courses', {
+    extend: 'SlateAdmin.view.people.details.AbstractDetails',
+    xtype: 'people-details-courses',
+    requires: [
+        'Ext.grid.Panel',
+        'Ext.grid.column.Template',
+        'Ext.form.field.ComboBox',
+        'SlateAdmin.store.Sections',
+        'SlateAdmin.proxy.API'
+    ],
+
+
+    title: 'Courses',
+
+
+    // panel config
+    layout: 'fit',
+
+    tbar: ['Term: ', {
+        xtype: 'combobox',
+        editable: false,
+        emptyText: 'Current Term',
+        valueField: 'ID',
+        flex: 1,
+        itemId: 'courseTermSelector',
+        queryMode: 'local',
+        name: 'courseTermSelector',
+        displayField: 'Title',
+        store: 'Terms'
+    }],
+
+    items: {
+        xtype: 'grid',
+        viewConfig: {
+            emptyText: 'No courses for selected term'
+        },
+        store: {
+            model: 'SlateAdmin.model.Section',
+            proxy: {
+                type: 'slateapi',
+                startParam: false,
+                limitParam: false,
+                pageParam: false,
+                extraParams: {
+                    include: 'Schedule,Location'
+                },
+                reader: {
+                    type: 'json',
+                    root: 'data'
+                }
+            }
+        },
+        columns: [{
+            header: 'Section',
+            dataIndex: 'Code',
+            width: 90
+        },{
+            header: 'Title',
+            dataIndex: 'Title',
+            flex: 1,
+            renderer: function(v, m, r){
+                return '&lt;a href=&quot;#courses/'+r.get('Handle')+'&quot;&gt;'+v+'&lt;a/&gt;';
+            }
+        },{
+            header: 'Schedule',
+            dataIndex: 'Schedule',
+            width: 90,
+            xtype: 'templatecolumn',
+            tpl: '&lt;tpl for=&quot;Schedule&quot;&gt;{Title}&lt;/tpl&gt;'
+        },{
+            header: 'Location',
+            width: 130,
+            dataIndex: 'Location',
+            xtype: 'templatecolumn',
+            tpl: '&lt;tpl for=&quot;Location&quot;&gt;{Title}&lt;/tpl&gt;'
+        }]
+    }
+});</pre>
+</body>
+</html>

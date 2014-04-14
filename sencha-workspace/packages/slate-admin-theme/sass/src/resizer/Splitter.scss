@@ -1,0 +1,4 @@
+.x-splitter-vertical {
+    background: darken($dark-ui-color, 5);
+    @include box-shadow(inset 0 0 3px black);
+}

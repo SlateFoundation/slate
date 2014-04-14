@@ -1,0 +1,6 @@
+.x-btn-glyph {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    .glyph-success & { color: $success-color; }
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*jslint browser: true, undef: true *//*global Ext*/
+Ext.define('SlateAdmin.model.Term', {
+    extend: 'Ext.data.Model',
+    requires: [
+        'SlateAdmin.proxy.Records'
+    ],
+
+
+    // model config
+    idProperty: 'ID',
+
+    fields: [
+        {
+            name: &quot;ID&quot;,
+            type: &quot;int&quot;
+        },
+        {
+            name: &quot;Class&quot;,
+            type: &quot;string&quot;,
+            defaultValue: &quot;Term&quot;
+        },
+        {
+            name: &quot;Created&quot;,
+            type: &quot;date&quot;,
+            dateFormat: &quot;timestamp&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;CreatorID&quot;,
+            type: &quot;int&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;RevisionID&quot;,
+            type: &quot;int&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;Title&quot;,
+            type: &quot;string&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;Handle&quot;,
+            type: &quot;string&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;Status&quot;,
+            type: &quot;string&quot;,
+            defaultValue: &quot;Live&quot;
+        },
+        {
+            name: &quot;StartDate&quot;,
+            type: &quot;date&quot;,
+            dateFormat: &quot;Y-m-d&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;EndDate&quot;,
+            type: &quot;date&quot;,
+            dateFormat: &quot;Y-m-d&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;ParentID&quot;,
+            type: &quot;int&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;Left&quot;,
+            type: &quot;int&quot;,
+            useNull: true
+        },
+        {
+            name: &quot;Right&quot;,
+            type: &quot;int&quot;,
+            useNull: true
+        }
+    ],
+
+    proxy: {
+        type: 'slaterecords',
+        url: '/terms'
+    }
+});</pre>
+</body>
+</html>

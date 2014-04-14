@@ -1,0 +1,48 @@
+$base-color: #008cc1; // SLA blue
+$contrast-color: #e8910c; // orange
+$warning-color: red;
+
+$page-bg-color: #fbfbfb;
+$link-color: $base-color;
+$text-color: #333;
+$muted-color: #999;
+$border-color: #bbb;
+
+$body-font: Lato, 'Helvetica Neue', Helvetica, sans-serif;
+$heading-font: Arvo, Rockwell, Georgia, serif;
+
+$font-size: 16px;
+$line-height: 1.5;
+
+$mq-phone:  'screen and (max-width:  480px)';
+$mq-tablet: 'screen and (min-width:  481px)';
+$mq-wide:   'screen and (min-width:  800px)';
+$mq-hd:     'screen and (min-width: 1280px)';
+
+@import 'compass';
+@import 'normalize';
+
+@import 'base';
+@import 'buttons';
+@import 'comments';
+@import 'courses';
+@import 'dashboard';
+@import 'events';
+@import 'forms';
+@import 'login';
+@import 'menu';
+@import 'modals';
+@import 'pages';
+@import 'paging';
+@import 'people';
+@import 'posts';
+@import 'search';
+
+.clearfix {
+    &::before,
+    &::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}

@@ -1,0 +1,3 @@
+<?php
+
+SearchRequestHandler::handleRequest();

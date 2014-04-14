@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*jslint browser: true, undef: true *//*global Ext*/
+// TODO: refactor this whole class
+Ext.define('SlateAdmin.view.people.details.Contacts', {
+    extend: 'Ext.grid.Panel',
+    xtype: 'people-details-contacts',
+    requires: [
+        'Ext.grid.plugin.CellEditing',
+        'Ext.grid.CellEditor',
+        'Ext.grid.feature.Grouping',
+        'SlateAdmin.model.Person'
+    ],
+
+
+    // people-details-contacts config
+    config: {
+        loaded: false
+    },
+
+
+    // gridpanel config
+    store: 'people.ContactPoints',
+    hideHeaders: true,
+    componentCls: 'ContactsManager',
+    tbar: {
+        layout: 'hbox',
+        itemId: 'relationshipAddBar',
+        items: ['Add Guardian:',{
+            xtype: 'combo',
+            flex: 1,
+            selectOnFocus: true,
+            name: 'ContactName',
+            autoSelect: false,
+            emptyText: 'First and Last name',
+            store: {
+                model: 'SlateAdmin.model.Person'
+            },
+            mode: 'remote',
+            displayField: 'FullName',
+            valueField: 'ID',
+            queryParam: 'q',
+            lazyRender: 'true',
+            allowBlank: false,
+            blankText: 'Select or type the full name of the contact'
+        },{
+            xtype: 'combo',
+            flex: 1,
+            emptyText: 'Relationship',
+            name: 'ContactRelationship',
+            selectOnFocus: true,
+            autoSelect: false,
+            typeAhead: true,
+            triggerAction: 'all',
+            mode: 'local',
+            store: ['Mother','Father','Guardian','Aunt','Uncle','Grandmother','Grandfather','Foster Mother','Foster Father','Stepmother','Stepfather','Sister','Brother','Unknown'],
+            lazyRender: true,
+            allowBlank: false,
+            blankText: 'Select or Type the contact\'s relationship with this person'
+
+        },{
+            xtype: 'button',
+            text: 'Save',
+            name: 'relationshipAdd',
+            icon: '/img/icons/fugue/card--plus.png'
+        }]
+    },
+    
+    
+    // gridpanel template methods
+    initComponent: function(){
+
+        var me = this;
+
+        this.plugins = [Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1,
+            pluginId: 'contactEditingPlugin',
+            onEditComplete: function(ed, value, startValue){
+
+                if(this.activeColumn.dataIndex == 'Data')
+                {
+                    value = me.prepareValueForSave(this.getActiveRecord(), value);
+                }
+                return Ext.grid.plugin.CellEditing.prototype.onEditComplete.call(this, ed, value, startValue);
+            }
+        })];
+
+        var grouping = Ext.create('Ext.grid.feature.Grouping', {
+            collapse: function() {
+
+            },
+            groupHeaderTpl: '{[void(values.relationship = Ext.getStore(&quot;people.Relationships&quot;).findRecord(&quot;RelatedPersonID&quot;, values.name, 0, false, false, true))]}'
+                + '{[void(values.relatedPerson = values.relationship.get(&quot;RelatedPerson&quot;))]}'
+                + '&lt;a href=&quot;#people//{[values.relatedPerson.Username ? values.relatedPerson.Username : &quot;?id=&quot;+values.relatedPerson.ID]}&quot; class=&quot;relatedPerson&quot;&gt;{[values.relatedPerson.FirstName]} {[values.relatedPerson.LastName]}&lt;/a&gt;'
+                + '&lt;span id=&quot;relationship-{[values.relationship.get(&quot;RelatedPersonID&quot;)]}&quot; class=&quot;groupRelationship edit-link{[values.relationship.get(&quot;Relationship&quot;) == &quot;Self&quot; ? &quot;-self&quot; : &quot; &quot;]}&quot;&gt;{[values.relationship.get(&quot;Relationship&quot;)]}&lt;/span&gt;'
+        });
+
+        this.features = [grouping];
+
+
+        this.columns = [{
+            id: 'ID',
+            dataIndex: 'ID',
+            sortable: true,
+            hidden: true
+        },{
+            id: 'PersonID',
+            dataIndex: 'PersonID',
+            sortable: true,
+            hidden: true
+        },{
+            text: 'Label',
+            dataIndex: 'Label',
+            width: 150,
+            allowBlank: false,
+            field: {
+                xtype: 'combobox',
+                store: ['Home Address','Home Phone','Mobile Phone','Work Phone','School Email','Personal Email','Work Email','Work Address']
+            },
+            renderer: function(v,m,r) {
+                return v || 'Add Contact';
+            }
+
+        },{
+            id: 'Class',
+            dataIndex: 'Class',
+            header: 'Class',
+            sortable: true,
+            width: 25,
+            padding: 0,
+            align: 'center',
+            renderer: this.renderContactClass
+        },{
+            text: 'Data',
+            dataIndex: 'Data',
+            allowBlank: false,
+            flex: 1,
+            getEditor: function(record, defaultField) {
+
+                return Ext.create('Ext.grid.CellEditor', {
+                    field: {
+                        xtype: 'textfield',
+                        allowBlank: false
+                    },
+                    startEdit: function(el, value) {
+                        value = me.prepareValueForEdit(record ,value);
+                        return Ext.grid.CellEditor.prototype.startEdit.call(this, el, value);
+                    }
+                });
+            },
+            renderer: function(v,m,r){
+                if (v) {
+                    if (r.get('Class') == 'AddressContactPoint') {
+                        v = v.Address + ', ' + v.City + ', ' + v.State + ' '  + v.Postal;
+                    }
+
+                    return v;
+                }
+            }
+        }];
+
+        this.callParent();
+    },
+
+
+    // people-details-contacts methods
+    prepareValueForSave: function(record, value){
+
+        var string = Ext.String.trim(value);
+
+        switch(record.get('Class'))
+        {
+            case 'AddressContactPoint':
+                var r = {
+                    Address: null,
+                    City: null,
+                    State: null,
+                    Postal: null
+                };
+
+                if(!string)
+                    return r;
+
+                var segments = string.split(/\s*[,\n]\s*/);
+                r.Address = segments.shift();
+
+                while(segments.length)
+                {
+                    var segment = segments.shift();
+                    var m;
+                    if (m = segment.match(/([a-zA-Z]{2,})\s+(\d{5}(-\d{4})?)/)) {
+                        r.State = m[1];
+                        r.Postal = m[2];
+                    } else if(segment.match(/\d{5}(-\d{4})?/)) {
+                        r.Postal = segment;
+                    } else if(!r.City) {
+                        r.City = segment;
+                    }
+                }
+                
+                return r;
+
+            case 'PhoneContactPoint':
+                return string.replace(/\D/g,'');
+
+            default:
+                return string;
+        }
+    },
+    
+    renderContactClass: function(value, metaData, record, rowIndex, colIndex, store) {
+        switch(record.get('Class'))
+        {
+            case 'PhoneContactPoint':
+                //return '&lt;img src=&quot;/img/icons/mono/black/16x16/phone_1.png&quot;&gt;';
+                metaData.tdCls += 'icon-contact-phone ';
+                break;
+
+            case 'AddressContactPoint':
+                //return '&lt;img src=&quot;/img/icons/mono/black/16x16/home.png&quot;&gt;';
+                metaData.tdCls += 'icon-contact-address ';
+                break;
+
+            case 'EmailContactPoint':
+                //return '&lt;img src=&quot;/img/icons/mono/black/16x16/mail.png&quot;&gt;';
+                metaData.tdCls += 'icon-contact-email ';
+                break;
+        }
+
+        return '';
+    },
+    
+    prepareValueForEdit: function(record, value){
+        if (record.get('Class')) {
+            switch (record.get('Class')) {
+                case 'AddressContactPoint':
+                    var s = record.get('Data').Address;
+
+                    if(record.get('Data').City)
+                        s += ', '+record.get('Data').City;
+
+                    if(record.get('Data').State || record.get('Data').Postal)
+                        s += ',';
+
+                    if(record.get('Data').State)
+                        s += ' '+record.get('Data').State;
+
+                    if(record.get('Data').Postal)
+                        s += ' '+record.get('Data').Postal;
+
+                    //originalValue = value = s;
+                    return s;
+
+                default:
+                    return record.get('Data');
+            }
+        }
+    }
+});</pre>
+</body>
+</html>

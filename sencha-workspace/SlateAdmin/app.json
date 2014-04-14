@@ -1,0 +1,11 @@
+{
+    "name": "SlateAdmin",
+
+    "requires": [
+        "extjs-boxselect",
+        "jarvus-ext-routing",
+        "jarvus-ext-lazydata"
+    ],
+
+    "id": "09b98baa-2996-4414-bfd7-20695647d369"
+}

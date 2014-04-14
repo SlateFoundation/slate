@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">/*jslint browser: true, undef: true *//*global Ext*/
+
+<span id='SlateAdmin-view-people-Manager'>/**
+</span> * Container for people section's grid and details view.
+ * 
+ * Handles propagating changes to {@link #cfg-selectedPerson} to active {@link SlateAdmin.view.people.details.AbstractDetails details tab}
+ */
+Ext.define('SlateAdmin.view.people.Manager', {
+    extend: 'Ext.container.Container',
+    xtype: 'people-manager',
+    requires: [
+        'SlateAdmin.view.people.Grid'
+    ],
+
+
+    // people-manager config
+    config: {
+<span id='SlateAdmin-view-people-Manager-cfg-selectedPerson'>        selectedPerson: null
+</span>    },
+
+
+<span id='SlateAdmin-view-people-Manager-property-layout'>    // container config
+</span>    layout: 'border',
+<span id='SlateAdmin-view-people-Manager-property-items'>    items: [{
+</span>        region: 'center',
+        xtype: 'people-grid'
+    },{
+        region: 'east',
+        xtype: 'container',
+        split: true,
+        stateful: true,
+        stateId: 'personDetails',
+        width: 450,
+        layout: {
+            type: 'vbox',
+            align: 'stretch'
+        },
+        items: [{
+            xtype: 'panel',
+            height: 200,
+            collapsible: true,
+            animCollapse: false,
+            cls: 'data-header person-header',
+            itemId: 'detailHeader',
+            title: 'Person',
+            tpl: [
+                '&lt;div class=&quot;photo-ct&quot;&gt;',
+                    '&lt;tpl if=&quot;PrimaryPhotoID&quot;&gt;&lt;img src=&quot;/thumbnail/{PrimaryPhotoID}/84x84/cropped&quot; width=84 height=84&gt;',
+                    '&lt;tpl else&gt;&lt;img src=&quot;/img/blank-avatar.png&quot; width=84 height=84&gt;',
+                    '&lt;/tpl&gt;',
+                '&lt;/div&gt;',
+                '&lt;dl class=&quot;kv-pairs&quot;&gt;',
+                    '&lt;tpl if=&quot;Email&quot;        &gt;&lt;div class=&quot;dli kv-pair&quot;&gt;&lt;dt class=&quot;kv-key&quot;&gt;Email&lt;/dt&gt;        &lt;dd class=&quot;kv-value&quot;&gt;&lt;a href=&quot;mailto:{Email}&quot;&gt;{Email}&lt;/a&gt;&lt;/dd&gt;&lt;/div&gt;&lt;/tpl&gt;',
+                    '&lt;tpl if=&quot;Phone&quot;        &gt;&lt;div class=&quot;dli kv-pair&quot;&gt;&lt;dt class=&quot;kv-key&quot;&gt;Phone&lt;/dt&gt;        &lt;dd class=&quot;kv-value&quot;&gt;{Phone}&lt;/dd&gt;&lt;/div&gt;&lt;/tpl&gt;',
+                    '&lt;tpl if=&quot;Address&quot;      &gt;&lt;div class=&quot;dli kv-pair&quot;&gt;&lt;dt class=&quot;kv-key&quot;&gt;Address&lt;/dt&gt;      &lt;dd class=&quot;kv-value&quot;&gt;{Address}&lt;/dd&gt;&lt;/div&gt;&lt;/tpl&gt;',
+                    '&lt;tpl for=&quot;Advisor&quot;     &gt;&lt;div class=&quot;dli kv-pair&quot;&gt;&lt;dt class=&quot;kv-key&quot;&gt;Advisor&lt;/dt&gt;      &lt;dd class=&quot;kv-value&quot;&gt;{FirstName} {LastName}&lt;/dd&gt;&lt;/div&gt;&lt;/tpl&gt;',
+                    '&lt;tpl if=&quot;AccountLevel&quot; &gt;&lt;div class=&quot;dli kv-pair&quot;&gt;&lt;dt class=&quot;kv-key&quot;&gt;Account Level&lt;/dt&gt;&lt;dd class=&quot;kv-value&quot;&gt;{AccountLevel}&lt;/dd&gt;&lt;/div&gt;&lt;/tpl&gt;',
+                    '&lt;tpl if=&quot;StudentNumber&quot;&gt;&lt;div class=&quot;dli kv-pair&quot;&gt;&lt;dt class=&quot;kv-key&quot;&gt;Student&amp;nbsp;#&lt;/dt&gt;    &lt;dd class=&quot;kv-value&quot;&gt;{StudentNumber}&lt;/dd&gt;&lt;/div&gt;&lt;/tpl&gt;',
+                '&lt;/dl&gt;'
+            ]
+        },{
+            xtype: 'tabpanel',
+            flex: 1,
+            itemId: 'detailTabs',
+            disabled: true
+        }]
+    }],
+
+
+<span id='SlateAdmin-view-people-Manager-method-initComponent'>    // people-manager methods
+</span>    // @private
+    initComponent: function() {
+        var me = this;
+        
+        me.callParent(arguments);
+        
+        me.detailHeader = me.down('#detailHeader');
+        me.detailTabs = me.down('#detailTabs');
+        me.down('#detailTabs').on('beforetabchange', 'onBeforeTabChange', me);
+    },
+
+<span id='SlateAdmin-view-people-Manager-method-updateSelectedPerson'>    // @private
+</span>    updateSelectedPerson: function(person, oldPerson) {
+        var me = this,
+            detailTabs = me.detailTabs,
+            activeTab = detailTabs.getActiveTab(),
+            loadedPerson;
+
+        me.syncDetailHeader();
+        detailTabs.enable();
+
+        if (oldPerson) {
+            oldPerson.un('afterCommit', 'syncDetailHeader', me);
+        }
+        
+        person.on('afterCommit', 'syncDetailHeader', me);
+
+        if (activeTab &amp;&amp; (!(loadedPerson = activeTab.getLoadedPerson()) || loadedPerson.getId() != person.getId())) {
+            activeTab.setLoadedPerson(person);
+        } else {
+            activeTab = detailTabs.setActiveTab(0);
+        }
+    },
+
+<span id='SlateAdmin-view-people-Manager-method-onBeforeTabChange'>    // @private
+</span>    onBeforeTabChange: function(detailTabs, activeTab) {
+        var selectedPerson = this.getSelectedPerson(),
+            tabLoadedPerson = activeTab.getLoadedPerson();
+
+        if (!selectedPerson) {
+            return false;
+        }
+
+        if (!tabLoadedPerson || tabLoadedPerson.getId() != selectedPerson.getId()) {
+            activeTab.setLoadedPerson(selectedPerson);
+        }
+    },
+    
+<span id='SlateAdmin-view-people-Manager-method-syncDetailHeader'>    /**
+</span>     * Update detail header based on {@link #cfg-selectedPerson}
+     */
+    syncDetailHeader: function() {
+        var me = this,
+            detailHeader = me.detailHeader,
+            person = this.getSelectedPerson();
+
+        detailHeader.update(person.getData());
+        detailHeader.setTitle(person.getDisplayName());
+    }
+});</pre>
+</body>
+</html>
