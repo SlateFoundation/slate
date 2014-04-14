@@ -8,7 +8,6 @@ Git::$repositories['slatefoundation-v1'] = array(
 	,'trees' => array(
 		'ext-library'
 		,'html-templates'
-		,'js-library'
 		,'php-classes'
 		,'php-config'
         ,'phpunit-tests'
