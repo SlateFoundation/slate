@@ -18,7 +18,8 @@ Emergence follows a design philosophy distinct from existing PHP frameworks that
 ## Installation via Emergence (linked child) - Recommended
 -  Create an emergence site that extends http://o9B11mbIXY1proH7@v1.slate.is
 
-This video walks through the complete process of installing emergence and then instantiating a different emergence-powered application called Gatekeeper: 
+This video walks through the complete process of installing emergence and then instantiating a different emergence-powered application called Gatekeeper:
+
 [![Walkthrough Video](http://b.vimeocdn.com/ts/455/313/455313620_640.jpg)](https://vimeo.com/79587819)
 
 ## Installation from Git
