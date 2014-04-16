@@ -14,6 +14,7 @@ class Person extends VersionedRecord
     static public $tableName = 'people';
     static public $singularNoun = 'person';
     static public $pluralNoun = 'people';
+    static public $collectionRoute = '/people';
 
     static public $fields = array(
         'FirstName' => array(

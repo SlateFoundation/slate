@@ -59,6 +59,7 @@ class Relationship extends \VersionedRecord
     static public $tableName = 'relationships';
     static public $singularNoun = 'relationship';
     static public $pluralNoun = 'relationships';
+    static public $collectionRoute = '/relationships';
 
     // required for shared-table subclassing support
     static public $rootClass = __CLASS__;

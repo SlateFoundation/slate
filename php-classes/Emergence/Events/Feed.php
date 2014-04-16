@@ -8,6 +8,7 @@ class Feed extends \ActiveRecord
     static public $tableName = 'feeds';
     static public $singularNoun = 'feed';
     static public $pluralNoun = 'feeds';
+    static public $collectionRoute = '/feeds';
 
     static public $fields = array(
         'Title'

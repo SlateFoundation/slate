@@ -8,6 +8,7 @@ class Page extends AbstractContent
     static public $defaultClass = __CLASS__;
     static public $singularNoun = 'page';
     static public $pluralNoun = 'pages';
+    static public $collectionRoute = '/pages';
 
     static public $fields = array(
         'LayoutClass' => array(

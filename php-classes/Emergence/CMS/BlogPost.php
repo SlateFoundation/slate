@@ -8,6 +8,7 @@ class BlogPost extends AbstractContent
     static public $defaultClass = __CLASS__;
     static public $singularNoun = 'blog post';
     static public $pluralNoun = 'blog posts';
+    static public $collectionRoute = '/blog';
 
     static public function getRecentlyPublished($limit = 5)
     {

@@ -13,6 +13,7 @@ class Schedule extends \VersionedRecord
     static public $tableName = 'course_schedules';
     static public $singularNoun = 'course schedule';
     static public $pluralNoun = 'course schedules';
+    static public $collectionRoute = '/schedules';
 
     // required for shared-table subclassing support
     static public $rootClass = __CLASS__;

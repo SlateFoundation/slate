@@ -18,6 +18,7 @@ class Course extends \VersionedRecord
     static public $rootClass = __CLASS__;
     static public $defaultClass = __CLASS__;
     static public $subClasses = array(__CLASS__);
+    static public $collectionRoute = '/courses';
 
     static public $fields = array(
         'Title' => array(
