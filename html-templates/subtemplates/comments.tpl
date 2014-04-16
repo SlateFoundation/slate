@@ -20,7 +20,7 @@
 			</fieldset>		
 		</form>
 	{else}
-		<p class="login-hint"><a href="/login?return=meetups/{$Context->Handle}">Log in</a> to post a comment.</p>
+		<p class="login-hint"><a href="/login?return={$Context->getURL()|escape:url}">Log in</a> to post a comment.</p>
 	{/if}
 {/template}
 

@@ -17,6 +17,7 @@ class Term extends \VersionedRecord
     static public $tableName = 'terms';
     static public $singularNoun = 'term';
     static public $pluralNoun = 'terms';
+    static public $collectionRoute = '/terms';
 
     // required for shared-table subclassing support
     static public $rootClass = __CLASS__;

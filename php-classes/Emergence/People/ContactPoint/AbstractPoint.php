@@ -19,6 +19,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     static public $tableName = 'contact_points';
     static public $singularNoun = 'contact point';
     static public $pluralNoun = 'contact points';
+    static public $collectionRoute = '/contact-points';
 
     // required for shared-table subclassing support
     static public $rootClass = __CLASS__;

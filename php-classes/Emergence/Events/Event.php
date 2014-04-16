@@ -10,6 +10,7 @@ class Event extends \ActiveRecord
     static public $rootClass = __CLASS__;
     static public $defaultClass = __CLASS__;
     static public $subClasses = array(__CLASS__);
+    static public $collectionRoute = '/events';
 
     // ActiveRecord configuration
     static public $tableName = 'events';

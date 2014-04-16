@@ -82,7 +82,9 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         xtype: 'grid',
         itemId: 'relationships',
         title: 'Related People',
-        componentCls: 'slate-people-details-contacts',
+        collapsible: true,
+        componentCls: 'slate-people-details-related',
+        bodyBorder: '1 0',
         store: {
             model: 'SlateAdmin.model.person.Relationship',
             pageSize: false,
@@ -203,6 +205,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         itemId: 'contactPoints',
         title: 'Contact Points',
         // columnLines: true,
+        collapsible: true,
         hideHeaders: true,
         componentCls: 'slate-people-details-contacts',
         disableSelection: true,

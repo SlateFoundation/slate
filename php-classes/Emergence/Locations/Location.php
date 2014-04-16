@@ -13,6 +13,7 @@ class Location extends \VersionedRecord
     static public $tableName = 'locations';
     static public $singularNoun = 'location';
     static public $pluralNoun = 'locations';
+    static public $collectionRoute = '/locations';
 
     // required for shared-table subclassing support
     static public $rootClass = __CLASS__;
