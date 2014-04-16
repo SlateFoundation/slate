@@ -6,7 +6,8 @@
         }
     }
     
-    .contact-cell-label {
+    .x-column-header-first,
+    .x-grid-cell-first {
         padding-left: 1.75em;
     }
     
@@ -83,5 +84,13 @@
         .x-action-col-icon {
             display: none;
         }
+    }
+}
+
+.slate-people-details-related {
+    @extend .slate-people-details-contacts;
+    
+    > .x-grid-body {
+        border-width: 1px 0;
     }
 }

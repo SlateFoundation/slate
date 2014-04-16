@@ -2,5 +2,7 @@ $panel-border-color: #999;
 
 $panel-body-background-color: #eaeaea;
 
+$panel-header-background-color: mix($base-color, lighten($accent-color, 10), 88%);
+$panel-header-background-gradient: color-stops(lighten($panel-header-background-color, 10), $panel-header-background-color);
 $panel-header-padding: ($font-size/3) ($font-size/3) ($font-size/3) ($font-size/3*2);
 $panel-header-text-padding: 1px 0 0;
