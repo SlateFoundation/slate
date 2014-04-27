@@ -1,6 +1,7 @@
 # slate
+An open-source foundation for schools.
 
-An open-source foundation for schools
+View complete getting started guides and documentation at http://slate.is/docs
 
 ## Maturity
 Slate is stable and has been used in production at pilot schools for over 5 years. This current open-source release however is only recommended for trial use by developers as breaking changes may need to be made over the next few minor versions as we work towards a 1.0 release.
