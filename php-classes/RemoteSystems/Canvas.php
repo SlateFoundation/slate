@@ -31,8 +31,6 @@ class Canvas
             $requestHeaders = array_merge($requestHeaders, $headers);
         }
 
-#       MICS::dump($params, $url, true);
-
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge(array(
             sprintf('Authorization: Bearer %s', static::$apiToken)
@@ -43,7 +41,6 @@ class Canvas
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
         $response = json_decode(curl_exec($ch), true);
-#       MICS::dump(curl_getinfo($ch, CURLINFO_HTTP_CODE), 'code', true);
         curl_close($ch);
 
         return $response;

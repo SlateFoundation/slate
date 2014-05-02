@@ -108,8 +108,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
 
         if (!empty($_REQUEST['TermID'])) {
-            $term = Term::getByWhere(array('ID' => $_REQUEST['TermID']));
-            //MICS::dump($term, 'this',true);
+            $term = Term::getByID($_REQUEST['TermID']);
             $concurrentTerms = $term->getConcurrentTermIDs();
             $containedTerms = $term->getContainedTermIDs();
             $termIDs = array_unique(array_merge($concurrentTerms, $containedTerms));
