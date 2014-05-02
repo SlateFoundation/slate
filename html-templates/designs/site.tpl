@@ -85,9 +85,9 @@
                 {foreach item=value key=name from=$postVars}
                     {if is_array($value)}
                         {foreach item=subvalue key=subkey from=$value}
-                        <input type="hidden" name="{$name|escape}[{$subkey|escape}]" value="{$subvalue|escape}">
+                        <input type="hidden" name="{$name|escape}[{$subkey|escape}]" value="{$subvalue|escape}">
                     {else}
-                        <input type="hidden" name="{$name|escape}" value="{$value|escape}">
+                        <input type="hidden" name="{$name|escape}" value="{$value|escape}">
                     {/if}
                 {/foreach}
                 <input type="hidden" name="_LOGIN[returnMethod]" value="{refill field=_LOGIN.returnMethod default=$.server.REQUEST_METHOD}"
