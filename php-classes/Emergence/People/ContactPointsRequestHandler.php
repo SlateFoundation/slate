@@ -28,11 +28,11 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
     public static function handleTemplatesRequest()
     {
         $templates = ContactPoint\AbstractPoint::getTemplates();
-        
+
         foreach ($templates AS $label => &$options) {
             $options['label'] = $label;
         }
-        
+
         usort($templates, function($a, $b) {
             return strcmp($a['class'], $b['class']);
         });
@@ -50,35 +50,39 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
             if (!$Person = Person::getByID($_REQUEST['relatedTo'])) {
                 return static::throwNotFoundError('relatedTo person not found');
             }
-            
+
             $relatedIDs = array_map(function($Relationship) {
                 return $Relationship->RelatedPersonID;
             }, $Person->Relationships);
-            
+
             $relatedIDs[] = $Person->ID;
-            
+
             $conditions[] = 'PersonID IN ('.implode(',', $relatedIDs).')';
         }
-        
+
         // build class-weight-based sorter
         $pointClasses = ContactPoint\AbstractPoint::getStaticSubclasses();
-        
+
+        // initialize all classes before sorting to prevent modifying during sort due to initialization
+        $pointClasses = array_filter($pointClasses, 'class_exists');
+
+        // sort classes
         usort($pointClasses, function($a, $b) {
             $aWeight = $a::$sortWeight;
             $bWeight = $b::$sortWeight;
-            
+
             if ($aWeight == $bWeight) {
                 return strcmp($a, $b);
             }
-            
+
             return ($aWeight < $bWeight) ? 1 : -1;
         });
-        
+
         static::$browseOrder = 'FIND_IN_SET(Class, "'.\DB::escape(implode(',', $pointClasses)).'"), ID ASC';
-        
+
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
-    
+
     static protected function applyRecordDelta(\ActiveRecord $ContactPoint, $data)
     {
         if (isset($data['String'])) {
@@ -88,7 +92,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
             $ContactPoint->unserialize($data['Data']);
             unset($data['Data']);
         }
-        
+
         return parent::applyRecordDelta($ContactPoint, $data);
     }
 }

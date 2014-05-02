@@ -2,7 +2,7 @@
 
 {block "content"}
     <h2>Log in to {Slate::$schoolName}</h2>
-	{if $authException}
+    {if $authException}
 		<div class="notify error">
 			<strong>Sorry!</strong> {$authException->getMessage()}
 		</div>
@@ -12,13 +12,13 @@
 		</div>
 	{/if}	
 	
-	<form method="POST" class="login-form">
+	<form method="POST" class="login-form">
 		{foreach item=value key=name from=$postVars}
 			{if is_array($value)}
 				{foreach item=subvalue key=subkey from=$value}
-				<input type="hidden" name="{$name|escape}[{$subkey|escape}]" value="{$subvalue|escape}">
+				<input type="hidden" name="{$name|escape}[{$subkey|escape}]" value="{$subvalue|escape}">
 			{else}
-				<input type="hidden" name="{$name|escape}" value="{$value|escape}">
+				<input type="hidden" name="{$name|escape}" value="{$value|escape}">
 			{/if}
 		{/foreach}
 
@@ -26,7 +26,7 @@
 		<input type="hidden" name="_LOGIN[return]" value="{refill field=_LOGIN.return default=$.server.REQUEST_URI}">	
 	
 		<fieldset class="shrink">
-			{field name=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true attribs='autofocus'}
+			{field name=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true autofocus=true}
 			{field name=_LOGIN[password] label=Password hint='<a href="/register/recover">Forgot?</a>' required=true refill=false type=password}
 			
 			<div class="submit-area">

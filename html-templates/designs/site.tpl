@@ -85,9 +85,9 @@
                 {foreach item=value key=name from=$postVars}
                     {if is_array($value)}
                         {foreach item=subvalue key=subkey from=$value}
-                        <input type="hidden" name="{$name|escape}[{$subkey|escape}]" value="{$subvalue|escape}">
+                        <input type="hidden" name="{$name|escape}[{$subkey|escape}]" value="{$subvalue|escape}">
                     {else}
-                        <input type="hidden" name="{$name|escape}" value="{$value|escape}">
+                        <input type="hidden" name="{$name|escape}" value="{$value|escape}">
                     {/if}
                 {/foreach}
                 <input type="hidden" name="_LOGIN[returnMethod]" value="{refill field=_LOGIN.returnMethod default=$.server.REQUEST_METHOD}"
@@ -100,7 +100,7 @@
 
                 <div class="modal-body">
                     <fieldset class="stretch">
-                        {field name=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true attribs='autofocus'}
+                        {field name=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true autofocus=true}
                         {field name=_LOGIN[password] label=Password hint='<a href="/register/recover">Forgot?</a>' required=true refill=false type=password}
                     </fieldset>
                 </div>

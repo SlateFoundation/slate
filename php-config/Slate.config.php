@@ -1,8 +1,12 @@
 <?php
 
-#Slate::$manageTools['Narratives'] = '/manage#progress/narratives';
-#Slate::$manageTools['Standards'] = '/manage#progress/standards';
-#Slate::$manageTools['Interims'] = '/manage#progress/interims';
+//Slate::$schoolName = 'MyTown High';
+//Slate::$schoolAbbr = 'MTH';
+//Slate::$siteSlogan = 'Open-source for education';
+    
+//Slate::$manageTools['Narratives'] = '/manage#progress/narratives';
+//Slate::$manageTools['Standards'] = '/manage#progress/standards';
+//Slate::$manageTools['Interims'] = '/manage#progress/interims';
 
 if (RemoteSystems\GoogleApps::$domain) {
     Slate::$webTools['Google Apps'] = array(
@@ -17,4 +21,4 @@ if (RemoteSystems\Canvas::$canvasHost) {
 	Slate::$webTools['Canvas'] = 'https://' . RemoteSystems\Canvas::$canvasHost;
 }
 
-#Slate::$webTools['Naviance'] = 'http://www.naviance.com/';
+//Slate::$webTools['Naviance'] = 'http://www.naviance.com/';

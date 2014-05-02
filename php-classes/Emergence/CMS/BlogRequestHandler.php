@@ -3,6 +3,7 @@
 namespace Emergence\CMS;
 
 use ActiveRecord;
+use CommentsRequestHandler;
 
 class BlogRequestHandler extends AbstractRequestHandler
 {
