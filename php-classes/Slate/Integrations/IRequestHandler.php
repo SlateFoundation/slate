@@ -4,7 +4,7 @@ namespace Slate\Integrations;
 
 interface IRequestHandler
 {
-    static public function getTitle();
-    static public function handleRequest();
-    static public function synchronize(SynchronizationJob $Job, $pretend = true, $verbose = false);
+    public static function getTitle();
+    public static function handleRequest();
+    public static function synchronize(SynchronizationJob $Job, $pretend = true, $verbose = false);
 }

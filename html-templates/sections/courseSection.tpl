@@ -56,7 +56,7 @@
 
 {block "sidebar"}
     {$Section = $data}
-    
+
         <dl class="well course-section-details property-list">
             <h3>{$Section->Code}</h3>
 
@@ -68,7 +68,7 @@
                 <dt>Term</dt>
                 <dd>{$Section->Term->Title}</dd>
             </div>
-            
+
             {if $.User}
                 <div class="dli">
                     <dt>Schedule</dt>
@@ -87,7 +87,7 @@
                 </div>
             {/if}
         </dl>
-    
+
     {*
         {$MoodleMapping = SynchronizationMapping::getByWhere(array(
             ContextClass = 'CourseSection'
@@ -95,7 +95,7 @@
             ,ExternalSource = 'MoodleIntegrator'
             ,ExternalKey = 'id'
         ))}
-    
+
         {if $MoodleMapping}
             <h2>Links</h2>
             <ul>
@@ -103,7 +103,7 @@
             </ul>
         {/if}
     *}
-    
+
     {if $.User->hasAccountLevel(Staff)}
         <h3>Course Tools</h3>
         <ul class="course-section-tools">
@@ -111,7 +111,7 @@
             <li class="download-roster"><a class="button" href="/sections/{$Section->Handle}/roster-download">Download Roster</a></li>
         </ul>
     {/if}
-    
+
 
     <h3>Instructor{tif count($Section->Instructors) != 1 ? s}</h3>
     <ul class="roster instructors">

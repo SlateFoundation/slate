@@ -7,20 +7,20 @@ use HandleBehavior, NestingBehavior;
 class Location extends \VersionedRecord
 {
     // VersionedRecord configuration
-    static public $historyTable = 'history_locations';
+    public static $historyTable = 'history_locations';
 
     // ActiveRecord configuration
-    static public $tableName = 'locations';
-    static public $singularNoun = 'location';
-    static public $pluralNoun = 'locations';
-    static public $collectionRoute = '/locations';
+    public static $tableName = 'locations';
+    public static $singularNoun = 'location';
+    public static $pluralNoun = 'locations';
+    public static $collectionRoute = '/locations';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
-    static public $fields = array(
+    public static $fields = array(
         'Title' => array(
             'fulltext' => true
         )
@@ -43,34 +43,34 @@ class Location extends \VersionedRecord
             ,'notnull' => false
         )
         ,'Left' => array(
-    		'type' => 'uint'
-			,'notnull' => false
+            'type' => 'uint'
+            ,'notnull' => false
             ,'unique' => true
-		)
+        )
         ,'Right' => array(
-    		'type' => 'uint'
-			,'notnull' => false
-		)
+            'type' => 'uint'
+            ,'notnull' => false
+        )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Parent' => array(
             'type' => 'one-one'
             ,'class' => 'Emergence\\Locations\\Location'
         )
     );
-    
-    static public $dynamicFields = array(
+
+    public static $dynamicFields = array(
         'Parent'
     );
 
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }
 
-    static public function getOrCreateByHandle($handle, $title = null)
+    public static function getOrCreateByHandle($handle, $title = null)
     {
         if ($Location = static::getByHandle($handle)) {
             return $Location;

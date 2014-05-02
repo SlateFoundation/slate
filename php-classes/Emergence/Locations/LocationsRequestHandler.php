@@ -6,9 +6,9 @@ use DB;
 
 class LocationsRequestHandler extends \RecordsRequestHandler
 {
-    static public $recordClass = 'Emergence\\Locations\\Location';
+    public static $recordClass = 'Emergence\\Locations\\Location';
 
-    static public function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
         if ($_REQUEST['Class']) {
             $conditions['Class'] = $_REQUEST['Class'];

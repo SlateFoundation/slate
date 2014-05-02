@@ -9,16 +9,16 @@ class SynchronizationJob extends ActiveRecord
     public $log;
 
     // ActiveRecord configuration
-    static public $tableName = 'synchronization_jobs';
-    static public $singularNoun = 'synchronization job';
-    static public $pluralNoun = 'synchronization jobs';
+    public static $tableName = 'synchronization_jobs';
+    public static $singularNoun = 'synchronization job';
+    public static $pluralNoun = 'synchronization jobs';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
-    static public $fields = array(
+    public static $fields = array(
         'Title'
         ,'Handle' => array(
             'unique' => true
@@ -50,7 +50,7 @@ class SynchronizationJob extends ActiveRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Template' => array(
             'type' => 'one-one'
             ,'class' => __CLASS__
@@ -63,7 +63,7 @@ class SynchronizationJob extends ActiveRecord
         )
     );
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }

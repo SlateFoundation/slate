@@ -6,7 +6,7 @@ use \Emergence\People\ContactPoint\Postal;
 
 class PostalTest extends \PHPUnit_Framework_TestCase
 {
-    static protected $addresses = array(
+    protected static $addresses = array(
         '908 N. 3rd St, Philadelphia, PA 19123' => array(
             'serialized' => "{\"name\":null,\"number\":\"908\",\"street\":\"N. 3rd St\",\"unit\":null,\"city\":\"Philadelphia\",\"state\":\"PA\",\"postal\":\"19123\"}",
             'string' => "908 N. 3rd St\nPhiladelphia, PA 19123",
@@ -83,7 +83,7 @@ class PostalTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($Address1->serialize(), $data['serialized']);
         }
     }
-    
+
     public function testToString()
     {
         foreach (static::$addresses AS $address => $data) {
@@ -91,7 +91,7 @@ class PostalTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($Address->toString(), $data['string']);
         }
     }
-    
+
     public function testToHTML()
     {
         foreach (static::$addresses AS $address => $data) {

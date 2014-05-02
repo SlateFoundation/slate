@@ -6,7 +6,7 @@ use \Emergence\People\ContactPoint\Email;
 
 class EmailTest extends \PHPUnit_Framework_TestCase
 {
-    static protected $emailAddresses = array(
+    protected static $emailAddresses = array(
         'username@example.com' => array(
             'serialized' => 'username@example.com',
             'string' => 'username@example.com',

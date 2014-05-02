@@ -4,16 +4,16 @@ namespace Slate\Integrations;
 
 abstract class AbstractRequestHandler extends \RequestHandler implements IRequestHandler
 {
-    static public $title;
+    public static $title;
 
-    static public $accountLevelSync = 'Administrator';
+    public static $accountLevelSync = 'Administrator';
 
-    static public function getTitle()
+    public static function getTitle()
     {
         return static::$title ? static::$title : get_called_class();
     }
 
-    static public function handleRequest()
+    public static function handleRequest()
     {
         // read request/response configuration
         $pretend = !empty($_REQUEST['pretend']);
@@ -161,14 +161,14 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
         ));
     }
 
-    static public function respond($responseID, $responseData = array(), $responseMode = false)
+    public static function respond($responseID, $responseData = array(), $responseMode = false)
     {
         $responseData['scriptBaseUrl'] = static::_getScriptBaseUrl();
 
         return parent::respond($responseID, $responseData, $responseMode);
     }
 
-    static protected function _getScriptBaseUrl($external = false)
+    protected static function _getScriptBaseUrl($external = false)
     {
         if ($external) {
             $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https').'://'.$_SERVER['HTTP_HOST'];
@@ -178,14 +178,14 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
         return $url;
     }
 
-    static public function getLogDirectory()
+    public static function getLogDirectory()
     {
         $logsRoot = "$_SERVER[SITE_ROOT]/site-data/synchronization-logs";
 
         return $logsRoot;
     }
 
-    static public function getLogFilename(SynchronizationJob $Job)
+    public static function getLogFilename(SynchronizationJob $Job)
     {
         return static::getLogDirectory() . "/$Job->ID.json";
     }

@@ -1,6 +1,6 @@
 <?php
 
-// TODO: bring routing style up to par with latest conventions 
+// TODO: bring routing style up to par with latest conventions
 
 namespace Slate\Courses;
 
@@ -13,11 +13,11 @@ use Slate\Courses\SectionParticipant;
 class SectionsRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler config
-    static public $recordClass = 'Slate\\Courses\\Section';
-    static public $accountLevelBrowse = false;
-    static public $browseOrder = 'Code';
+    public static $recordClass = 'Slate\\Courses\\Section';
+    public static $accountLevelBrowse = false;
+    public static $browseOrder = 'Code';
 
-    static public function handleRecordsRequest($action = false)
+    public static function handleRecordsRequest($action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
             case 'addParticipants':
@@ -26,7 +26,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                 return parent::handleRecordsRequest($action);
         }
     }
-    static public function handleRecordRequest(\ActiveRecord $Section, $action = false)
+    public static function handleRecordRequest(\ActiveRecord $Section, $action = false)
     {
         if (!static::checkReadAccess($Section)) {
             return static::throwUnauthorizedError();
@@ -74,7 +74,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-    static public function handleRosterRequest(CourseSection $Section)
+    public static function handleRosterRequest(CourseSection $Section)
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
@@ -84,7 +84,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         ));
     }
 
-    static public function getBlogsByCourseSection(CourseSection $Section)
+    public static function getBlogsByCourseSection(CourseSection $Section)
     {
         static::$responseMode = 'xml';
 
@@ -101,7 +101,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         ));
     }
 
-    static public function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
         if (empty($_REQUEST['AllCourses']) && $GLOBALS['Session']->PersonID) {
             $conditions[] = 'ID IN (SELECT CourseSectionID FROM course_section_participants WHERE PersonID = '.$GLOBALS['Session']->PersonID.')';
@@ -124,7 +124,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
-    static public function handleParticipantRemovalRequest($Section)
+    public static function handleParticipantRemovalRequest($Section)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['PersonID']) {
             $Participant = SectionParticipant::getByWhere(array(
@@ -142,7 +142,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     }
 
-    static public function handleParticipantAddRequest()
+    public static function handleParticipantAddRequest()
     {
         $courses = array();
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['PersonID'] && $_POST['SectionIDs']) {

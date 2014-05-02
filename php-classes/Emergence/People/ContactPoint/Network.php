@@ -4,16 +4,16 @@ namespace Emergence\People\ContactPoint;
 
 class Network extends AbstractPoint
 {
-    static public $defaultLabel = 'Network Id';
+    public static $defaultLabel = 'Network Id';
 
-    static public $sortWeight = 50;
+    public static $sortWeight = 50;
 
-    static public $networkLinkFormats = array(
+    public static $networkLinkFormats = array(
         'twitter.com' => 'http://twitter.com/%s',
         'facebook.com' => 'http://facebook.com/%s'
     );
 
-    static public $templates = array(
+    public static $templates = array(
         'Twitter' => array(
             'class' => __CLASS__
             ,'network' => 'twitter.com'
@@ -38,23 +38,23 @@ class Network extends AbstractPoint
             $network = $matches[1];
             $username = $matches[2];
         }
-        
+
         $this->network = $network;
         $this->username = $username;
     }
-    
+
     public function toString()
     {
         return "$this->username on $this->network";
     }
-    
+
     public function toHTML()
     {
         $networkClass = preg_replace('/[^a-zA-Z]/', '_', $this->network);
-            
+
         if (array_key_exists($this->network, static::$networkLinkFormats)) {
             $format = static::$networkLinkFormats[$this->network];
-            
+
             if (is_string($format)) {
                 $url = sprintf($format, urlencode($this->username));
             } elseif(is_callable($format)) {
@@ -62,7 +62,7 @@ class Network extends AbstractPoint
             } else {
                 throw new \Exception('Network formatter must be string or callable');
             }
-            
+
             return sprintf(
                 '<a class="contact-link contact-network contact-network-composite network-%s" href="%s">%s on %s</a>'
                 ,$networkClass
@@ -79,16 +79,16 @@ class Network extends AbstractPoint
             );
         }
     }
-    
+
     public function serialize()
     {
         return "$this->network/$this->username";
     }
-    
+
     public function unserialize($serialized)
     {
         list($network, $username) = explode('/', $serialized, 2);
-        
+
         if (!$network || !$username) {
             throw new \Exception('Could not unserialize network/username');
         }
@@ -109,7 +109,7 @@ class Network extends AbstractPoint
         if ($errors = \Validators\FQDN::isInvalid($this->network)) {
             $this->_validator->addError('network', 'Network invalid:' .reset($errors));
         }
-        
+
         // save results
         return $this->finishValidation();
     }

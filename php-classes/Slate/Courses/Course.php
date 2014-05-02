@@ -7,20 +7,20 @@ use HandleBehavior;
 class Course extends \VersionedRecord
 {
     // VersionedRecord configuration
-    static public $historyTable = 'history_courses';
+    public static $historyTable = 'history_courses';
 
     // ActiveRecord configuration
-    static public $tableName = 'courses';
-    static public $singularNoun = 'course';
-    static public $pluralNoun = 'courses';
+    public static $tableName = 'courses';
+    public static $singularNoun = 'course';
+    public static $pluralNoun = 'courses';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
-    static public $collectionRoute = '/courses';
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
+    public static $collectionRoute = '/courses';
 
-    static public $fields = array(
+    public static $fields = array(
         'Title' => array(
             'fulltext' => true
         )
@@ -51,7 +51,7 @@ class Course extends \VersionedRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Department' => array(
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Department'
@@ -61,13 +61,13 @@ class Course extends \VersionedRecord
             ,'class' => 'Slate\\Courses\\Section'
         )
     );
-    
-    static public $dynamicFields = array(
+
+    public static $dynamicFields = array(
         'Department' => 'Department'
     );
 
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }

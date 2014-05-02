@@ -9,9 +9,9 @@ use intouch\ical\iCal;
 
 class RequestHandler extends \Slate\Integrations\AbstractRequestHandler
 {
-    static public $title = 'Fetch iCal feeds';
+    public static $title = 'Fetch iCal feeds';
 
-    static public function synchronize(SynchronizationJob $Job, $pretend = true, $verbose = false)
+    public static function synchronize(SynchronizationJob $Job, $pretend = true, $verbose = false)
     {
         if ($Job->Status != 'Pending' && $Job->Status != 'Completed') {
             return static::throwError('Cannot execute job, status is not Pending or Complete');

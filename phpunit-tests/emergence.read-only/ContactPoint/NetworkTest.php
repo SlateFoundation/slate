@@ -6,7 +6,7 @@ use \Emergence\People\ContactPoint\Network;
 
 class NetworkTest extends \PHPUnit_Framework_TestCase
 {
-    static protected $networkIds = array(
+    protected static $networkIds = array(
         'twitter.com/username' => array(
             'serialized' => 'twitter.com/username',
             'string' => 'username on twitter.com',

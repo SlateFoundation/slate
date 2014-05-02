@@ -13,7 +13,7 @@ User::$fields['AccountLevel']['values'] = array(
 );
 
 User::$fields['AssignedPassword'] = array(
-	'type' => 'string'
-	,'notnull' => false
+    'type' => 'string'
+    ,'notnull' => false
     ,'accountLevelEnumerate' => 'Staff'
 );

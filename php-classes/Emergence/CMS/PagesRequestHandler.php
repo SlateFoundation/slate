@@ -5,12 +5,12 @@ namespace Emergence\CMS;
 class PagesRequestHandler extends AbstractRequestHandler
 {
     // RecordsRequestHandler config
-    static public $recordClass = 'Emergence\CMS\Page';
-    static public $browseConditions = array(
+    public static $recordClass = 'Emergence\CMS\Page';
+    public static $browseConditions = array(
         'Class' => 'Emergence\CMS\Page'
     );
 
-    static protected function throwRecordNotFoundError($handle, $message = 'Record not found')
+    protected static function throwRecordNotFoundError($handle, $message = 'Record not found')
     {
         return static::respond('pageNotFound', array(
             'success' => false

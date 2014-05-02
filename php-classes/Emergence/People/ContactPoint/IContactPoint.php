@@ -8,8 +8,8 @@ interface IContactPoint extends \Serializable
     public function toString();
     public function toHTML();
     public function loadString($string);
-    static public function fromString($string);
-    static public function fromSerialized($string);
-    static public function getByString($string, $conditions = array(), $options = array());
-    static public function getAllByString($string, $conditions = array(), $options = array());
+    public static function fromString($string);
+    public static function fromSerialized($string);
+    public static function getByString($string, $conditions = array(), $options = array());
+    public static function getAllByString($string, $conditions = array(), $options = array());
 }

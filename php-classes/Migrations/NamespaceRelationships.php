@@ -4,7 +4,7 @@ namespace Migrations;
 
 class NamespaceRelationships extends AbstractMigration
 {
-    static public function upgrade()
+    public static function upgrade()
     {
         static::addSql('ALTER TABLE `relationships` CHANGE `Class` `Class` ENUM("Relationship","Guardian","Emergence\\\\People\\\\Relationship","Emergence\\\\People\\\\GuardianRelationship") NOT NULL');
         static::addSql('UPDATE `relationships` SET `Class` = "Emergence\\\\People\\\\Relationship" WHERE `Class` = "Relationship"');

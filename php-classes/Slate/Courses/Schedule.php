@@ -7,20 +7,20 @@ use HandleBehavior;
 class Schedule extends \VersionedRecord
 {
     // VersionedRecord configuration
-    static public $historyTable = 'history_course_schedules';
+    public static $historyTable = 'history_course_schedules';
 
     // ActiveRecord configuration
-    static public $tableName = 'course_schedules';
-    static public $singularNoun = 'course schedule';
-    static public $pluralNoun = 'course schedules';
-    static public $collectionRoute = '/schedules';
+    public static $tableName = 'course_schedules';
+    public static $singularNoun = 'course schedule';
+    public static $pluralNoun = 'course schedules';
+    public static $collectionRoute = '/schedules';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
-    static public $fields = array(
+    public static $fields = array(
         'Title' => array(
             'fulltext' => true
             ,'notnull' => false
@@ -44,7 +44,7 @@ class Schedule extends \VersionedRecord
     );
 
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Blocks' => array(
             'type' => 'one-many'
             ,'class' => 'Slate\\Courses\\ScheduleBlock'
@@ -53,12 +53,12 @@ class Schedule extends \VersionedRecord
     );
 
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }
 
-    static public function getOrCreateByHandle($handle)
+    public static function getOrCreateByHandle($handle)
     {
         if ($Schedule = static::getByHandle($handle)) {
             return $Schedule;

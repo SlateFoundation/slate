@@ -7,9 +7,9 @@ class PhoneNumber implements IValidator
     const FICTITIOUS = 'fictitious';
     const LENGTH_NOT_10 = 'length_not_10';
     const LENGTH_OUT_OF_RANGE = 'length_out_of_range';
-    
 
-    static public function isInvalid($phone, array $options = array())
+
+    public static function isInvalid($phone, array $options = array())
     {
         $options = array_merge(array(
             'country' => null,
@@ -20,7 +20,7 @@ class PhoneNumber implements IValidator
         if (is_array($phone)) {
             $phone = implode('', $phone);
         }
-        
+
         //Strip all non-numeric characters
         $phone = preg_replace('/\D/', '', $phone);
 
@@ -32,17 +32,17 @@ class PhoneNumber implements IValidator
                 if ( (strlen($phone) == 11) && ($phone[0] == '1') ) {
                     $phone = substr($phone, 1);
                 }
-                
+
                 if (strlen($phone) != 10) {
                     return array(LENGTH_NOT_10 => 'US/CA phone number must be 10 digits');
                 }
-                
+
                 break;
             default:
                 if (strlen($phone) < 8 || strlen($phone) > 15) {
                     return array(LENGTH_OUT_OF_RANGE => 'Phone number must be between 8 and 15 digits');
                 }
-                
+
                 break;
         }
 
@@ -51,7 +51,7 @@ class PhoneNumber implements IValidator
             $area = substr($phone, 0, 3);
             $prefix = substr($phone, 3, 3);
             $line = substr($phone, 6);
-            
+
             if (!$options['allowFictitious']) {
                 $fictitious = false;
 
@@ -62,13 +62,13 @@ class PhoneNumber implements IValidator
                 } else {
                     $fictitious = ($prefix == '555' && substr($line, 0, 2) == '01');
                 }
-                
+
                 if ($fictitious) {
                     return array(self::FICTITIOUS => 'Phone number reserved for fictitious use');
                 }
             }
         }
-        
+
         return false;
     }
 }

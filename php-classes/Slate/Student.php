@@ -10,7 +10,7 @@ use Slate\Courses\SectionParticipant;
 
 class Student extends \User
 {
-    static public $fields = array(
+    public static $fields = array(
         'StudentNumber' => array(
             'type' => 'string'
             ,'unique' => true
@@ -29,7 +29,7 @@ class Student extends \User
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Advisor' => array(
             'type' => 'one-one'
             ,'class' => 'Person'
@@ -51,13 +51,13 @@ class Student extends \User
         )
     );
 
-    static public $dynamicFields = array(
+    public static $dynamicFields = array(
         'Advisor' => array(
             'accountLevelEnumerate' => 'Staff'
         )
     );
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'StudentNumber' => array(
             'qualifiers' => array('any', 'studentnumber')
             ,'points' => 2
@@ -87,7 +87,7 @@ class Student extends \User
     );
 
 
-    static public function getByStudentNumber($number)
+    public static function getByStudentNumber($number)
     {
         return static::getByField('StudentNumber', $number);
     }
@@ -116,7 +116,7 @@ class Student extends \User
         return $records;
     }
 
-    static public function getProgressSearchConditions($reportType, $search)
+    public static function getProgressSearchConditions($reportType, $search)
     {
         $reportSearchTerms = array(
             'qualifierConditions' => array()
@@ -190,7 +190,7 @@ class Student extends \User
         return $reportSearchTerms;
     }
 
-    static protected function getProgressNotesSummary($params, $search = false)
+    protected static function getProgressNotesSummary($params, $search = false)
     {
         $sql = 'SELECT %s FROM `%s` Note LEFT JOIN `%s` People ON (People.ID = Note.AuthorID)  WHERE (%s) HAVING (%s)';
 
@@ -255,7 +255,7 @@ class Student extends \User
         return $notes;
     }
 
-    static protected function getProgressNotes($params, $search = false)
+    protected static function getProgressNotes($params, $search = false)
     {
         $sql = 'SELECT %s FROM `%s` WHERE (%s) HAVING (%s)';
 
@@ -330,7 +330,7 @@ class Student extends \User
         return $notes;
     }
 
-    static protected function getNarrativeReportsSummary($params, $search = false)
+    protected static function getNarrativeReportsSummary($params, $search = false)
     {
         $sql = 'SELECT %s FROM `%s` Narrative INNER JOIN `%s` Course ON (Course.ID = Narrative.CourseSectionID) LEFT JOIN `%s` People ON (People.ID = Narrative.CreatorID) WHERE (%s) HAVING (%s)';
 
@@ -403,7 +403,7 @@ class Student extends \User
         return $narratives;
     }
 
-    static protected function getNarrativeReports($params, $search = false)
+    protected static function getNarrativeReports($params, $search = false)
     {
         $sql = 'SELECT %s FROM `%s` Narrative WHERE (%s) HAVING (%s)';
 
@@ -484,7 +484,7 @@ class Student extends \User
         return $narratives;
     }
 
-    static protected function getInterimReportsSummary($params, $search = false)
+    protected static function getInterimReportsSummary($params, $search = false)
     {
         $sql = 'SELECT %s FROM `%s` Interim INNER JOIN `%s` Course ON (Course.ID = Interim.CourseSectionID) LEFT JOIN `%s` People ON (People.ID = Interim.CreatorID) WHERE (%s) HAVING (%s)';
 
@@ -556,7 +556,7 @@ class Student extends \User
         return $interims;
     }
 
-    static protected function getInterimReports($params, $search)
+    protected static function getInterimReports($params, $search)
     {
         $sql = 'SELECT %s FROM `%s` Interim WHERE (%s) HAVING (%s)';
 
@@ -637,7 +637,7 @@ class Student extends \User
         return $interims;
     }
 
-    static protected function getStandardsSummary($params, $search = false)
+    protected static function getStandardsSummary($params, $search = false)
     {
         $termIDs = $params['Term'] == 'All' ? false : array_unique(array_merge($params['Term']->getContainedTermIDs(), $params['Term']->getConcurrentTermIDs()));
         $termIDString = $termIDs ? join(',', $termIDs) : false;
@@ -741,7 +741,7 @@ class Student extends \User
         return $standards;
     }
 
-    static protected function getStandards($params, $search = false)
+    protected static function getStandards($params, $search = false)
     {
         $termIDs = $params['Term'] == 'All' ? false : array_unique(array_merge($params['Term']->getContainedTermIDs(), $params['Term']->getConcurrentTermIDs()));
         $termIDString = $termIDs ? join(',', $termIDs) : false;
@@ -869,7 +869,7 @@ class Student extends \User
         return parent::save();
     }
 
-    static protected function generatePassword($length = 8)
+    protected static function generatePassword($length = 8)
     {
         $chars = array('2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's' ,'t', 'u', 'v', 'w', 'x', 'y', 'z');
         $password = '';
@@ -881,7 +881,7 @@ class Student extends \User
         return $password;
     }
 
-    static public function getDistinctAdvisors()
+    public static function getDistinctAdvisors()
     {
         return Person::getAllByQuery(
             'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName'
@@ -891,7 +891,7 @@ class Student extends \User
         );
     }
 
-    static public function getDistinctGraduationYears()
+    public static function getDistinctGraduationYears()
     {
         return DB::allRecords('SELECT DISTINCT GraduationYear FROM people WHERE GraduationYear IS NOT NULL AND GraduationYear != 0000 ORDER BY GraduationYear ASC');
     }

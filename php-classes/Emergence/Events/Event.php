@@ -7,17 +7,17 @@ use HandleBehavior;
 class Event extends \ActiveRecord
 {
     // support subclassing
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
-    static public $collectionRoute = '/events';
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
+    public static $collectionRoute = '/events';
 
     // ActiveRecord configuration
-    static public $tableName = 'events';
-    static public $singularNoun = 'event';
-    static public $pluralNoun = 'events';
+    public static $tableName = 'events';
+    public static $singularNoun = 'event';
+    public static $pluralNoun = 'events';
 
-    static public $fields = array(
+    public static $fields = array(
         'Handle' => array(
             'unique' => true
         )
@@ -44,7 +44,7 @@ class Event extends \ActiveRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Comments' => array(
             'type' => 'context-children'
             ,'class' => 'Comment'
@@ -52,7 +52,7 @@ class Event extends \ActiveRecord
         )
     );
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'Title' => array(
             'qualifiers' => array('any', 'title')
             ,'points' => 3
@@ -76,7 +76,7 @@ class Event extends \ActiveRecord
     );
 
 
-    static public function getUpcoming($options = array(), $conditions = array())
+    public static function getUpcoming($options = array(), $conditions = array())
     {
         $conditions[] = 'StartTime >= CURRENT_TIMESTAMP';
         $conditions['Status'] = 'Published';
@@ -89,7 +89,7 @@ class Event extends \ActiveRecord
         return static::getAllByWhere($conditions, $options);
     }
 
-    static public function groupEventsByDate($events)
+    public static function groupEventsByDate($events)
     {
         $dateFormat = 'Y-m-d';
         $timeFormat = 'Y-m-d H:i:s';
@@ -123,7 +123,7 @@ class Event extends \ActiveRecord
         return $dates;
     }
 
-    static public function getUntil($when, $options = array(), $conditions = array())
+    public static function getUntil($when, $options = array(), $conditions = array())
     {
         $conditions[] = 'EndTime >= CURRENT_TIMESTAMP';
         $conditions[] = 'StartTime <= FROM_UNIXTIME('.strtotime($when).')';
@@ -136,7 +136,7 @@ class Event extends \ActiveRecord
         return static::getAllByWhere($conditions, $options);
     }
 
-    static public function getByHandle($showHandle)
+    public static function getByHandle($showHandle)
     {
         return static::getByField('Handle', $showHandle, true);
     }

@@ -6,9 +6,9 @@ require_once('emergence.read-write/ContactPoint/AbstractTest.php');
 
 class NetworkTest extends AbstractTest
 {
-    static protected $testValue = 'SlateFoundation on twitter.com';
-    static protected $targetClassName = '\\Emergence\\People\\ContactPoint\\Network';
-    
+    protected static $testValue = 'SlateFoundation on twitter.com';
+    protected static $targetClassName = '\\Emergence\\People\\ContactPoint\\Network';
+
     public function testStringInAndOut()
     {
         $this->doTestStringInAndOut(static::$testValue);

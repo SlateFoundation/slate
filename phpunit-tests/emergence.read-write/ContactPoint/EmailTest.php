@@ -12,10 +12,10 @@ use \Emergence\People\ContactPoint\AbstractPoint;
 use \Emergence\People\ContactPoint\Email;
 
 class EmailTest extends AbstractTest
-{   
-    static protected $testValue = 'test.case+123@example.com';
-    static protected $targetClassName = '\\Emergence\\People\\ContactPoint\\Email';
-    
+{
+    protected static $testValue = 'test.case+123@example.com';
+    protected static $targetClassName = '\\Emergence\\People\\ContactPoint\\Email';
+
     public function testAutoPrimary()
     {
         $this->doTestAutoPrimary(static::$testValue, 'testcase2@example.com');
@@ -35,12 +35,12 @@ class EmailTest extends AbstractTest
     {
         $this->doTestReciprocalRelationshipParallel(static::$testValue);
     }
-    
+
     public function testReciprocalRelationshipSeries()
     {
         $this->doTestReciprocalRelationshipSeries(static::$testValue);
     }
-    
+
     public function testThieving()
     {
         $this->doTestThieving(static::$testValue);
@@ -51,7 +51,7 @@ class EmailTest extends AbstractTest
         $EmailPoint1 = Email::fromString(static::$testValue, static::$Person, true);
         $this->assertEquals($EmailPoint1, static::$testValue, 'New email point can be cast to string and match input value');
         $this->assertFalse($EmailPoint1->isPhantom, 'New email point is persisted to database');
-        
+
         try {
             $EmailPoint2 = Email::fromString(static::$testValue, static::$Person, true);
         } catch(RecordValidationException $e) {
@@ -70,15 +70,15 @@ class EmailTest extends AbstractTest
         $EmailPoint1 = Email::fromString(static::$testValue, static::$Person, true);
         $this->assertEquals($EmailPoint1, static::$testValue, 'First email point can be cast to string and match input value');
         $this->assertFalse($EmailPoint1->isPhantom, 'First email point is persisted to database');
-        
+
         $altValue = 'alt.'.static::$testValue;
         $EmailPoint2 = Email::fromString($altValue, static::$Person, true);
         $this->assertEquals($EmailPoint2, $altValue, 'Second email point can be cast to string and match alt input value');
         $this->assertFalse($EmailPoint2->isPhantom, 'Second email point is persisted to database');
-        
+
         $EmailPoint2->loadString(static::$testValue);
         $this->assertEquals($EmailPoint2, static::$testValue, 'Second email point can be cast to string and match original input value');
-        
+
         try {
             $EmailPoint2->save();
         } catch(RecordValidationException $e) {
@@ -92,7 +92,7 @@ class EmailTest extends AbstractTest
 
         $this->fail('An expected RecordValidationException has not been raised.');
     }
-    
+
     public function testGetUserByEmail()
     {
         $username = 'test-username';
@@ -103,7 +103,7 @@ class EmailTest extends AbstractTest
         )));
         $User->setClearPassword($password);
         $User->save();
-        
+
         $this->assertFalse($User->isPhantom, 'User is persisted to database');
         $this->assertTrue($User->verifyPassword($password), 'User->verifyPassword returns true');
 

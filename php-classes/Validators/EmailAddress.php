@@ -8,36 +8,36 @@ class EmailAddress implements IValidator
     const USERNAME_INVALID = 'username_invalid';
     const DOMAIN_INVALID = 'domain_invalid';
     const DOMAIN_BLACKLISTED = 'domain_blacklisted';
-    
-    static public function isInvalid($email, array $options = array())
+
+    public static function isInvalid($email, array $options = array())
     {
         $options = array_merge(array(
             'allowBlacklist' => false
         ), $options);
 
         @list($username, $domain) = explode('@', $email, 2);
-        
+
         if (!$username || !$domain) {
             return array(self::PARTS_MISSING => 'Email address must be in format username@domain');
         }
-        
+
         if (!preg_match('/^[_a-zA-Z0-9-+]+(\.[_+a-zA-Z0-9-]+)*$/', $username)) {
             return array(self::USERNAME_INVALID => 'Username portion of address is invalid');
         }
-        
+
         if (!preg_match('/^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/', $domain)) {
             return array(self::DOMAIN_INVALID => 'Domain portion of address is invalid');
         }
-        
+
         if (!$options['allowBlacklist'] && in_array(strtolower($domain), static::$domainBlacklist)) {
             return array(self::DOMAIN_BLACKLISTED => 'The email domain is blacklisted');
         }
-        
+
         return false;
     }
-    
+
     // no need to scroll, there's nothing more below this giant list of throwaway email address domains
-    static public $domainBlacklist = array(
+    public static $domainBlacklist = array(
         '0-mail.com',
         '0815.ru',
         '0clickemail.com',

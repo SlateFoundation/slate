@@ -4,11 +4,11 @@ namespace RemoteSystems;
 
 class Canvas
 {
-    static public $canvasHost;
-    static public $apiToken;
-    static public $accountID;
+    public static $canvasHost;
+    public static $apiToken;
+    public static $accountID;
 
-    static public function executeRequest($path, $requestMethod = 'GET', $params = array(), $headers = array())
+    public static function executeRequest($path, $requestMethod = 'GET', $params = array(), $headers = array())
     {
         $url = 'https://'.static::$canvasHost . '/api/v1/' . $path;
 
@@ -48,7 +48,7 @@ class Canvas
 
 
     // Accounts: https://canvas.instructure.com/doc/api/accounts.html
-    static public function getAccount($accountID = null)
+    public static function getAccount($accountID = null)
     {
         if (!$accountID) {
             $accountID = static::$accountID;
@@ -59,12 +59,12 @@ class Canvas
 
 
     // Users: https://canvas.instructure.com/doc/api/users.html
-    static public function getUser($userID)
+    public static function getUser($userID)
     {
         return static::executeRequest("users/$userID/profile");
     }
 
-    static public function createUser($data, $accountID = null)
+    public static function createUser($data, $accountID = null)
     {
         if (!$accountID) {
             $accountID = static::$accountID;
@@ -73,19 +73,19 @@ class Canvas
         return static::executeRequest("accounts/$accountID/users", 'POST', $data);
     }
 
-    static public function updateUser($userID, $data)
+    public static function updateUser($userID, $data)
     {
         return static::executeRequest("users/$userID", 'PUT', $data);
     }
 
 
     // Logins: https://canvas.instructure.com/doc/api/logins.html
-    static public function getLoginsByUser($userID)
+    public static function getLoginsByUser($userID)
     {
         return static::executeRequest("users/$userID/logins");
     }
 
-    static public function updateLogin($loginID, $data, $accountID = null)
+    public static function updateLogin($loginID, $data, $accountID = null)
     {
         if (!$accountID) {
             $accountID = static::$accountID;
@@ -96,12 +96,12 @@ class Canvas
 
 
     // Courses: https://canvas.instructure.com/doc/api/courses.html
-    static public function getCourse($courseID)
+    public static function getCourse($courseID)
     {
         return static::executeRequest("courses/$courseID");
     }
 
-    static public function createCourse($data, $accountID = null)
+    public static function createCourse($data, $accountID = null)
     {
         if (!$accountID) {
             $accountID = static::$accountID;
@@ -110,46 +110,46 @@ class Canvas
         return static::executeRequest("accounts/$accountID/courses", 'POST', $data);
     }
 
-    static public function updateCourse($courseID, $data)
+    public static function updateCourse($courseID, $data)
     {
         return static::executeRequest("courses/$courseID", 'PUT', $data);
     }
 
 
     // Sections: https://canvas.instructure.com/doc/api/sections.html
-    static public function getSection($sectionID)
+    public static function getSection($sectionID)
     {
         return static::executeRequest("sections/$sectionID");
     }
 
-    static public function getSectionsByCourse($courseID)
+    public static function getSectionsByCourse($courseID)
     {
         return static::executeRequest("courses/$courseID/sections", 'GET', array('per_page' => 1000));
     }
 
-    static public function createSection($courseID, $data)
+    public static function createSection($courseID, $data)
     {
         return static::executeRequest("courses/$courseID/sections", 'POST', $data);
     }
 
-    static public function updateSection($sectionID, $data)
+    public static function updateSection($sectionID, $data)
     {
         return static::executeRequest("sections/$sectionID", 'PUT', $data);
     }
 
 
     // Enrollments: https://canvas.instructure.com/doc/api/enrollments.html
-    static public function getEnrollmentsBySection($sectionID)
+    public static function getEnrollmentsBySection($sectionID)
     {
         return static::executeRequest("sections/$sectionID/enrollments", 'GET', array('per_page' => 1000));
     }
 
-    static public function createEnrollmentsForSection($sectionID, $data)
+    public static function createEnrollmentsForSection($sectionID, $data)
     {
         return static::executeRequest("sections/$sectionID/enrollments", 'POST', $data);
     }
 
-    static public function deleteEnrollmentsForCourse($courseID, $enrollmentID, $task = 'conclude')
+    public static function deleteEnrollmentsForCourse($courseID, $enrollmentID, $task = 'conclude')
     {
         return static::executeRequest("courses/$courseID/enrollments/$enrollmentID", 'DELETE', array(
             'task' => $task

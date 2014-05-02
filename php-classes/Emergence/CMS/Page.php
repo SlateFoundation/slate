@@ -5,12 +5,12 @@ namespace Emergence\CMS;
 class Page extends AbstractContent
 {
     // ActiveRecord configuration
-    static public $defaultClass = __CLASS__;
-    static public $singularNoun = 'page';
-    static public $pluralNoun = 'pages';
-    static public $collectionRoute = '/pages';
+    public static $defaultClass = __CLASS__;
+    public static $singularNoun = 'page';
+    public static $pluralNoun = 'pages';
+    public static $collectionRoute = '/pages';
 
-    static public $fields = array(
+    public static $fields = array(
         'LayoutClass' => array(
             'type' => 'enum'
             ,'values' => array('OneColumn')
@@ -20,7 +20,7 @@ class Page extends AbstractContent
     );
 
 
-    static public function getAllPublishedByContextObject(ActiveRecord $Context, $options = array())
+    public static function getAllPublishedByContextObject(ActiveRecord $Context, $options = array())
     {
         $options = array_merge(array(
             'conditions' => array()

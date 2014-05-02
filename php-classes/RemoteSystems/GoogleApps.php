@@ -4,10 +4,10 @@ namespace RemoteSystems;
 
 class GoogleApps
 {
-    static public $apiToken;
-    static public $domain;
+    public static $apiToken;
+    public static $domain;
 
-    static public function executeRequest($path, $requestMethod = 'GET', $params = array(), $headers = array())
+    public static function executeRequest($path, $requestMethod = 'GET', $params = array(), $headers = array())
     {
         $url = 'https://www.googleapis.com' . $path;
 
@@ -49,7 +49,7 @@ class GoogleApps
         return $response;
     }
 
-    static public function getAllResults($path, $resultsKey, $params = array())
+    public static function getAllResults($path, $resultsKey, $params = array())
     {
         if (!isset($params['maxResults'])) {
             $params['maxResults'] = 500;
@@ -75,19 +75,19 @@ class GoogleApps
         return $results;
     }
 
-    static public function getAllUsers($params = array())
+    public static function getAllUsers($params = array())
     {
         return static::getAllResults('/admin/directory/v1/users', 'users', $params);
     }
 
     // Patch user: https://developers.google.com/admin-sdk/directory/v1/reference/users/patch
-    static public function patchUser($userKey, $data)
+    public static function patchUser($userKey, $data)
     {
         return static::executeRequest("/admin/directory/v1/users/$userKey", 'PATCH', $data);
     }
 
     // Create user: https://developers.google.com/admin-sdk/directory/v1/reference/users/insert
-    static public function createUser($data)
+    public static function createUser($data)
     {
         return static::executeRequest("/admin/directory/v1/users", 'POST', $data);
     }

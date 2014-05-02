@@ -5,16 +5,16 @@ namespace Slate\Courses;
 class ScheduleBlock extends \ActiveRecord
 {
     // ActiveRecord configuration
-    static public $tableName = 'course_schedule_blocks';
-    static public $singularNoun = 'course schedule block';
-    static public $pluralNoun = 'course schedule blocks';
+    public static $tableName = 'course_schedule_blocks';
+    public static $singularNoun = 'course schedule block';
+    public static $pluralNoun = 'course schedule blocks';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
-    static public $fields = array(
+    public static $fields = array(
         'ScheduleID' => array(
             'type' => 'integer'
             ,'unsigned' => true
@@ -45,7 +45,7 @@ class ScheduleBlock extends \ActiveRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Schedule' => array(
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Schedule'

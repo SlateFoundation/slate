@@ -6,9 +6,9 @@ require_once('emergence.read-write/ContactPoint/AbstractTest.php');
 
 class PhoneTest extends AbstractTest
 {
-    static protected $testValue = '(123) 555-1955';
-    static protected $targetClassName = '\\Emergence\\People\\ContactPoint\\Phone';
-    
+    protected static $testValue = '(123) 555-1955';
+    protected static $targetClassName = '\\Emergence\\People\\ContactPoint\\Phone';
+
     public function testAutoPrimary()
     {
         $this->doTestAutoPrimary(static::$testValue, '+1 (800) 555-5555');
@@ -28,12 +28,12 @@ class PhoneTest extends AbstractTest
     {
         $this->doTestReciprocalRelationshipParallel(static::$testValue);
     }
-    
+
     public function testReciprocalRelationshipSeries()
     {
         $this->doTestReciprocalRelationshipSeries(static::$testValue);
     }
-    
+
     public function testThieving()
     {
         $this->doTestThieving(static::$testValue);
