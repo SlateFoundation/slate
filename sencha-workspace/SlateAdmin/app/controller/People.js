@@ -154,7 +154,7 @@ Ext.define('SlateAdmin.controller.People', {
     },
     
     showPerson: function(person) {
-        debugger;
+//        debugger;
     },
 
     showResults: function(query, person, tab) {

@@ -120,7 +120,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
                 fields: ['Handle', 'Title'],
                 proxy: {
                     type: 'ajax',
-                    url: window.SiteUser ? ('/people/json/'+window.SiteUser.Username+'/courses') : '/sections/json',
+                    url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/json/'+window.SiteEnvironment.user.Username+'/courses') : '/sections/json',
                     reader: {
                         type: 'json',
                         root: 'data'

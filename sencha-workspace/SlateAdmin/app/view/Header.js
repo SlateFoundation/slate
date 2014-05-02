@@ -11,7 +11,8 @@ Ext.define('SlateAdmin.view.Header', {
     },
     defaultType: 'component',
     items: [{
-        html: '<a class="header-link" href="/"><img class="header-logo" src="resources/images/slate-header-logo.png" width=54 height=40 alt="Slate"></a>'
+        renderTpl: '<a class="header-link" href="/"><img class="header-logo" src="{appBaseUrl}resources/images/slate-header-logo.png" width=54 height=40 alt="Slate"></a>',
+        renderData: window.SiteEnvironment || {}
     },{
         flex: 1
     },{
@@ -25,6 +26,6 @@ Ext.define('SlateAdmin.view.Header', {
             '<a class="logout-link" href="/logout">Log Out</a>'
         ],
         // TDOO: read & set from controller
-        data: window.SiteUser
+        data: window.SiteEnvironment && window.SiteEnvironment.user
     }]  
 });

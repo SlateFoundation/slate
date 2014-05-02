@@ -800,8 +800,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.override.util.InstantHistory": [],
   "Jarvus.ext.override.util.PushHistory": [],
   "Jarvus.ext.proxy.API": [],
-  "Jarvus.util.API": [],
   "Jarvus.util.AbstractAPI": [],
+  "Jarvus.util.MD5": [],
   "SlateAdmin.API": [],
   "SlateAdmin.Application": [],
   "SlateAdmin.controller.Courses": [],
@@ -1771,8 +1771,8 @@ Ext.ClassManager.addNameAliasMappings({
   "Jarvus.ext.proxy.API": [
     "proxy.api"
   ],
-  "Jarvus.util.API": [],
   "Jarvus.util.AbstractAPI": [],
+  "Jarvus.util.MD5": [],
   "SlateAdmin.API": [],
   "SlateAdmin.Application": [],
   "SlateAdmin.controller.Courses": [],
