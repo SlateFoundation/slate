@@ -100,7 +100,7 @@
 
                 <div class="modal-body">
                     <fieldset class="stretch">
-                        {field name=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true attribs='autofocus'}
+                        {field name=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true autofocus=true}
                         {field name=_LOGIN[password] label=Password hint='<a href="/register/recover">Forgot?</a>' required=true refill=false type=password}
                     </fieldset>
                 </div>
