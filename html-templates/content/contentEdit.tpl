@@ -3,15 +3,13 @@
 {block "css"}
     {$dwoo.parent}
 
-	{$App = Sencha_App::getByName('BlogEditor')}
-
-	<link rel="stylesheet" type="text/css" href="{$App->getVersionedPath('sdk/resources/ext-theme-classic/ext-theme-classic-all.css')}" />
+	<link rel="stylesheet" type="text/css" href="{Sencha::getVersionedFrameworkPath('ext', 'resources/ext-theme-classic/ext-theme-classic-all.css')}" />
 
 	{cssmin "slate-frontend.x-reset.css"}
 
-	<link rel="stylesheet" href="{$App->getVersionedPath('x/ExtUx/form/field/BoxSelect.css')}">
-	<link rel="stylesheet" href="{$App->getVersionedPath('x/ExtUx/portal/portal.css')}">
-	<link rel="stylesheet" href="{$App->getVersionedPath('x/Emergence/cms/view/EditorPanel.css')}">
+	<link rel="stylesheet" href="{Sencha::getVersionedLibraryPath('ExtUx/form/field/BoxSelect.css')}">
+	<link rel="stylesheet" href="{Sencha::getVersionedLibraryPath('ExtUx/portal/portal.css')}">
+	<link rel="stylesheet" href="{Sencha::getVersionedLibraryPath('Emergence/cms/view/EditorPanel.css')}">
 {/block}
 
 {block js-bottom}
