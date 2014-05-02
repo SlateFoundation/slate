@@ -6,12 +6,12 @@
         <h1>My Drafts</h1>
     </header>
 
-	<ul>
-	{foreach item=Draft from=$data}
-		<li>{contextLink $Draft}</li>
-	{foreachelse}
-		<li><em>You do not have any drafts</em></li>
-	{/foreach}
-	</ul>
+    <ul>
+    {foreach item=Draft from=$data}
+        <li>{contextLink $Draft}</li>
+    {foreachelse}
+        <li><em>You do not have any drafts</em></li>
+    {/foreach}
+    </ul>
 
 {/block}

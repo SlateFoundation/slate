@@ -4,37 +4,37 @@
 
 {block "content"}
     {$User = $data}
-	{$errors = $User->validationErrors}
-	
-	<h2>Create online account for {Slate::$schoolName}</h2>
+    {$errors = $User->validationErrors}
 
-	<form method="POST" class="register-form">
-		{if $errors}
-			<div class="notify error">
-				<strong>Please double-check the fields highlighted below.</strong>
-			</div>
-		{/if}
-	
-		<fieldset class="shrink">
-			<div class="inline-fields">
-				{* field name label='' error='' type=text placeholder='' hint='' required=false autofocus=false *}
-				{field name=FirstName label='First Name' error=$errors.FirstName required=true autofocus=true}
-				{field LastName 'Last Name' $errors.LastName text '' '' true}
-			</div>
+    <h2>Create online account for {Slate::$schoolName}</h2>
 
-				{field Email 'Email Address' $errors.Email email '' '' true}
+    <form method="POST" class="register-form">
+        {if $errors}
+            <div class="notify error">
+                <strong>Please double-check the fields highlighted below.</strong>
+            </div>
+        {/if}
 
-				{field Username Username $errors.Username username '' '' true}
+        <fieldset class="shrink">
+            <div class="inline-fields">
+                {* field name label='' error='' type=text placeholder='' hint='' required=false autofocus=false *}
+                {field name=FirstName label='First Name' error=$errors.FirstName required=true autofocus=true}
+                {field LastName 'Last Name' $errors.LastName text '' '' true}
+            </div>
 
-			<div class="inline-fields">
-				{field Password Password $errors.Password password '' '' true}
-				{field PasswordConfirm '(Confirm)' $errors.PasswordConfirm password '' '' true}
-			</div>
+                {field Email 'Email Address' $errors.Email email '' '' true}
 
-			<div class="submit-area">
-				<input type="submit" class="button submit" value="Create Account">
-				<span class="submit-text">or <a href="/login">Log In</a></span>
-			</div>
-		</fieldset>
-	</form>
+                {field Username Username $errors.Username username '' '' true}
+
+            <div class="inline-fields">
+                {field Password Password $errors.Password password '' '' true}
+                {field PasswordConfirm '(Confirm)' $errors.PasswordConfirm password '' '' true}
+            </div>
+
+            <div class="submit-area">
+                <input type="submit" class="button submit" value="Create Account">
+                <span class="submit-text">or <a href="/login">Log In</a></span>
+            </div>
+        </fieldset>
+    </form>
 {/block}

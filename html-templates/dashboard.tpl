@@ -10,45 +10,45 @@
         </div>
     {/if}
 
-	{template dashboardItem label url=no labelPrefix=no class=no}
-		{if is_string($url)}
-			<li class="shortcut {$class}"><a href="{$url|escape}">{if $labelPrefix}<small class="muted">{$labelPrefix|escape}</small><br>{/if}{$label|escape}</a></li>
-		{elseif is_array($url)}
-			{foreach item=subUrl key=subLabel from=$url}
-				{dashboardItem label=$subLabel url=$subUrl labelPrefix=$label}
-			{/foreach}
-		{/if}
-	{/template}
-    
+    {template dashboardItem label url=no labelPrefix=no class=no}
+        {if is_string($url)}
+            <li class="shortcut {$class}"><a href="{$url|escape}">{if $labelPrefix}<small class="muted">{$labelPrefix|escape}</small><br>{/if}{$label|escape}</a></li>
+        {elseif is_array($url)}
+            {foreach item=subUrl key=subLabel from=$url}
+                {dashboardItem label=$subLabel url=$subUrl labelPrefix=$label}
+            {/foreach}
+        {/if}
+    {/template}
+
     <h4>Shortcuts</h4>
     <ul class="dashboard-shortcuts">
         {$webTools = Slate::$webTools}
         {dashboardItem label=cat(Slate::$schoolAbbr, ' Homepage') url="/home?nodashboard=1"}
-		{foreach item=url key=label from=$webTools}
-			{dashboardItem label=$label url=$url}
-		{/foreach}
+        {foreach item=url key=label from=$webTools}
+            {dashboardItem label=$label url=$url}
+        {/foreach}
     </ul>
-        
+
     <h4>Classes</h4>
     <ul class="dashboard-shortcuts">
-		{foreach item=Section from=$.User->CurrentCourseSections}
-			<li class="shortcut">
-				<a href="/sections/{$Section->Handle}">
-    				{if $Section->Schedule->Title}<span class="pin muted">{$Section->Schedule->Title|escape}</span>{/if}
-					<small>{$Section->Title|escape}</small>
-				</a>
+        {foreach item=Section from=$.User->CurrentCourseSections}
+            <li class="shortcut">
+                <a href="/sections/{$Section->Handle}">
+                    {if $Section->Schedule->Title}<span class="pin muted">{$Section->Schedule->Title|escape}</span>{/if}
+                    <small>{$Section->Title|escape}</small>
+                </a>
 
-				{foreach item=Mapping from=$Section->Mappings}
-					{if $Mapping->ExternalSource == 'CanvasIntegrator' && $Mapping->ExternalKey == 'course[id]' && RemoteSystems\Canvas::$canvasHost}
-            			<div class="shortcut-stub">
-        				    <a href="https://{RemoteSystems\Canvas::$canvasHost}/courses/{$Mapping->ExternalIdentifier}" target="_blank">Canvas</a>
-        				</div>
-					{/if}
-				{/foreach}
-			</li>
-		{foreachelse}
-			<li class="empty"><em class="muted">None this term</em></li>
-		{/foreach}
+                {foreach item=Mapping from=$Section->Mappings}
+                    {if $Mapping->ExternalSource == 'CanvasIntegrator' && $Mapping->ExternalKey == 'course[id]' && RemoteSystems\Canvas::$canvasHost}
+                        <div class="shortcut-stub">
+                            <a href="https://{RemoteSystems\Canvas::$canvasHost}/courses/{$Mapping->ExternalIdentifier}" target="_blank">Canvas</a>
+                        </div>
+                    {/if}
+                {/foreach}
+            </li>
+        {foreachelse}
+            <li class="empty"><em class="muted">None this term</em></li>
+        {/foreach}
     </ul>
 
     {if $.User->hasAccountLevel('Staff')}
@@ -58,12 +58,12 @@
         <ul class="dashboard-shortcuts">
             {foreach $manageTools label url}{dashboardItem $label $url class=manage}{/foreach}
         </ul>
-	{/if}
+    {/if}
 {/block}
 
 {block "js-bottom"}
     {$dwoo.parent}
-    
+
     <script type="text/javascript">
         Ext.onReady(function(){
             Ext.select('.dismissible').on('click', function(ev, t) {
