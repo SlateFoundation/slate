@@ -51,6 +51,24 @@ abstract class AbstractRequestHandler extends \RecordsRequestHandler
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
+    static public function getRecordByHandle($handle)
+    {
+        $Record = parent::getRecordByHandle($handle);
+        
+        // redirect to correct handler
+        if ($Record && !is_a($Record, static::$recordClass)) {
+            $url = $Record->getURL();
+            
+            if ($rest = static::getPath()) {
+                $url .= '/' . implode('/', $rest);
+            }
+            
+            \Site::redirect($url);
+        }
+        
+        return $Record;
+    }
+
     static protected function onRecordCreated(ActiveRecord $Content, $requestData)
     {
         // initialite title
