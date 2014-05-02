@@ -6,9 +6,16 @@
     {$Person = $data}
 	<header>
 	    <hgroup>
+            {if $.User->ID == $Person->ID}
+                <div class="mini-page-tools">
+                    <a href="/profile" class="button">Edit Profile</a>
+                </div>
+            {/if}
         	<h1>{$Person->FullName|escape}</h1>
             {if $.User->ID == $Person->ID}
-        	    <div class="mini-page-tools"><a href="/blog/create" class="button primary">Create a Post</a></div>
+        	    <div class="mini-page-tools">
+                    <a href="/blog/create" class="button primary">Create a Post</a>
+                </div>
             {/if}
         	<h2>Blog Feed</h2>
 	    </hgroup>
