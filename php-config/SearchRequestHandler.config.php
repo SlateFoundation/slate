@@ -22,6 +22,21 @@ if ($GLOBALS['Session']->hasAccountLevel('User')) {
 	);
 }
 
+SearchRequestHandler::$searchClasses['Slate\Courses\Section'] = array(
+    'fields' => array(
+		'Title'
+		,array(
+			'field' => 'Code'
+			,'method' => 'like'
+		)
+		,array(
+			'field' => 'Handle'
+			,'method' => 'like'
+		)
+	)
+	,'conditions' => array('Status = "Live"')
+);
+
 SearchRequestHandler::$searchClasses['Emergence\CMS\Page'] = array(
 	'fields' => array(
 		'Title'
@@ -54,19 +69,4 @@ SearchRequestHandler::$searchClasses['Emergence\Events\Event'] = array(
 		)
 	)
 	,'conditions' => array('Status = "Published"')
-);
-
-SearchRequestHandler::$searchClasses['Slate\Courses\Section'] = array(
-	'fields' => array(
-		'Title'
-		,array(
-			'field' => 'Code'
-			,'method' => 'like'
-		)
-		,array(
-			'field' => 'Handle'
-			,'method' => 'like'
-		)
-	)
-	,'conditions' => array('Status = "Live"')
 );
