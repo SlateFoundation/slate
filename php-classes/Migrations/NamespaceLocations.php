@@ -4,7 +4,7 @@ namespace Migrations;
 
 class NamespaceLocations extends AbstractMigration
 {
-    static public function upgrade()
+    public static function upgrade()
     {
         static::addSql('ALTER TABLE `locations` CHANGE  `Class` `Class` ENUM("Emergence\\\\Locations\\\\Location") NOT NULL');
         static::addSql('UPDATE `locations` SET `Class` = "Emergence\\\\Locations\\\\Location"');

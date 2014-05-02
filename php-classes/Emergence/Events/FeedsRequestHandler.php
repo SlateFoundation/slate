@@ -4,9 +4,9 @@ namespace Emergence\Events;
 
 class FeedsRequestHandler extends \RecordsRequestHandler
 {
-    static public $recordClass = '\Emergence\Events\Feed';
+    public static $recordClass = '\Emergence\Events\Feed';
 
-    static public function handleRecordsRequest($action = false)
+    public static function handleRecordsRequest($action = false)
     {
         switch ($action = $action ? $action : static::shiftPath()) {
             case 'test':
@@ -16,7 +16,7 @@ class FeedsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-    static public function handleTestRequest()
+    public static function handleTestRequest()
     {
         if (empty($_REQUEST['url'])) {
             return static::throwError('You didn\'t supply a url.');

@@ -9,12 +9,12 @@ use User;
 class RelationshipsRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler configuration
-    static public $recordClass = 'Emergence\People\Relationship';
-    static public $accountLevelBrowse = 'Staff';
-    static public $accountLevelRead = 'Staff';
-    static public $accountLevelWrite = 'Staff';
-    static public $accountLevelAPI = 'Staff';
-    static public $browseOrder = array('ID' => 'ASC');
+    public static $recordClass = 'Emergence\People\Relationship';
+    public static $accountLevelBrowse = 'Staff';
+    public static $accountLevelRead = 'Staff';
+    public static $accountLevelWrite = 'Staff';
+    public static $accountLevelAPI = 'Staff';
+    public static $browseOrder = array('ID' => 'ASC');
 
     public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
@@ -26,7 +26,7 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
-    static protected function applyRecordDelta(ActiveRecord $Relationship, $data)
+    protected static function applyRecordDelta(ActiveRecord $Relationship, $data)
     {
         // get relationship-based defaults
         if ($data['Relationship'] && !empty(Relationship::$relationshipTypes[$data['Relationship']])) {
@@ -60,7 +60,7 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-#    static protected function getEditResponse($responseID, $responseData)
+#    protected static function getEditResponse($responseID, $responseData)
 #    {
 #        if ($responseData['success'] && $responseData['data']->RelatedPerson && $responseData['data']->RelatedPerson->isNew) {
 #            $responseData['newPerson'] = $responseData['data']->RelatedPerson;

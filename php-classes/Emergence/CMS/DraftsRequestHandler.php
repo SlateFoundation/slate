@@ -4,10 +4,10 @@ namespace Emergence\CMS;
 
 class DraftsRequestHandler extends \RequestHandler
 {
-    static public function handleRequest()
+    public static function handleRequest()
     {
         $GLOBALS['Session']->requireAuthentication();
-        
+
         if (static::peekPath() == 'json') {
             static::$responseMode = static::shiftPath();
         }
@@ -18,6 +18,6 @@ class DraftsRequestHandler extends \RequestHandler
                 'AuthorID' => $GLOBALS['Session']->PersonID
                 ,'Status = "Draft" OR Published > CURRENT_TIMESTAMP'
             ))
-        )); 
+        ));
     }
 }

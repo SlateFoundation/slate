@@ -4,7 +4,7 @@ namespace Migrations;
 
 class NamespaceTerms extends AbstractMigration
 {
-    static public function upgrade()
+    public static function upgrade()
     {
         static::addSql('RENAME TABLE `course_terms` TO `terms`');
         static::addSql('ALTER TABLE  `terms` CHANGE  `Class`  `Class` ENUM("Slate\\\\Term") NOT NULL');

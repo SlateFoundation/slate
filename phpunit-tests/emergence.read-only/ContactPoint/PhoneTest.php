@@ -6,7 +6,7 @@ use \Emergence\People\ContactPoint\Phone;
 
 class PhoneTest extends \PHPUnit_Framework_TestCase
 {
-    static protected $phoneNumbers = array(
+    protected static $phoneNumbers = array(
         '1234567890' => array(
             'serialized' => '1234567890',
             'string' => '(123) 456-7890',
@@ -58,7 +58,7 @@ class PhoneTest extends \PHPUnit_Framework_TestCase
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
         )
     );
-    
+
     public function testSerialize()
     {
         foreach (static::$phoneNumbers AS $phoneNumber => $data) {
@@ -68,7 +68,7 @@ class PhoneTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($Phone1->serialize(), $data['serialized']);
         }
     }
-    
+
     public function testToString()
     {
         foreach (static::$phoneNumbers AS $phoneNumber => $data) {
@@ -76,7 +76,7 @@ class PhoneTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($Phone->toString(), $data['string']);
         }
     }
-    
+
     public function testToHTML()
     {
         foreach (static::$phoneNumbers AS $phoneNumber => $data) {

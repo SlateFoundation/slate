@@ -3,20 +3,20 @@
 class Person extends VersionedRecord
 {
     // support subclassing
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
     // VersionedRecord configuration
-    static public $historyTable = 'history_people';
+    public static $historyTable = 'history_people';
 
     // ActiveRecord configuration
-    static public $tableName = 'people';
-    static public $singularNoun = 'person';
-    static public $pluralNoun = 'people';
-    static public $collectionRoute = '/people';
+    public static $tableName = 'people';
+    public static $singularNoun = 'person';
+    public static $pluralNoun = 'people';
+    public static $collectionRoute = '/people';
 
-    static public $fields = array(
+    public static $fields = array(
         'FirstName' => array(
             'includeInSummary' => true
         )
@@ -64,7 +64,7 @@ class Person extends VersionedRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'GroupMemberships' => array(
             'type' => 'one-many'
             ,'class' => 'GroupMember'
@@ -122,7 +122,7 @@ class Person extends VersionedRecord
         )
     );
 
-    static public $dynamicFields = array(
+    public static $dynamicFields = array(
         'PrimaryEmail' => array(
             'accountLevelEnumerate' => 'Staff'
         )
@@ -139,7 +139,7 @@ class Person extends VersionedRecord
         )
     );
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'FirstName' => array(
             'qualifiers' => array('any','name','fname','firstname','first')
             ,'points' => 2
@@ -182,22 +182,22 @@ class Person extends VersionedRecord
             ,'callback' => 'getGroupConditions'
         )
         ,'RelatedTo' => array(
-    		'qualifiers' => array('related-to')
-			,'points' => 1
-			,'sql' => 'ID IN (SELECT IF(RelatedPerson.ID = relationships.RelatedPersonID, relationships.PersonID, relationships.RelatedPersonID) FROM people RelatedPerson RIGHT JOIN relationships ON (RelatedPerson.ID IN (relationships.PersonID, relationships.RelatedPersonID)) WHERE RelatedPerson.Username = "%s")'
-		)
+            'qualifiers' => array('related-to')
+            ,'points' => 1
+            ,'sql' => 'ID IN (SELECT IF(RelatedPerson.ID = relationships.RelatedPersonID, relationships.PersonID, relationships.RelatedPersonID) FROM people RelatedPerson RIGHT JOIN relationships ON (RelatedPerson.ID IN (relationships.PersonID, relationships.RelatedPersonID)) WHERE RelatedPerson.Username = "%s")'
+        )
         ,'RelatedToID' => array(
-    		'qualifiers' => array('related-to-id')
-			,'points' => 1
-			,'sql' => 'ID IN (SELECT IF(RelatedPerson.ID = relationships.RelatedPersonID, relationships.PersonID, relationships.RelatedPersonID) FROM people RelatedPerson RIGHT JOIN relationships ON (RelatedPerson.ID IN (relationships.PersonID, relationships.RelatedPersonID)) WHERE RelatedPerson.ID = %u)'
-		)
+            'qualifiers' => array('related-to-id')
+            ,'points' => 1
+            ,'sql' => 'ID IN (SELECT IF(RelatedPerson.ID = relationships.RelatedPersonID, relationships.PersonID, relationships.RelatedPersonID) FROM people RelatedPerson RIGHT JOIN relationships ON (RelatedPerson.ID IN (relationships.PersonID, relationships.RelatedPersonID)) WHERE RelatedPerson.ID = %u)'
+        )
     );
 
     // Person
-    static public $requireGender = false;
-    static public $requireBirthDate = false;
-    static public $requireLocation = false;
-    static public $requireAbout = false;
+    public static $requireGender = false;
+    public static $requireBirthDate = false;
+    public static $requireLocation = false;
+    public static $requireAbout = false;
 
 
     public function getValue($name)
@@ -233,7 +233,7 @@ class Person extends VersionedRecord
                 return parent::getValue($name);
         }
     }
-    
+
     public function setValue($name, $value)
     {
         switch ($name) {
@@ -243,7 +243,7 @@ class Person extends VersionedRecord
                 if (!$this->isPhantom) {
                     $Existing = \Emergence\People\ContactPoint\Email::getByString($value, array('PersonID' => $this->ID));
                 }
-                
+
                 $this->PrimaryEmail = $Existing ? $Existing : \Emergence\People\ContactPoint\Email::fromString($value, $this, true);
                 break;
             default:
@@ -251,18 +251,18 @@ class Person extends VersionedRecord
         }
     }
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return User::getByHandle($handle);
     }
 
-    static public function getByEmail($email)
+    public static function getByEmail($email)
     {
         $EmailPoint = \Emergence\People\ContactPoint\Email::getByString($email);
         return $EmailPoint ? $EmailPoint->Person : null;
     }
 
-    static public function getByFullName($firstName, $lastName)
+    public static function getByFullName($firstName, $lastName)
     {
         return static::getByWhere(array(
             'FirstName' => $firstName
@@ -270,7 +270,7 @@ class Person extends VersionedRecord
         ));
     }
 
-    static public function getOrCreateByFullName($firstName, $lastName, $save = false)
+    public static function getOrCreateByFullName($firstName, $lastName, $save = false)
     {
         if ($Person = static::getByFullName($firstName, $lastName)) {
             return $Person;
@@ -282,7 +282,7 @@ class Person extends VersionedRecord
         }
     }
 
-    static public function parseFullName($fullName)
+    public static function parseFullName($fullName)
     {
         $parts = preg_split('/\s+/', trim($fullName), 2);
 
@@ -385,7 +385,7 @@ class Person extends VersionedRecord
         }
     }
 
-    static public function getGroupConditions($handle, $matchedCondition)
+    public static function getGroupConditions($handle, $matchedCondition)
     {
         $group = Group::getByHandle($handle);
 

@@ -4,7 +4,7 @@ namespace Migrations;
 
 class ContactPointsReserialized extends AbstractMigration
 {
-    static public function upgrade()
+    public static function upgrade()
     {
         // check for duplicate PrimaryEmail values
 #        Person->Address -> Person->Postal

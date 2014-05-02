@@ -8,23 +8,23 @@ use HandleBehavior, NestingBehavior;
 class Term extends \VersionedRecord
 {
     // number of days reporting period lasts after end of a term
-    static public $reportingPeriod = 14;
+    public static $reportingPeriod = 14;
 
     // VersionedRecord configuration
-    static public $historyTable = 'history_terms';
+    public static $historyTable = 'history_terms';
 
     // ActiveRecord configuration
-    static public $tableName = 'terms';
-    static public $singularNoun = 'term';
-    static public $pluralNoun = 'terms';
-    static public $collectionRoute = '/terms';
+    public static $tableName = 'terms';
+    public static $singularNoun = 'term';
+    public static $pluralNoun = 'terms';
+    public static $collectionRoute = '/terms';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
-    static public $fields = array(
+    public static $fields = array(
         'Title' => array(
             'fulltext' => true
             ,'notnull' => false
@@ -66,14 +66,14 @@ class Term extends \VersionedRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Parent' => array(
             'type' => 'one-one'
             ,'class' => __CLASS__
         )
     );
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'Title' => array(
             'qualifiers' => array('any','title')
             ,'points' => 2
@@ -86,12 +86,12 @@ class Term extends \VersionedRecord
         )
     );
 
-    static public function getCurrent()
+    public static function getCurrent()
     {
         return static::getByWhere('CURRENT_DATE BETWEEN StartDate AND EndDate', array('order' => '`Right` - `Left`'));
     }
 
-    static public function getCurrentReporting()
+    public static function getCurrentReporting()
     {
         $Term = static::getCurrent();
 
@@ -102,22 +102,22 @@ class Term extends \VersionedRecord
         return $Term;
     }
 
-    static public function getPrevious()
+    public static function getPrevious()
     {
         return static::getByWhere('Status = "Live" AND EndDate < CURRENT_TIMESTAMP', array('order' => 'EndDate DESC, `Right` - `Left`'));
     }
 
-    static public function getNext()
+    public static function getNext()
     {
         return static::getByWhere('Status = "Live" AND StartDate > CURRENT_TIMESTAMP', array('order' => 'StartDate ASC, `Right` - `Left`'));
     }
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }
 
-    static public function getOrCreateByHandle($handle)
+    public static function getOrCreateByHandle($handle)
     {
         if ($Term = static::getByHandle($handle)) {
             return $Term;
@@ -129,7 +129,7 @@ class Term extends \VersionedRecord
         }
     }
 
-    static public function getOrCreateByTitle($title)
+    public static function getOrCreateByTitle($title)
     {
         if ($Term = static::getByField('Title', $title)) {
             return $Term;

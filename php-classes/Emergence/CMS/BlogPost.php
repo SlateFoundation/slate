@@ -5,12 +5,12 @@ namespace Emergence\CMS;
 class BlogPost extends AbstractContent
 {
     // ActiveRecord configuration
-    static public $defaultClass = __CLASS__;
-    static public $singularNoun = 'blog post';
-    static public $pluralNoun = 'blog posts';
-    static public $collectionRoute = '/blog';
+    public static $defaultClass = __CLASS__;
+    public static $singularNoun = 'blog post';
+    public static $pluralNoun = 'blog posts';
+    public static $collectionRoute = '/blog';
 
-    static public function getRecentlyPublished($limit = 5)
+    public static function getRecentlyPublished($limit = 5)
     {
         return static::getAllByWhere(array(
             'Class' => 'Emergence\CMS\BlogPost'

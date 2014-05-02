@@ -5,17 +5,17 @@ namespace Emergence\CMS\Item;
 abstract class AbstractItem extends \VersionedRecord
 {
     // VersionedRecord configuration
-    static public $historyTable = 'history_content_items';
+    public static $historyTable = 'history_content_items';
 
     // ActiveRecord configuration
-    static public $tableName = 'content_items';
-    static public $singularNoun = 'content item';
-    static public $pluralNoun = 'content items';
+    public static $tableName = 'content_items';
+    public static $singularNoun = 'content item';
+    public static $pluralNoun = 'content items';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = 'Emergence\CMS\Item\Text';
-    static public $subClasses = array(
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = 'Emergence\CMS\Item\Text';
+    public static $subClasses = array(
         'Emergence\CMS\Item\Album'
         ,'Emergence\CMS\Item\Embed'
         ,'Emergence\CMS\Item\Media'
@@ -23,7 +23,7 @@ abstract class AbstractItem extends \VersionedRecord
         ,'Emergence\CMS\Item\Text'
     );
 
-    static public $fields = array(
+    public static $fields = array(
         'Title' => array(
             'notnull' => false
             ,'blankisnull' => true
@@ -50,7 +50,7 @@ abstract class AbstractItem extends \VersionedRecord
         ,'Data' => 'serialized'
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Author'    =>  array(
             'type'  =>  'one-one'
             ,'class' => 'Person'

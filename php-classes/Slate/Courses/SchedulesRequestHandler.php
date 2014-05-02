@@ -4,5 +4,5 @@ namespace Slate\Courses;
 
 class SchedulesRequestHandler extends \RecordsRequestHandler
 {
-    static public $recordClass = 'Slate\\Courses\\Schedule';
+    public static $recordClass = 'Slate\\Courses\\Schedule';
 }

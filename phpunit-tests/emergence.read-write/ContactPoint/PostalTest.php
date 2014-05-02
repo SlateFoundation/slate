@@ -6,9 +6,9 @@ require_once('emergence.read-write/ContactPoint/AbstractTest.php');
 
 class PostalTest extends AbstractTest
 {
-    static protected $testValue = "Jarvus Innovations\n908 N 3rd St\nSuite A\nPhiladelphia, PA 19123";
-    static protected $targetClassName = '\\Emergence\\People\\ContactPoint\\Postal';
-    
+    protected static $testValue = "Jarvus Innovations\n908 N 3rd St\nSuite A\nPhiladelphia, PA 19123";
+    protected static $targetClassName = '\\Emergence\\People\\ContactPoint\\Postal';
+
     public function testAutoPrimary()
     {
         $this->doTestAutoPrimary(static::$testValue, "123 Road St\nAnytown, PA 12345");
@@ -28,12 +28,12 @@ class PostalTest extends AbstractTest
     {
         $this->doTestReciprocalRelationshipParallel(static::$testValue);
     }
-    
+
     public function testReciprocalRelationshipSeries()
     {
         $this->doTestReciprocalRelationshipSeries(static::$testValue);
     }
-    
+
     public function testThieving()
     {
         $this->doTestThieving(static::$testValue);

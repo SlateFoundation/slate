@@ -7,20 +7,20 @@ use HandleBehavior;
 class Section extends \VersionedRecord
 {
     // VersionedRecord configuration
-    static public $historyTable = 'history_course_sections';
+    public static $historyTable = 'history_course_sections';
 
     // ActiveRecord configuration
-    static public $tableName = 'course_sections';
-    static public $singularNoun = 'course section';
-    static public $pluralNoun = 'course sections';
+    public static $tableName = 'course_sections';
+    public static $singularNoun = 'course section';
+    public static $pluralNoun = 'course sections';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
-    static public $collectionRoute = '/sections';
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
+    public static $collectionRoute = '/sections';
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'Code' => array(
             'qualifiers' => array('any','code')
             ,'points' => 2
@@ -28,7 +28,7 @@ class Section extends \VersionedRecord
         )
     );
 
-    static public $fields = array(
+    public static $fields = array(
         'CourseID' => array(
             'type' => 'integer'
             ,'unsigned' => true
@@ -77,7 +77,7 @@ class Section extends \VersionedRecord
     );
 
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Course' => array(
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Course'
@@ -121,24 +121,24 @@ class Section extends \VersionedRecord
         )
     );
 
-    static public $dynamicFields = array(
+    public static $dynamicFields = array(
         'Course'
         ,'Term'
         ,'Schedule'
         ,'Location'
     );
 
-    static public $sorters = array(
+    public static $sorters = array(
         'CourseTitle' => array(__CLASS__, 'sortCourseTitle')
     );
 
 
-    static public function sortCourseTitle($dir, $name)
+    public static function sortCourseTitle($dir, $name)
     {
         return '(SELECT Course.Title FROM courses Course WHERE Course.ID = CourseSection.CourseID) ' . $dir;
     }
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }
@@ -178,7 +178,7 @@ class Section extends \VersionedRecord
         parent::save($deep, $createRevision);
     }
 
-    static public function getFromHandle($handle, $autoCreate = true)
+    public static function getFromHandle($handle, $autoCreate = true)
     {
         $Course = false;
 
@@ -198,7 +198,7 @@ class Section extends \VersionedRecord
         return $Course;
     }
 
-    static public function assignCourses($personID, $courses, $role='Student')
+    public static function assignCourses($personID, $courses, $role='Student')
     {
         $assignedCourses = array();
 

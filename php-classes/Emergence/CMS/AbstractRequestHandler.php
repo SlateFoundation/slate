@@ -8,7 +8,7 @@ use Tag;
 
 abstract class AbstractRequestHandler extends \RecordsRequestHandler
 {
-    static public $contentTypes = array(
+    public static $contentTypes = array(
         'Emergence\CMS\Page' => array(
             'handler' => '/pages'
             ,'editor' => 'CMS.PageEditor'
@@ -19,7 +19,7 @@ abstract class AbstractRequestHandler extends \RecordsRequestHandler
         )
     );
 
-    static public $contentItemTypes = array(
+    public static $contentItemTypes = array(
         'Emergence\CMS\Item\RichText' => array(
             'composer' => 'CMS.Composer.RichTextComposer'
             //'composer' => 'CMS.Composer.WYMTextComposer'
@@ -29,19 +29,19 @@ abstract class AbstractRequestHandler extends \RecordsRequestHandler
         )
     );
 
-    static public $defaultItems = array(
+    public static $defaultItems = array(
         'Emergence\CMS\RichTextContent'
     );
 
     // RecordsRequestHandler config
-    static public $recordClass = 'Emergence\CMS\AbstractContent';
-    static public $accountLevelRead = false;
-    static public $accountLevelBrowse = false;
-    static public $accountLevelWrite = 'Staff';
-    static public $accountLevelAPI = 'Staff';
-    static public $browseOrder = array('Published' => 'DESC');
+    public static $recordClass = 'Emergence\CMS\AbstractContent';
+    public static $accountLevelRead = false;
+    public static $accountLevelBrowse = false;
+    public static $accountLevelWrite = 'Staff';
+    public static $accountLevelAPI = 'Staff';
+    public static $browseOrder = array('Published' => 'DESC');
 
-    static public function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
         if (!$GLOBALS['Session']->hasAccountLevel('Staff') || empty($_GET['showall'])) {
             static::$browseConditions['Status'] = 'Published';
@@ -51,38 +51,38 @@ abstract class AbstractRequestHandler extends \RecordsRequestHandler
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
-    static public function getRecordByHandle($handle)
+    public static function getRecordByHandle($handle)
     {
         $Record = parent::getRecordByHandle($handle);
-        
+
         // redirect to correct handler
         if ($Record && !is_a($Record, static::$recordClass)) {
             $url = $Record->getURL();
-            
+
             if ($rest = static::getPath()) {
                 $url .= '/' . implode('/', $rest);
             }
-            
+
             \Site::redirect($url);
         }
-        
+
         return $Record;
     }
 
-    static protected function onRecordCreated(ActiveRecord $Content, $requestData)
+    protected static function onRecordCreated(ActiveRecord $Content, $requestData)
     {
         // initialite title
         if (!empty($_GET['Title'])) {
             $Content->Title = $_GET['Title'];
         }
-    		
-    	// initialize status
-		if (!empty($_GET['Status']) && in_array($_GET['Status'], $Content::getFieldOptions('Status', 'values'))) {
-			$Content->Status = $_GET['Status'];
-		}
+
+        // initialize status
+        if (!empty($_GET['Status']) && in_array($_GET['Status'], $Content::getFieldOptions('Status', 'values'))) {
+            $Content->Status = $_GET['Status'];
+        }
     }
 
-    static protected function onRecordSaved(ActiveRecord $Content, $requestData)
+    protected static function onRecordSaved(ActiveRecord $Content, $requestData)
     {
         $responseData = array();
 
@@ -200,7 +200,7 @@ abstract class AbstractRequestHandler extends \RecordsRequestHandler
     }
 
 
-    static protected function getEditResponse($responseID, $responseData)
+    protected static function getEditResponse($responseID, $responseData)
     {
         $responseData['contentTypes'] = static::$contentTypes;
         foreach ($responseData['contentTypes'] AS $contentClass => &$cfg) {

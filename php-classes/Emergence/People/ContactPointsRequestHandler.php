@@ -8,12 +8,12 @@ use User;
 class ContactPointsRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler configuration
-    static public $recordClass = 'Emergence\People\ContactPoint\AbstractPoint';
-    static public $accountLevelBrowse = 'Staff';
-    static public $accountLevelRead = 'Staff';
-    static public $accountLevelWrite = 'Staff';
-    static public $accountLevelAPI = 'Staff';
-    static public $browseOrder = array('ID' => 'ASC');
+    public static $recordClass = 'Emergence\People\ContactPoint\AbstractPoint';
+    public static $accountLevelBrowse = 'Staff';
+    public static $accountLevelRead = 'Staff';
+    public static $accountLevelWrite = 'Staff';
+    public static $accountLevelAPI = 'Staff';
+    public static $browseOrder = array('ID' => 'ASC');
 
     public static function handleRecordsRequest($action = false)
     {
@@ -83,7 +83,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
-    static protected function applyRecordDelta(\ActiveRecord $ContactPoint, $data)
+    protected static function applyRecordDelta(\ActiveRecord $ContactPoint, $data)
     {
         if (isset($data['String'])) {
             $ContactPoint->loadString($data['String']);

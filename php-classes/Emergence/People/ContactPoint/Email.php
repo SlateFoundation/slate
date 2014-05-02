@@ -4,13 +4,13 @@ namespace Emergence\People\ContactPoint;
 
 class Email extends AbstractPoint
 {
-    static public $personPrimaryField = 'PrimaryEmailID';
+    public static $personPrimaryField = 'PrimaryEmailID';
 
-    static public $defaultLabel = 'Email';
+    public static $defaultLabel = 'Email';
 
-    static public $sortWeight = 1000;
+    public static $sortWeight = 1000;
 
-    static public $templates = array(
+    public static $templates = array(
         'School Email' => array(
             'class' => __CLASS__
             ,'placeholder' => ''
@@ -23,7 +23,7 @@ class Email extends AbstractPoint
     );
 
     public $address;
-    
+
     static function __classLoaded()
     {
         static::$templates['School Email']['placeholder'] = 'username@'.\Site::getConfig('primary_hostname');
@@ -34,12 +34,12 @@ class Email extends AbstractPoint
     {
         $this->address = (string)$string;
     }
-    
+
     public function toString()
     {
         return $this->address;
     }
-    
+
     public function toHTML()
     {
         return sprintf(
@@ -48,12 +48,12 @@ class Email extends AbstractPoint
             ,htmlspecialchars($this->toString())
         );
     }
-    
+
     public function serialize()
     {
         return $this->address;
     }
-    
+
     public function unserialize($serialized)
     {
         $this->address = $serialized;

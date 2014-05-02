@@ -10,19 +10,19 @@ use JSON;
 abstract class AbstractContent extends \VersionedRecord
 {
     // VersionedRecord configuration
-    static public $historyTable = 'history_content';
+    public static $historyTable = 'history_content';
 
     // ActiveRecord configuration
-    static public $tableName = 'content';
-    static public $singularNoun = 'content';
-    static public $pluralNoun = 'contents';
+    public static $tableName = 'content';
+    public static $singularNoun = 'content';
+    public static $pluralNoun = 'contents';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array('Emergence\CMS\Page', 'Emergence\CMS\BlogPost');
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array('Emergence\CMS\Page', 'Emergence\CMS\BlogPost');
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'Title' => array(
             'qualifiers' => array('any', 'title')
             ,'points' => 2
@@ -35,7 +35,7 @@ abstract class AbstractContent extends \VersionedRecord
         )
     );
 
-    static public $fields = array(
+    public static $fields = array(
         'ContextClass' => array(
             'type' => 'string'
             ,'notnull' => false
@@ -69,7 +69,7 @@ abstract class AbstractContent extends \VersionedRecord
     );
 
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Context' => array(
             'type' => 'context-parent'
         )
@@ -101,14 +101,14 @@ abstract class AbstractContent extends \VersionedRecord
         )
     );
 
-    static public $dynamicFields = array(
+    public static $dynamicFields = array(
         'tags' => 'Tags'
         ,'items' => 'Items'
         ,'Author'
     );
 
 
-    static public function getAllPublishedByContextObject(ActiveRecord $Context, $options = array())
+    public static function getAllPublishedByContextObject(ActiveRecord $Context, $options = array())
     {
         $options = array_merge(array(
             'conditions' => array()
@@ -129,7 +129,7 @@ abstract class AbstractContent extends \VersionedRecord
         return static::getAllByContextObject($Context, $options);
     }
 
-    static public function getAllPublishedByAuthor(Person $Author, $options = array())
+    public static function getAllPublishedByAuthor(Person $Author, $options = array())
     {
         $options = array_merge(array(
             'order' => array('Published' => 'DESC')
@@ -148,7 +148,7 @@ abstract class AbstractContent extends \VersionedRecord
         return static::getAllByWhere($conditions, $options);
     }
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByField('Handle', $handle, true);
     }

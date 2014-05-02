@@ -6,7 +6,7 @@ use \Emergence\People\ContactPoint\Link;
 
 class LinkTest extends \PHPUnit_Framework_TestCase
 {
-    static protected $links = array(
+    protected static $links = array(
         'http://example.com/?key1=value1&key2=value2' => array(
             'serialized' => 'http://example.com/?key1=value1&key2=value2',
             'string' => 'http://example.com/?key1=value1&key2=value2',

@@ -4,11 +4,11 @@ namespace Slate;
 
 class TermsRequestHandler extends \RecordsRequestHandler
 {
-    static public $recordClass = 'Slate\\Term';
-    static public $browseLimit = false;
-    static public $browseOrder = array('Left' => 'ASC');
+    public static $recordClass = 'Slate\\Term';
+    public static $browseLimit = false;
+    public static $browseOrder = array('Left' => 'ASC');
 
-    static public function handleRecordsRequest($action = false)
+    public static function handleRecordsRequest($action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
             case '*years':
@@ -18,7 +18,7 @@ class TermsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-    static public function handleYearsRequest()
+    public static function handleYearsRequest()
     {
         return static::respond('years', array(
             'success' => true
@@ -29,16 +29,16 @@ class TermsRequestHandler extends \RecordsRequestHandler
         ));
     }
 
-    static public function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
         if (!empty($_GET['includeCurrent'])) {
             $currentTerm = Term::getCurrent();
             $reportingTerm = Term::getCurrentReporting();
-            
+
             $responseData['currentTerm'] = $currentTerm ? $currentTerm->ID : null;
             $responseData['reportingTerm'] = $reportingTerm ? $reportingTerm->ID : null;
         }
-        
+
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 }

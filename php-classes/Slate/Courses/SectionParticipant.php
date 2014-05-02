@@ -6,13 +6,13 @@ class SectionParticipant extends \ActiveRecord
 {
     // ActiveRecord configuration
     static $tableName = 'course_section_participants';
-    static public $singularNoun = 'course participant';
-    static public $pluralNoun = 'course participants';
+    public static $singularNoun = 'course participant';
+    public static $pluralNoun = 'course participants';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
     static $fields = array(
         'CourseSectionID' => array(
@@ -37,7 +37,7 @@ class SectionParticipant extends \ActiveRecord
         )
     );
 
-    static public $indexes = array(
+    public static $indexes = array(
         'Participant' => array(
             'fields' => array('CourseSectionID','PersonID')
             ,'unique' => true
@@ -56,12 +56,12 @@ class SectionParticipant extends \ActiveRecord
         )
     );
 
-    static public $dynamicFields = array(
+    public static $dynamicFields = array(
         'Section'
         ,'Person'
     );
 
-    static public function create($values = array(), $save = false)
+    public static function create($values = array(), $save = false)
     {
         try {
             $Participant = parent::create($values, $save);

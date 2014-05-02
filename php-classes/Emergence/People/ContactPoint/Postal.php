@@ -4,13 +4,13 @@ namespace Emergence\People\ContactPoint;
 
 class Postal extends AbstractPoint
 {
-    static public $personPrimaryField = 'PrimaryPostalID';
+    public static $personPrimaryField = 'PrimaryPostalID';
 
-    static public $defaultLabel = 'Postal';
+    public static $defaultLabel = 'Postal';
 
-    static public $sortWeight = 100;
+    public static $sortWeight = 100;
 
-    static public $templates = array(
+    public static $templates = array(
         'Home Address' => array(
             'class' => __CLASS__
             ,'alternateLabels' => array('Work Address')
@@ -29,7 +29,7 @@ class Postal extends AbstractPoint
     public function loadString($string)
     {
         $segments = preg_split('/\s*[,\r\n]+\s*/', trim($string));
-        
+
         $this->name = null;
         $this->number = null;
         $this->street = null;
@@ -37,7 +37,7 @@ class Postal extends AbstractPoint
         $this->city = null;
         $this->state = null;
         $this->postal = null;
-        
+
         // TODO: use an online API if available for address normalization
         foreach ($segments AS $segment) {
             if (!$this->number && preg_match('/^(\d+)\s+(.*)/', $segment, $matches)) {
@@ -61,51 +61,51 @@ class Postal extends AbstractPoint
                 $this->name = $segment;
             }
         }
-        
+
 #        if (!$this->number || !$this->street || !($this->postal || ($this->city && $this->state))) {
 #            throw new \Emergence\Exceptions\ValidationException('Could not parse sufficient address data from string');
 #        }
     }
-    
+
     public function toString()
     {
         $string = "$this->number $this->street";
-        
+
         if ($this->name) {
             $string = "$this->name\n$string";
         }
-        
+
         if ($this->unit) {
             $string .= "\n$this->unit";
         }
-        
+
         if ($this->city || $this->state || $this->postal) {
             $string .= "\n";
-            
+
             if ($this->city) {
                 $string .= $this->city;
-                
+
                 if ($this->state || $this->postal) {
                     $string .= ', ';
                 }
             }
-            
+
             if ($this->state) {
                 $string .= $this->state;
-                
+
                 if ($this->postal) {
                     $string .= ' ';
                 }
             }
-            
+
             if ($this->postal) {
                 $string .= $this->postal;
             }
         }
-        
+
         return $string;
     }
-    
+
     public function toHTML()
     {
         return sprintf(
@@ -120,7 +120,7 @@ class Postal extends AbstractPoint
             ,nl2br(htmlspecialchars($this->toString()))
         );
     }
-    
+
     public function serialize()
     {
         return json_encode(array(
@@ -133,15 +133,15 @@ class Postal extends AbstractPoint
             ,'postal' => $this->postal
         ));
     }
-    
+
     public function unserialize($serialized)
     {
         $data = json_decode($serialized, true);
-        
+
         if (!is_array($data)) {
             throw new \Exception('Invalid postal address serialization, unable to decode JSON');
         }
-        
+
         $this->name = !empty($data['name']) ? $data['name'] : null;
         $this->number = !empty($data['number']) ? $data['number'] : null;
         $this->street = !empty($data['street']) ? $data['street'] : null;
@@ -155,19 +155,19 @@ class Postal extends AbstractPoint
     {
         // call parent
         parent::validate($deep);
-        
+
         if (!$this->number) {
             $this->_validator->addError('number', 'Street number is required');
         }
-        
+
         if (!$this->street) {
             $this->_validator->addError('street', 'Street name is required');
         }
-        
+
         if (!($this->postal || ($this->city && $this->state))) {
             $this->_validator->addError('postal', 'Postal code or city+state is required');
         }
-        
+
         // save results
         return $this->finishValidation();
     }

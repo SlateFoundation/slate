@@ -6,25 +6,25 @@ use Person;
 
 abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
 {
-    static public $personPrimaryField;
-    static public $defaultLabel;
-    static public $sortWeight = 0;
+    public static $personPrimaryField;
+    public static $defaultLabel;
+    public static $sortWeight = 0;
 
-    static protected $_dataLoaded;
+    protected static $_dataLoaded;
 
     // VersionedRecord configuration
-    static public $historyTable = 'history_contact_points';
+    public static $historyTable = 'history_contact_points';
 
     // ActiveRecord configuration
-    static public $tableName = 'contact_points';
-    static public $singularNoun = 'contact point';
-    static public $pluralNoun = 'contact points';
-    static public $collectionRoute = '/contact-points';
+    public static $tableName = 'contact_points';
+    public static $singularNoun = 'contact point';
+    public static $pluralNoun = 'contact points';
+    public static $collectionRoute = '/contact-points';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(
         'Emergence\People\ContactPoint\Email'
         ,'Emergence\People\ContactPoint\Phone'
         ,'Emergence\People\ContactPoint\Postal'
@@ -32,7 +32,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
         ,'Emergence\People\ContactPoint\Link'
     );
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'PersonID' => array(
             'qualifiers' => array('any', 'personid')
             ,'points' => 2
@@ -40,7 +40,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
         )
     );
 
-    static public $fields = array(
+    public static $fields = array(
         'PersonID' => array(
             'type' => 'integer'
             ,'unsigned' => true
@@ -55,14 +55,14 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Person' => array(
             'type' => 'one-one'
             ,'class' => 'Person'
         )
     );
-    
-    static public $dynamicFields = array(
+
+    public static $dynamicFields = array(
         'Person',
         'String' => array(
             'method' => 'toString'
@@ -71,19 +71,19 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
             'method' => 'isPrimary'
         )
     );
-    
-    
+
+
     public static function getTemplates()
     {
         $config = static::aggregateStackedConfig('templates');
-        
+
         foreach ($config AS $label => &$options) {
             if (is_string($options)) {
                 $options = array(
                     'class' => $options
                 );
             }
-            
+
             if (!empty($options['alternateLabels'])) {
                 foreach ($options['alternateLabels'] AS $alternateLabel) {
                     $config[$alternateLabel] = $options;
@@ -91,10 +91,10 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
                 unset($options['alternateLabels']);
             }
         }
-        
+
         return $config;
     }
-    
+
     public function isPrimary()
     {
         return !$this->isPhantom && static::$personPrimaryField && $this->Person->getValue(static::$personPrimaryField) == $this->ID;
@@ -105,7 +105,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     function __construct($record = array(), $isDirty = false, $isPhantom = null)
     {
         parent::__construct($record, $isDirty, $isPhantom);
-        
+
         if ($this->Data) {
             $this->unserialize($this->Data);
         }
@@ -115,28 +115,28 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     {
         // call parent
         parent::validate($deep);
-        
+
         // synchronize serialized to data field
         $this->Data = $this->serialize();
-        
+
         if (empty($this->Data)) {
             $this->_validator->addError('Data', 'No valid data has been loaded');
         }
-        
+
         if (empty($this->Label) && !static::$defaultLabel) {
             $this->_validator->addError('Label', 'A label is required');
         }
-        
+
         // save results
         return $this->finishValidation();
     }
 
     public function save($deep = true)
-	{
+    {
         if (empty($this->Label) && static::$defaultLabel) {
             $this->Label = static::$defaultLabel;
         }
-        
+
         $result = parent::save($deep);
 
         // automatically assign associated person's primary contact point to this one if it is not yet set
@@ -150,12 +150,12 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
         }
 
         return $result;
-	}
-    
+    }
+
     public function destroy()
     {
         $result = parent::destroy();
-        
+
         // remove or reassign associated person's primary contact point
         if ($result && $this->Person && static::$personPrimaryField && $this->Person->getValue(static::$personPrimaryField) == $this->ID) {
             $newDefault = static::getByWhere(array(
@@ -164,7 +164,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
             ), array(
                 'order' => array('ID' => 'DESC')
             ));
-            
+
             $wasDirty = $this->Person->isDirty;
             $this->Person->setValue(static::$personPrimaryField, $newDefault ? $newDefault->ID : null);
 
@@ -172,11 +172,11 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
                 $this->Person->save(false);
             }
         }
-        
+
         return $result;
     }
-    
-    
+
+
     // standard IContactPoint implementations
     public function __toString()
     {
@@ -214,18 +214,18 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
 
         return $instance;
     }
-    
+
     public static function getByString($string, $conditions = array(), $options = array())
     {
         $conditions['Data'] = static::fromString($string)->serialize();
-        
+
         return static::getByWhere($conditions, $options);
     }
 
     public static function getAllByString($string, $conditions = array(), $options = array())
     {
         $conditions['Data'] = static::fromString($string)->serialize();
-        
+
         return static::getAllByWhere($conditions, $options);
     }
 

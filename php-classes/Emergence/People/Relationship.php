@@ -4,7 +4,7 @@ namespace Emergence\People;
 
 class Relationship extends \VersionedRecord
 {
-    static public $relationshipTypes = array(
+    public static $relationshipTypes = array(
         'Mother' => array(
             'Person' => array('Gender' => 'Female')
             ,'Relationship' => array('Class' => 'Guardian')
@@ -53,20 +53,20 @@ class Relationship extends \VersionedRecord
 
 
     // VersionedRecord configuration
-    static public $historyTable = 'history_relationships';
+    public static $historyTable = 'history_relationships';
 
     // ActiveRecord configuration
-    static public $tableName = 'relationships';
-    static public $singularNoun = 'relationship';
-    static public $pluralNoun = 'relationships';
-    static public $collectionRoute = '/relationships';
+    public static $tableName = 'relationships';
+    public static $singularNoun = 'relationship';
+    public static $pluralNoun = 'relationships';
+    public static $collectionRoute = '/relationships';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__, 'Emergence\\People\\GuardianRelationship');
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__, 'Emergence\\People\\GuardianRelationship');
 
-    static public $fields = array(
+    public static $fields = array(
         'PersonID' => array(
             'type' => 'integer'
             ,'unsigned' => true
@@ -86,7 +86,7 @@ class Relationship extends \VersionedRecord
     );
 
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Person' => array(
             'type' => 'one-one'
             ,'class' => 'Person'
@@ -104,7 +104,7 @@ class Relationship extends \VersionedRecord
         )
     );
 
-    static public $searchConditions = array(
+    public static $searchConditions = array(
         'PersonID' => array(
             'qualifiers' => array('any', 'personid')
             ,'points' => 2
@@ -112,14 +112,14 @@ class Relationship extends \VersionedRecord
         )
     );
 
-    static public $indexes = array(
+    public static $indexes = array(
         'PersonRelationship' => array(
             'fields' => array('PersonID', 'RelatedPersonID')
             ,'unique' => true
         )
     );
-    
-    static public $dynamicFields = array(
+
+    public static $dynamicFields = array(
         'Person',
         'RelatedPerson',
         'InverseRelationship'
@@ -152,12 +152,12 @@ class Relationship extends \VersionedRecord
     }
 
 
-    static public function getAllByPerson($Person)
+    public static function getAllByPerson($Person)
     {
         return static::getAllByField('PersonID', is_a($Person, 'Person') ? $Person->ID : $Person);
     }
 
-    static public function setRelationship($Person, $RelatedPerson, $relationship)
+    public static function setRelationship($Person, $RelatedPerson, $relationship)
     {
         try {
             $Relationship = Relationship::create(array(
@@ -176,7 +176,7 @@ class Relationship extends \VersionedRecord
 
         return $Relationship;
     }
-    
+
     public static function getInverseRelationshipConditions($Relationship)
     {
         return array('PersonID' => $Relationship->RelatedPersonID);

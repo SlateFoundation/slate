@@ -4,11 +4,11 @@ namespace Emergence\CMS\Item;
 
 class Media extends AbstractItem
 {
-    static public $thumbWidth = 400;
-    static public $thumbHeight = 400;
+    public static $thumbWidth = 400;
+    public static $thumbHeight = 400;
 
-    static public $fullWidth = 1000;
-    static public $fullHeight = 1000;
+    public static $fullWidth = 1000;
+    public static $fullHeight = 1000;
 
     public function renderBody()
     {
@@ -21,7 +21,7 @@ class Media extends AbstractItem
         }
     }
 
-    static public function getMediaMarkup(\Media $Media)
+    public static function getMediaMarkup(\Media $Media)
     {
         switch ($Media->Class) {
             case 'AudioMedia':

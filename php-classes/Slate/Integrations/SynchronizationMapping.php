@@ -5,16 +5,16 @@ namespace Slate\Integrations;
 class SynchronizationMapping extends \ActiveRecord
 {
     // ActiveRecord configuration
-    static public $tableName = 'synchronization_mappings';
-    static public $singularNoun = 'synchronization mapping';
-    static public $pluralNoun = 'synchronization mappings';
+    public static $tableName = 'synchronization_mappings';
+    public static $singularNoun = 'synchronization mapping';
+    public static $pluralNoun = 'synchronization mappings';
 
     // required for shared-table subclassing support
-    static public $rootClass = __CLASS__;
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
+    public static $rootClass = __CLASS__;
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
 
-    static public $fields = array(
+    public static $fields = array(
         'ContextClass' => array(
             'type' => 'enum'
             ,'values' => array('Course', 'CourseSection', 'Person', 'CourseSectionParticipant')
@@ -38,13 +38,13 @@ class SynchronizationMapping extends \ActiveRecord
         )
     );
 
-    static public $relationships = array(
+    public static $relationships = array(
         'Context' => array(
             'type' => 'context-parent'
         )
     );
 
-    static public $indexes = array(
+    public static $indexes = array(
         'Context' => array(
             'type' => 'context-parent'
         )
@@ -54,7 +54,7 @@ class SynchronizationMapping extends \ActiveRecord
         )
     );
 
-    static public function create($values = array(), $save = false)
+    public static function create($values = array(), $save = false)
     {
         try {
             $Mapping = parent::create($values, $save);

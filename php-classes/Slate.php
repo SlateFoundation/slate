@@ -2,11 +2,11 @@
 
 class Slate
 {
-    static public $schoolName;
-    static public $schoolAbbr;
-    static public $siteSlogan = 'Open-source for education';
-    static public $webTools = array();
-    static public $manageTools = array(
+    public static $schoolName;
+    public static $schoolAbbr;
+    public static $siteSlogan = 'Open-source for education';
+    public static $webTools = array();
+    public static $manageTools = array(
         'People'     => '/manage#people',
         'Courses'    => '/manage#courses/mycourses',
         'Pages'      => '/pages'
@@ -23,11 +23,11 @@ class Slate
         }
     }
 
-    static public $siteWidgets = array(
+    public static $siteWidgets = array(
         'calendar' => true
     );
 
-    static public function getWidgetConfig($id)
+    public static function getWidgetConfig($id)
     {
         $widgetConfig = static::$siteWidgets[$id];
 
