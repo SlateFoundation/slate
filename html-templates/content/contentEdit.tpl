@@ -13,7 +13,7 @@
 {/block}
 
 {block js-bottom}
-	<script type ="text/javascript" src="/jslib/SWFUpload/swfupload.js"></script>
+    {jsmin "swfupload.js"}
 
 	<script type="text/javascript">
 		window.SiteUser = {$.User->getData()|json_encode};

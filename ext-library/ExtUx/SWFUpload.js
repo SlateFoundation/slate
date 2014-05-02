@@ -19,7 +19,7 @@ Ext.define('ExtUx.SWFUpload', {
 		,debugMode: false
 		,targetUrl: '/media/json/upload'
 		,fieldName: 'mediaFile'
-		,swfUrl: '/jslib/SWFUpload/Flash/swfupload.swf'
+		,swfUrl: '/swf/swfupload.swf'
 		,swfUploadCfg: {}
 		,relayCookies: false
 		,baseParams: []
