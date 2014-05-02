@@ -97,14 +97,15 @@ class EmailTest extends AbstractTest
     {
         $username = 'test-username';
         $password = 'test-password';
-        $hashedPassword = call_user_func(User::$passwordHasher, $password);
 
         static::$extraPeople[] = $User = User::create(array_merge(static::$personTestData, array(
             'Username' => $username
-            ,'Password' => $hashedPassword
-        )), true);
+        )));
+        $User->setClearPassword($password);
+        $User->save();
+        
         $this->assertFalse($User->isPhantom, 'User is persisted to database');
-        $this->assertEquals($User->Password, $hashedPassword, 'User->Password matches hashed value');
+        $this->assertTrue($User->verifyPassword($password), 'User->verifyPassword returns true');
 
         $UserByUsername = User::getByUsername($username);
         $this->assertNotEmpty($UserByUsername, 'User was found by username');

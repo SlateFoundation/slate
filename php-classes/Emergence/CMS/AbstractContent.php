@@ -110,10 +110,10 @@ abstract class AbstractContent extends \VersionedRecord
 
     static public function getAllPublishedByContextObject(ActiveRecord $Context, $options = array())
     {
-        $options = \MICS::prepareOptions($options, array(
+        $options = array_merge(array(
             'conditions' => array()
             ,'order' => array('Published' => 'DESC')
-        ));
+        ), $options);
 
         if (!$GLOBALS['Session']->Person) {
             $options['conditions']['Visibility'] = 'Public';
@@ -131,9 +131,9 @@ abstract class AbstractContent extends \VersionedRecord
 
     static public function getAllPublishedByAuthor(Person $Author, $options = array())
     {
-        $options = \MICS::prepareOptions($options, array(
+        $options = array_merge(array(
             'order' => array('Published' => 'DESC')
-        ));
+        ), $options);
 
         $conditions = array(
             'AuthorID' => $Author->ID

@@ -2,21 +2,18 @@
 
 class User extends Person
 {
-
-    static public $defaultClass = __CLASS__;
-    static public $subClasses = array(__CLASS__);
-    static public $singularNoun = 'user';
-    static public $pluralNoun = 'users';
+    public static $defaultClass = __CLASS__;
+    public static $subClasses = array(__CLASS__);
+    public static $singularNoun = 'user';
+    public static $pluralNoun = 'users';
 
     // ActiveRecord configuration
-    static public $fields = array(
+    public static $fields = array(
         'Username' => array(
             'unique' => true
         )
         ,'Password' => array(
-            'type' => 'password'
-            ,'length' => 40
-            ,'hashFunction' => 'SHA1'
+            'type' => 'string'
             ,'excludeFromData' => true
         )
         ,'AccountLevel' => array(
@@ -27,8 +24,7 @@ class User extends Person
     );
 
     // User
-    static public $minPasswordLength = 5;
-    static public $passwordHasher = 'SHA1';
+    public static $minPasswordLength = 5;
 
 
     static function __classLoaded()
@@ -49,8 +45,6 @@ class User extends Person
                 return static::_getAccountLevelIndex($this->AccountLevel);
             case 'Handle':
                 return $this->Username;
-            case 'SecretHashKey':
-                return SHA1($this->ID.$this->Username.$this->_record['Password']);
             default:
                 return parent::getValue($name);
         }
@@ -113,24 +107,24 @@ class User extends Person
         return parent::save($deep);
     }
 
-    static public function getByHandle($handle)
+    public static function getByHandle($handle)
     {
         return static::getByUsername($handle);
     }
 
     // enable login by email
-    static public function getByLogin($username, $password)
+    public static function getByLogin($username, $password)
     {
         $User = static::getByUsername($username);
 
-        if ($User && $User->Password == call_user_func(static::$passwordHasher, $password)) {
+        if ($User && is_a($User, __CLASS__) && $User->verifyPassword($password)) {
             return $User;
         } else {
             return null;
         }
     }
 
-    static public function getByUsername($username)
+    public static function getByUsername($username)
     {
         // try to get by username first
         $User = static::getByWhere(array('Username' => $username));
@@ -142,9 +136,27 @@ class User extends Person
         return $User;
     }
 
-    public function matchPassword($password)
+    public function verifyPassword($password)
     {
-        return call_user_func(static::$passwordHasher, $password) == $this->Password;
+        if ($this->Password[0] == '$') {
+            return password_verify($password, $this->Password);
+        } elseif (SHA1($password) == $this->Password) {
+            $wasDirty = $this->isDirty;
+            $this->setClearPassword($password);
+
+            if (!$wasDirty) {
+                $this->save();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setClearPassword($password)
+    {
+        $this->Password = password_hash($password, PASSWORD_DEFAULT);
     }
 
     public function hasAccountLevel($accountLevel)
@@ -158,17 +170,12 @@ class User extends Person
         }
     }
 
-    public function getPasswordHash()
-    {
-        return $this->_record[static::_cn('Password')];
-    }
-
-    static public function getUniqueUsername($firstName, $lastName, $options = array())
+    public static function getUniqueUsername($firstName, $lastName, $options = array())
     {
         // apply default options
-        $options = MICS::prepareOptions($options, array(
+        $options = array_merge(array(
             'format' => 'short' // full or short
-        ));
+        ), $options);
 
         // create username
         switch ($options['format']) {
@@ -200,7 +207,7 @@ class User extends Person
         return $username;
     }
 
-    static protected function _getAccountLevelIndex($accountLevel)
+    protected static function _getAccountLevelIndex($accountLevel)
     {
         return array_search($accountLevel, self::$fields['AccountLevel']['values']);
     }

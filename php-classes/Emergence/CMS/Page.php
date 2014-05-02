@@ -22,9 +22,9 @@ class Page extends AbstractContent
 
     static public function getAllPublishedByContextObject(ActiveRecord $Context, $options = array())
     {
-        $options = \MICS::prepareOptions($options, array(
+        $options = array_merge(array(
             'conditions' => array()
-        ));
+        ), $options);
 
         $options['conditions']['Class'] = __CLASS__;
 

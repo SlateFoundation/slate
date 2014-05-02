@@ -3,7 +3,7 @@
 
 {template commentForm Context url=no}
 	{if $.Session->Person}
-		<form class="comment-form" action="{tif $url ? $url : cat('/' MICS::getApp() '/' $Context->Handle '/comment')}" method="POST">
+		<form class="comment-form" action="{tif $url ? $url : cat($Context->getURL() '/comment')}" method="POST">
 			<fieldset class="comment stretch">
 				<div class="author">{avatar $.User size=56}</div>
 				
@@ -61,7 +61,7 @@
 {*
 {template commentForm Context url=no}
 	{if $.Session->Person}
-	<form class="comment-form" action="{tif $url ? $url : cat('/' MICS::getApp() '/' $Context->Handle '/comment')}" method="POST">
+	<form class="comment-form" action="{tif $url ? $url : cat($Context->getURL() '/comment')}" method="POST">
 		<div class="field expand">
 			<label for="Message">Message</label>
 			<input type="hidden" value="{$Context->ID}" name="BlogPostID">

@@ -847,6 +847,12 @@ class Student extends \User
         return $standards;
     }
 
+    public function setClearPassword($password)
+    {
+        $this->PasswordClear = $password;
+        return parent::setClearPassword($password);
+    }
+
     public function save($deep = true)
     {
         //Generate user name if none provided
@@ -856,9 +862,7 @@ class Student extends \User
 
         //Generate password if none provided
         if (!$this->Password) {
-            $password = static::generatePassword();
-            $this->PasswordClear = $password;
-            $this->Password = call_user_func(static::$passwordHasher, $password);
+            $this->setClearPassword(static::generatePassword());
         }
 
         // call parent
