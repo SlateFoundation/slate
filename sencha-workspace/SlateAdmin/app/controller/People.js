@@ -115,8 +115,8 @@ Ext.define('SlateAdmin.controller.People', {
                 specialkey: me.onSearchSpecialKey
             },
             'people-grid': {
-                select: me.onPersonSelect,
-                deselect: me.onPersonDeselect
+                select: { fn: me.onPersonSelect, buffer: 10 },
+                deselect: { fn: me.onPersonDeselect, buffer: 10 }
             },
             'people-manager #detailTabs': {
                 tabchange: me.onDetailTabChange
