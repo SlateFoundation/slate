@@ -614,71 +614,135 @@ img.pull-right {
 }
 
 /* line 324, ../sass/slate/_base.scss */
+.page-header {
+  overflow: hidden;
+  *zoom: 1;
+  border-bottom: 1px solid #bbbbbb;
+  margin: 1em 0 2em;
+  padding-bottom: .25em;
+}
+/* line 330, ../sass/slate/_base.scss */
+.page-header:empty {
+  display: none;
+}
+/* line 334, ../sass/slate/_base.scss */
+.page-header .header-title {
+  float: left;
+  margin: .5625em 0 0;
+}
+@media screen and (max-width: 480px) {
+  /* line 334, ../sass/slate/_base.scss */
+  .page-header .header-title {
+    float: none;
+  }
+}
+/* line 343, ../sass/slate/_base.scss */
+.page-header .header-buttons {
+  float: right;
+  margin-top: 1em;
+}
+@media screen and (max-width: 480px) {
+  /* line 343, ../sass/slate/_base.scss */
+  .page-header .header-buttons {
+    clear: left;
+    float: none;
+  }
+}
+/* line 352, ../sass/slate/_base.scss */
+.page-header .header-buttons .button + .button,
+.page-header .header-buttons button + .button,
+.page-header .header-buttons input[type="submit"] + .button,
+.page-header .header-buttons input[type="reset"] + .button,
+.page-header .header-buttons input[type="button"] + .button,
+.page-header .header-buttons .button + button,
+.page-header .header-buttons button + button,
+.page-header .header-buttons input[type="submit"] + button,
+.page-header .header-buttons input[type="reset"] + button,
+.page-header .header-buttons input[type="button"] + button,
+.page-header .header-buttons .button + input[type="submit"],
+.page-header .header-buttons button + input[type="submit"],
+.page-header .header-buttons input[type="submit"] + input[type="submit"],
+.page-header .header-buttons input[type="reset"] + input[type="submit"],
+.page-header .header-buttons input[type="button"] + input[type="submit"],
+.page-header .header-buttons .button + input[type="reset"],
+.page-header .header-buttons button + input[type="reset"],
+.page-header .header-buttons input[type="submit"] + input[type="reset"],
+.page-header .header-buttons input[type="reset"] + input[type="reset"],
+.page-header .header-buttons input[type="button"] + input[type="reset"],
+.page-header .header-buttons .button + input[type="button"],
+.page-header .header-buttons button + input[type="button"],
+.page-header .header-buttons input[type="submit"] + input[type="button"],
+.page-header .header-buttons input[type="reset"] + input[type="button"],
+.page-header .header-buttons input[type="button"] + input[type="button"] {
+  margin-left: .25em;
+}
+
+/* line 358, ../sass/slate/_base.scss */
 .footer-ct {
   border-width: 1px 0 0;
   text-align: right;
 }
-/* line 329, ../sass/slate/_base.scss */
+/* line 363, ../sass/slate/_base.scss */
 .footer-ct .info-line {
   display: inline-block;
 }
-/* line 333, ../sass/slate/_base.scss */
+/* line 367, ../sass/slate/_base.scss */
 .footer-ct .footer-primary {
   float: left;
   text-align: left;
 }
-/* line 338, ../sass/slate/_base.scss */
+/* line 372, ../sass/slate/_base.scss */
 .footer-ct small {
   color: #999;
   text-transform: uppercase;
 }
-/* line 342, ../sass/slate/_base.scss */
+/* line 376, ../sass/slate/_base.scss */
 .footer-ct small a {
   color: #999;
 }
 
-/* line 351, ../sass/slate/_base.scss */
+/* line 385, ../sass/slate/_base.scss */
 .twitter-ct iframe {
   max-width: 100%;
 }
 
-/* line 356, ../sass/slate/_base.scss */
+/* line 390, ../sass/slate/_base.scss */
 h1, h2, h3, h4, h5, h6 {
   color: #008cc1;
   font-family: Arvo, Rockwell, Georgia, serif;
   font-weight: normal;
 }
 
-/* line 362, ../sass/slate/_base.scss */
+/* line 396, ../sass/slate/_base.scss */
 h1 {
   letter-spacing: -1px;
 }
 
-/* line 370, ../sass/slate/_base.scss */
+/* line 404, ../sass/slate/_base.scss */
 h4 {
   font-size: 1em;
   margin-bottom: 0;
 }
 
-/* line 376, ../sass/slate/_base.scss */
+/* line 410, ../sass/slate/_base.scss */
 hgroup h1 {
   margin-bottom: 0;
 }
-/* line 380, ../sass/slate/_base.scss */
+/* line 414, ../sass/slate/_base.scss */
 hgroup h2 {
   color: #999999;
   margin-top: 0;
 }
 
-/* line 386, ../sass/slate/_base.scss */
+/* line 420, ../sass/slate/_base.scss */
 a {
   color: #008cc1;
 }
-/* line 390, ../sass/slate/_base.scss */
+/* line 424, ../sass/slate/_base.scss */
 a:hover, a:focus {
   color: #00b1f4;
 }
-/* line 392, ../sass/slate/_base.scss */
+/* line 426, ../sass/slate/_base.scss */
 a:active {
   color: #00678e;
 }
