@@ -141,6 +141,14 @@ Ext.define('SlateAdmin.controller.People', {
 //                checkchange: me.onExportFieldsChange
 //            }
         });
+        
+        me.listen({
+            store: {
+                '#People': {
+                    load: me.onStoreLoad
+                }
+            }
+        });
     },
 
     buildNavPanel: function() {
@@ -218,6 +226,10 @@ Ext.define('SlateAdmin.controller.People', {
                 this.getAdvancedSearchForm().getForm().reset();
             }
         }
+    },
+    
+    onStoreLoad: function() {
+        this.syncGridStatus();
     },
 
     onPersonSelect: function(selModel, personRecord, index) {
