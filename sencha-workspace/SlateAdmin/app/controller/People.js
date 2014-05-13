@@ -448,6 +448,7 @@ Ext.define('SlateAdmin.controller.People', {
         if (forceReload || proxy.isExtraParamsDirty()) {
             me.getManager().setSelectedPerson(null);
             store.removeAll();
+            me.getGrid().getSelectionModel().clearSelections();
             store.load({
                 callback: callback,
                 scope: me
