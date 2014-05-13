@@ -1,11 +1,13 @@
 {extends "designs/site.tpl"}
 
+{block title}Dashboard &mdash; {$dwoo.parent}{/block}
+
 {block "content"}
     <h1>{$.User->FirstName}’s Dashboard</h1>
 
     {if !$.cookies.dashboard_welcome_dismissed}
         <div class="well dismissible" data-dismissible-id="dashboard_welcome">
-            <p>Welcome to Slate! Slate ties together all the online tools and services that SLA uses so you only have to log in once. Now that you‘re logged in, simply choose a shortcut below or in the top right menu to access the tools you need.</p>
+            <p>Welcome to Slate! Slate ties together all the online tools and services that {Slate::$schoolAbbr} uses so you only have to log in once. Now that you‘re logged in, simply choose a shortcut below or in the top right menu to access the tools you need.</p>
             <button class="primary dismiss-button">Got it, thanks!</button>
         </div>
     {/if}
