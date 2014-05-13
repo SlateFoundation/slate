@@ -232,7 +232,7 @@ Ext.define('SlateAdmin.controller.People', {
         this.syncGridStatus();
     },
 
-    onPersonSelect: function(selModel, personRecord, index) {
+    onPersonSelect: function(selModel, record, index) {
         var me = this,
             selectionCount = selModel.getCount(),
             path = ['people'],
@@ -245,11 +245,11 @@ Ext.define('SlateAdmin.controller.People', {
         me.syncGridStatus();
 
         if (selectionCount == 1) {
-            manager.setSelectedPerson(personRecord);
+            manager.setSelectedPerson(record);
 
             me.syncState();
 
-            me.application.fireEvent('personselected', personRecord, me);
+            me.application.fireEvent('personselected', record, me);
         }
         
         Ext.resumeLayouts(true);
