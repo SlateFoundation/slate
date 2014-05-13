@@ -321,6 +321,40 @@ img {
 	text-decoration: none;
 }
 
+.page-header {
+    @include clearfix;
+    border-bottom: 1px solid $border-color;
+    margin: 1em 0 2em;
+    padding-bottom: .25em;
+    
+    &:empty {
+        display: none;
+    }
+
+    .header-title {
+        float: left;
+        margin: .5625em 0 0;
+
+        @media #{$mq-phone} {
+            float: none;
+        }
+    }
+    
+    .header-buttons {
+        float: right;
+        margin-top: 1em;
+
+        @media #{$mq-phone} {
+            clear: left;
+            float: none;
+        }
+        
+        .button + .button {
+            margin-left: .25em;
+        }
+    }
+}
+
 .footer-ct {
 	@extend .header-ct;
 	border-width: 1px 0 0;
