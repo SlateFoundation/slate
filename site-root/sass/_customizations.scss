@@ -1,2 +1,7 @@
-// Use this file to assign new values to the variables used in Slate's .scss files
+// Use this file to assign new values to the variables used in Slate's .scss files.
+// See sass/slate/_defaults.scss for available variables. If copying from that file,
+// be sure to remove the !default flag at the end of each line
 
+// Example: uncomment to swap the default base and contrast colors:
+//$base-color:     #e8910c; // orange
+//$contrast-color: #008cc1; // Slate blue
