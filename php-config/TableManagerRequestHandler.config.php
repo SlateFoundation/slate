@@ -1,3 +1,3 @@
 <?php
 
-TableManagerRequestHandler::$classFilters[] = '/^(SAML2|XmlSecurity|intouch)[\\\\_]/';
+TableManagerRequestHandler::$classFilters[] = '/^((Emergence\\\\)?SAML2|XmlSecurity|intouch)[\\\\_]/';
