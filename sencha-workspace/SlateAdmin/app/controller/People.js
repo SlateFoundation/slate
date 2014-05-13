@@ -503,24 +503,31 @@ Ext.define('SlateAdmin.controller.People', {
         if (selectionCount >= 1) {
             selectionCountCmp.setText(selectionCount + (selectionCount==1?' person':' people') + ' selected');
             selectionCountCmp.show();
-
-            exportResultsBtn.setText(
-                'Export ' +
-                (actionCount > 1 ? actionCount + ' ' : ' ')
-                + 'Result'
-                + (actionCount != 1 ? 's' : '')
-            );
-            sendInvitationsBtn.setText(
-                'Send '
-                + (actionCount > 1 ? actionCount + ' ' : ' ')
-                + 'Login Invitation'
-                + (actionCount != 1 ? 's' : '')
-            );
         } else {
             selectionCountCmp.hide();
-            
+        }
+        
+        if (actionCount >= 1) {
+            exportResultsBtn.setText(
+                'Export ' +
+                (actionCount > 1 ? actionCount + ' ' : ' ') +
+                'Result' +
+                (actionCount != 1 ? 's' : '')
+            );
+            exportResultsBtn.enable();
+
+            sendInvitationsBtn.setText(
+                'Send ' +
+                (actionCount > 1 ? actionCount + ' ' : ' ') +
+                'Login Invitation' +
+                (actionCount != 1 ? 's' : '')
+            );
+            sendInvitationsBtn.enable();
+        } else {
             exportResultsBtn.setText('Export Results');
+            exportResultsBtn.disable();
             sendInvitationsBtn.setText('Send Login Invitations');
+            sendInvitationsBtn.disable();
         }
 
         // disable any components marked bulkOnly unless multiple rows are selected
