@@ -11,6 +11,7 @@ class User extends Person
     public static $fields = array(
         'Username' => array(
             'unique' => true
+            ,'includeInSummary' => true
         )
         ,'Password' => array(
             'type' => 'string'
