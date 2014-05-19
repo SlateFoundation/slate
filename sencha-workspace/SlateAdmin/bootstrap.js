@@ -10,7 +10,11 @@ Ext.Loader.addClassPathMappings({
   "Ext.Msg": "../ext/src/window/MessageBox.js",
   "Ext.ux": "../packages/extjs-boxselect/src",
   "Jarvus": "../x/Jarvus",
-  "Jarvus.ext.override.proxy.Abort": "../packages/jarvus-ext-lazydata/overrides/proxy/Abort.js",
+  "Jarvus.ext.override": "../packages/jarvus-ext-routing/overrides",
+  "Jarvus.ext.override.data": "../packages/jarvus-ext-lazydata/overrides/data",
+  "Jarvus.ext.override.form": "../packages/jarvus-ext-lazydata/overrides/form",
+  "Jarvus.ext.override.grid": "../x/Jarvus/ext/override/grid",
+  "Jarvus.ext.override.proxy": "../packages/jarvus-ext-lazydata/overrides/proxy",
   "SlateAdmin": "app",
   "SlateAdminTheme": "../packages/slate-admin-theme/overrides",
   "SlateAdminTheme.toolbar.TextItem": "../packages/slate-admin-theme/overrides/toolbar/Toolbar.js"
@@ -18,7 +22,6 @@ Ext.Loader.addClassPathMappings({
 Ext.ClassManager.addNameAlternateMappings({
   "Emergence.ext.proxy.Records": [],
   "Emergence.ext.ux.DiffPanel": [],
-  "Emergence.util.API": [],
   "Emergence.util.AbstractAPI": [],
   "Emergence.util.Diff": [],
   "Ext.AbstractComponent": [],
@@ -863,7 +866,6 @@ Ext.ClassManager.addNameAliasMappings({
   "Emergence.ext.ux.DiffPanel": [
     "widget.diffpanel"
   ],
-  "Emergence.util.API": [],
   "Emergence.util.AbstractAPI": [],
   "Emergence.util.Diff": [],
   "Ext.AbstractComponent": [],
