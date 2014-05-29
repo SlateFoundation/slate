@@ -15,7 +15,7 @@ class Phone extends AbstractPoint
     public static $templates = array(
         'Mobile Phone' => array(
             'class' => __CLASS__
-            ,'alternateLabels' => array('Work Phone')
+            ,'alternateLabels' => array('Work Phone', 'Home Phone')
             ,'placeholder' => '(555) 555-0155'
             ,'pattern' => '/^\\(?\d{3}\\)?[^a-zA-Z0-9]*\d{3}[^a-zA-Z0-9]*\d{4}*$/i'
         )
