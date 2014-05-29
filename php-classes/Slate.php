@@ -4,7 +4,7 @@ class Slate
 {
     public static $schoolName;
     public static $schoolAbbr;
-    public static $siteSlogan = 'Open-source for education';
+    public static $siteSlogan = 'Open source for education';
     public static $webTools = array();
     public static $manageTools = array(
         'People'     => '/manage#people',

@@ -2,7 +2,7 @@
 
 //Slate::$schoolName = 'MyTown High';
 //Slate::$schoolAbbr = 'MTH';
-//Slate::$siteSlogan = 'Open-source for education';
+//Slate::$siteSlogan = 'Open source for education';
 
 //Slate::$manageTools['Narratives'] = '/manage#progress/narratives';
 //Slate::$manageTools['Standards'] = '/manage#progress/standards';

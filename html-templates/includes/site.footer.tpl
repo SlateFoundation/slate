@@ -1,5 +1,5 @@
 <span class="info-line">Slate is an open-source web platform for schools.</span>
-<span class="info-line">Learn how you can use or build on Slate at <a href="http://slate.is">http://slate.is</a>.</span>
+<span class="info-line"><a href="http://slate.is" title="Slate">Learn more.</a></span>
 
 {*
 <address>
