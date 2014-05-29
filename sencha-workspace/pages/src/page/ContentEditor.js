@@ -12,7 +12,7 @@ Ext.define('Site.page.ContentEditor', {
 
     onDocReady: function() {
         Ext.create('Emergence.cms.view.EditorPanel', {
-            renderTo: Ext.getBody().down('.primary-content')
+            renderTo: Ext.getBody().down('#contentEditorCt')
         }).setContentRecord(window.ContentData);
     }
 });

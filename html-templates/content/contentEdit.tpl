@@ -31,4 +31,6 @@
     {/if}
 {/block}
 
-{block content}{/block}
+{block content}
+    <div class="reading-width" id='contentEditorCt'></div>
+{/block}
