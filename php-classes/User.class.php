@@ -118,7 +118,7 @@ class User extends Person
     {
         $User = static::getByUsername($username);
 
-        if ($User && is_a($User, __CLASS__) && $User->verifyPassword($password)) {
+        if ($User && is_a($User, __CLASS__) && $User->hasAccountLevel('User') && $User->verifyPassword($password)) {
             return $User;
         } else {
             return null;
