@@ -1,0 +1,14 @@
+$base-color:    #008cc1;
+$accent-color:  $base-color;
+$page-bg-color: #f5f5f5;
+
+$heading-color: change-color($accent-color, $saturation: 60);
+$link-color:    $accent-color;
+
+$body-font:     Lato, 'Helvetica Neue', Tahoma, sans-serif;
+$heading-font:  Sanchez, Rockwell, Georgia, serif;
+
+// button colors
+$destructive-color: #eed5d5;
+
+@import url('http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Sanchez:400italic,400');

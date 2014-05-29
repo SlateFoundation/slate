@@ -1,9 +1,49 @@
-nav {
+.site.header {
+    background: rgba($text-color, .1);
+
+    > .inner {
+        position: relative;
+        
+        @media #{$mq-phone} {
+            padding-bottom: 0;
+        }
+    }
+}
+
+/*
+.branding {
+    float: left;
+    margin: .5em 0 0;
+    
+    @media #{$mq-phone} {
+        float: none;
+        
+        small {
+            font-size: smaller;
+        }
+    }
+}
+
+.site-search {
+    margin-top: 2.5em;
+    
+    @media #{$mq-phone} {
+        margin-top: 1em;
+    }
+}
+*/
+
+.slate-menu {
 	margin: 0;
+	position: absolute;
+	right: 1.5em;
+	top: 0;
+
 	@include experimental('tap-highlight-color', transparent);
 
 	@media #{$mq-phone} {
-		margin: 0 -6%;
+		margin: 0 -1.5em;
+		position: static;
 	}
 
 	.menu {
@@ -23,6 +63,14 @@ nav {
 		float: none;
 		position: relative;
 		width: auto;
+		
+		+ .menu-item {
+    		margin-left: .125em;
+		}
+		
+		.menu-item {
+    		margin: 0;
+		}
 
 		&:hover,
 		&.selected {
@@ -42,11 +90,12 @@ nav {
 
 		@media #{$mq-phone} {
 			float: left;
+			margin: 0;
 			position: static;
-			width: 33.333%;
+			width: 25%;
 			
-			&:hover {
-				
+			+ .menu-item {
+    			margin: 0;
 			}
 		}
 
@@ -87,6 +136,7 @@ nav {
 			background: rgba($base-color, .2);
 			@include background(linear-gradient( rgba($base-color, 0), rgba($base-color, 0.2) ));
 			@include border-top-radius(.5em);
+			min-width: 0;
 			padding: .5em 0;
 		}
 	}
@@ -108,6 +158,20 @@ nav {
 		visibility: hidden;
 		width: auto;
 		z-index: 1;
+		
+		&:empty::before {
+		    color: $muted-color;
+    		content: 'None available.';
+    		display: block;
+    		font-style: italic;
+    		min-height: 44px;
+    		padding: .5em .75em;
+
+			@media #{$mq-wide} {
+				min-height: 0;
+				padding: .25em 1em;
+			}
+		}
 		
 		.submenu {
 			min-width: 0;

@@ -1,7 +1,12 @@
 .event-day {
-    & > h3 {
-        margin-bottom: .3em;
-    }
+    margin: 2.5em 0;
+}
+
+.event-day-heading {
+    font-family: $body-font;
+    font-size: small;
+    margin: 0 0 .4em;
+    text-transform: uppercase;
 }
 
 .vevent {

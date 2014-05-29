@@ -6,7 +6,7 @@ Ext.define('Site.widget.Login', {
     ],
     
     config: {
-        loginLinkSelector: '.header-ct nav a[href^="/login"]',
+        loginLinkSelector: 'a[href^="/login"]',
         loginModalId: 'login-modal'
     },
 

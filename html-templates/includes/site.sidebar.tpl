@@ -3,7 +3,7 @@
     <div class="sidebar-item events-ct">
         {foreach key=date item=calendarEntries from=Emergence\Events\Event::groupEventsByDate(Emergence\Events\Event::getUpcoming(12))}
             <section class="event-day">
-                <h3>{$date|date_format:'%A, %B %e'}</h3>
+                <h3 class="event-day-heading">{$date|date_format:'%A, %B %e'}</h3>
                 {foreach item=calendarEntry from=$calendarEntries}
                     <article class="vevent">
                         {strip}<a class="url" href="/events/{$calendarEntry.Event->Handle}">

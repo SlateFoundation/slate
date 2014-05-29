@@ -1,0 +1,15 @@
+@import 'slate/variables';      // bring in Slate theme, overriding Emergence defaults
+@import 'site/variables';       // declare custom colors, fonts, etc. for your site in this file
+
+@import 'compass';              // import compass for useful functions, mixins, etc.
+                                // compass's variables can be overridden by 'site/variables'
+
+@import 'skeleton/variables';   // bring in default variables (will be overridden by any declared above)
+@import 'skeleton/common';      // set styles for common elements such as layout, typography, etc.
+@import 'skeleton/modules';     // bring in styles for forms, buttons, paging, etc.
+                                // you can also omit this line and import only the modules you need
+                                // e.g. @import 'base/modules/buttons';
+
+@import 'slate/modules';        // bring in Slate module styles
+@import 'site/modules';         // put your site-specific style rules and overrides (other than variables) in here
+                                // variables should go in 'site/variables' above

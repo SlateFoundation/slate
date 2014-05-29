@@ -23,7 +23,17 @@
 }
 
 @include shortcut-color();
-@include shortcut-color('manage', $color: $warning-color);
+@include shortcut-color('manage', $color: $danger-color);
+
+.dashboard-tpl {
+    .page-header {
+        margin: 1em 0 0;
+    }
+}
+
+.dashboard-header {
+    margin: 2em 0 .5em;
+}
 
 .dashboard-shortcuts {
     list-style: none;
