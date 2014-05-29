@@ -1,0 +1,8 @@
+@import 'compass/css3/font-face';
+
+@include font-face('Lato', inline-font-files('lato-lig-webfont.woff',    woff), false, 300, regular);
+@include font-face('Lato', inline-font-files('lato-ligita-webfont.woff', woff), false, 300, italic);
+@include font-face('Lato', inline-font-files('lato-reg-webfont.woff',    woff), false, 400, regular);
+@include font-face('Lato', inline-font-files('lato-regita-webfont.woff', woff), false, 400, italic);
+@include font-face('Lato', inline-font-files('lato-bol-webfont.woff',    woff), false, 700, regular);
+@include font-face('Lato', inline-font-files('lato-bolita-webfont.woff', woff), false, 700, italic);
