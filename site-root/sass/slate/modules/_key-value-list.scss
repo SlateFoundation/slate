@@ -1,0 +1,29 @@
+.kv-list {
+    display: table;
+
+    .dli { @extend .kv-pair;  }
+      dt { @extend .kv-key;   }
+      dd { @extend .kv-value; }
+}
+
+.kv-pair {
+    display: table-row;
+}
+
+.kv-key,
+.kv-value {
+    display: table-cell;
+    margin: 0;
+}
+
+.kv-key {
+    color: $muted-color;
+    font-size: smaller;
+    padding-right: 1em;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.kv-value {
+    font-weight: bold;
+}

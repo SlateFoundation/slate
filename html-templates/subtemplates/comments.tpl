@@ -1,21 +1,19 @@
 {load_templates "subtemplates/contextLinks.tpl"}
 {load_templates "subtemplates/people.tpl"}
+{load_templates "subtemplates/forms.tpl"}
 
 {template commentForm Context url=no}
     {if $.Session->Person}
         <form class="comment-form" action="{tif $url ? $url : cat($Context->getURL() '/comment')}" method="POST">
-            <fieldset class="comment stretch">
+            <fieldset class="comment stretch shrink">
                 <div class="author">{avatar $.User size=56}</div>
 
                 <div class="message">
-                    <label class="field">
-                        <span>{$.User->FullName}</span>
-                        <textarea id="Message" name="Message"></textarea>
-                    </label>
+                    {textarea Message $.User->FullName $validationErrors.Message hint='You can use <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">Markdown</a> for formatting.' required=true}
 
-                    <p class="hint">You can use <a href="http://daringfireball.net/projects/markdown/basics">Markdown</a> for formatting.</p>
-
-                    <input type="submit" class="submit" value="Post Comment">
+                    <div class="submit-area">
+                        <input type="submit" class="submit" value="Post Comment">
+                    </div>
                 </div>
             </fieldset>
         </form>
@@ -25,7 +23,7 @@
 {/template}
 
 {template commentsList comments contextLinks=off}
-    <section class="comments-list">
+    <section class="comments-list reading-width">
     {foreach item=Comment from=$comments}
         <article class="comment" id="comment-{$Comment->ID}">
             <div class="author">
@@ -41,7 +39,7 @@
                     {if $Comment->userCanWrite}
                         {*<a href="/comments/{$Comment->ID}/edit" class="edit">Edit</a>*}
                         <a href="/comments/{$Comment->ID}/delete"
-                           class="button destructive small confirm"
+                           class="button destructive tiny confirm"
                            data-confirm-yes="Delete Comment"
                            data-confirm-no="Don&rsquo;t Delete"
                            data-confirm-title="Deleting Comment"

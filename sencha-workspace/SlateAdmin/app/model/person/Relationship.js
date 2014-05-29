@@ -54,6 +54,21 @@ Ext.define('SlateAdmin.model.person.Relationship', {
             name: 'InverseRelationship'
         }
     ],
+
+    validations: [
+        {
+            type: 'presence',
+            field: 'Class'
+        },
+        {
+            type: 'presence',
+            field: 'PersonID'
+        },
+        {
+            type: 'presence',
+            field: 'Relationship'
+        }
+    ],
     
     associations: [{
         type: 'hasOne',

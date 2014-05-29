@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>People</title>
     <style>
+        {file_get_contents(Site::resolvePath('site-root/css/fonts/lato.css')->RealPath)}
         {file_get_contents(Site::resolvePath('site-root/css/reports/print.css')->RealPath)}
     </style>
 </head>

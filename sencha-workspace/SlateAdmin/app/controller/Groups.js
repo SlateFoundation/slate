@@ -141,7 +141,7 @@ Ext.define('SlateAdmin.controller.Groups', {
         var me = this,
             parentGroup = menuItem.parentMenu.getRecord();
 
-        Ext.Msg.prompt('Create group', 'Enter a name for the new group:', function(btn, text) {
+        Ext.Msg.prompt('Create subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
             var newGroup;
             
             if (btn == 'ok') {

@@ -1,17 +1,18 @@
 {extends "designs/site.tpl"}
 
 {block content}
-    <header>
-        <div class="mini-page-tools"><a href="/blog/create?Status=Draft" class="button primary">New Draft</a></div>
-        <h1>My Drafts</h1>
+<div class="reading-width">
+    <header class="page-header">
+        <h2 class="header-title">My Drafts</h2>
+        <div class="header-buttons"><a href="/blog/create?Status=Draft" class="button primary">New Draft</a></div>
     </header>
 
     <ul>
     {foreach item=Draft from=$data}
         <li>{contextLink $Draft}</li>
     {foreachelse}
-        <li><em>You do not have any drafts</em></li>
+        <li class="empty-text">You have no drafts saved. <a href="/blog/create?Status=Draft">Create a new draft.</a></li>
     {/foreach}
     </ul>
-
+</div>
 {/block}

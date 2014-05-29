@@ -866,7 +866,7 @@ class Student extends \User
         }
 
         // call parent
-        return parent::save();
+        return parent::save($deep);
     }
 
     protected static function generatePassword($length = 8)

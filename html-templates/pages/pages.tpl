@@ -3,20 +3,27 @@
 {block title}Pages Directory &mdash; {$dwoo.parent}{/block}
 
 {block content}
+<div class="sidebar-layout">
+	<div class="main-col">
+		<div class="col-inner">
+			<header class="page-header">
+				<h2 class="header-title">Pages Directory</h2>
+			</header>
+		
+		    <ul class="pages-list">
+		    {foreach item=Page from=$data}
+		        <li class="pages-list-item"><a href="/pages/{$Page->Handle}">{$Page->Title|escape}</a></li>
+		    {/foreach}
+		    </ul>
+		</div>
+	</div>
 
-    <h1>Pages Directory</h1>
-
-    <form action="/pages/create" method="GET">
-        <fieldset class="page-tools">
-            <input type="text" name="Title" value="{$pageHandle|replace:'_':' '|ucwords|escape}" placeholder="Page Title">
-            <input type="submit" value="Create New Page">
-        </fieldset>
-    </form>
-
-    <ul class="pages-list">
-    {foreach item=Page from=$data}
-        <li class="pages-list-item"><a href="/pages/{$Page->Handle}">{$Page->Title|escape}</a></li>
-    {/foreach}
-    </ul>
-
+	<div class="sidebar-col">
+	    <form action="/pages/create" method="GET" class="col-inner">
+	        <fieldset class="stretch">
+				{field "Title" "Page Title"}
+	            <input type="submit" value="Create New Page">
+	        </fieldset>
+	    </form>
+	</div>
 {/block}

@@ -115,8 +115,8 @@ Ext.define('SlateAdmin.controller.People', {
                 specialkey: me.onSearchSpecialKey
             },
             'people-grid': {
-                select: me.onPersonSelect,
-                deselect: me.onPersonDeselect
+                select: { fn: me.onPersonSelect, buffer: 10 },
+                deselect: { fn: me.onPersonDeselect, buffer: 10 }
             },
             'people-manager #detailTabs': {
                 tabchange: me.onDetailTabChange
@@ -140,6 +140,14 @@ Ext.define('SlateAdmin.controller.People', {
 //            'people-grid #exportResultsBtn #exportFieldsMenu menucheckitem': {
 //                checkchange: me.onExportFieldsChange
 //            }
+        });
+        
+        me.listen({
+            store: {
+                '#People': {
+                    load: me.onStoreLoad
+                }
+            }
         });
     },
 
@@ -219,8 +227,12 @@ Ext.define('SlateAdmin.controller.People', {
             }
         }
     },
+    
+    onStoreLoad: function() {
+        this.syncGridStatus();
+    },
 
-    onPersonSelect: function(selModel, personRecord, index) {
+    onPersonSelect: function(selModel, record, index) {
         var me = this,
             selectionCount = selModel.getCount(),
             path = ['people'],
@@ -233,11 +245,11 @@ Ext.define('SlateAdmin.controller.People', {
         me.syncGridStatus();
 
         if (selectionCount == 1) {
-            manager.setSelectedPerson(personRecord);
+            manager.setSelectedPerson(record);
 
             me.syncState();
 
-            me.application.fireEvent('personselected', personRecord, me);
+            me.application.fireEvent('personselected', record, me);
         }
         
         Ext.resumeLayouts(true);
@@ -436,6 +448,7 @@ Ext.define('SlateAdmin.controller.People', {
         if (forceReload || proxy.isExtraParamsDirty()) {
             me.getManager().setSelectedPerson(null);
             store.removeAll();
+            me.getGrid().getSelectionModel().clearSelections();
             store.load({
                 callback: callback,
                 scope: me
@@ -490,24 +503,31 @@ Ext.define('SlateAdmin.controller.People', {
         if (selectionCount >= 1) {
             selectionCountCmp.setText(selectionCount + (selectionCount==1?' person':' people') + ' selected');
             selectionCountCmp.show();
-
-            exportResultsBtn.setText(
-                'Export ' +
-                (actionCount > 1 ? actionCount + ' ' : ' ')
-                + 'Result'
-                + (actionCount != 1 ? 's' : '')
-            );
-            sendInvitationsBtn.setText(
-                'Send '
-                + (actionCount > 1 ? actionCount + ' ' : ' ')
-                + 'Login Invitation'
-                + (actionCount != 1 ? 's' : '')
-            );
         } else {
             selectionCountCmp.hide();
-            
+        }
+        
+        if (actionCount >= 1) {
+            exportResultsBtn.setText(
+                'Export ' +
+                (actionCount > 1 ? actionCount + ' ' : ' ') +
+                'Result' +
+                (actionCount != 1 ? 's' : '')
+            );
+            exportResultsBtn.enable();
+
+            sendInvitationsBtn.setText(
+                'Send ' +
+                (actionCount > 1 ? actionCount + ' ' : ' ') +
+                'Login Invitation' +
+                (actionCount != 1 ? 's' : '')
+            );
+            sendInvitationsBtn.enable();
+        } else {
             exportResultsBtn.setText('Export Results');
+            exportResultsBtn.disable();
             sendInvitationsBtn.setText('Send Login Invitations');
+            sendInvitationsBtn.disable();
         }
 
         // disable any components marked bulkOnly unless multiple rows are selected

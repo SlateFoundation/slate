@@ -1,11 +1,17 @@
 {extends designs/site.tpl}
 
 {block "content"}
-    <div class="mini-page-tools"><a href="/blog/create" class="button primary">Create a Post</a></div>
-    <h1>Blog Feed</h1>
-
+    {load_templates "subtemplates/paging.tpl"}
+    
+    <header class="page-header">
+        <h2 class="header-title">Blog Feed</h2>
+        <div class="header-buttons">
+            <a href="/blog/create" class="button primary">Create a Post</a>
+        </div>            
+    </header>
+    
     {foreach item=BlogPost from=$data}
-        {blogPost $BlogPost}
+        {blogPost $BlogPost headingLevel=h3}
     {foreachelse}
         <p>Stay tuned for the first post</p>
     {/foreach}

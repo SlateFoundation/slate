@@ -18,7 +18,6 @@ $golden-ratio: 1.61803398875;
 $golden-lg: percentage(1/$golden-ratio);
 $golden-sm: percentage(1 - (1/$golden-ratio));
 
-@import 'lato';
 @import 'general';
 
 .people {

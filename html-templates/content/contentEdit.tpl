@@ -23,6 +23,7 @@
     {$dwoo.parent}
 
     {if $.get.jsdebug}
+        {sencha_bootstrap classPaths=array('ext-library/ExtUx', 'ext-library/Jarvus/ext', 'ext-library/Emergence/ext', 'ext-library/Emergence/cms') patchLoader=false}
         <script>
             Ext.require('Site.page.ContentEditor');
         </script>
@@ -31,4 +32,6 @@
     {/if}
 {/block}
 
-{block content}{/block}
+{block content}
+    <div class="reading-width" id='contentEditorCt'></div>
+{/block}

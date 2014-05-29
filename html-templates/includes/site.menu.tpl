@@ -15,6 +15,8 @@
     {/if}
 {/template}
 
+<nav class="slate-menu">
+<ul class="menu">{strip}
 
 {if $.User}
     <li class="menu-item">
@@ -105,3 +107,6 @@
         <a class="menu-label" href="/login?return={$.server.REQUEST_URI|escape:url}">Log In</a>
     {/if}
 </li>
+
+{/strip}</ul>
+</nav>

@@ -3,6 +3,7 @@
 namespace Slate\Courses;
 
 use HandleBehavior;
+use Slate\Courses\SectionParticipant;
 
 class Section extends \VersionedRecord
 {
@@ -167,7 +168,7 @@ class Section extends \VersionedRecord
 
         // generate short code
         if (!$this->Code) {
-            $this->Code = static::getUniqueHandle($this->Course->Code, array(
+            $this->Code = HandleBehavior::getUniqueHandle("\\Slate\\Courses\\Section", $this->Course->Code, array(
                 'handleField' => 'Code'
                 ,'format' => '%s-%03u'
                 ,'alwaysSuffix' => true
