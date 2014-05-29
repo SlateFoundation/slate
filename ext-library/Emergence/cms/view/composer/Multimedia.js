@@ -25,7 +25,7 @@ Ext.define('Emergence.cms.view.composer.Multimedia', {
     targetUrl: '/media/json/upload',
     fieldName: 'Media',
     buttonText: '<span class="btnText">Browse…</span>',
-    fileTypes: '*',
+    fileTypes: '*.jpg; *.jpeg; *.png; *.gif; *.mp3; *.flv, *.mp4, *.pdf; *.JPG; *.JPEG; *.PNG; *.GIF; *.MP3; *.FLV; *.MP4; *.PDF',
     fileTypesDescription: 'Multimedia Files',
     fileSizeLimit: '300 MB',
     buttonWidth: 158,
@@ -66,7 +66,8 @@ Ext.define('Emergence.cms.view.composer.Multimedia', {
                 },
                 listeners: {
                     scope: me,
-                    uploadResponse: me.onUploadResponse
+                    uploadResponse: me.onUploadResponse,
+                    uploadError: me.onUploadError
                 }
             });
 
@@ -121,7 +122,11 @@ Ext.define('Emergence.cms.view.composer.Multimedia', {
 
         me.uploading = false;
     },
-
+    
+    onUploadError: function(file, errorCode, errorMessage) {
+        Ext.Msg.alert('Upload failed', 'Your upload failed, please try again later or contact support');
+        return false;
+    },
 
     onContentAreaRendered: function() {
         var me = this,
