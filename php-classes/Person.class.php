@@ -256,11 +256,6 @@ class Person extends VersionedRecord
         }
     }
 
-    public static function getByHandle($handle)
-    {
-        return User::getByHandle($handle);
-    }
-
     public static function getByEmail($email)
     {
         $EmailPoint = \Emergence\People\ContactPoint\Email::getByString($email);

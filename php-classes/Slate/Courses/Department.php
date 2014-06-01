@@ -58,11 +58,6 @@ class Department extends \VersionedRecord
     );
 
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public static function getOrCreateByTitle($title)
     {
         if ($Department = static::getByField('Title', $title)) {

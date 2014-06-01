@@ -67,11 +67,6 @@ class Course extends \VersionedRecord
     );
 
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public function validate($deep = true)
     {
         // call parent

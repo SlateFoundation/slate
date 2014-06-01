@@ -63,10 +63,6 @@ class SynchronizationJob extends ActiveRecord
         )
     );
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
 
     public function save($deep = true)
     {

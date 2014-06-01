@@ -53,11 +53,6 @@ class Schedule extends \VersionedRecord
     );
 
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public static function getOrCreateByHandle($handle)
     {
         if ($Schedule = static::getByHandle($handle)) {

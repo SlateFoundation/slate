@@ -65,11 +65,6 @@ class Location extends \VersionedRecord
     );
 
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public static function getOrCreateByHandle($handle, $title = null)
     {
         if ($Location = static::getByHandle($handle)) {
