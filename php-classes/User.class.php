@@ -107,6 +107,11 @@ class User extends Person
 
         return parent::save($deep);
     }
+    
+    public function getHandle()
+    {
+        return $this->Username;
+    }
 
     public static function getByHandle($handle)
     {
