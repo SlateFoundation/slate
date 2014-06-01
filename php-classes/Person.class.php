@@ -234,6 +234,11 @@ class Person extends VersionedRecord
         }
     }
 
+    public function getTitle()
+    {
+        return $this->FullName;
+    }
+
     public function setValue($name, $value)
     {
         switch ($name) {
