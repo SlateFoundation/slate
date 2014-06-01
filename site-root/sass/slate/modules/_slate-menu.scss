@@ -1,38 +1,3 @@
-.site.header {
-    background: rgba($text-color, .1);
-
-    > .inner {
-        position: relative;
-        
-        @media #{$mq-phone} {
-            padding-bottom: 0;
-        }
-    }
-}
-
-/*
-.branding {
-    float: left;
-    margin: .5em 0 0;
-    
-    @media #{$mq-phone} {
-        float: none;
-        
-        small {
-            font-size: smaller;
-        }
-    }
-}
-
-.site-search {
-    margin-top: 2.5em;
-    
-    @media #{$mq-phone} {
-        margin-top: 1em;
-    }
-}
-*/
-
 .slate-menu {
 	margin: 0;
 	position: absolute;

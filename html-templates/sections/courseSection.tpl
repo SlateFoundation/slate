@@ -1,8 +1,10 @@
 {extends "designs/site.tpl"}
 
 {block meta}
-    <link rel="alternate" type="application/rss+xml" title="RSS" href="/sections/{$Section->Handle}/rss">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="/sections/{$data->Handle}/rss">
 {/block}
+
+{block title}{$data->Title|escape} &mdash; {$dwoo.parent}{/block}
 
 {block js-bottom}
     <script type="text/javascript">
@@ -39,7 +41,7 @@
                 {foreach item=BlogPost from=$blogPosts}
                     {blogPost $BlogPost headingLevel="h3"}
                 {foreachelse}
-                    <p class="muted">This class has no posts in its public feed yet.</p>
+                    <p class="empty-text">This class has no posts in its public feed yet.</p>
                 {/foreach}
             
             
@@ -59,13 +61,13 @@
             <div class="col-inner">
         
                 <section class="well course-section-details">
-                    <h3 class="well-title">{$Section->Code}</h3>
+                    <h3 class="well-title">{$Section->Code|escape}</h3>
         
                     {if $Section->Course->Description}
                         <div class="muted markdown-ct">{$Section->Course->Description|escape|markdown}</div>
                     {/if}
         
-                    <dl class="kv-list">
+                    <dl class="kv-list align-right">
                         <div class="dli">
                             <dt>Term</dt>
                             <dd>{$Section->Term->Title}</dd>

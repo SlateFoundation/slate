@@ -2,24 +2,15 @@
 
 {block "content"}
     {$Comment = $data}
-    <form method="POST">
-        <h3>Contact Info</h3>
-        <fieldset>
+    
+    <header class="page-header">
+        <h3 class="header-title">Comment {if $Comment->getTitle()} on “{$Comment->Context->Title}”{/if}</h3>
+    </header>
 
-            {if $Comment->validationErrors.Message}
-                <p class="error">{$User->validationErrors.Message|escape}</p>
-            {/if}
+    <div class="reading-width">
+        {validationErrors $Comment->validationErrors}
+    
+        {commentForm $Comment->Context}
+    </div>
 
-
-            <div class="field">
-                <label for="Message">Message</label>
-                <textarea name="Message">{refill field=Message default=$Comment->Message}</textarea>
-            </div>
-
-            <div class="submit">
-                <input type="submit" class="submit" value="Save">
-            </div>
-        </fieldset>
-
-    </form>
 {/block}

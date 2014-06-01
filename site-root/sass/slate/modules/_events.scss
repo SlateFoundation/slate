@@ -1,5 +1,9 @@
 .event-day {
     margin: 2.5em 0;
+    
+    &:first-child {
+        margin-top: 1em;
+    }
 }
 
 .event-day-heading {
@@ -38,7 +42,7 @@
 }
 
 .event-listing {
-    border-top: 1px solid rgba($border-color, .5);
+    border-bottom: 1px solid rgba($border-color, .5);
     padding: 1em 0;
 
     .event-title {

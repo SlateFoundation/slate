@@ -2,7 +2,7 @@
 {load_templates "subtemplates/comments.tpl"}
 
 {template blogPost Post showHeader=true showBody=true showFooter=true showComments=false showCommentsSummary=true headingLevel=h2}
-    <article class="blog-post">
+    <article class="blog-post reading-width">
         {if $showHeader}
             <header class="section-header">
                 <{$headingLevel} class="header-title">
@@ -45,15 +45,7 @@
                         Tags: {foreach item=Tag from=$Post->Tags implode=', '}<a href="/tags/{$Tag->Handle}">{$Tag->Title|escape}</a>{/foreach}</span>
                     </div>
                 {/if}
-
-                {if $showComments}
-                    <section class="comments">
-                        <a name="comments"></a>
-                        <h3>Comments</h3>
-                        {commentForm $Post}
-                        {commentsList $Post->Comments}
-                    </section>
-                {elseif $showCommentsSummary}
+                {if $showCommentsSummary}
                     <a href="/blog/{$Post->Handle}#comments">
                         {if $Post->Comments}
                             {count($Post->Comments)} Comment{tif count($Post->Comments) != 1 ? s}
@@ -61,8 +53,12 @@
                             Be the first to comment.
                         {/if}
                     </a>
-                {/if}
+                {/if}                
             </footer>
+        {/if}
+
+        {if $showComments}
+            {commentSection $Post}
         {/if}
     </article>
 {/template}

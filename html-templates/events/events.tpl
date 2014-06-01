@@ -3,7 +3,9 @@
 {block title}Events &mdash; {$dwoo.parent}{/block}
 
 {block "content"}
-    <h1>Upcoming Events</h1>
+    <header class="page-header">
+        <h2 class="header-title">Upcoming Events</h1>
+    </header>
 
     {foreach item=Event from=$data}
         <article class="event-listing">
