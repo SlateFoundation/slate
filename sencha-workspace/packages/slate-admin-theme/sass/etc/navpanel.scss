@@ -1,0 +1,27 @@
+.navpanel-search-form {
+    background: #444;
+    border: none;
+
+    .x-panel-body {
+        background: none;
+        border: none;
+        padding: 1px 2px;
+    }
+    
+    .x-field {
+        margin: 0;
+    }
+
+    input {
+        background: white;
+        border: 1px solid #333;
+        @include border-radius(1em);
+        font-size: small;
+        padding: 2px 7px;
+
+        -webkit-appearance: none;
+        :-webkit-search-cancel-button {
+            -webkit-margin-end: 2px;
+        }
+    }
+}
