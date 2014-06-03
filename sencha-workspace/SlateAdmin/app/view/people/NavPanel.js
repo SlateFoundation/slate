@@ -17,13 +17,10 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         items: [{
             xtype: 'searchfield',
             anchor: '100%',
-            emptyText: 'Search for people&hellip;'
+            emptyText: 'Search all people…'
         }]
     }],
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
+    layout: 'fit',
     items: [{
         xtype: 'form',
         bodyPadding: 10,
@@ -31,10 +28,10 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         border: 0,
         items: [{
             xtype: 'fieldset',
-            title: 'Advanced',
+            title: 'Advanced Search',
             collapsible: true,
             collapsed: true,
-            stateful: true,
+            // stateful: true, TODO fix collapsing state bug
             stateId: 'peopleAdvSearchPanel',
             defaults: {
                 anchor: '100%',
