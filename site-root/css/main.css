@@ -562,7 +562,7 @@ h4.header-title {
 
 /* line 235, ../sass/skeleton/_common.scss */
 .page-section {
-  margin-bottom: 3em;
+  margin-bottom: 2em;
 }
 
 /* line 239, ../sass/skeleton/_common.scss */
@@ -1949,6 +1949,11 @@ form .hint, form .error-text {
 /* line 131, ../sass/skeleton/modules/_search.scss */
 .search-result a:hover .result-info, .search-result a:focus .result-info {
   color: #99d1e6;
+}
+
+/* line 139, ../sass/skeleton/modules/_search.scss */
+.full-search-results .section-header {
+  margin: 0 0 1em;
 }
 
 /* line 1, ../sass/skeleton/modules/_tables.scss */
