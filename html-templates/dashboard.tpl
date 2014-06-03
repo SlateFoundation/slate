@@ -54,7 +54,7 @@
                         {/foreach}
                     </li>
                 {foreachelse}
-                    <li class="empty"><em class="muted">None this term</em></li>
+                    <li class="empty"><em class="muted">None this term.</em></li>
                 {/foreach}
             </ul>
         

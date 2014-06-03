@@ -5,7 +5,7 @@
 {template commentForm Context url=no}
     {if $.Session->Person}
         <form class="comment-form" action="{tif $url ? $url : cat($Context->getURL() '/comment')}" method="POST">
-            <fieldset class="comment stretch shrink">
+            <fieldset class="comment stretch">
                 <div class="author">{avatar $.User size=56}</div>
 
                 <div class="message">
@@ -18,12 +18,12 @@
             </fieldset>
         </form>
     {else}
-        <p class="login-hint"><a href="/login?return={$Context->getURL()|escape:url}">Log in</a> to post a comment.</p>
+        <p class="login-hint well"><a href="/login?return={$Context->getURL()|escape:url}">Log in</a> to post a comment.</p>
     {/if}
 {/template}
 
 {template commentsList comments contextLinks=off}
-    <section class="comments-list reading-width">
+    <section class="comments-list">
     {foreach item=Comment from=$comments}
         <article class="comment" id="comment-{$Comment->ID}">
             <div class="author">
@@ -35,7 +35,7 @@
                 </header>
                 <div class="message-body">{$Comment->Message|markdown}</div>
                 <footer>
-                    <time>{$Comment->Created|date_format:'%c'}</time>
+                    <time><a href="#comment-{$Comment->ID}">{$Comment->Created|date_format:'%a, %b %e, %Y &middot; %-l:%M %P'}</a></time>
                     {if $Comment->userCanWrite}
                         {*<a href="/comments/{$Comment->ID}/edit" class="edit">Edit</a>*}
                         <a href="/comments/{$Comment->ID}/delete"
@@ -51,73 +51,17 @@
             </div>
         </article>
     {foreachelse}
-        <p class="empty-text">No comments have been posted yet.</p>
+        <p class="empty-text section-info">No comments have been posted yet.</p>
     {/foreach}
     </section>
 {/template}
 
-{*
-{template commentForm Context url=no}
-    {if $.Session->Person}
-    <form class="comment-form" action="{tif $url ? $url : cat($Context->getURL() '/comment')}" method="POST">
-        <div class="field expand">
-            <label for="Message">Message</label>
-            <input type="hidden" value="{$Context->ID}" name="BlogPostID">
-            <textarea name="Message"></textarea>
-        </div>
-
-        <div class="submit">
-            <input type="submit" class="submit" value="Post Comment">
-        </div>
-
-    </form>
-    {else}
-        Must login to comment
-    {/if}
+{template commentSection Item}
+    <section class="comments reading-width" id="comments">
+        <header class="section-header">
+            <h4 class="header-title">Comments {if $Item->Comments}({count($Item->Comments)}){/if}</h4>
+        </header>
+        {commentsList $Item->Comments}
+        {commentForm $Item}
+    </section>
 {/template}
-
-{template commentsList comments contextLinks=off tools=on}
-    <ol class="comments-list" id="comments">
-    {foreach item=Comment from=$comments}
-        <li class="comment" id="comment-{$Comment->ID}">
-            {if $Comment->Author->Class != Person  && $Comment->Author->Class != Disabled}
-                <address>{personLink $Comment->Creator yes 60 60}</address>
-            {/if}
-
-            {if $Comment->Author->Class == Person}
-                <address><img src="/thumbnail/person/60x60" /><a href="/users/:{$Comment->Author->ID}">{$Comment->Author->FullName}</a></address>
-            {/if}
-
-            <div class="message">
-                {if $Comment->ReplyTo}
-                    {if $Comment->ReplyTo->Author->Class == Person}
-                        <a class="receiver" href="#comment-{$Comment->ReplyTo->ID}">@{$Comment->ReplyTo->Author->FullName}</a>
-                    {else}
-                        <a class="receiver" href="#comment-{$Comment->ReplyTo->ID}">@{$Comment->ReplyTo->Author->Username}</a>
-                    {/if}
-                {/if}
-                {$Comment->Message}
-            </div>
-            {if $contextLinks}<div class="context">in reply to {contextLink $Comment->Context}</div>{/if}
-            <hr/>
-            <div class="footer">
-                <time datetime="{$Comment->Created|date_format:'%Y-%m-%dT%H:%M:%S%z'}" pubdate>
-                    {$Comment->Created|fuzzy_time}
-                </time>
-                {if $tools}
-                <div class="tools">
-                    <a href="#reply-{$Comment->ID}" class="replyLink">Reply</a>
-                    {if $Comment->userCanWrite}
-                        <a href="/comments/{$Comment->ID}/edit" class="edit">Edit</a>
-                        <a href="/comments/{$Comment->ID}/delete" class="delete">Delete</a>
-                    {/if}
-                </div>
-                {/if}
-            </div>
-        </li>
-    {foreachelse}
-        <div class="nocomments">No comments have been posted yet.</div>
-    {/foreach}
-    </ol>
-{/template}
-*}

@@ -45,7 +45,7 @@
                 {/foreach}
             </section>
         {foreachelse}
-            <em>No future events scheduled</em>
+            <p class="empty-text">No future events scheduled.</p>
         {/foreach}
     </div>
 {/if}

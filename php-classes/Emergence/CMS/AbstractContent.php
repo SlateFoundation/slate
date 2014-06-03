@@ -148,11 +148,6 @@ abstract class AbstractContent extends \VersionedRecord
         return static::getAllByWhere($conditions, $options);
     }
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public function validate($deep = true)
     {
         // call parent

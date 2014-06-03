@@ -10,6 +10,10 @@
     }
 }
 
+.comments {
+    margin: 1.5em 0;
+}
+
 .comments-list {
     .comment {
         padding: 1em 1.5em;
@@ -32,6 +36,8 @@
         time {
             color: $muted-color;
             font-size: small;
+            
+            a { color: inherit; }
         }
         
         .button {

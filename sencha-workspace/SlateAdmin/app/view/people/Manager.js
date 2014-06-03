@@ -50,8 +50,8 @@ Ext.define('SlateAdmin.view.people.Manager', {
         items: [{
             xtype: 'panel',
             itemId: 'detailHeader',
-            height: 200,
             collapsible: true,
+            titleCollapse: true,
             animCollapse: false,
             cls: 'data-header person-header',
             title: 'Person',

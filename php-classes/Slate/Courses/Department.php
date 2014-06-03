@@ -4,16 +4,16 @@ namespace Slate\Courses;
 
 use HandleBehavior;
 
-class Schedule extends \VersionedRecord
+class Department extends \VersionedRecord
 {
     // VersionedRecord configuration
-    public static $historyTable = 'history_course_schedules';
+    public static $historyTable = 'history_course_departments';
 
     // ActiveRecord configuration
-    public static $tableName = 'course_schedules';
-    public static $singularNoun = 'course schedule';
-    public static $pluralNoun = 'course schedules';
-    public static $collectionRoute = '/schedules';
+    public static $tableName = 'course_departments';
+    public static $singularNoun = 'course department';
+    public static $pluralNoun = 'course departments';
+    public static $collectionRoute = '/departments';
 
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
@@ -21,11 +21,16 @@ class Schedule extends \VersionedRecord
     public static $subClasses = array(__CLASS__);
 
     public static $fields = array(
-        'Title' => array(
+        'ContextClass' => null // uncomment to enable
+        ,'ContextID' => null
+
+        ,'Title' => array(
             'fulltext' => true
-            ,'notnull' => false
         )
         ,'Handle' => array(
+            'unique' => true
+        )
+        ,'Code' => array(
             'unique' => true
             ,'notnull' => false
         )
@@ -45,22 +50,21 @@ class Schedule extends \VersionedRecord
 
 
     public static $relationships = array(
-        'Blocks' => array(
+        'Courses' => array(
             'type' => 'one-many'
-            ,'class' => 'Slate\\Courses\\ScheduleBlock'
-            ,'foreign' => 'ScheduleID'
+            ,'class' => 'Slate\\Courses\\Course'
+            ,'foreign' => 'DepartmentID'
         )
     );
 
 
-    public static function getOrCreateByHandle($handle)
+    public static function getOrCreateByTitle($title)
     {
-        if ($Schedule = static::getByHandle($handle)) {
-            return $Schedule;
+        if ($Department = static::getByField('Title', $title)) {
+            return $Department;
         } else {
             return static::create(array(
-                'Title' => $handle
-                ,'Handle' => $handle
+                'Title' => $title
             ), true);
         }
     }
@@ -68,12 +72,11 @@ class Schedule extends \VersionedRecord
     public function validate($deep = true)
     {
         // call parent
-        parent::validate();
+        parent::validate($deep);
 
         $this->_validator->validate(array(
             'field' => 'Title'
             ,'errorMessage' => 'A title is required'
-            ,'required' => false
         ));
 
         // implement handles
@@ -92,3 +95,4 @@ class Schedule extends \VersionedRecord
         parent::save($deep, $createRevision);
     }
 }
+

@@ -136,11 +136,6 @@ class Event extends \ActiveRecord
         return static::getAllByWhere($conditions, $options);
     }
 
-    public static function getByHandle($showHandle)
-    {
-        return static::getByField('Handle', $showHandle, true);
-    }
-
     public function validate($deep = true)
     {
         // call parent

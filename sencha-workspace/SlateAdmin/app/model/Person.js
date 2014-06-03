@@ -15,7 +15,9 @@ Ext.define('SlateAdmin.model.Person', {
     fields: [
         'Username',
         'FirstName',
+        'MiddleName',
         'LastName',
+        'Gender',
         'AccountLevel',
         'Email',
         'Phone',

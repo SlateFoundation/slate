@@ -234,6 +234,11 @@ class Person extends VersionedRecord
         }
     }
 
+    public function getTitle()
+    {
+        return $this->FullName;
+    }
+
     public function setValue($name, $value)
     {
         switch ($name) {
@@ -249,11 +254,6 @@ class Person extends VersionedRecord
             default:
                 return parent::setValue($name, $value);
         }
-    }
-
-    public static function getByHandle($handle)
-    {
-        return User::getByHandle($handle);
     }
 
     public static function getByEmail($email)

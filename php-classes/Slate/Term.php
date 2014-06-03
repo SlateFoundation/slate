@@ -112,11 +112,6 @@ class Term extends \VersionedRecord
         return static::getByWhere('Status = "Live" AND StartDate > CURRENT_TIMESTAMP', array('order' => 'StartDate ASC, `Right` - `Left`'));
     }
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public static function getOrCreateByHandle($handle)
     {
         if ($Term = static::getByHandle($handle)) {

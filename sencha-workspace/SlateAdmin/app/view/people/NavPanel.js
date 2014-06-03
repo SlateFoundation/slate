@@ -3,7 +3,8 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
     extend: 'Ext.Panel',
     xtype: 'people-navpanel',
     requires: [
-        'Ext.form.Panel'
+        'Ext.form.Panel',
+        'Jarvus.ext.form.field.Search'
     ],
 
     title: 'People',
@@ -14,24 +15,25 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         dock: 'top',
         cls: 'navpanel-search-form',
         items: [{
-            xtype: 'textfield',
+            xtype: 'searchfield',
             anchor: '100%',
-            inputType: 'search',
-            itemId: 'searchField',
-            emptyText: 'Search All People',
-            selectOnFocus: true
+            emptyText: 'Search All People'
         }]
     }],
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     items: [{
         xtype: 'form',
         bodyPadding: 10,
         itemId: 'advancedSearchForm',
         title: 'Advanced Search',
-//        collapsible: true,
-//        collapsed: false,
-//        stateful: true,
-//        stateId: 'peopleAdvSearchPanel',
-//        bodyPadding: '8 12',
+        collapsible: true,
+        collapsed: true,
+        titleCollapse: true,
+        stateful: true,
+        stateId: 'peopleAdvSearchPanel',
         border: 0,
         defaults: {
             anchor: '100%',
@@ -40,26 +42,28 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             labelSeparator: '',
             labelAlign: 'right',
             labelStyle: 'font-size: small; color: #666',
-            labelPad: 10
+            labelPad: 10,
+            autoSelect: false // only for comboboxes
         },
         items: [{
-            fieldLabel: 'First',
-            name: 'firstname'
+            name: 'firstname',
+            fieldLabel: 'First'
         },{
-            fieldLabel: 'Last',
-            name: 'lastname'
+            name: 'lastname',
+            fieldLabel: 'Last'
         },{
-            fieldLabel: 'User',
-            name: 'username'
+            name: 'username',
+            fieldLabel: 'User'
         },{
-            fieldLabel: 'ID #',
-            name: 'studentnumber'
+            name: 'studentnumber',
+            fieldLabel: 'ID #'
         },{
             xtype: 'combo',
-            fieldLabel: 'Year',
             name: 'year',
-            queryMode: 'local',
+            fieldLabel: 'Year',
             displayField: 'GraduationYear',
+            emptyText: 'Any',
+            queryMode: 'local',
             store: {
                 fields: ['GraduationYear'],
                 proxy: {
@@ -73,22 +77,20 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             } 
         },{
             xtype: 'combo',
-            store: {
-                fields: ['gender'],
-                data: [{gender: 'Male'}, {gender: 'Female'}]
-            },
+            name: 'gender',
+            fieldLabel: 'Gender',
             displayField: 'gender',
             valueField: 'gender',
-            queryMode: 'local',
-            fieldLabel: 'Gender',
-            name: 'gender'
-        },{
-            name: 'advisor',
-            xtype: 'combo',
-            valueField: 'Username',
-            fieldLabel: 'Advisor',
             emptyText: 'Any',
+            queryMode: 'local',
+            store: ['Male', 'Female']
+        },{
+            xtype: 'combo',
+            name: 'advisor',
+            fieldLabel: 'Advisor',
             displayField: 'FullName',
+            valueField: 'Username',
+            emptyText: 'Any',
             queryMode: 'local',
             store: {
                 fields: [
@@ -111,10 +113,10 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             }        
         },{
             xtype: 'combo',
-            fieldLabel: 'Course',
-            valueField: 'Handle',
-            displayField: 'Title',
             name: 'course',
+            fieldLabel: 'Course',
+            displayField: 'Title',
+            valueField: 'Handle',
             emptyText: 'Any',
             queryMode: 'local',
             store: {
@@ -128,32 +130,10 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
                     }
                 }
             }
+        },{
+            xtype: 'button',
+            action: 'search',
+            text: 'Search'
         }]
-    }],
-
-    // TODO: rename or move this to the controller?
-    updateSearchOptions: function(query){
-        if (!query) {
-            return false;
-        }
-        
-        var me = this,
-            form = me.down('#advancedSearchForm'),
-            queryArray = query.split(' '),
-            fieldNames = {firstname: '', lastname: '' , username: '', studentnumber: '', year: '', gender: '', advisor: '', course: ''},
-            i;
-        
-        for(i=0; i<queryArray.length; i++) {
-            var result = /(.+):(.+)/.exec(queryArray[i]),
-                field = result ? form.down('field[name='+result[1]+']') : false;
-            
-            if(field) {
-                field.setValue(result[2]);
-                delete fieldNames[result[1]];
-            }
-        }
-
-        form.getForm().setValues(fieldNames);
-        me.down('#searchField').setValue(query);
-    }
+    }]
 });

@@ -139,11 +139,6 @@ class Section extends \VersionedRecord
         return '(SELECT Course.Title FROM courses Course WHERE Course.ID = CourseSection.CourseID) ' . $dir;
     }
 
-    public static function getByHandle($handle)
-    {
-        return static::getByField('Handle', $handle, true);
-    }
-
     public function validate($deep = true)
     {
         // call parent
