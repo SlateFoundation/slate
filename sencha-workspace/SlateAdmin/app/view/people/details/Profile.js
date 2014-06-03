@@ -35,8 +35,19 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             fieldLabel: 'First Name'
         },{
             xtype: 'textfield',
+            name: 'MiddleName',
+            fieldLabel: 'Middle Name'
+        },{
+            xtype: 'textfield',
             name: 'LastName',
             fieldLabel: 'Last Name'
+        },{
+            xtype: 'combo',
+            name: 'Gender',
+            fieldLabel: 'Gender',
+            forceSelection: true,
+            queryMode: 'local',
+            store: ['Male', 'Female']
         },{
             xtype: 'textfield',
             name: 'StudentNumber',
