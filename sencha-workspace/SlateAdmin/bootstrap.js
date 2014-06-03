@@ -792,6 +792,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.window.Window": [
     "Ext.Window"
   ],
+  "Jarvus.ext.form.field.Search": [],
   "Jarvus.ext.override.app.ControllerRouting": [],
   "Jarvus.ext.override.data.StoreIsLoaded": [],
   "Jarvus.ext.override.form.field.LazyLocalCombo": [],
@@ -1759,6 +1760,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Ext.window.Window": [
     "widget.window"
+  ],
+  "Jarvus.ext.form.field.Search": [
+    "widget.searchfield"
   ],
   "Jarvus.ext.override.app.ControllerRouting": [],
   "Jarvus.ext.override.data.StoreIsLoaded": [],
