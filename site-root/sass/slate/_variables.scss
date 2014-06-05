@@ -1,14 +1,12 @@
-$base-color:    #008cc1;
-$accent-color:  $base-color;
-$page-bg-color: #f5f5f5;
+$base-color:    #008cc1     !default;
+$accent-color:  $base-color !default;
+$page-bg-color: #f5f5f5     !default;
 
-$heading-color: change-color($accent-color, $saturation: 60);
-$link-color:    $accent-color;
+$heading-color: change-color($accent-color, $saturation: 60) !default;
+$link-color:    $accent-color !default;
 
-$body-font:     Lato, 'Helvetica Neue', Tahoma, sans-serif;
-$heading-font:  Sanchez, Rockwell, Georgia, serif;
+$body-font:     Lato, 'Helvetica Neue', Tahoma, sans-serif !default;
+$heading-font:  Sanchez, Rockwell, Georgia, serif          !default;
 
 // button colors
-$destructive-color: #eed5d5;
-
-@import url('http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Sanchez:400italic,400');
+$destructive-color: #eed5d5 !default;
