@@ -64,7 +64,6 @@ Ext.define('SlateAdmin.model.Group', {
         type: 'boolean',
         persist: false,
         convert: function(v, r) {
-            debugger;
             if (typeof v == 'boolean') {
                 return v;
             } else {
