@@ -48,16 +48,6 @@ Ext.define('SlateAdmin.model.Group', {
         type: 'integer',
         useNull: true
     },{
-        name: 'Left',
-        type: 'integer',
-        persist: false,
-        useNull: true
-    },{
-        name: 'Right',
-        type: 'integer',
-        persist: false,
-        useNull: true
-    },{
         name: 'FullPath',
         convert: function(v,r){
             return '/' + v;
@@ -74,10 +64,11 @@ Ext.define('SlateAdmin.model.Group', {
         type: 'boolean',
         persist: false,
         convert: function(v, r) {
+            debugger;
             if (typeof v == 'boolean') {
                 return v;
             } else {
-                return r.get('Left') == r.get('Right') - 1;
+                return r.raw.Left == r.raw.Right - 1;
             }
         }
     }],
