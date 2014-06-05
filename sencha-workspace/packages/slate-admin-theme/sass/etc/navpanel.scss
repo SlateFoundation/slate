@@ -1,5 +1,5 @@
 .navpanel-search-form {
-    background: #444;
+    background: #999;
     border: none;
 
     .x-panel-body {
@@ -14,14 +14,14 @@
 
     input {
         background: white;
-        border: 1px solid #333;
+        border: 1px solid #666;
         @include border-radius(1em);
         font-size: small;
         padding: 2px 7px;
 
         -webkit-appearance: none;
         :-webkit-search-cancel-button {
-            -webkit-margin-end: 2px;
+            -webkit-margin-end: 0;
         }
     }
 }

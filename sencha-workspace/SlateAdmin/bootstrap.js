@@ -857,6 +857,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.widget.field.State": [],
   "SlateAdmin.widget.field.contact.Postal": [],
   "SlateAdmin.widget.grid.ContactPointCellEditor": [],
+  "SlateAdminTheme.form.FieldSet": [],
   "SlateAdminTheme.tab.Tab": [],
   "SlateAdminTheme.toolbar.TextItem": []
 });
@@ -1878,6 +1879,7 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.slate-postalfield"
   ],
   "SlateAdmin.widget.grid.ContactPointCellEditor": [],
+  "SlateAdminTheme.form.FieldSet": [],
   "SlateAdminTheme.tab.Tab": [],
   "SlateAdminTheme.toolbar.TextItem": []
 });
@@ -1896,6 +1898,7 @@ Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/util/PushHistory
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/data/StoreIsLoaded.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/proxy/Abort.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/proxy/DirtyParams.js");;
+Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/form/FieldSet.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/form/field/LazyLocalCombo.js");;
 Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/toolbar/Toolbar.js");;
 Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/tab/Tab.js");;
