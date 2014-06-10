@@ -41,5 +41,28 @@ Ext.define('SlateAdmin.controller.DeveloperTools', {
                 console.groupEnd();
             });
         }
+        
+        // log route handling
+        app.on({
+            beforeroute: function(app, route, result, token) {
+                console.groupCollapsed('%s.%s(%o) handling route: %s', route.controller.id, route.action, result, token);
+            },
+            route: function() {
+                console.groupEnd();
+            }
+        });
+
+        // log navigation events
+        me.control({
+            'slateadmin-navigation': {
+                beforerender: function(panel) { console.info('navigation->beforerender'); },
+                render: function(panel) { console.info('navigation->render'); }
+            },
+            'slateadmin-navigation > *': {
+                beforerender: function(panel) { console.info('navigation.%s->beforerender', panel.title); },
+                beforeexpand: function(panel) { console.info('navigation.%s->beforeexpand', panel.title); },
+                expand: function(panel) { console.info('navigation.%s->expand', panel.title); }
+            }
+        });
     }
 });

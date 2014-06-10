@@ -13,6 +13,8 @@ Ext.define('SlateAdmin.controller.People', {
 
     stores: [
         'People',
+        'Groups',
+        'GroupsTree',
         'people.AccountLevels'
     ],
 
@@ -53,7 +55,10 @@ Ext.define('SlateAdmin.controller.People', {
         selector: 'people-navpanel searchfield'
     },{
         ref: 'advancedSearchForm',
-        selector: 'people-navpanel #advancedSearchForm'
+        selector: 'people-navpanel people-advancedsearchform'
+    },{
+        ref: 'groupsTree',
+        selector: 'people-navpanel #groups'
     },{
         ref: 'manager',
         selector: 'people-manager',
@@ -109,15 +114,21 @@ Ext.define('SlateAdmin.controller.People', {
         var me = this;
 
         me.control({
+            'people-navpanel': {
+                expand: me.onNavPanelExpand
+            },
             'people-navpanel searchfield': {
                 specialkey: me.onSearchSpecialKey,
                 clear: me.onSearchClear
             },
-            'people-navpanel #advancedSearchForm field': {
+            'people-navpanel people-advancedsearchform field': {
                 specialkey: me.onAdvancedSearchFormSpecialKey
             },
             'people-navpanel button[action=search]': {
-                click: me.onAdvancedSearchFormSearchClick
+                click: me.onSearchClick
+            },
+            'people-navpanel #groups': {
+                select: me.onGroupSelect
             },
             'people-grid': {
                 select: { fn: me.onPersonSelect, buffer: 10 },
@@ -126,9 +137,6 @@ Ext.define('SlateAdmin.controller.People', {
             'people-manager #detailTabs': {
                 tabchange: me.onDetailTabChange
             }
-//            'people-navpanel fieldset #groupsMenu': {
-//                select: me.onGroupSelect
-//            },
 //            'people-grid #exportResultsBtn': {
 //                click: me.onExportResultsClick
 //            },
@@ -160,10 +168,26 @@ Ext.define('SlateAdmin.controller.People', {
 
     // route handlers
     showPeople: function() {
-        this.application.loadCard(this.getManager());
+        var me = this,
+            groupsTreePanel = me.getGroupsTree(),
+            _selectRootNode = function() {
+                groupsTreePanel.getSelectionModel().select(0, false, true);
+            };
+
+        Ext.suspendLayouts();
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(me.getManager());
+        Ext.resumeLayouts(true);
+
+        if (groupsTreePanel.rendered) {
+            _selectRootNode();
+        } else {
+            groupsTreePanel.on('render', _selectRootNode);
+        }
     },
 
     showPerson: function(person) {
+        // TODO: implement loading a person without a search query
 //        debugger;
     },
 
@@ -190,7 +214,8 @@ Ext.define('SlateAdmin.controller.People', {
         me.syncAdvancedSearchForm();
 
         // activate manager
-        me.application.loadCard(manager);
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(manager);
 
         // resume layouts and insert a small delay to allow layouts to flush before triggering store load so loading mask can size correctly
         Ext.resumeLayouts(true);
@@ -199,26 +224,25 @@ Ext.define('SlateAdmin.controller.People', {
 
             // execute search (suppressed by doSearch if query hasn't changed) and select user
             me.doSearch(false, function() {
-                if (person) {
-                    // activate tab
-                    if (tab) {
-                        manager.detailTabs.setActiveTab(tab);
-                    }
+                // activate tab
+                if (person && tab) {
+                    manager.detailTabs.setActiveTab(tab);
+                }
 
-                    me.selectPerson(person, function() {
-                        ExtHistory.resumeState();
-                        Ext.resumeLayouts(true);
-                    });
-                } else {
+                me.selectPerson(person, function() {
                     ExtHistory.resumeState();
                     Ext.resumeLayouts(true);
-                }
+                });
             });
         }, 10);
     },
 
 
     // event handlers
+    onNavPanelExpand: function(navPanel, isExpanding) {
+        this.syncState();
+    },
+
     onSearchSpecialKey: function(field, ev) {
         var query = field.getValue().trim();
 
@@ -233,6 +257,7 @@ Ext.define('SlateAdmin.controller.People', {
     
     onSearchClear: function(field, ev) {
         this.getAdvancedSearchForm().getForm().reset();
+        this.getGroupsTree().getSelectionModel().select(0, false, true);
     },
     
     onAdvancedSearchFormSpecialKey: function(field, ev) {
@@ -241,7 +266,11 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
     
-    onAdvancedSearchFormSearchClick: function() {
+    onSearchClick: function() {
+        this.syncQueryField(true);
+    },
+    
+    onGroupSelect: function() {
         this.syncQueryField(true);
     },
 
@@ -251,22 +280,14 @@ Ext.define('SlateAdmin.controller.People', {
 
     onPersonSelect: function(selModel, record, index) {
         var me = this,
-            selectionCount = selModel.getCount(),
-            path = ['people'],
-            manager = me.getManager(),
-            detailTabs = manager.detailTabs,
-            extraParams = me.getPeopleStore().getProxy().extraParams,
-            activeTab = null;
+            selectionCount = selModel.getCount();
 
         Ext.suspendLayouts();
         me.syncGridStatus();
 
         if (selectionCount == 1) {
-            manager.setSelectedPerson(record);
-
+            me.getManager().setSelectedPerson(record);
             me.syncState();
-
-            me.application.fireEvent('personselected', record, me);
         }
 
         Ext.resumeLayouts(true);
@@ -291,57 +312,6 @@ Ext.define('SlateAdmin.controller.People', {
         this.syncState();
     },
 
-//    onGroupSelect: function(selModel, record, index) {
-//        var me = this,
-//            peopleManager = me.getPeopleManager(),
-//            queryArray = [],
-//            form = me.getPeopleSearchOptionsForm(),
-//            values = form.getValues(false, false, false, true);
-//
-//        for(var key in values) {
-//
-//            queryArray.push({
-//                field: key,
-//                value: values[key]
-//            });
-//        }
-//
-//        queryArray.push({value:record.get('Handle'), field:'group'});
-//
-//        Ext.util.History.add('people/search/'+me.encodeHashString(me.concatFieldsToQuery(queryArray)));
-//    },
-//
-//    onSearchOptionChange: function(field, newValue) {
-//        var me = this,
-//            form = me.getPeopleSearchOptionsForm(),
-//            values = form.getValues(false, false, false, true)//Won't return combo's that have just had their value changed to blank unless i pass these params,
-//            queryArray = [],
-//            query,
-//            searchValue = me.getPeopleSearchField().getValue(),
-//            manager = me.getPeopleManager(),
-//            loadedQuery = Ext.getStore('People').getProxy().extraParams;
-//
-//        for(var key in values) {
-//            queryArray.push({
-//                field: key,
-//                value: values[key]
-//            });
-//        }
-//
-//        query = me.concatFieldsToQuery(queryArray, loadedQuery.q);
-//
-//        if(searchValue != loadedQuery.q || loadedQuery.q != query) {
-//            loadedQuery.q = query;
-//        }
-//        else{
-//            return;
-//        }
-//
-//
-//
-//        Ext.util.History.add('people/search/'+me.encodeHashString(query));
-//    },
-//
 //    onExportMenuRendered: function(exportMenu) {
 //        var grid = exportMenu.up('people-grid'),
 //            exportItems = grid.getExportItems();
@@ -417,52 +387,13 @@ Ext.define('SlateAdmin.controller.People', {
 
 
     // controller methods
-//    concatFieldsToQuery: function(fields, loadedQuery) {
-//        var loadedQueryArray,
-//            j;
-//
-//        for(j = 0; j<fields.length; j++) {
-//            var field = fields[j].field,
-//                value = fields[j].value,
-//                foundFieldQuery = false,
-//                queryString = field+':' + value;
-//
-//            if(loadedQuery) {
-//                loadedQueryArray = loadedQuery.split(' ');
-//
-//                for(var i = 0; i<loadedQueryArray.length && !foundFieldQuery; i++) {
-//                    var regexField = new RegExp('^'+field+':');
-//                    if(regexField.test(loadedQueryArray[i])) {
-//
-//                        if(value) {
-//                            loadedQueryArray[i] = queryString;
-//                        } else {
-//                            delete loadedQueryArray[i];
-//                        }
-//                        foundFieldQuery = true;
-//                    }
-//                }
-//
-//
-//                loadedQuery = loadedQueryArray.join(' ');
-//            }
-//
-//            if(loadedQuery && value && !foundFieldQuery) {
-//                loadedQuery += ' '+queryString;
-//            } else if (!loadedQuery && value) {
-//                loadedQuery = queryString;
-//            }
-//        }
-//
-//        return loadedQuery.trim();
-//    },
-//
     doSearch: function(forceReload, callback) {
         var me = this,
             store = Ext.getStore('People'),
             proxy = store.getProxy();
 
         if (forceReload || proxy.isExtraParamsDirty()) {
+            proxy.abortLastRequest(true);
             me.getManager().setSelectedPerson(null);
             store.removeAll();
             me.getGrid().getSelectionModel().clearSelections();
@@ -477,17 +408,19 @@ Ext.define('SlateAdmin.controller.People', {
 
     syncState: function() {
         var me = this,
-            selModel = me.getGrid().getSelectionModel(),
             manager = me.getManager(),
+            selModel = me.getGrid().getSelectionModel(),
             detailTabs = manager.detailTabs,
             personRecord = manager.getSelectedPerson(),
             extraParams = me.getPeopleStore().getProxy().extraParams,
             path = ['people'],
+            title = 'People',
             activeTab = null;
 
 
         if (extraParams && extraParams.q) {
             path.push('search', extraParams.q);
+            title = '&ldquo;' + extraParams.q + '&rdquo;';
         }
 
         if (personRecord) {
@@ -499,9 +432,11 @@ Ext.define('SlateAdmin.controller.People', {
 
             activeTab = detailTabs.getActiveTab() || detailTabs.items.getAt(0);
             path.push(activeTab.getItemId());
+
+            title = activeTab.title + ' &mdash; ' + personRecord.getFullName();
         }
 
-        Ext.util.History.pushState(path);
+        Ext.util.History.pushState(path, title);
     },
 
     syncGridStatus: function() {
@@ -565,11 +500,14 @@ Ext.define('SlateAdmin.controller.People', {
             form = me.getAdvancedSearchForm().getForm(),
             fields = form.getFields().items,
             fieldsLen = fields.length, fieldIndex = 0, field, fieldName,
+            groupsTreePanel = me.getGroupsTree(),
+            rootGroupNode = me.getGroupsTreeStore().getRootNode(),
             query = me.getSearchField().getValue(),
             terms = query.split(/\s+/),
             termsLen = terms.length, termIndex = 0, term,
             values = {};
 
+        // build map of keyed search terms
         for (; termIndex < termsLen; termIndex++) {
             term = terms[termIndex].split(/:/, 2);
             if (term.length == 2) {
@@ -579,6 +517,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         Ext.suspendLayouts();
 
+        // sync advanced search fields from query term values
         for (; fieldIndex < fieldsLen; fieldIndex++) {
             field = fields[fieldIndex];
             fieldName = field.getName();
@@ -588,6 +527,19 @@ Ext.define('SlateAdmin.controller.People', {
             } else {
                 field.reset();
             }
+        }
+
+        // sync group selection
+        if (values.group) {
+            rootGroupNode.expand(false, function() {
+                var groupNode = rootGroupNode.findChild('Handle', values.group, true);
+                
+                if (groupNode) {
+                    groupsTreePanel.selectRecord(groupNode, false, true); // true to suppress select event because we're bringing the tree in-sync with an existing selection rather than making a new one
+                }
+            }); 
+        } else {
+            groupsTreePanel.selectRecord(rootGroupNode, false, true); // true to suppress select event because we're bringing the tree in-sync with an existing selection rather than making a new one
         }
 
         Ext.resumeLayouts(true);
@@ -602,6 +554,7 @@ Ext.define('SlateAdmin.controller.People', {
         var me = this,
             searchField = me.getSearchField(),
             form = me.getAdvancedSearchForm().getForm(),
+            selectedGroups = me.getGroupsTree().getSelectionModel().getSelection(),
             fields = form.getFields().items,
             fieldsLen = fields.length, fieldIndex = 0, field, fieldName, fieldValue,
             query = searchField.getValue(),
@@ -611,7 +564,7 @@ Ext.define('SlateAdmin.controller.People', {
             unmatchedTerms = [],
             queuedTerms = [];
 
-        // build list of field names and queued terms
+        // build list of field names and queued terms from advanced search form
         for (; fieldIndex < fieldsLen; fieldIndex++) {
             field = fields[fieldIndex];
             fieldName = field.getName();
@@ -624,6 +577,13 @@ Ext.define('SlateAdmin.controller.People', {
             }
         }
 
+        // add selected group
+        fieldNames.push('group');
+        if (selectedGroups.length > 0 && (fieldValue = selectedGroups[0].get('Handle'))) {
+            queuedTerms.push('group:'+fieldValue);
+        }
+
+        // scan query for terms that don't match a field
         for (; termIndex < termsLen; termIndex++) {
             term = terms[termIndex];
             splitTerm = term.split(/:/, 2);
@@ -632,49 +592,61 @@ Ext.define('SlateAdmin.controller.People', {
             }
         }
 
-        query = Ext.Array.merge(unmatchedTerms, queuedTerms).join(' ');
+        // build a query string that combines the unmatched terms with field values
+        query = Ext.String.trim(Ext.Array.merge(unmatchedTerms, queuedTerms).join(' '));
         searchField.setValue(query);
 
         if (execute) {
-            Ext.util.History.add(['people', 'search', query]);
+            Ext.util.History.add(query ? ['people', 'search', query] : 'people');
         }
     },
 
+    /**
+     * Selects a person (or clears selection) and updates grid+manager state without firing any select/deselect events
+     */
     selectPerson: function(person, callback) {
         var me = this,
             manager = me.getManager(),
             grid = me.getGrid(),
             store = grid.getStore(),
             selModel = grid.getSelectionModel(),
-            personRecord, queryParts, fieldName, fieldValue;
+            personRecord, queryParts, fieldName, fieldValue,
+            _finishSelectPerson;
+            
+        _finishSelectPerson = function() {
+            if (personRecord) {
+                selModel.select(personRecord, false, true);
+            } else {
+                selModel.deselectAll(true);
+            }
+
+            manager.setSelectedPerson(personRecord || null);
+            me.syncGridStatus();
+            me.syncState();
+            Ext.callback(callback, me);
+        };
 
         if (!person) {
-            selModel.deselectAll();
-            Ext.callback(callback, me);
-            return true;
+           _finishSelectPerson();
         } else if (Ext.isString(person) && person.charAt(0) != '?') {
-            personRecord = store.findExact('Username', person);
+            personRecord = store.findRecord('Username', person);
 
-            if (personRecord >= 0) {
-                selModel.select(personRecord);
-                Ext.callback(callback, me);
+            if (personRecord) {
+                _finishSelectPerson();
             } else {
-
                 store.load({
                     url: '/people/json/'+person,
                     callback: function(records, operation, success) {
                         if (!success || !records.length) {
-                            Ext.Msg.alert('Error','Could not find the group/person you requested');
+                            Ext.Msg.alert('Error', 'Could not find the group/person you requested');
                         } else {
-                            selModel.select(records[0]);
+                            personRecord = records[0];
                         }
 
-                        Ext.callback(callback, me);
+                        _finishSelectPerson();
                     }
                 });
             }
-
-            return true;
         } else if (Ext.isString(person)) {
             queryParts = person.substr(1).split('=',2);
             fieldName = queryParts[0];
@@ -684,8 +656,7 @@ Ext.define('SlateAdmin.controller.People', {
                 personRecord = store.getById(parseInt(fieldValue, 10));
 
                 if (personRecord) {
-                    selModel.select(personRecord);
-                    Ext.callback(callback, me);
+                    _finishSelectPerson();
                 } else {
                     store.load({
                         url: '/people/json/'+fieldValue,
@@ -693,28 +664,20 @@ Ext.define('SlateAdmin.controller.People', {
                             if (!success || !records.length) {
                                 Ext.Msg.alert('Error','Could not find the person you requested');
                             } else {
-                                selModel.select(records[0]);
+                                personRecord = records[0];
                             }
 
-                            Ext.callback(callback, me);
+                            _finishSelectPerson();
                         }
                     });
                 }
-
-                return true;
             } else {
                 Ext.Msg.alert('Error', 'Unknown person field: '+fieldName);
-
-                Ext.callback(callback, me);
-                return false;
+                _finishSelectPerson();
             }
         } else {
-            selModel.select(person);
-
-            Ext.callback(callback, me);
-            return true;
+            personRecord = person;
+            _finishSelectPerson();
         }
-
-        return false;
     }
 });

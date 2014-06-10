@@ -1,26 +1,25 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.courses.NavPanel', {
-    extend: 'Ext.Panel',
+    extend: 'SlateAdmin.view.LinksNavPanel',
     xtype: 'courses-navpanel',
     requires: [
         'Ext.form.Panel',
-        'SlateAdmin.widget.SearchBar'
+        'Jarvus.ext.form.field.Search'
     ],
     
     title: 'Courses',
-    html: [
-        '<ul class="slate-nav-list">',
-            '<li class="slate-nav-list-item"><a class="slate-nav-list-link" href="#courses/mycourses">My Courses</a></li>',
-            '<li class="slate-nav-list-item"><a class="slate-nav-list-link" href="#courses">Browse All Courses</a></li>',
-        '</ul>'
+    data: [
+        { href: '#courses/mine', text: 'My Courses' },
+        { href: '#courses/all', text: 'All Courses' }
     ],
     dockedItems: [{
-        xtype: 'form',
         dock: 'top',
+
+        xtype: 'form',
         cls: 'navpanel-search-form',
-        layout: 'auto',
         items: [{
-            xtype: 'slateadmin-searchbar'
+            xtype: 'searchfield',
+            anchor: '100%'
         }]
     }]
 });
