@@ -14,9 +14,12 @@ Ext.Loader.addClassPathMappings({
   "Jarvus.ext.override.data": "../packages/jarvus-ext-lazydata/overrides/data",
   "Jarvus.ext.override.form": "../packages/jarvus-ext-lazydata/overrides/form",
   "Jarvus.ext.override.grid": "../x/Jarvus/ext/override/grid",
+  "Jarvus.ext.override.panel": "../x/Jarvus/ext/override/panel",
   "Jarvus.ext.override.proxy": "../packages/jarvus-ext-lazydata/overrides/proxy",
+  "Jarvus.ext.override.tree": "../x/Jarvus/ext/override/tree",
   "SlateAdmin": "app",
   "SlateAdminTheme": "../packages/slate-admin-theme/overrides",
+  "SlateAdminTheme.override": "../packages/slate-admin-theme/overrides",
   "SlateAdminTheme.toolbar.TextItem": "../packages/slate-admin-theme/overrides/toolbar/Toolbar.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
@@ -798,11 +801,14 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.override.form.field.LazyLocalCombo": [],
   "Jarvus.ext.override.grid.column.ActionEvents": [],
   "Jarvus.ext.override.grid.column.ActionGlyphs": [],
+  "Jarvus.ext.override.panel.ToggleEvent": [],
   "Jarvus.ext.override.proxy.Abort": [],
   "Jarvus.ext.override.proxy.DirtyParams": [],
+  "Jarvus.ext.override.tree.Records": [],
   "Jarvus.ext.override.util.EncodedHistory": [],
   "Jarvus.ext.override.util.InstantHistory": [],
   "Jarvus.ext.override.util.PushHistory": [],
+  "Jarvus.ext.patch.panel.ExpandBeforeRender": [],
   "Jarvus.ext.proxy.API": [],
   "Jarvus.util.AbstractAPI": [],
   "Jarvus.util.MD5": [],
@@ -810,15 +816,16 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.Application": [],
   "SlateAdmin.controller.Courses": [],
   "SlateAdmin.controller.DeveloperTools": [],
-  "SlateAdmin.controller.Groups": [],
   "SlateAdmin.controller.Login": [],
   "SlateAdmin.controller.People": [],
+  "SlateAdmin.controller.Settings": [],
   "SlateAdmin.controller.Terms": [],
   "SlateAdmin.controller.Viewport": [],
   "SlateAdmin.controller.people.Contacts": [],
   "SlateAdmin.controller.people.Courses": [],
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
+  "SlateAdmin.controller.settings.Groups": [],
   "SlateAdmin.model.Group": [],
   "SlateAdmin.model.Person": [],
   "SlateAdmin.model.Section": [],
@@ -828,6 +835,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.proxy.API": [],
   "SlateAdmin.proxy.Records": [],
   "SlateAdmin.store.Groups": [],
+  "SlateAdmin.store.GroupsTree": [],
   "SlateAdmin.store.People": [],
   "SlateAdmin.store.SectionStudents": [],
   "SlateAdmin.store.Sections": [],
@@ -836,6 +844,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.store.people.ContactPointTemplates": [],
   "SlateAdmin.store.people.Invitations": [],
   "SlateAdmin.view.Header": [],
+  "SlateAdmin.view.LinksNavPanel": [],
   "SlateAdmin.view.LoginWindow": [],
   "SlateAdmin.view.Navigation": [],
   "SlateAdmin.view.Viewport": [],
@@ -843,6 +852,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.view.groups.Manager": [],
   "SlateAdmin.view.groups.Menu": [],
   "SlateAdmin.view.groups.NavPanel": [],
+  "SlateAdmin.view.people.AdvancedSearchForm": [],
   "SlateAdmin.view.people.Grid": [],
   "SlateAdmin.view.people.Manager": [],
   "SlateAdmin.view.people.NavPanel": [],
@@ -853,11 +863,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.view.people.details.contact.ContextMenu": [],
   "SlateAdmin.view.people.invitations.Panel": [],
   "SlateAdmin.view.people.invitations.Window": [],
-  "SlateAdmin.widget.SearchBar": [],
+  "SlateAdmin.view.settings.NavPanel": [],
   "SlateAdmin.widget.field.State": [],
   "SlateAdmin.widget.field.contact.Postal": [],
   "SlateAdmin.widget.grid.ContactPointCellEditor": [],
   "SlateAdminTheme.form.FieldSet": [],
+  "SlateAdminTheme.override.app.Application": [],
   "SlateAdminTheme.tab.Tab": [],
   "SlateAdminTheme.toolbar.TextItem": []
 });
@@ -1770,11 +1781,14 @@ Ext.ClassManager.addNameAliasMappings({
   "Jarvus.ext.override.form.field.LazyLocalCombo": [],
   "Jarvus.ext.override.grid.column.ActionEvents": [],
   "Jarvus.ext.override.grid.column.ActionGlyphs": [],
+  "Jarvus.ext.override.panel.ToggleEvent": [],
   "Jarvus.ext.override.proxy.Abort": [],
   "Jarvus.ext.override.proxy.DirtyParams": [],
+  "Jarvus.ext.override.tree.Records": [],
   "Jarvus.ext.override.util.EncodedHistory": [],
   "Jarvus.ext.override.util.InstantHistory": [],
   "Jarvus.ext.override.util.PushHistory": [],
+  "Jarvus.ext.patch.panel.ExpandBeforeRender": [],
   "Jarvus.ext.proxy.API": [
     "proxy.api"
   ],
@@ -1784,15 +1798,16 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.Application": [],
   "SlateAdmin.controller.Courses": [],
   "SlateAdmin.controller.DeveloperTools": [],
-  "SlateAdmin.controller.Groups": [],
   "SlateAdmin.controller.Login": [],
   "SlateAdmin.controller.People": [],
+  "SlateAdmin.controller.Settings": [],
   "SlateAdmin.controller.Terms": [],
   "SlateAdmin.controller.Viewport": [],
   "SlateAdmin.controller.people.Contacts": [],
   "SlateAdmin.controller.people.Courses": [],
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
+  "SlateAdmin.controller.settings.Groups": [],
   "SlateAdmin.model.Group": [],
   "SlateAdmin.model.Person": [],
   "SlateAdmin.model.Section": [],
@@ -1806,6 +1821,7 @@ Ext.ClassManager.addNameAliasMappings({
     "proxy.slaterecords"
   ],
   "SlateAdmin.store.Groups": [],
+  "SlateAdmin.store.GroupsTree": [],
   "SlateAdmin.store.People": [],
   "SlateAdmin.store.SectionStudents": [],
   "SlateAdmin.store.Sections": [
@@ -1819,6 +1835,9 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.store.people.Invitations": [],
   "SlateAdmin.view.Header": [
     "widget.slateadmin-header"
+  ],
+  "SlateAdmin.view.LinksNavPanel": [
+    "widget.links-navpanel"
   ],
   "SlateAdmin.view.LoginWindow": [
     "widget.slateadmin-loginwindow"
@@ -1838,6 +1857,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "SlateAdmin.view.groups.NavPanel": [
     "widget.groups-navpanel"
+  ],
+  "SlateAdmin.view.people.AdvancedSearchForm": [
+    "widget.people-advancedsearchform"
   ],
   "SlateAdmin.view.people.Grid": [
     "widget.people-grid"
@@ -1869,8 +1891,8 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.view.people.invitations.Window": [
     "widget.people-invitationswindow"
   ],
-  "SlateAdmin.widget.SearchBar": [
-    "widget.slateadmin-searchbar"
+  "SlateAdmin.view.settings.NavPanel": [
+    "widget.settings-navpanel"
   ],
   "SlateAdmin.widget.field.State": [
     "widget.slate-statefield"
@@ -1880,6 +1902,7 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "SlateAdmin.widget.grid.ContactPointCellEditor": [],
   "SlateAdminTheme.form.FieldSet": [],
+  "SlateAdminTheme.override.app.Application": [],
   "SlateAdminTheme.tab.Tab": [],
   "SlateAdminTheme.toolbar.TextItem": []
 });
@@ -1891,6 +1914,7 @@ Ext.setVersion("extjs-boxselect", "1.0.0");
 Ext.setVersion("jarvus-ext-lazydata", "1.0.0");
 Ext.setVersion("jarvus-ext-routing", "1.0.0");
 Ext.setVersion("slate-admin-theme", "1.0.0");
+Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/app/Application.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/app/ControllerRouting.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/util/EncodedHistory.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/util/InstantHistory.js");;
