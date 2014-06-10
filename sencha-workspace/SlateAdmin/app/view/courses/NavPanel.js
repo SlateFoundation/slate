@@ -4,7 +4,7 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
     xtype: 'courses-navpanel',
     requires: [
         'Ext.form.Panel',
-        'SlateAdmin.widget.SearchBar'
+        'Jarvus.ext.form.field.Search'
     ],
     
     title: 'Courses',
@@ -15,12 +15,13 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         '</ul>'
     ],
     dockedItems: [{
-        xtype: 'form',
         dock: 'top',
+
+        xtype: 'form',
         cls: 'navpanel-search-form',
-        layout: 'auto',
         items: [{
-            xtype: 'slateadmin-searchbar'
+            xtype: 'searchfield',
+            anchor: '100%'
         }]
     }]
 });

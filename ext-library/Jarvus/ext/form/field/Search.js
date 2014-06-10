@@ -5,6 +5,7 @@ Ext.define('Jarvus.ext.form.field.Search', {
 
     inputType: 'search',
     selectOnFocus: true,
+    emptyText: 'Search…',
 
     initEvents: function() {
         var me = this;
