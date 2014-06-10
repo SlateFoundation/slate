@@ -61,5 +61,12 @@ Ext.define('SlateAdmin.Application', {
 
     loadCard: function(card) {
         return this.getController('Viewport').loadCard(card);
+    
+    onRouteNotFound: function(token) {
+        if (!token) {
+            Ext.util.History.add('people');
+        } else {
+            console.warn('Route not found: %o', token);
+        }
     }
 });
