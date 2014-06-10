@@ -7,6 +7,11 @@ Ext.define('SlateAdmin.Application', {
         // Jarvus enhancements
         'Jarvus.ext.override.grid.column.ActionEvents',
         'Jarvus.ext.override.grid.column.ActionGlyphs',
+        'Jarvus.ext.override.panel.ToggleEvent',
+        'Jarvus.ext.override.tree.Records',
+        
+        // Jarvus bug fixes
+        'Jarvus.ext.patch.panel.ExpandBeforeRender',
 
         // framework features
         'Ext.state.LocalStorageProvider'
@@ -26,11 +31,12 @@ Ext.define('SlateAdmin.Application', {
         'people.Profile',
         'people.Courses',
         'people.Contacts',
-        
-        'Groups',
+
         'Terms',
-        'Courses'
-        
+        'Courses',
+        'Settings',
+        'settings.Groups'
+
         //<debug>
         ,'DeveloperTools'
         //</debug>
@@ -58,9 +64,6 @@ Ext.define('SlateAdmin.Application', {
         
         return matchedController;
     },
-
-    loadCard: function(card) {
-        return this.getController('Viewport').loadCard(card);
     
     onRouteNotFound: function(token) {
         if (!token) {

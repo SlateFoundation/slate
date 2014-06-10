@@ -8,7 +8,7 @@ Ext.define('SlateAdmin.view.groups.Manager', {
 
     useArrows: true,
     rootVisible: false,
-    store: 'Groups',
+    store: 'GroupsTree',
     columns: [{
         xtype: 'treecolumn',
         text: 'Group',

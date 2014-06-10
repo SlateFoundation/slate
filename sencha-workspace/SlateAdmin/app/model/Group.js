@@ -13,7 +13,7 @@ Ext.define('SlateAdmin.model.Group', {
         useNull: true
     },{
         name: 'Class',
-        defaultValue: 'Group'
+        defaultValue: 'Emergence\\People\\Groups\\Group'
     },{
         name: 'Created',
         type: 'date',
@@ -36,22 +36,26 @@ Ext.define('SlateAdmin.model.Group', {
         type: 'string',
         defaultValue: 'Active'
     },{
-        name: 'Data',
+        name: 'Founded',
+        type: 'date',
+        dateFormat: 'timestamp'
+    },{
+        name: 'About',
+        type: 'string',
         useNull: true
     },{
         name: 'Population',
         type: 'integer',
-        persist: false,
-        defaultValue: 0
+        useNull: true,
+        persist: false
     },{
         name: 'ParentID',
         type: 'integer',
         useNull: true
     },{
-        name: 'FullPath',
-        convert: function(v,r){
-            return '/' + v;
-        }
+        name: 'namesPath',
+        type: 'string',
+        persist: false
     },{
         name: 'text',
         type: 'string',
@@ -70,6 +74,31 @@ Ext.define('SlateAdmin.model.Group', {
                 return r.raw.Left == r.raw.Right - 1;
             }
         }
+    },{
+        name: 'qtip',
+        convert: function(v, r) {
+            var qtip = [],
+                population = r.get('Population'),
+                founded = r.get('Founded'),
+                about = r.get('About');
+            
+            if (founded) {
+                qtip.push('Founded: ' + founded.toLocaleDateString());
+            }
+            
+            if (Ext.isNumber(population)) {
+                qtip.push('Population: ' + population.toLocaleString());
+            }
+            
+            if (about) {
+                qtip.push('About: <span style="white-space: pre">' + about + '</q>');
+            }
+
+            return qtip.join('<br>');
+        }
+    },{
+        name: 'qshowDelay',
+        defaultValue: 2000
     }],
 
     proxy: {

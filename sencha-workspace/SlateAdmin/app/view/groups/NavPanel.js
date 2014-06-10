@@ -12,7 +12,7 @@ Ext.define('SlateAdmin.view.groups.NavPanel', {
         items: [{
             xtype: 'button',
             flex: 1,
-            href: '#groups',
+            href: '#groups/manage',
             hrefTarget: null,
             text: 'Manage Groups'
         }]

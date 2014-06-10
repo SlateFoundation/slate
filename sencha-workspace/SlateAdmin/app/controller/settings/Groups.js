@@ -1,12 +1,10 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.controller.Groups', {
+Ext.define('SlateAdmin.controller.settings.Groups', {
     extend: 'Ext.app.Controller',
     
     
     // controller config
     views: [
-        'groups.NavPanel',
-        
         'groups.Manager',
         'groups.Menu'
     ],
@@ -20,15 +18,12 @@ Ext.define('SlateAdmin.controller.Groups', {
     ],
     
     routes: {
-        'groups': 'showGroups'
+        'settings/groups': 'showManager'
     },
     
     refs: [{
-        ref: 'navPanel',
-        selector: 'groups-navpanel',
-        autoCreate: true,
-        
-        xtype: 'groups-navpanel'
+        ref: 'settingsNavPanel',
+        selector: 'settings-navpanel'
     },{
         ref: 'manager',
         selector: 'groups-manager',
@@ -49,9 +44,6 @@ Ext.define('SlateAdmin.controller.Groups', {
         var me = this;
 
         me.control({
-            'groups-navpanel': {
-                expand: me.onNavPanelExpand
-            },
             'groups-manager': {
                 show: me.onManagerShow,
                 itemcontextmenu: me.onGroupContextMenu
@@ -71,40 +63,37 @@ Ext.define('SlateAdmin.controller.Groups', {
         });
     },
     
-    buildNavPanel: function() {
-        return this.getNavPanel();
-    },
-    
     
     // route handlers
-    showGroups: function() {
-        this.application.loadCard(this.getManager());
+    showManager: function() {
+        var me = this,
+            navPanel = me.getSettingsNavPanel();
+
+        Ext.suspendLayouts();
+
+        Ext.util.History.suspendState();
+        navPanel.setActiveLink('settings/groups');
+        navPanel.expand(false);
+        Ext.util.History.resumeState(false); // false to discard any changes to state
+        
+        me.application.getController('Viewport').loadCard(me.getManager());
+
+        Ext.resumeLayouts(true);
     },
     
     
     // event handlers
-    onNavPanelExpand: function(navPanel) {
-        var rootNode = navPanel.getRootNode();
-        
-        if (rootNode.get('leaf')) {
-            navPanel.setLoading('Loading groups&hellip;');
-            rootNode.set('leaf', false);
-            rootNode.expand(false, function() {
-                navPanel.setLoading(false);
-            });
-        }
-    },
-    
     onManagerShow: function(managerPanel) {
         var rootNode = managerPanel.getRootNode();
-        
-        if (rootNode.get('leaf')) {
+
+        if (!rootNode.isLoaded()) {
             managerPanel.setLoading('Loading groups&hellip;');
-            rootNode.set('leaf', false);
             rootNode.expand(false, function() {
                 managerPanel.setLoading(false);
             });
         }
+
+        Ext.util.History.pushState('settings/groups', 'Groups &mdash; Settings');
     },
 
     onGroupContextMenu: function(tree, record, item, index, ev) {

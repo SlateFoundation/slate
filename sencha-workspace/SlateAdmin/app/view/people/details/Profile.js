@@ -74,18 +74,8 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             stacked: true,
             anyMatch: true,
             lazyAutoLoad: false,
-            store: {
-                model: 'SlateAdmin.model.Group',
-                proxy : {
-                    type: 'slaterecords',
-                    url: '/groups',
-                    include: ['FullPath'],
-                    extraParams: {
-                        parentGroup: 'any'
-                    }
-                }
-            },
-            displayField: 'FullPath',
+            store: 'Groups',
+            displayField: 'namesPath',
             valueField: 'ID'
         },{
             text: 'Save',
