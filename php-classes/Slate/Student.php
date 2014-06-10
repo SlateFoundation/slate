@@ -3,12 +3,13 @@
 namespace Slate;
 
 use DB;
-use Person;
+use \Emergence\People\Person;
+use \Emergence\People\User;
 use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
-class Student extends \User
+class Student extends User
 {
     public static $fields = array(
         'StudentNumber' => array(

@@ -1,7 +1,7 @@
 <?php
 
-User::$subClasses[] = 'Slate\\Student';
-User::$fields['AccountLevel']['values'] = array(
+\Emergence\People\User::$subClasses[] = 'Slate\\Student';
+\Emergence\People\User::$fields['AccountLevel']['values'] = array(
     'Disabled'
     ,'Contact'
     ,'User'
@@ -12,7 +12,7 @@ User::$fields['AccountLevel']['values'] = array(
     ,'Developer'
 );
 
-User::$fields['AssignedPassword'] = array(
+\Emergence\People\User::$fields['AssignedPassword'] = array(
     'type' => 'string'
     ,'notnull' => false
     ,'accountLevelEnumerate' => 'Staff'

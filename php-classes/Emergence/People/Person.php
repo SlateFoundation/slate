@@ -1,5 +1,11 @@
 <?php
 
+namespace Emergence\People;
+
+use DB;
+use VersionedRecord;
+use Group;
+
 class Person extends VersionedRecord
 {
     // support subclassing
@@ -193,12 +199,43 @@ class Person extends VersionedRecord
         )
     );
 
-    // Person
-    public static $requireGender = false;
-    public static $requireBirthDate = false;
-    public static $requireLocation = false;
-    public static $requireAbout = false;
+    public static $validators = array(
+        'Class' => array(
+            'validator' => 'selection'
+            ,'choices' => array() // filled dynamically in __classLoaded
+            ,'required' => false
+        )
+        ,'FirstName' => array(
+            'minlength' => 2
+            ,'required' => true
+            ,'errorMessage' => 'First name is required.'
+        )
+        ,'LastName' => array(
+            'minlength' => 2
+            ,'required' => true
+            ,'errorMessage' => 'Last name is required.'
+        )
+        ,'BirthDate' => array(
+            'validator' => 'date_ymd'
+            ,'required' => false
+        )
+        ,'Gender' => array(
+            'validator' => 'selection'
+            ,'required' => false
+            ,'choices' => array() // filled dynamically in __classLoaded
+        )
+    );
 
+    // Person
+    public static function __classLoaded()
+    {
+        if (get_called_class() == __CLASS__) {
+            self::$validators['Class']['choices'] = static::getStaticSubClasses();
+            self::$validators['Gender']['choices'] = self::$fields['Gender']['values'];
+        }
+
+        parent::__classLoaded();
+    }
 
     public function getValue($name)
     {
@@ -287,7 +324,7 @@ class Person extends VersionedRecord
         $parts = preg_split('/\s+/', trim($fullName), 2);
 
         if (count($parts) != 2) {
-            throw new Exception('Full name must contain a first and last name separated by a space');
+            throw new \Exception('Full name must contain a first and last name separated by a space.');
         }
 
         return array(
@@ -300,41 +337,6 @@ class Person extends VersionedRecord
     {
         // call parent
         parent::validate($deep);
-
-        $this->_validator->validate(array(
-            'field' => 'Class'
-            ,'validator' => 'selection'
-            ,'choices' => self::$subClasses
-            ,'required' => false
-        ));
-
-        $this->_validator->validate(array(
-            'field' => 'FirstName'
-            ,'minlength' => 2
-            ,'required' => true
-            ,'errorMessage' => 'First name is required'
-        ));
-
-        $this->_validator->validate(array(
-            'field' => 'LastName'
-            ,'minlength' => 2
-            ,'required' => true
-            ,'errorMessage' => 'Last name is required'
-        ));
-
-        $this->_validator->validate(array(
-            'field' => 'BirthDate'
-            ,'validator' => 'date_ymd'
-            ,'required' => static::$requireBirthDate
-        ));
-
-        $this->_validator->validate(array(
-            'field' => 'Gender'
-            ,'validator' => 'selection'
-            ,'required' => static::$requireGender
-            ,'choices' => self::$fields['Gender']['values']
-        ));
-
 
         // investigate dirty PrimaryEmail/PrimaryEmailID
         if (($this->isFieldDirty('PrimaryEmailID') && $this->PrimaryEmailID) || (!$this->PrimaryEmailID && $this->PrimaryEmail)) {
@@ -359,7 +361,6 @@ class Person extends VersionedRecord
                 $this->_validator->addError('PrimaryPostalID', 'PrimaryPostal already belongs to another person');
             }
         }
-
 
         // save results
         return $this->finishValidation();

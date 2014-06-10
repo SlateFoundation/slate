@@ -1,7 +1,13 @@
 <?php
 
+namespace Emergence\People;
+
+use DB;
+
 class User extends Person
 {
+    public static $minPasswordLength = 5;
+
     public static $defaultClass = __CLASS__;
     public static $subClasses = array(__CLASS__);
     public static $singularNoun = 'user';
@@ -24,15 +30,25 @@ class User extends Person
         )
     );
 
-    // User
-    public static $minPasswordLength = 5;
+    public static $validators = array(
+        'Username' => array(
+            'validator' => 'handle'
+            ,'required' => true
+            ,'errorMessage' => 'Username can only contain letters, numbers, hyphens, and underscores.'
+        )
+        ,'AccountLevel' => array(
+            'validator' => 'selection'
+            ,'choices' => array() // filled dynamically in __classLoaded
+            ,'required' => false
+        )
+    );
 
-
-    static function __classLoaded()
+    public static function __classLoaded()
     {
         // merge User classes into valid Person classes, but not again when child classes are loaded
         if (get_called_class() == __CLASS__) {
             Person::$subClasses = static::$subClasses = array_merge(Person::$subClasses, static::$subClasses);
+            self::$validators['AccountLevel']['choices'] = self::$fields['AccountLevel']['values'];
         }
 
         // finish ActiveRecord initialization
@@ -56,44 +72,14 @@ class User extends Person
         // call parent
         parent::validate($deep);
 
-        $this->_validator->validate(array(
-            'field' => 'Username'
-            ,'required' => true
-            ,'minlength' => 2
-            ,'maxlength' => 30
-            ,'errorMessage' => 'Username must be at least 2 characters'
-        ));
-
-
-        $this->_validator->validate(array(
-            'field' => 'Username'
-            ,'required' => true
-            ,'validator' => 'handle'
-            ,'errorMessage' => 'Username can only contain letters, numbers, hyphens, and underscores'
-        ));
-
-        // check handle uniqueness
+        // check username uniqueness
         if ($this->isDirty && !$this->_validator->hasErrors('Username') && $this->Username) {
-            $ExistingUser = User::getByUsername($this->Username);
+            $ExistingUser = static::getByUsername($this->Username);
 
             if ($ExistingUser && ($ExistingUser->ID != $this->ID)) {
-                $this->_validator->addError('Username', 'Username already registered');
+                $this->_validator->addError('Username', 'Username already registered.');
             }
         }
-
-        $this->_validator->validate(array(
-            'field' => 'Password'
-            ,'required' => true
-            ,'errorMessage' => 'Password required'
-        ));
-
-
-        $this->_validator->validate(array(
-            'field' => 'AccountLevel'
-            ,'validator' => 'selection'
-            ,'choices' => self::$fields['AccountLevel']['values']
-            ,'required' => false
-        ));
 
         // save results
         return $this->finishValidation();
@@ -102,12 +88,12 @@ class User extends Person
     public function save($deep = true)
     {
         if (!$this->Username) {
-            // TODO: auto generate username from first & last name
+            $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
         }
 
         return parent::save($deep);
     }
-    
+
     public function getHandle()
     {
         return $this->Username;
@@ -192,7 +178,7 @@ class User extends Person
                 $username = $firstName.'_'.$lastName;
                 break;
             default:
-                throw new Exception ('Unknown username format');
+                throw new Exception ('Unknown username format.');
         }
 
         // strip bad characters

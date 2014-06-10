@@ -1,9 +1,10 @@
 <?php
 
-Person::$relationships['CurrentCourseSections'] = array(
+Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
     'type' => 'many-many'
     ,'class' => 'Slate\\Courses\\Section'
     ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
+    ,'linkLocal' => 'PersonID'
     ,'linkForeign' => 'CourseSectionID'
     ,'conditions' => function($Person) {
         if (!$Term = Slate\Term::getCurrent()) {
@@ -22,7 +23,7 @@ Person::$relationships['CurrentCourseSections'] = array(
     }
 );
 
-Person::$searchConditions['Course'] = array(
+Emergence\People\Person::$searchConditions['Course'] = array(
     'qualifiers' => array('course')
     ,'points' => 1
     ,'join' => array(
