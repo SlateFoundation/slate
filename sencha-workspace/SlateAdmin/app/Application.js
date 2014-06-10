@@ -42,8 +42,6 @@ Ext.define('SlateAdmin.Application', {
         Ext.state.Manager.setProvider(Ext.create('Ext.state.LocalStorageProvider', {
             prefix: 'slateadmin-'
         }));
-
-        Ext.setGlyphFontFamily('FontAwesome');
     },
 
 
