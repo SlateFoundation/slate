@@ -2,6 +2,8 @@
 
 namespace Slate;
 
+use ActiveRecord;
+use Emergence\People\Person;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
@@ -23,7 +25,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
         }
     }
 
-    public static function handleRecordRequest(\ActiveRecord $Person, $action = false)
+    public static function handleRecordRequest(ActiveRecord $Person, $action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
             case 'courses':
@@ -33,7 +35,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
         }
     }
 
-    public static function handleCoursesRequest(\Person $Person)
+    public static function handleCoursesRequest(Person $Person)
     {
         if (!empty($_REQUEST['termID'])) {
             $Term = Term::getByID($_REQUEST['termID']);

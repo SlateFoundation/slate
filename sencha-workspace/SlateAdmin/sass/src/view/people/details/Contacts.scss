@@ -30,12 +30,6 @@
             display: none;
         }
     }
-
-    .contact-cell-value {
-        &.x-grid-invalid-cell {
-            background: rgba($danger-color, .2);
-        }
-    }
     
     .relationship-nonguardian {
         .glyph-shield {

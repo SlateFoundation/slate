@@ -79,7 +79,7 @@
  
                              {foreach $Person->Relationships Relationship}
                                 <div class="dli">
-                                    <dt>{$Relationship->Relationship}</dt>
+                                    <dt>{$Relationship->Label}</dt>
                                     <dd>{personLink $Relationship->RelatedPerson photo=no}</dd>
                                 </div>
                             {/foreach}

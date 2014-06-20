@@ -2,7 +2,8 @@
 Ext.define('SlateAdmin.controller.people.Contacts', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Ext.MessageBox'
+        'Ext.MessageBox',
+        'Jarvus.ext.override.view.TableErrors'
     ],
 
 
@@ -13,7 +14,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     ],
 
     stores: [
-        'people.ContactPointTemplates'
+        'people.ContactPointTemplates',
+        'people.RelationshipTemplates'
     ],
 //    stores: [
 //        'people.ContactPoints',
@@ -58,8 +60,9 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             },
             'people-details-contacts grid#relationships': {
                 beforeedit: me.onBeforeRelationshipsGridEdit,
-                edit: me.onRelationshipsGridEdit
-//                deleteclick: me.onRelationshipsGridDeleteClick
+                edit: me.onRelationshipsGridEdit,
+                deleteclick: me.onRelationshipsGridDeleteClick,
+                guardianclick: me.onRelationshipsGridGuardianClick
             },
             'people-details-contacts grid#contactPoints': {
                 beforeedit: me.onBeforeContactsGridEdit,
@@ -105,8 +108,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     onPersonLoaded: function(contactsPanel, person) {
         var me = this,
-            templatesStore = me.getPeopleContactPointTemplatesStore(),
-            templatesStoreLoaded = templatesStore.isLoaded(),
+            contactPointTemplatesStore = me.getPeopleContactPointTemplatesStore(),
+            contactPointTemplatesStoreLoaded = contactPointTemplatesStore.isLoaded(),
+            relationshipTemplatesStore = me.getPeopleRelationshipTemplatesStore(),
+            relationshipTemplatesStoreLoaded = relationshipTemplatesStore.isLoaded(),
             relationshipsGrid = me.getRelationshipsGrid(),
             relationshipsStore = relationshipsGrid.getStore(),
             relationshipsStoreLoaded = false,
@@ -119,7 +124,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     
             // resume rendering and finish when all 3 stores are loaded
             function _onStoresLoaded() {
-                if (templatesStoreLoaded && relationshipsStoreLoaded && contactsStoreLoaded) {
+                if (contactPointTemplatesStoreLoaded && relationshipTemplatesStoreLoaded && contactsStoreLoaded && relationshipsStoreLoaded) {
                     me.injectBlankRelationshipRecord();
                     me.injectBlankContactRecords();
                     contactsPanel.setLoading(false);
@@ -127,24 +132,25 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                 }
             }
     
-            // load templates only if needed
-            if (!templatesStoreLoaded) {
-                templatesStore.load({
+            // load contact point templates only if needed
+            if (!contactPointTemplatesStoreLoaded) {
+                contactPointTemplatesStore.load({
                     callback: function() {
-                        templatesStoreLoaded = true;
+                        contactPointTemplatesStoreLoaded = true;
                         _onStoresLoaded();
                     }
                 });
             }
     
-            // load relationships
-            relationshipsStore.getProxy().setExtraParam('person', person.getId());
-            relationshipsStore.load({
-                callback: function() {
-                    relationshipsStoreLoaded = true;
-                    _onStoresLoaded();
-                }
-            });
+            // load relationship templates only if needed
+            if (!relationshipTemplatesStoreLoaded) {
+                relationshipTemplatesStore.load({
+                    callback: function() {
+                        relationshipTemplatesStoreLoaded = true;
+                        _onStoresLoaded();
+                    }
+                });
+            }
     
             // load contacts
             contactsStore.getProxy().setExtraParam('person', person.getId());
@@ -154,40 +160,198 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     _onStoresLoaded();
                 }
             });
+    
+            // load relationships
+            relationshipsStore.getProxy().setExtraParam('person', person.getId());
+            relationshipsStore.load({
+                callback: function() {
+                    relationshipsStoreLoaded = true;
+                    _onStoresLoaded();
+                }
+            });
 
         }, 1);
     },
     
     onBeforeRelationshipsGridEdit: function(editingPlugin, context) {
-        if (context.column.getItemId() == 'person' && !context.record.phantom) {
-            return false;
+        var record = context.record,
+            fieldName = context.field,
+            activeEditor = editingPlugin.activeEditor,
+            loadedPersonId, comboStore;
+
+        if (record.phantom) {
+            if (fieldName == 'RelatedPerson') {
+                loadedPersonId = this.getContactsPanel().getLoadedPerson().getId();
+                comboStore = context.column.getEditor(record).getStore();
+                comboStore.clearFilter(true);
+                comboStore.addFilter(function(comboRecord) {
+                    var id = comboRecord.getId();
+                    return id != loadedPersonId && -1 == context.store.findBy(function(existingRecord) {
+                        return !existingRecord.phantom && existingRecord.get('RelatedPersonID') == id;
+                    });
+                });
+            } else {
+                return !Ext.isEmpty((activeEditor && activeEditor.editorId == 'person') ? activeEditor.getValue() : record.get('RelatedPerson'));
+            }
+        } else {
+            return fieldName != 'RelatedPerson';
         }
     },
     
     onRelationshipsGridEdit: function(editingPlugin, context) {
         var me = this,
             value = context.value,
-            record = context.record;
+            originalValue = context.originalValue,
+            fieldName = context.field,
+            editedRecord = context.record,
+            gridView = context.view,
+            editor = context.column.getEditor(editedRecord),
+            columnManager = context.grid.getColumnManager(),
+            templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender, phantomPerson;
 
-        if (context.column.getItemId() == 'person') {
+        gridView.clearInvalid(editedRecord);
+
+        if (fieldName == 'RelatedPerson') {
             if (Ext.isString(value)) {
                 value = value.split(/\s+/);
-                record.set('RelatedPerson', {
-                    LastName: value.pop(),
-                    MiddleName: value.length == 1 ? null : value.pop(),
-                    FirstName: value.join(' ')
-                });
+
+                if (value.length < 2) {
+                    editedRecord.set('RelatedPerson', {
+                        LastName: value[0]
+                    });
+                    gridView.markCellInvalid(editedRecord, 'person', 'At least a first and last name must be provided to add a new person');
+                } else {
+                    editedRecord.set('RelatedPerson', {
+                        LastName: value.pop(),
+                        MiddleName: value.length == 1 ? null : value.pop(),
+                        FirstName: value.join(' ')
+                    });
+                }
             } else if (Ext.isNumber(value)) {
-                record.set('RelatedPersonID', value);
+                editedRecord.set({
+                    RelatedPersonID: value,
+                    RelatedPerson: editor.findRecordByValue(value).getData()
+                });
             }
     
-            if (!record.get('Relationship')) {
-                editingPlugin.startEdit(record, context.grid.getColumnManager().getHeaderById('relationship'));
+            if (!editedRecord.get('Label')) {
+                // auto advance to relationship column if the editor isn't already active after a short delay
+                // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
+                Ext.defer(function() {
+                    if (!editingPlugin.editing) {
+                        editingPlugin.startEdit(editedRecord, columnManager.getHeaderById('relationship'));
+                    }
+                }, 50);
                 return;
             }
+        } else if (fieldName == 'Label') {
+            templateRecord = editor.findRecordByValue(value);
+            loadedPersonGender = me.getContactsPanel().getLoadedPerson().get('Gender');
+            currentInverse = editedRecord.get('InverseRelationship');
+
+            // apply template defaults for relationship and related person if this is a new record
+            if (editedRecord.phantom && templateRecord) {
+                if (templateRecord.get('Relationship')) {
+                    editedRecord.set(templateRecord.get('Relationship'));
+                }
+
+                phantomPerson = editedRecord.get('RelatedPerson') ;
+                if (phantomPerson && !phantomPerson.ID && templateRecord.get('Person')) {
+                    Ext.applyIf(phantomPerson, templateRecord.get('Person'));
+                }
+            }
+
+            // auto-set inverse for new or changes between stock values, or advance editor to inverse field
+            if (
+                templateRecord &&
+                (
+                    (!currentInverse || !currentInverse.Label) ||
+                    (
+                        (oldTemplateRecord = editor.findRecordByValue(originalValue)) &&
+                        oldTemplateRecord.getInverseLabel(loadedPersonGender) == currentInverse.Label
+                    )
+                ) &&
+                (templateInverse = templateRecord.getInverseLabel(loadedPersonGender))
+            ) {
+                editedRecord.set('InverseRelationship', {
+                    Label: templateInverse
+                });
+            } else {
+                // auto advance to inverse column if the editor isn't already active after a short delay
+                // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
+                Ext.defer(function() {
+                    if (!editingPlugin.editing) {
+                        editingPlugin.startEdit(editedRecord, columnManager.getHeaderById('inverse'));
+                    }
+                }, 50);
+                return;
+            }
+        } else if (fieldName == 'InverseRelationship.Label' && value != originalValue) {
+            if (value) {
+                editedRecord.set('InverseRelationship', {
+                    Label: value
+                });
+            } else {
+                gridView.markCellInvalid(editedRecord, 'inverse', 'Enter an inverse label for this relationship');
+            }
+        }
+
+        if (editedRecord.dirty && editedRecord.isValid()) {
+            editedRecord.save({
+                callback: function(savedRecord, operation, success) {
+    
+                    if (success) {
+                        // UPGRADE: manual call to commit shouldn't be necessary, remove when this bug is fixed: http://www.sencha.com/forum/showthread.php?273093
+                        editedRecord.commit();
+                    } else {
+                        // render any server-side validation errors
+                        Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function(result) {
+                            gridView.markRowInvalid(editedRecord, result.validationErrors);
+                        });
+                    }
+    
+                    //<debug>
+                    if (!Ext.getVersion().match('4.2.2.1144')) {
+                        console.warn('This hack above has not been tested with this version of ExtJS and may no longer be necessary');
+                    }
+                    //</debug>
+    
+                    // ensure there is a blank row for creating another record
+                    me.injectBlankRelationshipRecord();
+                }
+            });
+        }
+    },
+    
+    onRelationshipsGridDeleteClick: function(grid, record) {
+        if (record.phantom) {
+            return;
         }
         
-        me.injectBlankRelationshipRecord();
+        var relatedPerson = record.get('RelatedPerson');
+
+        Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0} {1}?', relatedPerson.FirstName, relatedPerson.LastName), function(btn) {
+            if (btn == 'yes') {
+                record.destroy();
+            }
+        });
+    },
+    
+    onRelationshipsGridGuardianClick: function(grid, record) {
+        if (record.phantom) {
+            return;
+        }
+
+        grid.setLoading('Toggling guardian status&hellip;');
+        record.set('Class', record.get('Class') == 'Emergence\\People\\Relationship' ? 'Emergence\\People\\GuardianRelationship' : 'Emergence\\People\\Relationship');
+        record.save({
+            callback: function(records, operation, success) {
+                // UPGRADE: manual call to commit shouldn't be necessary, remove when this bug is fixed: http://www.sencha.com/forum/showthread.php?273093
+                record.commit();
+
+                grid.setLoading(false);
+            }
+        });
     },
 
     onBeforeContactsGridEdit: function(editingPlugin, context) {
@@ -204,6 +368,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             labelEditor = editor;
             valueEditor = cm.getHeaderById('value').getEditor(record);
         } else if(fieldName == 'String') {
+            if (record.phantom && !record.get('Label')) {
+                return false;
+            }
+
             labelEditor = cm.getHeaderById('label').getEditor(record);
             valueEditor = editor;
         }
@@ -230,38 +398,36 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     onContactsGridEdit: function(editingPlugin, context) {
         var me = this,
             editedRecord = context.record,
-            view = context.view,
-            store = view.getStore();
-//            templateRecord, placeholder, valueColumn, valueField;
+            gridView = context.view,
+            store = gridView.getStore();
 
         if (context.field == 'Label' && !editedRecord.get('String')) {
-            editingPlugin.startEdit(editedRecord, context.grid.getColumnManager().getHeaderById('value'));
+            // auto advance to value column if the editor isn't already active after a short delay
+            // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
+            Ext.defer(function() {
+                if (!editingPlugin.editing) {
+                    editingPlugin.startEdit(editedRecord, context.grid.getColumnManager().getHeaderById('value'));
+                }
+            }, 50);
             return;
         }
 
-        editedRecord.save({
-            callback: function() {
-                // render any server-side validation errors
-                Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function(result) {
-                    var node = view.getNode(editedRecord);
-
-                    if (node) {
-                        Ext.fly(node).down('.contact-cell-value')
-                            .addCls('x-grid-invalid-cell')
-                            .set({
-                                'data-errorqtip': Ext.String.format('<ul><li>{0}</li></ul>', Ext.Object.getValues(result.validationErrors).join('</li><li>'))
-                            });
-                    }
-                });
-
-                // ensure each class has a phantom row
-                me.injectBlankContactRecords();
-            }
-        });
+        if (editedRecord.dirty && editedRecord.isValid()) {
+            editedRecord.save({
+                callback: function() {
+                    // render any server-side validation errors
+                    Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function(result) {
+                        gridView.markCellInvalid(editedRecord, 'value', result.validationErrors);
+                    });
+    
+                    // ensure each class has a phantom row
+                    me.injectBlankContactRecords();
+                }
+            });
+        }
     },
 
     onContactsGridDeleteClick: function(grid, record) {
-
         if (record.phantom) {
             return;
         }
@@ -351,9 +517,12 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     injectBlankRelationshipRecord: function() {
         var me = this,
             loadedPerson = me.getContactsPanel().getLoadedPerson(),
-            relationshipsStore = me.getRelationshipsGrid().getStore();
+            relationshipsStore = me.getRelationshipsGrid().getStore(),
+            phantomIndex = relationshipsStore.findBy(function(record) {
+                return record.phantom;
+            });
 
-        if (relationshipsStore.getNewRecords().length === 0) {
+        if (phantomIndex == -1) {
             relationshipsStore.add({
                 PersonID: loadedPerson.getId()
             });

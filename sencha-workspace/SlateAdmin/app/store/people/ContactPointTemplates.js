@@ -30,7 +30,7 @@ Ext.define('SlateAdmin.store.people.ContactPointTemplates', {
 
     proxy: {
         type: 'slateapi',
-        url: '/contact-points/json/*templates',
+        url: '/contact-points/*templates',
         pageParam: false,
         startParam: false,
         limitParam: false,

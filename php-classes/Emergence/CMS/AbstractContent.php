@@ -3,7 +3,7 @@
 namespace Emergence\CMS;
 
 use ActiveRecord;
-use Person;
+use Emergence\People\Person;
 use GlobalHandleBehavior;
 use JSON;
 

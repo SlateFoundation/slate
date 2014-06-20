@@ -125,6 +125,7 @@ class Person extends VersionedRecord
         ,'Relationships' => array(
             'type' => 'one-many'
             ,'class' => 'Emergence\\People\\Relationship'
+            ,'foreign' => 'PersonID'
         )
     );
 
@@ -230,9 +231,10 @@ class Person extends VersionedRecord
     public static function __classLoaded()
     {
         if (get_called_class() == __CLASS__) {
-            self::$validators['Class']['choices'] = static::getStaticSubClasses();
             self::$validators['Gender']['choices'] = self::$fields['Gender']['values'];
         }
+
+        self::$validators['Class']['choices'] = static::getStaticSubClasses();
 
         parent::__classLoaded();
     }
