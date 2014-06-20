@@ -53,29 +53,34 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 }
             }
         },
-        columns: [{
-            header: 'Section',
-            dataIndex: 'Code',
-            width: 90
-        },{
-            header: 'Title',
-            dataIndex: 'Title',
-            flex: 1,
-            renderer: function(v, m, r){
-                return '<a href="#courses/'+r.get('Handle')+'">'+v+'<a/>';
-            }
-        },{
-            header: 'Schedule',
-            dataIndex: 'Schedule',
-            width: 90,
-            xtype: 'templatecolumn',
-            tpl: '<tpl for="Schedule">{Title}</tpl>'
-        },{
-            header: 'Location',
-            width: 130,
-            dataIndex: 'Location',
-            xtype: 'templatecolumn',
-            tpl: '<tpl for="Location">{Title}</tpl>'
-        }]
+        columns: {
+            defaults: {
+                menuDisabled: true
+            },
+            items: [{
+                header: 'Section',
+                dataIndex: 'Code',
+                width: 90
+            },{
+                header: 'Title',
+                dataIndex: 'Title',
+                flex: 1,
+                renderer: function(v, m, r){
+                    return '<a href="#courses/'+r.get('Handle')+'">'+v+'<a/>';
+                }
+            },{
+                header: 'Schedule',
+                dataIndex: 'Schedule',
+                width: 90,
+                xtype: 'templatecolumn',
+                tpl: '<tpl for="Schedule">{Title}</tpl>'
+            },{
+                header: 'Location',
+                width: 130,
+                dataIndex: 'Location',
+                xtype: 'templatecolumn',
+                tpl: '<tpl for="Location">{Title}</tpl>'
+            }]
+        }
     }
 });
