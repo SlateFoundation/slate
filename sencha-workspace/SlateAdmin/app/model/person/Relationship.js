@@ -2,6 +2,7 @@
 Ext.define('SlateAdmin.model.person.Relationship', {
     extend: 'Ext.data.Model',
     requires: [
+        'Jarvus.ext.override.data.CallbackValidation',
         'SlateAdmin.proxy.Records'
     ],
 
@@ -35,10 +36,11 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         },
         {
             name: "RelatedPersonID",
-            type: "int"
+            type: "int",
+            useNull: true
         },
         {
-            name: "Relationship",
+            name: "Label",
             type: "string",
             useNull: true
         },
@@ -48,10 +50,12 @@ Ext.define('SlateAdmin.model.person.Relationship', {
             useNull: true
         },
         {
-            name: 'RelatedPerson'
+            name: 'RelatedPerson',
+            useNull: true
         },
         {
-            name: 'InverseRelationship'
+            name: 'InverseRelationship',
+            useNull: true
         }
     ],
 
@@ -65,9 +69,25 @@ Ext.define('SlateAdmin.model.person.Relationship', {
             field: 'PersonID'
         },
         {
+            type: 'callback',
+            field: 'RelatedPerson',
+            message: 'Select an existing person or provide a first and last name to add a new person',
+            validate: function(value, config) {
+                return value.ID || (value.FirstName && value.LastName);
+            }
+        },
+        {
             type: 'presence',
-            field: 'Relationship'
-        }
+            field: 'Label'
+        },
+        {
+            type: 'callback',
+            field: 'InverseRelationship',
+            message: 'Enter an inverse label for this relationship',
+            validate: function(value, config) {
+                return value && value.Label;
+            }
+        },
     ],
     
     associations: [{

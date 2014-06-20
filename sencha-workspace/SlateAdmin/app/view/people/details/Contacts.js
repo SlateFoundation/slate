@@ -32,52 +32,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         bodyBorder: false
     },
 
-/*
-    tbar: {
-        layout: 'hbox',
-//        itemId: 'relationshipAddBar',
-        items: ['Add Guardian:',{
-            xtype: 'combo',
-            flex: 1,
-            selectOnFocus: true,
-            name: 'ContactName',
-            autoSelect: false,
-            emptyText: 'First and Last name',
-            store: {
-                model: 'SlateAdmin.model.Person'
-            },
-            mode: 'remote',
-            displayField: 'FullName',
-            valueField: 'ID',
-            queryParam: 'q',
-            lazyRender: 'true',
-            allowBlank: false,
-            blankText: 'Select or type the full name of the contact'
-        },{
-            xtype: 'combo',
-            flex: 1,
-            emptyText: 'Relationship',
-            name: 'ContactRelationship',
-            selectOnFocus: true,
-            autoSelect: false,
-            typeAhead: true,
-            triggerAction: 'all',
-            mode: 'local',
-            store: ['Mother','Father','Guardian','Aunt','Uncle','Grandmother','Grandfather','Foster Mother','Foster Father','Stepmother','Stepfather','Sister','Brother','Unknown'],
-            lazyRender: true,
-            allowBlank: false,
-            blankText: 'Select or Type the contact\'s relationship with this person'
-
-        },{
-            xtype: 'button',
-            glyph: 0xf0c7, //fa-floppy-o
-            text: 'Save',
-            name: 'relationshipAdd',
-            // icon: '/img/icons/fugue/card--plus.png'
-        }]
-    },
-*/
-
     items: [{
         xtype: 'grid',
         itemId: 'relationships',
@@ -90,7 +44,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             model: 'SlateAdmin.model.person.Relationship',
             pageSize: false,
             remoteSort: true,
-            autoSync: true
+            autoSync: false
         },
         viewConfig: {
             loadMask: false,
@@ -116,91 +70,144 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 clicksToEdit: 1
             }
         ],
-        columns: [
-            {
-                itemId: 'person',
-                xtype: 'templatecolumn',
-                text: 'Name',
-                tdCls: 'relationship-cell-person',
-                flex: 1,
-                tpl: [
-                    '<tpl for="RelatedPerson">',
-                        '<a href="#{[this.getSearchRoute(parent, values)]}">{FirstName} {MiddleName} {LastName}</a>',
-                    '</tpl>',
-                    {
-                        getSearchRoute: function(relationship, relatedPerson) {
-                            var path = ['people', 'search', 'related-to-id:'+relationship.PersonID],
-                                relatedUsername = relatedPerson.Username;
-
-                            if (relatedUsername) {
-                                path.push(relatedUsername);
-                            } else {
-                                path.push('?id='+relatedPerson.ID);
+        columns: {
+            defaults: {
+                menuDisabled: true
+            },
+            items: [
+                {
+                    itemId: 'person',
+                    xtype: 'templatecolumn',
+                    text: 'Name',
+                    dataIndex: 'RelatedPerson',
+                    tdCls: 'relationship-cell-person',
+                    flex: 1,
+                    tpl: [
+                        '<tpl if="RelatedPerson">',
+                            '<tpl if="ID && RelatedPerson.ID"><a href="#{[this.getSearchRoute(values)]}"></tpl>',
+                                '<tpl for="RelatedPerson">{FirstName} {MiddleName} {LastName}</tpl>',
+                            '<tpl if="ID && RelatedPerson.ID"></a></tpl>',
+                        '<tpl else>',
+                            '<i class="fa fa-plus-circle"></i> Add new&hellip;',
+                        '</tpl>',
+                        {
+                            getSearchRoute: function(relationship) {
+                                var path = ['people', 'search', 'related-to-id:'+relationship.PersonID],
+                                    relatedPerson = relationship.RelatedPerson,
+                                    relatedUsername = relatedPerson.Username;
+    
+                                if (relatedUsername) {
+                                    path.push(relatedUsername);
+                                } else {
+                                    path.push('?id='+relatedPerson.ID);
+                                }
+                                
+                                path.push('contacts');
+                                
+                                return Ext.util.History.encodeRouteArray(path);
                             }
-                            
-                            path.push('contacts');
-                            
-                            return Ext.util.History.encodeRouteArray(path);
+                        }
+                    ],
+                    editor: {
+                        xtype: 'combobox',
+                        store: {
+                            model: 'SlateAdmin.model.Person'
+                        },
+                        allowBlank: false,
+                        queryMode: 'remote',
+                        queryParam: 'q',
+                        valueField: 'ID',
+                        displayField: 'FullName',
+                        autoSelect: false,
+                        triggerAction: 'query',
+                        minChars: 2,
+                        listeners: {
+                            select: function(comboField) {
+                                comboField.triggerBlur();
+                            }
+                        },
+                        xhooks: {
+                            setValue: function(value, doSelect) {
+                                // transform value from object form back into string or number
+                                if (Ext.isObject(value) && !value.isModel) {
+                                    if (value.ID) {
+                                        value = value.ID;
+                                    } else {
+                                        value = Ext.Array.clean([value.FirstName, value.MiddleName, value.LastName]).join(' ');
+                                    }
+                                }
+                                
+                                this.callParent([value || null, doSelect]);
+                            }
                         }
                     }
-                ],
-                editor: {
-                    xtype: 'combobox',
-                    store: {
-                        model: 'SlateAdmin.model.Person'
-                    },
-                    name: 'RelatedPerson',
-                    allowBlank: false,
-                    queryMode: 'remote',
-                    queryParam: 'q',
-                    valueField: 'ID',
-                    displayField: 'FullName',
-                    autoSelect: false
-                }
-            },
-            {
-                itemId: 'relationship',
-                text: 'Relationship',
-                dataIndex: 'Relationship',
-                tdCls: 'relationship-cell-label',
-                editor: {
-                    xtype: 'textfield',
-                    name: 'Relationship',
-                    allowBlank: false
-                }
-            },
-            {
-                itemId: 'inverse',
-                xtype: 'templatecolumn',
-                text: 'Inverse',
-                tdCls: 'relationship-cell-inverse',
-                tpl: [
-                    '<tpl if="InverseRelationship">',
-                        '{InverseRelationship.Relationship}',
-//                    '<tpl else>',
-//                        '<em>Unknown</em>',
-                    '</tpl>'
-                ]
-            },
-            {
-                xtype: 'actioncolumn',
-                width: 40,
-                items: [
-                    {
-                        iconCls: 'relationship-delete glyph-danger',
-                        glyph: 0xf056, // fa-minus-circle
-                        tooltip: 'Delete Relationship',
-                        action: 'delete'
-                    },
-                    {
-                        iconCls: 'relationship-guardian glyph-shield',
-                        glyph: 0xf132, // fa-shield
-                        tooltip: 'Designate Guardian',
-                        action: 'guardian'
+                },
+                {
+                    itemId: 'relationship',
+                    text: 'Relationship',
+                    dataIndex: 'Label',
+                    tdCls: 'relationship-cell-label',
+                    width: 120,
+                    editor: {
+                        xtype: 'combobox',
+                        store: 'people.RelationshipTemplates',
+                        allowBlank: false,
+                        queryMode: 'local',
+                        valueField: 'label',
+                        displayField: 'label',
+                        triggerAction: 'all',
+                        autoSelect: false,
+                        listeners: {
+                            focus: function(comboField) {
+                                comboField.expand();
+                            },
+                            select: function(comboField) {
+                                comboField.triggerBlur();
+                            }
+                        }
                     }
-                ]
-            }
-        ]
+                },
+                {
+                    itemId: 'inverse',
+                    xtype: 'templatecolumn',
+                    text: 'Inverse',
+                    dataIndex: 'InverseRelationship.Label',
+                    tdCls: 'relationship-cell-inverse',
+                    width: 120,
+                    tpl: [
+                        '<tpl if="InverseRelationship">',
+                            '{InverseRelationship.Label}',
+    //                    '<tpl else>',
+    //                        '<em>Unknown</em>',
+                        '</tpl>'
+                    ],
+                    editor: {
+                        xtype: 'textfield'
+                    }
+                },
+                {
+                    xtype: 'actioncolumn',
+                    dataIndex: 'Class',
+                    width: 40,
+                    items: [
+                        {
+                            action: 'delete',
+                            iconCls: 'relationship-delete glyph-danger',
+                            glyph: 0xf056, // fa-minus-circle
+                            tooltip: 'Delete Relationship'
+                        },
+                        {
+                            action: 'guardian',
+                            iconCls: 'relationship-guardian glyph-shield',
+                            glyph: 0xf132, // fa-shield
+                            getTip: function(v, meta, record) {
+                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' as a guardian';
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
     },{
         xtype: 'grid',
         itemId: 'contactPoints',
@@ -395,19 +402,22 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             },
             {
                 xtype: 'actioncolumn',
+                dataIndex: 'Primary',
                 width: 40,
                 items: [
                     {
+                        action: 'delete',
                         iconCls: 'contact-point-delete glyph-danger',
                         glyph: 0xf056, // fa-minus-circle
-                        tooltip: 'Delete Contact Point',
-                        action: 'delete'
+                        tooltip: 'Delete Contact Point'
                     },
                     {
+                        action: 'primary',
                         iconCls: 'contact-point-primary glyph-star',
                         glyph: 0xf005, // fa-star
-                        tooltip: 'Mark as Primary',
-                        action: 'primary'
+                        getTip: function(v, meta, record) {
+                            return (v ? 'Unmark' : 'Mark') + ' as primary point for this type';
+                        }
                     }
                 ]
             }
