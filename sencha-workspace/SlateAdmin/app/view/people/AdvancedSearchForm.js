@@ -5,7 +5,8 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
     requires: [
         'Ext.form.FieldSet',
         'Ext.form.field.Text',
-        'Ext.form.field.ComboBox'
+        'Ext.form.field.ComboBox',
+        'SlateAdmin.proxy.API'
     ],
 
     layout: 'auto',
