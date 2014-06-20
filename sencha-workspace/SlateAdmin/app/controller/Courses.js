@@ -16,7 +16,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 //    ],
 
     routes: {
-        'courses': 'showCourses',
+        'courses': 'showCourses'
 //        'courses/:sectionPath': {
 //            action: 'showCourses',
 //            conditions: {
