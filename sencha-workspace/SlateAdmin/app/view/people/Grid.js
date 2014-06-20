@@ -9,10 +9,10 @@ Ext.define('SlateAdmin.view.people.Grid', {
 
 
     // people-grid config
-    exportItems: null,
-    firstRefill: true,
-    exportFieldsLoaded: false,
-    pendingCheckedFields: false,
+//    exportItems: null,
+//    firstRefill: true,
+//    exportFieldsLoaded: false,
+//    pendingCheckedFields: false,
 
 
     // grid config
