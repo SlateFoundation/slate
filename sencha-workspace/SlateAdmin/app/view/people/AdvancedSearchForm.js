@@ -48,8 +48,8 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             store: {
                 fields: ['GraduationYear'],
                 proxy: {
-                    type: 'ajax',
-                    url: '/people/json/*graduation-years',
+                    type: 'slateapi',
+                    url: '/people/*graduation-years',
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -84,8 +84,8 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     }
                 ],
                 proxy: {
-                    type: 'ajax',
-                    url: '/people/json/*advisors',
+                    type: 'slateapi',
+                    url: '/people/*advisors',
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -103,8 +103,8 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             store: {
                 fields: ['Handle', 'Title'],
                 proxy: {
-                    type: 'ajax',
-                    url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/json/'+window.SiteEnvironment.user.Username+'/courses') : '/sections/json',
+                    type: 'slateapi',
+                    url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/'+window.SiteEnvironment.user.Username+'/courses') : '/sections',
                     reader: {
                         type: 'json',
                         root: 'data'

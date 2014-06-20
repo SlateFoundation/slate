@@ -14,7 +14,7 @@ Ext.define('SlateAdmin.store.people.AccountLevels', {
 
     proxy: {
         type: 'slateapi',
-        url: '/people/json/*account-levels',
+        url: '/people/*account-levels',
         reader: {
             type: 'json',
             root: 'data'

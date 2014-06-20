@@ -635,7 +635,7 @@ Ext.define('SlateAdmin.controller.People', {
                 _finishSelectPerson();
             } else {
                 store.load({
-                    url: '/people/json/'+person,
+                    url: '/people/'+person,
                     callback: function(records, operation, success) {
                         if (!success || !records.length) {
                             Ext.Msg.alert('Error', 'Could not find the group/person you requested');
@@ -659,7 +659,7 @@ Ext.define('SlateAdmin.controller.People', {
                     _finishSelectPerson();
                 } else {
                     store.load({
-                        url: '/people/json/'+fieldValue,
+                        url: '/people/'+fieldValue,
                         callback: function(records, operation, success) {
                             if (!success || !records.length) {
                                 Ext.Msg.alert('Error','Could not find the person you requested');
