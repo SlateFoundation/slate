@@ -12,24 +12,31 @@
 }
 
 .slate-nav-list-link {
+    background: white;
     display: block;
     font-size: small;
     padding: 5px 15px;
     text-decoration: none;
     
-    &.selected {
-        background: rgba(black, .1);
-    }
-    
     &:hover,
     &:focus {
-        background: white;
+        background: #eaeaea;
     }
 
     &::before {
         @include fa-glyph;
+        color: #999;
         content: '\f105';
         font-size: 14px;
-        margin-right: .5em;
+        width: 1em;
     }            
+
+    &.selected {
+        background: rgba(#00547b, .15);
+        
+        &::before {
+            color: inherit;
+            content: '\f101';
+        }
+    }    
 }
