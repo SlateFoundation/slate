@@ -50,28 +50,24 @@ Ext.define('SlateAdmin.view.people.Manager', {
         items: [{
             xtype: 'panel',
             itemId: 'detailHeader',
-            collapsible: true,
-            titleCollapse: true,
-            animCollapse: false,
             cls: 'data-header person-header',
-            title: 'Person',
+            bodyBorder: '0 0 1',
             tpl: [
-                '<div class="photo-ct">',
-                    '<tpl if="PrimaryPhotoID"><img src="/thumbnail/{PrimaryPhotoID}/84x84/cropped" width=84 height=84>',
+                '<div class="record-image">',
+                    '<tpl if="PrimaryPhotoID"><img src="/thumbnail/{PrimaryPhotoID}/168x168/cropped" width=84 height=84>',
                     '<tpl else><img src="/img/blank-avatar.png" width=84 height=84>',
                     '</tpl>',
                 '</div>',
-                '<dl class="kv-pairs">',
-                    '<tpl if="Email"        ><div class="dli kv-pair"><dt class="kv-key">Email</dt>        <dd class="kv-value"><a href="mailto:{Email}">{Email}</a></dd></div></tpl>',
-                    '<tpl if="Phone"        ><div class="dli kv-pair"><dt class="kv-key">Phone</dt>        <dd class="kv-value">{Phone}</dd></div></tpl>',
-                    '<tpl if="Address"      ><div class="dli kv-pair"><dt class="kv-key">Address</dt>      <dd class="kv-value">{Address}</dd></div></tpl>',
-                    '<tpl for="Advisor"     ><div class="dli kv-pair"><dt class="kv-key">Advisor</dt>      <dd class="kv-value">{FirstName} {LastName}</dd></div></tpl>',
-                    '<tpl if="AccountLevel" ><div class="dli kv-pair"><dt class="kv-key">Account Level</dt><dd class="kv-value">{AccountLevel}</dd></div></tpl>',
-                    '<tpl if="StudentNumber"><div class="dli kv-pair"><dt class="kv-key">Student&nbsp;#</dt>    <dd class="kv-value">{StudentNumber}</dd></div></tpl>',
-                '</dl>'
+                '<div class="record-data">',
+                    '<h1 class="record-title">{FullName}</h1>',
+                    '<h2 class="record-subtitle">{Username}</h1>',
+                '</div>'
             ]
         },{
             xtype: 'tabpanel',
+            bodyStyle: {
+                borderWidth: '1px 0 0'
+            },
             itemId: 'detailTabs',
             flex: 1
         }]
@@ -175,6 +171,5 @@ Ext.define('SlateAdmin.view.people.Manager', {
             person = this.getSelectedPerson();
 
         detailHeader.update(person ? person.getData() : '');
-        detailHeader.setTitle(person ? person.getDisplayName() : '');
     }
 });

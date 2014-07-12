@@ -20,6 +20,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
 
 
     title: 'Contacts',
+    glyph: 0xf095,
     itemId: 'contacts',
 
 
@@ -36,8 +37,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         xtype: 'grid',
         itemId: 'relationships',
         title: 'Related People',
-        collapsible: true,
-        titleCollapse: true,
         componentCls: 'slate-people-details-related',
         bodyBorder: '1 0',
         store: {
@@ -54,7 +53,11 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 var cls = record.get('Class') == 'Emergence\\People\\GuardianRelationship' ? 'relationship-guardian' : 'relationship-nonguardian';
                 
                 if (record.phantom) {
-                    cls += ' relationship-phantom';
+                    cls += ' slate-grid-phantom';
+                }
+                
+                if (record.dirty) {
+                    cls += ' slate-grid-dirty';
                 }
                 
                 if (!record.get('InverseRelationship')) {
@@ -80,7 +83,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     xtype: 'templatecolumn',
                     text: 'Name',
                     dataIndex: 'RelatedPerson',
-                    tdCls: 'relationship-cell-person',
+                    tdCls: 'relationship-cell-person slate-grid-cell-primary',
                     flex: 1,
                     tpl: [
                         '<tpl if="RelatedPerson">',
@@ -146,7 +149,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     itemId: 'relationship',
                     text: 'Relationship',
                     dataIndex: 'Label',
-                    tdCls: 'relationship-cell-label',
                     width: 120,
                     editor: {
                         xtype: 'combobox',
@@ -194,14 +196,14 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             action: 'delete',
                             iconCls: 'relationship-delete glyph-danger',
                             glyph: 0xf056, // fa-minus-circle
-                            tooltip: 'Delete Relationship'
+                            tooltip: 'Delete relationship'
                         },
                         {
                             action: 'guardian',
                             iconCls: 'relationship-guardian glyph-shield',
                             glyph: 0xf132, // fa-shield
                             getTip: function(v, meta, record) {
-                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' as a guardian';
+                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' guardian';
                             }
                         }
                     ]
@@ -213,8 +215,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         itemId: 'contactPoints',
         title: 'Contact Points',
         // columnLines: true,
-        collapsible: true,
-        titleCollapse: true,
         hideHeaders: true,
         componentCls: 'slate-people-details-contacts',
         disableSelection: true,
@@ -252,7 +252,11 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 }
                 
                 if (record.phantom) {
-                    cls += ' contact-phantom';
+                    cls += ' slate-grid-phantom';
+                }
+                
+                if (record.dirty) {
+                    cls += ' slate-grid-dirty';
                 }
                 
                 if (record.get('Primary')) {
@@ -325,8 +329,8 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 itemId: 'label',
                 text: 'Label',
                 dataIndex: 'Label',
-                tdCls: 'contact-cell-label',
                 width: 145,
+                tdCls: 'slate-grid-cell-primary',
                 editor: {
                     xtype: 'combobox',
                     store: {
@@ -409,7 +413,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         action: 'delete',
                         iconCls: 'contact-point-delete glyph-danger',
                         glyph: 0xf056, // fa-minus-circle
-                        tooltip: 'Delete Contact Point'
+                        tooltip: 'Delete contact point'
                     },
                     {
                         action: 'primary',

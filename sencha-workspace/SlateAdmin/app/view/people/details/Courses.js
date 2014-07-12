@@ -12,6 +12,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
 
 
     title: 'Courses',
+    glyph: 0xf073,
     itemId: 'courses',
 
 

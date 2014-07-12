@@ -1,6 +1,8 @@
 $panel-border-color: #999;
 
 $panel-body-background-color: #eaeaea;
+$panel-body-border-width: 1px 0 0;
+$panel-body-color: $color;
 
 $panel-header-background-color: mix($base-color, lighten($accent-color, 10), 88%);
 $panel-header-background-gradient: color-stops(lighten($panel-header-background-color, 10), $panel-header-background-color);

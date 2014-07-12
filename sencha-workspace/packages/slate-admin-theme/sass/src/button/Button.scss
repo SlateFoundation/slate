@@ -1,6 +1,10 @@
 .x-btn-glyph {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    
-    .glyph-success & { color: $success-color; }
 }
+
+@include glyph-color('success',  $success-color);
+@include glyph-color('danger',   $danger-color);
+@include glyph-color('inactive', $glyph-inactive-color);
+@include glyph-color('star',     $glyph-star-color);
+@include glyph-color('shield',   $glyph-shield-color);

@@ -1,0 +1,35 @@
+.#{$prefix}docked-top {
+    border-top-width: 0 !important;
+    border-bottom-width: 1px !important;
+}
+
+.#{$prefix}docked-bottom {
+    border-bottom-width: 0 !important;
+    border-top-width: 1px !important;
+}
+
+.#{$prefix}docked-left {
+    border-left-width: 0 !important;
+    border-right-width: 1px !important;
+}
+
+.#{$prefix}docked-right {
+    border-right-width: 0 !important;
+    border-left-width: 1px !important;
+}
+
+.#{$prefix}docked-noborder-top {
+    border-bottom-width: 0 !important;
+}
+
+.#{$prefix}docked-noborder-right {
+    border-left-width: 0 !important;
+}
+
+.#{$prefix}docked-noborder-bottom {
+    border-top-width: 0 !important;
+}
+
+.#{$prefix}docked-noborder-left {
+    border-right-width: 0 !important;
+}

@@ -1,0 +1,26 @@
+.kv-pairs {
+    display: table;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.kv-pair {
+    display: table-row;
+}
+
+.kv-key,
+.kv-value {
+    display: table-cell;
+}
+
+.kv-key {
+    color: mix($muted-color, $accent-color);
+    font-size: .75em;
+    padding-right: 1em;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+.kv-value {
+    font-weight: bold;
+}
