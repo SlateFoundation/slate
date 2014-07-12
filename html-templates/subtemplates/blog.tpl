@@ -19,7 +19,8 @@
                        data-confirm-title="Deleting Post"
                        data-confirm-body="Are you sure you want to delete the post &ldquo;{$Post->Title|escape}?&rdquo;"
                        data-confirm-destructive="true"
-                       data-confirm-url="/blog/json/{$Post->Handle}/delete">Delete</a>
+                       data-confirm-success-target=".blog-post"
+                       data-confirm-success-message="Blog post deleted">Delete</a>
                 </div>
                 {/if}
             </header>
