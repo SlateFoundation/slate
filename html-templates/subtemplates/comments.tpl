@@ -2,17 +2,23 @@
 {load_templates "subtemplates/people.tpl"}
 {load_templates "subtemplates/forms.tpl"}
 
-{template commentForm Context url=no}
+{template commentForm Context url=no Comment=no}
     {if $.Session->Person}
-        <form class="comment-form" action="{tif $url ? $url : cat($Context->getURL() '/comment')}" method="POST">
+        {if $Comment}
+            {$url = cat($Comment->getURL() '/edit')}
+        {elseif !$url}
+            {$url = cat($Context->getURL() '/comment')}
+        {/if}
+
+        <form class="comment-form" action="{$url|escape}" method="POST">
             <fieldset class="comment stretch">
                 <div class="author">{avatar $.User size=56}</div>
 
                 <div class="message">
-                    {textarea Message $.User->FullName $validationErrors.Message hint='You can use <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">Markdown</a> for formatting.' required=true}
+                    {textarea Message $.User->FullName $validationErrors.Message hint='You can use <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">Markdown</a> for formatting.' required=true default=$Comment->Message}
 
                     <div class="submit-area">
-                        <input type="submit" class="submit" value="Post Comment">
+                        <input type="submit" class="submit" value="{tif $Comment ? Edit : Post} Comment">
                     </div>
                 </div>
             </fieldset>
@@ -27,7 +33,7 @@
     {foreach item=Comment from=$comments}
         <article class="comment" id="comment-{$Comment->ID}">
             <div class="author">
-                <a href="/people/{$Comment->Creator->Username}">{avatar $Comment->Creator size=56}</a>
+                <a href="{$Comment->Creator->getURL()}">{avatar $Comment->Creator size=56}</a>
             </div>
             <div class="message">
                 <header>
