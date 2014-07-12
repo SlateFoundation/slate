@@ -3,7 +3,6 @@
 namespace Emergence\CMS;
 
 use ActiveRecord;
-use CommentsRequestHandler;
 
 class BlogRequestHandler extends AbstractRequestHandler
 {
@@ -23,32 +22,26 @@ class BlogRequestHandler extends AbstractRequestHandler
 
     public static $browseLimitDefault = 25;
 
-
-    public static function handleRecordRequest(ActiveRecord $BlogPost, $action = false)
-    {
-        switch ($action ? $action : $action = static::shiftPath()) {
-            case 'comment':
-                return CommentsRequestHandler::handleCreateRequest($BlogPost);
-            default:
-                return parent::handleRecordRequest($BlogPost, $action);
-        }
-    }
-
-    public static function handleRequest()
+    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
         if (!$GLOBALS['Session']->Person) {
-            static::$browseConditions['Visibility'] = 'Public';
+            $conditions['Visibility'] = 'Public';
         }
 
-        if (static::peekPath() == 'rss') {
-            static::$responseMode = static::shiftPath();
+        if (!empty($_REQUEST['AuthorID'])) {
+            $conditions['AuthorID'] = $_REQUEST['AuthorID'];
         }
 
-        if ($_REQUEST['AuthorID']) {
-            static::$browseConditions['AuthorID'] = $_REQUEST['AuthorID'];
+        return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+    }
+
+    public static function checkReadAccess(ActiveRecord $BlogPost, $suppressLogin = false)
+    {
+        if ($BlogPost->Visibility == 'Private' && !$GLOBALS['Session']->Person) {
+            return false;
         }
 
-        parent::handleRequest();
+        return parent::checkReadAccess($BlogPost);
     }
 
     public static function checkWriteAccess(ActiveRecord $BlogPost, $suppressLogin = false)
@@ -80,14 +73,5 @@ class BlogRequestHandler extends AbstractRequestHandler
         } else {
             return parent::respond($responseID, $responseData);
         }
-    }
-
-    public static function checkReadAccess(ActiveRecord $BlogPost, $suppressLogin = false)
-    {
-        if ($BlogPost->Visibility == 'Private' && !$GLOBALS['Session']->Person) {
-            return false;
-        }
-
-        return parent::checkReadAccess($BlogPost);
     }
 }
