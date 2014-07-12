@@ -9,8 +9,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     // controller config
     views: [
-        'people.details.Contacts',
-        'people.details.contact.ContextMenu'
+        'people.details.Contacts'
     ],
 
     stores: [
@@ -37,12 +36,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     },{
         ref: 'contactsGrid',
         selector: 'people-details-contacts grid#contactPoints'
-    },{
-        ref: 'contactContextMenu',
-        selector: 'contact-contextmenu',
-        autoCreate: true,
-
-        xtype: 'contact-contextmenu'
     }],
 
 

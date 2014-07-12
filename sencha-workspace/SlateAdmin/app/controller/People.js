@@ -6,15 +6,13 @@ Ext.define('SlateAdmin.controller.People', {
     // controller config
     views: [
         'people.NavPanel',
-
         'people.Manager'
-//      ,'people.PersonMenu'
     ],
 
     stores: [
-        'People',
-        'Groups',
-        'GroupsTree',
+        'people.People',
+        'people.Groups',
+        'people.GroupsTree',
         'people.AccountLevels'
     ],
 
@@ -194,7 +192,7 @@ Ext.define('SlateAdmin.controller.People', {
     showResults: function(query, person, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
-            store = me.getPeopleStore(),
+            store = me.getPeoplePeopleStore(),
             proxy = store.getProxy(),
             manager = me.getManager();
 
@@ -389,7 +387,7 @@ Ext.define('SlateAdmin.controller.People', {
     // controller methods
     doSearch: function(forceReload, callback) {
         var me = this,
-            store = Ext.getStore('People'),
+            store = me.getPeoplePeopleStore(),
             proxy = store.getProxy();
 
         if (forceReload || proxy.isExtraParamsDirty()) {
@@ -412,7 +410,7 @@ Ext.define('SlateAdmin.controller.People', {
             selModel = me.getGrid().getSelectionModel(),
             detailTabs = manager.detailTabs,
             personRecord = manager.getSelectedPerson(),
-            extraParams = me.getPeopleStore().getProxy().extraParams,
+            extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
             path = ['people'],
             title = 'People',
             activeTab = null;
@@ -501,7 +499,7 @@ Ext.define('SlateAdmin.controller.People', {
             fields = form.getFields().items,
             fieldsLen = fields.length, fieldIndex = 0, field, fieldName,
             groupsTreePanel = me.getGroupsTree(),
-            rootGroupNode = me.getGroupsTreeStore().getRootNode(),
+            rootGroupNode = me.getPeopleGroupsTreeStore().getRootNode(),
             query = me.getSearchField().getValue(),
             terms = query.split(/\s+/),
             termsLen = terms.length, termIndex = 0, term,

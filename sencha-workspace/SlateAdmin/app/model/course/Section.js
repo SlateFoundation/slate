@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.Section', {
+Ext.define('SlateAdmin.model.course.Section', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records'

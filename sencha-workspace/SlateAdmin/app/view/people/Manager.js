@@ -19,6 +19,11 @@ Ext.define('SlateAdmin.view.people.Manager', {
     },
     
     /**
+     * Reference to the detailCt {@link Ext.container.Container} subomponent
+     */
+    detailCt: null,
+    
+    /**
      * Reference to the detailHeader {@link Ext.panel.Panel} subomponent
      */
     detailHeader: null,
@@ -33,9 +38,11 @@ Ext.define('SlateAdmin.view.people.Manager', {
     layout: 'border',
     items: [{
         region: 'center',
+
         xtype: 'people-grid'
     },{
         region: 'east',
+
         xtype: 'container',
         itemId: 'detailCt',
         split: true,
@@ -48,7 +55,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
             align: 'stretch'
         },
         items: [{
-            xtype: 'panel',
+            xtype: 'component',
             itemId: 'detailHeader',
             cls: 'data-header person-header',
             bodyBorder: '0 0 1',
@@ -64,12 +71,13 @@ Ext.define('SlateAdmin.view.people.Manager', {
                 '</div>'
             ]
         },{
+            flex: 1,
+
             xtype: 'tabpanel',
+            itemId: 'detailTabs',
             bodyStyle: {
                 borderWidth: '1px 0 0'
-            },
-            itemId: 'detailTabs',
-            flex: 1
+            }
         }]
     }],
 

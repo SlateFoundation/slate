@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         'Ext.grid.feature.Grouping',
         'Ext.form.field.ComboBox',
 //        'Ext.selection.CellModel',
-//        'SlateAdmin.model.Person',
+        'SlateAdmin.model.person.Person',
         'SlateAdmin.model.person.Relationship',
         'SlateAdmin.model.person.ContactPoint',
         'SlateAdmin.store.people.ContactPointTemplates',
@@ -114,7 +114,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     editor: {
                         xtype: 'combobox',
                         store: {
-                            model: 'SlateAdmin.model.Person'
+                            model: 'SlateAdmin.model.person.Person'
                         },
                         allowBlank: false,
                         queryMode: 'remote',

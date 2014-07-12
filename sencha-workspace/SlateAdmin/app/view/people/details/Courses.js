@@ -6,7 +6,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
         'Ext.grid.Panel',
         'Ext.grid.column.Template',
         'Ext.form.field.ComboBox',
-        'SlateAdmin.store.Sections',
+        'SlateAdmin.model.course.Section',
         'SlateAdmin.proxy.API'
     ],
 
@@ -39,7 +39,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
             emptyText: 'No courses for selected term'
         },
         store: {
-            model: 'SlateAdmin.model.Section',
+            model: 'SlateAdmin.model.course.Section',
             proxy: {
                 type: 'slateapi',
                 startParam: false,

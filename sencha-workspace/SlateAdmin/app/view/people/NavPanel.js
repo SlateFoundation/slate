@@ -36,7 +36,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         border: '1 0',
 
         // treepanel config
-        store: 'GroupsTree',
+        store: 'people.GroupsTree',
         scroll: false,
         rootVisible: true,
         useArrows: true,

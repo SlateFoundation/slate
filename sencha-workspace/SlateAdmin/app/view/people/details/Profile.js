@@ -6,7 +6,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         'Ext.form.Panel',
         'Ext.ux.form.field.BoxSelect',
         'SlateAdmin.proxy.Records',
-        'SlateAdmin.model.Group'
+        'SlateAdmin.model.person.Group'
     ],
 
 
@@ -92,7 +92,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             stacked: true,
             anyMatch: true,
             lazyAutoLoad: false,
-            store: 'Groups',
+            store: 'people.Groups',
             displayField: 'namesPath',
             valueField: 'ID'
         }]

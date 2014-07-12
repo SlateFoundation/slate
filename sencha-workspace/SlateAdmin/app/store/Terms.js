@@ -1,9 +1,6 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.Terms', {
     extend: 'Ext.data.Store',
-    requires: [
-        'SlateAdmin.model.Term'
-    ],
 
     model: 'SlateAdmin.model.Term',
     proxy: {
