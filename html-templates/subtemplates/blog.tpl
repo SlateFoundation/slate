@@ -42,7 +42,7 @@
             <footer class="section-footer">
                 {if $Post->Tags}
                     <div class="post-tags">
-                        Tags: {foreach item=Tag from=$Post->Tags implode=', '}<a href="/tags/{$Tag->Handle}">{$Tag->Title|escape}</a>{/foreach}</span>
+                        Tags: {foreach item=Tag from=$Post->Tags implode=', '}<a href="/tags/{$Tag->Handle}">{$Tag->Title|escape}</a>{/foreach}
                     </div>
                 {/if}
                 {if $showCommentsSummary}
