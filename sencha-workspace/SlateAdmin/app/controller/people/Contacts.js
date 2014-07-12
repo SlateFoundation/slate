@@ -325,6 +325,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     
     onRelationshipsGridDeleteClick: function(grid, record) {
         if (record.phantom) {
+            if (record.dirty) {
+                record.reject();
+            }
+
             return;
         }
         
@@ -429,6 +433,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     onContactsGridDeleteClick: function(grid, record) {
         if (record.phantom) {
+            if (record.dirty) {
+                record.reject();
+            }
+
             return;
         }
 
