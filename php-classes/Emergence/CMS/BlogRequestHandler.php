@@ -15,6 +15,11 @@ class BlogRequestHandler extends AbstractRequestHandler
         'Class' => 'Emergence\CMS\BlogPost'
         ,'Status' => 'Published'
     );
+    public static $userResponseModes = array(
+        'application/json' => 'json'
+        ,'text/csv' => 'csv'
+        ,'application/rss+xml' => 'rss'
+    );
 
     public static $browseLimitDefault = 25;
 
