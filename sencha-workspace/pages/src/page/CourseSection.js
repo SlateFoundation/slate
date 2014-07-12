@@ -16,17 +16,23 @@ Ext.define('Site.page.CourseSection', {
             ev.stopEvent();
 
             Ext.Ajax.request({
-                url: '/sections/json/'+window.CourseSectionData.Handle+'/roster',
+                method: 'GET',
+                url: '/sections/'+window.CourseSectionData.Handle+'/roster',
+                params: {
+                    include: 'PrimaryEmail'
+                },
+                headers: {
+                    Accept: 'application/json'
+                },
                 success: function(response){
                     var r = Ext.decode(response.responseText);
 
                     window.prompt('Select and copy student emails', Ext.Array.map(Ext.Array.filter(r.data, function(personData) {
-                        return personData.Email;
+                        return personData.PrimaryEmail;
                     }), function(personData) {
-                        return '"'+personData.FirstName+' '+personData.LastName+'" <'+personData.Email+'>';
+                        return '"'+personData.FirstName+' '+personData.LastName+'" <'+personData.PrimaryEmail.Data+'>';
                     }).join(', '));
-                },
-                method: 'POST'
+                }
             });
         });
     }
