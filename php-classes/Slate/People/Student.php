@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate;
+namespace Slate\People;
 
 use DB;
 use Emergence\People\Person;

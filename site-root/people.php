@@ -1,3 +1,3 @@
 <?php
 
-Slate\PeopleRequestHandler::handleRequest();
+Slate\People\PeopleRequestHandler::handleRequest();

@@ -1,9 +1,10 @@
 <?php
 
-namespace Slate;
+namespace Slate\People;
 
 use ActiveRecord;
 use Emergence\People\Person;
+use Slate\Term;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
