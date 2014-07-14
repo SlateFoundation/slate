@@ -1,0 +1,43 @@
+.data-header {
+    .x-panel-body {
+        @include background-image(radial-gradient( tint($accent-color, 80%), tint($accent-color, 65%) ));
+        border-width: 1px 0;
+        padding: 10px;
+    }
+    
+    .record-image,
+    .record-data {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    
+    .record-image {
+        padding-right: 1em;
+        
+        img {
+            @include border-radius(2px);
+            display: block;
+        }
+    }
+    
+    .record-data {
+    }
+    
+    .record-title {
+        color: $color;
+        font-size: xx-large;
+        font-weight: 100;
+        line-height: 1;
+        margin: 0;
+        letter-spacing: -1px;
+        text-rendering: optimizeLegibility;
+    }
+    
+    .record-subtitle {
+        color: mix($color, tint($accent-color, 65%));
+        font-size: 1.125em;
+        font-weight: normal;
+        margin: 0;
+        margin-left: .125em; // correct alignment
+    }
+}

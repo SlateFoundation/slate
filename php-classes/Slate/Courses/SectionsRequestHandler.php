@@ -26,6 +26,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                 return parent::handleRecordsRequest($action);
         }
     }
+
     public static function handleRecordRequest(\ActiveRecord $Section, $action = false)
     {
         if (!static::checkReadAccess($Section)) {
@@ -74,7 +75,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-    public static function handleRosterRequest(CourseSection $Section)
+    public static function handleRosterRequest(Section $Section)
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
@@ -84,7 +85,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         ));
     }
 
-    public static function getBlogsByCourseSection(CourseSection $Section)
+    public static function getBlogsByCourseSection(Section $Section)
     {
         static::$responseMode = 'xml';
 

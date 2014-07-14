@@ -87,6 +87,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                 proxy: {
                     type: 'slateapi',
                     url: '/people/*advisors',
+                    summary: true,
                     reader: {
                         type: 'json',
                         root: 'data'
@@ -105,6 +106,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                 fields: ['Handle', 'Title'],
                 proxy: {
                     type: 'slateapi',
+                    summary: true,
                     url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/'+window.SiteEnvironment.user.Username+'/courses') : '/sections',
                     reader: {
                         type: 'json',

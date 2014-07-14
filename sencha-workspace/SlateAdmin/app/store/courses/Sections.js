@@ -1,12 +1,9 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.store.Sections', {
+Ext.define('SlateAdmin.store.courses.Sections', {
     extend: 'Ext.data.Store',
     alias: 'store.sections',
-    requires: [
-        'SlateAdmin.model.Section'
-    ],
 
-    model: 'SlateAdmin.model.Section',
+    model: 'SlateAdmin.model.course.Section',
     pageSize: 100,
     groupField: 'CourseTitle',
     buffered: true

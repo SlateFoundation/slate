@@ -4,7 +4,7 @@ namespace Emergence\CMS;
 
 use ActiveRecord;
 use Emergence\People\Person;
-use GlobalHandleBehavior;
+use HandleBehavior;
 use JSON;
 
 abstract class AbstractContent extends \VersionedRecord
@@ -72,9 +72,6 @@ abstract class AbstractContent extends \VersionedRecord
     public static $relationships = array(
         'Context' => array(
             'type' => 'context-parent'
-        )
-        ,'GlobalHandle' => array(
-            'type' => 'handle'
         )
         ,'Author' =>  array(
             'type' =>  'one-one'
@@ -159,7 +156,7 @@ abstract class AbstractContent extends \VersionedRecord
         ));
 
         // implement handles
-        GlobalHandleBehavior::onValidate($this, $this->_validator);
+        HandleBehavior::onValidate($this, $this->_validator);
 
         // save results
         return $this->finishValidation();
@@ -178,7 +175,7 @@ abstract class AbstractContent extends \VersionedRecord
         }
 
         // implement handles
-        GlobalHandleBehavior::onSave($this, $this->Title);
+        HandleBehavior::onSave($this);
 
         // call parent
         parent::save($deep, $createRevision);

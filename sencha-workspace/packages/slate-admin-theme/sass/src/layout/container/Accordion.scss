@@ -22,3 +22,11 @@
         }
     }    
 }
+
+.x-panel-header.x-accordion-hd.x-docked-noborder-top {
+    border-width: $accordion-header-border-width !important;
+    
+    .x-accordion-item:last-child & {
+        border-bottom-width: 1px !important;
+    }
+}

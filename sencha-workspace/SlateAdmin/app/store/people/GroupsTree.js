@@ -1,11 +1,8 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.store.GroupsTree', {
+Ext.define('SlateAdmin.store.people.GroupsTree', {
     extend: 'Ext.data.TreeStore',
-    requires: [
-        'SlateAdmin.model.Group'
-    ],
     
-    model: 'SlateAdmin.model.Group', 
+    model: 'SlateAdmin.model.person.Group', 
     root: {
         text: 'All People',
         ID: null
@@ -26,7 +23,7 @@ Ext.define('SlateAdmin.store.GroupsTree', {
         if (node.isLoaded()) {
             _finishExpand();
         } else {
-            groupsStore = Ext.getStore('Groups');
+            groupsStore = Ext.getStore('people.Groups');
 
             if (groupsStore.isLoaded()) {
                 me.loadFromArray(groupsStore.getRange());

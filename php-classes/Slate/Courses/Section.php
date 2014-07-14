@@ -100,12 +100,14 @@ class Section extends \VersionedRecord
             ,'class' => 'Person'
             ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
             ,'linkLocal' => 'CourseSectionID'
+            ,'linkForeign' => 'PersonID'
         )
         ,'Instructors' => array(
             'type' => 'many-many'
             ,'class' => 'Person'
             ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
             ,'linkLocal' => 'CourseSectionID'
+            ,'linkForeign' => 'PersonID'
             ,'conditions' => array('Link.Role = "Instructor"')
         )
         ,'Students' => array(
@@ -113,6 +115,7 @@ class Section extends \VersionedRecord
             ,'class' => 'Person'
             ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
             ,'linkLocal' => 'CourseSectionID'
+            ,'linkForeign' => 'PersonID'
             ,'conditions' => array('Link.Role = "Student"')
         )
         ,'Mappings' => array(

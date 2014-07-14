@@ -10,11 +10,11 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     ],
     
     stores: [
-        'Groups'
+        'people.Groups'
     ],
     
     models: [
-        'Group'
+        'person.Group'
     ],
     
     routes: {

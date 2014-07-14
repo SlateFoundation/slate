@@ -1,3 +1,4 @@
-.x-grid-cell-invalid, .x-grid-row-invalid {
+.x-grid-cell-invalid,
+.x-grid-row-invalid td {
     background-color: rgba($danger-color, .2) !important;
 }

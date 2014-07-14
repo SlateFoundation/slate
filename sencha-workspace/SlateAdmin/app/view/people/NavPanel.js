@@ -29,14 +29,14 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
     items: [{
         xtype: 'people-advancedsearchform',
         border: 0,
-        bodyPadding: 10
+        bodyPadding: '10 10 0'
     },{
         xtype: 'treepanel',
         itemId: 'groups',
-        border: 0,
+        border: '1 0',
 
         // treepanel config
-        store: 'GroupsTree',
+        store: 'people.GroupsTree',
         scroll: false,
         rootVisible: true,
         useArrows: true,

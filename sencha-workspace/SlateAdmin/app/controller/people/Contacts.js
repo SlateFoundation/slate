@@ -9,8 +9,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     // controller config
     views: [
-        'people.details.Contacts',
-        'people.details.contact.ContextMenu'
+        'people.details.Contacts'
     ],
 
     stores: [
@@ -37,12 +36,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     },{
         ref: 'contactsGrid',
         selector: 'people-details-contacts grid#contactPoints'
-    },{
-        ref: 'contactContextMenu',
-        selector: 'contact-contextmenu',
-        autoCreate: true,
-
-        xtype: 'contact-contextmenu'
     }],
 
 
@@ -325,6 +318,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     
     onRelationshipsGridDeleteClick: function(grid, record) {
         if (record.phantom) {
+            if (record.dirty) {
+                record.reject();
+            }
+
             return;
         }
         
@@ -429,6 +426,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     onContactsGridDeleteClick: function(grid, record) {
         if (record.phantom) {
+            if (record.dirty) {
+                record.reject();
+            }
+
             return;
         }
 

@@ -2,7 +2,7 @@
 Ext.define('Site.widget.model.CourseSection', {
     extend: 'Site.widget.model.AbstractModel',
     singleton: true,
-    alias: 'modelwidget.CourseSection',
+    alias: 'modelwidget.Slate\\Courses\\Section',
 
     collectionTitleTpl: 'Course Sections',
 

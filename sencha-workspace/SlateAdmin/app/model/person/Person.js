@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.Person', {
+Ext.define('SlateAdmin.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records'

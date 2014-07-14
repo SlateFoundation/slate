@@ -2,6 +2,7 @@ $base-color: #ccc;
 $accent-color: #00547b;
 $dark-ui-color: #153b4c;
 
+$color: #333;
 $muted-color: #777;
 
 $font-family: Lato, 'Helvetica Neue', Helvetica, Arial, Verdana, sans-serif;
@@ -11,3 +12,14 @@ $font-size: 15px;
   * Default font-size to use for glyphs
   */
 $glyph-size: 14px;
+
+/** 
+  * Color for success messages or positive actions (such as Save)
+  */
+$success-color: #5fb31d;
+
+/** 
+  * Color for error messages (stronger than warnings)
+  * or negative/destructive actions (such as Delete)
+  */
+$danger-color: #b3241d;

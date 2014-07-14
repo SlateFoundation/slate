@@ -10,6 +10,7 @@ Git::$repositories['slatefoundation-v1'] = array(
         ,'html-templates'
         ,'php-classes'
         ,'php-config'
+        ,'php-migrations'
         ,'phpunit-tests'
         ,'sencha-build'
         ,'sencha-workspace'

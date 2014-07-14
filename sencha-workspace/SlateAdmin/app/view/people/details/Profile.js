@@ -6,39 +6,58 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         'Ext.form.Panel',
         'Ext.ux.form.field.BoxSelect',
         'SlateAdmin.proxy.Records',
-        'SlateAdmin.model.Group'
+        'SlateAdmin.model.person.Group'
     ],
 
 
     title: 'Profile',
+    glyph: 0xf007,
     itemId: 'profile',
 
-
     // panel config
+    dockedItems: [{
+        xtype: 'toolbar',
+        items: [{
+            text: 'Cancel',
+            cls: 'glyph-danger',
+            itemId: 'assets-details-cancel-btn',
+            glyph: 0xf057 // fa-times-circle
+        },{
+            xtype: 'tbfill'
+        },{
+            text: 'Save',
+            action: 'save',
+            itemId: 'assets-details-save-btn',
+            cls: 'glyph-success',
+            glyph: 0xf058 // fa-check-circle
+        }]
+    }],
+
     layout: 'fit',
+    
     items: {
         xtype: 'form',
-        border: false,
+        bodyPadding: '15 10 10',
         trackResetOnLoad: true,
         autoScroll: true,
-        bodyPadding: '10',
-        defaults: {
-            labelSeparator: ''
+        defaultType: 'textfield',
+        fieldDefaults: {
+            labelAlign: 'right',
+            labelPad: 10,
+            labelSeparator: '',
+            anchor: '100%'
         },
         items: [{
             xtype: 'displayfield',
             name: 'Class',
             fieldLabel: 'Record Class'
         },{
-            xtype: 'textfield',
             name: 'FirstName',
             fieldLabel: 'First Name'
         },{
-            xtype: 'textfield',
             name: 'MiddleName',
             fieldLabel: 'Middle Name'
         },{
-            xtype: 'textfield',
             name: 'LastName',
             fieldLabel: 'Last Name'
         },{
@@ -49,7 +68,6 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             queryMode: 'local',
             store: ['Male', 'Female']
         },{
-            xtype: 'textfield',
             name: 'StudentNumber',
             fieldLabel: 'Student #'
         },{
@@ -74,17 +92,9 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             stacked: true,
             anyMatch: true,
             lazyAutoLoad: false,
-            store: 'Groups',
+            store: 'people.Groups',
             displayField: 'namesPath',
             valueField: 'ID'
-        },{
-            text: 'Save',
-            cls: 'glyph-success',
-            scale: 'medium',
-            margin: '10 105',
-            action: 'save',
-            xtype: 'button',
-            glyph: 0xf058 // fa-check-circle
         }]
     }
 });

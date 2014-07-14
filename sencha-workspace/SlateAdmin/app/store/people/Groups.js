@@ -1,11 +1,8 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.store.Groups', {
+Ext.define('SlateAdmin.store.people.Groups', {
     extend: 'Ext.data.Store',
-    requires: [
-        'SlateAdmin.model.Group'
-    ],
 
-    model: 'SlateAdmin.model.Group',
+    model: 'SlateAdmin.model.person.Group',
     proxy: {
         type: 'slaterecords',
         url: '/groups',
