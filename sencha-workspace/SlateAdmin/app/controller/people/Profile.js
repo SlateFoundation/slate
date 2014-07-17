@@ -62,8 +62,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             groupsField = me.getGroupsField(),
             groupsStore = groupsField.getStore();
 
-        me.getStudentNumberField().setVisible(personClass == 'Slate\\Student');
-        me.getAccountLevelField().setVisible(personClass != 'Person');
+        me.getStudentNumberField().setVisible(personClass == 'Slate\\People\Student');
+        me.getAccountLevelField().setVisible(personClass != 'Emergence\\People\\Person');
         
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
         if (groupsStore.isLoaded()) {
