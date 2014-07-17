@@ -1,10 +1,10 @@
 {load_templates "subtemplates/forms.tpl"}
 
-{if $.get.jsdebug}
-    <script src="{Sencha::getVersionedFrameworkPath('ext', 'ext-all-dev.js')}"></script>
-    {sencha_bootstrap classPaths=array('sencha-workspace/pages/src')}
+{if $.get.jsdebug || !Site::resolvePath('site-root/js/pages/common.js')}
+    <script src="{Sencha::getVersionedFrameworkPath('ext', 'build/ext-all-debug.js', '5.0.0')}"></script>
+    {sencha_bootstrap classPaths=array('sencha-workspace/pages/src', 'ext-library/Jarvus/ext/patch')}
 {else}
-    <script src="{Site::getVersionedRootUrl('js/pages/common.js')}"></script>
+    <script src="{versioned_url 'js/pages/common.js'}"></script>
 {/if}
 
 {if !$.User} {* markup for login modal. TODO: generate this in the JS *}
@@ -41,10 +41,6 @@
 {/if}
 
 <script>
-    // TODO: figure out how to properly scope CSS so this doesn't need to be done
-    Ext.onReady(function() {
-        Ext.getBody().removeCls(['x-body', 'x-reset']);
-    });
-
+    Ext.scopeCss = true;
     Ext.require('Site.Common');
 </script>

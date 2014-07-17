@@ -12,5 +12,12 @@
 
 {block js-app}
     {$dwoo.parent}
+    {if $.User->hasAccountLevel(Developer) && $.get.slateHost}
+        <script>
+            Ext.onReady(function() {
+                SlateAdmin.API.setHostname({$.get.slateHost|json_encode});
+            });
+        </script>
+    {/if}
     {include includes/site.analytics.tpl}
 {/block}

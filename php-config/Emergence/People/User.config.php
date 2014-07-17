@@ -1,6 +1,6 @@
 <?php
 
-\Emergence\People\User::$subClasses[] = 'Slate\\Student';
+\Emergence\People\User::$subClasses[] = 'Slate\\People\\Student';
 \Emergence\People\User::$fields['AccountLevel']['values'] = array(
     'Disabled'
     ,'Contact'

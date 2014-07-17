@@ -3,6 +3,8 @@
 {block "title"}{$data->FullName} &mdash; {$dwoo.parent}{/block}
 
 {block "content"}
+    {load_templates "subtemplates/blog.tpl"}
+
     {$Person = $data}
     {$ownProfile = tif($.User->ID == $Person->ID, true, false)}
 

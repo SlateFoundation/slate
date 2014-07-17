@@ -14,7 +14,7 @@ Ext.define('Site.Common', {
 
     constructor: function() {
         // register model widget aliases
-        Ext.ClassManager.setAlias('Site.widget.model.Person', 'modelwidget.Slate\\Student');
+        Ext.ClassManager.addAlias('Site.widget.model.Person', 'modelwidget.Slate\\People\\Student');
 
         // register onReady handler
         Ext.onReady(this.onDocReady, this);
