@@ -8,7 +8,7 @@ if (!DB::oneRecord('SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA =
 }
 
 if ($newType == DB::oneValue('SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = SCHEMA() AND TABLE_NAME = "locations" AND COLUMN_NAME = "Class"')) {
-    print("Skipping migration because table already has correct Class collumn type\n");
+    print("Skipping migration because table already has correct Class column type\n");
     return static::STATUS_SKIPPED;
 }
 
