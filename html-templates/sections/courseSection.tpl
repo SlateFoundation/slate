@@ -24,6 +24,8 @@
 
 
 {block "content"}
+    {load_templates "subtemplates/blog.tpl"}
+
     {$Section = $data}
 
     <div class="sidebar-layout">
