@@ -13,6 +13,8 @@ Ext.define('SlateAdmin.Application', {
         // Jarvus bug fixes
         'Jarvus.ext.patch.panel.ExpandBeforeRender',
         'Jarvus.ext.patch.grid.ResetTipAttributes',
+        'Jarvus.ext.patch.data.BufferedStoreStrictId',
+        'Jarvus.ext.patch.data.TreeStoreIndexOf',
 
         // framework features
         'Ext.state.LocalStorageProvider'

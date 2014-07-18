@@ -22,6 +22,16 @@ if ($GLOBALS['Session']->hasAccountLevel('User')) {
     );
 }
 
+SearchRequestHandler::$searchClasses['Tag'] = array(
+    'fields' => array(
+        'Title'
+        ,array(
+            'field' => 'Handle'
+            ,'method' => 'like'
+        )
+    )
+);
+
 SearchRequestHandler::$searchClasses['Slate\Courses\Section'] = array(
     'fields' => array(
         'Title'

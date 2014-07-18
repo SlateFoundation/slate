@@ -12,7 +12,7 @@ Ext.define('Site.page.CourseSection', {
     },
 
     onDocReady: function() {
-        Ext.select('a[href^=#copy-section-emails]').on('click', function(ev, t) {
+        Ext.getBody().on('click', function(ev, t) {
             ev.stopEvent();
 
             Ext.Ajax.request({
@@ -34,7 +34,7 @@ Ext.define('Site.page.CourseSection', {
                     }).join(', '));
                 }
             });
-        });
+        }, null, { delegate: 'a[href^="#copy-section-emails"]'});
     }
 });
 

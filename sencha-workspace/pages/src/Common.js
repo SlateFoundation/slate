@@ -7,6 +7,7 @@ Ext.define('Site.Common', {
         'Site.widget.Login',
         'Site.widget.Search',
         'Site.widget.model.Person',
+        'Site.widget.model.Tag',
         'Site.widget.model.CourseSection',
         'Site.widget.model.Content',
         'Site.widget.model.Event'

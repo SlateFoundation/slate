@@ -35,7 +35,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             fieldLabel: 'Last'
         },{
             name: 'username',
-            fieldLabel: 'User'
+            fieldLabel: 'Username'
         },{
             name: 'studentnumber',
             fieldLabel: 'ID #'

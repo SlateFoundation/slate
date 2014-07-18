@@ -2,7 +2,7 @@
 
 namespace Emergence\People\ContactPoint;
 
-use Person;
+use Emergence\People\Person;
 
 abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
 {
