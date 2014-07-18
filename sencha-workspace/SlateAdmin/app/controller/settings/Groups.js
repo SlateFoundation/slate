@@ -10,7 +10,8 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     ],
     
     stores: [
-        'people.Groups'
+        'people.Groups',
+        'people.GroupsTree'
     ],
     
     models: [
@@ -111,15 +112,19 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         Ext.Msg.prompt('Create organization', 'Enter a name for the new organization:', function(btn, text) {
             var newGroup;
             
-            if (btn == 'ok') {
-                newGroup = me.getGroupModel().create({
+            text = Ext.String.trim(text);
+            
+            if (btn == 'ok' && text) {
+                newGroup = me.getPersonGroupModel().create({
                     Name: text,
-                    Class: 'Organization'
+                    Class: 'Organization',
+                    namesPath: '/' + text
                 });
 
                 newGroup.save({
                     success: function() {
-                        me.getGroupsStore().getRootNode().appendChild(newGroup);
+                        me.getPeopleGroupsTreeStore().getRootNode().appendChild(newGroup);
+                        me.getPeopleGroupsStore().add(newGroup);
                     }
                 });
             }
@@ -133,11 +138,14 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         Ext.Msg.prompt('Create subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
             var newGroup;
             
-            if (btn == 'ok') {
-                newGroup = me.getGroupModel().create({
+            text = Ext.String.trim(text);
+            
+            if (btn == 'ok' && text) {
+                newGroup = me.getPersonGroupModel().create({
                     Name: text,
                     ParentID: parentGroup.get('ID'),
-                    Class: 'Group'
+                    Class: 'Group',
+                    namesPath: parentGroup.get('namesPath') + '/' + text
                 });
 
                 newGroup.save({
@@ -145,6 +153,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                         parentGroup.set('leaf', false);
                         parentGroup.appendChild(newGroup);
                         parentGroup.expand();
+                        me.getPeopleGroupsStore().add(newGroup);
                     }
                 });
             }
@@ -173,6 +182,6 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         var me = this,
             node = me.getMenu().getRecord();
 
-        Ext.util.History.add(['people', 'search', {group: node.get('Handle')}]);
+        Ext.util.History.add(['people', 'search', 'group:' + node.get('Handle')]);
     }
 });
