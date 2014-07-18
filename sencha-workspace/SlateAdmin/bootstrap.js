@@ -810,6 +810,10 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.override.util.InstantHistory": [],
   "Jarvus.ext.override.util.PushHistory": [],
   "Jarvus.ext.override.view.TableErrors": [],
+  "Jarvus.ext.patch.button.HrefBeforeRender": [],
+  "Jarvus.ext.patch.data.BufferedStoreStrictId": [],
+  "Jarvus.ext.patch.data.TreeStoreIndexOf": [],
+  "Jarvus.ext.patch.form.field.TagFieldFilterPickList": [],
   "Jarvus.ext.patch.grid.ResetTipAttributes": [],
   "Jarvus.ext.patch.panel.ExpandBeforeRender": [],
   "Jarvus.ext.proxy.API": [],
@@ -830,30 +834,33 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
   "SlateAdmin.controller.settings.Groups": [],
-  "SlateAdmin.model.Group": [],
-  "SlateAdmin.model.Person": [],
-  "SlateAdmin.model.Section": [],
   "SlateAdmin.model.Term": [],
+  "SlateAdmin.model.course.Course": [],
+  "SlateAdmin.model.course.Section": [],
   "SlateAdmin.model.person.ContactPoint": [],
+  "SlateAdmin.model.person.Group": [],
+  "SlateAdmin.model.person.Person": [],
   "SlateAdmin.model.person.Relationship": [],
   "SlateAdmin.model.person.RelationshipTemplate": [],
   "SlateAdmin.proxy.API": [],
   "SlateAdmin.proxy.Records": [],
-  "SlateAdmin.store.Groups": [],
-  "SlateAdmin.store.GroupsTree": [],
-  "SlateAdmin.store.People": [],
-  "SlateAdmin.store.SectionStudents": [],
-  "SlateAdmin.store.Sections": [],
   "SlateAdmin.store.Terms": [],
+  "SlateAdmin.store.courses.SectionParticipants": [],
+  "SlateAdmin.store.courses.Sections": [],
   "SlateAdmin.store.people.AccountLevels": [],
   "SlateAdmin.store.people.ContactPointTemplates": [],
+  "SlateAdmin.store.people.Groups": [],
+  "SlateAdmin.store.people.GroupsTree": [],
   "SlateAdmin.store.people.Invitations": [],
+  "SlateAdmin.store.people.People": [],
   "SlateAdmin.store.people.RelationshipTemplates": [],
   "SlateAdmin.view.Header": [],
   "SlateAdmin.view.LinksNavPanel": [],
   "SlateAdmin.view.LoginWindow": [],
   "SlateAdmin.view.Navigation": [],
   "SlateAdmin.view.Viewport": [],
+  "SlateAdmin.view.courses.Grid": [],
+  "SlateAdmin.view.courses.Manager": [],
   "SlateAdmin.view.courses.NavPanel": [],
   "SlateAdmin.view.groups.Manager": [],
   "SlateAdmin.view.groups.Menu": [],
@@ -866,7 +873,6 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.view.people.details.Contacts": [],
   "SlateAdmin.view.people.details.Courses": [],
   "SlateAdmin.view.people.details.Profile": [],
-  "SlateAdmin.view.people.details.contact.ContextMenu": [],
   "SlateAdmin.view.people.invitations.Panel": [],
   "SlateAdmin.view.people.invitations.Window": [],
   "SlateAdmin.view.settings.NavPanel": [],
@@ -1797,6 +1803,10 @@ Ext.ClassManager.addNameAliasMappings({
   "Jarvus.ext.override.util.InstantHistory": [],
   "Jarvus.ext.override.util.PushHistory": [],
   "Jarvus.ext.override.view.TableErrors": [],
+  "Jarvus.ext.patch.button.HrefBeforeRender": [],
+  "Jarvus.ext.patch.data.BufferedStoreStrictId": [],
+  "Jarvus.ext.patch.data.TreeStoreIndexOf": [],
+  "Jarvus.ext.patch.form.field.TagFieldFilterPickList": [],
   "Jarvus.ext.patch.grid.ResetTipAttributes": [],
   "Jarvus.ext.patch.panel.ExpandBeforeRender": [],
   "Jarvus.ext.proxy.API": [
@@ -1819,11 +1829,12 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
   "SlateAdmin.controller.settings.Groups": [],
-  "SlateAdmin.model.Group": [],
-  "SlateAdmin.model.Person": [],
-  "SlateAdmin.model.Section": [],
   "SlateAdmin.model.Term": [],
+  "SlateAdmin.model.course.Course": [],
+  "SlateAdmin.model.course.Section": [],
   "SlateAdmin.model.person.ContactPoint": [],
+  "SlateAdmin.model.person.Group": [],
+  "SlateAdmin.model.person.Person": [],
   "SlateAdmin.model.person.Relationship": [],
   "SlateAdmin.model.person.RelationshipTemplate": [],
   "SlateAdmin.proxy.API": [
@@ -1832,19 +1843,19 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.proxy.Records": [
     "proxy.slaterecords"
   ],
-  "SlateAdmin.store.Groups": [],
-  "SlateAdmin.store.GroupsTree": [],
-  "SlateAdmin.store.People": [],
-  "SlateAdmin.store.SectionStudents": [],
-  "SlateAdmin.store.Sections": [
+  "SlateAdmin.store.Terms": [],
+  "SlateAdmin.store.courses.SectionParticipants": [],
+  "SlateAdmin.store.courses.Sections": [
     "store.sections"
   ],
-  "SlateAdmin.store.Terms": [],
   "SlateAdmin.store.people.AccountLevels": [],
   "SlateAdmin.store.people.ContactPointTemplates": [
     "store.contactpointtemplates"
   ],
+  "SlateAdmin.store.people.Groups": [],
+  "SlateAdmin.store.people.GroupsTree": [],
   "SlateAdmin.store.people.Invitations": [],
+  "SlateAdmin.store.people.People": [],
   "SlateAdmin.store.people.RelationshipTemplates": [],
   "SlateAdmin.view.Header": [
     "widget.slateadmin-header"
@@ -1859,6 +1870,12 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.slateadmin-navigation"
   ],
   "SlateAdmin.view.Viewport": [],
+  "SlateAdmin.view.courses.Grid": [
+    "widget.courses-grid"
+  ],
+  "SlateAdmin.view.courses.Manager": [
+    "widget.courses-manager"
+  ],
   "SlateAdmin.view.courses.NavPanel": [
     "widget.courses-navpanel"
   ],
@@ -1894,9 +1911,6 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "SlateAdmin.view.people.details.Profile": [
     "widget.people-details-profile"
-  ],
-  "SlateAdmin.view.people.details.contact.ContextMenu": [
-    "widget.contact-contextmenu"
   ],
   "SlateAdmin.view.people.invitations.Panel": [
     "widget.people-invitationspanel"
