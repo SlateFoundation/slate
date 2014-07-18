@@ -13,18 +13,19 @@
 
     {$dwoo.parent}
 
-    {if $.get.jsdebug}
-        <script>
-            Ext.require('Site.page.CourseSection');
-        </script>
-    {else}
+    {if !$.get.jsdebug}
         <script src="{Site::getVersionedRootUrl('js/pages/CourseSection.js')}"></script>
     {/if}
+
+    <script>
+        Ext.require('Site.page.CourseSection');
+    </script>
 {/block}
 
 
 {block "content"}
     {load_templates "subtemplates/blog.tpl"}
+    {load_templates "subtemplates/paging.tpl"}
 
     {$Section = $data}
 
