@@ -40,6 +40,17 @@ class Email extends AbstractPoint
         return $this->address;
     }
 
+    public function toRecipientString()
+    {
+        $string = $this->address;
+
+        if ($this->Person && $this->Person->FullName) {
+            $string = $this->Person->FullName . " <$string>";
+        }
+
+        return $string;
+    }
+
     public function toHTML()
     {
         return sprintf(

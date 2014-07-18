@@ -22,7 +22,7 @@
                 {field LastName 'Last Name' $errors.LastName text '' '' true}
             </div>
 
-                {field Email 'Email Address' $errors.Email email '' '' true}
+                {field Email 'Email Address' $errors.PrimaryEmail.address email '' '' true}
 
                 {field Username Username $errors.Username username '' '' true}
 
