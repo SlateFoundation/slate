@@ -36,6 +36,10 @@ Ext.define('SlateAdmin.model.course.Section', {
             useNull: true
         },
         {
+            name: 'CourseID',
+            type: 'integer'
+        },
+        {
             name: 'TermID',
             type: 'integer',
             useNull: true
@@ -53,16 +57,6 @@ Ext.define('SlateAdmin.model.course.Section', {
         {
             name: 'StudentsCapacity',
             type: 'integer'
-        },
-        {
-            name: 'Course',
-            sortType: function(v){
-                return v ? v.Title : null;
-            }
-        },
-        {
-            name: 'CourseTitle',
-            mapping: 'Course.Title'
         },
         {
             name: 'Schedule',
@@ -86,23 +80,21 @@ Ext.define('SlateAdmin.model.course.Section', {
 
     proxy: {
         type: 'slaterecords',
-        url: '/sections',
-        sortParam: false,
-        groupParam: false,
-        pageParam: false
-    },
+        url: '/sections'
+    }
 
 
     // model methods
-    getDisplayName: function() {
-        return this.get('Title');
-    },
+//    getDisplayName: function() {
+//        return this.get('Title');
+//    },
 
-    getLink: function() {
-
-        if(this.phantom)
-            return this.getDisplayName();
-
-        return '<a href="/sections/'+this.get('Handle')+'" target="_blank">'+this.getDisplayName()+'</a>';
-    }
+//    getLink: function() {
+//
+//        if (this.phantom) {
+//            return this.getDisplayName();
+//        }
+//
+//        return '<a href="/sections/'+this.get('Handle')+'" target="_blank">'+this.getDisplayName()+'</a>';
+//    }
 });

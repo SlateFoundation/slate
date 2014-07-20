@@ -5,15 +5,14 @@ Ext.define('SlateAdmin.controller.Courses', {
 
     // controller config
     views: [
-        'courses.NavPanel'
-
-//      ,'courses.Manager'
+        'courses.NavPanel',
+        'courses.Manager'
     ],
 
-//    stores: [
-//        'Sections',
+    stores: [
+        'courses.Sections'
 //        'SectionStudents'
-//    ],
+    ],
 
     routes: {
         'courses': 'showCourses'
@@ -51,6 +50,12 @@ Ext.define('SlateAdmin.controller.Courses', {
         autoCreate: true,
         
         xtype: 'courses-navpanel'
+    },{
+        ref: 'manager',
+        selector: 'courses-manager',
+        autoCreate: true,
+
+        xtype: 'courses-manager'
 //    },{
 //        ref: 'coursesManager',
 //        selector: 'courses-manager',
@@ -109,9 +114,18 @@ Ext.define('SlateAdmin.controller.Courses', {
 
     // route handlers
     showCourses: function(sectionPath) {
-        console.info('showCourses -> gonna expand');
-        this.getNavPanel().expand();
-//        this.doShowCourses(true, sectionPath);
+        var me = this,
+            store = me.getCoursesSectionsStore();
+
+        Ext.suspendLayouts();
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(me.getManager());
+        
+        if (!store.isLoaded() && !store.isLoading()) {
+            store.loadPage(1);
+        }
+
+        Ext.resumeLayouts(true);
     },
     
     
