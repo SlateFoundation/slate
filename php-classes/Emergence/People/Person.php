@@ -157,11 +157,6 @@ class Person extends VersionedRecord
             ,'points' => 2
             ,'sql' => 'LastName LIKE "%%%s%%"'
         )
-        ,'Username' => array(
-            'qualifiers' => array('any','username','uname','user')
-            ,'points' => 2
-            ,'sql' => 'Username LIKE "%%%s%%"'
-        )
         ,'Gender' => array(
             'qualifiers' => array('gender','sex')
             ,'points' => 2
@@ -171,11 +166,6 @@ class Person extends VersionedRecord
             'qualifiers' => array('class')
             ,'points' => 2
             ,'sql' => 'Class LIKE "%%%s%%"'
-        )
-        ,'AccountLevel' => array(
-            'qualifiers' => array('accountlevel')
-            ,'points' => 2
-            ,'sql' => 'AccountLevel LIKE "%%%s%%"'
         )
         ,'Group' => array(
             'qualifiers' => array('group')

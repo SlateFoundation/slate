@@ -30,6 +30,19 @@ class User extends Person
         )
     );
 
+    public static $searchConditions = array(
+        'Username' => array(
+            'qualifiers' => array('any','username','uname','user')
+            ,'points' => 3
+            ,'sql' => 'Username LIKE "%%%s%%"'
+        )
+        ,'AccountLevel' => array(
+            'qualifiers' => array('accountlevel')
+            ,'points' => 2
+            ,'sql' => 'AccountLevel LIKE "%%%s%%"'
+        )
+    );
+
     public static $validators = array(
         'Username' => array(
             'validator' => 'handle'
