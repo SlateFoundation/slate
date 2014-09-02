@@ -6,7 +6,8 @@
 {/block}
 
 {block css-app}
-    {cssmin fonts/lato.css+fonts/font-awesome.css}
+    {cssmin fonts/lato.css}
+    {cssmin fonts/font-awesome.css}
     {$dwoo.parent}
 {/block}
 
