@@ -8,7 +8,7 @@
 
     <ul>
     {foreach item=Section from=$data}
-        <li><a href="/sections/{$Section->Handle}">{$Section->Title|escape}</a></li>
+        <li><a href="{$Section->getURL()}">{$Section->Title|escape}</a></li>
     {/foreach}
     </ul>
 {/block}
