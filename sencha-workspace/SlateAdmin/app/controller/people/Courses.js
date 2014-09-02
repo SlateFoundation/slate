@@ -9,9 +9,6 @@ Ext.define('SlateAdmin.controller.people.Courses', {
     ],
 
     refs: [{
-        ref: 'personDetailTabs',
-        selector: 'people-manager #detailTabs'
-    },{
         ref: 'coursesPanel',
         selector: 'people-details-courses',
         autoCreate: true,
@@ -79,7 +76,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         coursesPanel.setLoading(false);
 
         // configure proxy and load store
-        personSectionsProxy.url = '/people/json/' + person.get('ID') + '/courses';
+        personSectionsProxy.url = '/people/' + person.get('ID') + '/courses';
         personSectionsProxy.setExtraParam('termID', selectedTerm);
         personSectionsStore.load();
 

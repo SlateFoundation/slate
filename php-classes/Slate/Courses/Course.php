@@ -24,9 +24,6 @@ class Course extends \VersionedRecord
         'Title' => array(
             'fulltext' => true
         )
-        ,'Handle' => array(
-            'unique' => true
-        )
         ,'Code' => array(
             'unique' => true
         )
@@ -66,6 +63,21 @@ class Course extends \VersionedRecord
         'Department' => 'Department'
     );
 
+
+    public function getHandle()
+    {
+        return $this->Code;
+    }
+
+    public static function getByHandle($handle)
+    {
+        return static::getByCode($handle);
+    }
+
+    public static function getByCode($code)
+    {
+        return static::getByField('Code', $code);
+    }
 
     public function validate($deep = true)
     {

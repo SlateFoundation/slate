@@ -1,37 +1,37 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.controller.people.Profile', {
+Ext.define('SlateAdmin.controller.courses.Profile', {
     extend: 'Ext.app.Controller',
 
 
     // controller config
     views: [
-        'people.details.Profile'
+        'courses.sections.details.Profile'
     ],
 
     refs: [{
         ref: 'profilePanel',
-        selector: 'people-details-profile',
+        selector: 'courses-sections-details-profile',
         autoCreate: true,
         
-        xtype: 'people-details-profile'
+        xtype: 'courses-sections-details-profile'
     },{
         ref: 'profileForm',
-        selector: 'people-details-profile form'
+        selector: 'courses-sections-details-profile form'
     },{
         ref: 'cancelBtn',
-        selector: 'people-details-profile button[action=cancel]'
+        selector: 'courses-sections-details-profile button[action=cancel]'
     },{
         ref: 'saveBtn',
-        selector: 'people-details-profile button[action=save]'
+        selector: 'courses-sections-details-profile button[action=save]'
     },{
-        ref: 'studentNumberField',
-        selector: 'people-details-profile field[name=StudentNumber]'
+        ref: 'courseField',
+        selector: 'courses-sections-details-profile field[name=CourseID]'
     },{
-        ref: 'accountLevelField',
-        selector: 'people-details-profile field[name=AccountLevel]'
+        ref: 'codeField',
+        selector: 'courses-sections-details-profile field[name=Code]'
     },{
-        ref: 'groupsField',
-        selector: 'people-details-profile field[name=groupIDs]'
+        ref: 'titleField',
+        selector: 'courses-sections-details-profile field[name=Title]'
     }],
 
 
@@ -40,53 +40,61 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         var me = this;
 
         me.control({
-            'people-manager #detailTabs': {
+            'courses-sections-manager': {
+                selectedsectionchange: me.onSelectedSectionChange
+            },
+            'courses-sections-manager #detailTabs': {
                 beforerender: me.onBeforeTabsRender
             },
-            'people-details-profile': {
-                personloaded: me.onPersonLoaded
+            'courses-sections-details-profile': {
+                sectionloaded: me.onSectionLoaded
             },
-            'people-details-profile form': {
+            'courses-sections-details-profile form': {
                 dirtychange: me.syncButtons,
                 validitychange: me.syncButtons
             },
-            'people-details-profile button[action=cancel]': {
+            'courses-sections-details-profile button[action=cancel]': {
                 click: me.onCancelButtonClick
             },
-            'people-details-profile button[action=save]': {
+            'courses-sections-details-profile button[action=save]': {
                 click: me.onSaveButtonClick
+            },
+            'courses-sections-details-profile combobox[name=CourseID]': {
+                select: me.onCourseSelect
             }
         });
     },
 
 
     // event handlers
+    onSelectedSectionChange: function(manager, section) {
+        var me = this;
+
+        // switch to the profile tab and focus first field if this is a phantom
+        if (section && section.phantom) {
+            manager.detailTabs.setActiveTab(me.getProfilePanel());
+            
+            Ext.defer(function() {
+                me.getProfileForm().down('field[readOnly=false][disabled=false]').focus();
+            }, 100);
+        }
+    },
+
     onBeforeTabsRender: function(detailTabs) {
         detailTabs.add(this.getProfilePanel());
     },
     
-    onPersonLoaded: function(profilePanel, person) {
-        var me = this,
-            personClass = person.get('Class'),
-            profileForm = me.getProfileForm(),
-            groupsField = me.getGroupsField(),
-            groupsStore = groupsField.getStore();
+    onSectionLoaded: function(profilePanel, section) {
+        var me = this;
 
-        me.getStudentNumberField().setVisible(personClass == 'Slate\\People\\Student');
-        me.getAccountLevelField().setVisible(personClass != 'Emergence\\People\\Person');
-        
-        // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
-        if (groupsStore.isLoaded()) {
-            profileForm.loadRecord(person);
-        } else {
-            profilePanel.setLoading('Loading groups&hellip;');
-            groupsStore.load({
-                callback: function() {
-                    profileForm.loadRecord(person);
-                    profilePanel.setLoading(false);
-                }
-            });
-        }
+        me.getCodeField().setDisabled(!section.phantom);
+
+        profilePanel.setLoading('Loading lists&hellip;');
+        Ext.StoreMgr.requireLoaded(['Terms', 'Locations', 'courses.Schedules'], function() {
+            me.getProfileForm().loadRecord(section);
+            me.syncEmptyText();
+            profilePanel.setLoading(false);
+        });
     },
     
     onCancelButtonClick: function() {
@@ -97,13 +105,13 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         var me = this,
             profileForm = me.getProfileForm(),
             form = profileForm.getForm(),
-            person = form.getRecord();
+            section = form.getRecord();
 
         profileForm.setLoading('Saving&hellip;');
         
-        form.updateRecord(person);
+        form.updateRecord(section);
 
-        person.save({
+        section.save({
             success: function(record) {
                 // manually commit entire saved record until EXTJSIV-11442 is fixed
                 // see: http://www.sencha.com/forum/showthread.php?273093-Dirty-red-mark-of-grid-cell-not-removed-after-record.save
@@ -137,9 +145,28 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             }
         });
     },
+    
+    onCourseSelect: function() {
+        this.syncEmptyText();
+    },
 
 
     // internal methods
+    syncEmptyText: function() {
+        var me = this,
+            courseField = me.getCourseField(),
+            codeField = me.getCodeField(),
+            titleField = me.getTitleField(),
+            courseId = courseField.getValue(),
+            course = courseId && courseField.findRecordByValue(courseId);
+        
+        codeField.emptyText = course ? (course.get('Code') + '-000') : 'ABCD-000';
+        codeField.applyEmptyText();
+
+        titleField.emptyText = course ? course.get('Title') : 'Algebra 1';
+        titleField.applyEmptyText();
+    },
+
     syncButtons: function() {
         var me = this,
             profileForm = me.getProfileForm(),

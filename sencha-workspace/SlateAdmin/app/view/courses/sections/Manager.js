@@ -1,21 +1,21 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 
 /**
- * Container for people section's grid and details view.
+ * Container for course sections' grid and details view.
  * 
- * Handles propagating changes to {@link #cfg-selectedPerson} to active {@link SlateAdmin.view.people.details.AbstractDetails details tab}
+ * Handles propagating changes to {@link #cfg-selectedSection} to active {@link SlateAdmin.view.courses.details.AbstractDetails details tab}
  */
-Ext.define('SlateAdmin.view.people.Manager', {
+Ext.define('SlateAdmin.view.courses.sections.Manager', {
     extend: 'Ext.container.Container',
-    xtype: 'people-manager',
+    xtype: 'courses-sections-manager',
     requires: [
-        'SlateAdmin.view.people.Grid'
+        'SlateAdmin.view.courses.sections.Grid'
     ],
 
 
-    // people-manager config
+    // courses-sections-manager config
     config: {
-        selectedPerson: null
+        selectedSection: null
     },
     
     /**
@@ -39,7 +39,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
     items: [{
         region: 'center',
 
-        xtype: 'people-grid'
+        xtype: 'courses-sections-grid'
     },{
         region: 'east',
 
@@ -47,7 +47,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
         itemId: 'detailCt',
         split: true,
         stateful: true,
-        stateId: 'personDetails',
+        stateId: 'sectionDetails',
         disabled: true,
         width: 450,
         layout: {
@@ -57,17 +57,17 @@ Ext.define('SlateAdmin.view.people.Manager', {
         items: [{
             xtype: 'component',
             itemId: 'detailHeader',
-            cls: 'data-header person-header',
+            cls: 'data-header section-header',
             bodyBorder: '0 0 1',
             tpl: [
                 '<div class="record-image">',
-                    '<tpl if="PrimaryPhotoID"><img src="/thumbnail/{PrimaryPhotoID}/168x168/cropped" width=84 height=84>',
-                    '<tpl else><img src="/img/blank-avatar.png" width=84 height=84>',
+                    '<tpl if="ThumbnailID">',
+                        '<img src="/thumbnail/{ThumbnailID}/168x168/cropped" width=84 height=84>',
                     '</tpl>',
                 '</div>',
                 '<div class="record-data">',
-                    '<h1 class="record-title">{FullName}</h1>',
-                    '<h2 class="record-subtitle">{Username}</h1>',
+                    '<h1 class="record-title">{Code}</h1>',
+                    '<h2 class="record-subtitle">{Title}</h1>',
                 '</div>'
             ]
         },{
@@ -82,7 +82,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
     }],
 
 
-    // people-manager methods
+    // courses-sections-manager methods
     // @private
     initComponent: function() {
         var me = this,
@@ -103,27 +103,27 @@ Ext.define('SlateAdmin.view.people.Manager', {
     },
 
     // @private
-    updateSelectedPerson: function(person, oldPerson) {
+    updateSelectedSection: function(section, oldSection) {
         var me = this,
             detailCt = me.detailCt,
             detailTabs = me.detailTabs,
             activeTab = detailTabs.getActiveTab(),
-            loadedPerson;
+            loadedSection;
 
-        if (oldPerson) {
-            oldPerson.un('afterCommit', 'syncDetailHeader', me);
+        if (oldSection) {
+            oldSection.un('afterCommit', 'onSectionCommit', me);
         }
 
         Ext.suspendLayouts();
         me.syncDetailHeader();
             
-        if (person) {
-            person.on('afterCommit', 'syncDetailHeader', me);
+        if (section) {
+            section.on('afterCommit', 'onSectionCommit', me);
     
             if (!activeTab) {
-                activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedPerson
-            } else if (!(loadedPerson = activeTab.getLoadedPerson()) || loadedPerson.getId() != person.getId()) {
-                activeTab.setLoadedPerson(person);
+                activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedSection
+            } else {
+                activeTab.setLoadedSection(section);
             }
 
             if (activeTab && detailCt.isDisabled()) {
@@ -135,6 +135,8 @@ Ext.define('SlateAdmin.view.people.Manager', {
         } else {
             detailCt.disable();
         }
+        
+        me.fireEvent('selectedsectionchange', me, section, oldSection);
 
         Ext.resumeLayouts(true);
     },
@@ -142,15 +144,15 @@ Ext.define('SlateAdmin.view.people.Manager', {
     // @private
     onBeforeTabChange: function(detailTabs, activeTab) {
         var me = this,
-            selectedPerson = me.getSelectedPerson(),
-            tabLoadedPerson = activeTab.getLoadedPerson();
+            selectedSection = me.getSelectedSection(),
+            tabLoadedSection = activeTab.getLoadedSection();
 
-        if (!selectedPerson || me.disabled) {
+        if (!selectedSection || me.disabled) {
             return;
         }
 
-        if (!tabLoadedPerson || tabLoadedPerson.getId() != selectedPerson.getId()) {
-            activeTab.setLoadedPerson(selectedPerson);
+        if (!tabLoadedSection || tabLoadedSection.getId() != selectedSection.getId()) {
+            activeTab.setLoadedSection(selectedSection);
         }
     },
     
@@ -158,26 +160,34 @@ Ext.define('SlateAdmin.view.people.Manager', {
     onDetailTabsEnable: function(detailTabs) {
         var me = this,
             activeTab = me.detailTabs.getActiveTab(),
-            selectedPerson = me.getSelectedPerson(),
-            tabLoadedPerson = activeTab && activeTab.getLoadedPerson();
+            selectedSection = me.getSelectedSection(),
+            tabLoadedSection = activeTab && activeTab.getLoadedSection();
 
-        if (!selectedPerson || !activeTab) {
+        if (!selectedSection || !activeTab) {
             return;
         }
 
-        if (!tabLoadedPerson || tabLoadedPerson.getId() != selectedPerson.getId()) {
-            activeTab.setLoadedPerson(selectedPerson);
+        if (!tabLoadedSection || tabLoadedSection.getId() != selectedSection.getId()) {
+            activeTab.setLoadedSection(selectedSection);
         }
     },
     
+    // @private
+    onSectionCommit: function() {
+        var me = this;
+
+        me.syncDetailHeader();
+        me.fireEvent('sectioncommit', me, me.getSelectedSection());
+    },
+    
     /**
-     * Update detail header based on {@link #cfg-selectedPerson}
+     * Update detail header based on {@link #cfg-selectedSection}
      */
     syncDetailHeader: function() {
         var me = this,
             detailHeader = me.detailHeader,
-            person = this.getSelectedPerson();
+            section = this.getSelectedSection();
 
-        detailHeader.update(person ? person.getData() : '');
+        detailHeader.update(section ? section.getData() : '');
     }
 });

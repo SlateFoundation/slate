@@ -6,20 +6,29 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         'Ext.form.Panel',
         'Jarvus.ext.form.field.Search'
     ],
-    
+
     title: 'Courses',
     autoScroll: true,
-    bodyPadding: 0,
+    bodyPadding: '10 10 0',
 
     dockedItems: [{
         dock: 'top',
 
-        xtype: 'form',
+        xtype: 'container',
         cls: 'navpanel-search-form',
+        layout: 'fit',
         items: [{
             xtype: 'searchfield',
-            anchor: '100%'
+            name: 'query'
         }]
+    },{
+        dock: 'bottom',
+        
+        xtype: 'button',
+        action: 'create-section',
+        text: 'Create Section',
+        href: '#course-sections/create',
+        hrefTarget: '_self'
     }],
 
     defaults: {
@@ -33,126 +42,71 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         autoSelect: false // only for combo boxes
     },
     items: [{
-        xtype: 'combobox',
-        name: 'term',
-        fieldLabel: 'Term',
-        emptyText: 'Current Term',
-        queryMode: 'local',
-        store: 'Terms',
-        valueField: 'ID',
-        displayField: 'Title'
-    },{
         xtype: 'combo',
         name: 'teacher',
         fieldLabel: 'Teacher',
-        displayField: 'FullName',
+
+        queryMode: 'local',
+        store: 'courses.Teachers',
         valueField: 'Username',
-        emptyText: 'Any',
-        queryMode: 'local',
-        store: {
-            fields: [
-                {name: 'Username'},
-                {
-                    name: 'FullName',
-                    convert: function(v, r) {
-                        return r.raw.LastName + ', ' + r.raw.FirstName;
-                    }
-                }
-            ],
-            proxy: {
-                type: 'slateapi',
-                url: '/people/*advisors', // TODO: change to /sections/*teachers
-                summary: true,
-                reader: {
-                    type: 'json',
-                    root: 'data'
-                }
-            }
-        }        
-    },{
-        xtype: 'combo',
-        name: 'room',
-        fieldLabel: 'Room',
-        displayField: 'Title',
-        valueField: 'Handle',
-        emptyText: 'Any',
-        queryMode: 'local',
-        store: {
-            fields: [
-                {name: 'Username'},
-                {
-                    name: 'FullName',
-                    convert: function(v, r) {
-                        return r.raw.LastName + ', ' + r.raw.FirstName;
-                    }
-                }
-            ],
-            proxy: {
-                type: 'slateapi',
-                url: '/people/*advisors', // TODO: change to /sections/*rooms
-                summary: true,
-                reader: {
-                    type: 'json',
-                    root: 'data'
-                }
-            }
-        }        
+        displayField: 'FullName',
+
+        emptyText: 'Any'
     },{
         xtype: 'combo',
         name: 'course',
         fieldLabel: 'Course',
-        displayField: 'Title',
-        valueField: 'Handle',
-        emptyText: 'Any',
+
         queryMode: 'local',
-        store: {
-            fields: [
-                {name: 'Username'},
-                {
-                    name: 'FullName',
-                    convert: function(v, r) {
-                        return r.raw.LastName + ', ' + r.raw.FirstName;
-                    }
-                }
-            ],
-            proxy: {
-                type: 'slateapi',
-                url: '/courses',
-                summary: true,
-                reader: {
-                    type: 'json',
-                    root: 'data'
-                }
-            }
-        }        
+        store: 'courses.Courses',
+        valueField: 'Code',
+        displayField: 'Code',
+
+        emptyText: 'Any'
     },{
         xtype: 'combo',
+        name: 'department',
+        fieldLabel: 'Dept.',
+
+        queryMode: 'local',
+        store: 'courses.Departments',
+        valueField: 'Handle',
+        displayField: 'Title',
+
+        emptyText: 'Any'
+    },{
+        xtype: 'combobox',
+        name: 'term',
+        fieldLabel: 'Term',
+
+        queryMode: 'local',
+        store: 'Terms',
+        valueField: 'Handle',
+        displayField: 'Title',
+
+        emptyText: 'Any'
+    },{
+        xtype: 'combobox',
         name: 'schedule',
         fieldLabel: 'Schedule',
-        displayField: 'Title',
-        valueField: 'Handle',
-        emptyText: 'Any',
+
         queryMode: 'local',
-        store: {
-            fields: [
-                {name: 'Username'},
-                {
-                    name: 'FullName',
-                    convert: function(v, r) {
-                        return r.raw.LastName + ', ' + r.raw.FirstName;
-                    }
-                }
-            ],
-            proxy: {
-                type: 'slateapi',
-                url: '/courses/*schedules', // TODO: change to /sections/*rooms
-                summary: true,
-                reader: {
-                    type: 'json',
-                    root: 'data'
-                }
-            }
-        }        
+        store: 'courses.Schedules',
+        valueField: 'Handle',
+        displayField: 'Title',
+
+        emptyText: 'Any'
+    },{
+        xtype: 'combobox',
+        name: 'location',
+        fieldLabel: 'Location',
+
+        queryMode: 'local',
+        store: 'Locations',
+        valueField: 'Handle',
+        displayField: 'Title',
+
+        emptyText: 'Any'
     },{
         xtype: 'button',
         anchor: false,
@@ -160,5 +114,11 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         action: 'search',
         text: 'Search',
         glyph: 0xf002 // fa-search
+    },{
+        xtype: 'button',
+        anchor: false,
+        margin: '0 0 0 55',
+        action: 'reset',
+        text: 'Reset'
     }]
 });

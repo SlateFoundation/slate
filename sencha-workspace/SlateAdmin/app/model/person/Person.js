@@ -6,9 +6,6 @@ Ext.define('SlateAdmin.model.person.Person', {
     ],
 
 
-    parentNode: null,
-
-
     // model config
     idProperty: 'ID',
     

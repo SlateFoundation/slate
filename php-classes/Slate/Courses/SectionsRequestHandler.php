@@ -4,11 +4,12 @@
 
 namespace Slate\Courses;
 
-use SpreadSheetWriter;
-use Emergence\CMS\BlogRequestHandler;
-use Emergence\CMS\BlogPost;
-use Slate\Term;
-use Slate\Courses\SectionParticipant;
+use Emergence\People\Person;
+#use SpreadSheetWriter;
+#use Emergence\CMS\BlogRequestHandler;
+#use Emergence\CMS\BlogPost;
+#use Slate\Term;
+#use Slate\Courses\SectionParticipant;
 
 class SectionsRequestHandler extends \RecordsRequestHandler
 {
@@ -22,6 +23,16 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         switch ($action ? $action : $action = static::shiftPath()) {
 #            case 'addParticipants':
 #                return static::handleParticipantAddRequest();
+            case '*teachers':
+                return static::respond('teachers', [
+                    'data' => Person::getAllByQuery(
+                        'SELECT Teacher.* FROM (SELECT PersonID FROM `%s` WHERE Role = "Teacher") Participant JOIN `%s` Teacher ON Teacher.ID = Participant.PersonID'
+                        ,[
+                            SectionParticipant::$tableName
+                            ,Person::$tableName
+                        ]
+                    )
+                ]);
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -29,11 +40,9 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleRecordRequest(\ActiveRecord $Section, $action = false)
     {
-        if (!static::checkReadAccess($Section)) {
-            return static::throwUnauthorizedError();
-        }
-
         switch ($action ? $action : $action = static::shiftPath()) {
+            case 'participants':
+                return static::handleParticipantsRequest($Section);
 #            case 'roster':
 #                return static::handleRosterRequest($Section);
 #            case 'roster-download':
@@ -75,15 +84,47 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-#    public static function handleRosterRequest(Section $Section)
-#    {
-#        $GLOBALS['Session']->requireAccountLevel('Staff');
-#
-#        return static::respond('sectionRoster', array(
-#            'success' => true
-#            ,'data' => $Section->Participants
-#        ));
-#    }
+    public static function handleParticipantsRequest(Section $Section)
+    {
+        $GLOBALS['Session']->requireAccountLevel('Staff');
+        
+        if ($personId = static::shiftPath()) {
+            if (!ctype_digit($personId) || !$Participant = SectionParticipant::getByWhere(['CourseSectionID' => $Section->ID, 'PersonID' => $personId])) {
+                return static::throwNotFoundError();
+            }
+            
+            return static::handleParticipantRequest($Section, $Participant);
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $Participant = SectionParticipant::create($_POST);
+            
+            if (!$Participant->validate()) {
+                return static::throwError(reset($Participant->validationErrors));
+            }
+            
+            try {
+                $Participant->save();
+            } catch (\DuplicateKeyException $e) {
+                return static::throwError('Person is already a participant in this section.');
+            }
+
+            return static::respond('participantAdded', array(
+                'success' => true,
+                'data' => $Participant
+            ));
+        }
+
+        return static::respond('sectionParticipants', array(
+            'success' => true
+            ,'data' => $Section->Participants
+        ));
+    }
+
+    public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
+    {
+        
+    }
 
 #    public static function getBlogsByCourseSection(Section $Section)
 #    {

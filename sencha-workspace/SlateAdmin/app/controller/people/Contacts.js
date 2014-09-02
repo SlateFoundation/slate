@@ -22,9 +22,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 //    ],
 
     refs: [{
-        ref: 'personDetailTabs',
-        selector: 'people-manager #detailTabs'
-    },{
         ref: 'contactsPanel',
         selector: 'people-details-contacts',
         autoCreate: true,

@@ -5,16 +5,18 @@ Ext.define('SlateAdmin.Application', {
         'SlateAdmin.API',
         
         // Jarvus enhancements
-        'Jarvus.ext.override.grid.column.ActionEvents',
-        'Jarvus.ext.override.grid.column.ActionGlyphs',
+        'Jarvus.ext.override.grid.column.ActionEvents', // TODO: replace with jarvus-ext-actionevents package
+        'Jarvus.ext.override.grid.column.ActionGlyphs', // TODO: replace with jarvus-ext-glyphs package
         'Jarvus.ext.override.panel.ToggleEvent',
         'Jarvus.ext.override.tree.Records',
+        'Jarvus.ext.override.data.RequireLoadedStores',
         
         // Jarvus bug fixes
         'Jarvus.ext.patch.panel.ExpandBeforeRender',
         'Jarvus.ext.patch.grid.ResetTipAttributes',
         'Jarvus.ext.patch.data.BufferedStoreStrictId',
         'Jarvus.ext.patch.data.TreeStoreIndexOf',
+//        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
 
         // framework features
         'Ext.state.LocalStorageProvider'
@@ -35,10 +37,15 @@ Ext.define('SlateAdmin.Application', {
         'people.Courses',
         'people.Contacts',
 
-        'Terms',
         'Courses',
+        'courses.Profile',
+        'courses.Participants',
+
         'Settings',
-        'settings.Groups'
+        'settings.Groups',
+
+        'Terms',
+        'Locations'
 
         //<debug>
         ,'DeveloperTools'

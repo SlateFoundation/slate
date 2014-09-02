@@ -39,10 +39,6 @@ SearchRequestHandler::$searchClasses['Slate\Courses\Section'] = array(
             'field' => 'Code'
             ,'method' => 'like'
         )
-        ,array(
-            'field' => 'Handle'
-            ,'method' => 'like'
-        )
     )
     ,'conditions' => array('Status = "Live"')
 );

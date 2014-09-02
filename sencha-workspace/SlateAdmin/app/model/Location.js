@@ -1,11 +1,11 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.course.Section', {
+Ext.define('SlateAdmin.model.Location', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records'
     ],
 
-    
+
     // model config
     idProperty: 'ID',
 
@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.model.course.Section', {
         {
             name: "Class",
             type: "string",
-            defaultValue: "Slate\\Courses\\Section"
+            defaultValue: "Emergence\\Locations\\Location"
         },
         {
             name: "Created",
@@ -32,15 +32,16 @@ Ext.define('SlateAdmin.model.course.Section', {
             useNull: true
         },
         {
-            name: "CourseID",
-            type: "int"
+            name: "RevisionID",
+            type: "int",
+            useNull: true
         },
         {
             name: "Title",
             type: "string"
         },
         {
-            name: "Code",
+            name: "Handle",
             type: "string"
         },
         {
@@ -49,57 +50,29 @@ Ext.define('SlateAdmin.model.course.Section', {
             defaultValue: "Live"
         },
         {
-            name: "Notes",
+            name: "Description",
             type: "string",
             useNull: true
         },
         {
-            name: "StudentsCapacity",
+            name: "ParentID",
             type: "int",
             useNull: true
         },
         {
-            name: "TermID",
+            name: "Left",
             type: "int",
             useNull: true
         },
         {
-            name: "ScheduleID",
+            name: "Right",
             type: "int",
             useNull: true
-        },
-        {
-            name: "LocationID",
-            type: "int",
-            useNull: true
-        },
-        {
-            name: 'StudentsCount',
-            type: 'int'
         }
     ],
 
     proxy: {
         type: 'slaterecords',
-        url: '/sections'
-    },
-    
-    toUrl: function() {
-        return '/sections/' + this.get('Code');
+        url: '/locations'
     }
-
-
-    // model methods
-//    getDisplayName: function() {
-//        return this.get('Title');
-//    },
-
-//    getLink: function() {
-//
-//        if (this.phantom) {
-//            return this.getDisplayName();
-//        }
-//
-//        return '<a href="/sections/'+this.get('Handle')+'" target="_blank">'+this.getDisplayName()+'</a>';
-//    }
 });

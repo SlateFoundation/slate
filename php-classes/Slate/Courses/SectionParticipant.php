@@ -22,10 +22,11 @@ class SectionParticipant extends \ActiveRecord
         ,'PersonID' => array(
             'type' => 'integer'
             ,'unsigned' => true
+            ,'index' => true
         )
         ,'Role' => array(
             'type' => 'enum'
-            ,'values' => array('Observer','Student','Instructor','Administrator')
+            ,'values' => array('Observer','Student','Assistant','Teacher')
         )
         ,'StartDate' => array(
             'type' => 'timestamp'
@@ -60,6 +61,17 @@ class SectionParticipant extends \ActiveRecord
         'Section'
         ,'Person'
     );
+    
+    public static $validators = [
+        'CourseSectionID' => [
+            'validator' => 'number',
+            'min' => 1
+        ],
+        'PersonID' => [
+            'validator' => 'number',
+            'min' => 1
+        ]
+    ];
 
     public static function create($values = array(), $save = false)
     {

@@ -31,8 +31,8 @@ Ext.define('SlateAdmin.view.people.details.AbstractDetails', {
      * Called when the tab is activated or a new person is selected.
      * @template
      * @private
-     * @param {SlateAdmin.model.person} person The person being loaded
-     * @param {SlateAdmin.model.person} [oldPerson] The previously loaded person
+     * @param {SlateAdmin.model.person.Person} person The person being loaded
+     * @param {SlateAdmin.model.person.Person} [oldPerson] The previously loaded person
      */
     onPersonLoaded: function(person, oldPerson) {
     }

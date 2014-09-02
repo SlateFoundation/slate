@@ -38,6 +38,8 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
     public static function handleCoursesRequest(Person $Person)
     {
+        $GLOBALS['Session']->requireAccountLevel('Staff');
+
         if (!empty($_REQUEST['termID'])) {
             $Term = Term::getByID($_REQUEST['termID']);
         } else {
