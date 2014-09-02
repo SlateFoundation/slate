@@ -32,7 +32,7 @@ Ext.define('Site.widget.Login', {
         loginModal.enableDisplayMode();
 
         body.on('keyup', 'onBodyKeyup', me);
-        Ext.select(me.getLoginLinkSelector()).on('click', 'onLoginLinkClick', me);
+        body.on('click', 'onLoginLinkClick', me, {delegate: me.getLoginLinkSelector()});
         loginModal.down('.modal-close-button').on('click', 'hide', me);
         loginForm.on('submit', 'onLoginSubmit', me);
     },
