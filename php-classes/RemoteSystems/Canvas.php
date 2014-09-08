@@ -115,6 +115,13 @@ class Canvas
         return static::executeRequest("courses/$courseID", 'PUT', $data);
     }
 
+    static public function deleteCourse($courseID, $event = 'conclude')
+    {
+        return static::executeRequest("courses/$courseID", 'DELETE', array(
+            'event' => $event
+        ));
+    }
+
 
     // Sections: https://canvas.instructure.com/doc/api/sections.html
     public static function getSection($sectionID)
@@ -135,6 +142,11 @@ class Canvas
     public static function updateSection($sectionID, $data)
     {
         return static::executeRequest("sections/$sectionID", 'PUT', $data);
+    }
+
+    static public function deleteSection($sectionID)
+    {
+        return static::executeRequest("sections/$sectionID", 'DELETE');
     }
 
 
