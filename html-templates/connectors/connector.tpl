@@ -6,7 +6,7 @@
     <h1>{$title|escape}</h1>
 
     {if is_a($class, '\\Slate\\Connectors\\ISynchronize', true)}
-        <a href="{$connectorBaseUrl}/synchronize" class="btn">Synchronize</a>
+        <a href="{$connectorBaseUrl}/synchronize" class="button">Synchronize</a>
     {else}
         <p>This connector has no interface here yet</p>
     {/if}

@@ -94,7 +94,7 @@ class Job extends ActiveRecord
     {
         $ignoreFields = is_array($options['ignoreFields']) ? $options['ignoreFields'] : array();
         $fieldRenderers = is_array($options['fieldRenderers']) ? $options['fieldRenderers'] : array();
-        $messageRenderer = is_callable($options['messageRenderer']) ? $options['messageRenderer'] : function($logEntry) { return "{$logEntry[action]} {$logEntry[record]->Class} #{$logEntry[record]->ID}"; };
+        $messageRenderer = is_callable($options['messageRenderer']) ? $options['messageRenderer'] : function($logEntry) { return "{$logEntry[action]} ".$logEntry['record']->getTitle(); };
 
         $logEntry = array(
             'changes' => array()
@@ -133,19 +133,27 @@ class Job extends ActiveRecord
         return $this->log[] = $logEntry;
     }
 
-    public function logException(Exception $e)
+    public function logInvalidRecord(\ActiveRecord $Record)
+    {
+        $this->log[] = array(
+            'message' => 'Invalid ' . get_class($Record) . ' record: ' . $Record->getTitle()
+            ,'validationErrors' => $Record->validationErrors
+        );
+    }
+
+    public function logException(\Exception $e)
     {
         $this->log[] = array(
             'message' => get_class($e) . ': ' . $e->getMessage()
             ,'exception' => $e
         );
     }
-    
+
     public function getLogPath()
     {
         return $this->isPhantom ? null : \Site::$rootPath . '/site-data/connector-jobs/' . $this->ID . '.json';
     }
-    
+
     public function writeLog()
     {
         $logPath = $this->getLogPath();

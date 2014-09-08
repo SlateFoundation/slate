@@ -10,6 +10,7 @@ use intouch\ical\iCal;
 class Connector extends \Slate\Connectors\AbstractConnector implements \Slate\Connectors\ISynchronize
 {
     public static $title = 'iCal Feeds';
+    public static $connectorId = 'ical-feeds';
 
     public static function synchronize(Job $Job, $pretend = true, $verbose = false)
     {

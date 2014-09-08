@@ -5,11 +5,17 @@ namespace Slate\Connectors;
 abstract class AbstractConnector extends \RequestHandler implements IConnector
 {
     public static $title;
+    public static $connectorId;
     public static $accountLevelSynchronize = 'Administrator';
 
     public static function getTitle()
     {
         return static::$title ? static::$title : get_called_class();
+    }
+
+    public static function getConnectorId()
+    {
+        return static::$connectorId ? static::$connectorId : get_called_class();
     }
 
     public static function handleRequest($action = null)
@@ -94,9 +100,7 @@ abstract class AbstractConnector extends \RequestHandler implements IConnector
 
             $Job = Job::create(array(
                 'Connector' => get_called_class()
-                ,'Config' => array(
-                    'reportTo' => !empty($_REQUEST['reportTo']) ? $_REQUEST['reportTo'] : null
-                )
+                ,'Config' => static::_getJobConfig($_REQUEST)
             ));
 
             if (!empty($_REQUEST['createTemplate'])) {
@@ -191,5 +195,12 @@ abstract class AbstractConnector extends \RequestHandler implements IConnector
 
         $url .= '/' . preg_replace('/\.php$/i', '', join('/', \Site::$resolvedPath));
         return $url;
+    }
+
+    protected static function _getJobConfig(array $requestData)
+    {
+        return array(
+            'reportTo' => !empty($requestData['reportTo']) ? $requestData['reportTo'] : null
+        );
     }
 }

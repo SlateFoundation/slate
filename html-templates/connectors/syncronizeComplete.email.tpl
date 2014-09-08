@@ -18,9 +18,9 @@
         <pre>{$Job->Results|print_r:true}</pre>
 
         <h2>Log</h2>
-        <section class="sync-log">
+        <div class="sync-log">
         {foreach item=entry from=$Job->log}
-            <article>
+            <div class="log-entry">
                 {$entry.message|escape}
 
                 {if $entry.changes}
@@ -32,10 +32,20 @@
                     </dl>
                 {/if}
 
+                {if $entry.validationErrors}
+                    <dl>
+                        {foreach item=error key=field from=$entry.validationErrors}
+                            <dt>{$field}</dt>
+                            <dd>{$error|escape}</dd>
+                        {/foreach}
+                    </dl>
+                {/if}
+
                 {if $entry.exception}
                     <details><pre>{$entry.exception|print_r:true|escape}</pre></details>
-            </article>
+                {/if}
+            </div>
         {/foreach}
-        </section>
+        </div>
     </body>
 </html>

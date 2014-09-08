@@ -43,8 +43,18 @@
                 </dl>
             {/if}
 
+            {if $entry.validationErrors}
+                <dl>
+                    {foreach item=error key=field from=$entry.validationErrors}
+                        <dt>{$field}</dt>
+                        <dd>{$error|escape}</dd>
+                    {/foreach}
+                </dl>
+            {/if}
+
             {if $entry.exception}
                 <details><pre>{$entry.exception|print_r:true|escape}</pre></details>
+            {/if}
         </article>
     {/foreach}
     </section>

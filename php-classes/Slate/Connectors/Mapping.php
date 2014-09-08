@@ -17,7 +17,7 @@ class Mapping extends \ActiveRecord
     public static $fields = array(
         'ContextClass' => array(
             'type' => 'enum'
-            ,'values' => array('Course', 'CourseSection', 'Person', 'CourseSectionParticipant')
+            ,'values' => array('Slate\Courses\Course', 'Slate\Courses\Section', 'Emergence\People\Person', 'Slate\Courses\SectionParticipant')
         )
         ,'ContextID' => 'uint'
         ,'MappingSource' => array(
@@ -34,7 +34,7 @@ class Mapping extends \ActiveRecord
         )
         ,'ExternalIdentifier' => array(
             'type' => 'string'
-            ,'length' => 25
+            ,'length' => 255
         )
     );
 
