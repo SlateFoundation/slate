@@ -112,6 +112,11 @@ class Term extends \VersionedRecord
         return static::getByWhere('Status = "Live" AND StartDate > CURRENT_TIMESTAMP', array('order' => 'StartDate ASC, `Right` - `Left`'));
     }
 
+    public static function getAllMaster()
+    {
+        return static::getAllByWhere('ParentID IS NULL', array('order' => 'StartDate DESC'));
+    }
+
     public static function getOrCreateByHandle($handle)
     {
         if ($Term = static::getByHandle($handle)) {
