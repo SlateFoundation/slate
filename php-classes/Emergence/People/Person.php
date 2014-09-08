@@ -6,7 +6,7 @@ use DB;
 use VersionedRecord;
 use Group;
 
-class Person extends VersionedRecord
+class Person extends VersionedRecord implements \Emergence\People\IPerson
 {
     // support subclassing
     public static $rootClass = __CLASS__;
@@ -233,7 +233,7 @@ class Person extends VersionedRecord
     {
         switch ($name) {
             case 'FullName':
-                return $this->FirstName . ' ' . $this->LastName;
+                return $this->getFullName();
             case 'FirstInitial':
                 return strtoupper(substr($this->FirstName, 0, 1));
             case 'LastInitial':
@@ -265,7 +265,12 @@ class Person extends VersionedRecord
 
     public function getTitle()
     {
-        return $this->FullName;
+        return $this->getFullName();
+    }
+    
+    public function getFullName()
+    {
+        return $this->FirstName . ' ' . $this->LastName;
     }
 
     public function setValue($name, $value)
