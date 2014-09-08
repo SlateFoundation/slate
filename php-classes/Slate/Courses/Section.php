@@ -189,6 +189,7 @@ class Section extends \VersionedRecord
                 'handleField' => 'Code'
                 ,'format' => '%s-%03u'
                 ,'alwaysSuffix' => true
+                ,'case' => 'upper'
             ));
         }
 
