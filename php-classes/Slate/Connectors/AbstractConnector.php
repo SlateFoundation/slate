@@ -1,19 +1,43 @@
 <?php
 
-namespace Slate\Integrations;
+namespace Slate\Connectors;
 
-abstract class AbstractRequestHandler extends \RequestHandler implements IRequestHandler
+abstract class AbstractConnector extends \RequestHandler implements IConnector
 {
     public static $title;
-
-    public static $accountLevelSync = 'Administrator';
+    public static $accountLevelSynchronize = 'Administrator';
 
     public static function getTitle()
     {
         return static::$title ? static::$title : get_called_class();
     }
 
-    public static function handleRequest()
+    public static function handleRequest($action = null)
+    {
+        switch ($action ? $action : $action = static::shiftPath()) {
+            case 'synchronize':
+                if (!is_a(get_called_class(), 'Slate\Connectors\ISynchronize', true)) {
+                    return static::throwError('Connector does not implement synchronize');
+                }
+                
+                return static::handleSynchronizeRequest();
+            case '':
+            case false:
+                return static::handleConnectorRequest();
+            default:
+                return static::throwInvalidRequestError();
+        }
+    }
+    
+    public static function handleConnectorRequest()
+    {
+        return static::respond('connector', array(
+            'class' => get_called_class(),
+            'title' => static::getTitle()
+        ));
+    }
+        
+    public static function handleSynchronizeRequest()
     {
         // read request/response configuration
         $pretend = !empty($_REQUEST['pretend']);
@@ -24,21 +48,21 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
         }
 
         if ($jobHandle = static::shiftPath()) {
-            if (!$Job = SynchronizationJob::getByHandle($jobHandle)) {
+            if (!$Job = Job::getByHandle($jobHandle)) {
                 return static::throwNotFoundError('Job not found');
             }
 
-            if (static::$accountLevelSync) {
-                $GLOBALS['Session']->requireAccountLevel(static::$accountLevelSync);
+            if (static::$accountLevelSynchronize) {
+                $GLOBALS['Session']->requireAccountLevel(static::$accountLevelSynchronize);
             }
 
             if (static::peekPath() == 'log') {
-                $logFilename = static::getLogFilename($Job) . '.bz2';
+                $logPath = $Job->getLogPath() . '.bz2';
 
-                if (file_exists($logFilename)) {
+                if (file_exists($logPath)) {
                     header('Content-Type: application/json');
-                    header(sprintf('Content-Disposition: attachment; filename="%s-%u.json"', $Job->Integrator, $Job->ID));
-                    passthru("bzcat $logFilename");
+                    header(sprintf('Content-Disposition: attachment; filename="%s-%u.json"', $Job->Connector, $Job->ID));
+                    passthru("bzcat $logPath");
                     exit();
                 } else {
                     return static::throwNotFoundError('Log not available');
@@ -52,24 +76,24 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
 
         // authenticate and create job or copy template
         if (!empty($_REQUEST['template'])) {
-            $TemplateJob = SynchronizationJob::getByHandle($_REQUEST['template']);
+            $TemplateJob = Job::getByHandle($_REQUEST['template']);
 
-            if (!$TemplateJob || $TemplateJob->Status != 'Template' || $TemplateJob->Integrator != get_called_class()) {
+            if (!$TemplateJob || $TemplateJob->Status != 'Template' || $TemplateJob->Connector != get_called_class()) {
                 return static::throwNotFoundError('Template job not found');
             }
 
-            $Job = SynchronizationJob::create(array(
-                'Integrator' => $TemplateJob->Integrator
+            $Job = Job::create(array(
+                'Connector' => $TemplateJob->Connector
                 ,'Template' => $TemplateJob
                 ,'Config' => $TemplateJob->Config
             ));
         } else {
-            if (static::$accountLevelSync) {
-                $GLOBALS['Session']->requireAccountLevel(static::$accountLevelSync);
+            if (static::$accountLevelSynchronize) {
+                $GLOBALS['Session']->requireAccountLevel(static::$accountLevelSynchronize);
             }
 
-            $Job = SynchronizationJob::create(array(
-                'Integrator' => get_called_class()
+            $Job = Job::create(array(
+                'Connector' => get_called_class()
                 ,'Config' => array(
                     'reportTo' => !empty($_REQUEST['reportTo']) ? $_REQUEST['reportTo'] : null
                 )
@@ -93,9 +117,9 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             return static::respond('createJob', array(
                 'data' => $Job
-                ,'templates' => SynchronizationJob::getAllByWhere(array(
+                ,'templates' => Job::getAllByWhere(array(
                     'Status' => 'Template'
-                    ,'Integrator' => get_called_class()
+                    ,'Connector' => get_called_class()
                 ))
             ));
         }
@@ -109,7 +133,7 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
 
         // close connection to client
         if (!empty($_REQUEST['fork'])) {
-            header('Location: '.static::_getScriptBaseUrl(true).'/'.$Job->Handle, true, 201);
+            header('Location: '.static::_getConnectorBaseUrl(true).'/'.$Job->Handle, true, 201);
             print(json_encode(array('data' => $Job->getData())));
             fastcgi_finish_request();
         }
@@ -131,29 +155,20 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
         // save job if not pretend
         if (!$pretend) {
             $Job->save();
-
-            // write to log
-            $logDirectory = static::getLogDirectory();
-            if (!is_dir($logDirectory)) {
-                mkdir($logDirectory, 0777, true);
-            }
-
-            $logFilename = static::getLogFilename($Job);
-            file_put_contents($logFilename, json_encode($Job->log));
-            exec("bzip2 $logFilename");
+            $Job->writeLog();
 
             // email report
             if (!empty($Job->Config['reportTo'])) {
-                \Emergence\Mailer\Mailer::sendFromTemplate($Job->Config['reportTo'], 'syncComplete', array(
+                \Emergence\Mailer\Mailer::sendFromTemplate($Job->Config['reportTo'], 'syncronizeComplete', array(
                     'Job' => $Job
-                    ,'scriptBaseUrl' => static::_getScriptBaseUrl(true)
+                    ,'connectorBaseUrl' => static::_getConnectorBaseUrl(true)
                 ));
             }
         }
 
 
         // all done, respond
-        return static::respond('syncComplete', array(
+        return static::respond('syncronizeComplete', array(
             'data' => $Job
             ,'success' => $success
             ,'verbose' => $verbose
@@ -163,12 +178,12 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
 
     public static function respond($responseID, $responseData = array(), $responseMode = false)
     {
-        $responseData['scriptBaseUrl'] = static::_getScriptBaseUrl();
+        $responseData['connectorBaseUrl'] = static::_getConnectorBaseUrl();
 
         return parent::respond($responseID, $responseData, $responseMode);
     }
 
-    protected static function _getScriptBaseUrl($external = false)
+    protected static function _getConnectorBaseUrl($external = false)
     {
         if ($external) {
             $url = (empty($_SERVER['HTTPS']) ? 'http' : 'https').'://'.$_SERVER['HTTP_HOST'];
@@ -176,17 +191,5 @@ abstract class AbstractRequestHandler extends \RequestHandler implements IReques
 
         $url .= '/' . preg_replace('/\.php$/i', '', join('/', \Site::$resolvedPath));
         return $url;
-    }
-
-    public static function getLogDirectory()
-    {
-        $logsRoot = "$_SERVER[SITE_ROOT]/site-data/synchronization-logs";
-
-        return $logsRoot;
-    }
-
-    public static function getLogFilename(SynchronizationJob $Job)
-    {
-        return static::getLogDirectory() . "/$Job->ID.json";
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace Slate\Integrations;
+namespace Slate\Connectors;
 
-class SynchronizationMapping extends \ActiveRecord
+class Mapping extends \ActiveRecord
 {
     // ActiveRecord configuration
-    public static $tableName = 'synchronization_mappings';
-    public static $singularNoun = 'synchronization mapping';
-    public static $pluralNoun = 'synchronization mappings';
+    public static $tableName = 'connector_mappings';
+    public static $singularNoun = 'connector mapping';
+    public static $pluralNoun = 'connector mappings';
 
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
@@ -24,7 +24,7 @@ class SynchronizationMapping extends \ActiveRecord
             'type' => 'enum'
             ,'values' => array('Creation', 'Matching', 'Manual')
         )
-        ,'ExternalSource' => array(
+        ,'Connector' => array(
             'type' => 'string'
             ,'length' => 25
         )
@@ -49,7 +49,7 @@ class SynchronizationMapping extends \ActiveRecord
             'type' => 'context-parent'
         )
         ,'Mapping' => array(
-            'fields' => array('ContextClass', 'ExternalSource', 'ExternalKey', 'ExternalIdentifier')
+            'fields' => array('ContextClass', 'Connector', 'ExternalKey', 'ExternalIdentifier')
             ,'unique' => true
         )
     );
@@ -61,7 +61,7 @@ class SynchronizationMapping extends \ActiveRecord
         } catch (\DuplicateKeyException $e) {
             $Mapping = static::getByWhere(array(
                 'ContextClass' => $values['Context'] ? $values['Context']->getRootClass() : $values['ContextClass']
-                ,'ExternalSource' => $values['ExternalSource']
+                ,'Connector' => $values['Connector']
                 ,'ExternalKey' => $values['ExternalKey']
                 ,'ExternalIdentifier' => $values['ExternalIdentifier']
             ));

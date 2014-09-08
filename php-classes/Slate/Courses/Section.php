@@ -143,7 +143,7 @@ class Section extends \VersionedRecord
         )
         ,'Mappings' => array(
             'type' => 'context-children'
-            ,'class' => 'Slate\Integrations\SynchronizationMapping'
+            ,'class' => 'Slate\Connectors\Mapping'
             ,'contextClass' => __CLASS__
         )
     );

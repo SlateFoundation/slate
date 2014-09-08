@@ -22,7 +22,7 @@
     {if $Job->isPhantom}
         <p><em>Pretend mode: no changes have actually been applied. Re-run job without pretend mode to apply</em></p>
     {else}
-        <p><a href="{$scriptBaseUrl}/{$Job->Handle}">Results permalink</a></p>
+        <p><a href="{$connectorBaseUrl}/synchronize/{$Job->Handle}">Results permalink</a></p>
     {/if}
 
     <h2>Results</h2>

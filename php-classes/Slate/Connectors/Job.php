@@ -1,17 +1,18 @@
 <?php
 
-namespace Slate\Integrations;
+namespace Slate\Connectors;
 
 use ActiveRecord;
+use HandleBehavior;
 
-class SynchronizationJob extends ActiveRecord
+class Job extends ActiveRecord
 {
     public $log;
 
     // ActiveRecord configuration
-    public static $tableName = 'synchronization_jobs';
-    public static $singularNoun = 'synchronization job';
-    public static $pluralNoun = 'synchronization jobs';
+    public static $tableName = 'connector_jobs';
+    public static $singularNoun = 'connector job';
+    public static $pluralNoun = 'connector jobs';
 
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
@@ -30,7 +31,7 @@ class SynchronizationJob extends ActiveRecord
             ,'default' => 'Pending'
         )
 
-        ,'Integrator'
+        ,'Connector'
         ,'TemplateID' => array(
             'type' => 'uint'
             ,'notnull' => false
@@ -68,16 +69,16 @@ class SynchronizationJob extends ActiveRecord
     {
         // set handle
         if (!$this->Handle) {
-            $this->Handle = static::generateRandomHandle();
+            $this->Handle = HandleBehavior::generateRandomHandle($this);
         }
 
         // call parent
         return parent::save();
     }
 
-    public function getIntegratorTitle()
+    public function getConnectorTitle()
     {
-        $className = $this->Integrator;
+        $className = $this->Connector;
         return $className::getTitle();
     }
 
@@ -138,5 +139,23 @@ class SynchronizationJob extends ActiveRecord
             'message' => get_class($e) . ': ' . $e->getMessage()
             ,'exception' => $e
         );
+    }
+    
+    public function getLogPath()
+    {
+        return $this->isPhantom ? null : \Site::$rootPath . '/site-data/connector-jobs/' . $this->ID . '.json';
+    }
+    
+    public function writeLog()
+    {
+        $logPath = $this->getLogPath();
+        $logDirectory = dirname($logPath);
+
+        if (!is_dir($logDirectory)) {
+            mkdir($logDirectory, 0777, true);
+        }
+
+        file_put_contents($logPath, json_encode($this->log));
+        exec("bzip2 $logPath");
     }
 }

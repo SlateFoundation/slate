@@ -1,4 +1,4 @@
-{capture assign=subject}{$Job->getIntegratorTitle()} job #{$Job->ID} - Synchronization finished ({$Job->Status}){/capture}
+{capture assign=subject}{$Job->getConnectorTitle()} job #{$Job->ID} - Synchronization finished ({$Job->Status}){/capture}
 <html>
     <body>
         <style>
@@ -12,7 +12,7 @@
         </style>
 
         <h1>Synchronization job status: {$Job->Status}</h1>
-        <p><a href="{$scriptBaseUrl}/{$Job->Handle}">Results permalink</a></p>
+        <p><a href="{$connectorBaseUrl}/synchronize/{$Job->Handle}">Results permalink</a></p>
 
         <h2>Results</h2>
         <pre>{$Job->Results|print_r:true}</pre>

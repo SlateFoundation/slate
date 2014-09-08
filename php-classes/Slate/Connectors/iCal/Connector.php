@@ -1,17 +1,17 @@
 <?php
 
-namespace Slate\Integrations\iCal;
+namespace Slate\Connectors\iCal;
 
 use Emergence\Events\Feed;
 use Emergence\Events\FeedEvent;
-use Slate\Integrations\SynchronizationJob;
+use Slate\Connectors\Job;
 use intouch\ical\iCal;
 
-class RequestHandler extends \Slate\Integrations\AbstractRequestHandler
+class Connector extends \Slate\Connectors\AbstractConnector implements \Slate\Connectors\ISynchronize
 {
-    public static $title = 'Fetch iCal feeds';
+    public static $title = 'iCal Feeds';
 
-    public static function synchronize(SynchronizationJob $Job, $pretend = true, $verbose = false)
+    public static function synchronize(Job $Job, $pretend = true, $verbose = false)
     {
         if ($Job->Status != 'Pending' && $Job->Status != 'Completed') {
             return static::throwError('Cannot execute job, status is not Pending or Complete');

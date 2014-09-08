@@ -7,7 +7,7 @@
     <h1>Job #{$Job->ID} <small>{$Job->Status}</small></h1>
 
     {if $Job->Template}
-        <p>Spawned from template <a href="{$scriptBaseUrl}/{$Job->Template->Handle}">#{$Job->Template->ID}</a></p>
+        <p>Spawned from template <a href="{$connectorBaseUrl}/synchronize/{$Job->Template->Handle}">#{$Job->Template->ID}</a></p>
     {/if}
 
     {if $Job->Config}
@@ -27,7 +27,7 @@
     {if $Job->Status == 'Template'}
         <h2>Latest jobs run from this template</h2>
 
-        <form method="POST" action="{$scriptBaseUrl}?template={$Job->Handle}">
+        <form method="POST" action="{$connectorBaseUrl}/synchronize?template={$Job->Handle}">
             <input type="submit" value="Spawn a new job from this template">
         </form>
         <table width="100%">
@@ -39,7 +39,7 @@
             </tr>
             {foreach item=TemplatedJob from=$Job->TemplatedJobs}
                 <tr>
-                    <td><a href="{$scriptBaseUrl}/{$TemplatedJob->Handle}">{$TemplatedJob->ID}</a></td>
+                    <td><a href="{$connectorBaseUrl}/synchronize/{$TemplatedJob->Handle}">{$TemplatedJob->ID}</a></td>
                     <td align="right">{$TemplatedJob->Created|date_format:'%c'}</td>
                     <td>{personLink $TemplatedJob->Creator}</td>
                     <td align="right">{$TemplatedJob->Status}</td>
@@ -67,6 +67,6 @@
             {/foreach}
         </table>
     {else}
-        <p><a href="{$scriptBaseUrl}/{$Job->Handle}/log">Download log file</a></p>
+        <p><a href="{$connectorBaseUrl}/synchronize/{$Job->Handle}/log">Download log file</a></p>
     {/if}
 {/block}
