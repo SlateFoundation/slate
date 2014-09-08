@@ -149,9 +149,8 @@ class Section extends \VersionedRecord
     );
 
     public static $validators = [
-        'CourseID' => [
-            'validator' => 'number'
-            ,'min' => 1
+        'Course' => [
+            'validator' => 'require-relationship'
             ,'errorMessage' => 'Course must be selected'
         ]
     ];
