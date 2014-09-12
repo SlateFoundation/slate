@@ -85,6 +85,23 @@ class Term extends \VersionedRecord
             ,'sql' => 'Handle LIKE "%%%s%%"'
         )
     );
+    
+    public static function getClosest()
+    {
+        if ($Term = static::getCurrent()) {
+            return $Term;
+        }
+
+        if ($Term = static::getNext()) {
+            return $Term;
+        }
+
+        if ($Term = static::getPrevious()) {
+            return $Term;
+        }
+
+        return null;
+    }
 
     public static function getCurrent()
     {
@@ -100,6 +117,11 @@ class Term extends \VersionedRecord
         }
 
         return $Term;
+    }
+
+    public static function getLastTerm()
+    {
+        return static::getByWhere('Status = "Live"', array('order' => 'EndDate DESC, `Right` - `Left`'));
     }
 
     public static function getPrevious()
@@ -198,7 +220,7 @@ class Term extends \VersionedRecord
         );
     }
 
-    public function getLongestParent()
+    public function getMaster()
     {
         return static::getByQuery(
             'SELECT * FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left ASC LIMIT 1'
@@ -224,6 +246,7 @@ class Term extends \VersionedRecord
 
     public function getFuzzyTitle()
     {
+        // TODO: figure out what this is used for and update to use new q/s/y prefix scheme
         $regexTermArray = array(
             '/(\d{4}-\d{2}): (\d{1,}\w{2} Quarter)/' => 'Quarter'
             ,'/(\d{4}-\d{2})\.S(\d{1})/' => 'Semester'
