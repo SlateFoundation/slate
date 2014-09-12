@@ -3,6 +3,8 @@
 namespace Slate\Courses;
 
 use HandleBehavior;
+use DuplicateKeyException;
+use TableNotFoundException;
 use Slate\Courses\SectionParticipant;
 
 class Section extends \VersionedRecord
@@ -239,19 +241,23 @@ class Section extends \VersionedRecord
 
         try {
             return SectionParticipant::create($participantData, true);
-        } catch (\DuplicateKeyException $e) {
+        } catch (DuplicateKeyException $e) {
             return SectionParticipant::getByWhere($participantData);
         }
     }
     
     public function getStudentsCount()
     {
-        return (int)\DB::oneValue(
-            'SELECT COUNT(*) FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"'
-            ,[
-                SectionParticipant::$tableName
-                ,$this->ID
-            ]);
+        try {
+            return (int)\DB::oneValue(
+                'SELECT COUNT(*) FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"'
+                ,[
+                    SectionParticipant::$tableName
+                    ,$this->ID
+                ]);
+        } catch (TableNotFoundException $e) {
+            return 0;
+        }
     }
     
     // search SQL generators
@@ -263,14 +269,18 @@ class Section extends \VersionedRecord
             return 'FALSE';
         }
         
-        $sectionIds = \DB::allValues(
-            'CourseSectionID'
-            ,'SELECT CourseSectionID FROM `%s` Participant WHERE Participant.PersonID = %u AND Role = "Teacher"'
-            ,[
-                SectionParticipant::$tableName
-                ,$Teacher->ID
-            ]
-        );
+        try {
+            $sectionIds = \DB::allValues(
+                'CourseSectionID'
+                ,'SELECT CourseSectionID FROM `%s` Participant WHERE Participant.PersonID = %u AND Role = "Teacher"'
+                ,[
+                    SectionParticipant::$tableName
+                    ,$Teacher->ID
+                ]
+            );
+        }  catch (TableNotFoundException $e) {
+            return 'FALSE';
+        }
         
         if (!count($sectionIds)) {
             return 'FALSE';
