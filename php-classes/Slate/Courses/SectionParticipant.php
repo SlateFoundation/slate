@@ -83,7 +83,7 @@ class SectionParticipant extends \ActiveRecord
                 ,'PersonID' => $values['Person'] ? $values['Person']->ID : $values['PersonID']
             ));
 
-            if ($values['Role']) {
+            if (!empty($values['Role'])) {
                 $Participant->Role = $values['Role'];
             }
 

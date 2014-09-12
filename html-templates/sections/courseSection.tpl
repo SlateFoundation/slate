@@ -120,10 +120,10 @@
                     </ul>
                 {/if}
 
-                    <h3>Instructor{tif count($Section->Instructors) != 1 ? s}</h3>
-                    <ul class="roster instructors">
-                    {foreach item=Instructor from=$Section->Instructors}
-                        <li>{personLink $Instructor photo=true}</li>
+                    <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
+                    <ul class="roster teachers">
+                    {foreach item=Teacher from=$Section->Teachers}
+                        <li>{personLink $Teacher photo=true}</li>
                     {foreachelse}
                         <p class="empty-text">No instructors currently listed.</p>
                     {/foreach}

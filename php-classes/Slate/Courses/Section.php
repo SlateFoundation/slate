@@ -125,13 +125,13 @@ class Section extends \VersionedRecord
             ,'foreign' => 'CourseSectionID'
             ,'order' => 'Role DESC, (SELECT CONCAT(LastName,FirstName) FROM people WHERE people.id = PersonID)'
         )
-        ,'Instructors' => array(
+        ,'Teachers' => array(
             'type' => 'many-many'
             ,'class' => 'Person'
             ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
             ,'linkLocal' => 'CourseSectionID'
             ,'linkForeign' => 'PersonID'
-            ,'conditions' => array('Link.Role = "Instructor"')
+            ,'conditions' => array('Link.Role = "Teacher"')
         )
         ,'Students' => array(
             'type' => 'many-many'
