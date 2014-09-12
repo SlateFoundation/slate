@@ -1,6 +1,6 @@
 {extends designs/site.tpl}
 
-{block title}Import Google Sheets &mdash; {$dwoo.parent}{/block}
+{block title}Pull from Google Sheets &mdash; {$dwoo.parent}{/block}
 
 {block content}
     <h1>Pull from Google Sheet</h1>
@@ -23,20 +23,13 @@
     <h3>Run or save a new job</h3>
 	<form method="POST">
         <fieldset>
-            <legend>Job Mode</legend>
+            <legend>Job Configuration</legend>
     		<p>
     			<label>
     				Pretend
     				<input type="checkbox" name="pretend" value="true" {refill field=pretend checked="true" default="true"}>
     			</label>
     			(Check to prevent saving any changes to the database)
-    		</p>
-    		<p>
-    			<label>
-    				Verbose
-    				<input type="checkbox" name="verbose" value="true" {refill field=verbose checked="true" default="true"}>
-    			</label>
-    			(Check to see detailed output about what changes will be/have been made)
     		</p>
     		<p>
     			<label>
@@ -52,9 +45,23 @@
     			</label>
     			Email recipient or list of recipients to send post-sync report to
     		</p>
+            <p>
+    			<label>
+    				Auto Capitalize
+    				<input type="checkbox" name="autoCapitalize" value="true" {refill field=autoCapitalize checked="true"}>
+    			</label>
+    			(Check to make best-case at correct capitalization for proper nouns if input case is mangled)
+    		</p>
         </fieldset>
         <fieldset>
             <legend>User Accounts</legend>
+            <p>
+    			<label>
+    				Update usernames
+    				<input type="checkbox" name="updateUsernames" value="true" {refill field=updateUsernames checked="true"}>
+    			</label>
+    			(Check to change a user's username if the site's configured generator comes up with a new one)
+    		</p>
             <p>
     			<label>
     				Students CSV

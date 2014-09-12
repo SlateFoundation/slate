@@ -21,7 +21,7 @@
         <div class="sync-log">
         {foreach item=entry from=$Job->log}
             <div class="log-entry">
-                {$entry.message|escape}
+                <div>{$entry.message|escape}</div>
 
                 {if $entry.changes}
                     <dl>

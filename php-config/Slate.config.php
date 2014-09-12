@@ -3,6 +3,7 @@
 //Slate::$schoolName = 'MyTown High';
 //Slate::$schoolAbbr = 'MTH';
 //Slate::$siteSlogan = 'Open source for education';
+//Slate::$userEmailDomain = 'example.org';
 
 //Slate::$manageTools['Narratives'] = '/manage#progress/narratives';
 //Slate::$manageTools['Standards'] = '/manage#progress/standards';

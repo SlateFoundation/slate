@@ -5,7 +5,8 @@ class Slate
     public static $schoolName;
     public static $schoolAbbr;
     public static $siteSlogan = 'Open source for education';
-    static public $userEmailDomain;
+    public static $userEmailDomain;
+    public static $generateUserEmail;
     public static $webTools = array();
     public static $manageTools = array(
         'People'     => '/manage#people',
@@ -41,5 +42,16 @@ class Slate
         }
 
         return $widgetConfig;
+    }
+    
+    public static function generateUserEmail(Emergence\People\User $User)
+    {
+        if (is_callable(static::$generateUserEmail)) { 
+            return call_user_func(static::$generateUserEmail, $User, static::$userEmailDomain); 
+        } elseif (static::$userEmailDomain && $User->Username) {
+            return $User->Username . '@' . static::$userEmailDomain; 
+        }  else { 
+            return null; 
+        }
     }
 }

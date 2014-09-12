@@ -29,13 +29,6 @@
         </p>
         <p>
             <label>
-                Verbose
-                <input type="checkbox" name="verbose" value="true" {refill field=verbose checked="true" default="true"}>
-            </label>
-            (Check to see detailed output about what changes will be/have been made)
-        </p>
-        <p>
-            <label>
                 Create Template
                 <input type="checkbox" name="createTemplate" value="true" {refill field=createTemplate checked="true"}>
             </label>

@@ -143,7 +143,7 @@ class Section extends \VersionedRecord
         )
         ,'Mappings' => array(
             'type' => 'context-children'
-            ,'class' => 'Slate\Connectors\Mapping'
+            ,'class' => 'Emergence\Connectors\Mapping'
             ,'contextClass' => __CLASS__
         )
     );

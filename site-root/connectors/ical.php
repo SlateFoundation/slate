@@ -1,3 +1,3 @@
 <?php
 
-Slate\Connectors\iCal\Connector::handleRequest();
+Emergence\Connectors\iCal\Connector::handleRequest();

@@ -12,6 +12,18 @@
             margin-left: 2em;
             margin-top: 0;
         }
+        .sync-log .level-emergency  { color: darkred; font-weight: bold; }
+        .sync-log .level-alert      { color: darkred; font-weight: bold; }
+        .sync-log .level-critical   { color: red; font-weight: bold; }
+        .sync-log .level-error      { color: orangered; font-weight: bold; }
+        .sync-log .level-warning    { color: orangered; }
+        .sync-log .level-notice     { color: orange; }
+        .sync-log .level-info       { color: skyblue; }
+        .sync-log .level-debug      { color: lightgray; display: none; }
+        
+        .sync-log.show-debug .level-debug {
+            display: block;
+        }
     </style>
 {/block}
 
@@ -20,7 +32,7 @@
     <h1>Synchronization job status: {$Job->Status}</h1>
 
     {if $Job->isPhantom}
-        <p><em>Pretend mode: no changes have actually been applied. Re-run job without pretend mode to apply</em></p>
+        <p><strong>Pretend mode active: no changes have actually been applied. Re-run job without pretend mode to apply</strong></p>
     {else}
         <p><a href="{$connectorBaseUrl}/synchronize/{$Job->Handle}">Results permalink</a></p>
     {/if}
@@ -29,10 +41,11 @@
     <pre>{$Job->Results|print_r:true}</pre>
 
     <h2>Log</h2>
+    <label><input type="checkbox" onchange="Ext.getBody().down('.sync-log').toggleCls('show-debug', this.checked)">Show debug entries</label>
     <section class="sync-log">
     {foreach item=entry from=$Job->log}
-        <article>
-            {$entry.message|escape}
+        <article class="level-{$entry.level}">
+            <div>{$entry.message|escape}</div>
 
             {if $entry.changes}
                 <dl>
