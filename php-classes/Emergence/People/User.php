@@ -3,11 +3,13 @@
 namespace Emergence\People;
 
 use DB;
+use HandleBehavior;
 
 class User extends Person
 {
     public static $minPasswordLength = 5;
     public static $usernameGenerator = 'flast';
+    public static $onPasswordSet;
 
     public static $defaultClass = __CLASS__;
     public static $subClasses = array(__CLASS__);
@@ -101,8 +103,14 @@ class User extends Person
 
     public function save($deep = true)
     {
+        // generate user name if none provided
         if (!$this->Username) {
             $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
+        }
+
+        // generate password if none provided
+        if (!$this->Password) {
+            $this->setClearPassword(static::generatePassword());
         }
 
         return parent::save($deep);
@@ -163,6 +171,9 @@ class User extends Person
     public function setClearPassword($password)
     {
         $this->Password = password_hash($password, PASSWORD_DEFAULT);
+        if (is_callable(static::$onPasswordSet)) {
+            call_user_func(static::$onPasswordSet, $password, $this);
+        }
     }
 
     public function hasAccountLevel($accountLevel)
@@ -212,5 +223,17 @@ class User extends Person
     protected static function _getAccountLevelIndex($accountLevel)
     {
         return array_search($accountLevel, self::$fields['AccountLevel']['values']);
+    }
+
+    protected static function generatePassword($length = 8)
+    {
+        $chars = array('2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's' ,'t', 'u', 'v', 'w', 'x', 'y', 'z');
+        $password = '';
+
+        for ($i=0; $i<$length; $i++) {
+           $password .= $chars[mt_rand(0, count($chars)-1)];
+        }
+
+        return $password;
     }
 }
