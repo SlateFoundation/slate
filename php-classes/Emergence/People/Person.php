@@ -120,7 +120,8 @@ class Person extends VersionedRecord implements \Emergence\People\IPerson
         )
         ,'ContactPoints' => array(
             'type' => 'one-many'
-            ,'class' => 'ContactPoint'
+            ,'class' => '\\Emergence\\People\\ContactPoint\\AbstractPoint'
+            ,'foreign' => 'PersonID'
         )
         ,'Relationships' => array(
             'type' => 'one-many'
