@@ -56,6 +56,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
     );
     
     public static $studentRootGroup = 'students';
+    public static $studentAutoAssignEmail = true;
 
     public static $staffColumns = array(
         'First Name' => 'FirstName',
@@ -80,6 +81,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
     );
     
     public static $staffRootGroup = 'staff';
+    public static $staffAutoAssignEmail = true;
 
     public static $sectionColumns = array(
         'Section ID' => 'SectionExternal',
@@ -338,7 +340,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
                 $Record->PrimaryEmail->Label = 'Staff Email';
 
                 $Record->ContactPoints = array_merge($Record->ContactPoints, array($Record->PrimaryEmail));
-            } elseif (Slate::$userEmailDomain) {
+            } elseif (static::$studentAutoAssignEmail && Slate::$userEmailDomain) {
                 // if one is already set and updateUsernames are enabled, check if this contact point should be destroyed
                 if ($Record->PrimaryEmail) {
                     $emailUsername = $Record->PrimaryEmail->getLocalName();
@@ -651,7 +653,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
                 $Record->PrimaryEmail->Label = 'Staff Email';
 
                 $Record->ContactPoints = array_merge($Record->ContactPoints, array($Record->PrimaryEmail));
-            } elseif (Slate::$userEmailDomain) {
+            } elseif (static::$staffAutoAssignEmail && Slate::$userEmailDomain) {
                 // if one is already set and updateUsernames are enabled, check if this contact point should be destroyed
                 if ($Record->PrimaryEmail) {
                     $emailUsername = $Record->PrimaryEmail->getLocalName();
