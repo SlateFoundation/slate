@@ -123,7 +123,18 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
     {
-        
+        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+            $Participant->destroy();
+
+            return static::respond('participantDeleted', array(
+                'success' => true,
+                'data' => $Participant
+            ));
+        }
+
+        return static::respond('participant', array(
+            'data' => $Participant
+        ));
     }
 
 #    public static function getBlogsByCourseSection(Section $Section)

@@ -15,7 +15,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         ref: 'participantsPanel',
         selector: 'courses-sections-details-participants',
         autoCreate: true,
-        
+
         xtype: 'courses-sections-details-participants'
     },{
         ref: 'participantsGrid',
@@ -45,6 +45,9 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             },
             'courses-sections-details-participants button[action=add-participant]': {
                 click: me.onAddParticipantClick
+            },
+            'courses-sections-details-participants grid': {
+                deleteclick: me.onDeleteParticipantClick
             }
         });
     },
@@ -63,15 +66,44 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         participantsStore.getProxy().url = '/sections/' + section.get('Code') + '/participants';
         participantsStore.load();
     },
-    
+
     onFieldSpecialKey: function(field, ev) {
         if (ev.getKey() == ev.ENTER && Ext.isNumber(this.getPersonField().getValue())) {
             this.doAddParticipant();
         }
     },
-    
+
     onAddParticipantClick: function() {
         this.doAddParticipant();
+    },
+
+    onDeleteParticipantClick: function(grid, participant) {
+        var me = this,
+            participantsStore = grid.getStore(),
+            participantsPanel = me.getParticipantsPanel(),
+            section = participantsPanel.getLoadedSection();
+
+        participantsPanel.setLoading('Removing participant&hellip;');
+        SlateAdmin.API.request({
+            method: 'DELETE',
+            url: section.toUrl() + '/participants/' + participant.get('PersonID'),
+            success: function(response) {
+                var responseData = response.data;
+
+                if (responseData.success) {
+                    participantsStore.remove(participant);
+
+                    if (participant.get('Role') == 'Student') {
+                        section.set('StudentsCount', section.get('StudentsCount') - 1);
+                        section.commit(false, ['StudentsCount']);
+                    }
+                } else {
+                    Ext.Msg.alert('Not removed', responseData.message || 'This person could not be removed as a participant.');
+                }
+
+                participantsPanel.setLoading(false);
+            }
+        });
     },
 
 
@@ -103,14 +135,14 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             success: function(response) {
                 var responseData = response.data,
                     particpant = responseData.data;
-                
+
                 if (responseData.success && particpant) {
                     particpant.Person = personField.findRecordByValue(personId).getData();
                     particpant = participantsStore.getProxy().getReader().readRecords([particpant]);
                     participantsStore.add(particpant.records[0]);
                     personField.reset();
                     personField.focus();
-                    
+
                     if (role == 'Student') {
                         section.set('StudentsCount', section.get('StudentsCount') + 1);
                         section.commit(false, ['StudentsCount']);
@@ -118,7 +150,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
                 } else {
                     Ext.Msg.alert('Not added', responseData.message || 'This person could not be added as a participant.');
                 }
-                
+
                 participantsPanel.setLoading(false);
             }
         });

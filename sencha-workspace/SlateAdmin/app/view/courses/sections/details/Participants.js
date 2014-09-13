@@ -5,6 +5,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
     requires: [
         'Ext.grid.Panel',
         'Ext.grid.feature.Grouping',
+        'Ext.grid.column.Action',
         'Ext.grid.column.Template',
         'Ext.form.field.ComboBox',
         'SlateAdmin.proxy.API',
@@ -94,6 +95,15 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 header: 'Username',
                 dataIndex: 'PersonUsername',
                 tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
+            },{
+                xtype: 'actioncolumn',
+                width: 40,
+                items: [{
+                    action: 'delete',
+                    iconCls: 'participant-delete glyph-danger',
+                    glyph: 0xf056, // fa-minus-circle
+                    tooltip: 'Remove participant'
+                }]
             }]
         }
     }
