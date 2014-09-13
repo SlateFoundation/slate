@@ -32,6 +32,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
 
     // column map
     public static $studentColumns = array(
+        'Username' => 'Username',
         'School ID Number' => 'StudentNumber',
             'ID' => 'StudentNumber',
         'First Name' => 'FirstName',
@@ -48,7 +49,6 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
             'Graduation' => 'GraduationYear',
         'Cohort' => 'Group', 'Group' => 'Group',
         'Advisor' => 'AdvisorUsername',
-#        'Username',
 #        'Assigned Password',
 #        'Email',
 #        'Phone',
@@ -92,11 +92,13 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
             'Course code' => 'CourseCode',
         'Teacher' => 'TeacherUsername',
         'Term' => 'Term',
+            'Terms' => 'Term',
         'Schedule' => 'Schedule',
         'Location' => 'Location',
             'Room' => 'Location',
         'Students Capacity' => 'StudentsCapacity',
             '# of Students' => 'StudentsCapacity',
+            'Seats' => 'StudentsCapacity',
         'Notes' => 'Notes'
     );
 
@@ -104,7 +106,8 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
 
     public static $enrollmentColumns = array(
         'School ID Number' => 'StudentNumber',
-            'School ID' => 'StudentNumber'
+            'School ID' => 'StudentNumber',
+            'Student Number' => 'StudentNumber'
     );
 
 
