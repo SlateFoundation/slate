@@ -10,7 +10,7 @@ class Slate
     public static $webTools = array();
     public static $manageTools = array(
         'People'     => '/manage#people',
-        'Courses'    => '/manage#courses/mycourses',
+        'Course Sections'    => '/manage#course-sections',
         'Pages'      => '/pages'
     );
 

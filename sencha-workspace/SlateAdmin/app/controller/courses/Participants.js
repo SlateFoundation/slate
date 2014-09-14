@@ -2,6 +2,7 @@
 Ext.define('SlateAdmin.controller.courses.Participants', {
     extend: 'Ext.app.Controller',
     requires: [
+        'Ext.MessageBox',
         'SlateAdmin.API'
     ],
 
@@ -83,27 +84,43 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             participantsPanel = me.getParticipantsPanel(),
             section = participantsPanel.getLoadedSection();
 
-        participantsPanel.setLoading('Removing participant&hellip;');
-        SlateAdmin.API.request({
-            method: 'DELETE',
-            url: section.toUrl() + '/participants/' + participant.get('PersonID'),
-            success: function(response) {
-                var responseData = response.data;
-
-                if (responseData.success) {
-                    participantsStore.remove(participant);
-
-                    if (participant.get('Role') == 'Student') {
-                        section.set('StudentsCount', section.get('StudentsCount') - 1);
-                        section.commit(false, ['StudentsCount']);
-                    }
-                } else {
-                    Ext.Msg.alert('Not removed', responseData.message || 'This person could not be removed as a participant.');
+        Ext.Msg.confirm(
+            'Remove participant',
+            Ext.String.format(
+                'Are you sure you want to remove the <strong>{0}</strong> role for <strong>{1} {2}</strong> from <strong>{3}</strong>?',
+                participant.get('Role'),
+                participant.get('PersonFirstName'),
+                participant.get('PersonLastName'),
+                section.get('Code')
+            ),
+            function(btn) {
+                if (btn != 'yes') {
+                    return;
                 }
 
-                participantsPanel.setLoading(false);
+                participantsPanel.setLoading('Removing participant&hellip;');
+                SlateAdmin.API.request({
+                    method: 'DELETE',
+                    url: section.toUrl() + '/participants/' + participant.get('PersonID'),
+                    success: function(response) {
+                        var responseData = response.data;
+
+                        if (responseData.success) {
+                            participantsStore.remove(participant);
+
+                            if (participant.get('Role') == 'Student') {
+                                section.set('StudentsCount', section.get('StudentsCount') - 1);
+                                section.commit(false, ['StudentsCount']);
+                            }
+                        } else {
+                            Ext.Msg.alert('Not removed', responseData.message || 'This person could not be removed as a participant.');
+                        }
+
+                        participantsPanel.setLoading(false);
+                    }
+                });
             }
-        });
+        );
     },
 
 
