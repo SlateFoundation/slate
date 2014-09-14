@@ -43,6 +43,12 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         switch ($action ? $action : $action = static::shiftPath()) {
             case 'participants':
                 return static::handleParticipantsRequest($Section);
+            case 'post':
+                $GLOBALS['Session']->requireAuthentication();
+                return BlogRequestHandler::handleCreateRequest(BlogPost::create(array(
+                    'Class' => 'Emergence\CMS\BlogPost',
+                    'Context' => $Section
+                )));
 #            case 'roster':
 #                return static::handleRosterRequest($Section);
 #            case 'roster-download':

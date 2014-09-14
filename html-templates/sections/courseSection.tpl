@@ -34,7 +34,7 @@
             <div class="col-inner">
                 <header class="page-header">
                     <h2 class="header-title">{$Section->Title|escape} <small class="muted">Public Feed</small></h2>
-                    <div class="header-buttons"><a href="/sections/{$Section->Handle}/post" class="button primary">Create a Post</a></div>
+                    <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
             
                 {$limit = 10}
