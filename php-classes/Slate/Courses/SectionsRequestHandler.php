@@ -5,9 +5,9 @@
 namespace Slate\Courses;
 
 use Emergence\People\Person;
+use Emergence\CMS\BlogPost;
+use Emergence\CMS\BlogRequestHandler;
 #use SpreadSheetWriter;
-#use Emergence\CMS\BlogRequestHandler;
-#use Emergence\CMS\BlogPost;
 #use Slate\Term;
 #use Slate\Courses\SectionParticipant;
 
