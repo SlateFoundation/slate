@@ -49,6 +49,8 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                     'Class' => 'Emergence\CMS\BlogPost',
                     'Context' => $Section
                 )));
+            case 'students':
+                return static::handleStudentsRequest($Section);
 #            case 'roster':
 #                return static::handleRosterRequest($Section);
 #            case 'roster-download':
@@ -140,6 +142,15 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
         return static::respond('participant', array(
             'data' => $Participant
+        ));
+    }
+
+    public static function handleStudentsRequest(Section $Section)
+    {
+        $GLOBALS['Session']->requireAccountLevel('Staff');
+
+        return static::respond('students', array(
+            'data' => $Section->Students
         ));
     }
 

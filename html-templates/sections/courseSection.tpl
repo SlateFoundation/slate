@@ -8,7 +8,8 @@
 
 {block js-bottom}
     <script type="text/javascript">
-        window.CourseSectionData = {$data->getData()|json_encode};
+        var SiteEnvironment = SiteEnvironment || { };
+        SiteEnvironment.courseSection = {JSON::translateObjects($data, false, 'recordURL')|json_encode};
     </script>
 
     {$dwoo.parent}
