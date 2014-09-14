@@ -126,7 +126,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
                 activeTab.setLoadedPerson(person);
             }
 
-            if (detailCt.isDisabled()) {
+            if (activeTab && detailCt.isDisabled()) {
                 detailCt.enable();
                 
                 // ensure active tab is set, since it would be supressed while disabled

@@ -21,10 +21,7 @@ class Department extends \VersionedRecord
     public static $subClasses = array(__CLASS__);
 
     public static $fields = array(
-        'ContextClass' => null // uncomment to enable
-        ,'ContextID' => null
-
-        ,'Title' => array(
+        'Title' => array(
             'fulltext' => true
         )
         ,'Handle' => array(
@@ -86,13 +83,13 @@ class Department extends \VersionedRecord
         return $this->finishValidation();
     }
 
-    public function save($deep = true, $createRevision = true)
+    public function save($deep = true)
     {
         // implement handles
         HandleBehavior::onSave($this);
 
         // call parent
-        parent::save($deep, $createRevision);
+        parent::save($deep);
     }
 }
 

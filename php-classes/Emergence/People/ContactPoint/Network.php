@@ -41,6 +41,9 @@ class Network extends AbstractPoint
 
         $this->network = $network;
         $this->username = $username;
+
+        // update serialization
+        $this->Data = $this->serialize();
     }
 
     public function toString()

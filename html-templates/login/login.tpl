@@ -32,7 +32,7 @@
             <div class="submit-area">
                 <input type="submit" class="button submit" value="Log In">
                 {if RegistrationRequestHandler::$enableRegistration}
-                    <span class="submit-text">or <a href="/register">Register</a></span>
+                    <span class="submit-text">or <a href="/register{tif $.request.return || $.server.SCRIPT_NAME != '/login' ? cat('?return=', escape(default($.request.return, $.server.REQUEST_URI), url))}">Register</a></span>
                 {/if}
             </div>
         </fieldset>

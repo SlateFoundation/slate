@@ -11,6 +11,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
     title: 'People',
     autoScroll: true,
     bodyPadding: 0,
+
     dockedItems: [{
         dock: 'top',
 
@@ -22,6 +23,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             emptyText: 'Search all people…'
         }]
     }],
+
     layout: {
         type: 'vbox',
         align: 'stretch'

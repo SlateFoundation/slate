@@ -6,18 +6,23 @@ Ext.define('Site.page.CourseSection', {
     ],
 
     constructor: function() {
-        if (window.CourseSectionData) {
-            Ext.onReady(this.onDocReady, this);
-        }
+        Ext.onReady(this.onDocReady, this);
     },
 
     onDocReady: function() {
+        var siteEnv = window.SiteEnvironment,
+            courseSection = siteEnv && siteEnv.courseSection;
+        
+        if (!courseSection) {
+            return;
+        }
+
         Ext.getBody().on('click', function(ev, t) {
             ev.stopEvent();
 
             Ext.Ajax.request({
                 method: 'GET',
-                url: '/sections/'+window.CourseSectionData.Handle+'/roster',
+                url: courseSection.recordURL+'/students',
                 params: {
                     include: 'PrimaryEmail'
                 },

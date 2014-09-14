@@ -19,6 +19,9 @@ class Link extends AbstractPoint
     public function loadString($string)
     {
         $this->url = (string)$string;
+
+        // update serialization
+        $this->Data = $this->serialize();
     }
 
     public function toString()

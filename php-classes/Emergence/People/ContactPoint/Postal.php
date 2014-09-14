@@ -65,6 +65,9 @@ class Postal extends AbstractPoint
 #        if (!$this->number || !$this->street || !($this->postal || ($this->city && $this->state))) {
 #            throw new \Emergence\Exceptions\ValidationException('Could not parse sufficient address data from string');
 #        }
+
+        // update serialization
+        $this->Data = $this->serialize();
     }
 
     public function toString()

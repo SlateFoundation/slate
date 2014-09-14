@@ -1,6 +1,9 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
+    requires: [
+        'Ext.MessageBox'
+    ],
 
 
     // controller config
@@ -18,7 +21,18 @@ Ext.define('SlateAdmin.controller.People', {
 
     routes: {
         'people': 'showPeople',
-        'people/lookup/:person': 'showPerson',
+        'people/lookup/:person': {
+            action: 'showPerson',
+            conditions: {
+                ':person': '[^/]+'
+            }
+        },
+        'people/lookup/:person/:tab': {
+            action: 'showPerson',
+            conditions: {
+                ':person': '[^/]+'
+            }
+        },
         'people/search/:query': {
             action: 'showResults',
             conditions: {
@@ -184,7 +198,8 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
-    showPerson: function(person) {
+    showPerson: function(person, tab) {
+        alert('Loading an individual person is not yet implemented');
         // TODO: implement loading a person without a search query
 //        debugger;
     },
@@ -199,7 +214,7 @@ Ext.define('SlateAdmin.controller.People', {
         ExtHistory.suspendState();
         Ext.suspendLayouts();
 
-        //decode query string for processing
+        // decode query string for processing
         query = ExtHistory.decodeRouteComponent(query);
         person = ExtHistory.decodeRouteComponent(person);
 
@@ -276,7 +291,7 @@ Ext.define('SlateAdmin.controller.People', {
         this.syncGridStatus();
     },
 
-    onPersonSelect: function(selModel, record, index) {
+    onPersonSelect: function(selModel, personRecord, index) {
         var me = this,
             selectionCount = selModel.getCount();
 
@@ -284,14 +299,14 @@ Ext.define('SlateAdmin.controller.People', {
         me.syncGridStatus();
 
         if (selectionCount == 1) {
-            me.getManager().setSelectedPerson(record);
+            me.getManager().setSelectedPerson(personRecord);
             me.syncState();
         }
 
         Ext.resumeLayouts(true);
     },
 
-    onPersonDeselect: function(selModel, record, index) {
+    onPersonDeselect: function(selModel, personRecord, index) {
         var me = this,
             firstRecord;
 
@@ -393,8 +408,8 @@ Ext.define('SlateAdmin.controller.People', {
         if (forceReload || proxy.isExtraParamsDirty()) {
             proxy.abortLastRequest(true);
             me.getManager().setSelectedPerson(null);
-            store.removeAll();
             me.getGrid().getSelectionModel().clearSelections();
+            store.removeAll();
             store.load({
                 callback: callback,
                 scope: me
@@ -415,10 +430,11 @@ Ext.define('SlateAdmin.controller.People', {
             title = 'People',
             activeTab = null;
 
-
         if (extraParams && extraParams.q) {
             path.push('search', extraParams.q);
             title = '&ldquo;' + extraParams.q + '&rdquo;';
+        } else if(personRecord) {
+            path.push('lookup');
         }
 
         if (personRecord) {
@@ -427,11 +443,15 @@ Ext.define('SlateAdmin.controller.People', {
             } else {
                 path.push('?id='+personRecord.get('ID'));
             }
+            
+            title = personRecord.getFullName();
 
             activeTab = detailTabs.getActiveTab() || detailTabs.items.getAt(0);
-            path.push(activeTab.getItemId());
-
-            title = activeTab.title + ' &mdash; ' + personRecord.getFullName();
+            
+            if (activeTab) {
+                path.push(activeTab.getItemId());
+                title = activeTab.title + ' &mdash; ' + title;
+            }
         }
 
         Ext.util.History.pushState(path, title);
@@ -632,6 +652,7 @@ Ext.define('SlateAdmin.controller.People', {
             if (personRecord) {
                 _finishSelectPerson();
             } else {
+                // TODO: check if query params impacts this?
                 store.load({
                     url: '/people/'+person,
                     callback: function(records, operation, success) {
@@ -656,11 +677,12 @@ Ext.define('SlateAdmin.controller.People', {
                 if (personRecord) {
                     _finishSelectPerson();
                 } else {
+                    // TODO: check if query params impacts this?
                     store.load({
                         url: '/people/'+fieldValue,
                         callback: function(records, operation, success) {
                             if (!success || !records.length) {
-                                Ext.Msg.alert('Error','Could not find the person you requested');
+                                Ext.Msg.alert('Error', 'Could not find the person you requested');
                             } else {
                                 personRecord = records[0];
                             }

@@ -8,7 +8,8 @@
 
 {block js-bottom}
     <script type="text/javascript">
-        window.CourseSectionData = {$data->getData()|json_encode};
+        var SiteEnvironment = SiteEnvironment || { };
+        SiteEnvironment.courseSection = {JSON::translateObjects($data, false, 'recordURL')|json_encode};
     </script>
 
     {$dwoo.parent}
@@ -34,7 +35,7 @@
             <div class="col-inner">
                 <header class="page-header">
                     <h2 class="header-title">{$Section->Title|escape} <small class="muted">Public Feed</small></h2>
-                    <div class="header-buttons"><a href="/sections/{$Section->Handle}/post" class="button primary">Create a Post</a></div>
+                    <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
             
                 {$limit = 10}
@@ -116,14 +117,14 @@
                     <h3 class="well-title">Course Tools</h3>
                     <ul class="course-section-tools plain">
                         <li class="copy-email"><a class="button" href="#copy-section-emails">Copy Email List</a></li>
-                        <li class="download-roster"><a class="button" href="/sections/{$Section->Handle}/roster-download">Download Roster</a></li>
+                        <li class="download-roster"><a class="button" href="{$Section->getURL()}/students?format=csv&columns=LastName,FirstName,Gender,Username,PrimaryEmail,PrimaryPhone,StudentNumber,Advisor,GraduationYear">Download Roster</a></li>
                     </ul>
                 {/if}
 
-                    <h3>Instructor{tif count($Section->Instructors) != 1 ? s}</h3>
-                    <ul class="roster instructors">
-                    {foreach item=Instructor from=$Section->Instructors}
-                        <li>{personLink $Instructor photo=true}</li>
+                    <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
+                    <ul class="roster teachers">
+                    {foreach item=Teacher from=$Section->Teachers}
+                        <li>{personLink $Teacher photo=true}</li>
                     {foreachelse}
                         <p class="empty-text">No instructors currently listed.</p>
                     {/foreach}

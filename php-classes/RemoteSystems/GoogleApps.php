@@ -41,12 +41,17 @@ class GoogleApps
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-        $response = json_decode(curl_exec($ch), true);
-
+        
+        $response = curl_exec($ch);
+        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        return $response;
+        
+        switch ($responseCode) {
+            case 200:
+                return json_decode($response, true);
+            default:
+                throw new \Exception("Got HTTP status $responseCode from Google API");
+        }
     }
 
     public static function getAllResults($path, $resultsKey, $params = array())

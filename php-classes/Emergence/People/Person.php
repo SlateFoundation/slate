@@ -6,7 +6,7 @@ use DB;
 use VersionedRecord;
 use Group;
 
-class Person extends VersionedRecord
+class Person extends VersionedRecord implements \Emergence\People\IPerson
 {
     // support subclassing
     public static $rootClass = __CLASS__;
@@ -120,7 +120,8 @@ class Person extends VersionedRecord
         )
         ,'ContactPoints' => array(
             'type' => 'one-many'
-            ,'class' => 'ContactPoint'
+            ,'class' => '\\Emergence\\People\\ContactPoint\\AbstractPoint'
+            ,'foreign' => 'PersonID'
         )
         ,'Relationships' => array(
             'type' => 'one-many'
@@ -157,11 +158,6 @@ class Person extends VersionedRecord
             ,'points' => 2
             ,'sql' => 'LastName LIKE "%%%s%%"'
         )
-        ,'Username' => array(
-            'qualifiers' => array('any','username','uname','user')
-            ,'points' => 2
-            ,'sql' => 'Username LIKE "%%%s%%"'
-        )
         ,'Gender' => array(
             'qualifiers' => array('gender','sex')
             ,'points' => 2
@@ -171,11 +167,6 @@ class Person extends VersionedRecord
             'qualifiers' => array('class')
             ,'points' => 2
             ,'sql' => 'Class LIKE "%%%s%%"'
-        )
-        ,'AccountLevel' => array(
-            'qualifiers' => array('accountlevel')
-            ,'points' => 2
-            ,'sql' => 'AccountLevel LIKE "%%%s%%"'
         )
         ,'Group' => array(
             'qualifiers' => array('group')
@@ -243,7 +234,7 @@ class Person extends VersionedRecord
     {
         switch ($name) {
             case 'FullName':
-                return $this->FirstName . ' ' . $this->LastName;
+                return $this->getFullName();
             case 'FirstInitial':
                 return strtoupper(substr($this->FirstName, 0, 1));
             case 'LastInitial':
@@ -275,7 +266,12 @@ class Person extends VersionedRecord
 
     public function getTitle()
     {
-        return $this->FullName;
+        return $this->getFullName();
+    }
+    
+    public function getFullName()
+    {
+        return $this->FirstName . ' ' . $this->LastName;
     }
 
     public function setValue($name, $value)

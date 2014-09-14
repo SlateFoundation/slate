@@ -30,6 +30,9 @@ class Phone extends AbstractPoint
         if (strlen($this->number) == 11 && $this->number[0] == '1') {
             $this->number = substr($this->number, 1);
         }
+
+        // update serialization
+        $this->Data = $this->serialize();
     }
 
     public function toString()

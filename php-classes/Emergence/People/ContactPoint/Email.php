@@ -30,9 +30,22 @@ class Email extends AbstractPoint
         return parent::__classLoaded();
     }
 
+    public function getLocalName()
+    {
+        return strstr($this->address, '@', true);
+    }
+
+    public function getDomainName()
+    {
+        return substr(strstr($this->address, '@'), 1);
+    }
+
     public function loadString($string)
     {
         $this->address = (string)$string;
+
+        // update serialization
+        $this->Data = $this->serialize();
     }
 
     public function toString()

@@ -33,7 +33,7 @@
 
             <div class="submit-area">
                 <input type="submit" class="button submit" value="Create Account">
-                <span class="submit-text">or <a href="/login">Log In</a></span>
+                <span class="submit-text">or <a href="/login{tif $.request.return ? cat('?return=', escape($.request.return, url))}">Log In</a></span>
             </div>
         </fieldset>
     </form>

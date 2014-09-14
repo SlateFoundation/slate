@@ -19,15 +19,16 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         xtype: 'toolbar',
         items: [{
             text: 'Cancel',
+            action: 'cancel',
+            disabled: true,
             cls: 'glyph-danger',
-            itemId: 'assets-details-cancel-btn',
             glyph: 0xf057 // fa-times-circle
         },{
             xtype: 'tbfill'
         },{
             text: 'Save',
             action: 'save',
-            itemId: 'assets-details-save-btn',
+            disabled: true,
             cls: 'glyph-success',
             glyph: 0xf058 // fa-check-circle
         }]

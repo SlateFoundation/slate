@@ -9,7 +9,7 @@
             <div class="col-inner">
                 {$importantTag = Tag::getByHandle('important')}
                 {if $importantTag}
-                    {$importantPages = $importantTag->getItemsByClass('Emergence\CMS\Page', array(conditions = array(Class='Emergence\CMS\Page'), order = Published))}
+                    {$importantPages = $importantTag->getItemsByClass('Emergence\CMS\Page', array(conditions = array(Class='Emergence\CMS\Page',Status=Published,Visibility=Public,'Published IS NULL OR Published <= CURRENT_TIMESTAMP'), order = Published))}
             
                     {if count($importantPages)}
                         <div class="important-links">
@@ -25,7 +25,7 @@
             
                 {$homepageTag = Tag::getByHandle('homepage')}
                 {if $homepageTag}
-                    {$homePages = $homepageTag->getItemsByClass('Emergence\CMS\Page', array(conditions = array(Class='Emergence\CMS\Page'), order = Published))}
+                    {$homePages = $homepageTag->getItemsByClass('Emergence\CMS\Page', array(conditions = array(Class='Emergence\CMS\Page',Status=Published,Visibility=Public,'Published IS NULL OR Published <= CURRENT_TIMESTAMP'), order = Published))}
             
                     {foreach item=homePage from=$homePages}
                         <section class="page-section">

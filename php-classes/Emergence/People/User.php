@@ -3,10 +3,13 @@
 namespace Emergence\People;
 
 use DB;
+use HandleBehavior;
 
 class User extends Person
 {
     public static $minPasswordLength = 5;
+    public static $usernameGenerator = 'flast';
+    public static $onPasswordSet;
 
     public static $defaultClass = __CLASS__;
     public static $subClasses = array(__CLASS__);
@@ -27,6 +30,19 @@ class User extends Person
             'type' => 'enum'
             ,'values' => array('Disabled','Contact','User','Staff','Administrator','Developer')
             ,'default' => 'User'
+        )
+    );
+
+    public static $searchConditions = array(
+        'Username' => array(
+            'qualifiers' => array('any','username','uname','user')
+            ,'points' => 3
+            ,'sql' => 'Username LIKE "%%%s%%"'
+        )
+        ,'AccountLevel' => array(
+            'qualifiers' => array('accountlevel')
+            ,'points' => 2
+            ,'sql' => 'AccountLevel LIKE "%%%s%%"'
         )
     );
 
@@ -87,8 +103,14 @@ class User extends Person
 
     public function save($deep = true)
     {
+        // generate user name if none provided
         if (!$this->Username) {
             $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
+        }
+
+        // generate password if none provided
+        if (!$this->Password) {
+            $this->setClearPassword(static::generatePassword());
         }
 
         return parent::save($deep);
@@ -149,6 +171,9 @@ class User extends Person
     public function setClearPassword($password)
     {
         $this->Password = password_hash($password, PASSWORD_DEFAULT);
+        if (is_callable(static::$onPasswordSet)) {
+            call_user_func(static::$onPasswordSet, $password, $this);
+        }
     }
 
     public function hasAccountLevel($accountLevel)
@@ -165,42 +190,50 @@ class User extends Person
     public static function getUniqueUsername($firstName, $lastName, $options = array())
     {
         // apply default options
-        $options = array_merge(array(
-            'format' => 'short' // full or short
-        ), $options);
-
-        // create username
-        switch ($options['format']) {
-            case 'short':
-                $username = $firstName[0].$lastName;
-                break;
-            case 'full':
-                $username = $firstName.'_'.$lastName;
-                break;
-            default:
-                throw new Exception ('Unknown username format.');
-        }
-
-        // strip bad characters
-        $username = $strippedText = preg_replace(
-            array('/\s+/', '/[^a-zA-Z0-9\-_]+/')
-            , array('_', '-')
-            , strtolower($username)
+        $options = array_merge(
+            array('incrementerFormat' => '%s%u'),
+            is_string(static::$usernameGenerator) || is_callable(static::$usernameGenerator) ? array('format' => static::$usernameGenerator) : static::$usernameGenerator,
+            $options,
+            array('handleField' => 'Username')
         );
 
-        $incarnation = 1;
-        while (static::getByWhere(array('Username'=>$username))) {
-            // TODO: check for repeat posting here?
-            $incarnation++;
-
-            $username = $strippedText . $incarnation;
+        // create seed username
+        switch ($options['format']) {
+            case 'flast':
+                $username = $firstName[0].$lastName;
+                break;
+            case 'firstl':
+                $username = $firstName.$lastName[0];
+                break;
+            case 'first.last':
+                $username = $firstName.'.'.$lastName;
+                break;
+            default:
+                if (is_callable($options['format'])) {
+                    $username = call_user_func($options['format'], $firstName, $lastName, $options);
+                } else {
+                    throw new Exception ('Unknown format format.');
+                }
         }
 
-        return $username;
+        // use HandleBehavior to transform characters and guarantee uniqueness
+        return HandleBehavior::getUniqueHandle(get_called_class(), $username, $options);
     }
 
     protected static function _getAccountLevelIndex($accountLevel)
     {
         return array_search($accountLevel, self::$fields['AccountLevel']['values']);
+    }
+
+    protected static function generatePassword($length = 8)
+    {
+        $chars = array('2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's' ,'t', 'u', 'v', 'w', 'x', 'y', 'z');
+        $password = '';
+
+        for ($i=0; $i<$length; $i++) {
+           $password .= $chars[mt_rand(0, count($chars)-1)];
+        }
+
+        return $password;
     }
 }

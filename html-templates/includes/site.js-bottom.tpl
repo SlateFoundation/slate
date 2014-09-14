@@ -1,11 +1,6 @@
 {load_templates "subtemplates/forms.tpl"}
 
-{if $.get.jsdebug || !Site::resolvePath('site-root/js/pages/common.js')}
-    <script src="{Sencha::getVersionedFrameworkPath('ext', 'build/ext-all-debug.js', '5.0.0')}"></script>
-    {sencha_bootstrap classPaths=array('sencha-workspace/pages/src', 'ext-library/Jarvus/ext/patch')}
-{else}
-    <script src="{versioned_url 'js/pages/common.js'}"></script>
-{/if}
+{include "includes/site.ext-bootstrap.tpl"}
 
 {if !$.User} {* markup for login modal. TODO: generate this in the JS *}
 <div class="modal-mask" style="display:none" id="login-modal">
@@ -39,8 +34,3 @@
     </form>
 </div>
 {/if}
-
-<script>
-    Ext.scopeCss = true;
-    Ext.require('Site.Common');
-</script>

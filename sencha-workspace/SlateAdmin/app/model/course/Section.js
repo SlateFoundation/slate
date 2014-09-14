@@ -10,99 +10,96 @@ Ext.define('SlateAdmin.model.course.Section', {
     idProperty: 'ID',
 
     fields: [
-        'Handle',
-        'Title',
-        'Code',
-        'Status',
-        'Notes',
         {
-            name: 'ID',
-            type: 'integer',
+            name: "ID",
+            type: "int",
             useNull: true
         },
         {
-            name: 'Class',
-            defaultValue: 'Group'
+            name: "Class",
+            type: "string",
+            defaultValue: "Slate\\Courses\\Section"
         },
         {
-            name: 'Created',
-            type: 'date',
-            dateFormat: 'timestamp',
+            name: "Created",
+            type: "date",
+            dateFormat: "timestamp",
             useNull: true
         },
         {
-            name: 'CreatorID',
-            type: 'integer',
+            name: "CreatorID",
+            type: "int",
             useNull: true
         },
         {
-            name: 'TermID',
-            type: 'integer',
+            name: "CourseID",
+            type: "int"
+        },
+        {
+            name: "Title",
+            type: "string"
+        },
+        {
+            name: "Code",
+            type: "string"
+        },
+        {
+            name: "Status",
+            type: "string",
+            defaultValue: "Live"
+        },
+        {
+            name: "Notes",
+            type: "string",
             useNull: true
         },
         {
-            name: 'ScheduleID',
-            type: 'integer',
+            name: "StudentsCapacity",
+            type: "int",
             useNull: true
         },
         {
-            name: 'LocationID',
-            type: 'integer',
+            name: "TermID",
+            type: "int",
             useNull: true
         },
         {
-            name: 'StudentsCapacity',
-            type: 'integer'
+            name: "ScheduleID",
+            type: "int",
+            useNull: true
         },
         {
-            name: 'Course',
-            sortType: function(v){
-                return v ? v.Title : null;
-            }
+            name: "LocationID",
+            type: "int",
+            useNull: true
         },
         {
-            name: 'CourseTitle',
-            mapping: 'Course.Title'
-        },
-        {
-            name: 'Schedule',
-            sortType: function(v){
-                return v ? v.Title : null;
-            }
-        },
-        {
-            name: 'Location',
-            sortType: function(v){
-                return v ? v.Title : null;
-            }
-        },
-        {
-            name: 'Term',
-            sortType: function(v){
-                return v ? v.Title : null;
-            }
+            name: 'StudentsCount',
+            type: 'int'
         }
     ],
 
     proxy: {
         type: 'slaterecords',
-        url: '/sections',
-        sortParam: false,
-        groupParam: false,
-        pageParam: false
+        url: '/sections'
     },
+    
+    toUrl: function() {
+        return '/sections/' + this.get('Code');
+    }
 
 
     // model methods
-    getDisplayName: function() {
-        return this.get('Title');
-    },
+//    getDisplayName: function() {
+//        return this.get('Title');
+//    },
 
-    getLink: function() {
-
-        if(this.phantom)
-            return this.getDisplayName();
-
-        return '<a href="/sections/'+this.get('Handle')+'" target="_blank">'+this.getDisplayName()+'</a>';
-    }
+//    getLink: function() {
+//
+//        if (this.phantom) {
+//            return this.getDisplayName();
+//        }
+//
+//        return '<a href="/sections/'+this.get('Handle')+'" target="_blank">'+this.getDisplayName()+'</a>';
+//    }
 });

@@ -9,9 +9,6 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     ],
 
     refs: [{
-        ref: 'personDetailTabs',
-        selector: 'people-manager #detailTabs'
-    },{
         ref: 'profilePanel',
         selector: 'people-details-profile',
         autoCreate: true,
@@ -20,6 +17,12 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     },{
         ref: 'profileForm',
         selector: 'people-details-profile form'
+    },{
+        ref: 'cancelBtn',
+        selector: 'people-details-profile button[action=cancel]'
+    },{
+        ref: 'saveBtn',
+        selector: 'people-details-profile button[action=save]'
     },{
         ref: 'studentNumberField',
         selector: 'people-details-profile field[name=StudentNumber]'
@@ -43,8 +46,15 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             'people-details-profile': {
                 personloaded: me.onPersonLoaded
             },
-            'people-details-profile button[action=save]':{
-                click: me.onSaveProfileClick
+            'people-details-profile form': {
+                dirtychange: me.syncButtons,
+                validitychange: me.syncButtons
+            },
+            'people-details-profile button[action=cancel]': {
+                click: me.onCancelButtonClick
+            },
+            'people-details-profile button[action=save]': {
+                click: me.onSaveButtonClick
             }
         });
     },
@@ -62,7 +72,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             groupsField = me.getGroupsField(),
             groupsStore = groupsField.getStore();
 
-        me.getStudentNumberField().setVisible(personClass == 'Slate\\People\Student');
+        me.getStudentNumberField().setVisible(personClass == 'Slate\\People\\Student');
         me.getAccountLevelField().setVisible(personClass != 'Emergence\\People\\Person');
         
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
@@ -78,8 +88,12 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             });
         }
     },
+    
+    onCancelButtonClick: function() {
+        this.getProfileForm().getForm().reset();
+    },
 
-    onSaveProfileClick: function() {
+    onSaveButtonClick: function() {
         var me = this,
             profileForm = me.getProfileForm(),
             form = profileForm.getForm(),
@@ -96,6 +110,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
                 record.commit();
 
                 record.fireEvent('afterCommit', record);
+                
+                profileForm.loadRecord(record);
 
                 profileForm.setLoading(false);
             },
@@ -120,5 +136,17 @@ Ext.define('SlateAdmin.controller.people.Profile', {
                 profileForm.setLoading(false);
             }
         });
+    },
+
+
+    // internal methods
+    syncButtons: function() {
+        var me = this,
+            profileForm = me.getProfileForm(),
+            valid = profileForm.isValid(),
+            dirty = profileForm.isDirty();
+        
+        me.getCancelBtn().setDisabled(!dirty);
+        me.getSaveBtn().setDisabled(!dirty || !valid);
     }
 });

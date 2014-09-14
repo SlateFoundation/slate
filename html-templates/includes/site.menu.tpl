@@ -58,7 +58,7 @@
 {$infoTag = Tag::getByHandle('site_info')}
 
 {if $infoTag}
-    {$infoPages = $infoTag->getItemsByClass('Emergence\CMS\Page', array(conditions = array(Class='Emergence\CMS\Page')))}
+    {$infoPages = $infoTag->getItemsByClass('Emergence\CMS\Page', array(conditions = array(Class='Emergence\CMS\Page',Status=Published,Visibility=Public,'Published IS NULL OR Published <= CURRENT_TIMESTAMP')))}
 
     {if count($infoPages)}
     <li class="menu-item">

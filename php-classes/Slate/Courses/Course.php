@@ -24,9 +24,6 @@ class Course extends \VersionedRecord
         'Title' => array(
             'fulltext' => true
         )
-        ,'Handle' => array(
-            'unique' => true
-        )
         ,'Code' => array(
             'unique' => true
         )
@@ -66,30 +63,23 @@ class Course extends \VersionedRecord
         'Department' => 'Department'
     );
 
+    public static $validators = [
+        'Title'
+    ];
 
-    public function validate($deep = true)
+
+    public function getHandle()
     {
-        // call parent
-        parent::validate();
-
-        $this->_validator->validate(array(
-            'field' => 'Title'
-            ,'errorMessage' => 'A title is required'
-        ));
-
-        // implement handles
-        HandleBehavior::onValidate($this, $this->_validator);
-
-        // save results
-        return $this->finishValidation();
+        return $this->Code;
     }
 
-    public function save($deep = true, $createRevision = true)
+    public static function getByHandle($handle)
     {
-        // implement handles
-        HandleBehavior::onSave($this);
+        return static::getByCode($handle);
+    }
 
-        // call parent
-        parent::save($deep, $createRevision);
+    public static function getByCode($code)
+    {
+        return static::getByField('Code', $code);
     }
 }
