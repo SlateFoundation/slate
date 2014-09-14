@@ -51,40 +51,6 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                 )));
             case 'students':
                 return static::handleStudentsRequest($Section);
-#            case 'roster':
-#                return static::handleRosterRequest($Section);
-#            case 'roster-download':
-#                $GLOBALS['Session']->requireAccountLevel('Staff');
-#
-#                $csvWriter = new SpreadSheetWriter(array(
-#                    'filename' => $Section->Code.'_roster'
-#                    ,'autoHeader' => true
-#                ));
-#
-#                $students = SectionParticipant::getAllByQuery('SELECT s.* FROM `%s` s INNER JOIN people p ON (p.ID = s.PersonID) WHERE CourseSectionID=%u AND Role="Student" ORDER BY p.LastName,p.FirstName', array(SectionParticipant::$tableName, $Section->ID));
-#
-#                foreach ($students as $student) {
-#                    $csvWriter->writeRow(array(
-#                        'LastName' => $student->Person->LastName
-#                        ,'FirstName' => $student->Person->FirstName
-#                        ,'Username' => $student->Person->Username
-#                        ,'Email' => $student->Person->Email
-#                        ,'Student ID' => $student->Person->StudentNumber
-#                        ,'Advisor' => $student->Person->Advisor->FullName
-#                        ,'GraduationYear' => $student->Person->GraduationYear
-#                    ));
-#                }
-#
-#                $csvWriter->close();
-#                exit();
-#            case 'post':
-#                $GLOBALS['Session']->requireAuthentication();
-#                return BlogRequestHandler::handleCreateRequest(BlogPost::create(array(
-#                    'Class' => 'Emergence\CMS\BlogPost'
-#                    ,'Context' => $Section
-#                )));
-#            case 'removeParticipant':
-#                return static::handleParticipantRemovalRequest($Section);
 #            case 'rss':
 #                return static::getBlogsByCourseSection($Section);
             default:
@@ -131,6 +97,8 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
     {
+        $GLOBALS['Session']->requireAccountLevel('Staff');
+
         if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             $Participant->destroy();
 
