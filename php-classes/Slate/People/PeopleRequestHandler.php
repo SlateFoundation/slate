@@ -49,7 +49,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
         if (!empty($_REQUEST['termID'])) {
             $Term = Term::getByID($_REQUEST['termID']);
         } else {
-            $Term = Term::getCurrent();
+            $Term = Term::getClosest();
         }
 
         if (!$Term) {
