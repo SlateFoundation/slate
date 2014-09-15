@@ -16,7 +16,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
         collapsible: true,
         collapsed: true,
         // stateful: true, TODO fix collapsing state bug
-        stateId: 'peopleAdvSearchPanel',
+        stateId: 'people-advancedsearchform-fieldset',
         defaults: {
             anchor: '100%',
             xtype: 'textfield',

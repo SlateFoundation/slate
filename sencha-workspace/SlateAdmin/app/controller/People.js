@@ -1,8 +1,9 @@
-/*jslint browser: true, undef: true *//*global Ext*/
+/*jslint browser: true, undef: true *//*global Ext,SlateAdmin*/
 Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Ext.MessageBox'
+        'Ext.MessageBox',
+        'SlateAdmin.API'
     ],
 
 
@@ -89,6 +90,9 @@ Ext.define('SlateAdmin.controller.People', {
     },{
         ref: 'selectionCountCmp',
         selector: 'people-grid #selectionCount'
+    },{
+        ref: 'exportColumnsMenu',
+        selector: 'people-grid menu#csvExportColumns'
 //    },{
 //        ref: 'personMenu',
 //        autoCreate: true,
@@ -148,6 +152,12 @@ Ext.define('SlateAdmin.controller.People', {
             },
             'people-manager #detailTabs': {
                 tabchange: me.onDetailTabChange
+            },
+            'people-grid button#exportResultsBtn menuitem[exportFormat]': {
+                click: me.onExportFormatButtonClick
+            },
+            'people-grid menu#csvExportColumns': {
+                beforeshow: me.onBeforeCsvExportColumnsMenuShow
             }
 //            'people-grid #exportResultsBtn': {
 //                click: me.onExportResultsClick
@@ -267,22 +277,22 @@ Ext.define('SlateAdmin.controller.People', {
             }
         }
     },
-    
+
     onSearchClear: function(field, ev) {
         this.getAdvancedSearchForm().getForm().reset();
         this.getGroupsTree().getSelectionModel().select(0, false, true);
     },
-    
+
     onAdvancedSearchFormSpecialKey: function(field, ev) {
         if (ev.getKey() == ev.ENTER) {
             this.syncQueryField(true);
         }
     },
-    
+
     onSearchClick: function() {
         this.syncQueryField(true);
     },
-    
+
     onGroupSelect: function() {
         this.syncQueryField(true);
     },
@@ -323,6 +333,98 @@ Ext.define('SlateAdmin.controller.People', {
 
     onDetailTabChange: function(detailTabs, activeTab) {
         this.syncState();
+    },
+
+    onExportFormatButtonClick: function(menuItem) {
+        var me = this,
+            exportColumnsMenu = me.getExportColumnsMenu(),
+            exportFormat = menuItem.exportFormat,
+            params = Ext.applyIf({
+                format: exportFormat
+            }, me.getPeoplePeopleStore().getProxy().extraParams),
+            url;
+
+        if (exportFormat == 'json') {
+            params.include = '*';
+        } else if (exportFormat == 'csv') {
+            params.columns = Ext.Array.pluck(exportColumnsMenu.query('menuitem[checked]'), 'itemId').join(',');
+        }
+
+        url = '/people?' + Ext.Object.toQueryString(params);
+
+        if (exportFormat == 'json') {
+            window.open(url, '_blank');
+        } else {
+            location.href = url;
+        }
+    },
+
+    onBeforeCsvExportColumnsMenuShow: function(menu) {
+        var me = this,
+            columnsPlaceholder = menu.down('#columnsPlaceholder'),
+            selectedFieldKeys = ['FirstName', 'LastName', 'Username', 'StudentNumber', 'GraduationYear', 'Advisor', 'PrimaryEmail'];
+
+        if (menu.loaded) {
+            return;
+        }
+
+        menu.loaded = true;
+
+        columnsPlaceholder.show();
+
+        SlateAdmin.API.request({
+            method: 'GET',
+            url: '/people/*fields',
+            success: function(response) {
+                var recordData = response.data,
+                    fields = recordData.fields,
+                    dynamicFields = recordData.dynamicFields,
+                    menuItems = [],
+                    key, keyBits;
+
+                for (key in fields) {
+                    if (!fields.hasOwnProperty(key)) {
+                        continue;
+                    }
+
+                    if (key == 'RevisionID') {
+                        continue;
+                    }
+
+                    keyBits = key.match(/(\w+)ID(s?)/);
+                    if (keyBits && dynamicFields.hasOwnProperty(keyBits[1]+keyBits[2])) {
+                        continue;
+                    }
+
+                    menuItems.push({
+                        xtype: 'menucheckitem',
+                        itemId: key,
+                        text: fields[key].label,
+                        checked: Ext.Array.contains(selectedFieldKeys, key),
+                        fieldType: 'field'
+                    });
+                }
+
+                for (key in dynamicFields) {
+                    if (!dynamicFields.hasOwnProperty(key)) {
+                        continue;
+                    }
+
+                    menuItems.push({
+                        xtype: 'menucheckitem',
+                        itemId: key,
+                        text: dynamicFields[key].label,
+                        checked: Ext.Array.contains(selectedFieldKeys, key),
+                        fieldType: 'dynamicField'
+                    });
+                }
+
+                Ext.suspendLayouts();
+                menu.insert(menu.items.indexOf(columnsPlaceholder)+1, menuItems);
+                columnsPlaceholder.hide();
+                Ext.resumeLayouts(true);
+            }
+        });
     },
 
 //    onExportMenuRendered: function(exportMenu) {
@@ -443,11 +545,11 @@ Ext.define('SlateAdmin.controller.People', {
             } else {
                 path.push('?id='+personRecord.get('ID'));
             }
-            
+
             title = personRecord.getFullName();
 
             activeTab = detailTabs.getActiveTab() || detailTabs.items.getAt(0);
-            
+
             if (activeTab) {
                 path.push(activeTab.getItemId());
                 title = activeTab.title + ' &mdash; ' + title;
@@ -551,11 +653,11 @@ Ext.define('SlateAdmin.controller.People', {
         if (values.group) {
             rootGroupNode.expand(false, function() {
                 var groupNode = rootGroupNode.findChild('Handle', values.group, true);
-                
+
                 if (groupNode) {
                     groupsTreePanel.selectRecord(groupNode, false, true); // true to suppress select event because we're bringing the tree in-sync with an existing selection rather than making a new one
                 }
-            }); 
+            });
         } else {
             groupsTreePanel.selectRecord(rootGroupNode, false, true); // true to suppress select event because we're bringing the tree in-sync with an existing selection rather than making a new one
         }
@@ -630,7 +732,7 @@ Ext.define('SlateAdmin.controller.People', {
             selModel = grid.getSelectionModel(),
             personRecord, queryParts, fieldName, fieldValue,
             _finishSelectPerson;
-            
+
         _finishSelectPerson = function() {
             if (personRecord) {
                 selModel.select(personRecord, false, true);
