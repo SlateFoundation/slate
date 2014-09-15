@@ -7,7 +7,7 @@ Ext.define('Site.widget.model.CourseSection', {
     collectionTitleTpl: 'Course Sections',
 
     tpl: [
-        '<a href="/sections/{Handle}" class="link-model link-course-section">',
+        '<a href="/sections/{Code}" class="link-model link-course-section">',
             '<strong class="result-title">{Title}</strong> ',
             '<span class="result-info">{Code}</span>',
         '</a>'

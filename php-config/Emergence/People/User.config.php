@@ -18,7 +18,7 @@
 \Emergence\People\User::$fields['AssignedPassword'] = array(
     'type' => 'string'
     ,'notnull' => false
-    ,'accountLevelEnumerate' => 'Staff'
+    ,'accountLevelEnumerate' => 'Administrator'
 );
 \Emergence\People\User::$onPasswordSet = function($password, $User) {
     $User->AssignedPassword = $password;

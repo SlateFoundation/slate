@@ -2,9 +2,6 @@
 
 namespace Emergence\People;
 
-use Person;
-use User;
-
 class ContactPointsRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler configuration
