@@ -10,6 +10,12 @@ use Slate\Courses\SectionParticipant;
 
 class PeopleRequestHandler extends \PeopleRequestHandler
 {
+    public static $userResponseModes = array(
+        'application/json' => 'json'
+        ,'text/csv' => 'csv'
+        ,'application/pdf' => 'pdf'
+    );
+
     public static function handleRecordsRequest($action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
