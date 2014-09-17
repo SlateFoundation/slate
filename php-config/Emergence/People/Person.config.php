@@ -2,8 +2,8 @@
 
 Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
     'type' => 'many-many'
-    ,'class' => 'Slate\\Courses\\Section'
-    ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
+    ,'class' => Slate\Courses\Section::class
+    ,'linkClass' => Slate\Courses\SectionParticipant::class
     ,'linkLocal' => 'PersonID'
     ,'linkForeign' => 'CourseSectionID'
     ,'conditions' => function($Person) {
