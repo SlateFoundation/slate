@@ -2,8 +2,8 @@
 
 Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
     'type' => 'many-many'
-    ,'class' => 'Slate\\Courses\\Section'
-    ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
+    ,'class' => Slate\Courses\Section::class
+    ,'linkClass' => Slate\Courses\SectionParticipant::class
     ,'linkLocal' => 'PersonID'
     ,'linkForeign' => 'CourseSectionID'
     ,'conditions' => function($Person) {
@@ -21,6 +21,12 @@ Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
             ,'Related.TermID IN ('.implode(',', $Term->getConcurrentTermIDs()).')'
         );
     }
+);
+
+Emergence\People\Person::$relationships['Mappings'] = array(
+    'type' => 'context-children'
+    ,'class' => Emergence\Connectors\Mapping::class
+    ,'contextClass' => Emergence\People\Person::getStaticRootClass()
 );
 
 Emergence\People\Person::$searchConditions['Course'] = array(
