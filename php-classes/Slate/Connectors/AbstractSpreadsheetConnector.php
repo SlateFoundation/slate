@@ -1073,17 +1073,17 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         ));
     }
 
-    protected $_currentMasterTerm;
+    protected static $_currentMasterTerm;
     protected static function _getCurrentMasterTerm(Job $Job)
     {
-        if (!$this->_currentMasterTerm) {
+        if (!static::$_currentMasterTerm) {
             if (!($CurrentTerm = Term::getCurrent()) && !($CurrentTerm = Term::getNext())) {
                 throw new \Exception('Could not find a current or next term');
             }
 
-            $this->_currentMasterTerm = $CurrentTerm->getMaster();
+            static::$_currentMasterTerm = $CurrentTerm->getMaster();
         }
 
-        return $this->_currentMasterTerm;
+        return static::$_currentMasterTerm;
     }
 }
