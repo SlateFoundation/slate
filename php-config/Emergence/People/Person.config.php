@@ -23,6 +23,12 @@ Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
     }
 );
 
+Emergence\People\Person::$relationships['Mappings'] = array(
+    'type' => 'context-children'
+    ,'class' => Emergence\Connectors\Mapping::class
+    ,'contextClass' => Emergence\People\Person::getStaticRootClass()
+);
+
 Emergence\People\Person::$searchConditions['Course'] = array(
     'qualifiers' => array('course')
     ,'points' => 1

@@ -56,18 +56,39 @@
         <fieldset>
             <legend>User Accounts</legend>
             <p>
-    			<label>
+        		<label>
     				Update usernames
     				<input type="checkbox" name="updateUsernames" value="true" {refill field=updateUsernames checked="true"}>
     			</label>
     			(Check to change a user's username if the site's configured generator comes up with a new one)
     		</p>
             <p>
-    			<label>
+            	<label>
+    				Update about text
+    				<input type="checkbox" name="updateAbout" value="true" {refill field=updateAbout checked="true"}>
+    			</label>
+    			(Check to change set a user's About text from the spreadsheet even if they already have an entry)
+    		</p>
+            <p>
+            	<label>
+    				Auto-assign email address
+    				<input type="checkbox" name="autoAssignEmail" value="true" {refill field=autoAssignEmail checked="true" default="true"}>
+    			</label>
+    			(Check to automatically assign an email address if the spreadsheet provides none and `Slate::$userEmailDomain` is set)
+    		</p>
+            <p>
+        		<label>
     				Students CSV
     				<input type="text" name="studentsCsv" {refill field=studentsCsv} length="255">
     			</label>
     			URL captured by downloading a <strong>Students</strong> worksheet as CSV from a public link
+    		</p>
+            <p>
+        		<label>
+    				Alumni CSV
+    				<input type="text" name="alumniCsv" {refill field=alumniCsv} length="255">
+    			</label>
+    			URL captured by downloading a <strong>Alumni</strong> worksheet as CSV from a public link
     		</p>
             <p>
         		<label>
