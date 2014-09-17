@@ -721,6 +721,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _applyUserChanges(Job $Job, User $User, array $row, array &$results)
     {
+        $currentGraduationYear = date('Y', strtotime(static::_getCurrentMasterTerm($Job)->EndDate));
         $autoCapitalize = $Job->Config['autoCapitalize'];
         $_formatPronoun = function($string, $familyName = false) use ($autoCapitalize) {
             return $autoCapitalize ? Capitalizer::capitalizePronoun($string, $familyName) : $string;
@@ -796,7 +797,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         if (!empty($row['GraduationYear'])) {
             $User->GraduationYear = $importedGraduationYear = $row['GraduationYear'];
         } elseif (!empty($row['Grade'])) {
-            $User->GraduationYear = $importedGraduationYear = date('Y', strtotime(static::_getCurrentMasterTerm($Job)->EndDate)) + (12 - $row['Grade']);
+            $User->GraduationYear = $importedGraduationYear = $currentGraduationYear + (12 - $row['Grade']);
         }
 
         if ($importedGraduationYear && !$User->isA(Student::class)) {
@@ -938,12 +939,13 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             $groupHandle = 'class_of_'.$User->GraduationYear;
 
             if (!$primaryGroup = Group::getByHandle($groupHandle)) {
-                if (!$parentGroup = Group::getByHandle(static::$studentsRootGroup)) {
+                $parentGroupHandle = $User->GraduationYear >= $currentGraduationYear ? static::$studentsRootGroup : static::$alumniRootGroup;
+                if (!$parentGroup = Group::getByHandle($parentGroupHandle)) {
                     throw new RemoteRecordInvalid(
                         'student-root-group-not-found',
-                        sprintf('Student root group "%s" does not exist', static::$studentsRootGroup),
+                        sprintf('Student root group "%s" does not exist', $parentGroupHandle),
                         $row,
-                        static::$studentsRootGroup
+                        $parentGroupHandle
                     );
                 }
 
@@ -1073,17 +1075,17 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         ));
     }
 
-    protected $_currentMasterTerm;
+    protected static $_currentMasterTerm;
     protected static function _getCurrentMasterTerm(Job $Job)
     {
-        if (!$this->_currentMasterTerm) {
+        if (!static::$_currentMasterTerm) {
             if (!($CurrentTerm = Term::getCurrent()) && !($CurrentTerm = Term::getNext())) {
                 throw new \Exception('Could not find a current or next term');
             }
 
-            $this->_currentMasterTerm = $CurrentTerm->getMaster();
+            static::$_currentMasterTerm = $CurrentTerm->getMaster();
         }
 
-        return $this->_currentMasterTerm;
+        return static::$_currentMasterTerm;
     }
 }
