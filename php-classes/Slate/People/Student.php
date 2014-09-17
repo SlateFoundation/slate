@@ -84,9 +84,14 @@ class Student extends User
             ,'points' => 1
             ,'sql' => 'ID IN (SELECT relationships.RelatedPersonID FROM people Student RIGHT JOIN relationships ON (relationships.PersonID = Student.ID AND relationships.Class = "Guardian") WHERE AdvisorID=(SELECT Advisor.ID FROM people Advisor WHERE Advisor.Username = "%s"))'
         )
-
     );
 
+    public static $validators = array(
+        'StudentNumber' => array(
+            'required' => false
+            ,'errorMessage' => 'Unique student identifier missing'
+        )
+    );
 
     public static function getByStudentNumber($number)
     {
