@@ -125,6 +125,13 @@
     			</label>
     			URL captured by downloading a <strong>Enrollments</strong> worksheet as CSV from a public link
     		</p>
+            <p>
+                <label>
+                    Course Code Seperator
+                    <input type="text" name="enrollmentDivider" {refill field=enrollmentDivider} length="5">
+                </label>
+                If more then one course code is present in each cell, specify the character that divides each course here.
+            </p>
         </fieldset>
 
 		<input type="submit" value="Synchronize">

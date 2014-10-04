@@ -180,6 +180,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $config['updateAbout'] = !empty($requestData['updateAbout']);
         $config['autoAssignEmail'] = !empty($requestData['autoAssignEmail']);
         $config['masterTerm'] = !empty($requestData['masterTerm']) ? $requestData['masterTerm'] : null;
+        $config['enrollmentDivider'] = !empty($requestData['enrollmentDivider']) ? $requestData['enrollmentDivider'] : null;
 
         return $config;
     }
@@ -620,7 +621,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             // loop through every other column
-            foreach ($row['_rest'] AS $sectionIdentifier) {
+            foreach ($row['_rest'] as $sectionIdentifier) {
                 if (!$sectionIdentifier) {
                     continue;
                 }
@@ -628,38 +629,48 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Participant = null;
                 $results['analyzed-enrollments']++;
 
-                if (!$Section = $sectionsByIdentifier[$sectionIdentifier]) {
-                    $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
-
-                    $Mapping = Mapping::getByWhere(array(
-                        'ContextClass' => Section::getStaticRootClass(),
-                        'Connector' => static::getConnectorId(),
-                        'ExternalKey' => static::$sectionForeignKeyName,
-                        'ExternalIdentifier' => $externalIdentifier
-                    ));
-
-                    if ($Mapping) {
-                        $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
-                    } else {
-                        $results['failed']['section-not-found'][$sectionIdentifier]++;
-                        continue;
-                    }
+                // Optionally split code based user value
+                if (!$Job->Config['enrollmentDivider']) {
+                    $sectionIdentifiers = array($sectionIdentifier);
+                } else {
+                    $sectionIdentifiers = explode($Job->Config['enrollmentDivider'], $sectionIdentifier);
                 }
 
-                $Participant = static::_getOrCreateParticipant($Section, $Student, 'Student', $pretend);
-                $logEntry = static::_logParticipant($Job, $Participant);
+                foreach ($sectionIdentifiers as $sectionIdentifier) {
 
-                if ($logEntry['action'] == 'create') {
-                    $results['enrollments-created']++;
-                } elseif ($logEntry['action'] == 'update') {
-                    $results['enrollments-updated']++;
+                    // get cached section or look up mapping
+                    if (!$Section = $sectionsByIdentifier[$sectionIdentifier]) {
+                        $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
+                        $Mapping = Mapping::getByWhere(array(
+                            'ContextClass' => Section::getStaticRootClass(),
+                            'Connector' => static::getConnectorId(),
+                            'ExternalKey' => static::$sectionForeignKeyName,
+                            'ExternalIdentifier' => $externalIdentifier
+                        ));
+
+                        if ($Mapping) {
+                            $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
+                        } else {
+                            $results['failed']['section-not-found'][$sectionIdentifier]++;
+                            continue;
+                        }
+                    }
+
+
+                    // save and log participant
+                    $Participant = static::_getOrCreateParticipant($Section, $Student, 'Student', $pretend);
+                    $logEntry = static::_logParticipant($Job, $Participant);
+
+                    if ($logEntry['action'] == 'create') {
+                        $results['enrollments-created']++;
+                    } elseif ($logEntry['action'] == 'update') {
+                        $results['enrollments-updated']++;
+                    }
                 }
             }
         }
 
-
         // TODO: remove stale enrollments
-
 
         return $results;
     }
