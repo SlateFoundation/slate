@@ -178,7 +178,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 {
                     xtype: 'actioncolumn',
                     dataIndex: 'Class',
-                    width: 40,
+                    width: 54,
                     items: [
                         {
                             action: 'delete',
@@ -192,6 +192,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             glyph: 0xf132, // fa-shield
                             getTip: function(v, meta, record) {
                                 return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' guardian';
+                            }
+                        },
+                        {
+                            action: 'emergency',
+                            iconCls: 'relationship-emergency glyph-emergency',
+                            glyph: 0xf0f9, // fa-ambulance
+                            getTip: function(v, meta, record) {
+                                // TODO make this work
+                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' emergency contact';
                             }
                         }
                     ]
@@ -395,7 +404,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             {
                 xtype: 'actioncolumn',
                 dataIndex: 'Primary',
-                width: 40,
+                width: 36,
                 items: [
                     {
                         action: 'delete',

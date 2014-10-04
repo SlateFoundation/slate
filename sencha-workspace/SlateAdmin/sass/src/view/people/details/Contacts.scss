@@ -9,6 +9,17 @@
     }
 }
 
+.relationship-nonemergency {
+    .glyph-emergency {
+        color: $glyph-inactive-color;
+
+        &:hover,
+        &:focus {
+            color: mix($glyph-inactive-color, $glyph-emergency-color);
+        }
+    }
+}
+
 .contact-type-header {
     > .fa {
         margin-right: .125em;
