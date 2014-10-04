@@ -388,7 +388,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             $row = static::_readRow($row, static::$sectionColumns);
             $Record = null;
             $Mapping = null;
+
+
+            // start logging analysis
             $results['analyzed']++;
+            static::_logRow($Job, 'sections', $results['analyzed'], $row);
 
 
             // check required fields
@@ -403,8 +407,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Job->log(sprintf('Missing section code for row %u', $results['analyzed']), LogLevel::ERROR);
                 continue;
             }
-
-            $Job->log(sprintf('Row %03u - analyzing course section %s', $results['analyzed'], $row['Title']), LogLevel::DEBUG);
 
 
             // try to get existing section by mapping
@@ -525,6 +527,8 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $results['created']++;
             } elseif ($logEntry['action'] == 'update') {
                 $results['updated']++;
+            } else {
+                $results['unmodified']++;
             }
 
 
@@ -592,7 +596,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
             $row = static::_readRow($row, static::$enrollmentColumns);
             $Record = null;
+
+
+            // start logging analysis
             $results['analyzed']++;
+            static::_logRow($Job, 'enrollments', $results['analyzed'], $row);
 
 
             // check required fields
@@ -601,8 +609,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Job->log(sprintf('Missing enrollment student number for row %u', $results['analyzed']), LogLevel::ERROR);
                 continue;
             }
-
-            $Job->log(sprintf('Row %03u - analyzing enrollment(s) for %s', $results['analyzed'], $row['StudentNumber']), LogLevel::DEBUG);
 
 
             // get student
