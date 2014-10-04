@@ -187,7 +187,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     // task handlers
     public static function pullStudents(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
-    {Slate::$userEmailDomain = 'v1.slate.is'; // TODO: delete
+    {
         // check input
         static::_requireColumns('students', $spreadsheet, static::$studentRequiredColumns, static::$studentColumns);
 
