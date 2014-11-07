@@ -51,3 +51,50 @@ Emergence\People\Person::$searchConditions['Course'] = array(
     }
 );
 
+Emergence\People\Person::$searchConditions['Advisor'] = array(
+    'qualifiers' => array('advisor')
+    ,'points' => 1
+    ,'callback' => function($username, $matchedCondition) {
+        if (!$Advisor = Emergence\People\User::getByUsername($username)) {
+            return false;
+        }
+
+        if (!$currentTerm = Slate\Term::getClosest()) {
+            return false;
+        }
+
+        return sprintf(
+            'GraduationYear >= %u AND AdvisorID = %u'
+            , date('Y', strtotime($currentTerm->getMaster()->EndDate))
+            , $Advisor->ID
+        );
+    }
+);
+
+Emergence\People\Person::$searchConditions['WardAdvisor'] = array(
+    'qualifiers' => array('ward-advisor')
+    ,'points' => 1
+    ,'callback' => function($username, $matchedCondition) {
+        if (!$Advisor = Emergence\People\User::getByUsername($username)) {
+            return false;
+        }
+
+        if (!$currentTerm = Slate\Term::getClosest()) {
+            return false;
+        }
+
+        return sprintf(
+            'ID IN ('
+                .'SELECT relationships.RelatedPersonID'
+                .' FROM people Student'
+                .' RIGHT JOIN relationships'
+                    .' ON (relationships.PersonID = Student.ID AND relationships.Class = "Guardian")'
+                .' WHERE'
+                    .' GraduationYear >= %u'
+                    .' AND AdvisorID = %u'
+            .')'
+            , date('Y', strtotime($currentTerm->getMaster()->EndDate))
+            , $Advisor->ID
+        );
+    }
+);

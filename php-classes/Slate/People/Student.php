@@ -74,16 +74,6 @@ class Student extends User
             ,'points' => 1
             ,'sql' => 'AdvisorID=%u'
         )
-        ,'Advisor' => array(
-            'qualifiers' => array('advisor')
-            ,'points' => 1
-            ,'sql' => 'AdvisorID=(SELECT Advisor.ID FROM people Advisor WHERE Advisor.Username = "%s")'
-        )
-        ,'WardAdvisor' => array(
-            'qualifiers' => array('ward-advisor')
-            ,'points' => 1
-            ,'sql' => 'ID IN (SELECT relationships.RelatedPersonID FROM people Student RIGHT JOIN relationships ON (relationships.PersonID = Student.ID AND relationships.Class = "Guardian") WHERE AdvisorID=(SELECT Advisor.ID FROM people Advisor WHERE Advisor.Username = "%s"))'
-        )
     );
 
     public static $validators = array(
