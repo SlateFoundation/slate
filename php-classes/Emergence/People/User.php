@@ -115,6 +115,11 @@ class User extends Person
 
         return parent::save($deep);
     }
+    
+    public function getTitle()
+    {
+        return sprintf('%s (%s)', $this->Username, $this->AccountLevel);
+    }
 
     public function getHandle()
     {
@@ -141,7 +146,7 @@ class User extends Person
     public static function getByUsername($username)
     {
         // try to get by username first
-        $User = static::getByWhere(array('Username' => $username));
+        $User = static::getByField('Username', $username);
         if (!$User && !\Validators\EmailAddress::isInvalid($username)) {
             $EmailPoint = \Emergence\People\ContactPoint\Email::getByString($username);
             $User = $EmailPoint->Person;
@@ -171,6 +176,7 @@ class User extends Person
     public function setClearPassword($password)
     {
         $this->Password = password_hash($password, PASSWORD_DEFAULT);
+
         if (is_callable(static::$onPasswordSet)) {
             call_user_func(static::$onPasswordSet, $password, $this);
         }

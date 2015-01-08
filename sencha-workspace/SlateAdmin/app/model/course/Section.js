@@ -76,6 +76,12 @@ Ext.define('SlateAdmin.model.course.Section', {
         {
             name: 'StudentsCount',
             type: 'int'
+        },
+        {
+            name: 'Schedule'
+        },
+        {
+            name: 'Location'
         }
     ],
 

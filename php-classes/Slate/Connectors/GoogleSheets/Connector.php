@@ -86,7 +86,6 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
             );
         }
 
-
         // save job results
         $Job->Status = 'Completed';
         $Job->Results = $results;

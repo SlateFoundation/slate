@@ -180,6 +180,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $config['updateAbout'] = !empty($requestData['updateAbout']);
         $config['autoAssignEmail'] = !empty($requestData['autoAssignEmail']);
         $config['masterTerm'] = !empty($requestData['masterTerm']) ? $requestData['masterTerm'] : null;
+        $config['enrollmentDivider'] = !empty($requestData['enrollmentDivider']) ? $requestData['enrollmentDivider'] : null;
 
         return $config;
     }
@@ -187,7 +188,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     // task handlers
     public static function pullStudents(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
-    {Slate::$userEmailDomain = 'v1.slate.is'; // TODO: delete
+    {
         // check input
         static::_requireColumns('students', $spreadsheet, static::$studentRequiredColumns, static::$studentColumns);
 
@@ -388,7 +389,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             $row = static::_readRow($row, static::$sectionColumns);
             $Record = null;
             $Mapping = null;
+
+
+            // start logging analysis
             $results['analyzed']++;
+            static::_logRow($Job, 'sections', $results['analyzed'], $row);
 
 
             // check required fields
@@ -403,8 +408,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Job->log(sprintf('Missing section code for row %u', $results['analyzed']), LogLevel::ERROR);
                 continue;
             }
-
-            $Job->log(sprintf('Row %03u - analyzing course section %s', $results['analyzed'], $row['Title']), LogLevel::DEBUG);
 
 
             // try to get existing section by mapping
@@ -525,6 +528,8 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $results['created']++;
             } elseif ($logEntry['action'] == 'update') {
                 $results['updated']++;
+            } else {
+                $results['unmodified']++;
             }
 
 
@@ -592,7 +597,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
             $row = static::_readRow($row, static::$enrollmentColumns);
             $Record = null;
+
+
+            // start logging analysis
             $results['analyzed']++;
+            static::_logRow($Job, 'enrollments', $results['analyzed'], $row);
 
 
             // check required fields
@@ -601,8 +610,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Job->log(sprintf('Missing enrollment student number for row %u', $results['analyzed']), LogLevel::ERROR);
                 continue;
             }
-
-            $Job->log(sprintf('Row %03u - analyzing enrollment(s) for %s', $results['analyzed'], $row['StudentNumber']), LogLevel::DEBUG);
 
 
             // get student
@@ -614,7 +621,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             // loop through every other column
-            foreach ($row['_rest'] AS $sectionIdentifier) {
+            foreach ($row['_rest'] as $sectionIdentifier) {
                 if (!$sectionIdentifier) {
                     continue;
                 }
@@ -622,38 +629,48 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Participant = null;
                 $results['analyzed-enrollments']++;
 
-                if (!$Section = $sectionsByIdentifier[$sectionIdentifier]) {
-                    $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
-
-                    $Mapping = Mapping::getByWhere(array(
-                        'ContextClass' => Section::getStaticRootClass(),
-                        'Connector' => static::getConnectorId(),
-                        'ExternalKey' => static::$sectionForeignKeyName,
-                        'ExternalIdentifier' => $externalIdentifier
-                    ));
-
-                    if ($Mapping) {
-                        $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
-                    } else {
-                        $results['failed']['section-not-found'][$sectionIdentifier]++;
-                        continue;
-                    }
+                // Optionally split code based user value
+                if (!$Job->Config['enrollmentDivider']) {
+                    $sectionIdentifiers = array($sectionIdentifier);
+                } else {
+                    $sectionIdentifiers = explode($Job->Config['enrollmentDivider'], $sectionIdentifier);
                 }
 
-                $Participant = static::_getOrCreateParticipant($Section, $Student, 'Student', $pretend);
-                $logEntry = static::_logParticipant($Job, $Participant);
+                foreach ($sectionIdentifiers as $sectionIdentifier) {
 
-                if ($logEntry['action'] == 'create') {
-                    $results['enrollments-created']++;
-                } elseif ($logEntry['action'] == 'update') {
-                    $results['enrollments-updated']++;
+                    // get cached section or look up mapping
+                    if (!$Section = $sectionsByIdentifier[$sectionIdentifier]) {
+                        $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
+                        $Mapping = Mapping::getByWhere(array(
+                            'ContextClass' => Section::getStaticRootClass(),
+                            'Connector' => static::getConnectorId(),
+                            'ExternalKey' => static::$sectionForeignKeyName,
+                            'ExternalIdentifier' => $externalIdentifier
+                        ));
+
+                        if ($Mapping) {
+                            $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
+                        } else {
+                            $results['failed']['section-not-found'][$sectionIdentifier]++;
+                            continue;
+                        }
+                    }
+
+
+                    // save and log participant
+                    $Participant = static::_getOrCreateParticipant($Section, $Student, 'Student', $pretend);
+                    $logEntry = static::_logParticipant($Job, $Participant);
+
+                    if ($logEntry['action'] == 'create') {
+                        $results['enrollments-created']++;
+                    } elseif ($logEntry['action'] == 'update') {
+                        $results['enrollments-updated']++;
+                    }
                 }
             }
         }
 
-
         // TODO: remove stale enrollments
-
 
         return $results;
     }

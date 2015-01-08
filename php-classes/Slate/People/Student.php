@@ -5,6 +5,7 @@ namespace Slate\People;
 use DB;
 use Emergence\People\Person;
 use Emergence\People\User;
+use Emergence\People\Groups\Group;
 use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
@@ -74,16 +75,6 @@ class Student extends User
             ,'points' => 1
             ,'sql' => 'AdvisorID=%u'
         )
-        ,'Advisor' => array(
-            'qualifiers' => array('advisor')
-            ,'points' => 1
-            ,'sql' => 'AdvisorID=(SELECT Advisor.ID FROM people Advisor WHERE Advisor.Username = "%s")'
-        )
-        ,'WardAdvisor' => array(
-            'qualifiers' => array('ward-advisor')
-            ,'points' => 1
-            ,'sql' => 'ID IN (SELECT relationships.RelatedPersonID FROM people Student RIGHT JOIN relationships ON (relationships.PersonID = Student.ID AND relationships.Class = "Guardian") WHERE AdvisorID=(SELECT Advisor.ID FROM people Advisor WHERE Advisor.Username = "%s"))'
-        )
     );
 
     public static $validators = array(
@@ -111,5 +102,39 @@ class Student extends User
     public static function getDistinctGraduationYears()
     {
         return DB::allRecords('SELECT DISTINCT GraduationYear FROM people WHERE GraduationYear IS NOT NULL AND GraduationYear != 0000 ORDER BY GraduationYear ASC');
+    }
+
+    public static function getAllByListIdentifier($identifier)
+    {
+        if (!$identifier) {
+            throw new \Exception('');
+        }
+
+        if ($identifier == 'all') {
+            return static::getAllByClass();
+        }
+
+        list ($groupType, $groupHandle) = explode(' ', $identifier, 2);
+
+        switch ($groupType) {
+            case 'group':
+                if (!$Group = Group::getByHandle($groupHandle)) {
+                    throw new \Exception('Group not found');
+                }
+
+                return array_filter($Group->getAllPeople(), function($Person) {
+                    return $Person->isA(Student::class);
+                });
+            case 'section':
+                if (!$Section = Section::getByHandle($groupHandle)) {
+                    throw new \Exception('Section not found');
+                }
+
+                return array_values(array_filter($Section->Students, function($Person) {
+                    return $Person->isA(Student::class);
+                }));
+            default:
+                throw new \Exception('Group type not recognized');
+        }
     }
 }

@@ -37,7 +37,7 @@ class Slate
             $widgetConfig = $widgetConfig === true ? array() : null;
         }
 
-        if ($widgetConfig !== null && $widgetConfig['enabled'] !== false) {
+        if ($widgetConfig !== null && array_key_exists('enabled', $widgetConfig) && $widgetConfig['enabled'] !== false) {
             $widgetConfig['enabled'] = true;
         }
 
