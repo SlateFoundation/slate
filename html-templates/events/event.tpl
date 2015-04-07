@@ -3,6 +3,7 @@
 {block title}{$data->Title|escape} &mdash; Events &mdash; {$dwoo.parent}{/block}
 
 {block "content"}
+    {load_templates "subtemplates/comments.tpl"}
     {$Event = $data}
 
     <header class="page-header">
