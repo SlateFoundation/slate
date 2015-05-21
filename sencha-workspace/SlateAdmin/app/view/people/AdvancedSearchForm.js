@@ -53,7 +53,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     url: '/people/*graduation-years',
                     reader: {
                         type: 'json',
-                        root: 'data'
+                        rootProperty: 'data'
                     }
                 }
             } 
@@ -90,7 +90,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     summary: true,
                     reader: {
                         type: 'json',
-                        root: 'data'
+                        rootProperty: 'data'
                     }
                 }
             }        
@@ -110,7 +110,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/'+window.SiteEnvironment.user.Username+'/courses') : '/sections',
                     reader: {
                         type: 'json',
-                        root: 'data'
+                        rootProperty: 'data'
                     }
                 }
             }

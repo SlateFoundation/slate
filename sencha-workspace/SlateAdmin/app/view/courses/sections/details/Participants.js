@@ -72,7 +72,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 },
                 reader: {
                     type: 'json',
-                    root: 'data'
+                    rootProperty: 'data'
                 }
             }
         },

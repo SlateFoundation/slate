@@ -36,7 +36,7 @@ Ext.define('SlateAdmin.store.people.ContactPointTemplates', {
         limitParam: false,
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

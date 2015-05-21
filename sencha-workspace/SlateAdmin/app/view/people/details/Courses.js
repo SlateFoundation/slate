@@ -50,7 +50,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 },
                 reader: {
                     type: 'json',
-                    root: 'data'
+                    rootProperty: 'data'
                 }
             }
         },

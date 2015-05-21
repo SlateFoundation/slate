@@ -16,7 +16,7 @@ Ext.define('SlateAdmin.store.people.RelationshipTemplates', {
         limitParam: false,
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

@@ -17,7 +17,7 @@ Ext.define('SlateAdmin.store.people.AccountLevels', {
         url: '/people/*account-levels',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });
