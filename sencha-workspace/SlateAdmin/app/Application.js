@@ -5,17 +5,17 @@ Ext.define('SlateAdmin.Application', {
         'SlateAdmin.API',
         
         // Jarvus enhancements
-        'Jarvus.ext.override.grid.column.ActionEvents', // TODO: replace with jarvus-ext-actionevents package
-        'Jarvus.ext.override.grid.column.ActionGlyphs', // TODO: replace with jarvus-ext-glyphs package
-        'Jarvus.ext.override.panel.ToggleEvent',
-        'Jarvus.ext.override.tree.Records',
-        'Jarvus.ext.override.data.RequireLoadedStores',
+//        'Jarvus.ext.override.grid.column.ActionEvents', // TODO: replace with jarvus-ext-actionevents package
+//        'Jarvus.ext.override.grid.column.ActionGlyphs', // TODO: replace with jarvus-ext-glyphs package
+//        'Jarvus.ext.override.panel.ToggleEvent',
+//        'Jarvus.ext.override.tree.Records',
+//        'Jarvus.ext.override.data.RequireLoadedStores',
         
         // Jarvus bug fixes
-        'Jarvus.ext.patch.panel.ExpandBeforeRender',
-        'Jarvus.ext.patch.grid.ResetTipAttributes',
-        'Jarvus.ext.patch.data.BufferedStoreStrictId',
-        'Jarvus.ext.patch.data.TreeStoreIndexOf',
+//        'Jarvus.ext.patch.panel.ExpandBeforeRender',
+//        'Jarvus.ext.patch.grid.ResetTipAttributes',
+//        'Jarvus.ext.patch.data.BufferedStoreStrictId',
+//        'Jarvus.ext.patch.data.TreeStoreIndexOf',
 //        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
 
         // framework features

@@ -4,7 +4,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
     xtype: 'people-details-profile',
     requires: [
         'Ext.form.Panel',
-        'Ext.ux.form.field.BoxSelect',
+//        'Ext.ux.form.field.BoxSelect',
         'SlateAdmin.proxy.Records',
         'SlateAdmin.model.person.Group'
     ],
@@ -82,20 +82,20 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             emptyText: '(None)',
             triggerAction: 'all',
             editable: false
-        },{
-            name: 'groupIDs',
-            xtype: 'boxselect',
-            fieldLabel: 'Groups',
-            multiSelect: true,
-            delimiter: ',',
-            anchor: '100%',
-            queryMode: 'local',
-            stacked: true,
-            anyMatch: true,
-            lazyAutoLoad: false,
-            store: 'people.Groups',
-            displayField: 'namesPath',
-            valueField: 'ID'
+//        },{
+//            name: 'groupIDs',
+//            xtype: 'boxselect',
+//            fieldLabel: 'Groups',
+//            multiSelect: true,
+//            delimiter: ',',
+//            anchor: '100%',
+//            queryMode: 'local',
+//            stacked: true,
+//            anyMatch: true,
+//            lazyAutoLoad: false,
+//            store: 'people.Groups',
+//            displayField: 'namesPath',
+//            valueField: 'ID'
         }]
     }
 });

@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.model.person.Relationship', {
     extend: 'Ext.data.Model',
     requires: [
-        'Jarvus.ext.override.data.CallbackValidation',
+//        'Jarvus.ext.override.data.CallbackValidation',
         'SlateAdmin.proxy.Records'
     ],
 
