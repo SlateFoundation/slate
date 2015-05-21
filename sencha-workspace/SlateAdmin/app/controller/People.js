@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Ext.MessageBox',
+        'Ext.window.MessageBox',
         'SlateAdmin.API'
     ],
 

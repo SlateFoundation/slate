@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.controller.people.Contacts', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Ext.MessageBox',
+        'Ext.window.MessageBox',
 //        'Jarvus.ext.override.view.TableErrors'
     ],
 
