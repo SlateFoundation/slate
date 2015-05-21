@@ -8,7 +8,7 @@ Ext.application({
 
     extend: 'SlateAdmin.Application',
     
-    autoCreateViewport: 'SlateAdmin.view.main.Main'
+    autoCreateViewport: 'SlateAdmin.view.Viewport'
 	
     //-------------------------------------------------------------------------
     // Most customizations should be made to SlateAdmin.Application. If you need to
