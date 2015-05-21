@@ -1,0 +1,9 @@
+a {
+    @include link-colors($accent-color);
+}
+
+.slate-empty-view {
+    background: url('images/slate-empty-view.png') no-repeat center;
+    // background-image: url('images/slate-empty-view.svg');
+    @include background-size(contain);
+}
