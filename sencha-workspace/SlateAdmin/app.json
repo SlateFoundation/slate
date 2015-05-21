@@ -45,7 +45,8 @@
      *      ]
      */
     "requires": [
-        "emergence-apikit"
+        "emergence-apikit",
+        "jarvus-ext-searchfield"
     ],
 
     /**

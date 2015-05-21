@@ -4,7 +4,7 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
     xtype: 'courses-navpanel',
     requires: [
         'Ext.form.Panel',
-//        'Jarvus.ext.form.field.Search'
+        'Jarvus.ext.form.field.Search'
     ],
 
     title: 'Courses',
@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         cls: 'navpanel-search-form',
         layout: 'fit',
         items: [{
-            xtype: 'textfield',
+            xtype: 'searchfield',
             name: 'query'
         }]
     },{
