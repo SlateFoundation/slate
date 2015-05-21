@@ -34,55 +34,55 @@ Ext.define('SlateAdmin.controller.Courses', {
         'course-sections/lookup/:section': {
             action: 'showSection',
             conditions: {
-                ':section': '[^/]+'
+                ':section': '([^/]+)'
             }
         },
         'course-sections/lookup/:section/:tab': {
             action: 'showSection',
             conditions: {
-                ':section': '[^/]+'
+                ':section': '([^/]+)'
             }
         },
 
         'course-sections/search/:query': {
             action: 'showResults',
             conditions: {
-                ':query': '[^/]+'
+                ':query': '([^/]+)'
             }
         },
         'course-sections/search/:query/:section': {
             action: 'showResults',
             conditions: {
-                ':query': '[^/]+',
-                ':section': '[^/]+'
+                ':query': '([^/]+)',
+                ':section': '([^/]+)'
             }
         },
         'course-sections/search/:query/:section/:tab': {
             action: 'showResults',
             conditions: {
-                ':query': '[^/]+',
-                ':section': '[^/]+',
-                ':tab': '[^/]+'
+                ':query': '([^/]+)',
+                ':section': '([^/]+)',
+                ':tab': '([^/]+)'
             }
         }
 //        'courses/enrolled': 'showEnrolledCourses',
 //        'courses/enrolled/:sectionPath': {
 //            action: 'showEnrolledCourses',
 //            conditions: {
-//                ':sectionPath': 'sections/.+'
+//                ':sectionPath': '(sections/.+)'
 //            }
 //        },
 //        'courses/search/:query': {
 //            action: 'showResults',
 //            conditions: {
-//                ':query': '[^/]+'
+//                ':query': '([^/]+)'
 //            }
 //        },
 //        'courses/search/:query/:sectionPath': {
 //            action: 'showResults',
 //            conditions: {
-//                ':query': '[^/]+',
-//                ':sectionPath': 'sections/.+'
+//                ':query': '([^/]+)',
+//                ':sectionPath': '(sections/.+)'
 //            }
 //        }
     },

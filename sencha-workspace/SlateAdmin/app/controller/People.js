@@ -25,34 +25,34 @@ Ext.define('SlateAdmin.controller.People', {
         'people/lookup/:person': {
             action: 'showPerson',
             conditions: {
-                ':person': '[^/]+'
+                ':person': '([^/]+)'
             }
         },
         'people/lookup/:person/:tab': {
             action: 'showPerson',
             conditions: {
-                ':person': '[^/]+'
+                ':person': '([^/]+)'
             }
         },
         'people/search/:query': {
             action: 'showResults',
             conditions: {
-                ':query': '[^/]+'
+                ':query': '([^/]+)'
             }
         },
         'people/search/:query/:person': {
             action: 'showResults',
             conditions: {
-                ':query': '[^/]+',
-                ':person': '[^/]+'
+                ':query': '([^/]+)',
+                ':person': '([^/]+)'
             }
         },
         'people/search/:query/:person/:tab': {
             action: 'showResults',
             conditions: {
-                ':query': '[^/]+',
-                ':person': '[^/]+',
-                ':tab': '[^/]+'
+                ':query': '([^/]+)',
+                ':person': '([^/]+)',
+                ':tab': '([^/]+)'
             }
         }
     },
