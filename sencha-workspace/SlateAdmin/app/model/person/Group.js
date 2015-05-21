@@ -53,6 +53,14 @@ Ext.define('SlateAdmin.model.person.Group', {
         type: 'integer',
         useNull: true
     },{
+        name: 'Left',
+        type: 'integer',
+        useNull: true
+    },{
+        name: 'Right',
+        type: 'integer',
+        useNull: true
+    },{
         name: 'namesPath',
         type: 'string',
         persist: false
@@ -67,15 +75,17 @@ Ext.define('SlateAdmin.model.person.Group', {
         name: 'leaf',
         type: 'boolean',
         persist: false,
+        depends: ['Left', 'Right'],
         convert: function(v, r) {
             if (typeof v == 'boolean') {
                 return v;
             } else {
-                return r.raw.Left == r.raw.Right - 1;
+                return r.get('Left') == r.get('Right') - 1;
             }
         }
     },{
         name: 'qtip',
+        depends: ['Population', 'Founded', 'About'],
         convert: function(v, r) {
             var qtip = [],
                 population = r.get('Population'),
