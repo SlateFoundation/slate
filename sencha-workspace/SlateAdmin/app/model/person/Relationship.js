@@ -12,7 +12,7 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         {
             name: "ID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Class",
@@ -23,12 +23,12 @@ Ext.define('SlateAdmin.model.person.Relationship', {
             name: "Created",
             type: "date",
             dateFormat: "timestamp",
-            useNull: true
+            allowNull: true
         },
         {
             name: "CreatorID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "PersonID",
@@ -37,25 +37,25 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         {
             name: "RelatedPersonID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Label",
             type: "string",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Notes",
             type: "string",
-            useNull: true
+            allowNull: true
         },
         {
             name: 'RelatedPerson',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'InverseRelationship',
-            useNull: true
+            allowNull: true
         }
     ],
 

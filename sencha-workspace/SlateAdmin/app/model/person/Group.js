@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.model.person.Group', {
     fields: [{
         name: 'ID',
         type: 'integer',
-        useNull: true
+        allowNull: true
     },{
         name: 'Class',
         defaultValue: 'Emergence\\People\\Groups\\Group'
@@ -18,19 +18,19 @@ Ext.define('SlateAdmin.model.person.Group', {
         name: 'Created',
         type: 'date',
         dateFormat: 'timestamp',
-        useNull: true
+        allowNull: true
     },{
         name: 'CreatorID',
         type: 'integer',
-        useNull: true
+        allowNull: true
     },{
         name: 'Handle',
         type: 'string',
-        useNull: true
+        allowNull: true
     },{
         name: 'Name',
         type: 'string',
-        useNull: true
+        allowNull: true
     },{
         name: 'Status',
         type: 'string',
@@ -42,24 +42,24 @@ Ext.define('SlateAdmin.model.person.Group', {
     },{
         name: 'About',
         type: 'string',
-        useNull: true
+        allowNull: true
     },{
         name: 'Population',
         type: 'integer',
-        useNull: true,
+        allowNull: true,
         persist: false
     },{
         name: 'ParentID',
         type: 'integer',
-        useNull: true
+        allowNull: true
     },{
         name: 'Left',
         type: 'integer',
-        useNull: true
+        allowNull: true
     },{
         name: 'Right',
         type: 'integer',
-        useNull: true
+        allowNull: true
     },{
         name: 'namesPath',
         type: 'string',

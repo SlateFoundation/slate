@@ -23,27 +23,27 @@ Ext.define('SlateAdmin.model.Term', {
             name: "Created",
             type: "date",
             dateFormat: "timestamp",
-            useNull: true
+            allowNull: true
         },
         {
             name: "CreatorID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "RevisionID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Title",
             type: "string",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Handle",
             type: "string",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Status",
@@ -54,28 +54,28 @@ Ext.define('SlateAdmin.model.Term', {
             name: "StartDate",
             type: "date",
             dateFormat: "Y-m-d",
-            useNull: true
+            allowNull: true
         },
         {
             name: "EndDate",
             type: "date",
             dateFormat: "Y-m-d",
-            useNull: true
+            allowNull: true
         },
         {
             name: "ParentID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Left",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Right",
             type: "int",
-            useNull: true
+            allowNull: true
         }
     ],
 

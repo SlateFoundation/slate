@@ -19,12 +19,12 @@ Ext.define('SlateAdmin.store.people.ContactPointTemplates', {
         {
             name: 'placeholder',
             type: 'string',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'class',
             type: 'string',
-            useNull: true
+            allowNull: true
         }
     ],
 

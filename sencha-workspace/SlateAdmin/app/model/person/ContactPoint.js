@@ -11,7 +11,7 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
         {
             name: 'ID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Class',
@@ -21,34 +21,34 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
             name: 'Created',
             type: 'date',
             dateFormat: 'timestamp',
-            useNull: true,
+            allowNull: true,
             persist: false
         },
         {
             name: 'CreatorID',
             type: 'int',
-            useNull: true,
+            allowNull: true,
             persist: false
         },
         {
             name: 'PersonID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Label',
             type: 'string',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Data',
             type: 'string',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'String',
             type: 'string',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Primary',

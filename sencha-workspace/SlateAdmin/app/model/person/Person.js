@@ -32,48 +32,48 @@ Ext.define('SlateAdmin.model.person.Person', {
             name: 'Created',
             type: 'date',
             dateFormat: 'timestamp',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'CreatorID',
             type: 'integer',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'PrimaryPhotoID',
             type: 'integer',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'PrimaryEmailID',
             type: 'integer',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'PrimaryPhoneID',
             type: 'integer',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'PrimaryPostalID',
             type: 'integer',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Advisor',
-            useNull: true,
+            allowNull: true,
             sortType: function(v) {
                 return v ? v.LastName : '_';
             }
         },
         {
             name: 'AdvisorID',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'GraduationYear',
             type: 'integer',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'FullName',

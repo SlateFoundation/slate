@@ -13,7 +13,7 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
         {
             name: "ID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Class",
@@ -24,12 +24,12 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             name: "Created",
             type: "date",
             dateFormat: "timestamp",
-            useNull: true
+            allowNull: true
         },
         {
             name: "CreatorID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "CourseSectionID",
@@ -47,13 +47,13 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             name: "StartDate",
             type: "date",
             dateFormat: "timestamp",
-            useNull: true
+            allowNull: true
         },
         {
             name: "EndDate",
             type: "date",
             dateFormat: "timestamp",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Person"

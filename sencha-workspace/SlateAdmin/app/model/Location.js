@@ -13,7 +13,7 @@ Ext.define('SlateAdmin.model.Location', {
         {
             name: "ID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Class",
@@ -24,17 +24,17 @@ Ext.define('SlateAdmin.model.Location', {
             name: "Created",
             type: "date",
             dateFormat: "timestamp",
-            useNull: true
+            allowNull: true
         },
         {
             name: "CreatorID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "RevisionID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Title",
@@ -52,22 +52,22 @@ Ext.define('SlateAdmin.model.Location', {
         {
             name: "Description",
             type: "string",
-            useNull: true
+            allowNull: true
         },
         {
             name: "ParentID",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Left",
             type: "int",
-            useNull: true
+            allowNull: true
         },
         {
             name: "Right",
             type: "int",
-            useNull: true
+            allowNull: true
         }
     ],
 
