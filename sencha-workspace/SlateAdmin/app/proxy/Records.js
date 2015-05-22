@@ -3,5 +3,5 @@ Ext.define('SlateAdmin.proxy.Records', {
     extend: 'Emergence.ext.proxy.Records',
     alias: 'proxy.slaterecords',
     
-    apiWrapper: 'SlateAdmin.API'
+    connection: 'SlateAdmin.API'
 });

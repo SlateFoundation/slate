@@ -3,5 +3,5 @@ Ext.define('SlateAdmin.proxy.API', {
     extend: 'Jarvus.ext.proxy.API',
     alias: 'proxy.slateapi',
     
-    apiWrapper: 'SlateAdmin.API'
+    connection: 'SlateAdmin.API'
 });
