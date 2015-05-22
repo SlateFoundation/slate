@@ -117,7 +117,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
                 // see: http://www.sencha.com/forum/showthread.php?273093-Dirty-red-mark-of-grid-cell-not-removed-after-record.save
                 record.commit();
 
-                record.fireEvent('afterCommit', record);
+//                record.fireEvent('afterCommit', record); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
                 
                 profileForm.loadRecord(record);
 

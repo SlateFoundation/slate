@@ -111,14 +111,14 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
             loadedSection;
 
         if (oldSection) {
-            oldSection.un('afterCommit', 'onSectionCommit', me);
+//            oldSection.un('afterCommit', 'onSectionCommit', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
         }
 
         Ext.suspendLayouts();
         me.syncDetailHeader();
             
         if (section) {
-            section.on('afterCommit', 'onSectionCommit', me);
+//            section.on('afterCommit', 'onSectionCommit', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
     
             if (!activeTab) {
                 activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedSection
