@@ -14,3 +14,10 @@ Then run a web server from `slate-admin/sencha-workspace` or higher in your file
 to run a basic local server.
 
 The first time you build the app, it will download the correct version of the framework from Sencha.
+
+## Connecting to a server
+You can connect SlateAdmin to any remote Slate instance that has CORS enabled by appending the query
+paramater `apiHost` when loading the page. SlateAdmin.Application.init detects it and passes it
+to SlateAdmin.API.setHostname. SlateAdmin doesn't (yet) have a way to catch authentication errors
+and show a login prompt, so you'll just need to login to the site manually in another browser tab
+when you catch an error for now.
