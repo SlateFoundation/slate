@@ -118,7 +118,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
         me.syncDetailHeader();
             
         if (person) {
-            person.on('afterCommit', 'syncDetailHeader', me);
+//            person.on('afterCommit', 'syncDetailHeader', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way... session?
     
             if (!activeTab) {
                 activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedPerson
