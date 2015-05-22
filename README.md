@@ -21,3 +21,8 @@ paramater `apiHost` when loading the page. SlateAdmin.Application.init detects i
 to SlateAdmin.API.setHostname. SlateAdmin doesn't (yet) have a way to catch authentication errors
 and show a login prompt, so you'll just need to login to the site manually in another browser tab
 when you catch an error for now.
+
+## Build docs
+1. `sudo gem install jsduck` (if you don't have jsduck installed already)
+2. `cd slate-admin/sencha-workspace/SlateAdmin`
+3. `sencha ant docs`
