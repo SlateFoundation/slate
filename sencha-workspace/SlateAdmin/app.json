@@ -47,7 +47,8 @@
     "requires": [
         "emergence-apikit",
         "jarvus-ext-searchfield",
-        "jarvus-ext-routing"
+        "jarvus-ext-routing",
+        "jarvus-ext-lazydata"
     ],
 
     /**
