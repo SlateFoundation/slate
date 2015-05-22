@@ -8,8 +8,8 @@ Ext.define('SlateAdmin.Application', {
 //        'Jarvus.ext.override.grid.column.ActionEvents', // TODO: replace with jarvus-ext-actionevents package
 //        'Jarvus.ext.override.grid.column.ActionGlyphs', // TODO: replace with jarvus-ext-glyphs package
 //        'Jarvus.ext.override.panel.ToggleEvent',
-//        'Jarvus.ext.override.tree.Records',
 //        'Jarvus.ext.override.data.RequireLoadedStores',
+        'Jarvus.ext.override.tree.Records',
         
         // Jarvus bug fixes
 //        'Jarvus.ext.patch.panel.ExpandBeforeRender',
