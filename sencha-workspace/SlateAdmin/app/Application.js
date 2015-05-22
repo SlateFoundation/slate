@@ -55,9 +55,15 @@ Ext.define('SlateAdmin.Application', {
 
     // application template methods
     init: function() {
+        var pageParams = Ext.Object.fromQueryString(location.search);
+
         Ext.state.Manager.setProvider(Ext.create('Ext.state.LocalStorageProvider', {
             prefix: 'slateadmin-'
         }));
+
+        if (pageParams.apiHost) {
+            SlateAdmin.API.setHostname(pageParams.apiHost);
+        }
     },
 
 
