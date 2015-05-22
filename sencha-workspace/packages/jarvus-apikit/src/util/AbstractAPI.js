@@ -6,6 +6,8 @@
  * 
  * TODO:
  * - add events for all lifecycle events: beforerequest, request, beforexception, exception, unauthorized
+ * - does the touch version use Ext.Ajax or parent.request?
+ * - pass through request options like touch version does
  */
 Ext.define('Jarvus.util.AbstractAPI', {
     extend: 'Ext.data.Connection',
