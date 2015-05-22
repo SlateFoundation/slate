@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         xtype: 'form',
         cls: 'navpanel-search-form',
         items: [{
-            xtype: 'searchfield',
+            xtype: 'jarvus-searchfield',
             anchor: '100%',
             emptyText: 'Search all people…'
         }]

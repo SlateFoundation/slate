@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Jarvus.ext.form.field.Search', {
     extend: 'Ext.form.field.Text',
-    xtype: 'searchfield',
+    xtype: 'jarvus-searchfield',
 
     inputType: 'search',
     selectOnFocus: true,

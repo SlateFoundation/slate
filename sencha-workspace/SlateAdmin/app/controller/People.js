@@ -65,7 +65,7 @@ Ext.define('SlateAdmin.controller.People', {
         xtype: 'people-navpanel'
     },{
         ref: 'searchField',
-        selector: 'people-navpanel searchfield'
+        selector: 'people-navpanel jarvus-searchfield'
     },{
         ref: 'advancedSearchForm',
         selector: 'people-navpanel people-advancedsearchform'
@@ -133,7 +133,7 @@ Ext.define('SlateAdmin.controller.People', {
             'people-navpanel': {
                 expand: me.onNavPanelExpand
             },
-            'people-navpanel searchfield': {
+            'people-navpanel jarvus-searchfield': {
                 specialkey: me.onSearchSpecialKey,
                 clear: me.onSearchClear
             },
