@@ -62,8 +62,8 @@ Ext.define('Emergence.ext.proxy.Records', {
         } else {
             request.method = me.getMethod(request);
         }
-
-        if (Ext.isFunction(request.setUrl)) {
+        
+        if (Ext.isFunction(request.setUrl)) {            
             request.setUrl(operation.config.url || me.buildUrl(request));
         } else {
             request.url = (operation.config.url || me.buildUrl(request));
@@ -73,8 +73,8 @@ Ext.define('Emergence.ext.proxy.Records', {
         if (Ext.isFunction(me.clearParamsDirty)) {
             me.clearParamsDirty();
         }
-
-        if (Ext.isFunction(operation.setRequest)) {
+        
+        if (Ext.isFunction(operation.setRequest)) {            
             operation.setRequest(request);
         } else {
             operation.request = request;
