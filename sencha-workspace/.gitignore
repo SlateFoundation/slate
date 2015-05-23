@@ -1,4 +1,4 @@
-ext-*/
+/ext-*/
 build/
 
 # TODO: ignore packages again once they've all been moved to their own repos
