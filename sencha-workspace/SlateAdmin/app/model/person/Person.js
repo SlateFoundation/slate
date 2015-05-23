@@ -8,7 +8,7 @@ Ext.define('SlateAdmin.model.person.Person', {
 
     // model config
     idProperty: 'ID',
-    
+
     fields: [
         'Username',
         'FirstName',
@@ -77,19 +77,17 @@ Ext.define('SlateAdmin.model.person.Person', {
         },
         {
             name: 'FullName',
+            depends: ['FirstName', 'LastName'],
             convert: function(v,r) {
                 return r.get('FirstName') + ' ' + r.get('LastName');
             }
         }
     ],
-    
-    validations: [
-        {
-            type: 'presence',
-            field: 'FirstName'
-        },
-        {type: 'presence',  field: 'LastName'}
-    ],
+
+    validators: {
+        FirstName: 'presence',
+        LastName: 'presence'
+    },
 
     proxy: {
         type: 'slaterecords',
@@ -125,13 +123,13 @@ Ext.define('SlateAdmin.model.person.Person', {
         var me = this,
             displayName = me.getDisplayName(),
             url = me.toUrl();
-        
+
         return url ? '<a href="#'+url+'">'+displayName+'</a>' : displayName;
     },
-    
+
     toUrl: function() {
         var me = this;
-        
+
         if (me.phantom) {
             return null;
         } else if (me.get('Username')) {
