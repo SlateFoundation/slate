@@ -902,8 +902,8 @@ Ext.define('SlateAdmin.controller.Assets', {
                     
                 if (succ) {
                     
-                    me.getManager().updateSelectedAsset(record);
-                    me.getGrid().getSelectionModel().deselectAll(true);
+                    me.getManager().updateSelectedAsset(record);                    
+                    me.getGrid().getSelectionModel().deselectAll(true);                    
                     me.updateTreeNodesCount(originalData, record.getData());
                     
                     if(wasPhantom) {
@@ -912,8 +912,12 @@ Ext.define('SlateAdmin.controller.Assets', {
                         Ext.History.add(url, false);
                     } else {
                         form.setLoading(false);
+                        me.getGrid().setLoading(false);
                         me.getGrid().getStore().reload({
                             callback: function(records) {
+                                if (!records.length)
+                                    return;
+                                    
                                 if (me.getGrid().getSelectionModel().getSelection().indexOf(record) === -1) {
                                     me.selectAsset(record);
                                 }

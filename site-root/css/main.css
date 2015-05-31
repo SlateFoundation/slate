@@ -1054,7 +1054,7 @@ a:hover, a:focus {
   }
 }
 
-/* line 33, ../sass/skeleton/modules/_buttons.scss */
+/* line 34, ../sass/skeleton/modules/_buttons.scss */
 .button, button,
 a.button,
 input[type="submit"] {
@@ -1089,13 +1089,14 @@ input[type="submit"]:hover, .button:focus, button:focus,
 input[type="submit"]:focus {
   background-color: #ededed;
 }
-/* line 26, ../sass/skeleton/modules/_buttons.scss */
+/* line 27, ../sass/skeleton/modules/_buttons.scss */
 .button:active, button:active,
-input[type="submit"]:active {
+input[type="submit"]:active, .button.active, button.active,
+input.active[type="submit"] {
   box-shadow: 0 1px 0 #ededed, 0 -1px 0 #ededed;
   top: 1px;
 }
-/* line 49, ../sass/skeleton/modules/_buttons.scss */
+/* line 50, ../sass/skeleton/modules/_buttons.scss */
 .button.destructive, button.destructive,
 input.destructive[type="submit"] {
   background-color: #eed5d5;
@@ -1109,13 +1110,14 @@ input.destructive[type="submit"]:hover, .button.destructive:focus, button.destru
 input.destructive[type="submit"]:focus {
   background-color: #f8eeee;
 }
-/* line 26, ../sass/skeleton/modules/_buttons.scss */
+/* line 27, ../sass/skeleton/modules/_buttons.scss */
 .button.destructive:active, button.destructive:active,
-input.destructive[type="submit"]:active {
+input.destructive[type="submit"]:active, .button.destructive.active, button.destructive.active,
+input.destructive.active[type="submit"] {
   box-shadow: 0 1px 0 #f6eaea, 0 -1px 0 #f6eaea;
   top: 1px;
 }
-/* line 53, ../sass/skeleton/modules/_buttons.scss */
+/* line 54, ../sass/skeleton/modules/_buttons.scss */
 .button.primary, button.primary,
 input.primary[type="submit"], .button.submit, button.submit,
 input.submit[type="submit"], .button[type="submit"], button[type="submit"],
@@ -1135,25 +1137,28 @@ input[type="submit"]:hover, .button[type="submit"]:focus, button[type="submit"]:
 input[type="submit"]:focus {
   background-color: #00a6e5;
 }
-/* line 26, ../sass/skeleton/modules/_buttons.scss */
+/* line 27, ../sass/skeleton/modules/_buttons.scss */
 .button.primary:active, button.primary:active,
-input.primary[type="submit"]:active, .button.submit:active, button.submit:active,
-input.submit[type="submit"]:active, .button[type="submit"]:active, button[type="submit"]:active,
-input[type="submit"]:active {
+input.primary[type="submit"]:active, .button.primary.active, button.primary.active,
+input.primary.active[type="submit"], .button.submit:active, button.submit:active,
+input.submit[type="submit"]:active, .button.submit.active, button.submit.active,
+input.submit.active[type="submit"], .button[type="submit"]:active, button[type="submit"]:active,
+input[type="submit"]:active, .button[type="submit"].active, button[type="submit"].active,
+input[type="submit"].active {
   box-shadow: 0 1px 0 #7fc5e0, 0 -1px 0 #7fc5e0;
   top: 1px;
 }
-/* line 55, ../sass/skeleton/modules/_buttons.scss */
+/* line 56, ../sass/skeleton/modules/_buttons.scss */
 .button.block, button.block,
 input.block[type="submit"] {
   display: block;
 }
-/* line 57, ../sass/skeleton/modules/_buttons.scss */
+/* line 58, ../sass/skeleton/modules/_buttons.scss */
 .button.small, button.small,
 input.small[type="submit"] {
   font-size: small;
 }
-/* line 61, ../sass/skeleton/modules/_buttons.scss */
+/* line 62, ../sass/skeleton/modules/_buttons.scss */
 .button.tiny, button.tiny,
 input.tiny[type="submit"] {
   font-size: small;
@@ -1162,7 +1167,7 @@ input.tiny[type="submit"] {
   vertical-align: middle;
   width: auto;
 }
-/* line 70, ../sass/skeleton/modules/_buttons.scss */
+/* line 71, ../sass/skeleton/modules/_buttons.scss */
 h1 .button, h1 button,
 h1 input[type="submit"], h2 .button, h2 button,
 h2 input[type="submit"] {
@@ -1170,7 +1175,7 @@ h2 input[type="submit"] {
   vertical-align: .4em;
 }
 @media screen and (max-width: 568px) {
-  /* line 76, ../sass/skeleton/modules/_buttons.scss */
+  /* line 77, ../sass/skeleton/modules/_buttons.scss */
   .button + .button, button + .button,
   input[type="submit"] + .button, .button + button, button + button,
   input[type="submit"] + button,
@@ -1181,7 +1186,7 @@ h2 input[type="submit"] {
   }
 }
 
-/* line 87, ../sass/skeleton/modules/_buttons.scss */
+/* line 88, ../sass/skeleton/modules/_buttons.scss */
 button,
 a.button,
 input[type="submit"] {
@@ -1969,7 +1974,7 @@ form .hint, form .error-text {
 
 /* line 5, ../sass/skeleton/modules/_panels.scss */
 .panel-header {
-  background-color: #999;
+  background-color: #888;
   border-radius: 3px 3px 0 0;
   font-size: medium;
   font-size: 1rem;
@@ -1983,10 +1988,12 @@ form .hint, form .error-text {
   line-height: 1;
   margin: 0;
   text-align: center;
+  text-shadow: 0 1px 1px #333333;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 23, ../sass/skeleton/modules/_panels.scss */
+/* line 25, ../sass/skeleton/modules/_panels.scss */
 .panel-body {
   *zoom: 1;
   background-color: #ddd;
@@ -2000,30 +2007,34 @@ form .hint, form .error-text {
   display: table;
   clear: both;
 }
-/* line 30, ../sass/skeleton/modules/_panels.scss */
+/* line 32, ../sass/skeleton/modules/_panels.scss */
 .panel-body > :first-child {
   margin-top: 0;
 }
-/* line 34, ../sass/skeleton/modules/_panels.scss */
+/* line 36, ../sass/skeleton/modules/_panels.scss */
 .panel-body > :last-child {
   margin-bottom: 0;
 }
+/* line 40, ../sass/skeleton/modules/_panels.scss */
+.panel-body.table-ct {
+  overflow: auto;
+}
 
-/* line 41, ../sass/skeleton/modules/_panels.scss */
+/* line 47, ../sass/skeleton/modules/_panels.scss */
 table.panel-body tr > :first-child {
   padding-left: 1em;
 }
-/* line 45, ../sass/skeleton/modules/_panels.scss */
+/* line 51, ../sass/skeleton/modules/_panels.scss */
 table.panel-body tr > :last-child {
   padding-right: 1em;
 }
-/* line 51, ../sass/skeleton/modules/_panels.scss */
+/* line 57, ../sass/skeleton/modules/_panels.scss */
 table.panel-body tbody > tr:first-child > * {
   padding-top: .5em;
 }
-/* line 55, ../sass/skeleton/modules/_panels.scss */
+/* line 61, ../sass/skeleton/modules/_panels.scss */
 table.panel-body tbody > tr:last-child > * {
-  padding-bottom: .75em;
+  padding-bottom: .5em;
 }
 
 /* line 2, ../sass/skeleton/modules/_profile.scss */
@@ -3159,7 +3170,7 @@ table.row-highlight tbody > tr:hover > td, table.row-highlight tbody > tr:hover 
   transition-delay: 0, 250ms;
   visibility: hidden;
   width: auto;
-  z-index: 1;
+  z-index: 2;
 }
 /* line 127, ../sass/slate/modules/_slate-menu.scss */
 .slate-menu .submenu:empty::before {

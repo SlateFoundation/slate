@@ -9,14 +9,9 @@ Ext.Loader.addClassPathMappings({
   "Ext": "../ext/src",
   "Ext.Msg": "../ext/src/window/MessageBox.js",
   "Ext.ux": "../packages/extjs-boxselect/src",
-  "Jarvus": "../packages/jarvus-fuzzytime",
+  "Jarvus": "../x/Jarvus",
   "Jarvus.LightBox": "../packages/jarvus-lightbox/src/LightBox.js",
-  "Jarvus.ext": "../x/Jarvus/ext",
   "Jarvus.ext.override.proxy.Abort": "../packages/jarvus-ext-lazydata/overrides/proxy/Abort.js",
-  "Jarvus.util.API": "../x/Jarvus/util/API.js",
-  "Jarvus.util.AbstractAPI": "../x/Jarvus/util/AbstractAPI.js",
-  "Jarvus.util.CookieSniffer": "../x/Jarvus/util/CookieSniffer.js",
-  "Jarvus.util.MD5": "../x/Jarvus/util/MD5.js",
   "SlateAdmin": "app",
   "SlateAdminTheme": "../packages/slate-admin-theme/overrides",
   "SlateAdminTheme.override": "../packages/slate-admin-theme/overrides",
@@ -2123,6 +2118,7 @@ Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/app/ControllerRo
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/util/EncodedHistory.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/util/InstantHistory.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/util/PushHistory.js");;
+Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/data/RequireLoadedStores.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/data/StoreIsLoaded.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/proxy/Abort.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/proxy/DirtyParams.js");;
