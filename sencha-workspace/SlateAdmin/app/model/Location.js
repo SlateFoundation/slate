@@ -68,6 +68,20 @@ Ext.define('SlateAdmin.model.Location', {
             name: "Right",
             type: "int",
             useNull: true
+        },{
+            name: 'text',
+            type: 'string',
+            persist: false,
+            convert: function(v, r) {
+                return r.get('Title');
+            }
+        },{
+            name: 'leaf',
+            type: 'string',
+            persist: false,
+            convert: function(v, r) {
+                return (r.raw.Left && r.raw.Right && (r.raw.Right - r.raw.Left == 1));
+            }
         }
     ],
 

@@ -1,5 +1,17 @@
 <?php
 
+Emergence\People\Person::$dynamicFields['ticketsCount'] = [
+    'method' => function($Person) {
+        try {
+            $tickets = \Slate\Assets\Ticket::getCount(['AssigneeID' => $Person->ID]);
+        } catch (\TableNotFoundException $e) {
+            $tickets = 0;
+        }
+        
+        return $tickets;
+    }    
+];
+
 Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
     'type' => 'many-many'
     ,'class' => Slate\Courses\Section::class
@@ -96,5 +108,26 @@ Emergence\People\Person::$searchConditions['WardAdvisor'] = array(
             , date('Y', strtotime($currentTerm->getMaster()->EndDate))
             , $Advisor->ID
         );
+    }
+);
+
+Emergence\People\Person::$searchConditions['ID'] = array(
+    'qualifiers' => array('id'),
+    'points' => 3,
+    'callback' => function($ids, $matchedCondition) {
+        
+        $ids = explode(",", $ids);
+        
+        foreach ($ids as $id) {
+            if (is_numeric($id) && intval($id) > 0) {
+                $validIds[] = \DB::escape($id);
+            }
+        }
+        
+        if (!empty($validIds)) {
+            return $condition = sprintf('`%s`.ID IN (%s)', Emergence\People\Person::getTableAlias(), join(", ", $validIds));
+        } else {            
+            return false;
+        }
     }
 );

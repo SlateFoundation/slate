@@ -337,6 +337,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     onExportFormatButtonClick: function(menuItem) {
         var me = this,
+            selectedRows = me.getGrid().getSelectionModel().getSelection(),
             exportColumnsMenu = me.getExportColumnsMenu(),
             exportFormat = menuItem.exportFormat,
             params = Ext.applyIf({
@@ -348,6 +349,10 @@ Ext.define('SlateAdmin.controller.People', {
             params.include = '*';
         } else if (exportFormat == 'csv') {
             params.columns = Ext.Array.pluck(exportColumnsMenu.query('menuitem[checked]'), 'itemId').join(',');
+        }
+        
+        if (selectedRows.length >= 1) {
+            params.q = (params.q ? (params.q + ' ') : '') + ('id:' + selectedRows.map(function(row) {return row.data.ID;}).join(','));
         }
 
         url = '/people?' + Ext.Object.toQueryString(params);

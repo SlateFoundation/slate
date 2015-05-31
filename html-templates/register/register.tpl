@@ -18,7 +18,7 @@
         <fieldset class="shrink">
             <div class="inline-fields">
                 {* field name label='' error='' type=text placeholder='' hint='' required=false autofocus=false *}
-                {field name=FirstName label='First Name' error=$errors.FirstName required=true autofocus=true}
+                {field inputName=FirstName label='First Name' error=$errors.FirstName required=true autofocus=true}
                 {field LastName 'Last Name' $errors.LastName text '' '' true}
             </div>
 

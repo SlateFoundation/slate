@@ -9,8 +9,14 @@ Ext.Loader.addClassPathMappings({
   "Ext": "../ext/src",
   "Ext.Msg": "../ext/src/window/MessageBox.js",
   "Ext.ux": "../packages/extjs-boxselect/src",
-  "Jarvus": "../x/Jarvus",
+  "Jarvus": "../packages/jarvus-fuzzytime",
+  "Jarvus.LightBox": "../packages/jarvus-lightbox/src/LightBox.js",
+  "Jarvus.ext": "../x/Jarvus/ext",
   "Jarvus.ext.override.proxy.Abort": "../packages/jarvus-ext-lazydata/overrides/proxy/Abort.js",
+  "Jarvus.util.API": "../x/Jarvus/util/API.js",
+  "Jarvus.util.AbstractAPI": "../x/Jarvus/util/AbstractAPI.js",
+  "Jarvus.util.CookieSniffer": "../x/Jarvus/util/CookieSniffer.js",
+  "Jarvus.util.MD5": "../x/Jarvus/util/MD5.js",
   "SlateAdmin": "app",
   "SlateAdminTheme": "../packages/slate-admin-theme/overrides",
   "SlateAdminTheme.override": "../packages/slate-admin-theme/overrides",
@@ -790,6 +796,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.window.Window": [
     "Ext.Window"
   ],
+  "Jarvus.LightBox": [],
   "Jarvus.ext.form.field.Search": [],
   "Jarvus.ext.override.app.ControllerRouting": [],
   "Jarvus.ext.override.app.EncodedPaths": [],
@@ -797,6 +804,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.override.data.CallbackValidation": [],
   "Jarvus.ext.override.data.RequireLoadedStores": [],
   "Jarvus.ext.override.data.StoreIsLoaded": [],
+  "Jarvus.ext.override.data.TreeStore": [],
   "Jarvus.ext.override.form.field.LazyLocalCombo": [],
   "Jarvus.ext.override.grid.column.ActionEvents": [],
   "Jarvus.ext.override.grid.column.ActionGlyphs": [],
@@ -819,9 +827,12 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.proxy.API": [],
   "Jarvus.util.API": [],
   "Jarvus.util.AbstractAPI": [],
+  "Jarvus.util.CookieSniffer": [],
   "Jarvus.util.MD5": [],
+  "Jarvus.util.format.FuzzyTime": [],
   "SlateAdmin.API": [],
   "SlateAdmin.Application": [],
+  "SlateAdmin.controller.Assets": [],
   "SlateAdmin.controller.Courses": [],
   "SlateAdmin.controller.DeveloperTools": [],
   "SlateAdmin.controller.Locations": [],
@@ -829,6 +840,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.controller.People": [],
   "SlateAdmin.controller.Settings": [],
   "SlateAdmin.controller.Terms": [],
+  "SlateAdmin.controller.Tickets": [],
   "SlateAdmin.controller.Viewport": [],
   "SlateAdmin.controller.courses.Participants": [],
   "SlateAdmin.controller.courses.Profile": [],
@@ -837,8 +849,17 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
   "SlateAdmin.controller.settings.Groups": [],
+  "SlateAdmin.controller.settings.Locations": [],
+  "SlateAdmin.controller.settings.Statuses": [],
+  "SlateAdmin.model.Activity": [],
+  "SlateAdmin.model.Asset": [],
   "SlateAdmin.model.Location": [],
   "SlateAdmin.model.Term": [],
+  "SlateAdmin.model.asset.Location": [],
+  "SlateAdmin.model.asset.Status": [],
+  "SlateAdmin.model.asset.TemplateDataField": [],
+  "SlateAdmin.model.asset.Ticket": [],
+  "SlateAdmin.model.asset.TreeNode": [],
   "SlateAdmin.model.course.Course": [],
   "SlateAdmin.model.course.Department": [],
   "SlateAdmin.model.course.Schedule": [],
@@ -851,8 +872,16 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.model.person.RelationshipTemplate": [],
   "SlateAdmin.proxy.API": [],
   "SlateAdmin.proxy.Records": [],
+  "SlateAdmin.store.Assets": [],
   "SlateAdmin.store.Locations": [],
+  "SlateAdmin.store.LocationsTree": [],
   "SlateAdmin.store.Terms": [],
+  "SlateAdmin.store.assets.Locations": [],
+  "SlateAdmin.store.assets.Statuses": [],
+  "SlateAdmin.store.assets.StatusesTree": [],
+  "SlateAdmin.store.assets.TemplateDataFields": [],
+  "SlateAdmin.store.assets.Tickets": [],
+  "SlateAdmin.store.assets.TreeNodes": [],
   "SlateAdmin.store.courses.Courses": [],
   "SlateAdmin.store.courses.Departments": [],
   "SlateAdmin.store.courses.Schedules": [],
@@ -865,11 +894,22 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.store.people.Invitations": [],
   "SlateAdmin.store.people.People": [],
   "SlateAdmin.store.people.RelationshipTemplates": [],
+  "SlateAdmin.view.AbstractActivity": [],
   "SlateAdmin.view.Header": [],
   "SlateAdmin.view.LinksNavPanel": [],
   "SlateAdmin.view.LoginWindow": [],
   "SlateAdmin.view.Navigation": [],
   "SlateAdmin.view.Viewport": [],
+  "SlateAdmin.view.assets.Activity": [],
+  "SlateAdmin.view.assets.Details": [],
+  "SlateAdmin.view.assets.Grid": [],
+  "SlateAdmin.view.assets.Manager": [],
+  "SlateAdmin.view.assets.NavPanel": [],
+  "SlateAdmin.view.assets.TicketsGrid": [],
+  "SlateAdmin.view.assets.details.Form": [],
+  "SlateAdmin.view.assets.statuses.Manager": [],
+  "SlateAdmin.view.assets.statuses.Menu": [],
+  "SlateAdmin.view.assets.statuses.NavPanel": [],
   "SlateAdmin.view.courses.NavPanel": [],
   "SlateAdmin.view.courses.sections.Grid": [],
   "SlateAdmin.view.courses.sections.Manager": [],
@@ -879,6 +919,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.view.groups.Manager": [],
   "SlateAdmin.view.groups.Menu": [],
   "SlateAdmin.view.groups.NavPanel": [],
+  "SlateAdmin.view.locations.Manager": [],
+  "SlateAdmin.view.locations.Menu": [],
+  "SlateAdmin.view.locations.NavPanel": [],
   "SlateAdmin.view.people.AdvancedSearchForm": [],
   "SlateAdmin.view.people.Grid": [],
   "SlateAdmin.view.people.Manager": [],
@@ -890,6 +933,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.view.people.invitations.Panel": [],
   "SlateAdmin.view.people.invitations.Window": [],
   "SlateAdmin.view.settings.NavPanel": [],
+  "SlateAdmin.view.template.Activity": [],
+  "SlateAdmin.view.tickets.Activity": [],
+  "SlateAdmin.view.tickets.Details": [],
+  "SlateAdmin.view.tickets.Grid": [],
+  "SlateAdmin.view.tickets.Manager": [],
+  "SlateAdmin.view.tickets.details.Asset": [],
+  "SlateAdmin.view.tickets.details.Form": [],
   "SlateAdmin.widget.field.Person": [],
   "SlateAdmin.widget.field.State": [],
   "SlateAdmin.widget.field.contact.Postal": [],
@@ -1801,6 +1851,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.window.Window": [
     "widget.window"
   ],
+  "Jarvus.LightBox": [],
   "Jarvus.ext.form.field.Search": [
     "widget.searchfield"
   ],
@@ -1810,6 +1861,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Jarvus.ext.override.data.CallbackValidation": [],
   "Jarvus.ext.override.data.RequireLoadedStores": [],
   "Jarvus.ext.override.data.StoreIsLoaded": [],
+  "Jarvus.ext.override.data.TreeStore": [],
   "Jarvus.ext.override.form.field.LazyLocalCombo": [],
   "Jarvus.ext.override.grid.column.ActionEvents": [],
   "Jarvus.ext.override.grid.column.ActionGlyphs": [],
@@ -1834,9 +1886,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Jarvus.util.API": [],
   "Jarvus.util.AbstractAPI": [],
+  "Jarvus.util.CookieSniffer": [],
   "Jarvus.util.MD5": [],
+  "Jarvus.util.format.FuzzyTime": [],
   "SlateAdmin.API": [],
   "SlateAdmin.Application": [],
+  "SlateAdmin.controller.Assets": [],
   "SlateAdmin.controller.Courses": [],
   "SlateAdmin.controller.DeveloperTools": [],
   "SlateAdmin.controller.Locations": [],
@@ -1844,6 +1899,7 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.controller.People": [],
   "SlateAdmin.controller.Settings": [],
   "SlateAdmin.controller.Terms": [],
+  "SlateAdmin.controller.Tickets": [],
   "SlateAdmin.controller.Viewport": [],
   "SlateAdmin.controller.courses.Participants": [],
   "SlateAdmin.controller.courses.Profile": [],
@@ -1852,8 +1908,17 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
   "SlateAdmin.controller.settings.Groups": [],
+  "SlateAdmin.controller.settings.Locations": [],
+  "SlateAdmin.controller.settings.Statuses": [],
+  "SlateAdmin.model.Activity": [],
+  "SlateAdmin.model.Asset": [],
   "SlateAdmin.model.Location": [],
   "SlateAdmin.model.Term": [],
+  "SlateAdmin.model.asset.Location": [],
+  "SlateAdmin.model.asset.Status": [],
+  "SlateAdmin.model.asset.TemplateDataField": [],
+  "SlateAdmin.model.asset.Ticket": [],
+  "SlateAdmin.model.asset.TreeNode": [],
   "SlateAdmin.model.course.Course": [],
   "SlateAdmin.model.course.Department": [],
   "SlateAdmin.model.course.Schedule": [],
@@ -1870,8 +1935,16 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.proxy.Records": [
     "proxy.slaterecords"
   ],
+  "SlateAdmin.store.Assets": [],
   "SlateAdmin.store.Locations": [],
+  "SlateAdmin.store.LocationsTree": [],
   "SlateAdmin.store.Terms": [],
+  "SlateAdmin.store.assets.Locations": [],
+  "SlateAdmin.store.assets.Statuses": [],
+  "SlateAdmin.store.assets.StatusesTree": [],
+  "SlateAdmin.store.assets.TemplateDataFields": [],
+  "SlateAdmin.store.assets.Tickets": [],
+  "SlateAdmin.store.assets.TreeNodes": [],
   "SlateAdmin.store.courses.Courses": [],
   "SlateAdmin.store.courses.Departments": [],
   "SlateAdmin.store.courses.Schedules": [],
@@ -1886,6 +1959,9 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.store.people.Invitations": [],
   "SlateAdmin.store.people.People": [],
   "SlateAdmin.store.people.RelationshipTemplates": [],
+  "SlateAdmin.view.AbstractActivity": [
+    "widget.abstract-activity-panel"
+  ],
   "SlateAdmin.view.Header": [
     "widget.slateadmin-header"
   ],
@@ -1899,6 +1975,36 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.slateadmin-navigation"
   ],
   "SlateAdmin.view.Viewport": [],
+  "SlateAdmin.view.assets.Activity": [
+    "widget.assets-activity"
+  ],
+  "SlateAdmin.view.assets.Details": [
+    "widget.assets-details"
+  ],
+  "SlateAdmin.view.assets.Grid": [
+    "widget.assets-grid"
+  ],
+  "SlateAdmin.view.assets.Manager": [
+    "widget.assets-manager"
+  ],
+  "SlateAdmin.view.assets.NavPanel": [
+    "widget.assets-navpanel"
+  ],
+  "SlateAdmin.view.assets.TicketsGrid": [
+    "widget.assets-ticketsgrid"
+  ],
+  "SlateAdmin.view.assets.details.Form": [
+    "widget.assets-details-form"
+  ],
+  "SlateAdmin.view.assets.statuses.Manager": [
+    "widget.assets-statuses-manager"
+  ],
+  "SlateAdmin.view.assets.statuses.Menu": [
+    "widget.assets-statuses-menu"
+  ],
+  "SlateAdmin.view.assets.statuses.NavPanel": [
+    "widget.assets-statuses-navpanel"
+  ],
   "SlateAdmin.view.courses.NavPanel": [
     "widget.courses-navpanel"
   ],
@@ -1925,6 +2031,15 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "SlateAdmin.view.groups.NavPanel": [
     "widget.groups-navpanel"
+  ],
+  "SlateAdmin.view.locations.Manager": [
+    "widget.locations-manager"
+  ],
+  "SlateAdmin.view.locations.Menu": [
+    "widget.locations-menu"
+  ],
+  "SlateAdmin.view.locations.NavPanel": [
+    "widget.locations-navpanel"
   ],
   "SlateAdmin.view.people.AdvancedSearchForm": [
     "widget.people-advancedsearchform"
@@ -1959,6 +2074,25 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.view.settings.NavPanel": [
     "widget.settings-navpanel"
   ],
+  "SlateAdmin.view.template.Activity": [],
+  "SlateAdmin.view.tickets.Activity": [
+    "widget.tickets-activity"
+  ],
+  "SlateAdmin.view.tickets.Details": [
+    "widget.tickets-details"
+  ],
+  "SlateAdmin.view.tickets.Grid": [
+    "widget.tickets-grid"
+  ],
+  "SlateAdmin.view.tickets.Manager": [
+    "widget.tickets-manager"
+  ],
+  "SlateAdmin.view.tickets.details.Asset": [
+    "widget.tickets-details-asset"
+  ],
+  "SlateAdmin.view.tickets.details.Form": [
+    "widget.tickets-details-form"
+  ],
   "SlateAdmin.widget.field.Person": [
     "widget.slate-personfield"
   ],
@@ -1981,6 +2115,8 @@ Ext.setVersion("ext-theme-neutral", "4.2.2");
 Ext.setVersion("extjs-boxselect", "1.0.0");
 Ext.setVersion("jarvus-ext-lazydata", "1.0.0");
 Ext.setVersion("jarvus-ext-routing", "1.0.0");
+Ext.setVersion("jarvus-fuzzytime", "1.0.0");
+Ext.setVersion("jarvus-lightbox", "1.0.1");
 Ext.setVersion("slate-admin-theme", "1.0.0");
 Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/app/Application.js");;
 Ext.Loader.loadScript("../packages/jarvus-ext-routing/overrides/app/ControllerRouting.js");;
@@ -1995,6 +2131,7 @@ Ext.Loader.loadScript("../packages/jarvus-ext-lazydata/overrides/form/field/Lazy
 Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/toolbar/Toolbar.js");;
 Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/tab/Tab.js");;
 Ext.Loader.loadScript("../packages/slate-admin-theme/overrides/toolbar/TextItem.js");;
+Ext.Loader.loadScript("../packages/jarvus-fuzzytime/overrides/format/FuzzyTime.js");;
 /**
  * Sencha Blink - Development
  * @author Jacky Nguyen <jacky@sencha.com>

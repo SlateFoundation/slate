@@ -104,14 +104,16 @@ class Student extends User
         return DB::allRecords('SELECT DISTINCT GraduationYear FROM people WHERE GraduationYear IS NOT NULL AND GraduationYear != 0000 ORDER BY GraduationYear ASC');
     }
 
-    public static function getAllByListIdentifier($identifier)
+    public static function getAllByListIdentifier($identifier, $includeDisabled = false)
     {
         if (!$identifier) {
             throw new \Exception('');
         }
 
         if ($identifier == 'all') {
-            return static::getAllByClass();
+            return array_values(array_filter(static::getAllByClass(), function ($Person) use ($includeDisabled) {
+                return ($includeDisabled || $Person->AccountLevel != 'Disabled');
+            }));
         }
 
         list ($groupType, $groupHandle) = explode(' ', $identifier, 2);
@@ -122,16 +124,16 @@ class Student extends User
                     throw new \Exception('Group not found');
                 }
 
-                return array_filter($Group->getAllPeople(), function($Person) {
-                    return $Person->isA(Student::class);
-                });
+                return array_values(array_filter($Group->getAllPeople(), function($Person) use ($includeDisabled) {
+                    return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
+                }));
             case 'section':
                 if (!$Section = Section::getByHandle($groupHandle)) {
                     throw new \Exception('Section not found');
                 }
 
-                return array_values(array_filter($Section->Students, function($Person) {
-                    return $Person->isA(Student::class);
+                return array_values(array_filter($Section->Students, function($Person) use ($includeDisabled) {
+                    return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
                 }));
             default:
                 throw new \Exception('Group type not recognized');

@@ -43,12 +43,17 @@ class Schedule extends \VersionedRecord
         )
     );
 
+    public static $validators = [
+        'Title' => [
+            'errorMessage' => 'A title is required',
+            'required' => false
+        ]
+    ];
 
     public static $relationships = array(
         'Blocks' => array(
             'type' => 'one-many'
-            ,'class' => 'Slate\\Courses\\ScheduleBlock'
-            ,'foreign' => 'ScheduleID'
+            ,'class' => Slate\Courses\ScheduleBlock::class
         )
     );
 
@@ -69,12 +74,6 @@ class Schedule extends \VersionedRecord
     {
         // call parent
         parent::validate();
-
-        $this->_validator->validate(array(
-            'field' => 'Title'
-            ,'errorMessage' => 'A title is required'
-            ,'required' => false
-        ));
 
         // implement handles
         HandleBehavior::onValidate($this, $this->_validator);

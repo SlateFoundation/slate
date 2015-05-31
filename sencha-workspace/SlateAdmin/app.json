@@ -4,7 +4,9 @@
     "requires": [
         "extjs-boxselect",
         "jarvus-ext-routing",
-        "jarvus-ext-lazydata"
+        "jarvus-ext-lazydata",
+        "jarvus-lightbox",
+        "jarvus-fuzzytime"
     ],
 
     "id": "09b98baa-2996-4414-bfd7-20695647d369"

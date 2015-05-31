@@ -6,6 +6,7 @@ Ext.define('SlateAdmin.store.Locations', {
     proxy: {
         type: 'slaterecords',
         url: '/locations',
+        include: 'Population',
         startParam: false,
         limitParam: false
     }
