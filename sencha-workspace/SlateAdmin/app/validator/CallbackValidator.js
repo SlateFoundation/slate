@@ -2,7 +2,7 @@
 /**
  * Validates that the passed value is not `null` or `undefined` or `''`.
  */
-Ext.define('SlateAdmin.model.validator.CallbackValidator', {
+Ext.define('SlateAdmin.validator.CallbackValidator', {
     extend: 'Ext.data.validator.Validator',
     alias: 'data.validator.callback',
 
