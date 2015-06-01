@@ -9,8 +9,6 @@ Ext.define('SlateAdmin.model.person.Relationship', {
 
     idProperty: 'ID',
 
-    validationSeparator: 'jjjjjjjjjjjjj',
-
     fields: [
         {
             name: "ID",
