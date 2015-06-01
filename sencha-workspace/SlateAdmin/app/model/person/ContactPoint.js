@@ -73,16 +73,15 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
         relatedTable: ['Person']
     },
 
-    validate: function() {
+    getValidation: function() {
         var me = this,
-            errors = me.callParent(arguments);
+            validation = me.callParent(arguments);
 
-        if (errors.isValid()) {
+        if (validation.isValid()) {
             if (!me.get('String') && !me.get('Data')) {
-                errors.add({field: 'String', message: 'Contact point data cannot be empty'});
+                validation.set('String','Contact point data cannot be empty');
             }
         }
-
-        return errors;
+        return validation;
     }
 });
