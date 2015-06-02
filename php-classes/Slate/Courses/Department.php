@@ -45,6 +45,11 @@ class Department extends \VersionedRecord
         )
     );
 
+    public static $validators = [
+        'Title' => [
+            'errorMessage' => 'A title is required'
+        ]
+    ];
 
     public static $relationships = array(
         'Courses' => array(
@@ -71,11 +76,6 @@ class Department extends \VersionedRecord
         // call parent
         parent::validate($deep);
 
-        $this->_validator->validate(array(
-            'field' => 'Title'
-            ,'errorMessage' => 'A title is required'
-        ));
-
         // implement handles
         HandleBehavior::onValidate($this, $this->_validator);
 
@@ -92,4 +92,3 @@ class Department extends \VersionedRecord
         parent::save($deep);
     }
 }
-
