@@ -21,5 +21,5 @@
     ,'accountLevelEnumerate' => 'Administrator'
 );
 \Emergence\People\User::$onPasswordSet = function($password, $User) {
-    $User->AssignedPassword = $password;
+    $User->AssignedPassword = $User->hasAccountLevel('Administrator') ? null : $password;
 };
