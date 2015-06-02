@@ -38,8 +38,7 @@ class Location extends \VersionedRecord
             ,'notnull' => false
         )
         ,'ParentID' => array(
-            'type' => 'integer'
-            ,'unsigned' => true
+            'type' => 'uint'
             ,'notnull' => false
         )
         ,'Left' => array(

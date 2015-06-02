@@ -42,8 +42,7 @@ class Course extends \VersionedRecord
             ,'notnull' => false
         )
         ,'DepartmentID' => array(
-            'type' => 'integer'
-            ,'unsigned' => true
+            'type' => 'uint'
             ,'notnull' => false
         )
     );
