@@ -56,7 +56,7 @@ class Location extends \VersionedRecord
     public static $relationships = array(
         'Parent' => array(
             'type' => 'one-one'
-            ,'class' => 'Emergence\\Locations\\Location'
+            ,'class' => __CLASS__
         )
     );
 

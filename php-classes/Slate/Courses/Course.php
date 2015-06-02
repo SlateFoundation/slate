@@ -51,11 +51,11 @@ class Course extends \VersionedRecord
     public static $relationships = array(
         'Department' => array(
             'type' => 'one-one'
-            ,'class' => 'Slate\\Courses\\Department'
+            ,'class' => Department::class
         )
         ,'Sections' => array(
             'type' => 'one-many'
-            ,'class' => 'Slate\\Courses\\Section'
+            ,'class' => Section::class
         )
     );
 

@@ -47,8 +47,8 @@ class Schedule extends \VersionedRecord
     public static $relationships = array(
         'Blocks' => array(
             'type' => 'one-many'
-            ,'class' => 'Slate\\Courses\\ScheduleBlock'
             ,'foreign' => 'ScheduleID'
+            ,'class' => ScheduleBlock::class
         )
     );
 
