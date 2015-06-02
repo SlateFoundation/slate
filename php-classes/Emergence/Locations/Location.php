@@ -101,7 +101,7 @@ class Location extends \VersionedRecord
         NestingBehavior::onDestroy($this);
     }
 
-    public function save($deep = true, $createRevision = true)
+    public function save($deep = true)
     {
         // implement handles
         HandleBehavior::onSave($this);
@@ -109,6 +109,6 @@ class Location extends \VersionedRecord
         NestingBehavior::onSave($this);
 
         // call parent
-        parent::save($deep, $createRevision);
+        parent::save($deep);
     }
 }
