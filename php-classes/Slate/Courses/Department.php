@@ -15,11 +15,6 @@ class Department extends \VersionedRecord
     public static $pluralNoun = 'course departments';
     public static $collectionRoute = '/departments';
 
-    // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
-
     public static $fields = array(
         'Title' => array(
             'fulltext' => true
