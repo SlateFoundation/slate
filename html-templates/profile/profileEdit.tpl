@@ -30,8 +30,8 @@
                 	<fieldset class="stretch">
                     	<h3 class="legend">Profile Details</h3>
         
-                        {field name="Location" label="Location" default=$User->Location}
-                        {textarea name="About" label="About Me" default=$User->About}
+                        {field inputName="Location" label="Location" default=$User->Location}
+                        {textarea inputName="About" label="About Me" default=$User->About}
         
                 		<div class="submit-area">
                 			<input type="submit" class="submit" value="Save Profile">
@@ -42,9 +42,9 @@
             	<form action="/profile/password" method="POST">
                 	<fieldset class="stretch">
                     	<h3 class="legend">Change Password</h3>
-                	    {field name="OldPassword" label="Old Password" type="password"}
-                	    {field name="Password" label="New Password" type="password"}
-                	    {field name="PasswordConfirm" label="New Password (Confirm)" type="password"}
+                	    {field inputName="OldPassword" label="Old Password" type="password"}
+                	    {field inputName="Password" label="New Password" type="password"}
+                	    {field inputName="PasswordConfirm" label="New Password (Confirm)" type="password"}
         
                 		<div class="submit-area">
                 			<input type="submit" class="submit" value="Change Password">
