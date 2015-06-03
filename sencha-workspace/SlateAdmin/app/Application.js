@@ -5,9 +5,6 @@ Ext.define('SlateAdmin.Application', {
         'SlateAdmin.API',
 
         // Jarvus enhancements
-//        'Jarvus.ext.override.grid.column.ActionEvents', // TODO: replace with jarvus-ext-actionevents package
-//        'Jarvus.ext.override.grid.column.ActionGlyphs', // TODO: replace with jarvus-ext-glyphs package
-        'Jarvus.ext.override.tree.Records',
         'Jarvus.ext.override.data.RequireLoadedStores',
 
         // Jarvus bug fixes
