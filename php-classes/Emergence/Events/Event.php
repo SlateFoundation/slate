@@ -78,7 +78,7 @@ class Event extends \ActiveRecord
 
     public static function getUpcoming($options = array(), $conditions = array())
     {
-        $conditions[] = 'StartTime >= CURRENT_TIMESTAMP';
+        $conditions[] = 'EndTime >= CURRENT_TIMESTAMP';
         $conditions['Status'] = 'Published';
 
         $options = array_merge(array(

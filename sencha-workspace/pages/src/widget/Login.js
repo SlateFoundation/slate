@@ -32,8 +32,8 @@ Ext.define('Site.widget.Login', {
         loginModal.enableDisplayMode();
 
         body.on('keyup', 'onBodyKeyup', me);
-        body.on('click', 'onLoginLinkClick', me, {delegate: me.getLoginLinkSelector()});
-        loginModal.down('.modal-close-button').on('click', 'hide', me);
+        body.on('click', 'onLoginLinkClick', me, { delegate: me.getLoginLinkSelector() });
+        loginModal.on('click', 'hide', me, { delegate: '[data-action="close"]' });
         loginForm.on('submit', 'onLoginSubmit', me);
     },
 
@@ -68,7 +68,7 @@ Ext.define('Site.widget.Login', {
         loginForm.addCls('waiting');
 
         Ext.Ajax.request({
-            url: '/login/json',
+            url: '/login/?format=json',
             method: 'POST',
             form: loginForm,
             success: function(response) {

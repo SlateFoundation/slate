@@ -107,13 +107,21 @@ class Student extends User
     public static function getAllByListIdentifier($identifier, $includeDisabled = false)
     {
         if (!$identifier) {
-            throw new \Exception('');
+            return array();
         }
+        
+        $filterResult = function ($people) use ($includeDisabled) {
+            return array_values(array_filter($people, function($Person) use ($includeDisabled) {
+                return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
+            }));
+        };
 
         if ($identifier == 'all') {
-            return array_filter(static::getAllByClass(), function ($Person) use ($includeDisabled) {
-                return ($includeDisabled || $Person->AccountLevel != 'Disabled');
-            });
+            return $filterResult(static::getAllByClass()); // TODO: check if this will find sub-student classes?
+        }
+
+        if (preg_match('/^\d+(,\d+)*$/', $identifier)) {
+            return $filterResult(static::getAllByWhere('ID IN (' . $identifier . ')'));
         }
 
         list ($groupType, $groupHandle) = explode(' ', $identifier, 2);
@@ -124,17 +132,13 @@ class Student extends User
                     throw new \Exception('Group not found');
                 }
 
-                return array_filter($Group->getAllPeople(), function($Person) use ($includeDisabled) {
-                    return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
-                });
+                return $filterResult($Group->getAllPeople());
             case 'section':
                 if (!$Section = Section::getByHandle($groupHandle)) {
                     throw new \Exception('Section not found');
                 }
 
-                return array_values(array_filter($Section->Students, function($Person) use ($includeDisabled) {
-                    return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
-                }));
+                return $filterResult($Section->Students);
             default:
                 throw new \Exception('Group type not recognized');
         }

@@ -98,3 +98,26 @@ Emergence\People\Person::$searchConditions['WardAdvisor'] = array(
         );
     }
 );
+
+
+// TODO: merge into base model or replace with standard records method
+Emergence\People\Person::$searchConditions['ID'] = array(
+    'qualifiers' => array('id'),
+    'points' => 3,
+    'callback' => function($ids, $matchedCondition) {
+        
+        $ids = explode(",", $ids);
+        
+        foreach ($ids as $id) {
+            if (is_numeric($id) && intval($id) > 0) {
+                $validIds[] = \DB::escape($id);
+            }
+        }
+        
+        if (!empty($validIds)) {
+            return $condition = sprintf('`%s`.ID IN (%s)', Emergence\People\Person::getTableAlias(), join(", ", $validIds));
+        } else {            
+            return false;
+        }
+    }
+);

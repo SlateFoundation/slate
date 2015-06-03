@@ -38,8 +38,7 @@ class Location extends \VersionedRecord
             ,'notnull' => false
         )
         ,'ParentID' => array(
-            'type' => 'integer'
-            ,'unsigned' => true
+            'type' => 'uint'
             ,'notnull' => false
         )
         ,'Left' => array(
@@ -56,7 +55,7 @@ class Location extends \VersionedRecord
     public static $relationships = array(
         'Parent' => array(
             'type' => 'one-one'
-            ,'class' => 'Emergence\\Locations\\Location'
+            ,'class' => __CLASS__
         )
     );
 
@@ -101,7 +100,7 @@ class Location extends \VersionedRecord
         NestingBehavior::onDestroy($this);
     }
 
-    public function save($deep = true, $createRevision = true)
+    public function save($deep = true)
     {
         // implement handles
         HandleBehavior::onSave($this);
@@ -109,6 +108,6 @@ class Location extends \VersionedRecord
         NestingBehavior::onSave($this);
 
         // call parent
-        parent::save($deep, $createRevision);
+        parent::save($deep);
     }
 }

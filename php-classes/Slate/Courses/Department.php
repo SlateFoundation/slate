@@ -15,11 +15,6 @@ class Department extends \VersionedRecord
     public static $pluralNoun = 'course departments';
     public static $collectionRoute = '/departments';
 
-    // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
-
     public static $fields = array(
         'Title' => array(
             'fulltext' => true
@@ -45,6 +40,11 @@ class Department extends \VersionedRecord
         )
     );
 
+    public static $validators = [
+        'Title' => [
+            'errorMessage' => 'A title is required'
+        ]
+    ];
 
     public static $relationships = array(
         'Courses' => array(
@@ -71,11 +71,6 @@ class Department extends \VersionedRecord
         // call parent
         parent::validate($deep);
 
-        $this->_validator->validate(array(
-            'field' => 'Title'
-            ,'errorMessage' => 'A title is required'
-        ));
-
         // implement handles
         HandleBehavior::onValidate($this, $this->_validator);
 
@@ -92,4 +87,3 @@ class Department extends \VersionedRecord
         parent::save($deep);
     }
 }
-
