@@ -10,7 +10,8 @@ Ext.define('SlateAdmin.Application', {
         'Jarvus.ext.override.panel.ToggleEvent',
         'Jarvus.ext.override.tree.Records',
         'Jarvus.ext.override.data.RequireLoadedStores',
-        
+        'Jarvus.ext.override.data.TreeStore',
+        'Jarvus.util.format.FuzzyTime',
         // Jarvus bug fixes
         'Jarvus.ext.patch.panel.ExpandBeforeRender',
         'Jarvus.ext.patch.grid.ResetTipAttributes',
@@ -45,7 +46,12 @@ Ext.define('SlateAdmin.Application', {
         'settings.Groups',
 
         'Terms',
-        'Locations'
+        'Locations',
+        'settings.Locations',
+        
+        'Assets',
+        'Tickets',
+        'settings.Statuses'
 
         //<debug>
         ,'DeveloperTools'
@@ -55,9 +61,12 @@ Ext.define('SlateAdmin.Application', {
 
     // application template methods
     init: function() {
-        Ext.state.Manager.setProvider(Ext.create('Ext.state.LocalStorageProvider', {
-            prefix: 'slateadmin-'
-        }));
+        
+        if (!Ext.state.Manager.getProvider()) {
+            Ext.state.Manager.setProvider(Ext.create('Ext.state.LocalStorageProvider', {
+                prefix: 'slateadmin-'
+            }));    
+        }
     },
 
 

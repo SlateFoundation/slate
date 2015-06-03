@@ -5,7 +5,7 @@ Ext.define('SlateAdmin.store.people.People', {
     model: 'SlateAdmin.model.person.Person',
     proxy: {
         type: 'slaterecords',
-        url: '/people',
+        url: '/people/json',
         startParam: false,
         limitParam: false,
         include: 'groupIDs'

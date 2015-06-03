@@ -1,0 +1,23 @@
+{
+    "name": "jarvus-lightbox",
+    "type": "code",
+    "creator": "jarvus",
+    "summary": "Lightweight lightbox image viewer.",
+    "detailedDescription": "Lightweight lightbox image viewer.",
+    "version": "1.0.1",
+    "compatVersion": "1.0.1",
+    "format": "1",
+    "slicer": {
+        "js": [
+            {
+                "path": "${package.dir}/sass/example/custom.js",
+                "isWidgetManifest": true
+            }
+        ]
+    },
+    "output": "${package.dir}/build",
+    "local": true,
+    "requires": [
+
+    ]
+}

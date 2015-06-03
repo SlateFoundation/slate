@@ -1,5 +1,17 @@
 <?php
 
+Emergence\People\Person::$dynamicFields['ticketsCount'] = [
+    'method' => function($Person) {
+        try {
+            $tickets = \Slate\Assets\Ticket::getCount(['AssigneeID' => $Person->ID]);
+        } catch (\TableNotFoundException $e) {
+            $tickets = 0;
+        }
+        
+        return $tickets;
+    }    
+];
+
 Emergence\People\Person::$relationships['CurrentCourseSections'] = array(
     'type' => 'many-many'
     ,'class' => Slate\Courses\Section::class
