@@ -20,7 +20,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         'courses.SectionsResult'
 //        'SectionStudents'
     ],
-    
+
     models: [
         'course.Section'
     ],
@@ -91,7 +91,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         ref: 'navPanel',
         selector: 'courses-navpanel',
         autoCreate: true,
-        
+
         xtype: 'courses-navpanel'
     },{
         ref: 'sectionsManager',
@@ -198,14 +198,14 @@ Ext.define('SlateAdmin.controller.Courses', {
             if (section && tab) {
                 sectionsManager.detailTabs.setActiveTab(tab);
             }
-    
+
             me.selectSection(section, function() {
                 ExtHistory.resumeState();
                 Ext.resumeLayouts(true);
             });
         }, 10);
     },
-    
+
     showCreateSection: function() {
         var me = this,
             ExtHistory = Ext.util.History,
@@ -223,7 +223,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         if (!selectedSection || !selectedSection.phantom) {
             me.selectSection(me.getCourseSectionModel().create());
         }
-    
+
         ExtHistory.resumeState();
         Ext.resumeLayouts(true);
     },
@@ -272,13 +272,13 @@ Ext.define('SlateAdmin.controller.Courses', {
             });
         }, 10);
     },
-    
-    
+
+
     // event handlers
     onNavPanelExpand: function(navPanel) {
         Ext.util.History.pushState('course-sections', 'Course Sections');
     },
-    
+
     onNavFieldSpecialKey: function(field, ev) {
         if (ev.getKey() == ev.ENTER) {
             this.executeSearch();
@@ -294,21 +294,21 @@ Ext.define('SlateAdmin.controller.Courses', {
 //        sectionsGrid.reconfigure(sectionsResultStore);
 //        sectionsResultStore.loadPage(1);
     },
-    
+
     onResetClick: function() {
         this.getNavPanel().getForm().reset();
         this.executeSearch();
     },
-    
+
     onSectionCommit: function() {
         this.syncState();
     },
-    
+
     onResultsFetch: function(sectionsResultStore, records, successful, operation) {
         var coursesStore = this.getCoursesCoursesStore(),
             rawData = sectionsResultStore.getProxy().getReader().rawData,
             courses = rawData.related && rawData.related.Course;
-        
+
         if (courses) {
             coursesStore.loadData(courses, true);
         }
@@ -327,7 +327,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 
         Ext.resumeLayouts(true);
     },
-    
+
     onSectionDeselect: function(selModel, sectionRecord, index) {
         var me = this,
             firstRecord;
@@ -359,7 +359,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             me.getSectionsManager().setSelectedSection(null);
             grid.getSelectionModel().clearSelections();
             store.removeAll();
-            
+
             grid.setLoading('Preparing to search&hellip;');
             Ext.StoreMgr.requireLoaded(['Terms', 'Locations', 'courses.Courses', 'courses.Schedules'], function() {
                 grid.setLoading(false);
@@ -397,7 +397,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             title = sectionRecord.get('Title');
 
             activeTab = detailTabs.getActiveTab() || detailTabs.items.getAt(0);
-            
+
             if (activeTab) {
                 path.push(activeTab.getItemId());
                 title = activeTab.title + ' &mdash; ' + title;
@@ -491,7 +491,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         if (section) {
             return _finishSelectSection(section);
         }
-        
+
         // model needs to be loaded from server and rendered without a result set
         sectionsGrid.setLoading('Preparing to load course&hellip;');
         sectionsResultStore.getProxy().resetExtraParams();
@@ -503,7 +503,7 @@ Ext.define('SlateAdmin.controller.Courses', {
                     if (!success || !records.length) {
                         Ext.Msg.alert('Error', 'Could not find the course section you requested');
                     }
-    
+
                     _finishSelectSection(records && records[0]);
                 }
             });
@@ -519,7 +519,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             unmatchedTerms = [];
 
         Ext.suspendLayouts();
-        
+
         form.reset();
 
         // distribute terms between named fields and unmatched terms queue
@@ -535,7 +535,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         }
 
         form.findField('query').setValue(unmatchedTerms.join(' '));
-        
+
         Ext.resumeLayouts(true);
     },
 
@@ -549,7 +549,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             if (!fieldValue) {
                 return;
             }
-            
+
             if (fieldName == 'query') {
                 queryTerms.push(fieldValue);
             } else {
@@ -558,7 +558,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         });
 
         Ext.util.History.add(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
-    },
+    }
 
 
 
