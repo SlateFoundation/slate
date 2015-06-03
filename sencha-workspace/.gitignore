@@ -6,3 +6,5 @@ build/
 packages/slate-admin-theme
 packages/jarvus-ext-routing
 packages/jarvus-hotfixes
+packages/jarvus-ext-actionevents
+packages/jarvus-ext-glyphs
