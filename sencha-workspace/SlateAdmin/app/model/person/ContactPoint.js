@@ -60,7 +60,21 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
     validators: {
         Class: 'presence',
         PersonID: 'presence',
-        Label: 'presence'
+        Label: 'presence',
+        Data: {
+            type: 'callback',
+            message: 'Contact point data cannot be empty',
+            callback: function(val, rec) {
+                return (rec.get('String') || rec.get('Data'));
+            }
+        },
+        String: {
+            type: 'callback',
+            message: 'Contact point data cannot be empty',
+            callback: function(val, rec) {
+                return (rec.get('String') || rec.get('Data'));
+            }
+        }
     },
 
     proxy: {
@@ -71,17 +85,5 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
         sortParam: false,
         include: ['String', 'Primary'],
         relatedTable: ['Person']
-    },
-
-    getValidation: function() {
-        var me = this,
-            validation = me.callParent(arguments);
-
-        if (validation.isValid()) {
-            if (!me.get('String') && !me.get('Data')) {
-                validation.set('String','Contact point data cannot be empty');
-            }
-        }
-        return validation;
     }
 });
