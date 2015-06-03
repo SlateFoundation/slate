@@ -17,7 +17,7 @@
         <input type="hidden" name="_LOGIN[return]" value="{refill field=_LOGIN.return default=$.server.REQUEST_URI}">
 
         <header class="modal-header">
-            <div class="modal-close-button">&times;</div>
+            <div class="modal-close-button" data-action="close">&times;</div>
             <h2 class="modal-title">Log In</h2>
         </header>
 
@@ -29,7 +29,8 @@
         </div>
 
         <footer class="modal-buttons">
-            <input type="submit" class="primary" value="Log In">
+            <button type="button" data-action="close">Cancel</button>
+            <button type="submit">Log In</button>
         </footer>
     </form>
 </div>
