@@ -1,0 +1,7 @@
+.x-fieldset {
+    border-width: 1px 0; // doing it this way because you can't use multiple values for $fieldset-border-width
+
+    &.x-fieldset-collapsed {
+        border-width: 1px 0 0; // override hardcoded(!) width from the UI mixin
+    }
+}
