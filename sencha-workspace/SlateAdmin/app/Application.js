@@ -9,7 +9,6 @@ Ext.define('SlateAdmin.Application', {
 
         // Jarvus bug fixes
 //        'Jarvus.ext.patch.panel.ExpandBeforeRender',
-//        'Jarvus.ext.patch.grid.ResetTipAttributes',
 //        'Jarvus.ext.patch.data.BufferedStoreStrictId',
 //        'Jarvus.ext.patch.data.TreeStoreIndexOf',
 //        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
