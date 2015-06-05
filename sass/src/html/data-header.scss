@@ -1,11 +1,18 @@
 .data-header {
-    background-color: tint($base-color, .9);
+    background-color: tint($base-color, 90%);
 
     .record-image {
-        
+        float: left;
+        margin-right: 1em;
+    }
+
+    img,
+    svg {
+        display: block;
     }
 
     .record-data {
+        overflow: hidden;
     }
 
     .record-title {
