@@ -15,7 +15,6 @@ Git::$repositories['slate'] = [
         'php-config',
         'php-migrations',
         'phpunit-tests',
-        'sencha-docs',
         'sencha-workspace',
         'site-root'
     ]
