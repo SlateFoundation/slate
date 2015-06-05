@@ -1,0 +1,13 @@
+$tab-base-color:            lighten($base-color, 18);
+$tab-base-color-active:     darken($tab-base-color, 12);
+$tab-base-color-disabled:   desaturate($tab-base-color, 12);
+$tab-base-color-over:       lighten($tab-base-color, 8);
+
+$tab-border-radius: 0;
+
+$tab-color-active: white;
+
+$tab-icon-height: $glyph-size;
+$tab-icon-width: $glyph-size;
+
+$tab-padding: 10px;
