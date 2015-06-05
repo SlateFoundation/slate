@@ -27,7 +27,7 @@
 
             <target name="-before-init"/>
             <target name="-after-init"/>
-        
+
         The "page" target performs the call to Sencha Cmd to build the 'all-classes.js' file.
 
             <target name="-before-page"/>
@@ -46,6 +46,10 @@
             <arg value="--output=${docs.build.dir}"/>
             <arg value="--config=${app.dir}/docs/config.json"/>
         </exec>
+
+        <copy todir="${docs.build.dir}/resources">
+        <fileset dir="${app.dir}/docs/resources"></fileset>
+        </copy>
     </target>
 
 </project>
