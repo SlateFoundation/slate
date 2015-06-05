@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.courses.sections.Grid', {
 
     // grid config
     store: 'courses.SectionsResult',
-    columnLines: true,
+
     viewConfig: {
         emptyText: '<div class="emptyText">No course sections found</div>',
         deferEmptyText: true

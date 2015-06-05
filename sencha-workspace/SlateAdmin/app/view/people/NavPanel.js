@@ -10,7 +10,6 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
 
     title: 'People',
     autoScroll: true,
-    bodyPadding: 0,
 
     dockedItems: [{
         dock: 'top',
@@ -29,13 +28,10 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         align: 'stretch'
     },
     items: [{
-        xtype: 'people-advancedsearchform',
-        border: 0,
-        bodyPadding: '10 10 0'
+        xtype: 'people-advancedsearchform'
     },{
         xtype: 'treepanel',
         itemId: 'groups',
-        border: '1 0',
 
         // treepanel config
         store: 'people.GroupsTree',
