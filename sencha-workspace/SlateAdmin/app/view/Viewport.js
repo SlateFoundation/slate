@@ -2,15 +2,19 @@
 Ext.define('SlateAdmin.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'SlateAdmin.view.Header',
+        'SlateAdmin.view.Breadcrumbs',
         'SlateAdmin.view.Navigation',
         'Ext.layout.container.Card'
     ],
 
     layout: 'border',
     items: [{
-        xtype: 'slateadmin-header',
-        region: 'north'
+/*
+        region: 'north',
+        layout: 'fit',
+        items: [{
+            xtype: 'slateadmin-breadcrumbs'
+        }]
     },{
         xtype: 'slateadmin-navigation',
         region: 'west',
