@@ -3,6 +3,8 @@ Ext.define('Jarvus.ext.form.field.Search', {
     extend: 'Ext.form.field.Text',
     xtype: 'jarvus-searchfield',
 
+    cls: 'jarvus-searchfield',
+
     inputType: 'search',
     selectOnFocus: true,
     emptyText: 'Search…',
