@@ -16,14 +16,15 @@ Ext.define('SlateAdmin.view.Viewport', {
             xtype: 'slateadmin-breadcrumbs'
         }]
     },{
-        xtype: 'slateadmin-navigation',
+*/
         region: 'west',
+        xtype: 'slateadmin-navigation',
         split: true,
         collapsible: false
     },{
+        region: 'center',
         xtype: 'container',
         itemId: 'cardCt',
-        region: 'center',
         layout: 'card',
         items: {
             xtype:'component',

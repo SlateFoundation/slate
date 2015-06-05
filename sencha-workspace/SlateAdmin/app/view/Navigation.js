@@ -6,10 +6,7 @@ Ext.define('SlateAdmin.view.Navigation', {
         'Ext.layout.container.Accordion'
     ],
 
-    width: 210,
-    defaults: {
-        bodyPadding: 10
-    },
+    width: 200,
     layout: {
         type: 'accordion'
     }
