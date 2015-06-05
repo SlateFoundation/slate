@@ -19,8 +19,10 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
     // panel config
     layout: 'fit',
 
-    tbar: ['Term: ', {
+    tbar: [{
         xtype: 'combobox',
+        fieldLabel: 'Term',
+        labelWidth: 36,
         editable: false,
         emptyText: 'Current Term',
         valueField: 'ID',
