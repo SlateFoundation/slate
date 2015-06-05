@@ -1,12 +1,10 @@
 // use this mixin in src/button/Button.scss to fit properly in the cascade
-/*
 @mixin glyph-color($name, $color) {
     .glyph-#{$name},
     .glyph-#{$name} .x-btn-glyph {
         color: $color;
     }
 }
-*/
 
 /** 
   * Color for "inactive" or muted glyphs
