@@ -1,0 +1,89 @@
+Art Advanced,ARTADV,Arts and Humanities
+Drama Advanced,DRAMAADV,Arts and Humanities
+Engineering Advanced,ENGINADV,Elective
+African American History,AFAM,Social Studies
+African American Literature,AALIT,English
+Algebra 1,ALG1,Mathematics
+Algebra 2,ALG2,Mathematics
+American Government,AMGOV,Social Studies
+American History,AMHIST,Social Studies
+Anatomy and Physiology,ANAT,Science
+Applied Physics,APPPHYS,Elective
+Art - Senior Art,ARTSR,Arts and Humanities
+Bio-Chem 10,BC10,Science
+Bio-Chem 9,BC9,Science
+Calculus,CALC,Mathematics
+Capstone,CAP,Arts and Humanities
+Ceramics,CER,Arts and Humanities
+Chemical Engineering,CHEMENGIN,Science
+Chess,CHESS,Elective
+CSE 4 DAY A WEEK,CSE4DAY,Elective
+Debate,DEB,Elective
+Digital Video,DV,Elective
+Digital Video -Senior,DVSR,Elective
+Drama- Freshmen,DRAMA9,Arts and Humanities
+Engineering Fresheman,ENGIN9,Elective
+Engineering -- Senior,ENGINSR,Science
+English 1,ENG1,English
+English 2,ENG2,English
+English 3,ENG3,English
+Freshmen Seminar,9ADV,Arts and Humanities
+Geometry,GEO,Mathematics
+Health,HEALTH,Health and Physical Education
+ILP - 10th Grade,ILP10,Elective
+ILP - 11th Grade,ILP11,Elective
+Isms,ISMS,Social Studies
+Advisory Junior,ADV11,Arts and Humanities
+Lit Lab,LITLAB,English
+Museum Experience,MUSEXP,Arts and Humanities
+Music,MUS,Arts and Humanities
+Physical Education,PE,Health and Physical Education
+Physics,PHYS,Science
+Pre-Calculus,PRECALC,Mathematics
+Science and Society,SCISOC,Science
+Senior Assistant Teaching,SAT,Elective
+Advisory Senior,ADV12,Arts and Humanities
+Sexuality and Society in Literature,SEXSOC,English
+Shakespeare: Life 101 with Bill,SHAKE,English
+Advisory Sophomore,ADV10,Arts and Humanities
+Spanish 1,SP1,World Languages
+Spanish 2,SP2,World Languages
+Spanish 3,SP3,World Languages
+Spanish 4,SP4,World Languages
+Spanish 5,SP5,Administrative
+Statistics,STAT,Mathematics
+Study Hall,SHALL,Elective
+Study Skills,SS,Elective
+Technology- Freshmen,TECH9,Elective
+Web Design1,WEB,Elective
+Western European Film,FILM,Arts and Humanities
+World History,WRLDHIST,Social Studies
+Yearbook,YB,Elective
+Art - Freshman,ART9,Arts and Humanities
+Economic Issues of the 21st Century,ECON,Social Studies
+Globalization,GLOBAL,Social Studies
+Reel Reading: Focus on Film,REEL,English
+Storytelling,STORY,English
+Urban Ecol,URBECO,Science
+10th Grade Stream Classes,10Stream,Administrative
+11th Grade Stream Classes,11Stream,Administrative
+9th Grade Stream Classes,9Stream,Administrative
+Lunch,Lunch,Administrative
+Test Prep,Test,Administrative
+Lab Tech,labtech,Elective
+Food-English.,FOODENG,English
+13 Most Beautiful Experiments,13,Science
+Community Service,COMSERV,Elective
+Computer Science Engineering - Advanced,CSE,Elective
+Environmental Science,ENVSCI,Science
+Foundations of Algebra,FOUND,Health and Physical Education
+Independent Study Period,FREE,Elective
+Journalism,JOURNAL,Elective
+Spanish Independent Study,SPIND,World Languages
+Biotechnology,BIOTECH,Science
+Advanced Chemistry- Senior Science,SRADV CHEM,Science
+Advisory Freshmen,ADV09,Arts and Humanities
+CSE- Senior Computer Science,CSESR,Elective
+Multi-Disciplinary Project,MPROJ,Administrative
+Phys Ed- Seniors only (personal),PERFIT,Health and Physical Education
+Spanish 3/5,SP3/5,Administrative
