@@ -1,0 +1,153 @@
+/* including package jarvus-ext-lightbox */
+/* including package jarvus-ext-lightbox */
+/* line 1, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 15000;
+  text-align: center;
+  line-height: 0; }
+
+/* line 10, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox img {
+  width: auto;
+  height: auto; }
+
+/* line 15, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox a img {
+  border: none; }
+
+/* line 19, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-outerImageContainer {
+  position: relative;
+  background-color: #f3efec;
+  width: 250px;
+  height: 250px;
+  margin: 0 auto; }
+
+/* line 27, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-imageContainer {
+  padding: 10px; }
+
+/* line 31, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-loading {
+  position: absolute;
+  top: 40%;
+  left: 0%;
+  height: 25%;
+  width: 100%;
+  text-align: center;
+  line-height: 0;
+  background: url(../resources/jarvus-ext-lightbox/images/lb-load.gif) no-repeat center 15%; }
+
+/* line 42, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-hoverNav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10; }
+
+/* line 51, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-imageContainer > #ux-lightbox-hoverNav {
+  left: 0; }
+
+/* line 55, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-hoverNav a {
+  outline: none; }
+
+/* line 60, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-navPrev,
+#ux-lightbox-navNext {
+  width: 49%;
+  height: 100%;
+  background-image: url(data:image/gif;base64,AAAA);
+  /* Trick IE into showing hover */
+  display: block; }
+
+/* line 67, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-navPrev {
+  left: 0;
+  float: left; }
+
+/* line 68, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-navNext {
+  right: 0;
+  float: right; }
+
+/* line 69, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-navPrev:hover, #ux-lightbox-navPrev:visited:hover {
+  background: url(../resources/jarvus-ext-lightbox/images/lb-prev.png) left 33% no-repeat; }
+
+/* line 70, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-navNext:hover, #ux-lightbox-navNext:visited:hover {
+  background: url(../resources/jarvus-ext-lightbox/images/lb-next.png) right 33% no-repeat; }
+
+/* line 72, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-outerDataContainer {
+  margin: 0 auto;
+  width: 100%; }
+
+/* line 77, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-dataContainer {
+  font: 10px Verdana, Helvetica, sans-serif;
+  background-color: #f3efec;
+  overflow: auto;
+  line-height: 1.4em; }
+
+/* line 84, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-data {
+  padding: 0 10px;
+  color: #666; }
+
+/* line 85, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-data #ux-lightbox-details {
+  width: 80%;
+  float: left;
+  text-align: left; }
+
+/* line 86, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-data #ux-lightbox-caption {
+  font-weight: bold; }
+
+/* line 87, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-data #ux-lightbox-imageNumber {
+  display: block;
+  clear: left;
+  padding-bottom: 1.0em; }
+
+/* line 88, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-data #ux-lightbox-navClose {
+  background: url(../resources/jarvus-ext-lightbox/images/lb-close.gif) no-repeat;
+  width: 66px;
+  height: 22px;
+  float: right;
+  padding-bottom: 0.7em;
+  outline: none; }
+
+/* line 89, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-data #ux-lightbox-navClose:hover {
+  background-image: url(../resources/jarvus-ext-lightbox/images/lb-close-over.gif); }
+
+/* line 92, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-overlay,
+#ux-lightbox-shim {
+  border: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 14999;
+  width: 100%;
+  height: 500px;
+  background-color: #000;
+  padding: 0;
+  margin: 0;
+  opacity: 0.85; }
+
+/* line 106, ../../sass/src/ux/LightBox.scss */
+#ux-lightbox-shim {
+  z-index: 89;
+  background-color: transparent;
+  filter: alpha(opacity=0); }

@@ -1,7 +1,9 @@
-/*jslint browser: true, undef: true *//*global Ext*/
+/*jslint browser: true, undef: true *//*global Ext, SlateAdmin*/
 Ext.define('SlateAdmin.controller.Login', {
     extend: 'Ext.app.Controller',
-
+    requires: [
+        'SlateAdmin.API'  
+    ],
 
     // controller config
     views: [
@@ -14,6 +16,9 @@ Ext.define('SlateAdmin.controller.Login', {
         autoCreate: true,
 
         xtype: 'slateadmin-loginwindow'
+    },{
+        ref: 'viewport',
+        selector: 'viewport'
     }],
     
     
@@ -31,6 +36,9 @@ Ext.define('SlateAdmin.controller.Login', {
         });
 
         me.application.on('sessionexpired', me.onSessionExpired, me);
+        SlateAdmin.API.on('requestunauthorized', function(r, o) {
+            return me.onSessionExpired(null, r, o);
+        });
     },
     
 

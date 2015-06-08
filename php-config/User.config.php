@@ -1,19 +1,7 @@
 <?php
 
-User::$subClasses[] = 'Slate\\Student';
-User::$fields['AccountLevel']['values'] = array(
-    'Disabled'
-    ,'Contact'
-    ,'User'
-    ,'Student'
-    ,'Staff'
-    ,'Teacher'
-    ,'Administrator'
-    ,'Developer'
-);
-
-User::$fields['AssignedPassword'] = array(
-    'type' => 'string'
-    ,'notnull' => false
-    ,'accountLevelEnumerate' => 'Staff'
-);
+User::$dynamicFields['ticketsCount'] = [
+    'method' => function(User $User, $stringsOnly, $options, $field) {
+        return \Slate\Assets\Ticket::getCount(['AssigneeID' => $User->ID]);
+    }
+];

@@ -7,12 +7,18 @@ Ext.define('Site.Common', {
         'Site.widget.Login',
         'Site.widget.Search',
         'Site.widget.model.Person',
+        'Site.widget.model.Tag',
         'Site.widget.model.CourseSection',
+        'Site.widget.model.Asset',
         'Site.widget.model.Content',
         'Site.widget.model.Event'
     ],
 
     constructor: function() {
+        // register model widget aliases
+        Ext.ClassManager.addAlias('Site.widget.model.Person', 'modelwidget.Slate\\People\\Student');
+
+        // register onReady handler
         Ext.onReady(this.onDocReady, this);
     },
 
@@ -73,23 +79,24 @@ Ext.define('Site.Common', {
 
         body.on('click', function(ev, t) { // delegated to '.confirm' below
             ev.stopEvent();
-            t = ev.getTarget(null, null, true);
 
-            var blogPostEl = t.up('.blog-post'),
+            var confirmLink = ev.getTarget('.confirm', null, true),
+                successTarget = confirmLink.getAttribute('data-confirm-success-target'),
+                successMessage = confirmLink.getAttribute('data-confirm-success-message'),
                 confirmData = {
-                    title: t.getAttribute('data-confirm-title') || 'Confirm',
-                    body: t.getAttribute('data-confirm-body')  || 'Are you sure?',
-                    yes:  t.getAttribute('data-confirm-yes')   || 'Yes',
-                    no:   t.getAttribute('data-confirm-no')    || 'No',
-                    url:  t.getAttribute('data-confirm-url')   || '',
-                    destructive: !!t.getAttribute('data-confirm-destructive')
+                    title: confirmLink.getAttribute('data-confirm-title') || 'Confirm',
+                    body: confirmLink.getAttribute('data-confirm-body')   || 'Are you sure?',
+                    yes:  confirmLink.getAttribute('data-confirm-yes')    || 'Yes',
+                    no:   confirmLink.getAttribute('data-confirm-no')     || 'No',
+                    url:  confirmLink.getAttribute('data-confirm-url')    || confirmLink.getAttribute('href'),
+                    destructive: !!confirmLink.getAttribute('data-confirm-destructive')
                 },
                 modal = modalTemplate.append(body, confirmData, true);
                 
             body.addCls('blurred');
 
             modal.on('click', function(ev, t) {
-                t = ev.getTarget(null, null, true);
+                t = ev.getTarget('button', null, true);
 
                 if (t.hasCls('modal-close-button') || t.hasCls('cancel')) {
                     modal.destroy();
@@ -99,13 +106,24 @@ Ext.define('Site.Common', {
                     Ext.Ajax.request({
                         url: confirmData.url,
                         method: 'POST',
+                        headers: {
+                            Accept: 'application/json'
+                        },
                         success: function(response) {
-                            var r = Ext.decode(response.responseText);
+                            var r = Ext.decode(response.responseText),
+                                successTargetEl = successTarget && confirmLink.up(successTarget);
 
                             if (r.success) {
                                 modal.destroy();
                                 body.removeCls('blurred');
-                                blogPostEl.destroy();
+                                
+                                if (successTargetEl) {
+                                    if (successMessage) {
+                                        successTargetEl.replaceWith({ tag: 'p', cls: 'status', html: successMessage});
+                                    } else {
+                                        successTargetEl.destroy();
+                                    }
+                                }
                             } else {
                                 modal.down('.modal-body').update('There was a problem processing your request. Would you like to try again?');
                                 modal.down('.cancel').update('Cancel');
@@ -119,7 +137,7 @@ Ext.define('Site.Common', {
                         }
                     });
                 }
-            });
+            }, null, { delegate: 'button' });
         }, null, { delegate: '.confirm' });
     }
 });

@@ -1,0 +1,93 @@
+.upload-previews {
+    margin: 10px 0 12px;
+    padding: 0;
+    white-space: nowrap;
+
+    &:empty {
+        margin: 0;
+    }
+}
+
+.upload-preview {
+    background-position: center;
+    background-repeat: no-repeat;
+    @include background-size(cover);
+    border: 1px solid #b5b8c8;
+    display: inline-block;
+    height: 75px;
+    list-style: none;
+    position: relative;
+    vertical-align: top;
+    width: 75px;
+    
+    .remove-button,
+    .preview-button,
+    .add-button {
+        display: none;
+        height: 100%;
+        left: 0;
+        line-height: 75px;
+        position: absolute;
+        text-align: center;
+        text-decoration: none;
+        top: 0;
+        vertical-align: middle;
+        width: 100%;
+    }
+
+    .remove-button {
+        background: rgba(black, .6);
+        color: white;
+        height: 1.1em;
+        left: auto;
+        line-height: 1;
+        right: 0;
+        width: 1.1em;
+        
+        &:hover,
+        &:focus {
+            background: black;
+        }
+    }
+    
+    .preview-button {
+        background: rgba(#b5b8c8, .4);
+        color: rgba(black, .8);
+        text-shadow: 0 0 1px white;
+        
+        &:hover,
+        &:focus {
+            color: black;
+        }
+    }
+    
+    img {
+        display: block;
+    }
+    
+    + .upload-preview {
+        margin-left: 12px;
+    }
+    
+    &:hover,
+    &:focus {
+        .remove-button { display: table-cell; }
+        .preview-button { display: block; }
+    }
+}
+
+.upload-add-another {
+    @extend .upload-preview;
+    background: none;
+    
+    .add-button {
+        color: #b5b8c8;
+        display: block;
+        
+        &:hover,
+        &:focus {
+            background: #b5b8c8;
+            color: white;
+        }
+    }
+}

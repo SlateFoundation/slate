@@ -1,0 +1,148 @@
+@mixin activity-class(
+    $verb,
+    $verb-icon, 
+    $noun,
+    $noun-icon,
+    $color
+) {
+    .activity-item.#{$verb}-activity.#{$noun}-activity {
+        border-color: mix($color, #ccc, 30%);
+        
+        &::before {
+            color: $color;
+            content: $verb-icon + '\00a0' + $noun-icon;
+        }
+        
+        .activity-header {
+            background-color: tint($color, 95%);            
+        }
+    }
+}
+
+$asset-color: purple;
+$ticket-color: $accent-color;
+
+@include activity-class('create', '\f055', 'asset',  '\f109', $success-color);
+@include activity-class('create', '\f055', 'ticket', '\f145', $success-color);
+@include activity-class('edit',   '\f040', 'asset',  '\f109', $asset-color);
+@include activity-class('edit',   '\f040', 'ticket', '\f145', $ticket-color);
+@include activity-class('note',   '\f075', 'asset',  '\f109', $glyph-note-color);
+@include activity-class('note',   '\f075', 'ticket', '\f145', $glyph-note-color);
+
+.activity-item {
+    background: white;
+    border: 1px solid #ccc;
+    @include box-shadow(0 1px 1px rgba(black, .08));
+    margin-bottom: 10px;
+
+    &::before {
+        @include fa-glyph;
+        float: right;
+        font-size: 14px;
+        margin: 13px 10px;
+    }
+}
+
+.activity-header {
+    padding: 10px;
+}
+
+.activity-avatar {
+    float: left;
+    margin-right: .5em;
+}
+
+.activity-meta {
+    color: $muted-color;
+    overflow: hidden;
+    
+    a {
+        font-weight: bold;
+        text-decoration: none;
+        
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+}
+
+.activity-subject {
+    color: $color;
+    font-weight: bold;
+}
+
+.activity-timestamp {
+    color: #999;
+    display: block;
+    font-size: smaller;
+    line-height: 1.67;
+}
+
+.activity-body {
+    border-top: 1px solid #ddd;
+    padding: 10px;
+
+	&:empty {
+		border: none;
+	}
+}
+
+.activity-changes {
+    clear: both;
+    display: table;
+    margin: 0;
+    width: 100%;
+
+    .dli {
+        display: table-row;
+        
+        &:first-child > * { padding-top: 0; }
+         &:last-child > * { padding-bottom: 0; }
+    }
+    
+    dt, dd {
+        display: table-cell;
+        font-size: small;
+        padding: 5px;
+    }
+    
+    dt {
+        font-weight: bold;
+        padding-left: 0;
+        width: 100px;
+    }
+    
+    dd {
+        padding-right: 0;
+    }
+    
+    ins, del, .arrow {
+        display: inline-block;
+    }
+    
+    .arrow {
+        color: $muted-color;
+        margin: 0 .25em;
+    }
+    
+    del {
+        color: $muted-color;
+        
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+    }
+    
+    ins {
+        display: inline-block;
+        text-decoration: none;
+    }
+}
+
+.activity-note {
+    border-left: 2px solid #ccc;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
