@@ -19,7 +19,7 @@ Git::$repositories['slate'] = [
         'phpunit-tests',
         'sencha-workspace' => [
             'exclude' => [
-                '#^/SlateAdmin/bootstrap\\.#' // don't sync generated bootstrap files'
+                '#^/SlateAdmin/bootstrap\\.#' // don't sync generated bootstrap files
             ]
         ],
         'site-root' => [
