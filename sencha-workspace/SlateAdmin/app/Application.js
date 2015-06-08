@@ -11,15 +11,18 @@ Ext.define('SlateAdmin.Application', {
         'Jarvus.ext.override.tree.Records',
         'Jarvus.ext.override.data.RequireLoadedStores',
         
+        
         // Jarvus bug fixes
         'Jarvus.ext.patch.panel.ExpandBeforeRender',
         'Jarvus.ext.patch.grid.ResetTipAttributes',
         'Jarvus.ext.patch.data.BufferedStoreStrictId',
         'Jarvus.ext.patch.data.TreeStoreIndexOf',
+//         'Jarvus.ext.patch.form.field.DirtyDisplayField',
 //        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
 
         // framework features
-        'Ext.state.LocalStorageProvider'
+        'Ext.state.LocalStorageProvider',
+        'Jarvus.util.CookieSniffer'
     ],
 
 
@@ -36,6 +39,7 @@ Ext.define('SlateAdmin.Application', {
         'people.Profile',
         'people.Courses',
         'people.Contacts',
+        'people.Progress',
 
         'Courses',
         'courses.Profile',
@@ -43,12 +47,22 @@ Ext.define('SlateAdmin.Application', {
 
         'Settings',
         'settings.Groups',
+        'settings.Terms',
+        'settings.Locations',
+        'settings.assets.Statuses',
+        'settings.courses.Departments',
+        'settings.courses.Courses',
 
         'Terms',
-        'Locations'
+        'Locations',
 
+        'Progress',
+        'progress.Standards',
+        'progress.Worksheets',
+        'progress.Narratives',
+        'progress.Interims',
         //<debug>
-        ,'DeveloperTools'
+        'DeveloperTools'
         //</debug>
     ],
 
@@ -81,5 +95,12 @@ Ext.define('SlateAdmin.Application', {
         } else {
             console.warn('Route not found: %o', token);
         }
+    },
+    
+    //shortcut methods
+    //TODO: remove after progress notes are ported.
+    loadCard: function(card) {
+        return this.getController('Viewport').loadCard(card);
     }
+    
 });

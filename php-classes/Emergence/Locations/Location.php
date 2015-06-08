@@ -43,12 +43,12 @@ class Location extends \VersionedRecord
             ,'notnull' => false
         )
         ,'Left' => array(
-            'type' => 'uint'
+            'type' => 'int'
             ,'notnull' => false
             ,'unique' => true
         )
         ,'Right' => array(
-            'type' => 'uint'
+            'type' => 'int'
             ,'notnull' => false
         )
     );
@@ -110,5 +110,9 @@ class Location extends \VersionedRecord
 
         // call parent
         parent::save($deep, $createRevision);
+    }
+    
+    public function clean() {
+        $this->_isDirty = false;
     }
 }

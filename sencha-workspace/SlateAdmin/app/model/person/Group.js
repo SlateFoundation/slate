@@ -100,7 +100,10 @@ Ext.define('SlateAdmin.model.person.Group', {
         name: 'qshowDelay',
         defaultValue: 2000
     }],
-
+    validations: [{
+        type: 'presence',
+        field: 'Name'
+    }],
     proxy: {
         type: 'slaterecords',
         url: '/groups'

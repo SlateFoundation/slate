@@ -56,8 +56,16 @@ Ext.define('SlateAdmin.model.course.Department', {
         },
         {
             name: "Description",
-            type: "string",
-            useNull: true
+            type: "string"
+        }
+    ],
+    validations: [
+        {
+            type: 'presence',
+            field: 'Title'
+        }, {
+            type: 'presence',
+            field: 'Code'    
         }
     ],
 

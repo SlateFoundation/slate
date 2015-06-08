@@ -13,9 +13,30 @@ class TermsRequestHandler extends \RecordsRequestHandler
         switch ($action ? $action : $action = static::shiftPath()) {
             case '*years':
                 return static::handleYearsRequest();
+            case 'tree':
+                return static::handleTreeRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
+    }
+    
+    public static function handleTreeRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    {
+        if (!empty($_REQUEST['parentTerm']) && $_REQUEST['parentTerm'] != 'any') {
+            $conditions['ParentID'] = $_REQUEST['parentTerm'];
+        } elseif ($_REQUEST['parentTree'] != 'any') {
+            $conditions['ParentID'] = NULL;
+        }
+
+        if ($_REQUEST['query']) {
+            $conditions[] = sprintf('Name LIKE "%%%s%%"', DB::escape($_REQUEST['query']));
+        }
+
+        if (!empty($_REQUEST['q'])) {
+            $conditions[] = 'Name LIKE "%' . DB::escape($_REQUEST['q']) . '%"';
+        }
+
+        return parent::handleBrowseRequest($options, $conditions);
     }
 
     public static function handleYearsRequest()

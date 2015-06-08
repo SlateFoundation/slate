@@ -3,6 +3,7 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
     extend: 'Ext.data.TreeStore',
     
     model: 'SlateAdmin.model.person.Group', 
+    autoSync: true,
     root: {
         text: 'All People',
         ID: null

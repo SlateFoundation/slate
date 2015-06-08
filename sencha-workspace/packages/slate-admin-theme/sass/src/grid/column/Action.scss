@@ -1,3 +1,4 @@
+// TODO: migrate this to jarvus-ext-glyphs package
 .x-grid-cell-inner-action-col {
     font-size: $glyph-size;
     line-height: 1;
@@ -21,4 +22,12 @@
     &:focus {
         opacity: 1;
     }
+}
+
+.is-success {
+    background-color: $success-color;
+}
+
+.is-warning {
+    background-color: $warning-color;
 }

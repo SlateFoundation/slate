@@ -32,6 +32,16 @@ Ext.define('SlateAdmin.view.courses.sections.details.Profile', {
             cls: 'glyph-success',
             glyph: 0xf058 // fa-check-circle
         }]
+    }, {
+        xtype: 'toolbar',
+        dock: 'bottom',
+        items: [{
+            xtype: 'tbfill'
+        },{
+            text: 'Delete Section',
+            action: 'delete-coursesection',
+            cls: 'glyph-danger'
+        }]
     }],
 
     layout: 'fit',

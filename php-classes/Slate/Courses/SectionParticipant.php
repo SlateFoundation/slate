@@ -79,10 +79,10 @@ class SectionParticipant extends \ActiveRecord
             $Participant = parent::create($values, $save);
         } catch (\DuplicateKeyException $e) {
             $Participant = static::getByWhere(array(
-                'CourseSectionID' => $values['Section'] ? $values['Section']->ID : $values['SectionID']
+                'CourseSectionID' => $values['Section'] ? $values['Section']->ID : $values['CourseSectionID']
                 ,'PersonID' => $values['Person'] ? $values['Person']->ID : $values['PersonID']
             ));
-
+            
             if (!empty($values['Role'])) {
                 $Participant->Role = $values['Role'];
             }

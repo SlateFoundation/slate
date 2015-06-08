@@ -1,0 +1,7 @@
+.status-Published .x-grid-cell {
+    @extend .is-success;
+}
+
+.status-Draft .x-grid-cell {
+    @extend .is-warning;
+}

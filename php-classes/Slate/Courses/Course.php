@@ -37,10 +37,6 @@ class Course extends \VersionedRecord
             ,'fulltext' => true
             ,'notnull' => false
         )
-        ,'Prerequisites' => array(
-            'type' => 'clob'
-            ,'notnull' => false
-        )
         ,'DepartmentID' => array(
             'type' => 'integer'
             ,'unsigned' => true

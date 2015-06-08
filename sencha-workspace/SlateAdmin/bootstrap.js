@@ -12,6 +12,8 @@ Ext.Loader.addClassPathMappings({
   "Jarvus": "../x/Jarvus",
   "Jarvus.ext.override.proxy.Abort": "../packages/jarvus-ext-lazydata/overrides/proxy/Abort.js",
   "SlateAdmin": "app",
+  "SlateAdmin.model.person.progress.ProgressNote": "app/model/person/progress/Note.js",
+  "SlateAdmin.view.progress.standards.assignments.StudentsEditor": "app/view/progress/standards/assignments/StudentEditor.js",
   "SlateAdminTheme": "../packages/slate-admin-theme/overrides",
   "SlateAdminTheme.override": "../packages/slate-admin-theme/overrides",
   "SlateAdminTheme.toolbar.TextItem": "../packages/slate-admin-theme/overrides/toolbar/Toolbar.js"
@@ -812,6 +814,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.patch.data.BufferedStoreStrictId": [],
   "Jarvus.ext.patch.data.LoadWithId": [],
   "Jarvus.ext.patch.data.TreeStoreIndexOf": [],
+  "Jarvus.ext.patch.form.field.DirtyDisplayField": [],
   "Jarvus.ext.patch.form.field.TagFieldFilterPickList": [],
   "Jarvus.ext.patch.grid.DisableGroupingFeature": [],
   "Jarvus.ext.patch.grid.ResetTipAttributes": [],
@@ -819,16 +822,20 @@ Ext.ClassManager.addNameAlternateMappings({
   "Jarvus.ext.proxy.API": [],
   "Jarvus.util.API": [],
   "Jarvus.util.AbstractAPI": [],
+  "Jarvus.util.CookieSniffer": [],
   "Jarvus.util.MD5": [],
   "SlateAdmin.API": [],
   "SlateAdmin.Application": [],
+  "SlateAdmin.controller.Assets": [],
   "SlateAdmin.controller.Courses": [],
   "SlateAdmin.controller.DeveloperTools": [],
   "SlateAdmin.controller.Locations": [],
   "SlateAdmin.controller.Login": [],
   "SlateAdmin.controller.People": [],
+  "SlateAdmin.controller.Progress": [],
   "SlateAdmin.controller.Settings": [],
   "SlateAdmin.controller.Terms": [],
+  "SlateAdmin.controller.Tickets": [],
   "SlateAdmin.controller.Viewport": [],
   "SlateAdmin.controller.courses.Participants": [],
   "SlateAdmin.controller.courses.Profile": [],
@@ -836,9 +843,27 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.controller.people.Courses": [],
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
+  "SlateAdmin.controller.people.Progress": [],
+  "SlateAdmin.controller.progress.Interims": [],
+  "SlateAdmin.controller.progress.Narratives": [],
+  "SlateAdmin.controller.progress.Standards": [],
+  "SlateAdmin.controller.progress.Worksheets": [],
   "SlateAdmin.controller.settings.Groups": [],
+  "SlateAdmin.controller.settings.Locations": [],
+  "SlateAdmin.controller.settings.Terms": [],
+  "SlateAdmin.controller.settings.assets.Statuses": [],
+  "SlateAdmin.controller.settings.courses.Courses": [],
+  "SlateAdmin.controller.settings.courses.Departments": [],
+  "SlateAdmin.model.Activity": [],
+  "SlateAdmin.model.Asset": [],
   "SlateAdmin.model.Location": [],
   "SlateAdmin.model.Term": [],
+  "SlateAdmin.model.asset.Location": [],
+  "SlateAdmin.model.asset.Status": [],
+  "SlateAdmin.model.asset.TemplateDataField": [],
+  "SlateAdmin.model.asset.Ticket": [],
+  "SlateAdmin.model.asset.TreeNode": [],
+  "SlateAdmin.model.asset.TreeStore": [],
   "SlateAdmin.model.course.Course": [],
   "SlateAdmin.model.course.Department": [],
   "SlateAdmin.model.course.Schedule": [],
@@ -847,29 +872,74 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.model.person.ContactPoint": [],
   "SlateAdmin.model.person.Group": [],
   "SlateAdmin.model.person.Person": [],
+  "SlateAdmin.model.person.ProgressReport": [],
   "SlateAdmin.model.person.Relationship": [],
   "SlateAdmin.model.person.RelationshipTemplate": [],
+  "SlateAdmin.model.person.progress.NoteRecipient": [],
+  "SlateAdmin.model.person.progress.ProgressNote": [],
+  "SlateAdmin.model.progress.Interim": [],
+  "SlateAdmin.model.progress.Narrative": [],
+  "SlateAdmin.model.progress.SectionStudent": [],
+  "SlateAdmin.model.progress.interim.Email": [],
+  "SlateAdmin.model.progress.narrative.WorksheetAssignment": [],
+  "SlateAdmin.model.progress.standard.Prompt": [],
+  "SlateAdmin.model.progress.standard.Worksheet": [],
+  "SlateAdmin.model.progress.standard.WorksheetAssignment": [],
   "SlateAdmin.proxy.API": [],
   "SlateAdmin.proxy.Records": [],
+  "SlateAdmin.store.Assets": [],
   "SlateAdmin.store.Locations": [],
   "SlateAdmin.store.Terms": [],
+  "SlateAdmin.store.assets.Locations": [],
+  "SlateAdmin.store.assets.Statuses": [],
+  "SlateAdmin.store.assets.TemplateDataFields": [],
+  "SlateAdmin.store.assets.Tickets": [],
+  "SlateAdmin.store.assets.TreeNodes": [],
+  "SlateAdmin.store.assets.TreeStore": [],
   "SlateAdmin.store.courses.Courses": [],
   "SlateAdmin.store.courses.Departments": [],
   "SlateAdmin.store.courses.Schedules": [],
   "SlateAdmin.store.courses.SectionsResult": [],
   "SlateAdmin.store.courses.Teachers": [],
   "SlateAdmin.store.people.AccountLevels": [],
+  "SlateAdmin.store.people.Advisors": [],
   "SlateAdmin.store.people.ContactPointTemplates": [],
   "SlateAdmin.store.people.Groups": [],
   "SlateAdmin.store.people.GroupsTree": [],
   "SlateAdmin.store.people.Invitations": [],
   "SlateAdmin.store.people.People": [],
+  "SlateAdmin.store.people.ProgressReports": [],
   "SlateAdmin.store.people.RelationshipTemplates": [],
+  "SlateAdmin.store.people.progress.NoteRecipients": [],
+  "SlateAdmin.store.progress.Interims": [],
+  "SlateAdmin.store.progress.Narratives": [],
+  "SlateAdmin.store.progress.interims.Emails": [],
+  "SlateAdmin.store.progress.interims.People": [],
+  "SlateAdmin.store.progress.narratives.People": [],
+  "SlateAdmin.store.progress.narratives.WorksheetAssignments": [],
+  "SlateAdmin.store.progress.standards.People": [],
+  "SlateAdmin.store.progress.standards.Prompts": [],
+  "SlateAdmin.store.progress.standards.WorksheetAssignments": [],
+  "SlateAdmin.store.progress.standards.WorksheetStudents": [],
+  "SlateAdmin.store.progress.standards.Worksheets": [],
+  "SlateAdmin.store.settings.LocationsTree": [],
+  "SlateAdmin.store.settings.TermsTree": [],
+  "SlateAdmin.store.settings.assets.StatusesTree": [],
+  "SlateAdmin.store.settings.courses.Courses": [],
+  "SlateAdmin.store.settings.courses.Departments": [],
+  "SlateAdmin.view.AbstractActivity": [],
   "SlateAdmin.view.Header": [],
   "SlateAdmin.view.LinksNavPanel": [],
   "SlateAdmin.view.LoginWindow": [],
   "SlateAdmin.view.Navigation": [],
   "SlateAdmin.view.Viewport": [],
+  "SlateAdmin.view.assets.Activity": [],
+  "SlateAdmin.view.assets.Details": [],
+  "SlateAdmin.view.assets.Grid": [],
+  "SlateAdmin.view.assets.Manager": [],
+  "SlateAdmin.view.assets.NavPanel": [],
+  "SlateAdmin.view.assets.TicketsGrid": [],
+  "SlateAdmin.view.assets.details.Form": [],
   "SlateAdmin.view.courses.NavPanel": [],
   "SlateAdmin.view.courses.sections.Grid": [],
   "SlateAdmin.view.courses.sections.Manager": [],
@@ -887,9 +957,55 @@ Ext.ClassManager.addNameAlternateMappings({
   "SlateAdmin.view.people.details.Contacts": [],
   "SlateAdmin.view.people.details.Courses": [],
   "SlateAdmin.view.people.details.Profile": [],
+  "SlateAdmin.view.people.details.Progress": [],
+  "SlateAdmin.view.people.details.progress.Previewer": [],
+  "SlateAdmin.view.people.details.progress.note.EditWindow": [],
+  "SlateAdmin.view.people.details.progress.note.Form": [],
+  "SlateAdmin.view.people.details.progress.note.RecipientGrid": [],
+  "SlateAdmin.view.people.details.progress.note.Viewer": [],
   "SlateAdmin.view.people.invitations.Panel": [],
   "SlateAdmin.view.people.invitations.Window": [],
+  "SlateAdmin.view.progress.NavPanel": [],
+  "SlateAdmin.view.progress.interims.Email": [],
+  "SlateAdmin.view.progress.interims.Grid": [],
+  "SlateAdmin.view.progress.interims.Manager": [],
+  "SlateAdmin.view.progress.interims.Printer": [],
+  "SlateAdmin.view.progress.interims.Report": [],
+  "SlateAdmin.view.progress.interims.email.Grid": [],
+  "SlateAdmin.view.progress.interims.email.Manager": [],
+  "SlateAdmin.view.progress.narratives.Editor": [],
+  "SlateAdmin.view.progress.narratives.Grid": [],
+  "SlateAdmin.view.progress.narratives.Manager": [],
+  "SlateAdmin.view.progress.narratives.Printer": [],
+  "SlateAdmin.view.progress.narratives.StudentsGrid": [],
+  "SlateAdmin.view.progress.standards.Printer": [],
+  "SlateAdmin.view.progress.standards.assignments.Grid": [],
+  "SlateAdmin.view.progress.standards.assignments.Manager": [],
+  "SlateAdmin.view.progress.standards.assignments.StudentsEditor": [],
+  "SlateAdmin.view.progress.standards.assignments.StudentsGrid": [],
+  "SlateAdmin.view.progress.standards.assignments.WorksheetForm": [],
+  "SlateAdmin.view.progress.standards.worksheets.Editor": [],
+  "SlateAdmin.view.progress.standards.worksheets.Grid": [],
+  "SlateAdmin.view.progress.standards.worksheets.Manager": [],
+  "SlateAdmin.view.progress.standards.worksheets.PromptsGrid": [],
   "SlateAdmin.view.settings.NavPanel": [],
+  "SlateAdmin.view.settings.assets.statuses.Manager": [],
+  "SlateAdmin.view.settings.assets.statuses.Menu": [],
+  "SlateAdmin.view.settings.courses.Manager": [],
+  "SlateAdmin.view.settings.courses.Menu": [],
+  "SlateAdmin.view.settings.courses.departments.Manager": [],
+  "SlateAdmin.view.settings.courses.departments.Menu": [],
+  "SlateAdmin.view.settings.locations.Manager": [],
+  "SlateAdmin.view.settings.locations.Menu": [],
+  "SlateAdmin.view.settings.terms.Manager": [],
+  "SlateAdmin.view.settings.terms.Menu": [],
+  "SlateAdmin.view.template.Activity": [],
+  "SlateAdmin.view.tickets.Activity": [],
+  "SlateAdmin.view.tickets.Details": [],
+  "SlateAdmin.view.tickets.Grid": [],
+  "SlateAdmin.view.tickets.Manager": [],
+  "SlateAdmin.view.tickets.details.Asset": [],
+  "SlateAdmin.view.tickets.details.Form": [],
   "SlateAdmin.widget.field.Person": [],
   "SlateAdmin.widget.field.State": [],
   "SlateAdmin.widget.field.contact.Postal": [],
@@ -1825,6 +1941,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Jarvus.ext.patch.data.BufferedStoreStrictId": [],
   "Jarvus.ext.patch.data.LoadWithId": [],
   "Jarvus.ext.patch.data.TreeStoreIndexOf": [],
+  "Jarvus.ext.patch.form.field.DirtyDisplayField": [],
   "Jarvus.ext.patch.form.field.TagFieldFilterPickList": [],
   "Jarvus.ext.patch.grid.DisableGroupingFeature": [],
   "Jarvus.ext.patch.grid.ResetTipAttributes": [],
@@ -1834,16 +1951,20 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Jarvus.util.API": [],
   "Jarvus.util.AbstractAPI": [],
+  "Jarvus.util.CookieSniffer": [],
   "Jarvus.util.MD5": [],
   "SlateAdmin.API": [],
   "SlateAdmin.Application": [],
+  "SlateAdmin.controller.Assets": [],
   "SlateAdmin.controller.Courses": [],
   "SlateAdmin.controller.DeveloperTools": [],
   "SlateAdmin.controller.Locations": [],
   "SlateAdmin.controller.Login": [],
   "SlateAdmin.controller.People": [],
+  "SlateAdmin.controller.Progress": [],
   "SlateAdmin.controller.Settings": [],
   "SlateAdmin.controller.Terms": [],
+  "SlateAdmin.controller.Tickets": [],
   "SlateAdmin.controller.Viewport": [],
   "SlateAdmin.controller.courses.Participants": [],
   "SlateAdmin.controller.courses.Profile": [],
@@ -1851,9 +1972,27 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.controller.people.Courses": [],
   "SlateAdmin.controller.people.Invite": [],
   "SlateAdmin.controller.people.Profile": [],
+  "SlateAdmin.controller.people.Progress": [],
+  "SlateAdmin.controller.progress.Interims": [],
+  "SlateAdmin.controller.progress.Narratives": [],
+  "SlateAdmin.controller.progress.Standards": [],
+  "SlateAdmin.controller.progress.Worksheets": [],
   "SlateAdmin.controller.settings.Groups": [],
+  "SlateAdmin.controller.settings.Locations": [],
+  "SlateAdmin.controller.settings.Terms": [],
+  "SlateAdmin.controller.settings.assets.Statuses": [],
+  "SlateAdmin.controller.settings.courses.Courses": [],
+  "SlateAdmin.controller.settings.courses.Departments": [],
+  "SlateAdmin.model.Activity": [],
+  "SlateAdmin.model.Asset": [],
   "SlateAdmin.model.Location": [],
   "SlateAdmin.model.Term": [],
+  "SlateAdmin.model.asset.Location": [],
+  "SlateAdmin.model.asset.Status": [],
+  "SlateAdmin.model.asset.TemplateDataField": [],
+  "SlateAdmin.model.asset.Ticket": [],
+  "SlateAdmin.model.asset.TreeNode": [],
+  "SlateAdmin.model.asset.TreeStore": [],
   "SlateAdmin.model.course.Course": [],
   "SlateAdmin.model.course.Department": [],
   "SlateAdmin.model.course.Schedule": [],
@@ -1862,22 +2001,41 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.model.person.ContactPoint": [],
   "SlateAdmin.model.person.Group": [],
   "SlateAdmin.model.person.Person": [],
+  "SlateAdmin.model.person.ProgressReport": [],
   "SlateAdmin.model.person.Relationship": [],
   "SlateAdmin.model.person.RelationshipTemplate": [],
+  "SlateAdmin.model.person.progress.NoteRecipient": [],
+  "SlateAdmin.model.person.progress.ProgressNote": [],
+  "SlateAdmin.model.progress.Interim": [],
+  "SlateAdmin.model.progress.Narrative": [],
+  "SlateAdmin.model.progress.SectionStudent": [],
+  "SlateAdmin.model.progress.interim.Email": [],
+  "SlateAdmin.model.progress.narrative.WorksheetAssignment": [],
+  "SlateAdmin.model.progress.standard.Prompt": [],
+  "SlateAdmin.model.progress.standard.Worksheet": [],
+  "SlateAdmin.model.progress.standard.WorksheetAssignment": [],
   "SlateAdmin.proxy.API": [
     "proxy.slateapi"
   ],
   "SlateAdmin.proxy.Records": [
     "proxy.slaterecords"
   ],
+  "SlateAdmin.store.Assets": [],
   "SlateAdmin.store.Locations": [],
   "SlateAdmin.store.Terms": [],
+  "SlateAdmin.store.assets.Locations": [],
+  "SlateAdmin.store.assets.Statuses": [],
+  "SlateAdmin.store.assets.TemplateDataFields": [],
+  "SlateAdmin.store.assets.Tickets": [],
+  "SlateAdmin.store.assets.TreeNodes": [],
+  "SlateAdmin.store.assets.TreeStore": [],
   "SlateAdmin.store.courses.Courses": [],
   "SlateAdmin.store.courses.Departments": [],
   "SlateAdmin.store.courses.Schedules": [],
   "SlateAdmin.store.courses.SectionsResult": [],
   "SlateAdmin.store.courses.Teachers": [],
   "SlateAdmin.store.people.AccountLevels": [],
+  "SlateAdmin.store.people.Advisors": [],
   "SlateAdmin.store.people.ContactPointTemplates": [
     "store.contactpointtemplates"
   ],
@@ -1885,7 +2043,28 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.store.people.GroupsTree": [],
   "SlateAdmin.store.people.Invitations": [],
   "SlateAdmin.store.people.People": [],
+  "SlateAdmin.store.people.ProgressReports": [],
   "SlateAdmin.store.people.RelationshipTemplates": [],
+  "SlateAdmin.store.people.progress.NoteRecipients": [],
+  "SlateAdmin.store.progress.Interims": [],
+  "SlateAdmin.store.progress.Narratives": [],
+  "SlateAdmin.store.progress.interims.Emails": [],
+  "SlateAdmin.store.progress.interims.People": [],
+  "SlateAdmin.store.progress.narratives.People": [],
+  "SlateAdmin.store.progress.narratives.WorksheetAssignments": [],
+  "SlateAdmin.store.progress.standards.People": [],
+  "SlateAdmin.store.progress.standards.Prompts": [],
+  "SlateAdmin.store.progress.standards.WorksheetAssignments": [],
+  "SlateAdmin.store.progress.standards.WorksheetStudents": [],
+  "SlateAdmin.store.progress.standards.Worksheets": [],
+  "SlateAdmin.store.settings.LocationsTree": [],
+  "SlateAdmin.store.settings.TermsTree": [],
+  "SlateAdmin.store.settings.assets.StatusesTree": [],
+  "SlateAdmin.store.settings.courses.Courses": [],
+  "SlateAdmin.store.settings.courses.Departments": [],
+  "SlateAdmin.view.AbstractActivity": [
+    "widget.abstract-activity-panel"
+  ],
   "SlateAdmin.view.Header": [
     "widget.slateadmin-header"
   ],
@@ -1899,6 +2078,27 @@ Ext.ClassManager.addNameAliasMappings({
     "widget.slateadmin-navigation"
   ],
   "SlateAdmin.view.Viewport": [],
+  "SlateAdmin.view.assets.Activity": [
+    "widget.assets-activity"
+  ],
+  "SlateAdmin.view.assets.Details": [
+    "widget.assets-details"
+  ],
+  "SlateAdmin.view.assets.Grid": [
+    "widget.assets-grid"
+  ],
+  "SlateAdmin.view.assets.Manager": [
+    "widget.assets-manager"
+  ],
+  "SlateAdmin.view.assets.NavPanel": [
+    "widget.assets-navpanel"
+  ],
+  "SlateAdmin.view.assets.TicketsGrid": [
+    "widget.assets-ticketsgrid"
+  ],
+  "SlateAdmin.view.assets.details.Form": [
+    "widget.assets-details-form"
+  ],
   "SlateAdmin.view.courses.NavPanel": [
     "widget.courses-navpanel"
   ],
@@ -1950,14 +2150,150 @@ Ext.ClassManager.addNameAliasMappings({
   "SlateAdmin.view.people.details.Profile": [
     "widget.people-details-profile"
   ],
+  "SlateAdmin.view.people.details.Progress": [
+    "widget.people-details-progress"
+  ],
+  "SlateAdmin.view.people.details.progress.Previewer": [
+    "widget.people-details-progress-previewer"
+  ],
+  "SlateAdmin.view.people.details.progress.note.EditWindow": [
+    "widget.people-details-progress-note-editwindow"
+  ],
+  "SlateAdmin.view.people.details.progress.note.Form": [
+    "widget.people-details-progress-note-form"
+  ],
+  "SlateAdmin.view.people.details.progress.note.RecipientGrid": [
+    "widget.people-details-progress-note-recipientgrid"
+  ],
+  "SlateAdmin.view.people.details.progress.note.Viewer": [
+    "widget.people-details-progress-note-viewer"
+  ],
   "SlateAdmin.view.people.invitations.Panel": [
     "widget.people-invitationspanel"
   ],
   "SlateAdmin.view.people.invitations.Window": [
     "widget.people-invitationswindow"
   ],
+  "SlateAdmin.view.progress.NavPanel": [
+    "widget.progress-navpanel"
+  ],
+  "SlateAdmin.view.progress.interims.Email": [
+    "widget.progress-interims-email"
+  ],
+  "SlateAdmin.view.progress.interims.Grid": [
+    "widget.progress-interims-grid"
+  ],
+  "SlateAdmin.view.progress.interims.Manager": [
+    "widget.progress-interims-manager"
+  ],
+  "SlateAdmin.view.progress.interims.Printer": [
+    "widget.progress-interims-printer"
+  ],
+  "SlateAdmin.view.progress.interims.Report": [
+    "widget.progress-interims-report"
+  ],
+  "SlateAdmin.view.progress.interims.email.Grid": [
+    "widget.progress-interims-email-grid"
+  ],
+  "SlateAdmin.view.progress.interims.email.Manager": [
+    "widget.progress-interims-email-manager"
+  ],
+  "SlateAdmin.view.progress.narratives.Editor": [
+    "widget.progress-narratives-editor"
+  ],
+  "SlateAdmin.view.progress.narratives.Grid": [
+    "widget.progress-narratives-grid"
+  ],
+  "SlateAdmin.view.progress.narratives.Manager": [
+    "widget.progress-narratives-manager"
+  ],
+  "SlateAdmin.view.progress.narratives.Printer": [
+    "widget.progress-narratives-printer"
+  ],
+  "SlateAdmin.view.progress.narratives.StudentsGrid": [
+    "widget.progress-narratives-studentsgrid"
+  ],
+  "SlateAdmin.view.progress.standards.Printer": [
+    "widget.progress-standards-printer"
+  ],
+  "SlateAdmin.view.progress.standards.assignments.Grid": [
+    "widget.progress-standards-assignments-grid"
+  ],
+  "SlateAdmin.view.progress.standards.assignments.Manager": [
+    "widget.progress-standards-assignments-manager"
+  ],
+  "SlateAdmin.view.progress.standards.assignments.StudentsEditor": [
+    "widget.progress-standards-assignments-studentseditor"
+  ],
+  "SlateAdmin.view.progress.standards.assignments.StudentsGrid": [
+    "widget.progress-standards-assignments-studentsgrid"
+  ],
+  "SlateAdmin.view.progress.standards.assignments.WorksheetForm": [
+    "widget.progress-standards-assignments-worksheetform"
+  ],
+  "SlateAdmin.view.progress.standards.worksheets.Editor": [
+    "widget.progress-standards-worksheets-editor"
+  ],
+  "SlateAdmin.view.progress.standards.worksheets.Grid": [
+    "widget.progress-standards-worksheets-grid"
+  ],
+  "SlateAdmin.view.progress.standards.worksheets.Manager": [
+    "widget.progress-standards-worksheets-manager"
+  ],
+  "SlateAdmin.view.progress.standards.worksheets.PromptsGrid": [
+    "widget.progress-standards-worksheets-promptsgrid"
+  ],
   "SlateAdmin.view.settings.NavPanel": [
     "widget.settings-navpanel"
+  ],
+  "SlateAdmin.view.settings.assets.statuses.Manager": [
+    "widget.settings-assets-statuses-manager"
+  ],
+  "SlateAdmin.view.settings.assets.statuses.Menu": [
+    "widget.settings-assets-statuses-menu"
+  ],
+  "SlateAdmin.view.settings.courses.Manager": [
+    "widget.settings-courses-manager"
+  ],
+  "SlateAdmin.view.settings.courses.Menu": [
+    "widget.settings-courses-menu"
+  ],
+  "SlateAdmin.view.settings.courses.departments.Manager": [
+    "widget.settings-courses-departments-manager"
+  ],
+  "SlateAdmin.view.settings.courses.departments.Menu": [
+    "widget.settings-courses-departments-menu"
+  ],
+  "SlateAdmin.view.settings.locations.Manager": [
+    "widget.settings-locations-manager"
+  ],
+  "SlateAdmin.view.settings.locations.Menu": [
+    "widget.settings-locations-menu"
+  ],
+  "SlateAdmin.view.settings.terms.Manager": [
+    "widget.settings-terms-manager"
+  ],
+  "SlateAdmin.view.settings.terms.Menu": [
+    "widget.settings-terms-menu"
+  ],
+  "SlateAdmin.view.template.Activity": [],
+  "SlateAdmin.view.tickets.Activity": [
+    "widget.tickets-activity"
+  ],
+  "SlateAdmin.view.tickets.Details": [
+    "widget.tickets-details"
+  ],
+  "SlateAdmin.view.tickets.Grid": [
+    "widget.tickets-grid"
+  ],
+  "SlateAdmin.view.tickets.Manager": [
+    "widget.tickets-manager"
+  ],
+  "SlateAdmin.view.tickets.details.Asset": [
+    "widget.tickets-details-asset"
+  ],
+  "SlateAdmin.view.tickets.details.Form": [
+    "widget.tickets-details-form"
   ],
   "SlateAdmin.widget.field.Person": [
     "widget.slate-personfield"

@@ -107,4 +107,6 @@ class Student extends User
     {
         return DB::allRecords('SELECT DISTINCT GraduationYear FROM people WHERE GraduationYear IS NOT NULL AND GraduationYear != 0000 ORDER BY GraduationYear ASC');
     }
+    
+  
 }

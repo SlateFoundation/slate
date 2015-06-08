@@ -55,13 +55,11 @@ class Term extends \VersionedRecord
         )
         ,'Left' => array(
             'type' => 'integer'
-            ,'unsigned' => true
             ,'unique' => true
             ,'notnull' => false
         )
         ,'Right' => array(
             'type' => 'integer'
-            ,'unsigned' => true
             ,'notnull' => false
         )
     );

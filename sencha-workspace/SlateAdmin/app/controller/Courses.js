@@ -146,6 +146,9 @@ Ext.define('SlateAdmin.controller.Courses', {
             },
             'courses-sections-manager #detailTabs': {
                 tabchange: me.onDetailTabChange
+            },
+            'courses-sections-manager button[action=delete-coursesection]': {
+                click: me.onDeleteSectionClick
             }
 //            'courses-grid combobox[action=termSelector]': {
 //                change: me.onCourseTermChange
@@ -176,7 +179,6 @@ Ext.define('SlateAdmin.controller.Courses', {
     showSection: function(section, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
-            sectionsResultStore = me.getCoursesSectionsResultStore(),
             sectionsManager = me.getSectionsManager();
 
         ExtHistory.suspendState();
@@ -341,6 +343,21 @@ Ext.define('SlateAdmin.controller.Courses', {
 
         Ext.resumeLayouts(true);
     },
+    
+    onDeleteSectionClick: function() {
+        var selModel = this.getSectionsGrid().getSelectionModel(),
+            sectionManager = this.getSectionsManager(),
+            section = sectionManager.getSelectedSection();
+        
+        Ext.Msg.confirm('Deleting Section', 'Are you sure you want to delete this section?', function (btnId) {
+            if(btnId=='yes') {
+                section.destroy();
+                
+                selModel.deselectAll();
+                sectionManager.setSelectedSection(null);
+            }
+        });
+    },
 
     onDetailTabChange: function(detailTabs, activeTab) {
         this.syncState();
@@ -376,7 +393,6 @@ Ext.define('SlateAdmin.controller.Courses', {
     syncState: function() {
         var me = this,
             sectionsManager = me.getSectionsManager(),
-            selModel = me.getSectionsGrid().getSelectionModel(),
             detailTabs = sectionsManager.detailTabs,
             sectionRecord = sectionsManager.getSelectedSection(),
             extraParams = me.getCoursesSectionsResultStore().getProxy().extraParams,
@@ -558,7 +574,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         });
 
         Ext.util.History.add(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
-    },
+    }
 
 
 

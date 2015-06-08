@@ -42,10 +42,10 @@ Ext.define('SlateAdmin.view.groups.Manager', {
             }
         }
     }],
-    bbar: [{
+    tbar: [{
         xtype: 'button',
         icon: '/img/icons/fugue/bank--plus.png',
-        text: 'Create Organization',
+        text: 'Create Group',
         action: 'create-organization'
     }],
     plugins: [{

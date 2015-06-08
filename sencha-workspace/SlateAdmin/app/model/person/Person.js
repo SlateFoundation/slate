@@ -16,7 +16,7 @@ Ext.define('SlateAdmin.model.person.Person', {
         'LastName',
         'Gender',
         'AccountLevel',
-        'Email',
+        'PrimaryEmail',
         'Phone',
         'StudentNumber',
         'groupIDs',
@@ -94,7 +94,11 @@ Ext.define('SlateAdmin.model.person.Person', {
     proxy: {
         type: 'slaterecords',
         url: '/people',
-        include: 'groupIDs'
+        include: [
+            'groupIDs',
+            'PrimaryEmail',
+            'PrimaryPhone'
+        ]
     },
 
 
