@@ -1,4 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+/**
+ * The Main Application definition
+ */
 Ext.define('SlateAdmin.Application', {
     extend: 'Ext.app.Application',
     requires: [
@@ -18,7 +21,9 @@ Ext.define('SlateAdmin.Application', {
     ],
 
 
-    // application config
+    /**
+     * @cfg {String} name="SlateAdmin"
+     */
     name: 'SlateAdmin',
     suspendLayoutUntilInitialRoute: true,
 
@@ -48,7 +53,14 @@ Ext.define('SlateAdmin.Application', {
     ],
 
 
-    // application template methods
+    /**
+     * A template method that is called when the application boots. It is called before the Application's launch
+     * function is executed so gives a hook point to run any code before your Viewport is created.
+     *
+     * Here we set up the Ext.state.Manager with an Ext.state.LocalStorageProvider and check the url for an apiHost
+     * parameter and set the API hostname if it exists.
+     * @return {void}
+     */
     init: function() {
         var pageParams = Ext.Object.fromQueryString(location.search);
 
