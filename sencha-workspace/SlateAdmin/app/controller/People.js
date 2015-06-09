@@ -30,6 +30,12 @@ Ext.define('SlateAdmin.controller.People', {
                 ':person': '([^/]+)'
             }
         },
+        /**
+         * @route people/lookup /:person/:tab
+         * show person with requested details tab
+         * @param {String} person The requested person
+         * @param {String} tab The requested details tab
+         */
         'people/lookup/:person/:tab': {
             action: 'showPerson',
             conditions: {
@@ -316,6 +322,7 @@ Ext.define('SlateAdmin.controller.People', {
      * @param {Number} index The row index selected
      */
     onPersonSelect: function(selModel, personRecord, index) {
+        console.log('onPersonSelect!!!!');
         var me = this,
             selectionCount = selModel.getCount();
 
@@ -330,7 +337,14 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.resumeLayouts(true);
     },
 
+    /**
+     * Calls onPersonSelect if deselect event leves one record selected.
+     * @param {Ext.selection.RowModel} selModel The selection model
+     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Number} index The row index selected
+     */
     onPersonDeselect: function(selModel, personRecord, index) {
+        console.log('onPersonDeSelect!!!!');
         var me = this,
             firstRecord;
 
