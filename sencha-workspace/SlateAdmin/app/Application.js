@@ -10,9 +10,6 @@ Ext.define('SlateAdmin.Application', {
         // Jarvus enhancements
         'Jarvus.ext.override.data.RequireLoadedStores',
 
-        // Jarvus bug fixes
-//        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
-
         // framework features
         'Ext.state.LocalStorageProvider'
     ],
