@@ -2,7 +2,7 @@
 
 /**
  * Container for people section's grid and details view.
- * 
+ *
  * Handles propagating changes to {@link #cfg-selectedPerson} to active {@link SlateAdmin.view.people.details.AbstractDetails details tab}
  */
 Ext.define('SlateAdmin.view.people.Manager', {
@@ -17,12 +17,12 @@ Ext.define('SlateAdmin.view.people.Manager', {
     config: {
         selectedPerson: null
     },
-    
+
     /**
      * Reference to the detailCt {@link Ext.container.Container} subomponent
      */
     detailCt: null,
-    
+
     /**
      * Reference to the detailHeader {@link Ext.panel.Panel} subomponent
      */
@@ -88,9 +88,9 @@ Ext.define('SlateAdmin.view.people.Manager', {
         var me = this,
             detailCt,
             detailTabs;
-        
+
         me.callParent(arguments);
-        
+
         me.detailCt = detailCt = me.down('#detailCt');
         me.detailHeader = detailCt.down('#detailHeader');
         me.detailTabs = detailTabs = detailCt.down('#detailTabs');
@@ -103,23 +103,17 @@ Ext.define('SlateAdmin.view.people.Manager', {
     },
 
     // @private
-    updateSelectedPerson: function(person, oldPerson) {
+    updateSelectedPerson: function(person) {
         var me = this,
             detailCt = me.detailCt,
             detailTabs = me.detailTabs,
             activeTab = detailTabs.getActiveTab(),
             loadedPerson;
 
-        if (oldPerson) {
-//            oldPerson.un('afterCommit', 'syncDetailHeader', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
-        }
-
         Ext.suspendLayouts();
         me.syncDetailHeader();
-            
+
         if (person) {
-//            person.on('afterCommit', 'syncDetailHeader', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
-    
             if (!activeTab) {
                 activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedPerson
             } else if (!(loadedPerson = activeTab.getLoadedPerson()) || loadedPerson.getId() != person.getId()) {
@@ -128,7 +122,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
 
             if (activeTab && detailCt.isDisabled()) {
                 detailCt.enable();
-                
+
                 // ensure active tab is set, since it would be supressed while disabled
                 detailTabs.tabBar.setActiveTab(activeTab.tab);
             }
@@ -153,9 +147,9 @@ Ext.define('SlateAdmin.view.people.Manager', {
             activeTab.setLoadedPerson(selectedPerson);
         }
     },
-    
+
     // @private
-    onDetailTabsEnable: function(detailTabs) {
+    onDetailTabsEnable: function() {
         var me = this,
             activeTab = me.detailTabs.getActiveTab(),
             selectedPerson = me.getSelectedPerson(),
@@ -169,7 +163,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
             activeTab.setLoadedPerson(selectedPerson);
         }
     },
-    
+
     /**
      * Update detail header based on {@link #cfg-selectedPerson}
      */
