@@ -1,6 +1,6 @@
 {
     "--": "../app",
-    "--title": "Slate API Documentation",
+    "--title": "Slate-Admin API Documentation",
     "--ignore-global": true,
     "--tags": "tags/fields_tag.rb",
     "--tags": "tags/routes_tag.rb",
