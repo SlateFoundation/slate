@@ -11,7 +11,6 @@ Ext.define('SlateAdmin.Application', {
         'Jarvus.ext.override.data.RequireLoadedStores',
 
         // Jarvus bug fixes
-//        'Jarvus.ext.patch.panel.ExpandBeforeRender',
 //        'Jarvus.ext.patch.data.TreeStoreIndexOf',
 //        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
 
