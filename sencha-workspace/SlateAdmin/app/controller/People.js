@@ -338,7 +338,7 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * Event Handler. Calls onPersonSelect if deselect event leves one record selected.
+     * Event Handler. Calls onPersonSelect if deselect event leaves one record selected.
      * @param {Ext.selection.RowModel} selModel The selection model
      * @param {SlateAdmin.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
@@ -353,7 +353,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (selModel.getCount() == 1) {
             firstRecord = selModel.getSelection()[0];
-            me.onPersonSelect(selModel, firstRecord, firstRecord.index);
+            selModel.select(firstRecord);
         }
 
         Ext.resumeLayouts(true);
