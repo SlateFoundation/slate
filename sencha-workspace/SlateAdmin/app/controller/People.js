@@ -1,11 +1,13 @@
-/*jslint browser: true, undef: true *//*global Ext,SlateAdmin*/
+/*jslint browser: true, undef: true, eqeq: true *//*global Ext,SlateAdmin*/
+/**
+ * People controller
+ */
 Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
         'SlateAdmin.API'
     ],
-
 
     // controller config
     views: [
@@ -262,7 +264,12 @@ Ext.define('SlateAdmin.controller.People', {
 
 
     // event handlers
-    onNavPanelExpand: function(navPanel, isExpanding) {
+
+    /**
+     * Event Handler. Call syncState when people-navpanel is expanded.
+     * @param {SlateAdmin.view.people.NavPanel} navPanel the navigation panel
+     */
+    onNavPanelExpand: function(navPanel) {
         this.syncState();
     },
 
@@ -521,7 +528,12 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * @param {Boolean} noRounding If true this will return the value as a decimal with no rounding. If false the value with be rounded to the nearest year.
+     * @return {void}
+     */
     syncState: function() {
+        console.log('people: syncState');
         var me = this,
             manager = me.getManager(),
             selModel = me.getGrid().getSelectionModel(),
