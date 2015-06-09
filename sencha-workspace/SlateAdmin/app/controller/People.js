@@ -338,7 +338,7 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * Calls onPersonSelect if deselect event leves one record selected.
+     * Event Handler. Calls onPersonSelect if deselect event leves one record selected.
      * @param {Ext.selection.RowModel} selModel The selection model
      * @param {SlateAdmin.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
