@@ -1,4 +1,4 @@
-/*jslint browser: true, undef: true *//*global Ext*/
+/*jslint browser: true, undef: true, laxcomma:true *//*global Ext*/
 /**
  * The Main Application definition
  */
@@ -12,7 +12,6 @@ Ext.define('SlateAdmin.Application', {
 
         // Jarvus bug fixes
 //        'Jarvus.ext.patch.panel.ExpandBeforeRender',
-//        'Jarvus.ext.patch.data.BufferedStoreStrictId',
 //        'Jarvus.ext.patch.data.TreeStoreIndexOf',
 //        'Jarvus.ext.patch.grid.DisableGroupingFeature', // not used
 
