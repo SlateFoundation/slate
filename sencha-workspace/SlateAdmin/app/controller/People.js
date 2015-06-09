@@ -308,6 +308,13 @@ Ext.define('SlateAdmin.controller.People', {
         this.syncGridStatus();
     },
 
+    /**
+     * Event Handler. Sets the selectedPerson of the SlateAdmin.view.people.Manager to the selected record and
+     * calls syncGridStatus to update the bottom toolbar
+     * @param {Ext.selection.RowModel} selModel The selection model
+     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Number} index The row index selected
+     */
     onPersonSelect: function(selModel, personRecord, index) {
         var me = this,
             selectionCount = selModel.getCount();
@@ -529,14 +536,13 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * @param {Boolean} noRounding If true this will return the value as a decimal with no rounding. If false the value with be rounded to the nearest year.
+     * Sets the title and path (url) based on the selection in the grid and the active tab in details panel.
      * @return {void}
      */
     syncState: function() {
-        console.log('people: syncState');
         var me = this,
             manager = me.getManager(),
-            selModel = me.getGrid().getSelectionModel(),
+            selModel = me.getGrid().getSelectionModel(), // TODO: unused remove?
             detailTabs = manager.detailTabs,
             personRecord = manager.getSelectedPerson(),
             extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
@@ -571,6 +577,10 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.util.History.pushState(path, title);
     },
 
+    /**
+     * Sets the visibility and text for components in the bottom toolbar for the selected record(s)
+     * @return {void}
+     */
     syncGridStatus: function() {
         var me = this,
             grid = me.getGrid(),
