@@ -1,1 +1,22 @@
-$button-toolbar-background-gradient: 'matte';
+$button-default-background-gradient:            'none';
+$button-default-background-gradient-disabled:   'none';
+$button-default-background-gradient-focus:      'none';
+$button-default-background-gradient-over:       'none';
+$button-default-background-gradient-pressed:    'none';
+
+$button-toolbar-background-gradient:            'none';
+$button-toolbar-background-gradient-disabled:   'none';
+$button-toolbar-background-gradient-focus:      'none';
+$button-toolbar-background-gradient-over:       'none';
+$button-toolbar-background-gradient-pressed:    'none';
+
+$button-toolbar-background-color: tint($base-color, 96%);
+$button-toolbar-background-color-over: white;
+$button-toolbar-background-color-focus: $button-toolbar-background-color-over;
+$button-toolbar-background-color-disabled: transparent;
+
+$button-small-border-width: 0;
+
+$button-small-icon-size:    $glyph-size;
+$button-medium-icon-size:   $glyph-size;
+$button-large-icon-size:    $glyph-size * 2;

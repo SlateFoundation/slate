@@ -1,0 +1,19 @@
+.x-tree-elbow-img {
+    visibility: hidden;
+
+    &:first-child {
+        width: 8px;
+    }
+}
+
+.x-tree-icon-parent {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path fill="#30a1db" d="M150.6 135c-.3 2.7-2.9 5-5.6 5H15c-2.8 0-5.3-2.2-5.6-5L.6 65c-.3-2.7 1.6-5 4.4-5h150c2.8 0 4.7 2.2 4.4 5l-8.8 70zM140 35v15H20V35c0-2.8 2.2-5 5-5h1.5c1.9 0 3.5-1.6 3.5-3.5V25c0-1.4.6-2.6 1.5-3.5.9-.9 2.2-1.5 3.5-1.5h30c2.8 0 5 2.2 5 5v1.5c0 1.9 1.6 3.5 3.5 3.5H135c2.8 0 5 2.2 5 5z"/></svg>');
+
+    .x-grid-tree-node-expanded & {
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path fill="#2084b8" d="M160 35v55l-8.8-35.2c-.7-2.7-3.5-4.8-6.2-4.8H45c-2.8 0-5-2.2-5-5V35c0-2.8 2.2-5 5-5h1.5c1.9 0 3.5-1.6 3.5-3.5V25c0-1.4.6-2.6 1.5-3.5.9-.9 2.2-1.5 3.5-1.5h30c2.8 0 5 2.2 5 5v1.5c0 1.9 1.6 3.5 3.5 3.5H155c2.8 0 5 2.2 5 5zM45 50h-5v-5c0 2.8 2.2 5 5 5zM158.8 135.1c.7 2.7-1 4.9-3.8 4.9H25c-2.8 0-5.5-2.2-6.2-4.9L1.2 64.9C.5 62.2 2.2 60 5 60h130c2.8 0 5.5 2.2 6.2 4.9l17.6 70.2z"/></svg>');
+    }
+}
+
+.x-tree-icon-leaf {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path fill="#30a1db" d="M156.5 10H3.5C1.6 10 0 11.6 0 10v133c0 5.4 1.6 7 3.5 7h153c1.9 0 3.5-1.6 3.5-7V10c0 1.6-1.6 0-3.5 0zM150 136.5c0 1.9-1.6 3.5-3.5 3.5h-133c-1.9 0-3.5-1.6-3.5-3.5v-103c0-1.9 1.6-3.5 3.5-3.5h133c1.9 0 3.5 1.6 3.5 3.5v103zM30 70h100v10H30zM30 110h100v10H30zM30 50h60v10H30zM30 90h60v10H30z"/></svg>');
+}
