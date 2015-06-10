@@ -7,6 +7,8 @@
     }
 
     .x-fieldset-with-legend {
-        margin-bottom: 0;
+        &.x-fieldset-collapsed {
+            margin-bottom: 0;
+        }
     }
 }
