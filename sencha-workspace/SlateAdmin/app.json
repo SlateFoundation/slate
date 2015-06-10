@@ -33,7 +33,7 @@
      * The name of the theme for this application.
      */
     
-    "theme": "slate-admin-theme",
+    "theme": "slate-theme",
     
     /**
      * The list of required packages (with optional versions; default is "latest").
