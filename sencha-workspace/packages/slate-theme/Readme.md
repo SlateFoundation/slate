@@ -1,2 +1,0 @@
-# slate-theme - Read Me
-
