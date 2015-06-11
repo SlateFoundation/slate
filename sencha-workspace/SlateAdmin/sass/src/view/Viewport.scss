@@ -1,3 +1,7 @@
+.x-viewport > .x-body {
+    padding-top: 3.25em;
+}
+
 a {
     @include link-colors($accent-color);
 }
