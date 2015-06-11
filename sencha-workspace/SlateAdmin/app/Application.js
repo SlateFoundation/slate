@@ -25,7 +25,7 @@ Ext.define('SlateAdmin.Application', {
 
     // application config
     name: 'SlateAdmin',
-    suspendLayoutUntilInitialRoute: true,
+    //suspendLayoutUntilInitialRoute: true, // TODO: find a way to achive this optimization with the built-in routing of ExtJS 5
 
     controllers: [
         'Viewport',
