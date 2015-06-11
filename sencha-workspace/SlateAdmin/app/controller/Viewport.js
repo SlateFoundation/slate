@@ -4,9 +4,16 @@ Ext.define('SlateAdmin.controller.Viewport', {
 
 
     // controller config
+    views: [
+        'Viewport'
+    ],
+
     refs: [{
         ref: 'viewport',
-        selector: 'viewport'
+        selector: 'viewport',
+        autoCreate: true,
+        
+        xclass: 'SlateAdmin.view.Viewport'
     },{
         ref: 'navCt',
         selector: 'slateadmin-navigation'
@@ -19,6 +26,7 @@ Ext.define('SlateAdmin.controller.Viewport', {
     // controller template methods
     onLaunch: function() {
         var me = this,
+            viewport = me.getViewport(), // must be created before calling getNavCt
             navCt = me.getNavCt(),
             navPanels = [];
 
