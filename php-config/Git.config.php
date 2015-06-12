@@ -8,7 +8,11 @@ Git::$repositories['slate'] = [
     'trees' => [
         'dwoo-plugins',
         'event-handlers',
-        'html-templates',
+        'html-templates' => [
+            'exclude' => [
+                '#^/app/SlateAdmin(/|$)#' // don't delete file from slate-admin package
+            ]
+        ],
         'mail-handlers',
         'php-classes',
         'php-config' => [
@@ -34,6 +38,7 @@ Git::$repositories['slate-admin'] = [
     'localOnly' => true,
     'trees' => [
         'docs/slate-admin',
+        'html-templates/app/SlateAdmin',
         'sencha-workspace/SlateAdmin' => [
             'exclude' => [
                 '#^/bootstrap\\.#' // don't sync generated bootstrap files
