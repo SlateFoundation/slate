@@ -34,7 +34,11 @@ Git::$repositories['slate-admin'] = [
     'localOnly' => true,
     'trees' => [
         'docs/slate-admin',
-        'sencha-workspace/SlateAdmin',
+        'sencha-workspace/SlateAdmin' => [
+            'exclude' => [
+                '#^/bootstrap\\.#' // don't sync generated bootstrap files
+            ]
+        ],
         'site-root/manage.php',
 
         // TODO: eliminate for own package:
