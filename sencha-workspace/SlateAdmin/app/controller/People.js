@@ -349,7 +349,7 @@ Ext.define('SlateAdmin.controller.People', {
      * Event Handler. Calls syncState when people-navpanel is expanded.
      * @param {SlateAdmin.view.people.NavPanel} navPanel The navigation panel
      */
-    onNavPanelExpand: function(navPanel) {
+    onNavPanelExpand: function() {
         this.syncState();
     },
 
@@ -471,7 +471,7 @@ Ext.define('SlateAdmin.controller.People', {
     /**
      * Event Handler. Calls syncState when active detail tab changes to that the change is reflected in the url
      */
-    onDetailTabChange: function(detailTabs, activeTab) {
+    onDetailTabChange: function() {
         this.syncState();
     },
 
