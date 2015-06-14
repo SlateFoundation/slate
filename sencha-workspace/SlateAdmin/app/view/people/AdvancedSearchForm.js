@@ -1,4 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+/**
+ * Advanced Search Form
+ */
 Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
     extend: 'Ext.form.Panel',
     xtype: 'people-advancedsearchform',
@@ -56,7 +59,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                         rootProperty: 'data'
                     }
                 }
-            } 
+            }
         },{
             xtype: 'combo',
             name: 'gender',
@@ -93,7 +96,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                         rootProperty: 'data'
                     }
                 }
-            }        
+            }
         },{
             xtype: 'combo',
             name: 'course',
