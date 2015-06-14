@@ -236,12 +236,15 @@ Ext.define('SlateAdmin.controller.People', {
     /**
      * Route Handler for the following routes:
      *
-     *      - people/search/:query
-     *      - people/search/:query/:person
-     *      - people/search/:query/:person/:tab
-     * @param {String} query
-     * @param {String} person
-     * @param {String} tab
+     * - people/search/:query
+     * - people/search/:query/:person
+     * - people/search/:query/:person/:tab
+     *
+     * Performs the search specified by the query parameter.  If person and tab are specified it will select
+     * the person in the result set and activate the appropriate profile tab.
+     * @param {String} query The search query.
+     * @param {String} person The person to select
+     * @param {String} tab The profile tab to activate
      * @return {void}
      */
     showResults: function(query, person, tab) {
