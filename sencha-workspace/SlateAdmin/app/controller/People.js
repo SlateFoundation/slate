@@ -231,7 +231,7 @@ Ext.define('SlateAdmin.controller.People', {
      * Route Handler for people/lookup/:person/:tab route.
      * Performs a search by username specified by person parameter, selects the person in the result
      * set and activates the appropriate profile tab.
-     * @param {String} person The person to select
+     * @param {String} person The username to search by and select in the result list
      * @param {String} tab The profile tab to activate
      * @return {void}
      */
