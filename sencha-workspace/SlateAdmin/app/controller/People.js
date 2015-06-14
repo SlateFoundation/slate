@@ -227,10 +227,18 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * Route Handler for people/lookup/:person/:tab route.
+     * Performs a search by username specified by person parameter, selects the person in the result
+     * set and activates the appropriate profile tab.
+     * @param {String} person The person to select
+     * @param {String} tab The profile tab to activate
+     * @return {void}
+     */
     showPerson: function(person, tab) {
-        alert('Loading an individual person is not yet implemented');
-        // TODO: implement loading a person without a search query
-//        debugger;
+        var query = 'username:'+person;
+
+        this.showResults('username:person',person, tab);
     },
 
     /**
