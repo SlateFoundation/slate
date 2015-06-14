@@ -468,6 +468,9 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.resumeLayouts(true);
     },
 
+    /**
+     * Event Handler. Calls syncState when active detail tab changes to that the change is reflected in the url
+     */
     onDetailTabChange: function(detailTabs, activeTab) {
         this.syncState();
     },
