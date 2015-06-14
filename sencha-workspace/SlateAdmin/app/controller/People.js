@@ -191,12 +191,23 @@ Ext.define('SlateAdmin.controller.People', {
         });
     },
 
+    /**
+     * Called by SlateAdmin.controller.Viewport when it is launched and requests all of the
+     * application navpanels in order to add them to SlateAdmin.view.Navigation
+     * @return {SlateAdmin.view.people.NavPanel}
+     */
     buildNavPanel: function() {
         return this.getNavPanel();
     },
 
-
     // route handlers
+
+    /**
+     * Route Handler for people route.
+     * Instructs the Viewport controller to add SlateAdmin.view.people.Manager to the Viewport's center
+     * region card container, and ensures that the root node of the navpanel's treepanel is selected.
+     * @return {void}
+     */
     showPeople: function() {
         var me = this,
             groupsTreePanel = me.getGroupsTree(),
@@ -222,6 +233,17 @@ Ext.define('SlateAdmin.controller.People', {
 //        debugger;
     },
 
+    /**
+     * Route Handler for the following routes:
+     *
+     *      - people/search/:query
+     *      - people/search/:query/:person
+     *      - people/search/:query/:person/:tab
+     * @param {String} query
+     * @param {String} person
+     * @param {String} tab
+     * @return {void}
+     */
     showResults: function(query, person, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
