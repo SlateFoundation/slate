@@ -1,3 +1,3 @@
 <?php
 
-Emergence\People\RegistrationRequestHandler::$enableRegistration = false;
+Emergence\People\RegistrationRequestHandler::$enableRegistration = true;

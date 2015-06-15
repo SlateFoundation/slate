@@ -1,212 +1,95 @@
-.slate-menu {
-	margin: 0;
-	position: absolute;
-	right: 1.5em;
-	top: 0;
+$slate-menu-background-color: rgba(#f5f5f5, .97);
 
-	@include experimental('tap-highlight-color', transparent);
+.site-nav {
+    background-color: $slate-menu-background-color;
+    border-top: 1px solid rgba(black, .1);
+    border-bottom: 1px solid rgba(black, .2);
+    box-shadow: 0 .25em .25em -.25em rgba(black, .3);
+    margin-bottom: -1px;
 
-	@media #{$mq-phone} {
-		margin: 0 -1.5em;
-		position: static;
-	}
+    a {
+        color: $text-color;
+        text-decoration: none;
+    }
 
-	.menu {
-		margin: 0;
-		padding: 0;
-		text-align: right;
-		white-space: nowrap;
-		
-		@media #{$mq-phone} {
-			& > .menu-item:first-child > .submenu { @include transform-origin(left, top); }
-			& > .menu-item:last-child > .submenu { @include transform-origin(right, top); }
-		}
-	}
-	
-	.menu-item {
-		display: inline-block;
-		float: none;
-		position: relative;
-		width: auto;
-		
-		+ .menu-item {
-    		margin-left: .125em;
-		}
-		
-		.menu-item {
-    		margin: 0;
-		}
+    > .inner {
+        padding: 0;
+    }
 
-		&:hover,
-		&.selected {
-			& > .submenu {
-				opacity: 1;
-				@include transform(none);
-				@include transition-delay(0);
-				visibility: visible;
-			}				
+    .nav-menu {
+        border-collapse: collapse;
+        display: table;
+        margin: 0;
+        padding: 0;
+        table-layout: fixed;
+        width: 100%;
 
-			& > .menu-label {
-				background: $link-color;
-				@include background(linear-gradient( lighten($link-color, 5%), $link-color ));
-				color: white;					
-			}
-		}
+        > .nav-item {
+            border: 1px solid $border-color;
+            border-width: 0 1px;
+        }
+    }
 
-		@media #{$mq-phone} {
-			float: left;
-			margin: 0;
-			position: static;
-			width: 25%;
-			
-			+ .menu-item {
-    			margin: 0;
-			}
-		}
+    .nav-item {
+        display: table-cell;
+        list-style: none;
+        position: relative;
+        text-align: center;
 
-        &.empty {
-            .menu-label {
-                background: none;
-                color: $muted-color;
-                cursor: default;
+        .nav-item {
+            display: block;
+            text-align: left;
+        }
+
+        &:hover,
+        &:focus {
+            background-color: rgba($link-color, .2);
+        }
+    }
+
+    .nav-label {
+        cursor: pointer;
+        display: block;
+        padding: .5em 1em;
+        white-space: nowrap;
+    }
+
+    .has-submenu {
+        &.is-open,
+        &:hover,
+        &:focus {
+            > .nav-submenu {
+                display: block;
+                opacity: 1;
+                @include transform(none);
+                @include transition-delay(0);
+                @include transition-duration(200ms, 0);
+                visibility: visible;
             }
         }
-	}
-	
-	.menu-label {
-		@include background(linear-gradient( rgba($base-color, .25), rgba($base-color, 0) ));
-		@include border-radius(0);
-		@include box-sizing(border-box);
-		color: $link-color;
-		cursor: pointer;
-		display: block;
-		min-width: 6em;
-		padding: .25em 1em;
-		text-align: center;
-		text-decoration: none;
-		@include experimental('tap-highlight-color', rgba($base-color, .4));
-		white-space: nowrap;
-		
-		img {
-    		vertical-align: -3px;
-		}
-		
-		.menu-item:hover > & {
-			@include background(linear-gradient( lighten($base-color, 10%), $base-color ));
-			color: white;
-			text-decoration: none;
-		}
-		
-		@media #{$mq-phone} {
-			background: rgba($base-color, .2);
-			@include background(linear-gradient( rgba($base-color, 0), rgba($base-color, 0.2) ));
-			@include border-top-radius(.5em);
-			min-width: 0;
-			padding: .5em 0;
-		}
-	}
-	
-	.submenu {
-		background: rgba(white, .95);
-		border: 1px solid darken($base-color, 5%);
-		@include box-sizing(border-box);
-		@include box-shadow(0 .25em .5em rgba(black, .2));
-		margin: 0;
-		min-width: 120%;
-		opacity: 0;
-		padding: 0;
-		position: absolute;
-		@include scale3d(.8, .6, 0);
-		@include transform-origin(left, top);
-		@include transition(all 120ms, visibility 0);
-		@include transition-delay(0, 250ms);
-		visibility: hidden;
-		width: auto;
-		z-index: 1;
-		
-		&:empty::before {
-		    color: $muted-color;
-    		content: 'None available.';
-    		display: block;
-    		font-style: italic;
-    		min-height: 44px;
-    		padding: .5em .75em;
+    }
 
-			@media #{$mq-wide} {
-				min-height: 0;
-				padding: .25em 1em;
-			}
-		}
-		
-		.submenu {
-			min-width: 0;
-			right: 100%;
-			top: -1px;
-			@include transform-origin(right, top);
-		}
-		
-		.menu-item {
-			display: block;
-			float: none;
-			position: relative;
-			width: 100%;
-			
-			& + .menu-item {
-				border: none;
-			}			
-		}	
-		
-		.menu-label {
-			background: none;
-			@include border-radius(0);
-			color: $text-color;
-			float: none;
-			min-height: 44px;
-			padding: .5em .75em;
-			text-align: left;
-			
-			@media #{$mq-wide} {
-				min-height: 0;
-				padding: .25em 1em;
-			}
-		}
-			
-		@media #{$mq-phone} {
-			background: white;
-			border-width: 1px 0;
-			@include box-shadow(0 0 1em black);
-			left: 0;
-			min-width: 100%;
-			@include transform-origin(center, top);
-			width: 100%;
-			
-			.menu-item {
-				& + .menu-item {
-					border-top: 1px solid rgba(black, .1);
-				}			
-			}
-			
-			.submenu {
-				right: auto;
-				top: 100%;
-			}
-		}
-	}
+    .nav-submenu {
+        background-color: $slate-menu-background-color;
+        border: 1px solid rgba(black, .2);
+        box-shadow: 0 .25em .25em rgba(black, .2);
+        left: -1px;
+        margin: 0;
+        min-width: 120%;
+        opacity: 0;
+        padding: 0;
+        position: absolute;
+        top: 100%;
+        @include scale(.8, .6);
+        @include transform-origin(0, 0);
+        @include transition(all 250ms, visibility 0s); // "0s" unit required in chrome 42. not sure why
+        @include transition-delay(100ms, 0);
+        @include transition-timing-function(cubic-bezier(0.2, 0.8, 0, 1.1));
+        visibility: hidden;
+        z-index: 1;
 
-	.has-submenu {
-		& > .menu-label {
-		    padding-right: 1.5em;
-
-			&::before {
-				content: '\25b8'; // right
-				float: right;
-				// @include experimental('font-smoothing', none); // keep the arrows sharp... disabled for now because iPad
-				margin-right: -1em;
-                
-				@media #{$mq-phone} {
-					content: '\25be'; // down
-				}
-			}
-		}
-	}
+        .nav-item {
+            font-size: $font-size * .875;
+        }
+    }
 }

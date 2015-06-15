@@ -1,0 +1,636 @@
+@-webkit-keyframes menu-in {
+  /* line 6, ../../../sass/slate/modules/omnibar.scss */
+  from {
+    opacity: 0;
+    -webkit-transform: scale(0.8, 0.6);
+    transform: scale(0.8, 0.6);
+  }
+
+  /* line 12, ../../../sass/slate/modules/omnibar.scss */
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes menu-in {
+  /* line 20, ../../../sass/slate/modules/omnibar.scss */
+  from {
+    opacity: 0;
+    -webkit-transform: scale(0.8, 0.6);
+    transform: scale(0.8, 0.6);
+  }
+
+  /* line 26, ../../../sass/slate/modules/omnibar.scss */
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@-webkit-keyframes fade-in {
+  /* line 34, ../../../sass/slate/modules/omnibar.scss */
+  from {
+    opacity: 0;
+  }
+
+  /* line 35, ../../../sass/slate/modules/omnibar.scss */
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  /* line 39, ../../../sass/slate/modules/omnibar.scss */
+  from {
+    opacity: 0;
+  }
+
+  /* line 40, ../../../sass/slate/modules/omnibar.scss */
+  to {
+    opacity: 1;
+  }
+}
+
+/* line 44, ../../../sass/slate/modules/omnibar.scss */
+.slate-omnibar {
+  background-color: #333;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.6);
+  color: white;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 2;
+}
+/* line 54, ../../../sass/slate/modules/omnibar.scss */
+.slate-omnibar a {
+  color: white;
+  text-decoration: none;
+}
+/* line 59, ../../../sass/slate/modules/omnibar.scss */
+.slate-omnibar > .inner {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+/* line 65, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-items {
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 2.75em;
+  margin: 0 -1em;
+  padding: 0;
+}
+
+/* line 73, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-item {
+  display: block;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  list-style: none;
+}
+/* line 79, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-item:hover, .omnibar-item:focus {
+  background-color: rgba(49, 160, 218, 0.4);
+}
+/* line 82, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-item:hover .omnibar-menu-ct, .omnibar-item:focus .omnibar-menu-ct {
+  display: block;
+}
+
+/* line 88, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-link {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 1em;
+}
+
+/* line 94, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-link-image {
+  margin-right: 0.5em;
+}
+
+/* line 98, ../../../sass/slate/modules/omnibar.scss */
+.slate-logo {
+  height: 2em;
+  width: auto;
+}
+
+/* line 103, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-search-item {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  margin: 0 1em 0 .5em;
+}
+/* line 108, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-search-item:hover, .omnibar-search-item:focus {
+  background: none;
+}
+
+/* line 113, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-search-form {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: flex-end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+/* line 121, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-search-field {
+  background-color: transparent;
+  background-image: url("http://placehold.it/48");
+  background-position: 0.5em center;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  border: 1px solid transparent;
+  border-width: 0 0 1px;
+  box-shadow: none;
+  padding-left: 2.5em;
+  padding-right: 0;
+  text-align: left;
+  -webkit-transition: 250ms cubic-bezier(1, 0, 0, 1);
+  -moz-transition: 250ms cubic-bezier(1, 0, 0, 1);
+  -o-transition: 250ms cubic-bezier(1, 0, 0, 1);
+  transition: 250ms cubic-bezier(1, 0, 0, 1);
+  width: 6em;
+}
+/* line 32, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field::-webkit-input-placeholder {
+  color: white;
+}
+/* line 36, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field::-moz-placeholder {
+  color: white;
+}
+/* line 40, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field:-ms-input-placeholder {
+  color: white;
+}
+/* line 44, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field:input-placeholder {
+  color: white;
+}
+/* line 138, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-search-field:focus {
+  background-color: rgba(255, 255, 255, 0.1667);
+  border-color: #31a0da;
+  outline: none;
+  width: 100%;
+}
+/* line 32, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field:focus::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.3333);
+}
+/* line 36, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field:focus::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.3333);
+}
+/* line 40, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field:focus:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.3333);
+}
+/* line 44, ../../../sass/slate/_mixins.scss */
+.omnibar-search-field:focus:input-placeholder {
+  color: rgba(255, 255, 255, 0.3333);
+}
+
+/* line 148, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-ct {
+  background-color: rgba(68, 68, 68, 0.93);
+  box-shadow: 0 0.5em 0.5em -0.5em rgba(0, 0, 0, 0.6);
+  display: none;
+  left: 0;
+  position: absolute;
+  right: 0;
+  text-align: right;
+  top: 100%;
+  z-index: 1;
+}
+
+/* line 160, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu {
+  margin: 0 auto;
+  padding: 1.5em 0;
+  width: 85%;
+}
+
+/* line 166, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item {
+  display: inline-block;
+  list-style: none;
+  margin: 0.5em -1.25em 0.5em 1.5em;
+  text-align: center;
+  vertical-align: top;
+}
+
+/* line 177, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-link:hover .omnibar-menu-image-bg, .omnibar-menu-link:focus .omnibar-menu-image-bg {
+  fill: #1f7dae;
+}
+/* line 181, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-link:hover .omnibar-menu-image, .omnibar-menu-link:focus .omnibar-menu-image {
+  -webkit-transform: scale(1.1, 1.1);
+  -moz-transform: scale(1.1, 1.1);
+  -ms-transform: scale(1.1, 1.1);
+  -o-transform: scale(1.1, 1.1);
+  transform: scale(1.1, 1.1);
+}
+/* line 185, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-link:hover .omnibar-menu-label, .omnibar-menu-link:focus .omnibar-menu-label {
+  color: #acd9f0;
+}
+
+/* line 191, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-icon {
+  margin: 0;
+  width: 96px;
+  -webkit-animation: menu-in 300ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+  animation: menu-in 300ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+  -webkit-backface-visibility: hidden;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(1) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.0167s;
+  animation-delay: 0.0167s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(2) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.0334s;
+  animation-delay: 0.0334s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(3) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.0501s;
+  animation-delay: 0.0501s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(4) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.0668s;
+  animation-delay: 0.0668s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(5) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.0835s;
+  animation-delay: 0.0835s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(6) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.1002s;
+  animation-delay: 0.1002s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(7) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.1169s;
+  animation-delay: 0.1169s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(8) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.1336s;
+  animation-delay: 0.1336s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(9) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.1503s;
+  animation-delay: 0.1503s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(10) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.167s;
+  animation-delay: 0.167s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(11) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.1837s;
+  animation-delay: 0.1837s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(12) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.2004s;
+  animation-delay: 0.2004s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(13) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.2171s;
+  animation-delay: 0.2171s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(14) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.2338s;
+  animation-delay: 0.2338s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(15) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.2505s;
+  animation-delay: 0.2505s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(16) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.2672s;
+  animation-delay: 0.2672s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(17) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.2839s;
+  animation-delay: 0.2839s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(18) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.3006s;
+  animation-delay: 0.3006s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(19) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.3173s;
+  animation-delay: 0.3173s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(20) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.334s;
+  animation-delay: 0.334s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(21) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.3507s;
+  animation-delay: 0.3507s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(22) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.3674s;
+  animation-delay: 0.3674s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(23) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.3841s;
+  animation-delay: 0.3841s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(24) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.4008s;
+  animation-delay: 0.4008s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(25) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.4175s;
+  animation-delay: 0.4175s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(26) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.4342s;
+  animation-delay: 0.4342s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(27) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.4509s;
+  animation-delay: 0.4509s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(28) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.4676s;
+  animation-delay: 0.4676s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(29) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.4843s;
+  animation-delay: 0.4843s;
+}
+/* line 202, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(30) .omnibar-menu-icon {
+  -webkit-animation-delay: 0.501s;
+  animation-delay: 0.501s;
+}
+
+/* line 209, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-image-ct {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin: auto;
+  height: 4em;
+  position: relative;
+  width: 4em;
+}
+
+/* line 219, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-image-bg {
+  fill: #31a0da;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  -webkit-transition: 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  -moz-transition: 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  -o-transition: 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  width: 100%;
+  -webkit-animation: menu-in 200ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+  animation: menu-in 200ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+  -webkit-backface-visibility: hidden;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(1) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 82ms;
+  animation-delay: 82ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(2) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 97ms;
+  animation-delay: 97ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(3) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 112ms;
+  animation-delay: 112ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(4) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 127ms;
+  animation-delay: 127ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(5) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 142ms;
+  animation-delay: 142ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(6) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 157ms;
+  animation-delay: 157ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(7) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 172ms;
+  animation-delay: 172ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(8) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 187ms;
+  animation-delay: 187ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(9) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 202ms;
+  animation-delay: 202ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(10) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 217ms;
+  animation-delay: 217ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(11) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 232ms;
+  animation-delay: 232ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(12) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 247ms;
+  animation-delay: 247ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(13) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 262ms;
+  animation-delay: 262ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(14) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 277ms;
+  animation-delay: 277ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(15) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 292ms;
+  animation-delay: 292ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(16) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 307ms;
+  animation-delay: 307ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(17) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 322ms;
+  animation-delay: 322ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(18) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 337ms;
+  animation-delay: 337ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(19) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 352ms;
+  animation-delay: 352ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(20) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 367ms;
+  animation-delay: 367ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(21) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 382ms;
+  animation-delay: 382ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(22) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 397ms;
+  animation-delay: 397ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(23) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 412ms;
+  animation-delay: 412ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(24) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 427ms;
+  animation-delay: 427ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(25) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 442ms;
+  animation-delay: 442ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(26) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 457ms;
+  animation-delay: 457ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(27) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 472ms;
+  animation-delay: 472ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(28) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 487ms;
+  animation-delay: 487ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(29) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 502ms;
+  animation-delay: 502ms;
+}
+/* line 235, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-item:nth-child(30) .omnibar-menu-image-bg {
+  -webkit-animation-delay: 517ms;
+  animation-delay: 517ms;
+}
+
+/* line 242, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-image {
+  display: block;
+  fill: currentColor;
+  height: 75%;
+  position: relative;
+  width: 75%;
+}
+
+/* line 251, ../../../sass/slate/modules/omnibar.scss */
+.omnibar-menu-label {
+  color: white;
+  font-size: smaller;
+  line-height: 1.25;
+  margin-top: 0.25em;
+}
