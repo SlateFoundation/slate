@@ -1,0 +1,97 @@
+@-webkit-keyframes slip-in {
+    from { -webkit-transform: rotateX(10deg) scale(.8); transform: rotateX(10deg) scale(.8); }
+      to { -webkit-transform: none; transform: none; }
+}
+
+@keyframes slip-in {
+    from { -webkit-transform: rotateX(10deg) scale(.8); transform: rotateX(10deg) scale(.8); }
+      to { -webkit-transform: none; transform: none; }
+}
+
+@-webkit-keyframes fade-in {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+.modal-mask {
+    background: rgba($page-bg-color, .6);
+    height: 100%;
+    left: 0;
+    overflow: auto;
+    @include perspective(1000);
+    position: fixed;
+    top: 0;
+    width: 100%;
+
+    -webkit-animation: fade-in .2s;
+    animation: fade-in .2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-dialog {
+    @include backface-visibility(hidden);
+    background: $page-bg-color;
+    border: 1px solid darken($link-color, 5);
+    border-top-color: lighten($link-color, 5);
+    border-bottom-color: darken($link-color, 15);
+    @include border-radius(.25em);
+    @include box-shadow(0 .25em 1em -.25em rgba($text-color, .4));
+    margin: 5em auto;
+    max-width: 75%;
+    padding: 1.5em 1.5em 1em;
+    @include transform-origin(top);
+    width: 23em;
+    
+    &.waiting {
+        background-image: inline-image('spinner.gif');
+        background-repeat: no-repeat;
+        background-position: center;
+        
+        .modal-body,
+        .modal-buttons {
+            opacity: .2;
+            pointer-events: none;
+        }
+    }
+    
+    -webkit-animation: slip-in .2s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+    animation: slip-in .2s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+}
+
+.modal-close-button {
+    color: mix($text-color, $link-color);
+    cursor: pointer;
+    float: right;
+    font-size: 1.75em;
+    font-weight: bold;
+    line-height: 1;
+    margin-top: -(3em/16);
+    opacity: .3;
+    
+    &:hover, &:focus { opacity: .6; }
+}
+
+.modal-title {
+    font-size: 1.5em;
+    margin: 0 0 .5em;
+}
+
+.modal-body {
+    margin: 1.5em 0;
+}
+
+.modal-buttons {
+    margin: 1.5em 0 0;
+    text-align: right;
+    
+    .button {
+        margin-left: .5em;
+    }
+}
