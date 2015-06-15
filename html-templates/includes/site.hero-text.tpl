@@ -1,0 +1,1 @@
+<p>The Science Leadership Academy is a partnership high school between the School District of Philadelphia and The Franklin Institute. vSLA is an inquiry-driven, project-based high school focused on 21st century learning that opened its doors on September 7, 2006.</p>

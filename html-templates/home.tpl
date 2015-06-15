@@ -1,6 +1,8 @@
 {extends "designs/site.tpl"}
 {block "body-class"}home{/block}
 
+{block "header-class"}reveal-hero{/block}
+
 {block "content"}
     {load_templates "subtemplates/blog.tpl"}
     <div class="sidebar-layout">
