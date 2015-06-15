@@ -22,7 +22,7 @@
         </header>
 
         <div class="modal-body">
-            <fieldset class="stretch">
+            <fieldset class="stretch plain">
                 {loginField}
                 {passwordField}
             </fieldset>
