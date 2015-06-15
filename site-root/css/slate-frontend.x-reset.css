@@ -1,5 +1,0 @@
-/* resets to make ExtJS theme compatible with normalize.css */
-/* line 2, ../sass/slate-frontend.x-reset.scss */
-.x-reset img {
-  vertical-align: baseline;
-}
