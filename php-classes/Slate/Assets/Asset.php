@@ -183,10 +183,11 @@ class Asset extends \ActivityRecord
     
     public function getValue($name)
     {
+        if (in_array($name, static::$aliasTypes)) {
+            return $this->getAliasByType($name);
+        }
+
         switch ($name) {
-            case 'MfrSerial':
-                return $this->getMfrSerial();
-            
             case 'FullName':
                 return $this->getTitle();
                 
@@ -205,20 +206,16 @@ class Asset extends \ActivityRecord
         return join(" - ", $values);
     }
     
-    public function getMfrSerial()
-    {
-        $serialAlias = null;
-        
-        if (is_array($this->Aliases)) {
-            foreach ($this->Aliases AS $alias) {
-                if ($alias->Type == $name) {
-                    $serialAlias = $alias;
-                    break;
-                }
-            }    
-        }
-        return $serialAlias;
-    }
+	public function getAliasByType($aliasType)
+	{
+		foreach ($this->Aliases AS $Alias) {
+			if ($Alias->Type == $aliasType) {
+				return $Alias;
+			}
+		}
+
+		return null;
+	}
 
 
     public static function sortIdentifier($dir, $name)
