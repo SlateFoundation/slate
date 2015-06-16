@@ -1,10 +1,9 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 /**
- * people.Profile controller
+ * people.Profile controller handles events for the people.details.Profile
  */
 Ext.define('SlateAdmin.controller.people.Profile', {
     extend: 'Ext.app.Controller',
-
 
     // controller config
     views: [
@@ -68,10 +67,23 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
 
     // event handlers
+
+    /**
+     * Event Handler. Adds the profile panel to the details tab panel
+     * @param {Ext.tab.Panel} detailsTabs The details tab panel defined in SlateAdmin.view.people.Manager
+     * @return {void}
+     */
     onBeforeTabsRender: function(detailTabs) {
         detailTabs.add(this.getProfilePanel());
     },
 
+    /**
+     * Event Handler. Handles personloaded event defined by SlateAdmin.view.people.details.AbstractDetails which fires when
+     * the tab is activated or a new person is selected.  This initializes the form for the selected user.
+     * @param {SlateAdmin.controller.people.Profile} profilePanel The profile panel.
+     * @param {SlateAdmin.model.person.Person} person The person record.
+     * @return {void}
+     */
     onPersonLoaded: function(profilePanel, person) {
         var me = this,
             personClass = person.get('Class'),
@@ -96,10 +108,18 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         }
     },
 
+    /**
+     * Event Handler. Discards changes and resets form to last loaded state when cancel button is clicked.
+     * @return {void}
+     */
     onCancelButtonClick: function() {
         this.getProfileForm().getForm().reset();
     },
 
+    /**
+     * Event Handler. Saves changes to user profile.
+     * @return {void}
+     */
     onSaveButtonClick: function() {
         var me = this,
             profileForm = me.getProfileForm(),
@@ -146,8 +166,12 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         });
     },
 
-
     // internal methods
+
+    /**
+     * Set the enabled/disabled states of the Save and Cancel buttons based on the dirty and valid properties of the form.
+     * @return {void}
+     */
     syncButtons: function() {
         var me = this,
             profileForm = me.getProfileForm(),
