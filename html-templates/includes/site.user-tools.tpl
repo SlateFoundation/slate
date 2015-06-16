@@ -19,39 +19,30 @@
                 </form>
             </li>
 
-            {if $.User}
-            <li class="omnibar-item">
-                <a class="omnibar-link" href="/courses">
-                    <img class="omnibar-link-image" src="http://placehold.it/48" alt="" width="24" height="24">
-                    Courses
-                </a>
-                <div class="omnibar-menu-ct">
-                    <ul class="omnibar-menu">
-                        {loop array(
-                            array(title => 'Algebra',   icon => 'arithmetic'),
-                            array(title => 'English',   icon => 'writing'),
-                            array(title => 'Biology',   icon => 'chemistry'),
-                            array(title => 'History',   icon => 'globe'),
-                            array(title => 'Art',       icon => 'palette'),
-                            array(title => 'Long Course Name Here', icon => 'binoculars'),
-                            array(title => 'Health',    icon => 'heartbeat'),
-                            array(title => 'Spanish',   icon => 'intl')
-                        )}
-                            <li class="omnibar-menu-item">
-                                <a class="omnibar-menu-link" href="/courses/{$title|whitespace:'_'}">
-                                    <figure class="omnibar-menu-icon">
-                                        <div class="omnibar-menu-image-ct">
-                                            <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
-                                            <svg class="omnibar-menu-image"><use xlink:href="#icon-{$icon}"/></svg>
-                                        </div>
-                                        <figcaption class="omnibar-menu-label">{$title}</figcaption>
-                                    </figure>
-                                </a>
-                            </li>
-                        {/loop}
-                    </ul>
-                </div>
-            </li>
+            {if $.User && count($.User->CurrentCourseSections)}
+                <li class="omnibar-item">
+                    <a class="omnibar-link" href="/courses">
+                        <img class="omnibar-link-image" src="http://placehold.it/48" alt="" width="24" height="24">
+                        Courses
+                    </a>
+                    <div class="omnibar-menu-ct">
+                        <ul class="omnibar-menu">
+                            {foreach item=CourseSection from=$.User->CurrentCourseSections}
+                                <li class="omnibar-menu-item">
+                                    <a class="omnibar-menu-link" href="{$CourseSection->getUrl()|escape}" title="{$CourseSection->getTitle()|escape}">
+                                        <figure class="omnibar-menu-icon">
+                                            <div class="omnibar-menu-image-ct">
+                                                <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
+                                                <svg class="omnibar-menu-image"><use xlink:href="#icon-{Slate\UI\Courses::getIcon($CourseSection)|default:'default'}"/></svg>
+                                            </div>
+                                            <figcaption class="omnibar-menu-label">{$CourseSection->Code|escape}</figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </li>
             {/if}
 
             {if $.User}
