@@ -494,7 +494,7 @@ Ext.define('SlateAdmin.controller.People', {
             params.columns = Ext.Array.pluck(exportColumnsMenu.query('menuitem[checked]'), 'itemId').join(',');
         }
 
-        url = '/people?' + Ext.Object.toQueryString(params);
+        url = SlateAdmin.API.buildUrl('/people?' + Ext.Object.toQueryString(params));
 
         if (exportFormat == 'json') {
             window.open(url, '_blank');
