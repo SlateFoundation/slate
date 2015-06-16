@@ -2,7 +2,7 @@
 
 namespace Slate\UI;
 
-use ActiveRecord;
+use ActiveRecord, UserUnauthorizedException;
 use Tag;
 
 class Navigation
@@ -30,13 +30,17 @@ class Navigation
 
 				// expand a tag into a sub-menu of matched items
 				if (is_a($value, Tag::class)) {
-					if (!count($value->Items)) {
-						continue;
-					}
-
 					$subMenu = [];
 					foreach ($value->Items AS $TagItem) {
-						$subMenu[$TagItem->Context->getTitle()] = $TagItem->Context->getUrl();
+						try {
+							$subMenu[$TagItem->Context->getTitle()] = $TagItem->Context->getUrl();
+						} catch (UserUnauthorizedException $e) {
+							continue;
+						}
+					}
+
+					if (!count($subMenu)) {
+						continue;
 					}
 
 					$value = $subMenu;
