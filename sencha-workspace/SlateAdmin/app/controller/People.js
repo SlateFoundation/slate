@@ -348,6 +348,7 @@ Ext.define('SlateAdmin.controller.People', {
     /**
      * Event Handler. Calls syncState when people-navpanel is expanded.
      * @param {SlateAdmin.view.people.NavPanel} navPanel The navigation panel
+     * @return {void}
      */
     onNavPanelExpand: function() {
         this.syncState();
@@ -430,6 +431,7 @@ Ext.define('SlateAdmin.controller.People', {
      * @param {Ext.selection.RowModel} selModel The selection model
      * @param {SlateAdmin.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
+     * @return {void}
      */
     onPersonSelect: function(selModel, personRecord, index) {
         var me = this,
@@ -452,6 +454,7 @@ Ext.define('SlateAdmin.controller.People', {
      * @param {Ext.selection.RowModel} selModel The selection model
      * @param {SlateAdmin.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
+     * @return {void}
      */
     onPersonDeselect: function(selModel, personRecord, index) {
         var me = this,
@@ -470,6 +473,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     /**
      * Event Handler. Calls syncState when active detail tab changes to that the change is reflected in the url
+     * @return {void}
      */
     onDetailTabChange: function() {
         this.syncState();
@@ -499,6 +503,11 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * Generates the column options for the CVS export sub menu from the results of a server request to /people/*fields.
+     * @param {Ext.menu.Menu} menu The CSV export column selection menu
+     * @return {void}
+     */
     onBeforeCsvExportColumnsMenuShow: function(menu) {
         var me = this,
             columnsPlaceholder = menu.down('#columnsPlaceholder'),
@@ -523,6 +532,8 @@ Ext.define('SlateAdmin.controller.People', {
                     key, keyBits;
 
                 for (key in fields) {
+
+                    // QUESTION: are we worried about the possibility that the JS Object prototype has been overwritten?
                     if (!fields.hasOwnProperty(key)) {
                         continue;
                     }
