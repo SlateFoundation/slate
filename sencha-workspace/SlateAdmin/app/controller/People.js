@@ -480,7 +480,7 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * Exports data in the requested format.
+     * Event Handler.  Exports data in the requested format.
      * @param {Ext.menu.Item} menuItem The menuitem specifying the desired format
      * @return {void}
      */
@@ -661,7 +661,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     /**
      * Performs a reload of the store if forceReload parameter is true or the proxy's extraParams are dirty.
-     * @param {Boolean} [forceReload=false] Set to true to force reload of store even if proxy's extraParams have not changed
+     * @param {Boolean} forceReload=false Set to true to force reload of store even if proxy's extraParams have not changed
      * @param {function} callback the callback function to perform
      * @return {void}
      */
