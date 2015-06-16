@@ -1,36 +1,19 @@
-{$menus = array(
-    'About',
-    'Students',
-    'Parents',
-    'Staff',
-    'Community',
-    'Calendar',
-    'Contact Us')}
-
-{$menuItems = array(
-    'Mission and Vision',
-    'Admissions',
-    'Curriculum',
-    'Student Handbook',
-    'About SLA',
-    'Giving to SLA')}
-
 <nav class="site site-nav">
     <div class="inner">
         <ul class="nav-menu">
-            {foreach item=menu from=$menus}
-                {$last = $dwoo.foreach.default.last}
-                {$tag = tif($last, 'a', 'span')}
-                <li class="nav-item {if !$last}has-submenu{/if}">
-                    <{$tag} class="nav-label" href="/{$menu|whitespace:'_'}">{$menu}</{$tag}>
-                    {if !$last}
+            {foreach key=text item=target from=Slate\UI\Navigation::getSiteMenu()}
+                <li class="nav-item {if is_array($target)}has-submenu{/if}">
+                    {if is_array($target)}
+                        <span class="nav-label">{$text|escape}</span>
                         <ul class="nav-submenu">
-                            {loop $menuItems}
+                            {foreach key=subText item=subTarget from=$target}
                                 <li class="nav-item">
-                                    <a class="nav-label" href="{$|whitespace:'_'}">{$}</a>
+                                    <a class="nav-label" href="{$subTarget|escape}">{$subText|escape}</a>
                                 </li>
-                            {/loop}
+                            {/foreach}
                         </ul>
+                    {else}
+                        <a class="nav-label" href="{$target|escape}">{$text|escape}</a>
                     {/if}
                 </li>
             {/foreach}
