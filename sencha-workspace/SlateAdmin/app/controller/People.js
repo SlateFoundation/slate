@@ -479,6 +479,11 @@ Ext.define('SlateAdmin.controller.People', {
         this.syncState();
     },
 
+    /**
+     * Exports data in the requested format.
+     * @param {Ext.menu.Item} menuItem The menuitem specifying the desired format
+     * @return {void}
+     */
     onExportFormatButtonClick: function(menuItem) {
         var me = this,
             exportColumnsMenu = me.getExportColumnsMenu(),
@@ -653,6 +658,13 @@ Ext.define('SlateAdmin.controller.People', {
 
 
     // controller methods
+
+    /**
+     * Performs a reload of the store if forceReload parameter is true or the proxy's extraParams are dirty.
+     * @param {Boolean} [forceReload=false] Set to true to force reload of store even if proxy's extraParams have not changed
+     * @param {function} callback the callback function to perform
+     * @return {void}
+     */
     doSearch: function(forceReload, callback) {
         var me = this,
             store = me.getPeoplePeopleStore(),
@@ -771,8 +783,8 @@ Ext.define('SlateAdmin.controller.People', {
 
     /**
      * Updates the advanced search form from the query string field
-     *
      * Inverse of {@link #method-syncQueryField}
+     * @return {void}
      */
     syncAdvancedSearchForm: function() {
         var me = this,
@@ -827,7 +839,8 @@ Ext.define('SlateAdmin.controller.People', {
     /**
      * Updates the query string field from the advanced search form.
      * Inverse of {@link #method-syncAdvancedSearchForm}
-     * @param {Boolean} [execute=false] Will perform the query by adding the query string to Ext.util.History
+     * @param {Boolean} [execute=false] If true, will perform the query by adding the query string to Ext.util.History
+     * @return {void}
      */
     syncQueryField: function(execute) {
         var me = this,
@@ -882,6 +895,9 @@ Ext.define('SlateAdmin.controller.People', {
 
     /**
      * Selects a person (or clears selection) and updates grid+manager state without firing any select/deselect events
+     * @param {String} person The username of selected person or an "id=value" query string identifying the person by id
+     * @param {function} callback The callback function to perform
+     * @return {void}
      */
     selectPerson: function(person, callback) {
         var me = this,
