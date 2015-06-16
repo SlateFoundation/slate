@@ -1,4 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+/**
+ * people.Profile controller
+ */
 Ext.define('SlateAdmin.controller.people.Profile', {
     extend: 'Ext.app.Controller',
 

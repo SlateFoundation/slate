@@ -1,4 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+/**
+ * people.Courses controller
+ */
 Ext.define('SlateAdmin.controller.people.Courses', {
     extend: 'Ext.app.Controller',
 
@@ -12,7 +15,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         ref: 'coursesPanel',
         selector: 'people-details-courses',
         autoCreate: true,
-        
+
         xtype: 'people-details-courses'
     },{
         ref: 'coursesGrid',
@@ -45,7 +48,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
     onBeforeTabsRender: function(detailTabs) {
         detailTabs.add(this.getCoursesPanel());
     },
-    
+
     onPersonLoaded: function(coursesPanel, person) {
         var me = this,
             personSectionsStore = me.getCoursesGrid().getStore(),
@@ -53,7 +56,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
             termsStore = Ext.getStore('Terms'),
             termSelector = me.getPersonCoursesTermSelector(),
             selectedTerm = termSelector.getValue();
-            
+
         // ensure terms are loaded
         if (!termsStore.isLoaded()) {
             coursesPanel.setLoading('Loading terms&hellip;');
@@ -65,14 +68,14 @@ Ext.define('SlateAdmin.controller.people.Courses', {
 
             return;
         }
-        
+
         if (!selectedTerm) {
             selectedTerm = termsStore.getCurrentTerm();
             if (selectedTerm) {
                 selectedTerm = selectedTerm.getId();
             }
         }
-        
+
         coursesPanel.setLoading(false);
 
         // configure proxy and load store
@@ -88,7 +91,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         var me = this,
             personSectionsStore = me.getCoursesGrid().getStore(),
             personSectionsProxy = personSectionsStore.getProxy();
-        
+
         personSectionsProxy.setExtraParam('termID', newValue);
 
         if (personSectionsProxy.isExtraParamsDirty()) {
