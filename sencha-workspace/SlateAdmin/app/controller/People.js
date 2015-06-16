@@ -814,9 +814,9 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * Updates the query string field from the advanced search form
-     *
+     * Updates the query string field from the advanced search form.
      * Inverse of {@link #method-syncAdvancedSearchForm}
+     * @param {Boolean} [execute=false] Will perform the query by adding the query string to Ext.util.History
      */
     syncQueryField: function(execute) {
         var me = this,
