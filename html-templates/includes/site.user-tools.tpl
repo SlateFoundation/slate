@@ -19,105 +19,66 @@
                 </form>
             </li>
 
-            {if $.User && count($.User->CurrentCourseSections)}
-                <li class="omnibar-item">
-                    <a class="omnibar-link" href="/courses">
-                        <img class="omnibar-link-image" src="http://placehold.it/48" alt="" width="24" height="24">
-                        Courses
-                    </a>
-                    <div class="omnibar-menu-ct">
-                        <ul class="omnibar-menu">
-                            {foreach item=CourseSection from=$.User->CurrentCourseSections}
-                                <li class="omnibar-menu-item">
-                                    <a class="omnibar-menu-link" href="{$CourseSection->getUrl()|escape}" title="{$CourseSection->getTitle()|escape}">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
-                                                <svg class="omnibar-menu-image"><use xlink:href="#icon-{Slate\UI\Courses::getIcon($CourseSection)|default:'default'}"/></svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label">{$CourseSection->Code|escape}</figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </div>
-                </li>
-            {/if}
-
-            {if $.User}
-            <li class="omnibar-item">
-                <a class="omnibar-link" href="/tools">
-                    <img class="omnibar-link-image" src="http://placehold.it/48" alt="" width="24" height="24">
-                    Tools
-                </a>
-                <div class="omnibar-menu-ct">
-                    <ul class="omnibar-menu">
-                        {loop array(
-                            array(title => 'Google Apps for Education', icon => 'gapps'),
-                            array(title => 'Gmail',                     icon => 'gmail'),
-                            array(title => 'Google Docs',               icon => 'gdrive'),
-                            array(title => 'Google Calendar',           icon => 'gcal'),
-                            array(title => 'Google Sites',              icon => 'gsites'),
-                            array(title => 'Gradebook',                 icon => 'gradebook'),
-                            array(title => 'Student Directory',         icon => 'contacts'),
-                            array(title => 'Blogs',                     icon => 'rss'),
-                            array(title => 'SIS',                       icon => 'id'),
-                            array(title => 'LMS',                       icon => 'network'),
-                            array(title => 'College Counseling',        icon => 'diploma'),
-                            array(title => 'Homepage',                  icon => 'home'),
-                            array(title => 'Another Tool',              icon => 'tools'),
-                            array(title => 'Another Link'               icon => 'link')
-                        )}
-                            <li class="omnibar-menu-item">
-                                <a class="omnibar-menu-link" href="/tools/{$title|whitespace:'_'}">
-                                    <figure class="omnibar-menu-icon">
-                                        <div class="omnibar-menu-image-ct">
-                                            <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
-                                            <svg class="omnibar-menu-image"><use xlink:href="#icon-{$icon}"/></svg>
-                                        </div>
-                                        <figcaption class="omnibar-menu-label">{$title}</figcaption>
-                                    </figure>
-                                </a>
-                            </li>
-                        {/loop}
-                    </ul>
-                </div>
-            </li>
-            {/if}
-
-            <li class="omnibar-item">
-                {if $.User}
-                <a class="omnibar-link" href="/profile">
-                    <img class="omnibar-link-image" src="http://placehold.it/48" alt="" width="24" height="24">
-                    {$.User->FirstName}
-                </a>
-                <div class="omnibar-menu-ct">
-                    <ul class="omnibar-menu">
-                        {loop array(
-                            array(title => 'My Profile',   icon => 'user'),
-                            array(title => 'Edit Profile', icon => 'gearhead'),
-                            array(title => 'My Drafts',    icon => 'writing'),
-                            array(title => 'Log Out'       icon => 'logout')
-                        )}
-                            <li class="omnibar-menu-item">
-                                <a class="omnibar-menu-link" href="/profile/{$title|whitespace:'_'}">
-                                    <figure class="omnibar-menu-icon">
-                                        <div class="omnibar-menu-image-ct">
-                                            <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
-                                            <svg class="omnibar-menu-image"><use xlink:href="#icon-{$icon}"/></svg>
-                                        </div>
-                                        <figcaption class="omnibar-menu-label">{$title}</figcaption>
-                                    </figure>
-                                </a>
-                            </li>
-                        {/loop}
-                    </ul>
-                </div>
-                {else}
-                <a class="omnibar-link" href="/login">Log In</a>
+            {template omnibarMenuItem item labelPrefix=null}
+                {if $item.href}
+                    <li class="omnibar-menu-item">
+                        <a class="omnibar-menu-link" href="{$item.href|escape}" title="{$item.label|escape}">
+                            <figure class="omnibar-menu-icon">
+                                <div class="omnibar-menu-image-ct">
+                                    <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
+                                    <svg class="omnibar-menu-image"><use xlink:href="#icon-{$item.icon|default:'link'|escape}"/></svg>
+                                </div>
+                                <figcaption class="omnibar-menu-label">
+                                    {if $labelPrefix}
+                                        <small class="muted">{$labelPrefix|escape}</small><br>
+                                    {/if}
+                                    {$item.shortLabel|default:$item.label|escape}
+                                </figcaption>
+                            </figure>
+                        </a>
+                    </li>
                 {/if}
-            </li>
+
+                {if $item.items}
+                    {foreach item=subItem from=$item.items}
+                        {if !$subItem.icon && !$subItem.iconSrc}
+                            {if $item.icon}
+                                {$subItem.icon = $item.icon}
+                            {/if}
+                            {if $item.iconSrc}
+                                {$subItem.iconSrc = $item.iconSrc}
+                            {/if}
+                        {/if}
+                        {omnibarMenuItem $subItem labelPrefix=tif($labelPrefix, cat($labelPrefix, ' > ', $item.label), $item.label)}
+                    {/foreach}
+                {/if}
+            {/template}
+
+            {template omnibarItem item}
+                <li class="omnibar-item">
+                    <{if $item.href}a href="{$item.href|escape}"{else}span{/if} class="omnibar-link" title="{$item.label|escape}"> {* TODO: what if no href, span? *}
+                        {if $item.iconSrc}
+                            <img class="omnibar-link-image" src="{$item.iconSrc|escape}" alt="{$item.label|escape}" width="24" height="24">
+                        {/if}
+                        {$item.shortLabel|default:$item.label|escape}
+                    </{tif $item.href ? a : span}>
+                    
+                    {if !empty($item.items)}
+                        <div class="omnibar-menu-ct">
+                            <ul class="omnibar-menu">
+                                {foreach item=subItem from=$item.items}
+                                    {omnibarMenuItem $subItem}
+                                {/foreach}
+                            </ul>
+                        </div>
+                    {/if}
+                </li>
+            {/template}
+
+
+            {foreach item=item from=Slate\UI\Omnibar::getItems()}
+                {omnibarItem $item}
+            {/foreach}
         </ul>
     </div>
 </div>

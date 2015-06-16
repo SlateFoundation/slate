@@ -6,7 +6,7 @@ use Slate\Courses\Department;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
 
-class Courses
+class Courses implements IOmnibarSource
 {
 	public static $courseIcons = [
 		'arithmetic' => [
@@ -64,5 +64,27 @@ class Courses
 		// TODO: look for a department match
 
 		return null;
+	}
+
+	public static function getOmnibarItems()
+	{
+		if (empty($_SESSION['User'])) {
+			return [];
+		}
+
+		return [
+			'Courses' => [
+//				'_iconSrc' => 'http://placehold.it/48',
+				'_href' => Course::$collectionRoute,
+				'_items' => array_map(function(Section $Section) {
+					return [
+						'_label' => $Section->getTitle(),
+						'_shortLabel' => $Section->Code,
+						'_icon' => static::getIcon($Section),
+						'_href' => $Section->getUrl()
+					];
+				}, $_SESSION['User']->CurrentCourseSections)
+			]
+		];
 	}
 }
