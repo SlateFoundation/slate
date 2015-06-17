@@ -9,22 +9,26 @@ class ManageSlate implements \Slate\UI\ILinksSource
 	public static function getLinks($context = null)
 	{
 		if (!empty($_SESSION['User']) && $_SESSION['User']->hasAccountLevel('Staff')) {
-			$appsLinks = [
-                'Manage Slate' => [
-                    '_href' => '/manage',
-                    '_icon' => 'tools',
+			$manageLinks = static::getManageLinks();
 
-                    'This Is The Omnibar' => $context == \Slate\UI\Omnibar::class ? 'hello' : null, // TODO: remove before commit
-                    'People' => '/manage#people',
-                    'Course Sections' => '/manage#course-sections',
-                    'Settings' => '/manage#settings',
-                    'Pages' => '/pages'
-                ]
-			];
-
-            return static::$parentTree ? [static::$parentTree => $appsLinks] : $appsLinks;
+            return static::$parentTree ? [static::$parentTree => $manageLinks] : $manageLinks;
 		}
 
 		return [];
 	}
+
+    public static function getManageLinks()
+    {
+        return [
+            'Manage Slate' => [
+                '_href' => '/manage',
+                '_icon' => 'tools',
+
+                'People' => '/manage#people',
+                'Course Sections' => '/manage#course-sections',
+                'Settings' => '/manage#settings',
+                'Pages' => '/pages'
+            ]
+		];
+    }
 }

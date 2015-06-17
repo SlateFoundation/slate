@@ -8,10 +8,17 @@ class GoogleApps implements \Slate\UI\ILinksSource
 
 	public static function getLinks($context = null)
 	{
-        $domain = \RemoteSystems\GoogleApps::$domain;
+		$appsLinks = static::getGoogleAppsLinks();
 
+        return static::$parentTree ? [static::$parentTree => $appsLinks] : $appsLinks;
+	}
+
+    public static function getGoogleAppsLinks()
+    {
+        $domain = \RemoteSystems\GoogleApps::$domain ?: 'slatedemo.com';
+        
 		if (!empty($_SESSION['User']) && $domain) {
-			$appsLinks = [
+            return [
                 'Google Apps' => [
                     '_icon' => 'gapps',
                     '_href' => $_SESSION['User']->hasAccountLevel('Administrator') ? 'https://admin.google.com/a/' . $domain : null,
@@ -32,11 +39,9 @@ class GoogleApps implements \Slate\UI\ILinksSource
                         '_href' => 'https://sites.google.com/a/' . $domain
                     ]
                 ]
-			];
+    		];
+        }
 
-            return static::$parentTree ? [static::$parentTree => $appsLinks] : $appsLinks;
-		}
-
-		return [];
-	}
+        return null;
+    }
 }
