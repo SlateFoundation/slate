@@ -1,12 +1,12 @@
 <?php
 
-namespace Slate\UI;
+namespace Slate\UI\Adapters;
 
 use Slate\Courses\Department;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
 
-class Courses implements IOmnibarSource
+class Courses implements \Slate\UI\IOmnibarSource
 {
 	public static $courseIcons = [
 		'arithmetic' => [

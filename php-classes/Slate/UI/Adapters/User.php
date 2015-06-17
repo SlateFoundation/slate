@@ -1,8 +1,10 @@
 <?php
 
-namespace Slate\UI;
+namespace Slate\UI\Adapters;
 
-class User implements IOmnibarSource
+use Slate\UI\Omnibar;
+
+class User implements \Slate\UI\IOmnibarSource
 {
 	public static function getOmnibarItems()
 	{

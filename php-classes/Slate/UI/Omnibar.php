@@ -4,12 +4,7 @@ namespace Slate\UI;
 
 class Omnibar
 {
-	public static $sources = [
-		Courses::class,
-		Tools::class,
-		User::class
-	];
-
+	public static $sources = [];
 	public static $preferredIconSize = 48;
 
 	public static function getItems()
