@@ -35,12 +35,12 @@ class Tools implements IOmnibarSource
 		}
 	}
 
-	public static function getOmnibarItems()
+	public static function getOmnibarLinks()
 	{
 		return [
 			'Tools' => empty($_SESSION['User']) ? null : [
 //				'_iconSrc' => 'http://placehold.it/48',
-				'_items' => static::$tools
+				'_children' => static::$tools
 			]
 		];
 	}

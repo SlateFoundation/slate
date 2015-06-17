@@ -4,5 +4,5 @@ namespace Slate\UI;
 
 interface IOmnibarSource
 {
-	public static function getOmnibarItems();
+	public static function getOmnibarLinks();
 }

@@ -6,7 +6,7 @@ use Slate\UI\Omnibar;
 
 class User implements \Slate\UI\IOmnibarSource
 {
-	public static function getOmnibarItems()
+	public static function getOmnibarLinks()
 	{
 		if ($User = $_SESSION['User']) {
 			return [

@@ -19,55 +19,55 @@
                 </form>
             </li>
 
-            {template omnibarMenuItem item labelPrefix=null}
-                {if $item.href}
+            {template omnibarChildLink link labelPrefix=null}
+                {if $link.href}
                     <li class="omnibar-menu-item">
-                        <a class="omnibar-menu-link" href="{$item.href|escape}" title="{$item.label|escape}">
+                        <a class="omnibar-menu-link" href="{$link.href|escape}" title="{$link.label|escape}">
                             <figure class="omnibar-menu-icon">
                                 <div class="omnibar-menu-image-ct">
                                     <svg class="omnibar-menu-image-bg"><use xlink:href="#icon-squircle"/></svg>
-                                    <svg class="omnibar-menu-image"><use xlink:href="#icon-{$item.icon|default:'link'|escape}"/></svg>
+                                    <svg class="omnibar-menu-image"><use xlink:href="#icon-{$link.icon|default:'link'|escape}"/></svg>
                                 </div>
                                 <figcaption class="omnibar-menu-label">
                                     {if $labelPrefix}
                                         <small class="muted">{$labelPrefix|escape}</small><br>
                                     {/if}
-                                    {$item.shortLabel|default:$item.label|escape}
+                                    {$link.shortLabel|default:$link.label|escape}
                                 </figcaption>
                             </figure>
                         </a>
                     </li>
                 {/if}
 
-                {if $item.items}
-                    {foreach item=subItem from=$item.items}
-                        {if !$subItem.icon && !$subItem.iconSrc}
-                            {if $item.icon}
-                                {$subItem.icon = $item.icon}
+                {if $link.children}
+                    {foreach item=childLink from=$link.children}
+                        {if !$childLink.icon && !$childLink.iconSrc}
+                            {if $link.icon}
+                                {$childLink.icon = $link.icon}
                             {/if}
-                            {if $item.iconSrc}
-                                {$subItem.iconSrc = $item.iconSrc}
+                            {if $link.iconSrc}
+                                {$childLink.iconSrc = $link.iconSrc}
                             {/if}
                         {/if}
-                        {omnibarMenuItem $subItem labelPrefix=tif($labelPrefix, cat($labelPrefix, ' > ', $item.label), $item.label)}
+                        {omnibarChildLink $childLink labelPrefix=tif($labelPrefix, cat($labelPrefix, ' > ', $link.label), $link.label)}
                     {/foreach}
                 {/if}
             {/template}
 
-            {template omnibarItem item}
+            {template omnibarLink link}
                 <li class="omnibar-item">
-                    <{if $item.href}a href="{$item.href|escape}"{else}span{/if} class="omnibar-link" title="{$item.label|escape}"> {* TODO: what if no href, span? *}
-                        {if $item.iconSrc}
-                            <img class="omnibar-link-image" src="{$item.iconSrc|escape}" alt="{$item.label|escape}" width="24" height="24">
+                    <{if $link.href}a href="{$link.href|escape}"{else}span{/if} class="omnibar-link" title="{$link.label|escape}"> {* TODO: what if no href, span? *}
+                        {if $link.iconSrc}
+                            <img class="omnibar-link-image" src="{$link.iconSrc|escape}" alt="{$link.label|escape}" width="24" height="24">
                         {/if}
-                        {$item.shortLabel|default:$item.label|escape}
-                    </{tif $item.href ? a : span}>
+                        {$link.shortLabel|default:$link.label|escape}
+                    </{tif $link.href ? a : span}>
                     
-                    {if !empty($item.items)}
+                    {if !empty($link.children)}
                         <div class="omnibar-menu-ct">
                             <ul class="omnibar-menu">
-                                {foreach item=subItem from=$item.items}
-                                    {omnibarMenuItem $subItem}
+                                {foreach item=childLink from=$link.children}
+                                    {omnibarChildLink $childLink}
                                 {/foreach}
                             </ul>
                         </div>
@@ -76,8 +76,8 @@
             {/template}
 
 
-            {foreach item=item from=Slate\UI\Omnibar::getItems()}
-                {omnibarItem $item}
+            {foreach item=link from=Slate\UI\Omnibar::getLinks()}
+                {omnibarLink $link}
             {/foreach}
         </ul>
     </div>

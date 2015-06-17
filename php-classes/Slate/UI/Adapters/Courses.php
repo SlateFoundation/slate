@@ -66,7 +66,7 @@ class Courses implements \Slate\UI\IOmnibarSource
 		return null;
 	}
 
-	public static function getOmnibarItems()
+	public static function getOmnibarLinks()
 	{
 		if (empty($_SESSION['User'])) {
 			return [];
@@ -76,7 +76,7 @@ class Courses implements \Slate\UI\IOmnibarSource
 			'Courses' => [
 //				'_iconSrc' => 'http://placehold.it/48',
 				'_href' => Course::$collectionRoute,
-				'_items' => array_map(function(Section $Section) {
+				'_children' => array_map(function(Section $Section) {
 					return [
 						'_label' => $Section->getTitle(),
 						'_shortLabel' => $Section->Code,
