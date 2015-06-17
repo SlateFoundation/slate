@@ -42,10 +42,10 @@ class User implements \Slate\UI\IOmnibarSource
 					]
 				]
 			];
-		} else {
-			return [
-				'Log In' => '/login?return=' . urlencode($_SERVER['REQUEST_URI'])
-			];
 		}
+
+		return [
+			'Log In' => '/login?return=' . urlencode($_SERVER['REQUEST_URI'])
+		];
 	}
 }
