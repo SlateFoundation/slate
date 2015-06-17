@@ -7,12 +7,8 @@ class Slate
     public static $siteSlogan = 'Open source for education';
     public static $userEmailDomain;
     public static $generateUserEmail;
-    public static $webTools = array();
-    public static $manageTools = array(
-        'People'     => '/manage#people',
-        'Course Sections'    => '/manage#course-sections',
-        'Pages'      => '/pages'
-    );
+    public static $webTools = [];
+    public static $manageTools = [];
 
     static function __classLoaded()
     {

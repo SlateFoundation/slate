@@ -15,69 +15,79 @@
 {/block}
 
 {block "content"}
+    {template dashboardLink link parentLink=null labelPrefix=null}
+        {if $parentLink && !$link.icon && !$link.iconSrc}
+            {if $parentLink.icon}
+                {$link.icon = $parentLink.icon}
+            {/if}
+            {if $parentLink.iconSrc}
+                {$link.iconSrc = $parentLink.iconSrc}
+            {/if}
+        {/if}
+
+        {if $link.href}
+            <li class="dashboard-icon-item {$link.cls}">
+                <a class="dashboard-icon-link" href="{$link.href|escape}">
+                    <figure class="dashboard-icon-ct">
+                        <div class="dashboard-icon">
+                            <svg class="dashboard-icon-bg"><use xlink:href="#icon-squircle"/></svg>
+                            {if $link.icon}
+                                <svg class="dashboard-icon-glyph"><use xlink:href="#icon-{$link.icon}"/></svg>
+                            {/if}
+                        </div>
+                        <figcaption class="dashboard-icon-label">
+                            {if $labelPrefix}
+                                <small class="muted">{$labelPrefix|escape}</small><br>
+                            {/if}
+                            {$link.label|escape}
+                        </figcaption>
+                    </figure>
+                </a>
+            </li>
+        {/if}
+
+        {if $link.children}
+            {foreach item=childLink from=$link.children}
+                {$parentLabel = $link.shortLabel|default:$link.label}
+                {dashboardLink $childLink parentLink=$link labelPrefix=tif($labelPrefix, cat($labelPrefix, ' » ', $parentLabel), $parentLabel)}
+            {/foreach}
+        {/if}
+    {/template}
+
+    {template 'dashboardItem' title icon url cls=no}
+        <li class="dashboard-icon-item {tif $cls ? $cls : ''}">
+            <a class="dashboard-icon-link" href="{$url|default:'#$icon'}">
+                <figure class="dashboard-icon-ct">
+                    <div class="dashboard-icon">
+                        <svg class="dashboard-icon-bg"><use xlink:href="#icon-squircle"/></svg>
+                        <svg class="dashboard-icon-glyph"><use xlink:href="#icon-{$icon}"/></svg>
+                    </div>
+                    <figcaption class="dashboard-icon-label">{$title}</figcaption>
+                </figure>
+            </a>
+        </li>
+    {/template}
+
     <header class="page-header">
-        <h2 class="header-title">{$.User->FirstName}’s Dashboard</h2>
+        <h1 class="header-title">{$.User->FirstName}’s Dashboard</h1>
     </header>
 
     <div class="sidebar-layout">
         <div class="main-col">
             <div class="col-inner">
-                {if !$.cookies.dashboard_welcome_dismissed}
-                    <div class="well dismissible" data-dismissible-id="dashboard_welcome">
-                        <p>Welcome to Slate! Slate ties together all the online tools and services that {Slate::$schoolAbbr} uses so you only have to log in once. Now that you‘re logged in, simply choose a shortcut below or in the top right menu to access the tools you need.</p>
-                        <button class="primary dismiss-button">Got it, thanks!</button>
-                    </div>
-                {/if}
-        
-                {template dashboardItem label url=no labelPrefix=no class=no}
-                    {if is_string($url)}
-                        <li class="shortcut {$class}"><a href="{$url|escape}">{if $labelPrefix}<small class="muted">{$labelPrefix|escape}</small><br>{/if}{$label|escape}</a></li>
-                    {elseif is_array($url)}
-                        {foreach item=subUrl key=subLabel from=$url}
-                            {dashboardItem label=$subLabel url=$subUrl labelPrefix=$label}
-                        {/foreach}
+            
+                {foreach item=link from=$links}
+                    {if $link.children}
+                        <section class="dashboard-group" id="{unique_dom_id}{$link.label}{/}">
+                            <h2 class="dashboard-group-title">{$link.label|escape}</h2>
+                            <ul class="dashboard-icon-list">
+                                {foreach item=childLink from=$link.children}
+                                    {dashboardLink $childLink parentLink=$link}
+                                {/foreach}
+                            </ul>
+                        </section>
                     {/if}
-                {/template}
-        
-                <h4 class="dashboard-header">Shortcuts</h4>
-                <ul class="dashboard-shortcuts">
-                    {$webTools = Slate::$webTools}
-                    {dashboardItem label=cat(Slate::$schoolAbbr, ' Homepage') url="/home?nodashboard=1"}
-                    {foreach item=url key=label from=$webTools}
-                        {dashboardItem label=$label url=$url}
-                    {/foreach}
-                </ul>
-        
-                <h4 class="dashboard-header">Classes</h4>
-                <ul class="dashboard-shortcuts">
-                    {foreach item=Section from=$.User->CurrentCourseSections}
-                        <li class="shortcut">
-                            <a href="/sections/{$Section->Handle}">
-                                {if $Section->Schedule->Title}<span class="pin muted">{$Section->Schedule->Title|escape}</span>{/if}
-                                <small>{$Section->Title|escape}</small>
-                            </a>
-            
-                            {foreach item=Mapping from=$Section->Mappings}
-                                {if $Mapping->ExternalSource == 'CanvasIntegrator' && $Mapping->ExternalKey == 'course[id]' && RemoteSystems\Canvas::$canvasHost}
-                                    <div class="shortcut-stub">
-                                        <a href="https://{RemoteSystems\Canvas::$canvasHost}/courses/{$Mapping->ExternalIdentifier}" target="_blank">Canvas</a>
-                                    </div>
-                                {/if}
-                            {/foreach}
-                        </li>
-                    {foreachelse}
-                        <li class="empty"><em class="muted">None this term.</em></li>
-                    {/foreach}
-                </ul>
-        
-                {if $.User->hasAccountLevel('Staff')}
-                    {$manageTools = Slate::$manageTools}
-            
-                    <h4 class="dashboard-header">Manage Slate</h4>
-                    <ul class="dashboard-shortcuts">
-                        {foreach $manageTools label url}{dashboardItem $label $url class=manage}{/foreach}
-                    </ul>
-                {/if}
+                {/foreach}
             </div>
         </div>
     

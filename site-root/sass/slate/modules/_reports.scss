@@ -1,0 +1,103 @@
+.slate-report {
+    h1, h2, h3, h4, h5, h6 {
+        font-family: $body-font;
+    }
+
+    .report-header {
+        @include align-items(flex-end);
+        @include display-flex;
+        margin-bottom: 3em;
+    }
+
+    .report-title {
+        @include flex(1);
+        font-family: $body-font;
+        font-size: 2.5em;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .report-type {
+        display: block;
+        font-size: .5em;
+        margin: .25em;
+    }
+
+    .report-contact {
+        line-height: 1.25;
+        margin: 0;
+        text-align: right;
+    }
+
+    .report-section-title {
+        border-bottom: 1px solid $border-color;
+        font-size: 1em;
+        font-weight: bold;
+        margin: 3em 0 1em;
+        padding-bottom: 1em;
+        text-transform: uppercase;
+    }
+
+    .report-subsection-title {
+        font-size: 1.75em;
+        font-weight: bold;
+    }
+
+    .report-heading-4 {
+        font-size: 1.25em;
+        margin-bottom: .25em;
+    }
+
+    .report-table {
+        td, th {
+            background: none;
+            border-top: 1px solid $border-color;
+            padding: .5em 1em;
+            vertical-align: top;
+
+            &:first-child { padding-left: 0; }
+            &:last-child  { padding-right: 0; }
+        }
+
+        thead th {
+            border: none;
+            font-size: 1.25em;
+        }
+    }
+
+    p {
+        margin: 0 0 1em;
+    }
+
+    dl {
+        display: table;
+
+        p {
+            margin: 0 0 .5em;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .dli {
+        display: table-row;
+    }
+
+    dt, dd {
+        display: table-cell;
+        padding: .25em 0;
+    }
+
+    dt {
+        font-weight: bold;
+        padding-right: 1em;
+        text-align: right;
+        white-space: nowrap;
+
+        &::after {
+            content: ':';
+        }
+    }
+}

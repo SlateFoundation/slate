@@ -3,6 +3,7 @@
 
 @import './variables-all';          // loads the variable files in order for all layers
 
+@import './mixins-all';             // Loads mixin files in order for all layers
 
 
 @import 'skeleton/utilities';   // utility classes such as .pull-left and .clearfix

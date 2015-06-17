@@ -1,0 +1,145 @@
+$source-grid-border-color: rgba($border-color, .5);
+
+.source-grid-ct {
+    margin: 0 -1em;
+
+    .source-grid-ct & {
+        margin-left: 0;
+    }
+}
+
+.source-grid {
+    margin: 0;
+    max-width: 100%;
+
+    td, th {
+        font-size: $font-size - 2;
+        height: 2em;
+        line-height: 1.3333;
+        padding-bottom: .25em;
+        padding-top: .25em;
+
+        &:first-child {
+            padding-left: 1.25em;
+        }
+
+        &:last-child {
+            padding-right: 1.25em;
+        }
+
+        .field {
+            font-size: $font-size;
+        }
+    }
+
+    &.top-align {
+        td, th {
+            height: auto;
+            padding-bottom: (2em/3);
+            padding-top: (2em/3);
+            vertical-align: top;
+        }
+    }
+
+    small {
+        color: $muted-color;
+        display: inline-block;
+        margin-top: .125em;
+        letter-spacing: .25px;
+        text-transform: uppercase;
+    }
+
+    .source-grid-col-header {
+        background-color: transparent;
+    }
+    
+    .source-grid-data-cell {
+        border-bottom: 1px solid $source-grid-border-color;
+        overflow: hidden;
+    
+        &:first-child {
+            // folder-closed
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path fill="#30a1db" d="M150.6 135c-.3 2.7-2.9 5-5.6 5H15c-2.8 0-5.3-2.2-5.6-5L.6 65c-.3-2.7 1.6-5 4.4-5h150c2.8 0 4.7 2.2 4.4 5l-8.8 70zM140 35v15H20V35c0-2.8 2.2-5 5-5h1.5c1.9 0 3.5-1.6 3.5-3.5V25c0-1.4.6-2.6 1.5-3.5.9-.9 2.2-1.5 3.5-1.5h30c2.8 0 5 2.2 5 5v1.5c0 1.9 1.6 3.5 3.5 3.5H135c2.8 0 5 2.2 5 5z"/></svg>');
+            background-position: 1.25em .75em;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-left: 3em;
+        }
+    }
+    
+    .source-grid-data-row {
+        cursor: pointer;
+    
+        &:hover {
+            td, td {
+                background-color: rgba($link-color, .1);
+            }        
+        }
+        
+        &.is-selected {
+            .source-grid-data-cell {
+                background-color: rgba($link-color, .2);
+            }
+        }
+
+        &.is-expanded {
+            .source-grid-data-cell {
+                background-color: rgba($link-color, .2);
+        
+                &:first-child {
+                    // folder-open
+                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path fill="#2084b8" d="M160 35v55l-8.8-35.2c-.7-2.7-3.5-4.8-6.2-4.8H45c-2.8 0-5-2.2-5-5V35c0-2.8 2.2-5 5-5h1.5c1.9 0 3.5-1.6 3.5-3.5V25c0-1.4.6-2.6 1.5-3.5.9-.9 2.2-1.5 3.5-1.5h30c2.8 0 5 2.2 5 5v1.5c0 1.9 1.6 3.5 3.5 3.5H155c2.8 0 5 2.2 5 5zM45 50h-5v-5c0 2.8 2.2 5 5 5zM158.8 135.1c.7 2.7-1 4.9-3.8 4.9H25c-2.8 0-5.5-2.2-6.2-4.9L1.2 64.9C.5 62.2 2.2 60 5 60h130c2.8 0 5.5 2.2 6.2 4.9l17.6 70.2z"/></svg>');
+                }
+            }
+        }
+    }
+    
+    .source-grid-expansion-row {
+        display: none;
+
+        &.is-expanded {
+            display: table-row;
+        }
+
+        .source-grid-expansion-cell {
+            border-bottom: 1px solid $source-grid-border-color;
+            padding: .5em 1em .5em 1.75em;
+        }
+        
+        .source-grid-data-cell {
+            &:first-child {
+                // tree-doc
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160"><path fill="#30a1db" d="M156.5 10H3.5C1.6 10 0 11.6 0 10v133c0 5.4 1.6 7 3.5 7h153c1.9 0 3.5-1.6 3.5-7V10c0 1.6-1.6 0-3.5 0zM150 136.5c0 1.9-1.6 3.5-3.5 3.5h-133c-1.9 0-3.5-1.6-3.5-3.5v-103c0-1.9 1.6-3.5 3.5-3.5h133c1.9 0 3.5 1.6 3.5 3.5v103zM30 70h100v10H30zM30 110h100v10H30zM30 50h60v10H30zM30 90h60v10H30z"/></svg>');
+            }
+        }
+
+        .source-grid-data-row:last-child {
+            .source-grid-data-cell {
+                border-bottom: 0;
+            }
+        }
+    }
+
+    .source-grid-status-cell {
+        border-top: 1px solid $source-grid-border-color;
+    }
+    
+    .source-grid-text-check {
+        color: $success-color;
+        display: inline-block;
+        font-size: larger;
+        line-height: 1;
+        margin-right: .25em;
+        text-align: center;
+        vertical-align: -.125em;
+        width: 1em;
+    }
+
+    .source-grid-text-grade {
+        // (roughly) center on letters, with or without +/-
+        display: inline-block;
+        padding-left: .5em;
+        text-align: left;
+        width: 1.25em;
+    }
+}
