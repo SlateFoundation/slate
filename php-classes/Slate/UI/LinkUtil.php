@@ -6,8 +6,6 @@ class LinkUtil
 {
 	public static function normalizeTree($inputTree)
 	{
-		if (!empty($_GET['debug'])) \Debug::dumpVar($inputTree, false, 'normalizeTree input');
-
 		$outputTree = [];
 
 		foreach ($inputTree AS $key => $value) {
@@ -66,15 +64,11 @@ class LinkUtil
 			$outputTree[$link['label']] = $link;
 		}
 
-		if (!empty($_GET['debug'])) \Debug::dumpVar($outputTree, false, 'normalizeTree result');
-
 		return $outputTree;
 	}
 
 	public static function mergeTree($existingTree, $inputTree)
 	{
-		if (!empty($_GET['debug'])) \Debug::dumpVar(['$existingTree' => $existingTree, '$inputTree' => $inputTree], false, 'mergeTree input');
-
 		foreach ($inputTree AS $key => $value) {
 			if (
 				is_string($key) &&
@@ -91,8 +85,6 @@ class LinkUtil
 				}
 			}
 		}
-
-		if (!empty($_GET['debug'])) \Debug::dumpVar($existingTree, false, 'mergeTree result');
 
 		return $existingTree;
 	}
