@@ -49,21 +49,22 @@
                                 {$childLink.iconSrc = $link.iconSrc}
                             {/if}
                         {/if}
-                        {omnibarChildLink $childLink labelPrefix=tif($labelPrefix, cat($labelPrefix, ' > ', $link.label), $link.label)}
+                        {$parentLabel = $link.shortLabel|default:$link.label}
+                        {omnibarChildLink $childLink labelPrefix=tif($labelPrefix, cat($labelPrefix, ' > ', $parentLabel), $parentLabel)}
                     {/foreach}
                 {/if}
             {/template}
 
             {template omnibarLink link}
                 <li class="omnibar-item" {html_attributes_encode $link prefix='data-' deep=no}>
-                    <{if $link.href}a href="{$link.href|escape}"{else}span{/if} class="omnibar-link" title="{$link.label|escape}"> {* TODO: what if no href, span? *}
+                    <{if $link.href}a href="{$link.href|escape}"{else}span{/if} class="omnibar-link" title="{$link.label|escape}">
                         {if $link.iconSrc}
                             <img class="omnibar-link-image" src="{$link.iconSrc|escape}" alt="{$link.label|escape}" width="24" height="24">
                         {/if}
                         {$link.shortLabel|default:$link.label|escape}
                     </{tif $link.href ? a : span}>
                     
-                    {if !empty($link.children)}
+                    {if $link.children}
                         <div class="omnibar-menu-ct">
                             <ul class="omnibar-menu">
                                 {foreach item=childLink from=$link.children}

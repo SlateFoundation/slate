@@ -2,11 +2,11 @@
 
 namespace Slate\UI\Adapters;
 
-class GoogleApps implements \Slate\UI\IOmnibarSource
+class GoogleApps implements \Slate\UI\ILinksSource
 {
     public static $parentTree = 'Tools';
 
-	public static function getOmnibarLinks()
+	public static function getLinks($context = null)
 	{
         $domain = \RemoteSystems\GoogleApps::$domain;
 

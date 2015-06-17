@@ -2,11 +2,11 @@
 
 namespace Slate\UI\Adapters;
 
-class Canvas implements \Slate\UI\IOmnibarSource
+class Canvas implements \Slate\UI\ILinksSource
 {
     public static $parentTree = 'Tools';
 
-	public static function getOmnibarLinks()
+	public static function getLinks($context = null)
 	{
         $domain = \RemoteSystems\Canvas::$canvasHost;
 

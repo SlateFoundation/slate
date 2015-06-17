@@ -1,6 +1,6 @@
 <?php
 
-Slate\UI\Navigation::$siteMenu = [
+Slate\UI\Navigation::$links = [
 	Emergence\CMS\Page::getByHandle('about'),
 	'Students' => Tag::getByHandle('site.students'),
 	'Parents' => Tag::getByHandle('site.parents'),

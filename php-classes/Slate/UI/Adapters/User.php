@@ -4,9 +4,9 @@ namespace Slate\UI\Adapters;
 
 use Slate\UI\Omnibar;
 
-class User implements \Slate\UI\IOmnibarSource
+class User implements \Slate\UI\ILinksSource
 {
-	public static function getOmnibarLinks()
+	public static function getLinks($context = null)
 	{
 		if ($User = $_SESSION['User']) {
 			return [

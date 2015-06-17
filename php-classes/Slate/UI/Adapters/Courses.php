@@ -6,7 +6,7 @@ use Slate\Courses\Department;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
 
-class Courses implements \Slate\UI\IOmnibarSource
+class Courses implements \Slate\UI\ILinksSource
 {
 	public static $courseIcons = [
 		'arithmetic' => [
@@ -66,7 +66,7 @@ class Courses implements \Slate\UI\IOmnibarSource
 		return null;
 	}
 
-	public static function getOmnibarLinks()
+	public static function getLinks($context = null)
 	{
 		if (empty($_SESSION['User'])) {
 			return [];

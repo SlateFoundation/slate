@@ -2,8 +2,33 @@
 
 namespace Slate\UI;
 
+use ActiveRecord;
+use Tag;
+use UserUnauthorizedException;
+
 class LinkUtil
 {
+	public static function mergeSources($sources, $context = null)
+	{
+		$links = [];
+
+		foreach ($sources AS $source) {
+			if (is_subclass_of($source, ILinksSource::class)) {
+				$newLinks = $source::getLinks($context);
+			} elseif (is_callable($source)) {
+				$newLinks = call_user_func($source);
+			} elseif (is_array($source) || $source instanceof \Traversable || $source instanceof \stdClass) {
+				$newLinks = $source;
+			} else {
+				continue;
+			}
+
+			$links = LinkUtil::mergeTree($links, LinkUtil::normalizeTree($newLinks));
+		}
+
+		return $links;
+	}
+
 	public static function normalizeTree($inputTree)
 	{
 		$outputTree = [];
@@ -18,7 +43,30 @@ class LinkUtil
 				$value = [
 					'_href' => $value
 				];
-			} elseif ($value instanceof \ActiveRecord) {
+			} elseif ($value instanceof Tag) {
+
+				$children = [];
+
+				foreach ($value->Items AS $TagItem) {
+					try {
+						$children[$TagItem->Context->getHandle()] = [
+							'_href' => $TagItem->Context->getUrl(),
+							'_label' => $TagItem->Context->getTitle()
+						];
+					} catch (UserUnauthorizedException $e) {
+						continue;
+					}
+				}
+
+				$value = [
+					'_label' => $value->getTitle(),
+					'_href' => $value->getUrl()
+				];
+
+				if (count($children)) {
+					$value['_children'] = $children;
+				}
+			} elseif ($value instanceof ActiveRecord) {
 				$value = [
 					'_label' => $value->getTitle(),
 					'_href' => $value->getUrl()

@@ -4,7 +4,7 @@ namespace Slate\UI;
 
 use Slate;
 
-class Tools implements IOmnibarSource
+class Tools implements ILinksSource
 {
 	public static $tools = [];
 	
@@ -35,7 +35,7 @@ class Tools implements IOmnibarSource
 		}
 	}
 
-	public static function getOmnibarLinks()
+	public static function getLinks($context = null)
 	{
 		return [
 			'Tools' => empty($_SESSION['User']) ? null : [
