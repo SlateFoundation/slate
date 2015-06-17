@@ -17,6 +17,8 @@ class LinkUtil
 				$newLinks = $source::getLinks($context);
 			} elseif (is_callable($source)) {
 				$newLinks = call_user_func($source, $context);
+			} elseif ($source instanceof ActiveRecord) {
+				$newLinks = [$source];
 			} elseif (is_array($source) || $source instanceof \Traversable || $source instanceof \stdClass) {
 				$newLinks = $source;
 			} else {
