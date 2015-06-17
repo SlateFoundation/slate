@@ -15,7 +15,7 @@ class GoogleApps implements \Slate\UI\ILinksSource
 
     public static function getGoogleAppsLinks()
     {
-        $domain = \RemoteSystems\GoogleApps::$domain ?: 'slatedemo.com';
+        $domain = \RemoteSystems\GoogleApps::$domain;
         
 		if (!empty($_SESSION['User']) && $domain) {
             return [
