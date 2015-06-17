@@ -25,13 +25,13 @@ class LinkUtil
 				continue;
 			}
 
-			$links = LinkUtil::mergeTree($links, LinkUtil::normalizeTree($newLinks));
+			$links = LinkUtil::mergeTree($links, LinkUtil::normalizeTree($newLinks, $context));
 		}
 
 		return $links;
 	}
 
-	public static function normalizeTree($inputTree)
+	public static function normalizeTree($inputTree, $context = null)
 	{
 		$outputTree = [];
 
@@ -71,7 +71,8 @@ class LinkUtil
 			} elseif ($value instanceof ActiveRecord) {
 				$value = [
 					'_label' => $value->getTitle(),
-					'_href' => $value->getUrl()
+					'_href' => $value->getUrl(),
+					'_iconSrc' => $context && property_exists($context, 'preferredIconSize') && $context::$preferredIconSize ? $value->getThumbnailURL($context::$preferredIconSize) : null
 				];
 			} elseif (!is_array($value)) {
 				throw new \UnexpectedValueException('Link tree value must be array, string, or ActiveRecord instance');
@@ -108,7 +109,7 @@ class LinkUtil
 
 			// copy normalized children to link
 			if (count($children)) {
-				$link['children'] = static::normalizeTree($children);
+				$link['children'] = static::normalizeTree($children, $context);
 			}
 
 			// choose output key for link
