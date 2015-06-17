@@ -8,7 +8,7 @@ class GoogleApps implements \Slate\UI\IOmnibarSource
 
 	public static function getOmnibarLinks()
 	{
-        $domain = \RemoteSystems\GoogleApps::$domain ?: 'slatedemo.com'; // TODO: remove sample value
+        $domain = \RemoteSystems\GoogleApps::$domain;
 
 		if (!empty($_SESSION['User']) && $domain) {
 			$appsLinks = [

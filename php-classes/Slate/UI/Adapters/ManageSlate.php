@@ -16,12 +16,8 @@ class ManageSlate implements \Slate\UI\IOmnibarSource
 
                     'People' => '/manage#people',
                     'Course Sections' => '/manage#course-sections',
-                    'Pages' => '/pages',
-
-                    // TODO: remove these
-                    'Narratives' => '/manage#progress/narratives',
-                    'Standards' => '/manage#progress/standards',
-                    'Interims' => '/manage#progress/interims'
+                    'Settings' => '/manage#settings',
+                    'Pages' => '/pages'
                 ]
 			];
 

@@ -2,5 +2,5 @@
 
 namespace Slate\UI;
 
-// TODO: remove this sample
-Tools::$tools['Naviance'] = 'http://www.naviance.com/';
+// add your custom tool links here for the omnibar and dasboard
+//Tools::$tools['Example Tool'] = 'http://example.com/';

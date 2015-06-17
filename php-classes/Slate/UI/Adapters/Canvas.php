@@ -8,7 +8,7 @@ class Canvas implements \Slate\UI\IOmnibarSource
 
 	public static function getOmnibarLinks()
 	{
-        $domain = \RemoteSystems\Canvas::$canvasHost ?: 'canvas.slatedemo.com'; // TODO: remove sample value
+        $domain = \RemoteSystems\Canvas::$canvasHost;
 
 		if (!empty($_SESSION['User']) && $domain) {
 			$canvasLinks = [
