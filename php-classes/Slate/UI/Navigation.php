@@ -5,13 +5,7 @@ namespace Slate\UI;
 class Navigation
 {
 	public static $sources = [];
-
-	public static $links = [
-		'Home' => '/home',
-		'Blog' => '/blog',
-		'Courses' => '/courses',
-		'Contact Us' => '/contact'
-	];
+	public static $links = [];
 
 	public static function getLinks()
 	{
