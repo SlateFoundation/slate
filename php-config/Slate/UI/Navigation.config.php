@@ -2,10 +2,10 @@
 
 Slate\UI\Navigation::$links = [
 	Emergence\CMS\Page::getByHandle('about'),
-	'Students' => Tag::getByHandle('site.students'),
-	'Parents' => Tag::getByHandle('site.parents'),
-	'Staff' => Tag::getByHandle('site.staff'),
-	'Community' => Tag::getByHandle('site.community'),
+	'Students' => Tag::getByHandle('students'),
+	'Parents' => Tag::getByHandle('parents'),
+	'Staff' => Tag::getByHandle('staff'),
+	'Community' => Tag::getByHandle('community'),
 	'Calendar' => '/events',
 	'Contact Us' => '/contact'
 ];
