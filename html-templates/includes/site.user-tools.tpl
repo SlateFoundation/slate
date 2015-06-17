@@ -19,7 +19,16 @@
                 </form>
             </li>
 
-            {template omnibarChildLink link labelPrefix=null}
+            {template omnibarChildLink link parentLink=null labelPrefix=null}
+                {if $parentLink && !$link.icon && !$link.iconSrc}
+                    {if $parentLink.icon}
+                        {$link.icon = $parentLink.icon}
+                    {/if}
+                    {if $parentLink.iconSrc}
+                        {$link.iconSrc = $parentLink.iconSrc}
+                    {/if}
+                {/if}
+
                 {if $link.href}
                     <li class="omnibar-menu-item" {html_attributes_encode $link prefix='data-' deep=no}>
                         <a class="omnibar-menu-link" href="{$link.href|escape}" title="{$link.label|escape}">
@@ -41,16 +50,8 @@
 
                 {if $link.children}
                     {foreach item=childLink from=$link.children}
-                        {if !$childLink.icon && !$childLink.iconSrc}
-                            {if $link.icon}
-                                {$childLink.icon = $link.icon}
-                            {/if}
-                            {if $link.iconSrc}
-                                {$childLink.iconSrc = $link.iconSrc}
-                            {/if}
-                        {/if}
                         {$parentLabel = $link.shortLabel|default:$link.label}
-                        {omnibarChildLink $childLink labelPrefix=tif($labelPrefix, cat($labelPrefix, ' > ', $parentLabel), $parentLabel)}
+                        {omnibarChildLink $childLink parentLink=$link labelPrefix=tif($labelPrefix, cat($labelPrefix, ' » ', $parentLabel), $parentLabel)}
                     {/foreach}
                 {/if}
             {/template}
@@ -68,7 +69,7 @@
                         <div class="omnibar-menu-ct">
                             <ul class="omnibar-menu">
                                 {foreach item=childLink from=$link.children}
-                                    {omnibarChildLink $childLink}
+                                    {omnibarChildLink $childLink parentLink=$link}
                                 {/foreach}
                             </ul>
                         </div>
