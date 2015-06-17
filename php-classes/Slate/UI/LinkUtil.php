@@ -16,7 +16,7 @@ class LinkUtil
 			if (is_string($source) && is_subclass_of($source, ILinksSource::class)) {
 				$newLinks = $source::getLinks($context);
 			} elseif (is_callable($source)) {
-				$newLinks = call_user_func($source);
+				$newLinks = call_user_func($source, $context);
 			} elseif (is_array($source) || $source instanceof \Traversable || $source instanceof \stdClass) {
 				$newLinks = $source;
 			} else {
