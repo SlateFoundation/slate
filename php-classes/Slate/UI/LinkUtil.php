@@ -13,7 +13,7 @@ class LinkUtil
 		$links = [];
 
 		foreach ($sources AS $source) {
-			if (is_subclass_of($source, ILinksSource::class)) {
+			if (is_string($source) && is_subclass_of($source, ILinksSource::class)) {
 				$newLinks = $source::getLinks($context);
 			} elseif (is_callable($source)) {
 				$newLinks = call_user_func($source);
