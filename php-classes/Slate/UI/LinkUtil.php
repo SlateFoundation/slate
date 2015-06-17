@@ -61,7 +61,14 @@ class LinkUtil
 				$link['children'] = static::normalizeTree($children);
 			}
 
-			$outputTree[$link['label']] = $link;
+			// choose output key for link
+			if (isset($link['id'])) {
+				$key = $link['id'];
+			} elseif (!is_string($key)) {
+				$key = $link['label'];
+			}
+
+			$outputTree[$key] = $link;
 		}
 
 		return $outputTree;
