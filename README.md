@@ -5,7 +5,7 @@ The full-screen ExtJS app powering /manage on Slate V1, extracted from SlateFoun
 1. Install latest 5.x Sencha CMD
 2. Clone this repository
 3. `cd slate-admin/sencha-workspace/packages`
-4. `git clone https://github.com/SlateFoundation/slate-admin-theme.git`
+4. `git clone https://github.com/SlateFoundation/slate-theme.git`
 5. `cd ../SlateAdmin`
 6. `sencha app build`
 
