@@ -1,0 +1,8 @@
+#north-region #header-content {
+    height: 40px;
+    background: url(../images/slate-docs-header-logo.png) 0 0 no-repeat;
+    background-size: 32px 24px;
+    margin: 8px 0 0 12px;
+    padding-top: 2px;
+    padding-left: 48px;
+}
