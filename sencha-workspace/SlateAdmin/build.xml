@@ -39,6 +39,11 @@
             <target name="-after-build"/>
     -->
 
+    <!-- TODO: remove this hack to make inline-images work, see https://www.sencha.com/forum/showthread.php?286900 -->
+    <target name="-before-sass">
+        <symlink link="${build.sass.dir}/images" resource="${build.resources.dir}/images" />
+    </target>
+
     <target name="docs" depends="init" description="Builds docs for the app">
         <property name="docs.build.dir" value="${workspace.build.dir}/docs/${app.name}" />
         <mkdir dir="${docs.build.dir}/docs"/>
