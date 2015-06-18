@@ -1,4 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+/**
+ * people.Invite controller
+ */
 Ext.define('SlateAdmin.controller.people.Invite', {
     extend: 'Ext.app.Controller',
 

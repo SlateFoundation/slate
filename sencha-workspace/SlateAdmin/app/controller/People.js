@@ -1,11 +1,13 @@
-/*jslint browser: true, undef: true *//*global Ext,SlateAdmin*/
+/*jslint browser: true, undef: true, eqeq: true *//*global Ext,SlateAdmin*/
+/**
+ * People controller
+ */
 Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
         'SlateAdmin.API'
     ],
-
 
     // controller config
     views: [
@@ -28,6 +30,12 @@ Ext.define('SlateAdmin.controller.People', {
                 ':person': '([^/]+)'
             }
         },
+        /**
+         * @route people/lookup /:person/:tab
+         * show person with requested details tab
+         * @param {String} person The requested person
+         * @param {String} tab The requested details tab
+         */
         'people/lookup/:person/:tab': {
             action: 'showPerson',
             conditions: {
@@ -183,12 +191,23 @@ Ext.define('SlateAdmin.controller.People', {
         });
     },
 
+    /**
+     * Called by SlateAdmin.controller.Viewport when it is launched and requests all of the
+     * application navpanels in order to add them to SlateAdmin.view.Navigation
+     * @return {SlateAdmin.view.people.NavPanel}
+     */
     buildNavPanel: function() {
         return this.getNavPanel();
     },
 
-
     // route handlers
+
+    /**
+     * Route Handler for people route.
+     * Instructs the Viewport controller to add SlateAdmin.view.people.Manager to the Viewport's center
+     * region card container, and ensures that the root node of the navpanel's treepanel is selected.
+     * @return {void}
+     */
     showPeople: function() {
         var me = this,
             groupsTreePanel = me.getGroupsTree(),
@@ -208,12 +227,75 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * Route Handler for people/lookup/:person/:tab route.
+     * Performs a search by username specified by person parameter, selects the person in the result
+     * set and activates the appropriate profile tab.
+     * @param {String} person The username to search by and select in the result list
+     * @param {String} tab The profile tab to activate
+     * @return {void}
+     */
     showPerson: function(person, tab) {
-        alert('Loading an individual person is not yet implemented');
-        // TODO: implement loading a person without a search query
-//        debugger;
+        var me = this,
+            ExtHistory = Ext.util.History,
+            query = 'username:'+person;
+            store = me.getPeoplePeopleStore(),
+            proxy = store.getProxy(),
+            manager = me.getManager();
+
+        ExtHistory.suspendState();
+        Ext.suspendLayouts();
+
+        // queue store to load
+        proxy.abortLastRequest(true);
+        proxy.setExtraParam('q', query);
+
+        // Clear searchfield, reset the advanced search form and select the root node of the navpanel's treepanel.
+        me.getSearchField().setValue('');
+        me.getAdvancedSearchForm().getForm().reset();
+        me.getGroupsTree().getSelectionModel().select(0, false, true);
+
+        // activate manager
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(manager);
+
+        // resume layouts and insert a small delay to allow layouts to flush before triggering store load so loading mask can size correctly
+        Ext.resumeLayouts(true);
+        Ext.defer(function() {
+            Ext.suspendLayouts();
+
+            // execute search (suppressed by doSearch if query hasn't changed) and select user
+            me.doSearch(false, function() {
+                // activate tab
+                if (person && tab) {
+                    manager.detailTabs.setActiveTab(tab);
+                }
+
+                // query has been performed so we can remove the q param so syncState() doesn't use it to change our path
+                delete proxy.extraParams.q;
+
+                me.selectPerson(person, function() {
+                    ExtHistory.resumeState();
+                    Ext.resumeLayouts(true);
+                });
+            });
+        }, 10);
     },
 
+    /**
+     * Route Handler for the following routes:
+     *
+     * - people/search/:query
+     * - people/search/:query/:person
+     * - people/search/:query/:person/:tab
+     *
+     * Performs the search specified by the query parameter.  If person and tab are specified it will select
+     * the person in the result set and activate the appropriate profile tab.
+     * @param {String} query The search query.
+     * @param {String} person The person to select
+     * @param {String} tab The profile tab to activate
+     * @return {void}
+     */
     showResults: function(query, person, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
@@ -262,10 +344,24 @@ Ext.define('SlateAdmin.controller.People', {
 
 
     // event handlers
-    onNavPanelExpand: function(navPanel, isExpanding) {
+
+    /**
+     * Event Handler. Calls syncState when people-navpanel is expanded.
+     * @param {SlateAdmin.view.people.NavPanel} navPanel The navigation panel
+     * @return {void}
+     */
+    onNavPanelExpand: function() {
         this.syncState();
     },
 
+    /**
+     * Event Handler. Handles the inherited specialkey event of Jarvus.ext.form.field.Search .
+     * If the key pressed is ENTER the query will be performed. If the key pressed is ENTER and the
+     * search field is blank, the advanced search form will be reset.
+     * @param {Jarvus.ext.form.field.Search} field The search field
+     * @param {Ext.event.Event} ev The event object
+     * @return {void}
+     */
     onSearchSpecialKey: function(field, ev) {
         var query = field.getValue().trim();
 
@@ -278,29 +374,65 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * Event Handler. Resets the advanced search form and selects the root node of the navpanel's treepanel.
+     * @param {Jarvus.ext.form.field.Search} field The search field
+     * @param {Ext.event.Event} ev The event object
+     * @return {void}
+     */
     onSearchClear: function(field, ev) {
         this.getAdvancedSearchForm().getForm().reset();
         this.getGroupsTree().getSelectionModel().select(0, false, true);
     },
 
+    /**
+     * Event Handler. Handles the specialkey event of fields contained in SlateAdmin.view.people.AdvancedSearchForm.
+     * If the key pressed is ENTER, syncQueryField will be called which updates the query string field
+     * from the advanced search form.
+     * @param {Ext.form.field.Base} field The advanced search form field
+     * @param {Ext.event.Event} ev The event object
+     * @return {void}
+     */
     onAdvancedSearchFormSpecialKey: function(field, ev) {
         if (ev.getKey() == ev.ENTER) {
             this.syncQueryField(true);
         }
     },
 
+    /**
+     * Event Handler. Handles the click event of the navpanel search button.  Calls syncQueryField to update
+     * the query string field from the advanced search form.
+     * @return {void}
+     */
     onSearchClick: function() {
         this.syncQueryField(true);
     },
 
+    /**
+     * Event Handler. Handles the navpanel's treepanel select event.  Calls syncQueryField where the selected
+     * group is added to the query string.
+     * @return {void}
+     */
     onGroupSelect: function() {
         this.syncQueryField(true);
     },
 
+    /**
+     * Event Handler. Handles the People store's load event. Calls syncGridStatus to update the bottom toolbar.
+     * @return {void}
+     */
     onStoreLoad: function() {
         this.syncGridStatus();
     },
 
+    /**
+     * Event Handler. Handles the select event of the People grid. Sets the selectedPerson of the
+     * SlateAdmin.view.people.Manager to the selected record and calls syncGridStatus to update the bottom toolbar.
+     * @param {Ext.selection.RowModel} selModel The selection model
+     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Number} index The row index selected
+     * @return {void}
+     */
     onPersonSelect: function(selModel, personRecord, index) {
         var me = this,
             selectionCount = selModel.getCount();
@@ -316,6 +448,14 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.resumeLayouts(true);
     },
 
+    /**
+     * Event Handler. Handles the deselect event of the People grid. Calls onPersonSelect if deselect event
+     * leaves one record selected.
+     * @param {Ext.selection.RowModel} selModel The selection model
+     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Number} index The row index selected
+     * @return {void}
+     */
     onPersonDeselect: function(selModel, personRecord, index) {
         var me = this,
             firstRecord;
@@ -325,16 +465,25 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (selModel.getCount() == 1) {
             firstRecord = selModel.getSelection()[0];
-            me.onPersonSelect(selModel, firstRecord, firstRecord.index);
+            selModel.select(firstRecord);
         }
 
         Ext.resumeLayouts(true);
     },
 
-    onDetailTabChange: function(detailTabs, activeTab) {
+    /**
+     * Event Handler. Calls syncState when active detail tab changes to that the change is reflected in the url
+     * @return {void}
+     */
+    onDetailTabChange: function() {
         this.syncState();
     },
 
+    /**
+     * Event Handler.  Exports data in the requested format.
+     * @param {Ext.menu.Item} menuItem The menuitem specifying the desired format
+     * @return {void}
+     */
     onExportFormatButtonClick: function(menuItem) {
         var me = this,
             exportColumnsMenu = me.getExportColumnsMenu(),
@@ -350,7 +499,7 @@ Ext.define('SlateAdmin.controller.People', {
             params.columns = Ext.Array.pluck(exportColumnsMenu.query('menuitem[checked]'), 'itemId').join(',');
         }
 
-        url = '/people?' + Ext.Object.toQueryString(params);
+        url = SlateAdmin.API.buildUrl('/people?' + Ext.Object.toQueryString(params));
 
         if (exportFormat == 'json') {
             window.open(url, '_blank');
@@ -359,6 +508,11 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * Generates the column options for the CVS export sub menu from the results of a server request to /people/*fields.
+     * @param {Ext.menu.Menu} menu The CSV export column selection menu
+     * @return {void}
+     */
     onBeforeCsvExportColumnsMenuShow: function(menu) {
         var me = this,
             columnsPlaceholder = menu.down('#columnsPlaceholder'),
@@ -383,6 +537,8 @@ Ext.define('SlateAdmin.controller.People', {
                     key, keyBits;
 
                 for (key in fields) {
+
+                    // QUESTION: are we worried about the possibility that the JS Object prototype has been overwritten?
                     if (!fields.hasOwnProperty(key)) {
                         continue;
                     }
@@ -502,6 +658,13 @@ Ext.define('SlateAdmin.controller.People', {
 
 
     // controller methods
+
+    /**
+     * Performs a reload of the store if forceReload parameter is true or the proxy's extraParams are dirty.
+     * @param {Boolean} forceReload=false Set to true to force reload of store even if proxy's extraParams have not changed
+     * @param {function} callback the callback function to perform
+     * @return {void}
+     */
     doSearch: function(forceReload, callback) {
         var me = this,
             store = me.getPeoplePeopleStore(),
@@ -521,10 +684,14 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    /**
+     * Sets the title and path (url) based on the selection in the grid and the active tab in details panel.
+     * @return {void}
+     */
     syncState: function() {
         var me = this,
             manager = me.getManager(),
-            selModel = me.getGrid().getSelectionModel(),
+            selModel = me.getGrid().getSelectionModel(), // TODO: unused remove?
             detailTabs = manager.detailTabs,
             personRecord = manager.getSelectedPerson(),
             extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
@@ -559,6 +726,10 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.util.History.pushState(path, title);
     },
 
+    /**
+     * Sets the visibility and text for components in the bottom toolbar for the selected record(s)
+     * @return {void}
+     */
     syncGridStatus: function() {
         var me = this,
             grid = me.getGrid(),
@@ -612,8 +783,8 @@ Ext.define('SlateAdmin.controller.People', {
 
     /**
      * Updates the advanced search form from the query string field
-     *
      * Inverse of {@link #method-syncQueryField}
+     * @return {void}
      */
     syncAdvancedSearchForm: function() {
         var me = this,
@@ -666,9 +837,10 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * Updates the query string field from the advanced search form
-     *
+     * Updates the query string field from the advanced search form.
      * Inverse of {@link #method-syncAdvancedSearchForm}
+     * @param {Boolean} [execute=false] If true, will perform the query by adding the query string to Ext.util.History
+     * @return {void}
      */
     syncQueryField: function(execute) {
         var me = this,
@@ -723,6 +895,9 @@ Ext.define('SlateAdmin.controller.People', {
 
     /**
      * Selects a person (or clears selection) and updates grid+manager state without firing any select/deselect events
+     * @param {String} person The username of selected person or an "id=value" query string identifying the person by id
+     * @param {function} callback The callback function to perform
+     * @return {void}
      */
     selectPerson: function(person, callback) {
         var me = this,
