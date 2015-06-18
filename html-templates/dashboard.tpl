@@ -26,7 +26,7 @@
         {/if}
 
         {if $link.href}
-            <li class="dashboard-icon-item {$link.cls}">
+            <li class="dashboard-icon-item {$link.cls}" {html_attributes_encode $link prefix='data-' deep=no}>
                 <a class="dashboard-icon-link" href="{$link.href|escape}">
                     <figure class="dashboard-icon-ct">
                         <div class="dashboard-icon">
@@ -52,20 +52,6 @@
                 {dashboardLink $childLink parentLink=$link labelPrefix=tif($labelPrefix, cat($labelPrefix, ' » ', $parentLabel), $parentLabel)}
             {/foreach}
         {/if}
-    {/template}
-
-    {template 'dashboardItem' title icon url cls=no}
-        <li class="dashboard-icon-item {tif $cls ? $cls : ''}">
-            <a class="dashboard-icon-link" href="{$url|default:'#$icon'}">
-                <figure class="dashboard-icon-ct">
-                    <div class="dashboard-icon">
-                        <svg class="dashboard-icon-bg"><use xlink:href="#icon-squircle"/></svg>
-                        <svg class="dashboard-icon-glyph"><use xlink:href="#icon-{$icon}"/></svg>
-                    </div>
-                    <figcaption class="dashboard-icon-label">{$title}</figcaption>
-                </figure>
-            </a>
-        </li>
     {/template}
 
     <header class="page-header">
