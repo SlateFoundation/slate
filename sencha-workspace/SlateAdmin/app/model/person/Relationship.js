@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.model.person.Relationship', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.validator.CallbackValidator',
+        'SlateAdmin.model.validator.CallbackValidator', // TODO: move this to a jarvus package eventually
         'SlateAdmin.proxy.Records'
     ],
 
@@ -66,14 +66,14 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         RelatedPerson: {
             type: 'callback',
             message: 'Select an existing person or provide a first and last name to add a new person',
-            callback: function(val)  {
+            callback: function(val) {
                 return val && (val.ID || (val.FirstName && val.LastName));
             }
         },
         InverseRelationship: {
             type: 'callback',
             message: 'Enter an inverse label for this relationship',
-            callback: function(val)  {
+            callback: function(val) {
                 return val && val.Label;
             }
         }
