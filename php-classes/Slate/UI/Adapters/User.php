@@ -13,7 +13,7 @@ class User implements \Slate\UI\ILinksSource
 				$User->FullName => [
 					'_shortLabel' => $User->FirstName,
 					'_href' => $User->getUrl(),
-					'_iconSrc' => $User->PrimaryPhoto ? $User->PrimaryPhoto->getThumbnailRequest(Omnibar::$preferredIconSize) : null,
+					'_iconSrc' => $User->PrimaryPhoto ? $User->getThumbnailUrl(Omnibar::$preferredIconSize) : null,
 					'My Profile' => [
 						'_icon' => 'user',
 						'_href' => $User->getUrl()
