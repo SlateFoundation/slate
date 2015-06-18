@@ -4,3 +4,4 @@ build/
 # TODO: ignore packages again once they've all been moved to their own repos
 #packages/*
 packages/slate-theme
+packages/jarvus-hotfixes
