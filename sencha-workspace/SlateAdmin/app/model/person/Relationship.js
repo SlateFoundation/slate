@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.model.person.Relationship', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.model.validator.CallbackValidator', // TODO: move this to a jarvus package eventually
+        'SlateAdmin.validator.CallbackValidator', // TODO: move this to a jarvus package eventually
         'SlateAdmin.proxy.Records'
     ],
 
