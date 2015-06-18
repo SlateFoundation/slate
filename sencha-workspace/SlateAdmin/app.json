@@ -45,6 +45,7 @@
      *      ]
      */
     "requires": [
+        "jarvus-hotfixes",
         "emergence-apikit",
         "jarvus-ext-searchfield",
         "jarvus-ext-routing",
