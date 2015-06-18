@@ -7,13 +7,13 @@
 }
 
 .x-tree-icon-parent {
-    background-image: inline-image('folder-closed.svg');
+    background-image: inline-image('tree/folder-closed.svg');
 
     .x-grid-tree-node-expanded & {
-        background-image: inline-image('folder-open.svg');
+        background-image: inline-image('tree/folder-open.svg');
     }
 }
 
 .x-tree-icon-leaf {
-    background-image: inline-image('file.svg');
+    background-image: inline-image('tree/file.svg');
 }
