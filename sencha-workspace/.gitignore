@@ -5,3 +5,7 @@ build/
 #packages/*
 packages/slate-theme
 packages/jarvus-hotfixes
+packages/jarvus-ext-routing
+packages/jarvus-ext-actionevents
+packages/jarvus-ext-glyphs
+packages/jarvus-ext-treerecords

@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.controller.people.Contacts', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Ext.window.MessageBox',
+        'Ext.window.MessageBox'
 //        'Jarvus.ext.override.view.TableErrors'
     ],
 
@@ -111,7 +111,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         Ext.defer(function() {
             contactsPanel.setLoading('Loading contacts&hellip;');
             Ext.suspendLayouts();
-    
+
             // resume rendering and finish when all 3 stores are loaded
             function _onStoresLoaded() {
                 if (contactPointTemplatesStoreLoaded && relationshipTemplatesStoreLoaded && contactsStoreLoaded && relationshipsStoreLoaded) {
@@ -121,7 +121,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     Ext.resumeLayouts(true);
                 }
             }
-    
+
             // load contact point templates only if needed
             if (!contactPointTemplatesStoreLoaded) {
                 contactPointTemplatesStore.load({
@@ -131,7 +131,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     }
                 });
             }
-    
+
             // load relationship templates only if needed
             if (!relationshipTemplatesStoreLoaded) {
                 relationshipTemplatesStore.load({
@@ -141,7 +141,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     }
                 });
             }
-    
+
             // load contacts
             contactsStore.getProxy().setExtraParam('person', person.getId());
             contactsStore.load({
@@ -150,7 +150,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     _onStoresLoaded();
                 }
             });
-    
+
             // load relationships
             relationshipsStore.getProxy().setExtraParam('person', person.getId());
             relationshipsStore.load({
@@ -162,7 +162,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
         }, 1);
     },
-    
+
     onBeforeRelationshipsGridEdit: function(editingPlugin, context) {
         var record = context.record,
             fieldName = context.field,
@@ -187,7 +187,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             return fieldName != 'RelatedPerson';
         }
     },
-    
+
     onRelationshipsGridEdit: function(editingPlugin, context) {
         var me = this,
             value = context.value,
@@ -223,7 +223,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     RelatedPerson: editor.findRecordByValue(value).getData()
                 });
             }
-    
+
             if (!editedRecord.get('Label')) {
                 // auto advance to relationship column if the editor isn't already active after a short delay
                 // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
@@ -289,7 +289,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         if (editedRecord.dirty && editedRecord.isValid()) {
             editedRecord.save({
                 callback: function(savedRecord, operation, success) {
-    
+
                     if (success) {
                         // UPGRADE: manual call to commit shouldn't be necessary, remove when this bug is fixed: http://www.sencha.com/forum/showthread.php?273093
                         editedRecord.commit();
@@ -299,20 +299,20 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                             gridView.markRowInvalid(editedRecord, result.validationErrors);
                         });
                     }
-    
+
                     //<debug>
                     if (!Ext.getVersion().match('4.2.2.1144')) {
                         console.warn('This hack above has not been tested with this version of ExtJS and may no longer be necessary');
                     }
                     //</debug>
-    
+
                     // ensure there is a blank row for creating another record
                     me.injectBlankRelationshipRecord();
                 }
             });
         }
     },
-    
+
     onRelationshipsGridDeleteClick: function(grid, record) {
         if (record.phantom) {
             if (record.dirty) {
@@ -321,7 +321,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
             return;
         }
-        
+
         var relatedPerson = record.get('RelatedPerson');
 
         Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0} {1}?', relatedPerson.FirstName, relatedPerson.LastName), function(btn) {
@@ -330,7 +330,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             }
         });
     },
-    
+
     onRelationshipsGridGuardianClick: function(grid, record) {
         if (record.phantom) {
             return;
@@ -413,7 +413,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function(result) {
                         gridView.markCellInvalid(editedRecord, 'value', result.validationErrors);
                     });
-    
+
                     // ensure each class has a phantom row
                     me.injectBlankContactRecords();
                 }

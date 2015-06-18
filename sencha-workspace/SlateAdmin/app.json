@@ -3,7 +3,7 @@
      * The application's namespace.
      */
     "name": "SlateAdmin",
-    
+
     /**
      * The version of the application.
      */
@@ -32,9 +32,9 @@
     /**
      * The name of the theme for this application.
      */
-    
+
     "theme": "slate-theme",
-    
+
     /**
      * The list of required packages (with optional versions; default is "latest").
      *
@@ -49,7 +49,10 @@
         "emergence-apikit",
         "jarvus-ext-searchfield",
         "jarvus-ext-routing",
-        "jarvus-ext-lazydata"
+        "jarvus-ext-lazydata",
+        "jarvus-ext-actionevents",
+        "jarvus-ext-glyphs",
+        "jarvus-ext-treerecords"
     ],
 
     /**
@@ -174,15 +177,15 @@
 
 
     /**
-     * override objects for setting build environment specific 
+     * override objects for setting build environment specific
      * settings.
      */
     "production": {
     },
-    
+
     "testing": {
     },
-    
+
     "development": {
     },
 
