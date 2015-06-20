@@ -5,12 +5,15 @@
     {$dwoo.parent}
 {/block}
 
+{block css-loader}
+    {include includes/site.css.tpl}
+{/block}
+
 {block body}
     {include includes/site.user-tools.tpl}
 {/block}
 
 {block css-app}
-    {include includes/site.css.tpl}
     {cssmin fonts/lato.css}
     {cssmin fonts/font-awesome.css}
     {$dwoo.parent}
