@@ -1,20 +1,11 @@
-{extends app/ext.tpl}
+{extends app/slate-ext.tpl}
 
 {block meta}
     {$title = "Manage Slate"}
     {$dwoo.parent}
 {/block}
 
-{block css-loader}
-    {include includes/site.css.tpl}
-{/block}
-
-{block body}
-    {include includes/site.user-tools.tpl}
-{/block}
-
 {block css-app}
-    {cssmin fonts/lato.css}
     {cssmin fonts/font-awesome.css}
     {$dwoo.parent}
 {/block}
