@@ -1,5 +1,5 @@
 # SlateAdmin
-The full-screen ExtJS app powering /manage on Slate V1, extracted from SlateFoundation/slate and upgradet to ExtJS 5
+The full-screen ExtJS app powering /manage on Slate V1, extracted from SlateFoundation/slate and upgraded to ExtJS 5
 
 ## Getting started with development
 1. Install latest 5.x Sencha CMD
@@ -9,7 +9,7 @@ The full-screen ExtJS app powering /manage on Slate V1, extracted from SlateFoun
 5. `cd ../SlateAdmin`
 6. `sencha app build`
 
-Then run a web server from `slate-admin/sencha-workspace` or higher in your file tree and navigate to the
+Then run a web server from the main `slate-admin` directory or higher in your file tree and navigate to the
 `sencha-workspace/SlateAdmin` folder in your browser. If you don't have a server you can run `sencha web start`
 to run a basic local server.
 
