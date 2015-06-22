@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.proxy.API', {
+Ext.define('Slate.proxy.API', {
     extend: 'Jarvus.ext.proxy.API',
     alias: 'proxy.slateapi',
 
-    connection: 'SlateAdmin.API'
+    connection: 'Slate.API'
 });

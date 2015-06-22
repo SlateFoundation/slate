@@ -2,10 +2,10 @@
 /**
  * Slate records proxy
  */
-Ext.define('SlateAdmin.proxy.Records', {
+Ext.define('Slate.proxy.Records', {
     extend: 'Emergence.ext.proxy.Records',
     alias: 'proxy.slaterecords',
 
-    connection: 'SlateAdmin.API'
+    connection: 'Slate.API'
 });
 

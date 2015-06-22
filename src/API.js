@@ -1,5 +1,5 @@
 /*jslint browser: true ,undef: true *//*global Ext*/
-Ext.define('SlateAdmin.API', {
+Ext.define('Slate.API', {
     extend: 'Emergence.util.AbstractAPI',
     singleton: true,
 
