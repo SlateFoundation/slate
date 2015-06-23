@@ -57,7 +57,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         items: [{
             xtype: 'component',
             itemId: 'detailHeader',
-            cls: 'data-header section-header',
+            cls: 'data-header',
             bodyBorder: '0 0 1',
             tpl: [
                 '<div class="record-image">',

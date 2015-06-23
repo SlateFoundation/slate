@@ -1,9 +1,18 @@
-.x-viewport > .x-body {
-    padding-top: 3.25em;
+.x-viewport {
+    .slate-omnibar {
+        box-shadow: none;
+        z-index: 101;
+
+        > .inner {
+            padding: 0 1em 0 .75em;
+            width: 100%;
+        }
+    }
 }
 
-a {
-    @include link-colors($accent-color);
+.slateadmin-main {
+    margin-top: 2.75em;
+    -webkit-font-smoothing: antialiased;    
 }
 
 .slate-empty-view {

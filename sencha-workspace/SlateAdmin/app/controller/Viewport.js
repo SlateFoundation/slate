@@ -26,7 +26,7 @@ Ext.define('SlateAdmin.controller.Viewport', {
     // controller template methods
     onLaunch: function() {
         var me = this,
-            viewport = me.getViewport(), // must be created before calling getNavCt
+            viewport = me.getViewport({ renderTo: Ext.getBody().down('.slateadmin-viewport') }), // must be created before calling getNavCt
             navCt = me.getNavCt(),
             navPanels = [];
 
@@ -49,6 +49,7 @@ Ext.define('SlateAdmin.controller.Viewport', {
         });
 
         navCt.add(navPanels);
+        Ext.getBody().removeCls('loading');
     },
 
 
