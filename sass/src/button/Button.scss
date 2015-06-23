@@ -7,6 +7,12 @@
     border-top-color: transparent;
 }
 
+.x-btn-default-toolbar-medium {
+    &.x-btn-over {
+        border-bottom-color: #aaa;
+    }
+}
+
 .x-btn-icon-left.x-btn-button-default-medium > .x-btn-icon-el-default-medium,
 .x-btn-icon-left.x-btn-button-default-toolbar-medium > .x-btn-icon-el-default-toolbar-medium {
     margin-left: 4px;
