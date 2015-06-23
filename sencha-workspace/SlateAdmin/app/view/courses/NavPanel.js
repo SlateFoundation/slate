@@ -10,6 +10,7 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
     title: 'Courses',
     autoScroll: true,
     bodyPadding: '10 10 0',
+    cls: 'navpanel-search-criteria',
 
     dockedItems: [{
         dock: 'top',
@@ -24,11 +25,17 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
     },{
         dock: 'bottom',
         
-        xtype: 'button',
-        action: 'create-section',
-        text: 'Create Section',
-        href: '#course-sections/create',
-        hrefTarget: '_self'
+        xtype: 'container',
+        layout: 'fit',
+        padding: 10,
+        items: [{
+            xtype: 'button',
+            action: 'create-section',
+            text: 'Create Section',
+            glyph: 0xf055, // fa-plus-circle
+            href: '#course-sections/create',
+            hrefTarget: '_self'
+        }]
     }],
 
     defaults: {
@@ -37,7 +44,6 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         labelWidth: 45,
         labelSeparator: '',
         labelAlign: 'right',
-        labelStyle: 'font-size: small; color: #666',
         labelPad: 10,
         autoSelect: false // only for combo boxes
     },
@@ -114,11 +120,13 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         action: 'search',
         text: 'Search',
         glyph: 0xf002 // fa-search
+/*
     },{
         xtype: 'button',
         anchor: false,
         margin: '0 0 0 55',
         action: 'reset',
         text: 'Reset'
+*/
     }]
 });

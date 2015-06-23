@@ -16,6 +16,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
     items: [{
         xtype: 'fieldset',
         title: 'Advanced Search',
+        cls: 'navpanel-search-criteria',
         collapsible: true,
         collapsed: true,
         // stateful: true, TODO fix collapsing state bug
@@ -26,7 +27,6 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             labelWidth: 65,
             labelSeparator: '',
             labelAlign: 'right',
-            labelStyle: 'font-size: small; color: #666',
             autoSelect: false // only for combo boxes
         },
         items: [{
