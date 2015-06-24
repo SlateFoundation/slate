@@ -1,4 +1,10 @@
 .x-grid-group-title {
-    font-size: 12px;
-    text-transform: uppercase;
+    color: $base-color;
+    font-size: large;
+    font-weight: normal;
+    padding-top: 1.5em;
+
+    small.pull-right {
+        margin-top: .0625em;
+    }
 }
