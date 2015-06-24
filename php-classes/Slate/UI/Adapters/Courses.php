@@ -74,7 +74,7 @@ class Courses implements \Slate\UI\ILinksSource
 
 		return [
 			'Courses' => [
-//				'_iconSrc' => 'http://placehold.it/48',
+				'_icon' => 'courses',
 				'_href' => Course::$collectionRoute,
 				'_children' => array_map(function(Section $Section) {
 					return [

@@ -53,8 +53,8 @@
             {/template}
 
             {template omnibarLink link}
-                <li class="omnibar-item" {html_attributes_encode $link prefix='data-' deep=no}>
-                    <{if $link.href}a href="{$link.href|escape}"{else}span{/if} class="omnibar-link" title="{$link.label|escape}">
+                <li class="omnibar-item {if $link.icon}icon-{$link.icon}{/if}" {html_attributes_encode $link prefix='data-' deep=no}>
+                    <{if $link.href}a href="{$link.href|escape}"{else}span{/if} class="omnibar-link" {if $link.label != $link.shortLabel}title="{$link.label|escape}"{/if}>
                         {if $link.iconSrc}
                             <img class="omnibar-link-image" src="{$link.iconSrc|escape}" alt="{$link.label|escape}" width="24" height="24">
                         {/if}

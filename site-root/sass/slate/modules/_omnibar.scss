@@ -83,8 +83,21 @@
 
 .omnibar-link {
     @include align-items(center);
+    background-position: 1em center;
+    background-repeat: no-repeat;
+    background-size: 18px;
     @include display-flex;
     padding: 0 1em;
+
+    .icon-courses & {
+        background-image: inline-image('omnibar/tools-white.svg');
+        padding-left: 2.75em;
+    }
+
+    .icon-tools & {
+        background-image: inline-image('omnibar/courses-white.svg');
+        padding-left: 2.75em;
+    }
 }
 
 .omnibar-link-image {
@@ -119,11 +132,11 @@
     background-image: inline-image('omnibar/search-white.svg');
     background-position: 0.5em center;
     background-repeat: no-repeat;
-    background-size: 24px;
+    background-size: 18px;
     border: 1px solid transparent;
     border-width: 0 0 1px;
     box-shadow: none;
-    padding-left: 2.5em;
+    padding-left: 2.25em;
     padding-right: 0;
     text-align: left;
     @include transition(250ms cubic-bezier(1, 0, 0, 1));

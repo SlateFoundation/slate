@@ -39,7 +39,7 @@ class Tools implements ILinksSource
 	{
 		return [
 			'Tools' => empty($_SESSION['User']) ? null : [
-//				'_iconSrc' => 'http://placehold.it/48',
+				'_icon' => 'tools',
 				'_children' => static::$tools
 			]
 		];
