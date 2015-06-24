@@ -55,7 +55,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
             ftype: 'grouping',
             collapsible: false,
             groupHeaderTpl: [
-                '{groupValue} <span style="float:right">{children.length}</span>'
+                '{groupValue} <tpl if="children.length &gt; 1"><small class="muted">({children.length})</small></tpl>'
             ]
         }],
         store: {
