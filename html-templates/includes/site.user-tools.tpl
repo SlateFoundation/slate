@@ -35,7 +35,7 @@
                                 </div>
                                 <figcaption class="omnibar-menu-label">
                                     {if $labelPrefix}
-                                        <small class="muted">{$labelPrefix|escape}</small><br>
+                                        <small class="muted">{$labelPrefix|escape}</small>
                                     {/if}
                                     {$link.shortLabel|default:$link.label|escape}
                                 </figcaption>

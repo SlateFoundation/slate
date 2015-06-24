@@ -249,5 +249,10 @@
     font-size: smaller;
     line-height: 1.25;
     margin-top: 0.25em;
+
+    small {
+        display: block;
+        margin: .25em 0 .125em
+    }
 }
 
