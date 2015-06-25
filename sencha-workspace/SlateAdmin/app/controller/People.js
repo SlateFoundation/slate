@@ -22,6 +22,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     routes: {
         'people': 'showPeople',
+        'people/all': 'showResults',
         'people/lookup/:person': {
             action: 'showPerson',
             conditions: {
@@ -144,7 +145,8 @@ Ext.define('SlateAdmin.controller.People', {
                 click: me.onSearchClick
             },
             'people-navpanel #groups': {
-                select: me.onGroupSelect
+                //select: me.onGroupSelect
+                itemclick: me.onGroupSelect
             },
             'people-grid': {
                 select: { fn: me.onPersonSelect, buffer: 10 },
@@ -700,7 +702,14 @@ Ext.define('SlateAdmin.controller.People', {
         // add selected group
         fieldNames.push('group');
         if (selectedGroups.length > 0 && (fieldValue = selectedGroups[0].get('Handle'))) {
-            queuedTerms.push('group:'+fieldValue);
+            if (fieldValue !== 'slate-internal-people-root-node') {
+                // push group if it is not the root node
+                queuedTerms.push('group:'+fieldValue);
+            } else {
+                // if root node, set path to people/all and return
+                Ext.util.History.add('people/all');
+                return;
+            }
         }
 
         // scan query for terms that don't match a field
