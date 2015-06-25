@@ -41,6 +41,30 @@ Ext.define('SlateAdmin.view.groups.Manager', {
                 ]
             }
         }
+    },{
+        xtype: 'actioncolumn',
+        dataIndex: 'Class',
+        width: 54,
+        items: [
+            {
+                action: 'browse',
+                iconCls: 'group-browse glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Browse Members'
+            },
+            {
+                action: 'create-subgroup',
+                iconCls: 'group-create-subgroup glyph-danger',
+                glyph: 0xf132, // fa-shield
+                tooltip: 'Create Subgroup'
+            },
+            {
+                action: 'delete',
+                iconCls: 'group-delete glyph-danger',
+                glyph: 0xf0f9, // fa-ambulance
+                tooltip: 'Delete Group'
+            }
+        ]
     }],
     bbar: [{
         xtype: 'button',
