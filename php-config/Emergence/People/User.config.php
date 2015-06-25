@@ -12,14 +12,3 @@
     ,'Administrator'
     ,'Developer'
 );
-
-
-// store plaintext passwords -- // TODO: only store the first password? OR store an unsalted SHA1 hash for exporting?
-\Emergence\People\User::$fields['AssignedPassword'] = array(
-    'type' => 'string'
-    ,'notnull' => false
-    ,'accountLevelEnumerate' => 'Administrator'
-);
-\Emergence\People\User::$onPasswordSet = function($password, $User) {
-    $User->AssignedPassword = $User->hasAccountLevel('Administrator') ? null : $password;
-};
