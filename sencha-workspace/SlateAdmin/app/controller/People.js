@@ -255,7 +255,7 @@ Ext.define('SlateAdmin.controller.People', {
                 }
 
                 me.selectPerson(person, function() {
-                    ExtHistory.resumeState();
+                    ExtHistory.resumeState(false);
                     Ext.resumeLayouts(true);
                 });
             });
