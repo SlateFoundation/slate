@@ -677,6 +677,7 @@ Ext.define('SlateAdmin.controller.People', {
             searchField = me.getSearchField(),
             form = me.getAdvancedSearchForm().getForm(),
             selectedGroups = me.getGroupsTree().getSelectionModel().getSelection(),
+            rootGroupSelected = false,
             fields = form.getFields().items,
             fieldsLen = fields.length, fieldIndex = 0, field, fieldName, fieldValue,
             query = searchField.getValue(),
@@ -706,9 +707,10 @@ Ext.define('SlateAdmin.controller.People', {
                 // push group if it is not the root node
                 queuedTerms.push('group:'+fieldValue);
             } else {
+                rootGroupSelected = true;
                 // if root node, set path to people/all and return
-                Ext.util.History.add('people/all');
-                return;
+            //    Ext.util.History.add('people/all');
+            //    return;
             }
         }
 
@@ -723,6 +725,13 @@ Ext.define('SlateAdmin.controller.People', {
 
         // build a query string that combines the unmatched terms with field values
         query = Ext.String.trim(Ext.Array.merge(unmatchedTerms, queuedTerms).join(' '));
+
+        if (!query && rootGroupSelected) {
+            // if there's no query and root group is selected, redirect to people/all
+            Ext.util.History.add('people/all');
+            return;
+        }
+
         searchField.setValue(query);
 
         if (execute) {
