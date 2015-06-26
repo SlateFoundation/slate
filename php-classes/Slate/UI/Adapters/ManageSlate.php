@@ -24,10 +24,22 @@ class ManageSlate implements \Slate\UI\ILinksSource
                 '_href' => '/manage',
                 '_icon' => 'tools',
 
-                'People' => '/manage#people',
-                'Course Sections' => '/manage#course-sections',
-                'Settings' => '/manage#settings',
-                'Pages' => '/pages'
+                'People' => [
+                    '_href' => '/manage#people',
+                    '_icon' => 'users'
+                ],
+                'Course Sections' => [
+                    '_href' => '/manage#course-sections',
+                    '_icon' => 'books'
+                ],
+                'School Settings' => [
+                    '_href' => '/manage#settings',
+                    '_icon' => 'gears'
+                ],
+                'Pages' => [
+                    '_href' => '/pages',
+                    '_icon' => 'records'
+                ]
             ]
 		];
     }
