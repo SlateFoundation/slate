@@ -1,4 +1,4 @@
 # slate-icons
-SVG icons for Slate's dashboard and omnibar menus
+The contents of this folder are copied from https://github.com/SlateFoundation/slate-icons/tree/releases/1.0.0/build
 
-Add an icon exported from Illustrator (preferably 200 pixels square and filled with black) to the main directory, then run [`grunt`](http://gruntjs.com/) to minify and add it to the `slate-icons.svg` sprite.
+To build a new icon set, see https://github.com/SlateFoundation/slate-icons
