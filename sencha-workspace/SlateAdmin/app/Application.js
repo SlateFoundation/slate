@@ -44,6 +44,7 @@ Ext.define('SlateAdmin.Application', {
         'Settings',
         'settings.Groups',
         'settings.Courses',
+        'settings.Departments',
 
         'Terms',
         'Locations'
