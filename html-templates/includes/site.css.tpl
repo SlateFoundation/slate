@@ -7,5 +7,4 @@
 {*
 	Load fonts individually for better caching
 *}
-{cssmin fonts/lato.css}
-{cssmin fonts/sanchez.css}
+{cssmin "fonts/lato.css+fonts/sanchez.css"}
