@@ -75,6 +75,7 @@ body {
 
     a {
         color: mix($text-color, $link-color, 30%);
+        font-size: smaller;
         font-weight: bold;
     }
 }
