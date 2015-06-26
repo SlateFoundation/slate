@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.model.Term', {
         {
             name: "Class",
             type: "string",
-            defaultValue: "Term"
+            defaultValue: "Slate\\Term"
         },
         {
             name: "Created",
