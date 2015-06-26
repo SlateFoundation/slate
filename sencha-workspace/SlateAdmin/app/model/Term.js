@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-//TODO: perhaps this should be in model/course directory with Course, Department, and Section?
+//TODO: perhaps this should be in model/course directory with Course, Department, and Section? (also corresponding Emergence classes)
 Ext.define('SlateAdmin.model.Term', {
     extend: 'Ext.data.Model',
     requires: [
