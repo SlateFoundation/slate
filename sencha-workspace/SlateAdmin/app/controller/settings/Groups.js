@@ -47,9 +47,9 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         me.control({
             'groups-manager': {
                 show: me.onManagerShow,
-                browsemembers: me.onBrowseMembersClick,
-                createsubgroup: me.onCreateSubgroupClick,
-                deletegroup: me.onDeleteGroupClick
+                browsemembersclick: me.onBrowseMembersClick,
+                createsubgroupclick: me.onCreateSubgroupClick,
+                deletegroupclick: me.onDeleteGroupClick
             },
             'groups-manager button[action=create-organization]': {
                 click: me.onCreateOrganizationClick
@@ -115,8 +115,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         });
     },
 
-    //onCreateSubgroupClick: function(menuItem, event) {
-    onCreateSubgroupClick: function(rec) {
+    onCreateSubgroupClick: function(grid,rec) {
         var me = this,
             parentGroup = rec;
 
@@ -145,7 +144,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         });
     },
 
-    onDeleteGroupClick: function(rec) {
+    onDeleteGroupClick: function(grid,rec) {
         var parentNode = rec.parentNode;
 
         Ext.Msg.confirm('Deleting Group', 'Are you sure you want to delete this group?', function(btn) {
@@ -161,7 +160,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         });
     },
 
-    onBrowseMembersClick: function(rec) {
+    onBrowseMembersClick: function(grid,rec) {
         Ext.util.History.add(['people', 'search', 'group:' + rec.get('Handle')]);
     }
 });
