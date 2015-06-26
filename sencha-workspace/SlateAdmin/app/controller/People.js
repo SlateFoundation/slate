@@ -708,9 +708,6 @@ Ext.define('SlateAdmin.controller.People', {
                 queuedTerms.push('group:'+fieldValue);
             } else {
                 rootGroupSelected = true;
-                // if root node, set path to people/all and return
-            //    Ext.util.History.add('people/all');
-            //    return;
             }
         }
 
