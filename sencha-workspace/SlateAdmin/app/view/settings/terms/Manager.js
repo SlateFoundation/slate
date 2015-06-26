@@ -56,6 +56,30 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
                 ]
             }
         }
+    },{
+        xtype: 'actioncolumn',
+        dataIndex: 'Class',
+        width: 54,
+        items: [
+            {
+                action: 'browsecourses',
+                iconCls: 'group-browse glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Browse Courses'
+            },
+            {
+                action: 'createsubterm',
+                iconCls: 'group-create-subterm glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Create Subterm'
+            },
+            {
+                action: 'deleteterm',
+                iconCls: 'group-delete glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Delete Term'
+            }
+        ]
     }],
     bbar: [{
         xtype: 'button',
