@@ -1,4 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+//TODO: perhaps this should be in model/course directory with Course, Department, and Section?
 Ext.define('SlateAdmin.model.Term', {
     extend: 'Ext.data.Model',
     requires: [
