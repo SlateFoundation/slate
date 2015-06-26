@@ -47,22 +47,31 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         width: 54,
         items: [
             {
-                action: 'browse',
                 iconCls: 'group-browse glyph-danger',
                 glyph: 0xf056, // fa-minus-circle
-                tooltip: 'Browse Members'
+                tooltip: 'Browse Members',
+                handler: function(view, rowIndex) {
+                    var rec = view.getStore().getAt(rowIndex);
+                    view.up('groups-manager').fireEvent('browsemembers',rec);
+                }
             },
             {
-                action: 'create-subgroup',
                 iconCls: 'group-create-subgroup glyph-danger',
                 glyph: 0xf132, // fa-shield
-                tooltip: 'Create Subgroup'
+                tooltip: 'Create Subgroup',
+                handler: function(view, rowIndex) {
+                    var rec = view.getStore().getAt(rowIndex);
+                    view.up('groups-manager').fireEvent('createsubgroup',rec);
+                }
             },
             {
-                action: 'delete',
                 iconCls: 'group-delete glyph-danger',
                 glyph: 0xf0f9, // fa-ambulance
-                tooltip: 'Delete Group'
+                tooltip: 'Delete Group',
+                handler: function(view, rowIndex) {
+                    var rec = view.getStore().getAt(rowIndex);
+                    view.up('groups-manager').fireEvent('deletegroup',rec);
+                }
             }
         ]
     }],
