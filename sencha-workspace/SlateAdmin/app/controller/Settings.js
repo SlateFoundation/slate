@@ -16,11 +16,11 @@ Ext.define('SlateAdmin.controller.Settings', {
         ref: 'navPanel',
         selector: 'settings-navpanel',
         autoCreate: true,
-        
+
         xtype: 'settings-navpanel'
     }],
-    
-    
+
+
 	// controller template methods
     init: function() {
         var me = this;
@@ -45,8 +45,8 @@ Ext.define('SlateAdmin.controller.Settings', {
         navPanel.setActiveLink(null);
         navPanel.expand();
     },
-    
-    
+
+
     // event handlers
     onNavPanelExpand: function(navPanel) {
         Ext.util.History.pushState('settings', 'Settings');
@@ -58,7 +58,6 @@ Ext.define('SlateAdmin.controller.Settings', {
         var path = ['settings'],
             title = 'Settings',
             activeLink = this.getNavPanel().getActiveLink();
-        console.log('syncState, activeLink = ', activeLink)
         Ext.util.History.pushState(path, title);
     }
 });
