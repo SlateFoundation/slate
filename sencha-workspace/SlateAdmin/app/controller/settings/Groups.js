@@ -50,25 +50,10 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                 browsemembers: me.onBrowseMembersClick,
                 createsubgroup: me.onCreateSubgroupClick,
                 deletegroup: me.onDeleteGroupClick
-                //itemcontextmenu: me.onGroupContextMenu
             },
             'groups-manager button[action=create-organization]': {
                 click: me.onCreateOrganizationClick
             }
-/*
-            'groups-manager actioncolumn[action=browse-members]': {
-                click: me.onBrowseMembersClick
-            },
-            'groups-menu menuitem[action=browse-members]': {
-                click: me.onBrowseMembersClick
-            },
-            'groups-menu menuitem[action=create-subgroup]': {
-                click: me.onCreateSubgroupClick
-            },
-            'groups-menu menuitem[action=delete-group]': {
-                click: me.onDeleteGroupClick
-            }
-*/
         });
     },
 
@@ -103,15 +88,6 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         }
 
         Ext.util.History.pushState('settings/groups', 'Groups &mdash; Settings');
-    },
-
-    onGroupContextMenu: function(tree, record, item, index, ev) {
-        ev.stopEvent();
-
-        var menu = this.getMenu();
-
-        menu.setRecord(record);
-        menu.showAt(ev.getXY());
     },
 
     onCreateOrganizationClick: function() {
