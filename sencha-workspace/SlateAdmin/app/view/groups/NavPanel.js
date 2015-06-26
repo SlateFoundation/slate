@@ -1,8 +1,9 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+// TODO: Is this class being used?
 Ext.define('SlateAdmin.view.groups.NavPanel', {
     extend: 'Ext.tree.Panel',
     xtype: 'groups-navpanel',
-    
+
     // panel config
     title: 'Groups',
     bodyPadding: 0,
@@ -17,7 +18,7 @@ Ext.define('SlateAdmin.view.groups.NavPanel', {
             text: 'Manage Groups'
         }]
     }],
-    
+
     // treepanel config
     store: 'Groups',
     rootVisible: false,
