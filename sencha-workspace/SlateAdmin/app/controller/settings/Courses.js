@@ -44,20 +44,6 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
             'courses-manager button[action=create-course]': {
                 click: me.onCreateCourseClick
             }
-/*
-            'courses-manager button[action=create-organization]': {
-                click: me.onCreateOrganizationClick
-            },
-            'courses-menu menuitem[action=browse-members]': {
-                click: me.onBrowseMembersClick
-            },
-            'courses-menu menuitem[action=create-subcourse]': {
-                click: me.onCreateSubcourseClick
-            },
-            'courses-menu menuitem[action=delete-course]': {
-                click: me.onDeleteCourseClick
-            }
-*/
         });
     },
 
@@ -97,7 +83,8 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     onCreateCourseClick: function() {
-        var me = this;
+        //var me = this;
+        console.log('onCreateCourseClick - implement me');
 
     },
 
