@@ -1,4 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
+//TODO:  move to view.settings wih other settings managers
 Ext.define('SlateAdmin.view.groups.Manager', {
     extend: 'Ext.tree.Panel',
     xtype: 'groups-manager',
