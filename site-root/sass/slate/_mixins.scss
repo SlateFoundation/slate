@@ -1,32 +1,4 @@
-// temp substitutes for compass mixins
-
-@mixin align-items($align-items) {
-      -webkit-box-align: $align-items;
-    -webkit-align-items: $align-items;
-         -ms-flex-align: $align-items;
-            align-items: $align-items;
-}
-
-@mixin display-flex {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-}
-
-@mixin flex($flex) {
-    -webkit-box-flex: $flex;
-        -webkit-flex: $flex;
-            -ms-flex: $flex;
-                flex: $flex;
-}
-
-@mixin justify-content($justify-content) {
-           -webkit-box-pack: $justify-content;
-    -webkit-justify-content: $justify-content;
-              -ms-flex-pack: $justify-content;
-            justify-content: $justify-content;
-}
+@import 'utilities/contrast-color';
 
 @mixin input-placeholder($color){
     &::-webkit-input-placeholder {
