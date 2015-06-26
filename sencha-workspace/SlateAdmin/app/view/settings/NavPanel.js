@@ -8,8 +8,8 @@ Ext.define('SlateAdmin.view.settings.NavPanel', {
         { href: '#settings/groups', text: 'Groups' },
         { href: '#settings/terms', text: 'Terms' },
         { href: '#settings/departments', text: 'Departments' },
-        { href: '#settings/courses', text: 'Courses' },
-        { href: '#settings/locations', text: 'Locations' },
-        { href: '#settings/asset-statuses', text: 'Asset Statuses' }
+        { href: '#settings/courses', text: 'Courses' }
+//        { href: '#settings/locations', text: 'Locations' },
+//        { href: '#settings/asset-statuses', text: 'Asset Statuses' }
     ]
 });
