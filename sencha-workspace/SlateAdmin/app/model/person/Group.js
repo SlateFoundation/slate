@@ -42,6 +42,7 @@ Ext.define('SlateAdmin.model.person.Group', {
     },{
         name: 'About',
         type: 'string',
+        persist: false,
         allowNull: true
     },{
         name: 'Population',
@@ -91,15 +92,15 @@ Ext.define('SlateAdmin.model.person.Group', {
                 population = r.get('Population'),
                 founded = r.get('Founded'),
                 about = r.get('About');
-            
+
             if (founded) {
                 qtip.push('Founded: ' + founded.toLocaleDateString());
             }
-            
+
             if (Ext.isNumber(population)) {
                 qtip.push('Population: ' + population.toLocaleString());
             }
-            
+
             if (about) {
                 qtip.push('About: <span style="white-space: pre">' + about + '</q>');
             }
