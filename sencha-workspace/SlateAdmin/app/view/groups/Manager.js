@@ -3,7 +3,8 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     extend: 'Ext.tree.Panel',
     xtype: 'groups-manager',
     requires: [
-        'Ext.grid.plugin.CellEditing'
+        'Ext.grid.plugin.CellEditing',
+        'Jarvus.ext.actionevents.override.grid.column.ActionEvents'
     ],
 
     useArrows: true,
@@ -47,31 +48,22 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         width: 54,
         items: [
             {
+                action: 'browsemembers',
                 iconCls: 'group-browse glyph-danger',
                 glyph: 0xf056, // fa-minus-circle
-                tooltip: 'Browse Members',
-                handler: function(view, rowIndex) {
-                    var rec = view.getStore().getAt(rowIndex);
-                    view.up('groups-manager').fireEvent('browsemembers',rec);
-                }
+                tooltip: 'Browse Members'
             },
             {
+                action: 'createsubgroup',
                 iconCls: 'group-create-subgroup glyph-danger',
-                glyph: 0xf132, // fa-shield
-                tooltip: 'Create Subgroup',
-                handler: function(view, rowIndex) {
-                    var rec = view.getStore().getAt(rowIndex);
-                    view.up('groups-manager').fireEvent('createsubgroup',rec);
-                }
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Create Subgroup'
             },
             {
+                action: 'deletegroup',
                 iconCls: 'group-delete glyph-danger',
-                glyph: 0xf0f9, // fa-ambulance
-                tooltip: 'Delete Group',
-                handler: function(view, rowIndex) {
-                    var rec = view.getStore().getAt(rowIndex);
-                    view.up('groups-manager').fireEvent('deletegroup',rec);
-                }
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Delete Group'
             }
         ]
     }],
