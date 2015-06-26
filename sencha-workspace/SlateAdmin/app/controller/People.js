@@ -709,11 +709,17 @@ Ext.define('SlateAdmin.controller.People', {
             } else {
                 rootGroupSelected = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 // if root node, set path to people/all and return
             //    Ext.util.History.add('people/all');
             //    return;
 >>>>>>> updated code so a click on All People would not clear a query, replicating behavior of other groups
+=======
+                // if root node, set path to people/all and return
+            //    Ext.util.History.add('people/all');
+            //    return;
+>>>>>>> aefd7d7f8ff72ac6030eba80204d04357297c139
             }
         }
 
