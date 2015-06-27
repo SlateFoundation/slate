@@ -111,10 +111,13 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         var me = this,
             win = me.getTermsFormWindow(),
             form = win.down('form'),
+            titleField = form.down('textfield[name="Title"]'),
             saveButton = win.down('button[action="save"]'),
             parentDisplayField = form.down('displayfield[name="ParentDisplay"]');
 
+        form.suspendEvents();
         form.reset();
+        form.resumeEvents();
 
         if (rec.get && rec.get('ID')) {
             // This term will have a parent
@@ -135,7 +138,10 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         }
 
         saveButton.disable();
-        win.show();
+
+        win.show(null,function() {
+            titleField.focus();
+        });
     },
 
     onSaveTermClick: function() {
