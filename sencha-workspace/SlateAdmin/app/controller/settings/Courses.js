@@ -5,7 +5,8 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
     // controller config
     views: [
-        'settings.courses.Manager'
+        'settings.courses.Manager',
+        'settings.courses.Form'
     ],
 
     stores: [
@@ -29,8 +30,13 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         autoCreate: true,
 
         xtype: 'courses-manager'
-    }],
+    },{
+        ref: 'coursesFormWindow',
+        selector: 'courses-form-window',
+        autoCreate: true,
 
+        xtype: 'courses-form-window'
+    }],
 
 	// controller template methods
     init: function() {
@@ -39,10 +45,19 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         me.control({
             'courses-manager': {
                 show: me.onManagerShow,
-                edit: me.onCellEditorEdit
+                edit: me.onCellEditorEdit,
+                browsecoursesclick: me.onBrowseCoursesClick,
+                deletecourseclick: me.onDeleteCourseClick
             },
             'courses-manager button[action=create-course]': {
                 click: me.onCreateCourseClick
+            },
+            'courses-form-window button[action="save"]': {
+                click: me.onSaveCourseClick
+            },
+            'courses-form-window form': {
+                fieldvaliditychange: me.setFormValidity,
+                fielderrorchange: me.setFormValidity
             }
         });
     },
@@ -85,7 +100,49 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     onCreateCourseClick: function() {
         //var me = this;
         console.log('onCreateCourseClick - implement me');
+        var me = this,
+            win = me.getCoursesFormWindow(),
+            form = win.down('form'),
+            titleField = form.down('textfield[name="Title"]'),
+            saveButton = win.down('button[action="save"]');
 
+        form.suspendEvents();
+        form.reset();
+        form.resumeEvents();
+
+        saveButton.disable();
+
+        win.show(null,function() {
+            titleField.focus();
+        });
+    },
+
+    onSaveCourseClick: function() {
+        var me = this,
+            manager = me.getManager();
+            win = me.getCoursesFormWindow(),
+            form = win.down('form'),
+            course = me.getCourseCourseModel().create(form.getValues());
+
+        if (course.isValid()) {
+            course.set('ID', null);
+
+            course.save({
+                success: function(rec) {
+                    win.close();
+                    me.getCoursesCoursesStore().add(course);
+                    manager.getView().focusRow(rec);
+                }
+            });
+        }
+    },
+
+    onDeleteCourseClick: function(grid,rec) {
+        Ext.Msg.confirm('Deleting Course', 'Are you sure you want to delete this course?', function(btn) {
+            if (btn == 'yes') {
+                rec.erase();
+            }
+        });
     },
 
     onCellEditorEdit: function(editor, e) {
@@ -94,6 +151,19 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         if (rec.isValid()) {
             rec.save();
         }
-    }
+    },
 
+    onBrowseCoursesClick: function(grid,rec) {
+        Ext.util.History.add(['course-sections', 'search', 'course:' + rec.get('Code')]);
+    },
+
+    setFormValidity: function(form) {
+        var saveButton = form.up('window').down('button[action="save"]');
+
+        if (form.isValid()) {
+            saveButton.enable();
+        } else {
+            saveButton.disable();
+        }
+    }
 });
