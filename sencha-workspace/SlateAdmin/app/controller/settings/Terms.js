@@ -111,7 +111,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         var me = this,
             win = me.getTermsFormWindow(),
             form = win.down('form'),
-            saveButton = win.down('button[action="save"]');
+            saveButton = win.down('button[action="save"]'),
             parentDisplayField = form.down('displayfield[name="ParentDisplay"]');
 
         form.reset();
