@@ -101,7 +101,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
             if (btn == 'ok' && text) {
                 newGroup = me.getPersonGroupModel().create({
                     Name: text,
-                    Class: 'Organization',
+                    Class: 'Emergence\\People\\Groups\\Organization',
                     namesPath: '/' + text
                 });
 
@@ -128,7 +128,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                 newGroup = me.getPersonGroupModel().create({
                     Name: text,
                     ParentID: parentGroup.get('ID'),
-                    Class: 'Group',
+                    Class: 'Emergence\\People\\Groups\\Group',
                     namesPath: parentGroup.get('namesPath') + '/' + text
                 });
 
