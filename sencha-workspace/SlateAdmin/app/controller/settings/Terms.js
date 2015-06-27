@@ -32,7 +32,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         xtype: 'terms-manager'
     },{
         ref: 'termsFormWindow',
-        selector: 'terms-form',
+        selector: 'terms-form-window',
         autoCreate: true,
 
         xtype: 'terms-form-window'
@@ -48,7 +48,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
                 show: me.onManagerShow,
                 edit: me.onCellEditorEdit,
                 browsecoursesclick: me.onBrowseCoursesClick,
-                createsubtermclick: me.onCreateSubtermClick,
+                createtermclick: me.onCreateTermClick,
                 deletetermclick: me.onDeleteTermClick
             },
             'terms-manager button[action=create-term]': {
@@ -56,6 +56,10 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
             },
             'terms-form-window button[action="save"]': {
                 click: me.onSaveTermClick
+            },
+            'terms-form-window form': {
+                fieldvaliditychange: me.setFormValidity,
+                fielderrorchange: me.setFormValidity
             }
         });
     },
@@ -103,39 +107,41 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         }
     },
 
-    onCreateTermClick: function() {
+    onCreateTermClick: function(grid,rec) {
         var me = this,
-            win = me.getTermsFormWindow();
+            win = me.getTermsFormWindow(),
+            form = win.down('form'),
+            saveButton = win.down('button[action="save"]');
+            parentDisplayField = form.down('displayfield[name="ParentDisplay"]');
 
-        win.down('form').reset();
+        form.reset();
+
+        if (rec.get && rec.get('ID')) {
+            // This term will have a parent
+            form.getForm().setValues({
+                ParentID: rec.get('ID'),
+                ParentDisplay: rec.get('Title'),
+                TitlesPath: '/' + rec.get('Title')
+            });
+            win.setParentTerm(rec);
+            parentDisplayField.show();
+        } else {
+            // This term has no parent
+            form.getForm().setValues({
+                TitlesPath: ''
+            });
+            win.setParentTerm(null);
+            parentDisplayField.hide();
+        }
+
+        saveButton.disable();
         win.show();
-
-/*
-        Ext.Msg.prompt('Create organization', 'Enter a name for the new organization:', function(btn, text) {
-            var newTerm;
-
-            text = Ext.String.trim(text);
-
-            if (btn == 'ok' && text) {
-                newTerm = me.getTermModel().create({
-                    Name: text,
-                    namesPath: '/' + text
-                });
-
-                newTerm.save({
-                    success: function() {
-                        me.getTermsTreeStore().getRootNode().appendChild(newTerm);
-                        me.getTermsStore().add(newTerm);
-                    }
-                });
-            }
-        });
-*/
     },
 
     onSaveTermClick: function() {
         var me = this,
             win = me.getTermsFormWindow(),
+            parentTerm = win.getParentTerm(),
             form = win.down('form'),
             term;
 
@@ -143,45 +149,25 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
         if (term.isValid()) {
 
-            term.set('titlesPath', '/' + term.get('Title'));
+            term.set('ID', null);
             term.set('leaf', true);
+            term.set('TitlesPath', term.get('TitlesPath') + '/' + term.get('Title'));
 
             term.save({
                 success: function() {
-                    me.getTermsTreeStore().getRootNode().appendChild(term);
+                    win.close();
+
+                    if (parentTerm) {
+                        parentTerm.set('leaf', false);
+                        parentTerm.appendChild(term);
+                        parentTerm.expand();
+                    } else {
+                        me.getTermsTreeStore().getRootNode().appendChild(term);
+                    }
                     me.getTermsStore().add(term);
                 }
             });
         }
-    },
-
-    onCreateSubtermClick: function(grid,rec) {
-        var me = this,
-            parentTerm = rec;
-
-        Ext.Msg.prompt('Create term', 'Enter a name for the new term:', function(btn, text) {
-            var newTerm;
-
-            text = Ext.String.trim(text);
-
-            if (btn == 'ok' && text) {
-                newTerm = me.getTermModel().create({
-                    Name: text,
-                    ParentID: parentTerm.get('ID'),
-                    Class: 'Term',
-                    titlesPath: parentTerm.get('titlesPath') + '/' + text
-                });
-
-                newTerm.save({
-                    success: function() {
-                        parentTerm.set('leaf', false);
-                        parentTerm.appendChild(newTerm);
-                        parentTerm.expand();
-                        me.getTermsStore().add(newTerm);
-                    }
-                });
-            }
-        });
     },
 
     onDeleteTermClick: function(grid,rec) {
@@ -201,8 +187,17 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        console.log('onBrowseCoursesClick');
         Ext.util.History.add(['course-sections', 'search', 'term:' + rec.get('Handle')]);
+    },
+
+    setFormValidity: function(form) {
+        var saveButton = form.up('window').down('button[action="save"]');
+
+        if (form.isValid()) {
+            saveButton.enable();
+        } else {
+            saveButton.disable();
+        }
     }
 
 });

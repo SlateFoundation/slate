@@ -13,12 +13,18 @@ Ext.define('SlateAdmin.view.settings.terms.Form', {
         modal: true,
         minWidth: 360,
         closeAction: 'hide',
-        layout: 'fit'
+        layout: 'fit',
+        parentTerm: null
     },
 
     items: [{
         xtype: 'form',
+        bodyPadding: 12,
         items: [{
+            fieldLabel: 'Parent',
+            name: 'ParentDisplay',
+            xtype: 'displayfield'
+        },{
             fieldLabel: 'Title',
             name: 'Title',
             xtype: 'textfield',
@@ -35,18 +41,25 @@ Ext.define('SlateAdmin.view.settings.terms.Form', {
             xtype: 'datefield',
             format :'Y-m-d',
             allowBlank: true
+        },{
+            name: 'ParentID',
+            xtype: 'hidden',
+            value: null
+        },{
+            name: 'TitlesPath',
+            xtype: 'hidden',
+            value: null
         }]
     }],
 
     buttons: [{
         text: 'save',
-        action: 'save',
+        action: 'save'
+    },{
+        text: 'cancel',
         handler: function(button) {
             button.up('window').close();
         }
-    },{
-        text: 'continue',
-        action: 'continue'
     }]
 
 });

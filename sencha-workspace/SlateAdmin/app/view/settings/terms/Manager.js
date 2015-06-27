@@ -63,15 +63,16 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         items: [
             {
                 action: 'browsecourses',
+                border: '2px',
                 iconCls: 'group-browse glyph-danger',
                 glyph: 0xf056, // fa-minus-circle
                 tooltip: 'Browse Courses'
             },
             {
-                action: 'createsubterm',
-                iconCls: 'group-create-subterm glyph-danger',
+                action: 'createterm',
+                iconCls: 'group-create-term glyph-danger',
                 glyph: 0xf056, // fa-minus-circle
-                tooltip: 'Create Subterm'
+                tooltip: 'Create Term'
             },
             {
                 action: 'deleteterm',
