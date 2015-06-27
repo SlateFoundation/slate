@@ -38,7 +38,9 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
         me.control({
             'departments-manager': {
                 show: me.onManagerShow,
-                edit: me.onCellEditorEdit
+                edit: me.onCellEditorEdit,
+                browsecoursesclick: me.onBrowseCoursesClick,
+                deletedepartmentclick: me.onDeleteDepartmentClick
             },
             'departments-manager button[action=create-department]': {
                 click: me.onCreateDepartmentClick
@@ -82,7 +84,8 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     },
 
     onCreateDepartmentClick: function() {
-        var me = this;
+        var me = this,
+            manager = me.getManager();
 
         Ext.Msg.prompt('Create department', 'Department name:', function(btn, text) {
             var department;
@@ -96,8 +99,9 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
                 });
 
                 department.save({
-                    success: function() {
+                    success: function(rec) {
                         me.getCoursesDepartmentsStore().add(department);
+                        manager.getView().focusRow(rec);
                     }
                 });
             }
@@ -110,6 +114,18 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
         if (rec.isValid()) {
             rec.save();
         }
+    },
+
+    onDeleteDepartmentClick: function(grid,rec) {
+        Ext.Msg.confirm('Deleting Department', 'Are you sure you want to delete this department?', function(btn) {
+            if (btn == 'yes') {
+                rec.erase();
+            }
+        });
+    },
+
+    onBrowseCoursesClick: function(grid,rec) {
+        Ext.util.History.add(['course-sections', 'search', 'department:' + rec.get('Handle')]);
     }
 
 });

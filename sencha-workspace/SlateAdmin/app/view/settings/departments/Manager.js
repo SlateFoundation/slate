@@ -39,6 +39,26 @@ Ext.define('SlateAdmin.view.settings.departments.Manager', {
                 ]
             }
         }
+    },{
+        xtype: 'actioncolumn',
+        dataIndex: 'Class',
+        width: 54,
+        items: [
+            {
+                action: 'browsecourses',
+                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
+                iconCls: 'group-browse glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Browse Courses'
+            },
+            {
+                action: 'deletedepartment',
+                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
+                iconCls: 'group-delete glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Delete Department'
+            }
+        ]
     }],
     bbar: [{
         xtype: 'button',
