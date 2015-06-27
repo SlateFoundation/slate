@@ -82,9 +82,26 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     },
 
     onCreateDepartmentClick: function() {
-        //var me = this;
-        console.log('onCreateDepartmentClick- implement me');
+        var me = this;
 
+        Ext.Msg.prompt('Create department', 'Department name:', function(btn, text) {
+            var department;
+
+            text = Ext.String.trim(text);
+
+            if (btn == 'ok' && text) {
+                department = me.getCourseDepartmentModel().create({
+                    Title: text,
+                    Class: 'Slate\\Courses\\Department'
+                });
+
+                department.save({
+                    success: function() {
+                        me.getCoursesDepartmentsStore().add(department);
+                    }
+                });
+            }
+        });
     },
 
     onCellEditorEdit: function(editor, e) {
