@@ -52,7 +52,8 @@
         "jarvus-ext-lazydata",
         "jarvus-ext-actionevents",
         "jarvus-ext-glyphs",
-        "jarvus-ext-treerecords"
+        "jarvus-ext-treerecords",
+        "jarvus-ext-actionevents"
     ],
 
     /**
