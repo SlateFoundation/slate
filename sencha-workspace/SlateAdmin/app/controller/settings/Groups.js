@@ -5,8 +5,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     // controller config
     views: [
-        'groups.Manager',
-        'groups.Menu'
+        'groups.Manager'
     ],
 
     stores: [
@@ -31,12 +30,6 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         autoCreate: true,
 
         xtype: 'groups-manager'
-    },{
-        ref: 'menu',
-        selector: 'groups-menu',
-        autoCreate: true,
-
-        xtype: 'groups-menu'
     }],
 
 
