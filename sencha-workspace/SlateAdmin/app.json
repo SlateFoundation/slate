@@ -49,7 +49,7 @@
         "emergence-apikit",
         "jarvus-ext-searchfield",
         "jarvus-ext-routing",
-        "jarvus-ext-lazydata",
+        "jarvus-lazydata",
         "jarvus-ext-actionevents",
         "jarvus-ext-glyphs",
         "jarvus-ext-treerecords"
