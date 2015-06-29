@@ -2,7 +2,7 @@
 
 // @include font-face('Lato', inline-font-files('Lato/Lato-Light.woff',        woff), false, 300, regular);
 // @include font-face('Lato', inline-font-files('Lato/Lato-LightItalic.woff',  woff), false, 300, italic);
-@include font-face('Lato', inline-font-files('Lato/Lato-Regular.woff',      woff), false, 400, regular);
-@include font-face('Lato', inline-font-files('Lato/Lato-Italic.woff',       woff), false, 400, italic);
-@include font-face('Lato', inline-font-files('Lato/Lato-Bold.woff',         woff), false, 700, regular);
-@include font-face('Lato', inline-font-files('Lato/Lato-BoldItalic.woff',   woff), false, 700, italic);
+@include font-face('Lato', inline-font-files('LatoLatin/LatoLatin-Regular.woff',      woff), false, 400, regular);
+@include font-face('Lato', inline-font-files('LatoLatin/LatoLatin-Italic.woff',       woff), false, 400, italic);
+@include font-face('Lato', inline-font-files('LatoLatin/LatoLatin-Bold.woff',         woff), false, 700, regular);
+@include font-face('Lato', inline-font-files('LatoLatin/LatoLatin-BoldItalic.woff',   woff), false, 700, italic);
