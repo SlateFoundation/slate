@@ -4,7 +4,7 @@
             {if $.User}
             <li class="omnibar-item">
                 <a class="omnibar-link root-link" href="/">
-                    <img class="slate-logo" src="/img/slate-logo-white.svg" width="41" height="32" alt="Slate">
+                    <img class="slate-logo" src="{versioned_url img/slate-logo-white.svg}" width="41" height="32" alt="Slate">
                 </a>
             </li>
             {/if}
