@@ -9,7 +9,6 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         'SlateAdmin.model.person.Group'
     ],
 
-
     title: 'Profile',
     glyph: 0xf007,
     itemId: 'profile',
@@ -35,7 +34,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
     }],
 
     layout: 'fit',
-    
+
     items: {
         xtype: 'form',
         bodyPadding: '15 10 10',
