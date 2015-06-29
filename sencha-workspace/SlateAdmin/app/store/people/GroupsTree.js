@@ -1,14 +1,15 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.people.GroupsTree', {
     extend: 'Ext.data.TreeStore',
-    
-    model: 'SlateAdmin.model.person.Group', 
+
+    model: 'SlateAdmin.model.person.Group',
     root: {
         text: 'All People',
+        Handle: 'slate-internal-people-root-node',
         ID: null
     },
     nodeParam: 'parentGroup',
-    
+
     onBeforeNodeExpand: function(node, callback, scope, args) {
         var me = this,
             groupsStore, callbackArgs,
