@@ -122,6 +122,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                     Name: text,
                     ParentID: parentGroup.get('ID'),
                     Class: 'Emergence\\People\\Groups\\Group',
+                    leaf: true,
                     namesPath: parentGroup.get('namesPath') + '/' + text
                 });
 
