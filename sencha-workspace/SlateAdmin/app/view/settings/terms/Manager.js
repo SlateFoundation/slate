@@ -45,7 +45,6 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         dataIndex: 'Status',
         editor: {
             xtype: 'combo',
-//          valueField: 'name',
             displayField: 'name',
             store: {
                 fields: ['name'],
