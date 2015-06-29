@@ -1,11 +1,3 @@
 /ext-*/
 build/
-
-# TODO: ignore packages again once they've all been moved to their own repos
-#packages/*
-packages/slate-theme
-packages/jarvus-hotfixes
-packages/jarvus-ext-routing
-packages/jarvus-ext-actionevents
-packages/jarvus-ext-glyphs
-packages/jarvus-ext-treerecords
+/packages/*/
