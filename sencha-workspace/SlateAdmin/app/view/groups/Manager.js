@@ -4,7 +4,8 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     extend: 'Ext.tree.Panel',
     xtype: 'groups-manager',
     requires: [
-        'Ext.grid.plugin.CellEditing'
+        'Ext.grid.plugin.CellEditing',
+        'Jarvus.ext.actionevents.override.grid.column.ActionEvents'
     ],
 
     useArrows: true,
@@ -42,6 +43,30 @@ Ext.define('SlateAdmin.view.groups.Manager', {
                 ]
             }
         }
+    },{
+        xtype: 'actioncolumn',
+        dataIndex: 'Class',
+        width: 54,
+        items: [
+            {
+                action: 'browsemembers',
+                iconCls: 'group-browse glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Browse Members'
+            },
+            {
+                action: 'createsubgroup',
+                iconCls: 'group-create-subgroup glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Create Subgroup'
+            },
+            {
+                action: 'deletegroup',
+                iconCls: 'group-delete glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Delete Group'
+            }
+        ]
     }],
     bbar: [{
         xtype: 'button',
