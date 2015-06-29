@@ -50,20 +50,17 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         items: [
             {
                 action: 'browsemembers',
-                iconCls: 'group-browse glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Browse Members'
             },
             {
                 action: 'createsubgroup',
-                iconCls: 'group-create-subgroup glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Create Subgroup'
             },
             {
                 action: 'deletegroup',
-                iconCls: 'group-delete glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Delete Group'
             }
         ]

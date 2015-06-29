@@ -46,16 +46,12 @@ Ext.define('SlateAdmin.view.settings.courses.Manager', {
         items: [
             {
                 action: 'browsecourses',
-                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
-                iconCls: 'group-browse glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Browse Courses'
             },
             {
                 action: 'deletecourse',
-                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
-                iconCls: 'group-delete glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Delete Course'
             }
         ]

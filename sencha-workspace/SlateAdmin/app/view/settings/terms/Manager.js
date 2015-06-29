@@ -59,27 +59,21 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 54,
+        width: 81,
         items: [
             {
                 action: 'browsecourses',
-                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
-                iconCls: 'group-browse glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Browse Courses'
             },
             {
                 action: 'createterm',
-                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
-                iconCls: 'group-create-term glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Create Term'
             },
             {
                 action: 'deleteterm',
-                icon: 'http://icons.iconarchive.com/icons/everaldo/crystal-clear/16/Action-run-icon.png',
-                iconCls: 'group-delete glyph-danger',
-                glyph: 0xf056, // fa-minus-circle
+                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
                 tooltip: 'Delete Term'
             }
         ]
