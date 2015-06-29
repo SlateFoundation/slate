@@ -40,7 +40,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
         region: 'center',
         flex: 3,
 
-        xtype: 'people-grid',
+        xtype: 'people-grid'
     },{
         region: 'east',
         flex: 2,
