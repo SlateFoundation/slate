@@ -3,7 +3,6 @@
 
     .record-image {
         float: left;
-        margin-right: 1em;
     }
 
     img,
@@ -13,6 +12,7 @@
 
     .record-data {
         overflow: hidden;
+        padding: 1em;
     }
 
     .record-title {
@@ -22,6 +22,7 @@
     }
 
     .record-subtitle {
-        margin: 0;
+        font-size: 1.25em;
+        margin: .125em 0 0;
     }
 }
