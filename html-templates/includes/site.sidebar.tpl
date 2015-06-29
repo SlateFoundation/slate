@@ -7,6 +7,7 @@
     </li>    
 {/template}
 
+{*
 <div class="sidebar-item todo-ct">
     <h2 class="sidebar-item-title">To-Do List</h2>
 
@@ -35,7 +36,7 @@
             <form class="new-task-form todo-item-wrap">
                 <input class="todo-item-checkbox" type="checkbox" disabled>
                 <div class="textarea-ct todo-item-title"><textarea placeholder="New task&hellip;"></textarea></div>
-{*                 <div class="submit-area"><input class="button small primary" type="submit" value="Add"></div> *}
+<!--            <div class="submit-area"><input class="button small primary" type="submit" value="Add"></div> -->
             </form>
         </li>
     </ul>
@@ -53,6 +54,7 @@
     </ul>
 
 </div>
+*}
 
 {$calendarWidget = Slate::getWidgetConfig(calendar)}
 {if $calendarWidget.enabled}
