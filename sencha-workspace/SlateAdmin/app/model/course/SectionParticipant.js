@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
-        'Emergence.ext.proxy.Records'
+        'Emergence.proxy.Records'
     ],
 
 
