@@ -30,8 +30,8 @@
                         <a class="omnibar-menu-link" href="{$link.href|escape}" title="{$link.label|escape}">
                             <figure class="omnibar-menu-icon">
                                 <div class="omnibar-menu-image-ct">
-                                    <svg class="omnibar-menu-image-bg"><use xlink:href="/img/slate-icons/slate-icons.svg#icon-squircle"/></svg>
-                                    <svg class="omnibar-menu-image"><use xlink:href="/img/slate-icons/slate-icons.svg#icon-{$link.icon|default:'link'|escape}"/></svg>
+                                    <svg class="omnibar-menu-image-bg"><use xlink:href="{versioned_url img/slate-icons/slate-icons.svg}#icon-squircle"/></svg>
+                                    <svg class="omnibar-menu-image"><use xlink:href="{versioned_url img/slate-icons/slate-icons.svg}#icon-{$link.icon|default:'link'|escape}"/></svg>
                                 </div>
                                 <figcaption class="omnibar-menu-label">
                                     {if $labelPrefix}

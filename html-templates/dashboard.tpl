@@ -30,9 +30,9 @@
                 <a class="dashboard-icon-link" href="{$link.href|escape}">
                     <figure class="dashboard-icon-ct">
                         <div class="dashboard-icon">
-                            <svg class="dashboard-icon-bg"><use xlink:href="/img/slate-icons/slate-icons.svg#icon-squircle"/></svg>
+                            <svg class="dashboard-icon-bg"><use xlink:href="{versioned_url img/slate-icons/slate-icons.svg}#icon-squircle"/></svg>
                             {if $link.icon}
-                                <svg class="dashboard-icon-glyph"><use xlink:href="/img/slate-icons/slate-icons.svg#icon-{$link.icon}"/></svg>
+                                <svg class="dashboard-icon-glyph"><use xlink:href="{versioned_url img/slate-icons/slate-icons.svg}#icon-{$link.icon}"/></svg>
                             {/if}
                         </div>
                         <figcaption class="dashboard-icon-label">

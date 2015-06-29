@@ -35,7 +35,7 @@
                 {/foreach}
 
                 <footer class="page-footer">
-                    <a href="/blog/rss?AuthorID={$Person->ID}"><img src="/img/rss.png" width=14 height=14 alt="RSS"></a>
+                    <a href="/blog/rss?AuthorID={$Person->ID}"><img src="{versioned_url img/rss.png}" width=14 height=14 alt="RSS"></a>
                 </footer>
             </div>
         </div>

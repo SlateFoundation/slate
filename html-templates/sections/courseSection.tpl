@@ -56,7 +56,7 @@
                         </div>
                     {/if}
             
-                    <a href="/sections/{$Section->Handle}/rss"><img src="/img/rss.png" width=14 height=14 alt="RSS"></a>
+                    <a href="/sections/{$Section->Handle}/rss"><img src="{versioned_url img/rss.png}" width=14 height=14 alt="RSS"></a>
                 </footer>
             </div>
         </div>
