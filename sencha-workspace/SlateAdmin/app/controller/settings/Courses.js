@@ -98,8 +98,6 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     onCreateCourseClick: function() {
-        //var me = this;
-        console.log('onCreateCourseClick - implement me');
         var me = this,
             win = me.getCoursesFormWindow(),
             form = win.down('form'),
