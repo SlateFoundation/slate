@@ -15,4 +15,12 @@ Ext.define('SlateAdmin.API', {
             scope: scope
         });
     }
+}, function(API) {
+    var pageParams = Ext.Object.fromQueryString(location.search);
+
+    // allow API host to be overridden via apiHost param
+    if (pageParams.apiHost) {
+        API.setHostname(pageParams.apiHost);
+        API.setUseSSL(false);
+    }
 });
