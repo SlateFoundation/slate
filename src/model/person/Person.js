@@ -19,6 +19,11 @@ Ext.define('Slate.model.person.Person', {
         'Email',
         'Phone',
         'StudentNumber',
+        'GPSStatus',
+        'GPSStatusGroup',
+        'Help',
+        'Priority',
+        'Standards',
         'groupIDs',
         {
             name: 'ID',
