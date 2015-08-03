@@ -1,9 +1,9 @@
 // overrides
-$base-color: #1f83b1;
-$body-background-color: transparent;
-$color: #333;
-$font-family: Lato;
-$font-size: 14px;
+$base-color: #1f83b1 !default;
+$body-background-color: transparent !default;
+$color: #333 !default;
+$font-family: Lato !default;
+$font-size: 14px !default;
 
 // custom
-$dark-ui-color: red;
+$dark-ui-color: red !default;

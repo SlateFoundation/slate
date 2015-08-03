@@ -1,25 +1,25 @@
-$button-default-background-gradient:            'none';
-$button-default-background-gradient-disabled:   'none';
-$button-default-background-gradient-focus:      'none';
-$button-default-background-gradient-over:       'none';
-$button-default-background-gradient-pressed:    'none';
+$button-default-background-gradient:            'none' !default;
+$button-default-background-gradient-disabled:   'none' !default;
+$button-default-background-gradient-focus:      'none' !default;
+$button-default-background-gradient-over:       'none' !default;
+$button-default-background-gradient-pressed:    'none' !default;
 
-$button-toolbar-background-gradient:            'none';
-$button-toolbar-background-gradient-disabled:   'none';
-$button-toolbar-background-gradient-focus:      'none';
-$button-toolbar-background-gradient-over:       'none';
-$button-toolbar-background-gradient-pressed:    'none';
+$button-toolbar-background-gradient:            'none' !default;
+$button-toolbar-background-gradient-disabled:   'none' !default;
+$button-toolbar-background-gradient-focus:      'none' !default;
+$button-toolbar-background-gradient-over:       'none' !default;
+$button-toolbar-background-gradient-pressed:    'none' !default;
 
-$button-toolbar-background-color: #f9f9f9;
-$button-toolbar-background-color-over: white;
-$button-toolbar-background-color-focus: $button-toolbar-background-color-over;
-$button-toolbar-background-color-disabled: transparent;
+$button-toolbar-background-color: #f9f9f9 !default;
+$button-toolbar-background-color-over: white !default;
+$button-toolbar-background-color-focus: $button-toolbar-background-color-over !default;
+$button-toolbar-background-color-disabled: transparent !default;
 
-$button-toolbar-border-color: rgba(#d5d5d5, 0);
-$button-toolbar-border-color-disabled: transparent;
+$button-toolbar-border-color: rgba(#d5d5d5, 0) !default;
+$button-toolbar-border-color-disabled: transparent !default;
 
-$button-small-border-width: 0;
+$button-small-border-width: 0 !default;
 
-$button-small-icon-size:    $glyph-size;
-$button-medium-icon-size:   $glyph-size;
-$button-large-icon-size:    $glyph-size * 2;
+$button-small-icon-size:    $glyph-size !default;
+$button-medium-icon-size:   $glyph-size !default;
+$button-large-icon-size:    $glyph-size * 2 !default;
