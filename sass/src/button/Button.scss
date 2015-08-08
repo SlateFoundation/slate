@@ -2,10 +2,11 @@
 @include glyph-color('success', $success-color);
 
 .x-btn {
-    border-bottom-color: #d5d5d5;
 }
 
 .x-btn-default-toolbar-medium {
+    border-bottom-color: #d5d5d5;
+
     &.x-btn-over {
         border-bottom-color: #ccc;
     }
