@@ -58,6 +58,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         'School ID Number' => 'StudentNumber',
             'Student ID' => 'StudentNumber',
         'Username' => 'Username',
+        'Password' => 'Password',
         'Email' => 'Email',
         'First Name' => 'FirstName',
             'First' => 'FirstName',
@@ -81,6 +82,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     public static $alumniColumns = array(
         'Username' => 'Username',
+        'Password' => 'Password',
         'Email' => 'Email',
         'First Name' => 'FirstName',
             'First' => 'FirstName',
@@ -109,7 +111,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             'Birthday' => 'BirthDate',
 #        'StaffID',
         'Username' => 'Username',
-#        'Assigned Password',
+        'Password' => 'Password',
         'Account Level' => 'AccountLevel',
             'Account Type' => 'AccountLevel',
         'Role / Job Title' => 'About',
@@ -177,6 +179,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         $config['autoCapitalize'] = !empty($requestData['autoCapitalize']);
         $config['updateUsernames'] = !empty($requestData['updateUsernames']);
+        $config['updatePasswords'] = !empty($requestData['updatePasswords']);
         $config['updateAbout'] = !empty($requestData['updateAbout']);
         $config['autoAssignEmail'] = !empty($requestData['autoAssignEmail']);
         $config['masterTerm'] = !empty($requestData['masterTerm']) ? $requestData['masterTerm'] : null;
@@ -784,6 +787,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             if ($User->isPhantom) {
                 $Job->log(sprintf('Initializing AccountLevel to %s', $row['AccountLevel']), LogLevel::DEBUG);
             }
+        }
+
+        if (!empty($row['Password']) && ($User->isPhantom || !empty($Job->Config['updatePasswords']))) {
+            $User->setClearPassword($row['Password']);
         }
 
 

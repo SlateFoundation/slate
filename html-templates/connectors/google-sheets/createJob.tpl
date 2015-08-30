@@ -63,6 +63,13 @@
     			(Check to change a user's username if the site's configured generator comes up with a new one)
     		</p>
             <p>
+        		<label>
+    				Update passwords
+    				<input type="checkbox" name="updatePasswords" value="true" {refill field=updatePasswords checked="true"}>
+    			</label>
+    			(Check to change a existing users' passwords if one is specified in the sheet)
+    		</p>
+            <p>
             	<label>
     				Update about text
     				<input type="checkbox" name="updateAbout" value="true" {refill field=updateAbout checked="true"}>
