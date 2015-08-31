@@ -5,11 +5,10 @@ Ext.define('SlateAdmin.store.people.AccountLevels', {
         'SlateAdmin.proxy.API'
     ],
 
+    idProperty: 'value',
     fields: [{
         name: 'value',
-        convert: function(v, r) {
-            return r.raw;
-        }
+        type: 'string'
     }],
 
     proxy: {
@@ -17,7 +16,13 @@ Ext.define('SlateAdmin.store.people.AccountLevels', {
         url: '/people/*account-levels',
         reader: {
             type: 'json',
-            rootProperty: 'data'
+            transform: function(data) {
+                return Ext.Array.map(data.data, function(value) {
+                    return {
+                        value: value
+                    }
+                });
+            }
         }
     }
 });

@@ -30,6 +30,7 @@ Ext.define('SlateAdmin.Application', {
         'people.Profile',
         'people.Courses',
         'people.Contacts',
+        'people.Progress',
 
         'Courses',
         'courses.Profile',
@@ -42,7 +43,13 @@ Ext.define('SlateAdmin.Application', {
         'settings.Terms',
 
         'Terms',
-        'Locations'
+        'Locations',
+        
+        'Progress',
+        'progress.Standards',
+        'progress.Worksheets',
+        'progress.Narratives',
+        'progress.Interims'
 
         //<debug>
         ,'DeveloperTools'

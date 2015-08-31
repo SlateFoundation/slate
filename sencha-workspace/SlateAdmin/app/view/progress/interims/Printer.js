@@ -1,0 +1,224 @@
+/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
+Ext.define('SlateAdmin.view.progress.interims.Printer', {
+    extend: 'Ext.container.Container'    
+    ,xtype: 'progress-interims-printer'
+    ,requires: [
+        'Ext.layout.container.VBox'
+        ,'Ext.layout.container.HBox'
+        ,'Ext.form.Panel'
+        ,'Ext.form.FieldSet'
+        ,'Ext.form.field.ComboBox'
+        ,'Ext.util.Cookies'
+    ]
+    
+    ,componentCls: 'progress-interims-printer' 
+    ,layout: {
+        type: 'vbox'
+        ,align: 'stretch'
+	}
+	,initComponent: function() {
+
+		this.items = [{
+            xtype: 'form'
+            ,itemId: 'filterForm'
+            ,bodyPadding: 5
+            ,items: [{
+                xtype: 'fieldset'
+                ,title: 'Filter reports by&hellip;'
+                ,layout: 'hbox'
+                ,padding: 10
+                ,defaultType: 'combo'
+                ,defaults: {
+                    flex: 1
+                    ,labelAlign: 'right'
+                    ,labelWidth: 60
+                    ,forceSelection: true
+                    ,allowBlank: true
+                    ,valueField: 'ID'
+                }
+                ,items: [{
+                    name: 'termID'
+                    ,fieldLabel: 'Term'
+                    ,emptyText: 'Current Term'
+                    ,displayField: 'Title'
+					,queryMode: 'local'
+					,value: window.currentTerm
+					,forceSelection: false
+                    ,valueField: 'ID'
+                    ,store: 'Terms'
+                },{
+                    name: 'advisorID'
+                    ,fieldLabel: 'Advisor'
+                    ,emptyText: 'Any'
+                    ,displayField: 'FullName'
+                    ,queryMode: 'local'
+                    ,typeAhead: true
+                    ,store: 'people.Advisors'
+                },{
+                    name: 'authorID'
+                    ,fieldLabel: 'Author'
+                    ,emptyText: 'Any'
+                    ,displayField: 'FullName'
+                    ,typeAhead: true
+                    ,store: {
+                        autoLoad: true
+                        ,fields: [
+                            {name: 'ID', type: 'int'}
+                            ,{
+                                name: 'FullName'
+                                ,convert: function(v, r) {
+                                    return r.raw.LastName + ', ' + r.raw.FirstName;
+                                }
+                            }
+                        ]
+                        ,proxy: {
+                            type: 'ajax'
+                            ,url: '/interims/json/authors'
+                            ,reader: {
+                                type: 'json'
+                                ,rootProperty: 'data'
+                            }
+                        }
+                    }
+                },{
+                    name: 'studentID'
+                    ,fieldLabel: 'Student'
+                    ,emptyText: 'All'
+                    ,queryMode: 'remote'
+                    ,queryParam: 'q'
+                    ,hideTrigger: true
+                    ,store: 'progress.interims.People'
+                    ,listConfig: {
+                        getInnerTpl: function() {
+                            return '{LastName}, {FirstName}'
+                        }
+                    }
+                    ,displayTpl: '<tpl for=".">{LastName}, {FirstName}</tpl>'
+                    ,listeners: {
+                        beforequery: function(qe) {
+                            if(!qe)
+                                return false;
+                            else
+                                qe.query += ' class:Student';
+                        }
+                    }
+                }]
+            }]
+            ,bbar: [{
+                xtype: 'tbfill'
+            },{
+                text: 'Preview'
+                ,action: 'preview'
+            },{
+                text: 'Print'
+                ,action: 'print'
+            },{
+                text: 'Save to CSV'
+                ,action: 'save-csv'
+            },{
+                xtype: 'tbseparator'
+            },{
+                text: 'Clear Filters'
+                ,action: 'clear-filters'
+            },{
+                xtype: 'tbfill'
+            }]
+		},{
+            xtype: 'component'
+            ,itemId: 'previewBox'
+            ,cls: 'print-preview'
+            ,flex: 1
+            ,disabled: true
+            ,renderTpl: '<iframe width="100%" height="100%"></iframe>'
+            ,renderSelectors: {
+                iframeEl: 'iframe'
+            }
+            ,listeners: {
+                scope: this
+                ,afterrender: {
+                    fn: function(previewBox) {
+                        this.mon(previewBox.iframeEl, 'load', function() {
+                            this.fireEvent('previewload', this, previewBox);
+                            previewBox.setLoading(false);
+                        }, this);
+                    }
+                    ,delay: 10
+                }
+            }
+		}];
+        
+		this.callParent();
+		
+	}
+    
+    
+    //helper functions
+    ,loadEmailPreview: function(params) {
+    	var previewBox = this.getComponent('previewBox');
+        previewBox.enable();
+        previewBox.setLoading({msg: 'Downloading Email Preview&hellip;'});
+        previewBox.iframeEl.dom.src = '/interims/email/preview?'+Ext.Object.toQueryString(params);
+    }
+    ,loadPreview: function(params) {
+        var previewBox = this.getComponent('previewBox');
+        previewBox.enable();
+        previewBox.setLoading({msg: 'Downloading reports&hellip;'});
+        params.apiHost = 'cc.sla.slatepowered.net';
+        
+        SlateAdmin.API.request({
+            url: '/interims/print/preview',
+            params: params,
+            scope: this,
+            success: function(res) {
+                debugger;
+                var previewBox = this.getComponent('previewBox');
+                previewBox.setHtml(res.responseText);
+                previewBox.setLoading(false);
+            }
+        })
+        // previewBox.iframeEl.dom.src = '/interims/print/preview?'+Ext.Object.toQueryString(params);
+    }
+    
+    ,loadPrint: function(params) {
+        var filterForm = this.getComponent('filterForm')
+            ,previewBox = this.getComponent('previewBox');
+            
+        params.downloadToken = Math.random();
+        
+        
+        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        
+        var printLoadingInterval = setInterval(function() {
+            if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
+            {
+                clearInterval(printLoadingInterval);
+                filterForm.setLoading(false);
+            }
+        }, 500);
+        
+        // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
+        previewBox.iframeEl.dom.src = '/interims/print?'+Ext.Object.toQueryString(params);
+    }
+    
+    ,downloadCsv: function(params) {
+        var filterForm = this.getComponent('filterForm')
+            ,previewBox = this.getComponent('previewBox');
+            
+        params.downloadToken = Math.random();
+        
+        
+        filterForm.setLoading({msg: 'Preparing CSV, please wait, this may take a minute&hellip;'});
+        
+        var csvLoadingInterval = setInterval(function() {
+            if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
+            {
+                clearInterval(csvLoadingInterval);
+                filterForm.setLoading(false);
+            }
+        }, 500);
+        
+        // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
+        previewBox.iframeEl.dom.src = '/interims/csv?'+Ext.Object.toQueryString(params);
+    }
+
+});
