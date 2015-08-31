@@ -4,8 +4,7 @@
  */
 Ext.define('Slate.proxy.Records', {
     extend: 'Emergence.proxy.Records',
-    alias: 'proxy.slaterecords',
+    alias: 'proxy.slate-records',
 
     connection: 'Slate.API'
 });
-

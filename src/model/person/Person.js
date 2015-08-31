@@ -95,7 +95,7 @@ Ext.define('Slate.model.person.Person', {
     },
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/people',
         include: 'groupIDs'
     },
