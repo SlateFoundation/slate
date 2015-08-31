@@ -55,7 +55,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
                         }
                     ],
                     proxy: {
-                        type: 'ajax',
+                        type: 'slateapi',
                         url: '/terms/json',
 						limitParam: false,
 						pageParam: false,
@@ -154,10 +154,26 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
     
     //helper functions
     loadPreview: function (params) {
-        var previewBox = this.getComponent('previewBox');
+        var previewBox = this.getComponent('previewBox'),
+            apiHost = SlateAdmin.API.getHost();
+            
+        params.apiHost = apiHost ? apiHost : null;
+        
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        previewBox.iframeEl.dom.src = '/standards/print/preview?' + Ext.Object.toQueryString(params);
+        
+        SlateAdmin.API.request({
+            url: '/standards/print/preview',
+            params: params,
+            scope: this,
+            success: function(res) {
+                var previewBox = this.getComponent('previewBox'),
+                    doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
+                doc.open();
+                doc.write(res.responseText);
+                doc.close();
+            }
+        });
     },
     
     loadPrint: function (params) {

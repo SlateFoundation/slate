@@ -160,34 +160,38 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
         previewBox.iframeEl.dom.src = '/interims/email/preview?'+Ext.Object.toQueryString(params);
     }
     ,loadPreview: function(params) {
-        var previewBox = this.getComponent('previewBox');
+        var previewBox = this.getComponent('previewBox'),
+            apiHost = SlateAdmin.API.getHost();
+            
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        params.apiHost = 'cc.sla.slatepowered.net';
         
-        SlateAdmin.API.request({
+       params.apiHost = apiHost ? apiHost : null;
+    
+       SlateAdmin.API.request({
             url: '/interims/print/preview',
             params: params,
             scope: this,
             success: function(res) {
-                var previewBox = this.getComponent('previewBox');
-                previewBox.setHtml(res.responseText);
-                previewBox.setLoading(false);
+                var previewBox = this.getComponent('previewBox'),
+                    doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
+                doc.open();
+                doc.write(res.responseText);
+                doc.close();
             }
-        })
-        // previewBox.iframeEl.dom.src = '/interims/print/preview?'+Ext.Object.toQueryString(params);
+        });
     }
     
     ,loadPrint: function(params) {
-        var filterForm = this.getComponent('filterForm')
-            ,previewBox = this.getComponent('previewBox');
+        var filterForm = this.getComponent('filterForm'),
+            previewBox = this.getComponent('previewBox'),
+            apiHost = SlateAdmin.API.getHost(),
+            printLoadingInterval;
             
-        params.downloadToken = Math.random();
+        params.downloadToken = Math.random();   
+        params.apiHost = apiHost ? apiHost : null;
         
-        
-        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        
-        var printLoadingInterval = setInterval(function() {
+        printLoadingInterval = setInterval(function() {
             if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
             {
                 clearInterval(printLoadingInterval);
@@ -195,20 +199,26 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
             }
         }, 500);
         
-        // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        previewBox.iframeEl.dom.src = '/interims/print?'+Ext.Object.toQueryString(params);
+        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        
+        
+        previewBox.iframeEl.dom.src  = '/interims/print?'+Ext.Object.toQueryString(params);
     }
     
     ,downloadCsv: function(params) {
-        var filterForm = this.getComponent('filterForm')
-            ,previewBox = this.getComponent('previewBox');
+        var me = this,
+            filterForm = me.getComponent('filterForm'),
+            previewBox = me.getComponent('previewBox'),
+            apiHost = SlateAdmin.API.getHost(),
+            csvLoadingInterval;
             
-        params.downloadToken = Math.random();
+        params.downloadToken = Math.random();   
+        params.apiHost = apiHost ? apiHost : null;
         
         
         filterForm.setLoading({msg: 'Preparing CSV, please wait, this may take a minute&hellip;'});
         
-        var csvLoadingInterval = setInterval(function() {
+        csvLoadingInterval = setInterval(function() {
             if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
             {
                 clearInterval(csvLoadingInterval);
@@ -216,8 +226,7 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
             }
         }, 500);
         
-        // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        previewBox.iframeEl.dom.src = '/interims/csv?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src  = '/interims/csv?'+Ext.Object.toQueryString(params);
     }
 
 });

@@ -48,7 +48,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                     ]
                     ,autoLoad: true
                     ,proxy: {
-                        type: 'ajax'
+                        type: 'slateapi'
                         ,url: '/terms/json'
 						,limitParam: false
 						,pageParam: false
@@ -107,11 +107,16 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                         }
                     ]
                     ,proxy: {
-                        type: 'ajax'
+                        type: 'slateapi'
                         ,url: '/narratives/json/authors'
                         ,reader: {
                             type: 'json'
                             ,rootProperty: 'data'
+                            ,transform: function(data) {
+                                return Ext.Array.map(data.data, function(value) {
+                                    value.FullName = value.LastName + ', ' + value.FirstName 
+                                });
+                            }
                         }
                     }
                 }
@@ -156,21 +161,38 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
     
     // helper functions
     ,loadPreview: function(params, invokePrintDialog) {
-        var previewBox = this.getComponent('previewBox')
-        	,iframeEl = previewBox.iframeEl;
+        var previewBox = this.getComponent('previewBox'),
+        	iframeEl = previewBox.iframeEl,
+            apiHost = SlateAdmin.API.getHost();
+            
+        params.apiHost = apiHost ? apiHost : null;
         
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        iframeEl.dom.src = '/narratives/print/preview?'+Ext.Object.toQueryString(params);
         
         iframeEl.on('load', function() {
             this.fireEvent('previewload', this, previewBox);
             previewBox.setLoading(false);
             
             if (invokePrintDialog) {
-            	iframeEl.dom.contentWindow.print();
+                iframeEl.dom.contentWindow.print();
             }
         }, this, { single: true, delay: 10 })
+    
+        SlateAdmin.API.request({
+            url: '/narratives/print/preview',
+            params: params,
+            scope: this,
+            success: function(res) {
+                var previewBox = this.getComponent('previewBox'),
+                    doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
+                doc.open();
+                doc.write(res.responseText);
+                doc.close();
+            }
+        });
+    
+  
     }
     
     ,loadPrint: function(params) {

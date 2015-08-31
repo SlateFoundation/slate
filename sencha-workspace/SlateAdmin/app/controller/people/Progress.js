@@ -419,14 +419,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 		var reportPreviewer = this.getReportPreviewer();
 		
 		reportPreviewer.show();
-		reportPreviewer.updateReport(record);
+		reportPreviewer.setReport(record);
 	},
 	
 	onInterimClick: function(record) {
 		var reportPreviewer = this.getReportPreviewer();
 		
 		reportPreviewer.show();
-		reportPreviewer.updateReport(record);
+		reportPreviewer.setReport(record);
 	},
 	
 	onStandardsClick: function(record) {
@@ -434,7 +434,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 		var reportPreviewer = this.getReportPreviewer();
 		
 		reportPreviewer.show();
-		reportPreviewer.updateReport(record);
+		reportPreviewer.setReport(record);
 	},
     
     doFilter: function(forceReload, callback) {
