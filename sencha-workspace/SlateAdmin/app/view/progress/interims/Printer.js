@@ -170,7 +170,6 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
             params: params,
             scope: this,
             success: function(res) {
-                debugger;
                 var previewBox = this.getComponent('previewBox');
                 previewBox.setHtml(res.responseText);
                 previewBox.setLoading(false);
