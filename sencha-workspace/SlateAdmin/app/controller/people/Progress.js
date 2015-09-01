@@ -345,7 +345,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
 		switch(record.get('Class'))
 		{
-			case 'ProgressNote':
+			case 'Slate\\Progress\\Note':
 				return me.onProgressNoteClick(record);
 				
 			case 'Slate\\Progress\\Narratives\\Report':
