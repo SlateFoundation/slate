@@ -6,7 +6,7 @@ Ext.define('Slate.API', {
     // example function
     getMySections: function(callback, scope) {
         this.request({
-            url: '/sections/json',
+            url: '/sections',
             method: 'GET',
             params: {
                 AllCourses: 'false'
