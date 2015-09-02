@@ -313,31 +313,32 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 	onProgressTermChange: function(field, newValue, oldValue) {
 		var reportsStore = Ext.getStore('people.ProgressReports'),
 			reportsProxy = reportsStore.getProxy();
-			
+
 		reportsProxy.setExtraParam('termID', newValue);
 		
 		this.bufferedDoFilter();
 	},
     
     onExportProgressClick: function() {
+        var me = this,
+            reportsStore = Ext.getStore('people.ProgressReports'),
+            reportsProxy = reportsStore.getProxy(),
+            reportsContainer = me.getProgressPanel(),
+            apiHost = SlateAdmin.API.getHost(),
+            exportUrl = '/progress/export?' + Ext.Object.toQueryString(reportsProxy.getExtraParams()),
+            exportLoadMask = {msg: 'Preparing PDF, please wait, this may take a minute&hellip;'};
+            
         Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports', function(btn) {
 			if(btn == 'yes') {
-				var me = this,
-					reportsList = me.getProgressList(),
-					reportsProxy = reportsList.getStore().getProxy(),
-					reportsContainer = me.getProgressPanel(),
-					exportUrl = '/progress/export?' + Ext.Object.toQueryString(reportsProxy.extraParams),
-					exportLoadMask = new Ext.LoadMask(reportsContainer, {
-						msg: 'Preparing PDF, please wait, this may take a minute&hellip;'
-					});
-
-		        reportsContainer.setLoading(exportLoadMask);
+                if(Ext.isEmpty(apiHost)) {
+                    reportsContainer.setLoading(exportLoadMask);
+                }
 		        
-		        Jarvus.util.CookieSniffer.downloadFile(exportUrl, function() {
+		        SlateAdmin.API.downloadFile(exportUrl, function() {
 					reportsContainer.setLoading(false);
-		        });
+		        }, me);
 			}
-		}, this);
+		}, me);
 	},
     
     onProgressRecordClick: function(view, record) {

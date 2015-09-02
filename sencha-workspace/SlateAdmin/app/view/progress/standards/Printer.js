@@ -177,23 +177,25 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
     },
     
     loadPrint: function (params) {
-        var filterForm = this.getComponent('filterForm'),
-            previewBox = this.getComponent('previewBox');
-            
+        var me = this,
+            filterForm = me.getComponent('filterForm'),
+            previewBox = me.getComponent('previewBox'),
+            apiHost = SlateAdmin.API.getHost(),
+            printLoadingInterval;
+        
         params.downloadToken = Math.random();
         
-        
-        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        
-        var printLoadingInterval = setInterval(function () {
-            if (Ext.util.Cookies.get('downloadToken') == params.downloadToken)
-            {
-                clearInterval(printLoadingInterval);
-                filterForm.setLoading(false);
-            }
-        }, 500);
-        
-        // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        previewBox.iframeEl.dom.src = '/standards/print?' + Ext.Object.toQueryString(params);
+        if(Ext.isEmpty(apiHost)) {
+            printLoadingInterval = setInterval(function() {
+                if(Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
+                    clearInterval(printLoadingInterval);
+                    filterForm.setLoading(false);
+                }
+            }, 500);
+            
+            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        } 
+
+        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/standards/print??'+Ext.Object.toQueryString(params);
     }
 });

@@ -183,26 +183,27 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
     }
     
     ,loadPrint: function(params) {
-        var filterForm = this.getComponent('filterForm'),
-            previewBox = this.getComponent('previewBox'),
+        var me = this,
+            filterForm = me.getComponent('filterForm'),
+            previewBox = me.getComponent('previewBox'),
             apiHost = SlateAdmin.API.getHost(),
             printLoadingInterval;
+        
+        params.downloadToken = Math.random();
+        
+        if(Ext.isEmpty(apiHost)) {
+            printLoadingInterval = setInterval(function() {
+                if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
+                {
+                    clearInterval(printLoadingInterval);
+                    filterForm.setLoading(false);
+                }
+            }, 500);
             
-        params.downloadToken = Math.random();   
-        params.apiHost = apiHost ? apiHost : null;
-        
-        printLoadingInterval = setInterval(function() {
-            if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
-            {
-                clearInterval(printLoadingInterval);
-                filterForm.setLoading(false);
-            }
-        }, 500);
-        
-        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        
-        
-        previewBox.iframeEl.dom.src  = '/interims/print?'+Ext.Object.toQueryString(params);
+            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        } 
+
+        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/interims/print?'+Ext.Object.toQueryString(params);
     }
     
     ,downloadCsv: function(params) {
@@ -213,20 +214,21 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
             csvLoadingInterval;
             
         params.downloadToken = Math.random();   
-        params.apiHost = apiHost ? apiHost : null;
+        
+        if(Ext.isEmpty(apiHost)) {
+            csvLoadingInterval = setInterval(function() {
+                if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
+                {
+                    clearInterval(csvLoadingInterval);
+                    filterForm.setLoading(false);
+                }
+            }, 500);
+            
+            filterForm.setLoading({msg: 'Preparing CSV, please wait, this may take a minute&hellip;'});
+        } 
         
         
-        filterForm.setLoading({msg: 'Preparing CSV, please wait, this may take a minute&hellip;'});
-        
-        csvLoadingInterval = setInterval(function() {
-            if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
-            {
-                clearInterval(csvLoadingInterval);
-                filterForm.setLoading(false);
-            }
-        }, 500);
-        
-        previewBox.iframeEl.dom.src  = '/interims/csv?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/interims/csv?'+Ext.Object.toQueryString(params);
     }
 
 });

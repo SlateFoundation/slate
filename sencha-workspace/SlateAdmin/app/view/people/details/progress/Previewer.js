@@ -44,12 +44,15 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
 	
 	//helper functions
 	,updateReport: function(report){
-		var me = this
-            ,previewBox = me.getComponent('previewBox')
-			,reportClass = report.get('Class')
-			,loadingSrc = ''
-			,loadMask
-            ,params;
+        var me = this,
+            filterForm = me.getComponent('filterForm'),
+            previewBox = me.getComponent('previewBox'),
+            reportClass = report.get('Class'),
+            apiHost = SlateAdmin.API.getHost(),
+			loadingSrc = '',
+            params = {},
+			loadMask,
+            printLoadingInterval;
 			
 		switch(reportClass) {
 			case 'Slate\\Progress\\Narratives\\Report':
@@ -83,21 +86,21 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
 				loadingSrc = '/interims/pdf/'+report.get('ID');
 				break;
 		}
-		
-		previewBox.setLoading(loadMask);
+        
+        params.downloadToken = Math.random();
+        
+        if(Ext.isEmpty(apiHost)) {
+            printLoadingInterval = setInterval(function() {
+                if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
+                {
+                    clearInterval(printLoadingInterval);
+                    previewBox.setLoading(false);
+                }
+            }, 500);
+            
+            previewBox.setLoading(loadMask);
+        } 
 
-        SlateAdmin.API.request({
-            url: loadingSrc,
-            params: params,
-            success: function(res) {
-                var previewBox = me.getComponent('previewBox'),
-                    doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
-                doc.open();
-                doc.write(res.responseText);
-                doc.close();
-            }
-        });
-		
-		me.setReport(report);
+        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + loadingSrc+'?'+Ext.Object.toQueryString(params);
 	}
 });
