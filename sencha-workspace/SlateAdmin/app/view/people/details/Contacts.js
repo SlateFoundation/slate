@@ -114,7 +114,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         xtype: 'slate-personfield',
                         listeners: {
                             select: function(comboField) {
-                                comboField.triggerBlur();
+                                comboField.collapse();
                             }
                         },
                         xhooks: {
@@ -152,7 +152,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                                 comboField.expand();
                             },
                             select: function(comboField) {
-                                comboField.triggerBlur();
+                                comboField.collapse();
                             }
                         }
                     }
@@ -344,7 +344,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             comboField.expand();
                         },
                         select: function(comboField) {
-                            comboField.triggerBlur();
+                            comboField.collapse();
                         }
                     }
                 },

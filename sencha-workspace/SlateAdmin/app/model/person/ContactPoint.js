@@ -6,6 +6,7 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
     ],
 
     idProperty: 'ID',
+    identifier: 'negative',
 
     fields: [
         {

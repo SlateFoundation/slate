@@ -240,7 +240,6 @@ Ext.define('SlateAdmin.controller.People', {
     showPerson: function(person, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
-            query = 'username:'+person;
             store = me.getPeoplePeopleStore(),
             proxy = store.getProxy(),
             manager = me.getManager();
@@ -250,7 +249,6 @@ Ext.define('SlateAdmin.controller.People', {
 
         // queue store to load
         proxy.abortLastRequest(true);
-        proxy.setExtraParam('q', query);
 
         // Clear searchfield, reset the advanced search form and select the root node of the navpanel's treepanel.
         me.getSearchField().setValue('');
