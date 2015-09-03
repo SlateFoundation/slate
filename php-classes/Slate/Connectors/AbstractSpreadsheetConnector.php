@@ -182,6 +182,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $config['updateUsernames'] = !empty($requestData['updateUsernames']);
         $config['updatePasswords'] = !empty($requestData['updatePasswords']);
         $config['updateAbout'] = !empty($requestData['updateAbout']);
+        $config['matchFullNames'] = !empty($requestData['matchFullNames']);
         $config['autoAssignEmail'] = !empty($requestData['autoAssignEmail']);
         $config['masterTerm'] = !empty($requestData['masterTerm']) ? $requestData['masterTerm'] : null;
         $config['enrollmentDivider'] = !empty($requestData['enrollmentDivider']) ? $requestData['enrollmentDivider'] : null;
@@ -726,7 +727,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // try to get existing user by full name
-        if (!empty($row['FirstName']) && !empty($row['LastName']) && ($User = User::getByFullName($row['FirstName'], $row['LastName']))) {
+        if ($Job->Config['matchFullNames'] && !empty($row['FirstName']) && !empty($row['LastName']) && ($User = User::getByFullName($row['FirstName'], $row['LastName']))) {
             return $User;
         }
 

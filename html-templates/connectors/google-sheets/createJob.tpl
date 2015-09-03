@@ -70,11 +70,18 @@
     			(Check to change a existing users' passwords if one is specified in the sheet)
     		</p>
             <p>
-            	<label>
+                <label>
     				Update about text
     				<input type="checkbox" name="updateAbout" value="true" {refill field=updateAbout checked="true"}>
     			</label>
     			(Check to change set a user's About text from the spreadsheet even if they already have an entry)
+    		</p>
+            <p>
+                <label>
+    				Match existing users with full names
+    				<input type="checkbox" name="matchFullNames" value="true" {refill field=matchFullNames checked="true"}>
+    			</label>
+    			(Check to try to match existing users by their first/last name if no unique ID match succeeds)
     		</p>
             <p>
             	<label>
