@@ -72,6 +72,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             'Birthday' => 'BirthDate',
         'Graduation Year' => 'GraduationYear',
             'Graduation' => 'GraduationYear',
+        'Grade' => 'Grade',
         'Cohort' => 'Group', 'Group' => 'Group',
         'Advisor' => 'AdvisorUsername',
 #        'Assigned Password',
