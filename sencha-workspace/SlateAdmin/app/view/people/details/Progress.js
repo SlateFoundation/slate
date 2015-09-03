@@ -111,7 +111,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                             '<span class="datum author">{AuthorUsername}</span>',
                             '<time class="datum token index date" datetime="{Date:date(\'c\')}" title="{Date:date(\'F j, Y, g:i a\')}">',
                             '{Date:date(\'M j\')}',
-                            // '<span class="token-extended">{Date:date(\', Y, g:i a\')}</span>',
+                            '<span class="token-extended">{Date:date(\', Y, g:i a\')}</span>',
                             '</time>',
                         '</div>',
                         '<div class="description">{Subject}</div>',
