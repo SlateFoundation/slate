@@ -75,7 +75,7 @@ class Courses implements \Slate\UI\ILinksSource
 		return [
 			'Courses' => [
 				'_icon' => 'courses',
-				'_href' => Course::$collectionRoute,
+				'_href' => Section::$collectionRoute,
 				'_children' => array_map(function(Section $Section) {
 					return [
 						'_id' => $Section->Code,
