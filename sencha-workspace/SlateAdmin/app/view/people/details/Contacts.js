@@ -10,6 +10,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         'Ext.grid.feature.Grouping',
         'Ext.form.field.ComboBox',
         'SlateAdmin.model.person.Relationship',
+        'SlateAdmin.store.people.RelationshipTemplates',
         'SlateAdmin.model.person.ContactPoint',
         'SlateAdmin.store.people.ContactPointTemplates',
         'SlateAdmin.widget.field.Person',

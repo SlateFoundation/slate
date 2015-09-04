@@ -2,7 +2,8 @@
 Ext.define('SlateAdmin.model.person.ContactPoint', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'SlateAdmin.proxy.Records',
+        'Ext.data.identifier.Negative'
     ],
 
     idProperty: 'ID',
