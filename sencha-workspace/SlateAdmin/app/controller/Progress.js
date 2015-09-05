@@ -18,11 +18,11 @@ Ext.define('SlateAdmin.controller.Progress', {
         ref: 'navPanel',
         selector: 'progress-navpanel',
         autoCreate: true,
-        
+
         xtype: 'progress-navpanel'
     }],
-    
-    
+
+
     // controller template methods
     init: function() {
         var me = this;
@@ -35,7 +35,7 @@ Ext.define('SlateAdmin.controller.Progress', {
     },
 
     buildNavPanel: function() {
-        return this.getNavPanel();
+        return location.search.match(/\Wenablesbg(\W|$)/) && this.getNavPanel();
     },
 
 
@@ -47,8 +47,8 @@ Ext.define('SlateAdmin.controller.Progress', {
         navPanel.setActiveLink(null);
         navPanel.expand();
     },
-    
-    
+
+
     // event handlers
     onNavPanelExpand: function(navPanel) {
         Ext.util.History.pushState('progress', 'Student Progress');
