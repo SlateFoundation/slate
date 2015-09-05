@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.store.people.GroupsTree', {
-    extend: 'SlateAdmin.store.GroupsTree',
+Ext.define('SlateAdmin.store.GroupsTree', {
+    extend: 'Ext.data.TreeStore',
 
     model: 'SlateAdmin.model.person.Group',
     root: {

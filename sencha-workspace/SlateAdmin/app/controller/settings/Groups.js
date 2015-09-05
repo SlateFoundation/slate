@@ -9,6 +9,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     ],
 
     stores: [
+        'GroupsTree',
         'people.Groups',
         'people.GroupsTree'
     ],
