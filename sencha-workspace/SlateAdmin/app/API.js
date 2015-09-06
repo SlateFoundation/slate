@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.API', {
     extend: 'Emergence.util.AbstractAPI',
     singleton: true,
-    
+
     // example function
     getMySections: function(callback, scope) {
         this.request({
@@ -17,14 +17,14 @@ Ext.define('SlateAdmin.API', {
     },
     downloadFile: function(url, callback, scope, options) {
         options = options || {};
-        
+
         // create and append downloadToken
         var apiHost = SlateAdmin.API.getHost(),
             downloadToken = Math.random(),
             downloadInterval;
 
-        url = (apiHost ? 'http://'+apiHost : '') + Ext.urlAppend(url, 'downloadToken=' + downloadToken);
-        
+        url = this.buildUrl(Ext.urlAppend(url, 'downloadToken=' + downloadToken));
+
         // get or create iframe el
         this.downloadFrame = this.downloadFrame || Ext.getBody().createChild({
             tag: 'iframe',
@@ -32,8 +32,8 @@ Ext.define('SlateAdmin.API', {
                 display: 'none'
             }
         });
-        
-        if(Ext.isEmpty(apiHost)) {
+
+        if(apiHost) {
             // setup token monitor
             downloadInterval = setInterval(function() {
                 if(Ext.util.Cookies.get('downloadToken') == downloadToken)
@@ -44,7 +44,7 @@ Ext.define('SlateAdmin.API', {
                 }
             }, options.pollingInterval || 500);
         }
-        
+
         // launch download
         if(options.openWindow)
         {

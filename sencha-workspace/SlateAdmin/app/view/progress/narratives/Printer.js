@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.progress.narratives.Printer', {
-    extend: 'Ext.container.Container'    
+    extend: 'Ext.container.Container'
     ,xtype: 'progress-narratives-printer'
     ,requires: [
         'Ext.layout.container.VBox'
@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
         ,'Ext.form.field.ComboBox'
         ,'Ext.util.Cookies'
     ]
-    ,componentCls: 'progress-narratives-printer'   
+    ,componentCls: 'progress-narratives-printer'
     ,layout: {
         type: 'vbox'
         ,align: 'stretch'
@@ -114,7 +114,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                             ,rootProperty: 'data'
                             ,transform: function(data) {
                                 return Ext.Array.map(data.data, function(value) {
-                                    value.FullName = value.LastName + ', ' + value.FirstName 
+                                    value.FullName = value.LastName + ', ' + value.FirstName
                                 });
                             }
                         }
@@ -157,28 +157,26 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
         }
 	}]
 
-    
-    
+
+
     // helper functions
     ,loadPreview: function(params, invokePrintDialog) {
         var previewBox = this.getComponent('previewBox'),
         	iframeEl = previewBox.iframeEl,
             apiHost = SlateAdmin.API.getHost();
-            
-        params.apiHost = apiHost ? apiHost : null;
-        
+
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        
+
         iframeEl.on('load', function() {
             this.fireEvent('previewload', this, previewBox);
             previewBox.setLoading(false);
-            
+
             if (invokePrintDialog) {
                 iframeEl.dom.contentWindow.print();
             }
         }, this, { single: true, delay: 10 })
-    
+
         SlateAdmin.API.request({
             url: '/narratives/print/preview',
             params: params,
@@ -191,30 +189,30 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 doc.close();
             }
         });
-    
-  
+
+
     }
-    
+
     ,loadPrint: function(params) {
         var filterForm = this.getComponent('filterForm')
             ,previewBox = this.getComponent('previewBox');
-            
+
         params.downloadToken = Math.random();
-        
-        
+
+
         filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        
+
         var printLoadingInterval = setInterval(function() {
-        
+
             if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
             {
                 clearInterval(printLoadingInterval);
                 filterForm.setLoading(false);
             }
         }, 500);
-        
+
         // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        previewBox.iframeEl.dom.src = '/narratives/print?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src = SlateAdmin.API.buildUrl('/narratives/print?'+Ext.Object.toQueryString(params));
     }
 
 });

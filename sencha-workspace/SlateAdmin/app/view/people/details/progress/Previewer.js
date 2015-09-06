@@ -1,18 +1,18 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     extend: 'Ext.window.Window'
-	,xtype: 'people-details-progress-previewer'
-    
+    ,xtype: 'people-details-progress-previewer'
+
     ,config: {
         report: null
     }
 
-	,layout: 'fit'
-	,height: 400
-	,width: 1200
-	,modal: true
-	,title: 'Report Preview'
-	,items: [{
+    ,layout: 'fit'
+    ,height: 400
+    ,width: 1200
+    ,modal: true
+    ,title: 'Report Preview'
+    ,items: [{
         xtype: 'component'
         ,itemId: 'previewBox'
         ,cls: 'print-preview'
@@ -33,74 +33,67 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
                 ,delay: 10
             }
         }
-	}]
-//	,tpl: [
-//		'<h3 class="Subject">{[values[0].CourseTitle]}</h3>'
-//		,'<tpl for=".">'
-//			,'<span>{PromptTitle} - <b>{Grade}</b></span><br>'
-//		,'</tpl>'
-//	]
-	
-	
-	//helper functions
-	,updateReport: function(report){
+    }]
+
+    //helper functions
+    ,updateReport: function(report){
         var me = this,
             filterForm = me.getComponent('filterForm'),
             previewBox = me.getComponent('previewBox'),
             reportClass = report.get('Class'),
             apiHost = SlateAdmin.API.getHost(),
-			loadingSrc = '',
+            loadingSrc = '',
             params = {},
-			loadMask,
+            loadMask,
             printLoadingInterval;
-			
-		switch(reportClass) {
-			case 'Slate\\Progress\\Narratives\\Report':
+
+        switch (reportClass) {
+            case 'Slate\\Progress\\Narratives\\Report':
                 me.setTitle('Narrative Preview');
-                
-				loadingSrc = '/standards/print/preview';
-				loadMask = {msg: 'Loading Narrative&hellip;'};
+
+                loadingSrc = '/standards/print/preview';
+                loadMask = {msg: 'Loading Narrative&hellip;'};
                 loadingSrc = '/narratives/print/preview';
-				params = {
-					narrativeID: report.get('ID')
-				}
-				
-				break;
-			
-			case 'Standards':
-				me.setTitle('Standards Preview');
-			
-				loadMask = {msg: 'Loading Standards&hellip;'};
-				loadingSrc = '/standards/print/preview'
                 params = {
-					studentID: report.get('StudentID')
-					,sectionID: report.get('CourseSectionID')
-					,termID: report.get('TermID')
-				}
-				break;
-				
-			case 'Slate\\Progress\\Interims\\Report':
-				me.setTitle('Interims Preview');
-			
-				loadMask = {msg: 'Loading Interims&hellip;'};
-				loadingSrc = '/interims/pdf/'+report.get('ID');
-				break;
-		}
-        
+                    narrativeID: report.get('ID')
+                }
+
+                break;
+
+            case 'Standards':
+                me.setTitle('Standards Preview');
+
+                loadMask = {msg: 'Loading Standards&hellip;'};
+                loadingSrc = '/standards/print/preview'
+                params = {
+                    studentID: report.get('StudentID')
+                    ,sectionID: report.get('CourseSectionID')
+                    ,termID: report.get('TermID')
+                }
+                break;
+
+            case 'Slate\\Progress\\Interims\\Report':
+                me.setTitle('Interims Preview');
+
+                loadMask = {msg: 'Loading Interims&hellip;'};
+                loadingSrc = '/interims/pdf/'+report.get('ID');
+                break;
+        }
+
         params.downloadToken = Math.random();
-        
-        if(Ext.isEmpty(apiHost)) {
+
+        if (Ext.isEmpty(apiHost)) {
             printLoadingInterval = setInterval(function() {
-                if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
+                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken)
                 {
                     clearInterval(printLoadingInterval);
                     previewBox.setLoading(false);
                 }
             }, 500);
-            
+
             previewBox.setLoading(loadMask);
-        } 
+        }
 
         previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + loadingSrc+'?'+Ext.Object.toQueryString(params);
-	}
+    }
 });

@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.progress.interims.Printer', {
-    extend: 'Ext.container.Container'    
+    extend: 'Ext.container.Container'
     ,xtype: 'progress-interims-printer'
     ,requires: [
         'Ext.layout.container.VBox'
@@ -10,8 +10,8 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
         ,'Ext.form.field.ComboBox'
         ,'Ext.util.Cookies'
     ]
-    
-    ,componentCls: 'progress-interims-printer' 
+
+    ,componentCls: 'progress-interims-printer'
     ,layout: {
         type: 'vbox'
         ,align: 'stretch'
@@ -146,12 +146,12 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
                 }
             }
 		}];
-        
+
 		this.callParent();
-		
+
 	}
-    
-    
+
+
     //helper functions
     ,loadEmailPreview: function(params) {
     	var previewBox = this.getComponent('previewBox');
@@ -162,12 +162,10 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
     ,loadPreview: function(params) {
         var previewBox = this.getComponent('previewBox'),
             apiHost = SlateAdmin.API.getHost();
-            
+
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        
-       params.apiHost = apiHost ? apiHost : null;
-    
+
        SlateAdmin.API.request({
             url: '/interims/print/preview',
             params: params,
@@ -181,17 +179,16 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
             }
         });
     }
-    
+
     ,loadPrint: function(params) {
         var me = this,
             filterForm = me.getComponent('filterForm'),
             previewBox = me.getComponent('previewBox'),
-            apiHost = SlateAdmin.API.getHost(),
             printLoadingInterval;
-        
+
         params.downloadToken = Math.random();
-        
-        if(Ext.isEmpty(apiHost)) {
+
+        if(!SlateAdmin.API.getHost()) {
             printLoadingInterval = setInterval(function() {
                 if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
                 {
@@ -199,22 +196,22 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
                     filterForm.setLoading(false);
                 }
             }, 500);
-            
-            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        } 
 
-        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/interims/print?'+Ext.Object.toQueryString(params);
+            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        }
+
+        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl('/interims/print?'+Ext.Object.toQueryString(params));
     }
-    
+
     ,downloadCsv: function(params) {
         var me = this,
             filterForm = me.getComponent('filterForm'),
             previewBox = me.getComponent('previewBox'),
             apiHost = SlateAdmin.API.getHost(),
             csvLoadingInterval;
-            
-        params.downloadToken = Math.random();   
-        
+
+        params.downloadToken = Math.random();
+
         if(Ext.isEmpty(apiHost)) {
             csvLoadingInterval = setInterval(function() {
                 if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
@@ -223,11 +220,11 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
                     filterForm.setLoading(false);
                 }
             }, 500);
-            
+
             filterForm.setLoading({msg: 'Preparing CSV, please wait, this may take a minute&hellip;'});
-        } 
-        
-        
+        }
+
+
         previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/interims/csv?'+Ext.Object.toQueryString(params);
     }
 

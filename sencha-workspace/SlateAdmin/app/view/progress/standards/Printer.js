@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,SlateAdmin*/
 Ext.define('SlateAdmin.view.progress.standards.Printer', {
-    extend: 'Ext.container.Container',  
+    extend: 'Ext.container.Container',
     xtype: 'progress-standards-printer',
     requires: [
         'Ext.layout.container.VBox',
@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
         'Ext.form.field.ComboBox',
         'Ext.util.Cookies'
     ],
-    
+
     componentCls: 'progress-standards-printer',
     layout: {
         type: 'vbox',
@@ -51,7 +51,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
                         {
                             name: 'ID',
                             type: 'integer'
-                            
+
                         }
                     ],
                     proxy: {
@@ -150,18 +150,15 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
             }
         }
 	}],
-    
-    
+
+
     //helper functions
     loadPreview: function (params) {
-        var previewBox = this.getComponent('previewBox'),
-            apiHost = SlateAdmin.API.getHost();
-            
-        params.apiHost = apiHost ? apiHost : null;
-        
+        var previewBox = this.getComponent('previewBox');
+
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        
+
         SlateAdmin.API.request({
             url: '/standards/print/preview',
             params: params,
@@ -175,27 +172,26 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
             }
         });
     },
-    
+
     loadPrint: function (params) {
         var me = this,
             filterForm = me.getComponent('filterForm'),
             previewBox = me.getComponent('previewBox'),
-            apiHost = SlateAdmin.API.getHost(),
             printLoadingInterval;
-        
+
         params.downloadToken = Math.random();
-        
-        if(Ext.isEmpty(apiHost)) {
+
+        if(SlateAdmin.API.getHost()) {
             printLoadingInterval = setInterval(function() {
                 if(Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
                     clearInterval(printLoadingInterval);
                     filterForm.setLoading(false);
                 }
             }, 500);
-            
-            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        } 
 
-        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/standards/print??'+Ext.Object.toQueryString(params);
+            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        }
+
+        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl('/standards/print??'+Ext.Object.toQueryString(params));
     }
 });
