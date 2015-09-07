@@ -51,7 +51,12 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
 
         // treepanel config
         store: {
-            xclass: 'SlateAdmin.store.people.GroupsTree'
+            xclass: 'SlateAdmin.store.people.GroupsTree',
+            root: {
+                text: 'All People',
+                Handle: 'slate-internal-people-root-node',
+                ID: null
+            }
         },
         scroll: false,
         rootVisible: true,

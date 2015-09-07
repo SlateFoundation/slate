@@ -8,11 +8,6 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
         parentIdProperty: 'ParentID'
     },
 
-    root: {
-        text: 'All People',
-        Handle: 'slate-internal-people-root-node',
-        ID: null
-    },
     nodeParam: 'parentGroup',
 
     applySource: function(store) {
