@@ -11,6 +11,9 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
     useArrows: true,
     rootVisible: false,
     store: 'TermsTree',
+    viewConfig: {
+        toggleOnDblClick: false
+    },
     columns: [{
         xtype: 'treecolumn',
         text: 'Term',

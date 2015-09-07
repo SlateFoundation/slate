@@ -8,6 +8,7 @@ Ext.define('SlateAdmin.store.GroupsTree', {
         Handle: 'slate-internal-people-root-node',
         ID: null
     },
+    autoSync: true,
     nodeParam: 'parentGroup',
 
     onBeforeNodeExpand: function(node, callback, scope, args) {

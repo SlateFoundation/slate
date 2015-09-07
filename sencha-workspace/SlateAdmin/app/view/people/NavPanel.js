@@ -52,7 +52,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         store: 'people.GroupsTree',
         scroll: false,
         rootVisible: true,
-        useArrows: true,
+        useArrows: false,
         singleExpand: true,
         hideHeaders: true,
         viewConfig: {
