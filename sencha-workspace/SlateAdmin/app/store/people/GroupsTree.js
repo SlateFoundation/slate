@@ -1,8 +1,13 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.people.GroupsTree', {
-    extend: 'SlateAdmin.store.GroupsTree',
+    extend: 'Ext.data.TreeStore',
+    alias: 'store.groupstree',
 
-    model: 'SlateAdmin.model.person.Group',
+    config: {
+        source: 'people.Groups',
+        parentIdProperty: 'ParentID'
+    },
+
     root: {
         text: 'All People',
         Handle: 'slate-internal-people-root-node',
@@ -10,9 +15,34 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
     },
     nodeParam: 'parentGroup',
 
+    applySource: function(store) {
+        return Ext.data.StoreManager.lookup(store);
+    },
+
+    updateSource: function(store) {
+        store.on({
+            update: 'onSourceUpdate',
+            scope: this
+        });
+    },
+
+    onSourceUpdate: function(sourceStore, sourceRecord, operation) {
+        if (operation != 'commit') {
+            return;
+        }
+
+        var localRecord = this.getNodeById(sourceRecord.getId());
+        if (!localRecord) {
+            return;
+        }
+
+        localRecord.set(sourceRecord.getData({persist: true}), { dirty: false, commit: true});
+    },
+
     onBeforeNodeExpand: function(node, callback, scope, args) {
         var me = this,
-            groupsStore, callbackArgs,
+            groupsStore = me.getSource(),
+            callbackArgs,
             _finishExpand = function() {
                 callbackArgs = [node.childNodes];
                 if (args) {
@@ -24,8 +54,6 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
         if (node.isLoaded()) {
             _finishExpand();
         } else {
-            groupsStore = Ext.getStore('people.Groups');
-
             if (groupsStore.isLoaded()) {
                 me.loadFromArray(groupsStore.getRange());
                 _finishExpand();
@@ -52,11 +80,25 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
             parent = parentId ? rootNode.findChild('ID', parentId, true) : rootNode;
 
             if (parent) {
-                record.set('namesPath', parent.get('namesPath') + '/' + record.get('Name'));
-                parent.appendChild(record, true, true);
+                parent.appendChild(Ext.create('SlateAdmin.model.person.Group', Ext.applyIf({
+                    namesPath: (parent.get('namesPath') || '') + '/' + record.get('Name')
+                }, record.getData())), true, true);
             } else {
                 Ext.Logger.warn('Could not find parent for group in GroupsTree.loadFromArray');
             }
+        }
+    },
+
+    listeners: {
+        update: function(store, record, operation, modifiedFieldNames, details) {
+            if (!record.dirty) {
+                return;
+            }
+
+            var sourceRecord = this.getSource().getById(record.getId());
+
+            sourceRecord.set(record.getChanges());
+            sourceRecord.save();
         }
     }
 });

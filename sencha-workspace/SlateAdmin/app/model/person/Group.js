@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.model.person.Group', {
-    extend: 'Ext.data.Model',
+    extend: 'Ext.data.TreeModel',
     requires: [
         'SlateAdmin.proxy.Records'
     ],
@@ -74,6 +74,10 @@ Ext.define('SlateAdmin.model.person.Group', {
             return v || r.get('Name');
         }
     },{
+        name: 'parentId',
+        persist: false,
+        mapping: 'ParentID'
+    },{
         name: 'leaf',
         type: 'boolean',
         persist: false,
@@ -87,6 +91,7 @@ Ext.define('SlateAdmin.model.person.Group', {
         }
     },{
         name: 'qtip',
+        persist: false,
         depends: ['Population', 'Founded', 'About'],
         convert: function(v, r) {
             var qtip = [],
@@ -110,6 +115,7 @@ Ext.define('SlateAdmin.model.person.Group', {
         }
     },{
         name: 'qshowDelay',
+        persist: false,
         defaultValue: 2000
     }],
 

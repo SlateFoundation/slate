@@ -9,9 +9,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     ],
 
     stores: [
-        'GroupsTree',
-        'people.Groups',
-        'people.GroupsTree'
+        'people.Groups'
     ],
 
     models: [
@@ -33,22 +31,16 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         xtype: 'groups-manager'
     }],
 
-
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'groups-manager': {
-                show: me.onManagerShow,
-                browsemembersclick: me.onBrowseMembersClick,
-                createsubgroupclick: me.onCreateSubgroupClick,
-                deletegroupclick: me.onDeleteGroupClick
-            },
-            'groups-manager button[action=create-organization]': {
-                click: me.onCreateOrganizationClick
-            }
-        });
+    control: {
+        'groups-manager': {
+            show: 'onManagerShow',
+            browsemembersclick: 'onBrowseMembersClick',
+            createsubgroupclick: 'onCreateSubgroupClick',
+            deletegroupclick: 'onDeleteGroupClick'
+        },
+        'groups-manager button[action=create-organization]': {
+            click: 'onCreateOrganizationClick'
+        }
     },
 
 
@@ -85,7 +77,9 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     },
 
     onCreateOrganizationClick: function() {
-        var me = this;
+        var me = this,
+            manager = me.getManager(),
+            treeStore = manager.getStore();
 
         Ext.Msg.prompt('Create organization', 'Enter a name for the new organization:', function(btn, text) {
             var newGroup;
@@ -101,7 +95,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
                 newGroup.save({
                     success: function() {
-                        me.getPeopleGroupsTreeStore().getRootNode().appendChild(newGroup);
+                        treeStore.getRootNode().appendChild(newGroup);
                         me.getPeopleGroupsStore().add(newGroup);
                     }
                 });

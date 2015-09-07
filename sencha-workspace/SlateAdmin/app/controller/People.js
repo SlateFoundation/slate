@@ -18,7 +18,6 @@ Ext.define('SlateAdmin.controller.People', {
     stores: [
         'people.People',
         'people.Groups',
-        'people.GroupsTree',
         'people.AccountLevels'
     ],
 
@@ -792,7 +791,7 @@ Ext.define('SlateAdmin.controller.People', {
             fields = form.getFields().items,
             fieldsLen = fields.length, fieldIndex = 0, field, fieldName,
             groupsTreePanel = me.getGroupsTree(),
-            rootGroupNode = me.getPeopleGroupsTreeStore().getRootNode(),
+            rootGroupNode = groupsTreePanel.getStore().getRootNode(),
             query = me.getSearchField().getValue(),
             terms = query.split(/\s+/),
             termsLen = terms.length, termIndex = 0, term,
