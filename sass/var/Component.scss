@@ -4,28 +4,7 @@ $body-background-color: transparent !default;
 $color: #333 !default;
 $font-family: Lato !default;
 $font-size: 14px !default;
-$muted-color: #777;
 
-/**
-  * Default font-size to use for glyphs
-  */
-$glyph-size: 14px;
-
-/** 
-  * Color for success messages or positive actions (such as Save)
-  */
-$success-color: #5fb31d;
-
-/** 
-  * Color for error messages (stronger than warnings)
-  * or negative/destructive actions (such as Delete)
-  */
-$danger-color: #b3241d;
 
 // custom
 $dark-ui-color: red !default;
-
-/**
-  * General line color
-  */
-$rule-color: tint($dark-ui-color, 75%);
