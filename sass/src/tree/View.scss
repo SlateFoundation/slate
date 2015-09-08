@@ -1,5 +1,5 @@
 .x-tree-elbow-img {
-    &:first-child {
+    &:first-child.x-tree-elbow-empty {
         width: 8px;
     }
 }
