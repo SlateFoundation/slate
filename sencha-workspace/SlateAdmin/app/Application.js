@@ -44,7 +44,7 @@ Ext.define('SlateAdmin.Application', {
 
         'Terms',
         'Locations',
-        
+
         'Progress',
         'progress.Standards',
         'progress.Worksheets',
@@ -56,6 +56,14 @@ Ext.define('SlateAdmin.Application', {
         //</debug>
     ],
 
+
+    listen: {
+        controller: {
+            '#': {
+                unmatchedroute: 'onUnmatchedRoute'
+            }
+        }
+    },
 
     /**
      * A template method that is called when the application boots. It is called before the Application's launch
@@ -86,11 +94,9 @@ Ext.define('SlateAdmin.Application', {
         return matchedController;
     },
 
-    onRouteNotFound: function(token) {
-        if (!token) {
-            Ext.util.History.add('people');
-        } else {
-            console.warn('Route not found: %o', token);
-        }
+    onUnmatchedRoute: function(token) {
+        //<debug>
+        Ext.log.warn('Route not found: ', token);
+        //</debug>
     }
 });
