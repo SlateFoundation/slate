@@ -3,7 +3,8 @@ Ext.define('SlateAdmin.model.progress.Interim', {
 	extend: 'Ext.data.Model',
 	requires: [
 		'Ext.data.proxy.Ajax',
-        'SlateAdmin.proxy.Records'
+        'SlateAdmin.proxy.Records',
+        'Ext.data.validator.Presence'
 	],
 
 	idProperty: 'ID',
