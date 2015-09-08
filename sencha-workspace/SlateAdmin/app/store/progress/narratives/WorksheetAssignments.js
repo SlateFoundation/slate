@@ -2,10 +2,10 @@
 Ext.define('SlateAdmin.store.progress.narratives.WorksheetAssignments', {
     extend: 'Ext.data.Store',
     requires: [
-        'SlateAdmin.model.progress.Narrative'   
+        'SlateAdmin.model.progress.Narrative'
     ],
 
-    model: 'SlateAdmin.model.progress.narrative.WorksheetAssignment', 
+    model: 'SlateAdmin.model.progress.narrative.WorksheetAssignment',
     autoSync: true,
     pageSize: false
 });

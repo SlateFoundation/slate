@@ -1,21 +1,21 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.controller.progress.Standards', {
     extend: 'Ext.app.Controller',
-    
+
     views: [
         'progress.standards.assignments.Manager',
         'progress.standards.Printer',
         'progress.standards.assignments.StudentsGrid'
     ],
-    
-    
+
+
     stores: [
         'progress.standards.WorksheetAssignments',
         'progress.standards.WorksheetStudents',
         'progress.standards.People',
         'people.Advisors'
     ],
-    
+
     refs: [{
         ref: 'standardsPanel',
         selector: 'progress-standards-printer'
@@ -51,69 +51,63 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         ref: 'navPanel',
         selector: 'progress-navpanel',
         autoCreate: true,
-        
+
         xtype: 'progress-navpanel'
     }],
-    
-    
+
+
     routes: {
         'progress/standards': 'showStandards',
         'progress/standards/printing': 'showStandardsPrinting'
     },
-    
-    init: function () {
 
-        var me = this;
-
-        me.control({
-            'progress-standards-assignments-manager': {
-                activate: me.onStandardsActivate
+    control: {
+        'progress-standards-assignments-manager': {
+            activate: 'onStandardsActivate'
+        },
+        'progress-standards-printer button[action=clear-filters]': {
+            click: 'onStandardsClearFiltersClick'
+        },
+        'progress-standards-printer button[action=preview]': {
+            click: 'onStandardsPreviewClick'
+        },
+        'progress-standards-printer button[action=print]': {
+            click: 'onStandardsPrintClick'
+        },
+        'progress-standards-assignments-grid button[action=myClassesToggle]': {
+            toggle: 'onMyClassesToggle'
+        },
+        'progress-standards-assignments-studenteditor textareafield': {
+            change: {
+                fn: 'onDescriptionChange',
+                buffer: 2000
             },
-            'progress-standards-printer button[action=clear-filters]': {
-                click: me.onStandardsClearFiltersClick
-            },
-            'progress-standards-printer button[action=preview]': {
-                click: me.onStandardsPreviewClick
-            },
-            'progress-standards-printer button[action=print]': {
-                click: me.onStandardsPrintClick
-            },
-            'progress-standards-assignments-grid button[action=myClassesToggle]': {
-                toggle: me.onMyClassesToggle
-            },
-            'progress-standards-assignments-studenteditor textareafield': {
-                change: {
-                    fn: me.onDescriptionChange,
-                    buffer: 2000
-                },
-                keydown: me.onDirtyDescription,
-                specialkey: me.onDirtyDescription
-            },
-            'progress-standards-assignments-grid': {
-                select: me.loadSection,
-                edit: me.onStandardsAssignmentEdit
-            },
-            'progress-standards-assignments-studentsgrid': {
-                select: me.loadWorksheet
-            },
-            'progress-standards-assignments-worksheetform combo': {
-                change: me.onComboValueChange
-            },
-            'progress-standards-assignments-worksheetform button[action=saveWorksheetForm]': {
-                click: me.saveWorksheetForm
-            },
-            'progress-standards-assignments-grid #termSelector': {
-                change: me.onTermChange
-            }
-        });
+            keydown: 'onDirtyDescription',
+            specialkey: 'onDirtyDescription'
+        },
+        'progress-standards-assignments-grid': {
+            select: 'loadSection',
+            edit: 'onStandardsAssignmentEdit'
+        },
+        'progress-standards-assignments-studentsgrid': {
+            select: 'loadWorksheet'
+        },
+        'progress-standards-assignments-worksheetform combo': {
+            change: 'onComboValueChange'
+        },
+        'progress-standards-assignments-worksheetform button[action=saveWorksheetForm]': {
+            click: 'saveWorksheetForm'
+        },
+        'progress-standards-assignments-grid #termSelector': {
+            change: 'onTermChange'
+        }
     },
-
 
     //route handlers
     showStandards: function () {
         var me = this,
             navPanel = me.getNavPanel();
-        
+
         navPanel.expand();
         navPanel.setActiveLink('progress/standards');
         me.application.getController('Viewport').loadCard(me.getStandardsManager());
@@ -135,8 +129,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         worksheetStore.load({
             url: '/standards/my-sections',
             params: {
-                termID: termSelector ? termSelector.getValue() : window.currentTerm,
-                format: 'json'
+                termID: termSelector ? termSelector.getValue() : window.currentTerm
             }
         });
     },
@@ -170,8 +163,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         Ext.getStore('progress.standards.WorksheetAssignments').load({
             url: '/standards/' + (btn.pressed ? 'my-sections' : 'term-sections'),
             params: {
-                termID: newValue,
-                format: 'json'
+                termID: newValue
             }
         });
     },
@@ -243,8 +235,9 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             success: function (response) {
                 var r = Ext.decode(response.responseText);
 
-                if (!r.success || !r.data)
+                if (!r.success || !r.data) {
                     return Ext.MessageBox.alert('Can\'t find prompts', 'You have to go add prompts onto this worksheet before you can grade your students');
+                }
 
                 Ext.each(r.data, function (grade) {
                     worksheetForm.add(me.configurePromptField(grade));
@@ -264,34 +257,31 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             cls: 'label-component-ct',
             padding: '4 8',
             layout: 'hbox',
-            items: [
-                {
-                    xtype: 'combobox',
-                    cls: 'field-component-labeled',
-                    store: ['1', '2', '3', '4', 'N/A'],
-                    queryMode: 'local',
-                    name: 'prompt-' + grade.PromptID,
-                    value: grade.Grade || null
-                },
-                {
-                    xtype: 'component',
-                    cls: 'field-label-component',
-                    html: grade.PromptTitle,
-                    flex: 1,
-                    padding: '4 8',
-                    listeners: {
-                        render: function (labelCmp) {
-                            labelCmp.mon(labelCmp.getEl(), 'click', function (ev, t) {
-                                var fieldCmp = labelCmp.prev('combobox');
+            items: [{
+                xtype: 'combobox',
+                cls: 'field-component-labeled',
+                store: ['1', '2', '3', '4', 'N/A'],
+                queryMode: 'local',
+                name: 'prompt-' + grade.PromptID,
+                value: grade.Grade || null
+            },{
+                xtype: 'component',
+                cls: 'field-label-component',
+                html: grade.PromptTitle,
+                flex: 1,
+                padding: '4 8',
+                listeners: {
+                    render: function (labelCmp) {
+                        labelCmp.mon(labelCmp.getEl(), 'click', function (ev, t) {
+                            var fieldCmp = labelCmp.prev('combobox');
 
-                                if (fieldCmp) {
-                                    fieldCmp.focus();
-                                }
-                            });
-                        }
+                            if (fieldCmp) {
+                                fieldCmp.focus();
+                            }
+                        });
                     }
                 }
-            ]
+            }]
         };
     },
 
@@ -327,14 +317,14 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             }
         });
     },
-    
+
     onComboValueChange: function (combo, newValue) {
         var nextCombo;
 
         if (combo.findRecordByValue(newValue)) {
             nextCombo = combo.nextNode('combo');
             combo.triggerBlur();
-            
+
             if (nextCombo) {
                 nextCombo.focus();
             } else {
@@ -376,8 +366,9 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
 
                 worksheetForm.setLoading(false);
 
-                if (worksheetsStore.getAt(worksheetsStore.find('ID', studentSelModel.getSelection()[0].get('ID')) + 1))
+                if (worksheetsStore.getAt(worksheetsStore.find('ID', studentSelModel.getSelection()[0].get('ID')) + 1)) {
                     studentSelModel.select(worksheetsStore.getAt(worksheetsStore.find('ID', studentSelModel.getSelection()[0].get('ID')) + 1));
+                }
             },
             failure: function (form, action) {
                 worksheetForm.setLoading(false);

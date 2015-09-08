@@ -22,13 +22,13 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         ref: 'narrativesManager',
         autoCreate: true,
         selector: 'progress-narratives-manager',
-        
+
         xtype: 'progress-narratives-manager'
     }, {
         ref: 'narrativesPrinter',
         autoCreate: true,
         selector: 'progress-narratives-printer',
-        
+
         xtype: 'progress-narratives-printer'
     }, {
         ref: 'narrativesPrintForm',
@@ -44,58 +44,54 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress/narratives': 'showNarratives',
         'progress/narratives/printing': 'showNarrativePrinting'
     },
-    init: function () {
-        var me = this;
-
-        me.control({
-            'progress-narratives-manager': {
-                activate: me.onManagerActivate
-            },
-            'progress-narratives-studentsgrid': {
-                select: me.onNarrativeSelect,
-                beforeselect: me.onBeforeNarrativeSelect
-            },
-            'progress-narratives-printer button[action=clear-filters]': {
-                click: me.onNarrativesClearFiltersClick
-            },
-            'progress-narratives-printer button[action=preview]': {
-                click: me.onNarrativesPreviewClick
-            },
-            'progress-narratives-printer button[action=print-pdf]': {
-                click: me.onNarrativesPrintPdfClick
-            },
-            'progress-narratives-printer button[action=print-browser]': {
-                click: me.onNarrativesPrintBrowserClick
-            },
-            'progress-narratives-editor button[action=revertChanges]': {
-                click: me.revertChanges
-            },
-            'progress-narratives-editor button[action=saveDraft]': {
-                click: me.onNarrativeSaved
-            },
-            'progress-narratives-editor button[action=saveFinished]': {
-                click: me.onNarrativeFinished
-            },
-            'progress-narratives-editor combo': {
-                change: me.onComboValueChange
-            },
-            'progress-narratives-editor': {
-                dirtychange: me.onEditorDirtyChange
-            },
-            'progress-narratives-studentsgrid button[action=loadSavedReports]': {
-                toggle: me.onSavedReportsToggle
-            },
-            'progress-narratives-grid #termSelector': {
-                change: me.onTermChange
-            },
-            'progress-narratives-grid': {
-                select: me.loadSection,
-                edit: me.onNarrativeAssignmentEdit
-            },
-            'progress-narratives-grid button[action=myClassesToggle]': {
-                toggle: me.onMyClassesToggle
-            }
-        });
+    control: {
+        'progress-narratives-manager': {
+            activate: 'onManagerActivate'
+        },
+        'progress-narratives-studentsgrid': {
+            select: 'onNarrativeSelect',
+            beforeselect: 'onBeforeNarrativeSelect'
+        },
+        'progress-narratives-printer button[action=clear-filters]': {
+            click: 'onNarrativesClearFiltersClick'
+        },
+        'progress-narratives-printer button[action=preview]': {
+            click: 'onNarrativesPreviewClick'
+        },
+        'progress-narratives-printer button[action=print-pdf]': {
+            click: 'onNarrativesPrintPdfClick'
+        },
+        'progress-narratives-printer button[action=print-browser]': {
+            click: 'onNarrativesPrintBrowserClick'
+        },
+        'progress-narratives-editor button[action=revertChanges]': {
+            click: 'revertChanges'
+        },
+        'progress-narratives-editor button[action=saveDraft]': {
+            click: 'onNarrativeSaved'
+        },
+        'progress-narratives-editor button[action=saveFinished]': {
+            click: 'onNarrativeFinished'
+        },
+        'progress-narratives-editor combo': {
+            change: 'onComboValueChange'
+        },
+        'progress-narratives-editor': {
+            dirtychange: 'onEditorDirtyChange'
+        },
+        'progress-narratives-studentsgrid button[action=loadSavedReports]': {
+            toggle: 'onSavedReportsToggle'
+        },
+        'progress-narratives-grid #termSelector': {
+            change: 'onTermChange'
+        },
+        'progress-narratives-grid': {
+            select: 'loadSection',
+            edit: 'onNarrativeAssignmentEdit'
+        },
+        'progress-narratives-grid button[action=myClassesToggle]': {
+            toggle: 'onMyClassesToggle'
+        }
     },
 
 
@@ -193,8 +189,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         manager.setNarrativeSaved(true);
 
         me.loadStandards(assignment.get('WorksheetID') ? record : false);
-
-
     },
 
     onEditorDirtyChange: function (field, dirty) {
@@ -417,8 +411,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
                 r = Ext.decode(action.response.responseText);
 
-                if (editor)
+                if (editor) {
                     editor.setLoading(false);
+                }
 
                 me.mergeNarrative(narrative, r);
 
@@ -437,14 +432,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     mergeNarrative: function (narrative, saveResponse) {
         var prompts = [],
             savedPrompts = saveResponse.standards;
-        
-        //Causes selection on to break upon 2 records getting id set
-        /*
-if(!narrative.get('ID')) {
-            narrative.set('ID', saveResponse.data.ID);
-        }
-*/
-        
+
         narrative.set('Updated', saveResponse.data.Updated);
 
         for (var key in savedPrompts) {

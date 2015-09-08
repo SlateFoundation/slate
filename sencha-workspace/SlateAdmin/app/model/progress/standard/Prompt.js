@@ -5,7 +5,7 @@ Ext.define('SlateAdmin.model.progress.standard.Prompt', {
         'Ext.data.proxy.Ajax',
         'SlateAdmin.proxy.Records'
     ],
-    
+
     idProperty: 'ID',
     fields: [
         'Prompt',

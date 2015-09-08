@@ -2,9 +2,6 @@
 Ext.define('SlateAdmin.controller.Progress', {
     extend: 'Ext.app.Controller',
 
-//    requires: [
-//        'SlateAdmin.proxy.Records'
-//    ],
     // controller config
     views: [
         'progress.NavPanel'
@@ -23,24 +20,19 @@ Ext.define('SlateAdmin.controller.Progress', {
     }],
 
 
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'progress-navpanel': {
-                expand: me.onNavPanelExpand
-            }
-        });
+    control: {
+        'progress-navpanel': {
+            expand: 'onNavPanelExpand'
+        }
     },
 
-    buildNavPanel: function() {
+    buildNavPanel: function () {
         return location.search.match(/\Wenablesbg(\W|$)/) && this.getNavPanel();
     },
 
 
     // route handlers
-    showProgress: function() {
+    showProgress: function () {
         var me = this,
             navPanel = me.getNavPanel();
 
@@ -50,17 +42,17 @@ Ext.define('SlateAdmin.controller.Progress', {
 
 
     // event handlers
-    onNavPanelExpand: function(navPanel) {
+    onNavPanelExpand: function (navPanel) {
         Ext.util.History.pushState('progress', 'Student Progress');
     },
 
 
     // controller methods
-    syncState: function() {
+    syncState: function () {
         var path = ['progress'],
             title = 'Progress',
             activeLink = this.getNavPanel().getActiveLink();
-        console.log('syncState, activeLink = ', activeLink);
+
         Ext.util.History.pushState(path, title);
     }
 });
