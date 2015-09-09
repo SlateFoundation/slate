@@ -42,23 +42,25 @@ Ext.define('SlateAdmin.view.settings.departments.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 54,
+        width: 80,
         items: [
             {
                 action: 'browsecourses',
-                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
+                glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
                 tooltip: 'Browse Courses'
             },
             {
                 action: 'deletedepartment',
-                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
+                iconCls: 'glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
                 tooltip: 'Delete Department'
             }
         ]
     }],
     bbar: [{
         xtype: 'button',
-        icon: '/img/icons/fugue/bank--plus.png',
+        glyph: 0xf055, // fa-plus-circle,
+        cls: 'glyph-success',
         text: 'Create Department',
         action: 'create-department'
     }],
