@@ -104,8 +104,8 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
                         }
                     }
                 }]
-            }]
-            ,bbar: [{
+            }],
+            bbar: [{
                 xtype: 'tbfill'
             },{
                 text: 'Preview',

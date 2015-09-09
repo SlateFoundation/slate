@@ -29,8 +29,8 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
                     	previewBox.setDisabled(false);
                         previewBox.setLoading(false);
                     }, this);
-                }
-                ,delay: 10
+                },
+                delay: 10
             }
         }
     }],
@@ -66,9 +66,9 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
                 loadMask = {msg: 'Loading Standards&hellip;'};
                 loadingSrc = '/standards/print/preview'
                 params = {
-                    studentID: report.get('StudentID')
-                    ,sectionID: report.get('CourseSectionID')
-                    ,termID: report.get('TermID')
+                    studentID: report.get('StudentID'),
+                    sectionID: report.get('CourseSectionID'),
+                    termID: report.get('TermID')
                 }
                 break;
 

@@ -190,8 +190,8 @@ Ext.define('SlateAdmin.view.progress.interims.email.Manager', {
 	                        this.fireEvent('previewload', this, previewBox);
 	                        previewBox.setLoading(false);
 	                    }, this);
-	                }
-	                ,delay: 10
+	                },
+	                delay: 10
 	            }
 	        }
 		}]

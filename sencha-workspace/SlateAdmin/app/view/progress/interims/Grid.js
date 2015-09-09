@@ -31,8 +31,8 @@ Ext.define('SlateAdmin.view.progress.interims.Grid', {
                         return interim.get('Section').Title;
                     }),
                     getReportsSummary: function (studentRows) {
-                        var statusFrequencies = {}
-                            ,gridView = me.getView();
+                        var statusFrequencies = {},
+                            gridView = me.getView();
 
 
                         Ext.each(studentRows, function (studentRow) {

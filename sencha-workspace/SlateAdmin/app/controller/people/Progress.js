@@ -25,8 +25,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
         xtype: 'people-details-progress'
     }, {
-        ref: 'progressList'
-        ,selector: 'people-details-progress dataview'
+        ref: 'progressList',
+        selector: 'people-details-progress dataview'
     }, {
         ref: 'peopleManager',
         selector: 'people-manager'
@@ -52,14 +52,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         ref: 'progressNoteViewer',
         selector: 'people-details-progress-note-viewer'
     },{
-        ref: 'progressNoteRecipientGrid'
-        ,selector: 'people-details-progress-note-recipientgrid'
+        ref: 'progressNoteRecipientGrid',
+        selector: 'people-details-progress-note-recipientgrid'
     },{
         ref: 'progressNoteEditorWindow',
         selector: 'people-details-progress-note-editwindow',
-        autoCreate: true
+        autoCreate: true,
 
-        ,xtype: 'people-details-progress-note-editwindow'
+        xtype: 'people-details-progress-note-editwindow'
     }],
 
     control: {
@@ -269,10 +269,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     onSendProgressNote: function (){
-        var me = this
-            ,editorWindow = me.getProgressNoteEditorWindow()
-            ,recipients = me.getProgressNoteRecipientGrid().getSelectionModel().getSelection()
-            ,record = editorWindow.getProgressNote();
+        var me = this,
+            editorWindow = me.getProgressNoteEditorWindow(),
+            recipients = me.getProgressNoteRecipientGrid().getSelectionModel().getSelection(),
+            record = editorWindow.getProgressNote();
 
         if (!recipients.length) {
             return Ext.Msg.alert('Cannot send email', 'Please select recipients before sending.');
@@ -489,8 +489,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             jsonData: {
                 data: recipients.map(function (r) {
                     return  {
-                        PersonID: r.get('PersonID')
-                        ,Email: r.get('Email')
+                        PersonID: r.get('PersonID'),
+                        Email: r.get('Email')
                     };
                 }),
                 messageID: noteId

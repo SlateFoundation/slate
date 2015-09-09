@@ -191,9 +191,9 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
         });
 
 
-    }
+    },
 
-    ,loadPrint: function (params) {
+    loadPrint: function (params) {
         var filterForm = this.getComponent('filterForm'),
             previewBox = this.getComponent('previewBox');
 
