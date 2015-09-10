@@ -93,6 +93,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             previewBox.setLoading(loadMask);
         }
 
-        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + loadingSrc+'?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl(loadingSrc+'?'+Ext.Object.toQueryString(params));
     }
 });

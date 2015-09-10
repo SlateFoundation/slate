@@ -156,7 +156,7 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
         var previewBox = this.getComponent('previewBox');
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading Email Preview&hellip;'});
-        previewBox.iframeEl.dom.src = '/interims/email/preview?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src = SlateAdmin.API.buildUrl('/interims/email/preview?'+Ext.Object.toQueryString(params));
     },
 
     loadPreview: function (params) {
@@ -221,6 +221,6 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
             filterForm.setLoading({msg: 'Preparing CSV, please wait, this may take a minute&hellip;'});
         }
 
-        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + '/interims/csv?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src  =  SlateAdmin.API.buildUrl('/interims/csv?'+Ext.Object.toQueryString(params));
     }
 });
