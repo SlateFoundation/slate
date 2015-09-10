@@ -28,12 +28,13 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
 			xtype: 'button',
 			text: 'New Note',
 			action: 'composeNote',
-			icon: '/img/icons/fugue/notebook--plus.png'
+			cls: 'glyph-success',
+			glyph: 0xf055 // fa-plus-circle
 		},{
 			xtype: 'button',
 			text: 'Types',
 			itemId: 'reportTypes',
-			icon: '/img/icons/fugue/ui-check-boxes.png',
+			glyph: 0xf0ca, // fa-list-ul
 			menu: {
 				floating: true,
 				items: [{
@@ -92,7 +93,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
 			xtype: 'button',
 			text: 'Export',
 			action: 'export-reports',
-			icon: '/img/icons/fugue/folder-export.png'	
+			glyph: 0xf064 // fa-share
 		}]
 	},{
 		xtype: 'dataview',

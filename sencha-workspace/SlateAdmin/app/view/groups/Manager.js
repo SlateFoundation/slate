@@ -31,7 +31,7 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         dataIndex: 'Population'
     },{
         text: 'Group Type',
-        width: 150,
+        width: 300,
         dataIndex: 'Class'
     },{
         text: 'Status',
@@ -52,28 +52,31 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 54,
+        width: 80,
         items: [
             {
                 action: 'browsemembers',
-                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
+                glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
                 tooltip: 'Browse Members'
             },
             {
                 action: 'createsubgroup',
-                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
+                iconCls: 'glyph-success',
+                glyph: 0xf055, // fa-plus-circle
                 tooltip: 'Create Subgroup'
             },
             {
                 action: 'deletegroup',
-                icon: 'http://www.goodsync.com/images/icons/C_Dis_Cir.png',
+                iconCls: 'glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
                 tooltip: 'Delete Group'
             }
         ]
     }],
     bbar: [{
         xtype: 'button',
-        icon: '/img/icons/fugue/bank--plus.png',
+        glyph: 0xf055, // fa-plus-circle,
+        cls: 'glyph-success',
         text: 'Create Organization',
         action: 'create-organization'
     }],

@@ -53,13 +53,13 @@ Ext.define('SlateAdmin.view.settings.terms.Form', {
     }],
 
     buttons: [{
-        text: 'save',
-        action: 'save'
-    },{
-        text: 'cancel',
+        text: 'Cancel',
         handler: function(button) {
             button.up('window').close();
         }
+    },'->',{
+        text: 'Save',
+        action: 'save'
     }]
 
 });
