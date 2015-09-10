@@ -66,7 +66,7 @@ Ext.define('SlateAdmin.model.person.Group', {
         type: 'string',
         persist: false,
         convert: function(v, r) {
-            return r.getPath('text', '/');
+            return v || r.getPath('text', '/');
         }
     },{
         name: 'text',
