@@ -90,6 +90,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                 newGroup = me.getPersonGroupModel().create({
                     Name: text,
                     Class: 'Emergence\\People\\Groups\\Organization',
+                    leaf: true,
                     namesPath: '/' + text
                 });
 
