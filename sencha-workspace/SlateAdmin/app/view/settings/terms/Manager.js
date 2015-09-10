@@ -23,6 +23,13 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
             xtype: 'textfield'
         }
     },{
+        text: 'Code',
+        flex: 2,
+        dataIndex: 'Handle',
+        editor: {
+            xtype: 'textfield'
+        }
+    },{
         text: 'Start Date',
         xtype: 'datecolumn',
         format :'Y-m-d',

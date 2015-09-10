@@ -26,6 +26,13 @@ Ext.define('SlateAdmin.view.groups.Manager', {
             xtype: 'textfield'
         }
     },{
+        text: 'Code',
+        flex: 2,
+        dataIndex: 'Handle',
+        editor: {
+            xtype: 'textfield'
+        }
+    },{
         text: 'Population',
         width: 100,
         dataIndex: 'Population'
