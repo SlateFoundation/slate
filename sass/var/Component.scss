@@ -7,4 +7,10 @@ $font-size: 14px !default;
 
 
 // custom
-$dark-ui-color: red !default;
+$dark-ui-color: #153b4c !default;
+$muted-color: #777 !default;
+
+/**
+  * General line color
+  */
+$rule-color: tint($dark-ui-color, 75%);
