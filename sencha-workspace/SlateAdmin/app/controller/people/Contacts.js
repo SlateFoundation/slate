@@ -399,11 +399,13 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             store = gridView.getStore();
 
         if (context.field == 'Label' && !editedRecord.get('String')) {
-            if (editingPlugin.editing) {
-                editingPlugin.completeEdit();
-            }
-
-            editingPlugin.startEdit(editedRecord, context.grid.getColumnManager().getHeaderById('value'));
+            // auto advance to value column if the editor isn't already active after a short delay
+            // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
+            Ext.defer(function() {
+                if (!editingPlugin.editing) {
+                    editingPlugin.startEdit(editedRecord, context.grid.getColumnManager().getHeaderById('value'));
+                }
+            }, 50);
             return;
         }
 
