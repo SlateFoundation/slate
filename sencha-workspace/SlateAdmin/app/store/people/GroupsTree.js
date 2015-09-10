@@ -75,9 +75,7 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
             parent = parentId ? rootNode.findChild('ID', parentId, true) : rootNode;
 
             if (parent) {
-                parent.appendChild(Ext.create('SlateAdmin.model.person.Group', Ext.applyIf({
-                    namesPath: (parent.get('namesPath') || '') + '/' + record.get('Name')
-                }, record.getData())), true, true);
+                parent.appendChild(Ext.create('SlateAdmin.model.person.Group', record.getData()), true, true);
             } else {
                 Ext.Logger.warn('Could not find parent for group in GroupsTree.loadFromArray');
             }
