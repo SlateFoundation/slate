@@ -64,31 +64,19 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
 		},{
 			xtype: 'tbtext',
 			text: 'Term: '
-		},{		
-			xtype: 'combobox',
-			emptyText: 'Current Term',
-			valueField: 'ID',
-			editable: false,
+		},{
 			flex: 1,
+
+			xtype: 'combobox',
 			itemId: 'progressReportsTermSelector',
-			value: 17,
-			queryMode: 'local',
-			name: 'progressReportsTermSelector',
+
+			emptyText: 'Current Term', // TODO: verify current term is in fact the default behavior of the backend when no term is selected
+
+			store: 'Terms',
+			valueField: 'ID',
 			displayField: 'Title',
-			store: {
-				fields: ['Title',{name: "ID", type: 'integer'}],
-				proxy: {
-					type: 'slateapi',
-					url: '/terms',
-					limitParam: false,
-					pageParam: false,
-					startParam: false,
-					reader: {
-						type: 'json',
-						rootProperty: 'data'
-					}
-				}
-			}
+			queryMode: 'local',
+			forceSelection: true
 		},{
 			xtype: 'button',
 			text: 'Export',
