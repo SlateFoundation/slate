@@ -233,6 +233,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             ExtHistory = Ext.util.History,
             sectionsManager = me.getSectionsManager(),
             sectionsResultStore = me.getCoursesSectionsResultStore(),
+            navPanel = me.getNavPanel(),
             sectionsResultProxy = sectionsResultStore.getProxy();
 
         ExtHistory.suspendState();
@@ -250,7 +251,10 @@ Ext.define('SlateAdmin.controller.Courses', {
         me.syncSearchForm();
 
         // activate manager
+        navPanel.suspendEvents();
         me.getNavPanel().expand();
+        navPanel.resumeEvents();
+
         me.application.getController('Viewport').loadCard(sectionsManager);
 
         // resume layouts and insert a small delay to allow layouts to flush before triggering store load so loading mask can size correctly
