@@ -135,7 +135,9 @@ Ext.define('SlateAdmin.controller.People', {
 
     // controller template methods
     init: function() {
-        var me = this;
+        var me = this,
+            groupStore = Ext.getStore('people.Groups'),
+            path, parentGroup;
 
         me.control({
             'people-navpanel': {
@@ -181,6 +183,19 @@ Ext.define('SlateAdmin.controller.People', {
 //            'people-grid #exportResultsBtn #exportFieldsMenu menucheckitem': {
 //                checkchange: me.onExportFieldsChange
 //            }
+        });
+
+        groupStore.on('load', function (group) {
+            groupStore.sort('LEFT', 'ASC');
+            groupStore.each(function(group) {
+                path = '';
+                if(group.get('ParentID')) {
+                    parentGroup = groupStore.getById(group.get('ParentID'));
+                    path = parentGroup.get('namesPath');
+                }
+
+                group.set('namesPath', path + '/' + group.get('Name'));
+            });
         });
 
         me.listen({
