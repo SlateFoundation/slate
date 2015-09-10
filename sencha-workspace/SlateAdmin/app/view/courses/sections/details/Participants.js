@@ -38,6 +38,8 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
             forceSelection: true
         },{
             xtype: 'button',
+            glyph: 0xf055, // fa-plus-circle
+            cls: 'glyph-success',
             text: 'Add',
             action: 'add-participant'
         }
