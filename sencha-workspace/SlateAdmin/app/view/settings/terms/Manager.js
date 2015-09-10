@@ -24,7 +24,7 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         }
     },{
         text: 'Code',
-        flex: 2,
+        width: 100,
         dataIndex: 'Handle',
         editor: {
             xtype: 'textfield'

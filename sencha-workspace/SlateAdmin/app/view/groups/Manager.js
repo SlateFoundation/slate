@@ -27,7 +27,7 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         }
     },{
         text: 'Code',
-        flex: 2,
+        width: 200,
         dataIndex: 'Handle',
         editor: {
             xtype: 'textfield'

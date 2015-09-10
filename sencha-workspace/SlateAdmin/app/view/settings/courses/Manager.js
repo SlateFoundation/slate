@@ -17,7 +17,7 @@ Ext.define('SlateAdmin.view.settings.courses.Manager', {
         }
     },{
         text: 'Code',
-        width: 160,
+        width: 200,
         dataIndex: 'Code',
         editor: {
             xtype: 'textfield'

@@ -17,7 +17,7 @@ Ext.define('SlateAdmin.view.settings.departments.Manager', {
         }
     },{
         text: 'Code',
-        width: 160,
+        width: 200,
         dataIndex: 'Handle',
         editor: {
             xtype: 'textfield'
