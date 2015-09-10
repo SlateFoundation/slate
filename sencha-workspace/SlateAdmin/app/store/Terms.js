@@ -12,20 +12,20 @@ Ext.define('SlateAdmin.store.Terms', {
             includeCurrent: true
         }
     },
-    
+
     getCurrentTerm: function() {
         var me = this,
             rawData = me.getProxy().getReader().rawData,
             termId = rawData && rawData.currentTerm;
-        
+
         return (termId && me.getById(termId)) || null;
     },
-    
+
     getReportingTerm: function() {
         var me = this,
             rawData = me.getProxy().getReader().rawData,
             termId = rawData && rawData.reportingTerm;
-        
+
         return (termId && me.getById(termId)) || null;
     }
 });

@@ -28,25 +28,11 @@ Ext.define('SlateAdmin.view.progress.narratives.Grid', {
     },{
         xtype: 'combo',
         valueField: 'ID',
-        value: 17,
         queryMode: 'local',
         flex: 1,
         itemId: 'termSelector',
         displayField: 'Title',
-        store: {
-            fields: ['Title',{name:'ID', type:'integer'}],
-            proxy: {
-                type: 'slateapi',
-                url: '/terms',
-                limitParam: false,
-                pageParam: false,
-                startParam: false,
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            }
-        }
+        store: 'Terms'
     }],
     columns: [{
         header: 'Section',

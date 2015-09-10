@@ -65,6 +65,9 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         'progress-standards-assignments-manager': {
             activate: 'onStandardsActivate'
         },
+        'progress-standards-printer': {
+            activate: 'onPrinterActivate'
+        },
         'progress-standards-printer button[action=clear-filters]': {
             click: 'onStandardsClearFiltersClick'
         },
@@ -120,18 +123,47 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
 
     //event handlers
     onStandardsActivate: function () {
-        var termSelector = this.getStandardsTermSelector(),
-            worksheetStore = Ext.getStore('progress.standards.WorksheetAssignments');
+        var me = this,
+            termStore = Ext.getStore('Terms');
 
         Ext.getStore('progress.standards.WorksheetStudents').removeAll(true);
-        this.loadedSection = false;
+        me.loadedSection = false;
 
-        worksheetStore.load({
-            url: '/standards/my-sections',
-            params: {
-                termID: termSelector ? termSelector.getValue() : window.currentTerm
-            }
-        });
+        if (!termStore.isLoaded()) {
+            termStore.load({
+                callback: function () {
+                    me.loadWorksheets();
+                }
+            });
+        } else {
+            me.loadWorksheets();
+        }
+    },
+
+    onPrinterActivate: function (manager) {
+        var termSelector = this.getStandardsPrinter().down('combo[name=termID]'),
+            selectedTerm = termSelector.getValue(),
+            termStore = Ext.getStore('Terms'),
+            advisorStore = Ext.getStore('people.Advisors'),
+            onTermLoad = function () {
+                if(!selectedTerm) {
+                    termSelector.setValue(termStore.getReportingTerm().getId());
+                    manager.setLoading(false);
+                }
+
+
+            };
+
+        if(!termStore.isLoaded()) {
+            manager.setLoading('Loading terms&hellip;');
+            termStore.load({
+                callback: onTermLoad
+            });
+        }
+
+        if(!advisorStore.isLoaded()) {
+            advisorStore.load();
+        }
     },
 
     onDirtyDescription: function (field) {
@@ -184,11 +216,13 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
     },
 
     onMyClassesToggle: function (btn, pressed) {
-        var termSelector = this.getStandardsTermSelector();
+        var termSelector = this.getStandardsTermSelector(),
+            termID = termSelector.getValue();
+
         Ext.getStore('progress.standards.WorksheetAssignments').load({
             url: '/standards/json/' + (pressed ? 'my-sections': 'term-sections'),
             params: {
-                termID: termSelector ? termSelector.getValue() : window.currentTerm
+                termID: termID
             }
         });
     },
@@ -214,6 +248,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         var me = this,
             worksheetForm = me.getStandardsWorksheetForm(),
             manager = me.getStandardsManager(),
+            termID = termSelector.getValue(),
             termSelector = me.getStandardsTermSelector();
 
         me.loadedStudent = record;
@@ -229,7 +264,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             method: 'GET',
             params: {
                 courseSectionID: manager.getSection().get('CourseSectionID'),
-                termID: termSelector ? termSelector.getValue() : window.currentTerm,
+                termID: termID,
                 studentID: manager.getStudent().get('ID')
             },
             success: function (response) {
@@ -285,6 +320,26 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         };
     },
 
+    loadWorksheets: function() {
+         var termSelector = this.getStandardsTermSelector(),
+            termStore = Ext.getStore('Terms'),
+            term = termSelector.getValue(),
+            reportingTerm = termStore.getReportingTerm(),
+            worksheetStore = Ext.getStore('progress.standards.WorksheetAssignments');
+
+        if(!term && reportingTerm) {
+            term = reportingTerm.getId();
+            termSelector.setValue(term);
+        }
+
+        worksheetStore.load({
+            url: '/standards/my-sections',
+            params: {
+                termID: term
+            }
+        });
+    },
+
     loadSection: function (view, record) {
         if (!record.get("WorksheetID")) {
             return false;
@@ -298,6 +353,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             manager = me.getStandardsManager(),
             editor = me.getStudentEditor(),
             grid = me.getStudentsGrid(),
+            termID = termSelector.getValue(),
             termSelector = me.getStandardsTermSelector();
 
         manager.updateSection(record);
@@ -313,7 +369,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         Ext.getStore('progress.standards.WorksheetStudents').load({
             params: {
                 courseSectionID: record.get('CourseSectionID'),
-                termID: termSelector ? termSelector.getValue() : window.currentTerm
+                termID: termID
             }
         });
     },
@@ -339,6 +395,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             manager = me.getStandardsManager(),
             section = manager.getSection(),
             student = manager.getStudent(),
+            termID = termSelector.getValue(),
             termSelector = me.getStandardsTermSelector();
 
 
@@ -347,7 +404,7 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
             url: '/standards/student-worksheet',
             params: {
                 courseSectionID: section.get('CourseSectionID'),
-                termID: termSelector ? termSelector.getValue() : window.currentTerm,
+                termID: termID,
                 studentID: student.get('ID')
             },
             success: function (form, action) {

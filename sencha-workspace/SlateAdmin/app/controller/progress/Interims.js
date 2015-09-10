@@ -88,6 +88,9 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         'progress-interims-report button[action=save]': {
             click: 'onInterimSaveClick'
         },
+        'progress-interims-printer': {
+            activate: 'onPrinterActivate'
+        },
         'progress-interims-printer button[action=preview]': {
             click: 'onInterimsPreviewClick'
         },
@@ -141,8 +144,48 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
 
     //event handlers
-    onInterimsActivate: function () {
-        this.loadMyStudents();
+    onInterimsActivate: function (manager) {
+        var me = this,
+            termStore = Ext.getStore('Terms');
+
+            // ensure terms are loaded
+        if (!termStore.isLoaded()) {
+            manager.setLoading('Loading terms&hellip;');
+            termStore.load({
+                callback: function () {
+                    manager.setLoading(false);
+                    me.loadMyStudents();
+                }
+            });
+        } else {
+            me.loadMyStudents();
+        }
+    },
+
+    onPrinterActivate: function (manager) {
+        var termSelector = this.getInterimsPrinter().down('combo[name=termID]'),
+            selectedTerm = termSelector.getValue(),
+            termStore = Ext.getStore('Terms'),
+            advisorStore = Ext.getStore('people.Advisors'),
+            onTermLoad = function () {
+                if(!selectedTerm) {
+                    termSelector.setValue(termStore.getReportingTerm().getId());
+                    manager.setLoading(false);
+                }
+
+
+            };
+
+        if(!termStore.isLoaded()) {
+            manager.setLoading('Loading terms&hellip;');
+            termStore.load({
+                callback: onTermLoad
+            });
+        }
+
+        if(!advisorStore.isLoaded()) {
+            advisorStore.load();
+        }
     },
 
     onTermChange: function (field, newValue, oldValue) {
@@ -391,10 +434,20 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
     },
 
     loadMyStudents: function () {
+        var termSelector = this.getInterimsTermSelector(),
+            termStore = Ext.getStore('Terms'),
+            term = termSelector.getValue(),
+            reportingTerm = termStore.getReportingTerm();
+
+        if(!term && reportingTerm) {
+           term = reportingTerm.getId();
+           termSelector.setValue(term);
+        }
+
         Ext.getStore('progress.Interims').load({
             url: '/interims/mystudents',
             params: {
-                termID: this.getInterimsTermSelector().getValue()
+                termID: term
             }
         });
     }

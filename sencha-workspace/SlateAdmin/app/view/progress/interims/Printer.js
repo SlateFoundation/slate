@@ -42,7 +42,6 @@ Ext.define('SlateAdmin.view.progress.interims.Printer', {
                     emptyText: 'Current Term',
                     displayField: 'Title',
                     queryMode: 'local',
-                    value: window.currentTerm,
                     forceSelection: false,
                     valueField: 'ID',
                     store: 'Terms'

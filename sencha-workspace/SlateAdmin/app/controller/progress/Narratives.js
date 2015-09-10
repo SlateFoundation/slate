@@ -52,6 +52,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             select: 'onNarrativeSelect',
             beforeselect: 'onBeforeNarrativeSelect'
         },
+        'progress-narratives-printer': {
+            activate: 'onPrinterActivate'
+        },
         'progress-narratives-printer button[action=clear-filters]': {
             click: 'onNarrativesClearFiltersClick'
         },
@@ -106,27 +109,56 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     //event handlers
     onManagerActivate: function (manager) {
-        var termSelector = this.getNarrativesTermSelector(),
-            advisorsStore = Ext.getStore('people.Advisors'),
-            worksheetStore = Ext.getStore('progress.narratives.WorksheetAssignments');
+        var me = this,
+            termStore = Ext.getStore('Terms');
 
-        if (!advisorsStore.isLoaded()) {
-            advisorsStore.load();
+            // ensure terms are loaded
+        if (!termStore.isLoaded()) {
+            manager.setLoading('Loading terms&hellip;');
+            termStore.load({
+                callback: function () {
+                    manager.setLoading(false);
+                    me.loadWorksheets();
+                }
+            });
+        } else {
+            me.loadWorksheets();
         }
-        worksheetStore.load({
-            url: '/standards/json/my-sections',
-            params: {
-                termID: termSelector ? termSelector.getValue() : window.currentTerm
-            }
-        });
+    },
+
+    onPrinterActivate: function (manager) {
+        var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
+            selectedTerm = termSelector.getValue(),
+            termStore = Ext.getStore('Terms'),
+            advisorStore = Ext.getStore('people.Advisors'),
+            onTermLoad = function () {
+                if(!selectedTerm) {
+                    termSelector.setValue(termStore.getReportingTerm().getId());
+                    manager.setLoading(false);
+                }
+
+
+            };
+
+        if(!termStore.isLoaded()) {
+            manager.setLoading('Loading terms&hellip;');
+            termStore.load({
+                callback: onTermLoad
+            });
+        }
+
+        if(!advisorStore.isLoaded()) {
+            advisorStore.load();
+        }
     },
 
     onMyClassesToggle: function (btn, pressed) {
-        var termSelector = this.getNarrativesTermSelector();
+        var termSelector = this.getNarrativesTermSelector(),
+            termID = termSelector.getValue();
         Ext.getStore('progress.narratives.WorksheetAssignments').load({
             url: '/standards/json/' + (pressed ? 'my-sections': 'term-sections'),
             params: {
-                termID: termSelector ? termSelector.getValue() : window.currentTerm
+                termID: termID
             }
         });
     },
@@ -250,6 +282,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     loadSection: function (view, record) {
         var me = this,
             termSelector = me.getNarrativesTermSelector(),
+            termID = termSelector.getValue(),
             grid = me.getNarrativesGrid();
 
         grid.enable();
@@ -259,7 +292,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         Ext.getStore('progress.Narratives').load({
             params: {
                 courseSectionID: record.get('CourseSectionID'),
-                termID: termSelector ? termSelector.getValue() : window.currentTerm
+                termID: termID
             }
         });
     },
@@ -459,5 +492,25 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                 combo.up('progress-narratives-editor').down('htmleditor').focus(true, 100);
             }
         }
+    },
+
+    loadWorksheets: function() {
+         var termSelector = this.getNarrativesTermSelector(),
+            termStore = Ext.getStore('Terms'),
+            term = termSelector.getValue(),
+            reportingTerm = termStore.getReportingTerm(),
+            worksheetStore = Ext.getStore('progress.narratives.WorksheetAssignments');
+
+        if(!term && reportingTerm) {
+            term = reportingTerm.getId();
+            termSelector.setValue(term);
+        }
+
+        worksheetStore.load({
+            url: '/standards/my-sections',
+            params: {
+                termID: term
+            }
+        });
     }
 });

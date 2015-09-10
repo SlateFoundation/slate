@@ -64,31 +64,17 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
 		},{
 			xtype: 'tbtext',
 			text: 'Term: '
-		},{		
+		},{
 			xtype: 'combobox',
 			emptyText: 'Current Term',
 			valueField: 'ID',
 			editable: false,
 			flex: 1,
 			itemId: 'progressReportsTermSelector',
-			value: 17,
 			queryMode: 'local',
 			name: 'progressReportsTermSelector',
 			displayField: 'Title',
-			store: {
-				fields: ['Title',{name: "ID", type: 'integer'}],
-				proxy: {
-					type: 'slateapi',
-					url: '/terms',
-					limitParam: false,
-					pageParam: false,
-					startParam: false,
-					reader: {
-						type: 'json',
-						rootProperty: 'data'
-					}
-				}
-			}
+			store: 'Terms'
 		},{
 			xtype: 'button',
 			text: 'Export',
