@@ -4,23 +4,23 @@ Ext.define('SlateAdmin.model.progress.interim.Email', {
     requires: [
         'SlateAdmin.proxy.Records'
     ],
-    
+
     fields: [{
-		name: 'Student'
+        name: 'Student'
     }, {
-    	name: 'FirstName',
-    	mapping: 'Student.FirstName'
+        name: 'FirstName',
+        mapping: 'Student.FirstName'
     }, {
-    	name: 'LastName',
-    	mapping: 'Student.LastName'
+        name: 'LastName',
+        mapping: 'Student.LastName'
     }, {
-		name: 'EmailBody'
+        name: 'EmailBody'
     }, {
-		name: 'Recipients'
+        name: 'Recipients'
     }],
-    
+
     proxy: {
-    	type: 'slaterecords',
-    	url: '/interims/email'
+        type: 'slaterecords',
+        url: '/interims/email'
     }
 });

@@ -20,7 +20,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         ref: 'interimsEmailManager',
         autoCreate: true,
         selector: 'progress-interims-email-manager',
-        
+
         xtype: 'progress-interims-email-manager'
     }, {
         ref: 'interimsEmailSearchForm',
@@ -32,7 +32,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         ref: 'interimsManager',
         autoCreate: true,
         selector: 'progress-interims-manager',
-        
+
         xtype: 'progress-interims-manager'
     }, {
         ref: 'interimsGrid',
@@ -56,7 +56,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         ref: 'interimsPrinter',
         autoCreate: true,
         selector: 'progress-interims-printer',
-        
+
         xtype: 'progress-interims-printer'
     }, {
         ref: 'interimsPrintForm',
@@ -70,58 +70,54 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         'progress/interims/email': 'showInterimEmails',
         'progress/interims/printing': 'showInterimPrinting'
     },
-    init: function () {
-        var me = this;
-
-        me.control({
-            'progress-interims-manager': {
-                activate: me.onInterimsActivate
-            },
-            'progress-interims-grid': {
-                beforeselect: me.onBeforeInterimReportSelect,
-                select: me.onInterimReportSelect,
-                deselect: me.onInterimReportDeselect
-            },
-            'progress-interims-report button[action=delete]': {
-                click: me.onInterimDeleteClick
-            },
-            'progress-interims-report button[action=cancel]': {
-                click: me.onInterimCancelClick
-            },
-            'progress-interims-report button[action=save]': {
-                click: me.onInterimSaveClick
-            },
-            'progress-interims-printer button[action=preview]': {
-                click: me.onInterimsPreviewClick
-            },
-            'progress-interims-printer button[action=print]': {
-                click: me.onInterimsPrintClick
-            },
-            'progress-interims-printer button[action=save-csv]': {
-                click: me.onInterimsSaveCsvClick
-            },
-            'progress-interims-printer button[action=clear-filters]': {
-                click: me.onInterimsClearFiltersClick
-            },
-            'progress-interims-email-manager button[action=interim-email-search]': {
-                click: me.onInterimEmailSearchClick
-            },
-            'progress-interims-email-manager button[action=clear-filters]': {
-                click: me.onInterimEmailClearFiltersClick
-            },
-            'progress-interims-email-grid': {
-                select: me.onStudentInterimEmailSelect
-            },
-            'progress-interims-email-grid button[action=interim-email-send]': {
-                click: me.onInterimEmailSendClick
-            },
-            'progress-interims-grid #termSelector': {
-                change: me.onTermChange
-            },
-            'progress-interims-report': {
-                dirtychange: me.onInterimEditorDirtyChange
-            }
-        });
+    control: {
+        'progress-interims-manager': {
+            activate: 'onInterimsActivate'
+        },
+        'progress-interims-grid': {
+            beforeselect: 'onBeforeInterimReportSelect',
+            select: 'onInterimReportSelect',
+            deselect: 'onInterimReportDeselect'
+        },
+        'progress-interims-report button[action=delete]': {
+            click: 'onInterimDeleteClick'
+        },
+        'progress-interims-report button[action=cancel]': {
+            click: 'onInterimCancelClick'
+        },
+        'progress-interims-report button[action=save]': {
+            click: 'onInterimSaveClick'
+        },
+        'progress-interims-printer button[action=preview]': {
+            click: 'onInterimsPreviewClick'
+        },
+        'progress-interims-printer button[action=print]': {
+            click: 'onInterimsPrintClick'
+        },
+        'progress-interims-printer button[action=save-csv]': {
+            click: 'onInterimsSaveCsvClick'
+        },
+        'progress-interims-printer button[action=clear-filters]': {
+            click: 'onInterimsClearFiltersClick'
+        },
+        'progress-interims-email-manager button[action=interim-email-search]': {
+            click: 'onInterimEmailSearchClick'
+        },
+        'progress-interims-email-manager button[action=clear-filters]': {
+            click: 'onInterimEmailClearFiltersClick'
+        },
+        'progress-interims-email-grid': {
+            select: 'onStudentInterimEmailSelect'
+        },
+        'progress-interims-email-grid button[action=interim-email-send]': {
+            click: 'onInterimEmailSendClick'
+        },
+        'progress-interims-grid #termSelector': {
+            change: 'onTermChange'
+        },
+        'progress-interims-report': {
+            dirtychange: 'onInterimEditorDirtyChange'
+        }
     },
 
 
@@ -194,7 +190,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             }
         }, this);
     },
-    
+
     onInterimEditorDirtyChange: function () {
         this.getInterimsManager().setInterimSaved(false);
     },
@@ -218,8 +214,9 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             return false;
         }
 
-        if (reportData.Comments == '<br>')
+        if (reportData.Comments == '<br>') {
             reportData.Comments = null;
+        }
 
         interim.set(reportData);
 
@@ -231,12 +228,6 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
                 me.getInterimsManager().setInterimSaved(true);
 
                 interim.set('Saved', savedInterim.Saved);
-                //Same issue in narratives doSaveReport
-                /*
-if(!interim.get('ID')) {
-                    interim.setId(savedInterim.ID);
-                }
-*/
 
                 interim.commit();
                 report.setLoading(false);
@@ -287,7 +278,7 @@ if(!interim.get('ID')) {
                         fn: function (r1, r2) {
                             var student1 = r1.get('Student'),
                                 student2 = r2.get('Student');
-                                
+
                                 if (student1.LastName < student2.LastName) {
                                     return -1;
                                 } else {
@@ -352,7 +343,7 @@ if(!interim.get('ID')) {
             key;
 
         formValues.Recipients = Array.isArray(recipients) ? recipients.join(',') :  [recipients].join(',');
-        
+
 
         formValues = Ext.apply(formValues,{
             studentID: record.get('Student').ID
@@ -360,7 +351,7 @@ if(!interim.get('ID')) {
 
         emailManager.loadStudentPreview(formValues);
     },
-    
+
     onInterimEmailSendClick: function () {
         var emailStore = Ext.getStore('progress.interims.Emails'),
             formValues = this.getInterimsEmailSearchForm().getForm().getValues(),
@@ -394,11 +385,11 @@ if(!interim.get('ID')) {
     onInterimsClearFiltersClick: function () {
         this.getInterimsPrintForm().getForm().reset();
     },
-    
+
     onInterimEmailClearFiltersClick: function () {
         this.getInterimsEmailSearchForm().getForm().reset();
     },
-    
+
     loadMyStudents: function () {
         Ext.getStore('progress.Interims').load({
             url: '/interims/mystudents',

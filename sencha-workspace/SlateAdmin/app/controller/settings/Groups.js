@@ -81,7 +81,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
             manager = me.getManager(),
             treeStore = manager.getStore();
 
-        Ext.Msg.prompt('Create organization', 'Enter a name for the new organization:', function(btn, text) {
+        Ext.Msg.prompt('Create Organization', 'Enter a name for the new organization:', function(btn, text) {
             var newGroup;
 
             text = Ext.String.trim(text);
@@ -90,6 +90,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                 newGroup = me.getPersonGroupModel().create({
                     Name: text,
                     Class: 'Emergence\\People\\Groups\\Organization',
+                    leaf: true,
                     namesPath: '/' + text
                 });
 
@@ -107,7 +108,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         var me = this,
             parentGroup = rec;
 
-        Ext.Msg.prompt('Create subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
+        Ext.Msg.prompt('Create Subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
             var newGroup;
 
             text = Ext.String.trim(text);

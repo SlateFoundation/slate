@@ -16,7 +16,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
         type: 'vbox',
         align: 'stretch'
     },
-	items: [{
+    items: [{
         xtype: 'form',
         itemId: 'filterForm',
         bodyPadding: 5,
@@ -66,8 +66,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
                         }
                     }
                 }
-            },
-            {
+            },{
                 name: 'advisorID',
                 xtype: 'combobox',
                 fieldLabel: 'Advisor',
@@ -76,8 +75,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
                 queryMode: 'local',
                 typeAhead: true,
                 store: 'people.Advisors'
-            },
-            {
+            },{
                 name: 'studentID',
                 fieldLabel: 'Student',
                 emptyText: 'All',
@@ -103,32 +101,25 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
         }],
         bbar: [{
             xtype: 'tbfill'
-        },
-        {
+        },{
             text: 'Preview',
             action: 'preview'
-        },
-        {
+        },{
             text: 'Print',
             action: 'print'
-        },
-        {
+        },{
             text: 'Email to Parents',
             action: 'email',
             disabled: true
-        },
-        {
+        },{
             xtype: 'tbseparator'
-        },
-        {
+        },{
             text: 'Clear Filters',
             action: 'clear-filters'
-        },
-        {
+        }, {
             xtype: 'tbfill'
         }]
-	},
-	{
+    },{
         xtype: 'component',
         itemId: 'previewBox',
         cls: 'print-preview',
@@ -149,7 +140,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
                 delay: 10
             }
         }
-	}],
+    }],
 
 
     //helper functions
@@ -163,7 +154,7 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
             url: '/standards/print/preview',
             params: params,
             scope: this,
-            success: function(res) {
+            success: function (res) {
                 var previewBox = this.getComponent('previewBox'),
                     doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
                 doc.open();
@@ -181,9 +172,9 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
 
         params.downloadToken = Math.random();
 
-        if(SlateAdmin.API.getHost()) {
-            printLoadingInterval = setInterval(function() {
-                if(Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
+        if (SlateAdmin.API.getHost()) {
+            printLoadingInterval = setInterval(function () {
+                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
                     clearInterval(printLoadingInterval);
                     filterForm.setLoading(false);
                 }

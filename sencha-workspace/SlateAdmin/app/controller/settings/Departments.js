@@ -87,7 +87,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
         var me = this,
             manager = me.getManager();
 
-        Ext.Msg.prompt('Create department', 'Department name:', function(btn, text) {
+        Ext.Msg.prompt('Create Department', 'Enter a name for the new department:', function(btn, text) {
             var department;
 
             text = Ext.String.trim(text);

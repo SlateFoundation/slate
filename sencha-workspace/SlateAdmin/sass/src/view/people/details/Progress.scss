@@ -10,43 +10,32 @@
         &:hover {
             background-color: tint($accent-color, 85%);
         }
-        
+
         .meta {
+            color: $muted-color;
+
+            .type {
+                font-weight: bold;
+            }
+
             .author {
-                color: $muted-color;
                 font-size: 0.8em;
-                padding: 0 0.3333em;
+                margin-left: .375em;
                 text-transform: uppercase;
             }
             
             .date {
-                background-color: tint($accent-color, 75%);
-                border-radius: 3px;
-                font-size: 0.8em;
                 float: right;
-                padding: 0.3333em;
+                font-size: smaller;
                 
                 .token-extended {
                     display: none;
                 }
             }
-            
-            &:hover {
-                
-                .date {
-                    background-color: tint($accent-color, 70%);
-                
-                    .token-extended {
-                        display: inline;
-                    }
-                }
-            }
         }
 
-        
         .description {
             clear: right;
-            margin-top: $font-size;
         }
     }
 }

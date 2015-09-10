@@ -435,7 +435,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
         Ext.Msg.confirm('Delete contact point', Ext.String.format('Are you sure you want to delete the contact point labeled "{0}"?', record.get('Label')), function(btn) {
             if (btn == 'yes') {
-                record.destroy();
+                record.erase();
             }
         });
     },

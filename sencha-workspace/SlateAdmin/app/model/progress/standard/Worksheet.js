@@ -4,7 +4,8 @@ Ext.define('SlateAdmin.model.progress.standard.Worksheet', {
     requires: [
         'Ext.data.proxy.Ajax',
         'SlateAdmin.model.person.Person',
-        'SlateAdmin.proxy.Records'
+        'SlateAdmin.proxy.Records',
+        'Ext.data.validator.Presence'
     ],
 
     idProperty: 'ID',
@@ -42,7 +43,7 @@ Ext.define('SlateAdmin.model.progress.standard.Worksheet', {
         url: '/standards/worksheets',
         include: ['TotalPrompts'],
         extraParams: {
-            format: 'json'   
+            format: 'json'
         },
         reader: {
             type: 'json',

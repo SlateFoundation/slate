@@ -5,7 +5,7 @@ Ext.define('SlateAdmin.model.progress.Narrative', {
         'Ext.data.proxy.Ajax',
         'SlateAdmin.proxy.Records'
     ],
-    
+
     fields: [
         'Class',
         'Student',

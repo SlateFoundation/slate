@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,SlateAdmin*/
 Ext.define('SlateAdmin.view.progress.standards.worksheets.Editor', {
-    extend: 'Ext.form.Panel', 
+    extend: 'Ext.form.Panel',
     xtype: 'progress-standards-worksheets-editor',
     requires: [
         'Ext.form.field.Display',
@@ -8,10 +8,10 @@ Ext.define('SlateAdmin.view.progress.standards.worksheets.Editor', {
         'Ext.form.field.HtmlEditor',
         'SlateAdmin.view.progress.standards.worksheets.PromptsGrid'
     ],
-    
+
     layout: {
         type: 'vbox',
-		align: 'stretch'
+        align: 'stretch'
     },
     defaults: {
         labelWidth: 70,
@@ -28,7 +28,7 @@ Ext.define('SlateAdmin.view.progress.standards.worksheets.Editor', {
         name: 'Description',
         itemId: 'Description'
     }, {
-		xtype: 'progress-standards-worksheets-promptsgrid',
-		flex: 1
+        xtype: 'progress-standards-worksheets-promptsgrid',
+        flex: 1
     }]
 });

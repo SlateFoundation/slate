@@ -1,42 +1,42 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
-    extend: 'Ext.window.Window'
-    ,xtype: 'people-details-progress-previewer'
+    extend: 'Ext.window.Window',
+    xtype: 'people-details-progress-previewer',
 
-    ,config: {
+    config: {
         report: null
-    }
+    },
 
-    ,layout: 'fit'
-    ,height: 400
-    ,width: 1200
-    ,modal: true
-    ,title: 'Report Preview'
-    ,items: [{
-        xtype: 'component'
-        ,itemId: 'previewBox'
-        ,cls: 'print-preview'
-        ,flex: 1
-        ,disabled: true
-        ,renderTpl: '<iframe width="100%" height="100%"></iframe>'
-        ,renderSelectors: {
+    layout: 'fit',
+    height: 400,
+    width: 1200,
+    modal: true,
+    title: 'Report Preview',
+    items: [{
+        xtype: 'component',
+        itemId: 'previewBox',
+        cls: 'print-preview',
+        flex: 1,
+        disabled: true,
+        renderTpl: '<iframe width="100%" height="100%"></iframe>',
+        renderSelectors: {
             iframeEl: 'iframe'
-        }
-        ,listeners: {
+        },
+        listeners: {
             afterrender: {
-                fn: function(previewBox) {
-                    this.mon(previewBox.iframeEl, 'load', function() {
+                fn: function (previewBox) {
+                    this.mon(previewBox.iframeEl, 'load', function () {
                     	previewBox.setDisabled(false);
                         previewBox.setLoading(false);
                     }, this);
-                }
-                ,delay: 10
+                },
+                delay: 10
             }
         }
-    }]
+    }],
 
     //helper functions
-    ,updateReport: function(report){
+    updateReport: function (report){
         var me = this,
             filterForm = me.getComponent('filterForm'),
             previewBox = me.getComponent('previewBox'),
@@ -66,9 +66,9 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
                 loadMask = {msg: 'Loading Standards&hellip;'};
                 loadingSrc = '/standards/print/preview'
                 params = {
-                    studentID: report.get('StudentID')
-                    ,sectionID: report.get('CourseSectionID')
-                    ,termID: report.get('TermID')
+                    studentID: report.get('StudentID'),
+                    sectionID: report.get('CourseSectionID'),
+                    termID: report.get('TermID')
                 }
                 break;
 
@@ -83,9 +83,8 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
         params.downloadToken = Math.random();
 
         if (Ext.isEmpty(apiHost)) {
-            printLoadingInterval = setInterval(function() {
-                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken)
-                {
+            printLoadingInterval = setInterval(function () {
+                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
                     clearInterval(printLoadingInterval);
                     previewBox.setLoading(false);
                 }
