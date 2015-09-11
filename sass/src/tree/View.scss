@@ -15,3 +15,15 @@
 .x-tree-icon-leaf {
     background-image: inline-image('tree/file.svg');
 }
+
+.x-tree-no-lines {
+    .x-tree-expander {
+        background-image: inline-image('tree/plus.svg');
+        background-position: center;
+        background-size: 11px;
+    }
+
+    .x-grid-tree-node-expanded .x-tree-expander {
+        background-image: inline-image('tree/minus.svg');
+    }
+}
