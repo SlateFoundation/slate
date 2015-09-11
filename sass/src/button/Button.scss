@@ -1,5 +1,6 @@
 @include glyph-color('danger',  $danger-color);
 @include glyph-color('success', $success-color);
+@include glyph-color('accent',  $accent-color);
 
 .x-btn {
 }
