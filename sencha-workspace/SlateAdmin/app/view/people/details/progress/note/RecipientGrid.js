@@ -26,7 +26,8 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
     },{
         text: 'Add a custom recipient',
         action: 'addCustomRecipientBtn',
-        icon: '/img/icons/fugue/card--plus.png',
+        cls: 'glyph-success',
+        glyph: 0xf055, // fa-plus-circle
         menu: {
             plain: true,
             enableKeyNav: false,

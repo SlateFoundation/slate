@@ -20,14 +20,16 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
     },{
         xtype: 'button',
         text: 'Discard',
-        icon: '/img/icons/fugue/cross-script.png',
+        cls: 'glyph-danger',
+        glyph: 0xf057, // fa-times-circle
         action: 'discardProgressNote'
     },{
         xtype: 'tbspacer'
     },{
         xtype: 'button',
-        text: 'Send and Submit to Official Record',
-        icon: '/img/icons/fugue/envelope--arrow.png',
+        text: 'Send &amp; Submit to Official Record',
+        cls: 'glyph-accent',
+        glyph: 0xf1d9, // fa-send-o
         action: 'sendProgressNote'
     }],
     modal: true,
