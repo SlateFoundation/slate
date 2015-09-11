@@ -11,19 +11,11 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
     glyph: 0xf095,
     itemId: 'progress',
 
+    layout: 'fit',
 
-    // panel config
-    autoScroll: true,
-    layout: 'anchor',
-    defaults: {
-        anchor: '100%',
-        border: false,
-        bodyBorder: false
-    },
-
-    items: [{
+    dockedItems: [{
         xtype: 'toolbar',
-        docked: 'top',
+        dock: 'top',
         items: [{
             xtype: 'button',
             text: 'New Note',
@@ -65,28 +57,34 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             xtype: 'tbtext',
             text: 'Term: '
         },{
+            flex: 1,
             xtype: 'combobox',
             itemId: 'progressReportsTermSelector',
             name: 'progressReportsTermSelector',
-            emptyText: 'Current Term',
+            emptyText: 'Current',
             store: 'Terms',
             valueField: 'ID',
             displayField: 'Title',
             queryMode: 'local',
             forceSelection: true
-        },{
+        }]
+    },{
+        xtype: 'toolbar',
+        dock: 'bottom',
+        items: ['->',{
             xtype: 'button',
             text: 'Export',
             action: 'export-reports',
             glyph: 0xf064 // fa-share
         }]
-    },{
+    }],
+
+    items: [{
         xtype: 'dataview',
         itemId: 'progressReportsList',
         store: 'people.ProgressReports',
         itemSelector: '.person-record',
-        emptyText: '<div style="text-align:center">No Progress Records</div>',
-        flex: 1,
+        emptyText: '<div class="empty-text">No progress records found for selected type and term.</div>',
         autoScroll: true,
         tpl: [
             '<ol class="person-records rich-list">',
