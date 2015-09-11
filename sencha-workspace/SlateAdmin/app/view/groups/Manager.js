@@ -9,7 +9,6 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         'SlateAdmin.store.people.GroupsTree'
     ],
 
-    useArrows: true,
     rootVisible: false,
     store: {
         xclass: 'SlateAdmin.store.people.GroupsTree'
