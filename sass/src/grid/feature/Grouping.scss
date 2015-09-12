@@ -7,4 +7,12 @@
     small.pull-right {
         margin-top: .0625em;
     }
+
+    .has-small-group-headers & {
+        color: $muted-color;
+        font-size: smaller;
+        letter-spacing: .5px;
+        padding-top: 1em;
+        text-transform: uppercase;
+    }
 }
