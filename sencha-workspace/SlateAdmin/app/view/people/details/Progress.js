@@ -52,6 +52,8 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                 }]
             }
         },{
+            xtype: 'tbspacer'
+        },{
             xtype: 'tbseparator'
         },{
             xtype: 'tbtext',

@@ -12,19 +12,17 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
     progressNote: null,
 
     layout: 'border',
-    height: 400,
-    width: 700,
+    height: 500,
+    width: 800,
     title: 'Compose Progress Note',
     bbar: [{
-        xtype: 'tbfill'
-    },{
         xtype: 'button',
-        text: 'Discard',
+        text: 'Discard Changes',
         cls: 'glyph-danger',
         glyph: 0xf057, // fa-times-circle
         action: 'discardProgressNote'
     },{
-        xtype: 'tbspacer'
+        xtype: 'tbfill'
     },{
         xtype: 'button',
         text: 'Send &amp; Submit to Official Record',
@@ -45,7 +43,7 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
         }]
     },{
         xtype: 'people-details-progress-note-recipientgrid',
-        width: 300,
+        width: 320,
         region: 'east'
     }],
 
