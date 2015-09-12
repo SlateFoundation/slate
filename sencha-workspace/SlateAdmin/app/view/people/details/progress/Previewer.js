@@ -9,7 +9,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
 
     layout: 'fit',
     height: 600,
-    width: 1000,
+    width: 1166,
     modal: true,
     title: 'Report Preview',
     items: [{
