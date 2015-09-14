@@ -8,10 +8,6 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         'groups.Manager'
     ],
 
-    stores: [
-        'people.Groups'
-    ],
-
     models: [
         'person.Group'
     ],
