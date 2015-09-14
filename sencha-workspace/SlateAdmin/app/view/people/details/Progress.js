@@ -11,87 +11,84 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
     glyph: 0xf095,
     itemId: 'progress',
 
+    layout: 'fit',
 
-    // panel config
-    autoScroll: true,
-    layout: 'anchor',
-    defaults: {
-        anchor: '100%',
-        border: false,
-        bodyBorder: false
-    },
+    dockedItems: [{
+        xtype: 'toolbar',
+        dock: 'top',
+        items: [{
+            xtype: 'button',
+            text: 'New Note',
+            action: 'composeNote',
+            cls: 'glyph-success',
+            glyph: 0xf055 // fa-plus-circle
+        },{
+            xtype: 'button',
+            text: 'Types',
+            itemId: 'reportTypes',
+            glyph: 0xf0ca, // fa-list-ul
+            menu: {
+                floating: true,
+                items: [{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Progress Notes',
+                    value: 'progressnotes'
+                },{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Narratives',
+                    value: 'narratives'
+                },{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Interims',
+                    value: 'interims'
+                },{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Standards',
+                    value: 'standards'
+                }]
+            }
+        },{
+            xtype: 'tbspacer'
+        },{
+            xtype: 'tbseparator'
+        },{
+            xtype: 'tbtext',
+            text: 'Term: '
+        },{
+            flex: 1,
+            xtype: 'combobox',
+            itemId: 'progressReportsTermSelector',
+            name: 'progressReportsTermSelector',
+            emptyText: 'Current',
+            store: 'Terms',
+            valueField: 'ID',
+            displayField: 'Title',
+            queryMode: 'local',
+            forceSelection: true
+        }]
+    },{
+        xtype: 'toolbar',
+        dock: 'bottom',
+        items: ['->',{
+            xtype: 'button',
+            text: 'Export',
+            action: 'export-reports',
+            glyph: 0xf064 // fa-share
+        }]
+    }],
 
     items: [{
-        xtype: 'toolbar',
-		docked: 'top',
-		items: [{
-			xtype: 'button',
-			text: 'New Note',
-			action: 'composeNote',
-			cls: 'glyph-success',
-			glyph: 0xf055 // fa-plus-circle
-		},{
-			xtype: 'button',
-			text: 'Types',
-			itemId: 'reportTypes',
-			glyph: 0xf0ca, // fa-list-ul
-			menu: {
-				floating: true,
-				items: [{
-					xtype: 'menucheckitem',
-					checked: true,
-					text: 'Progress Notes',
-					value: 'progressnotes'
-				},{
-					xtype: 'menucheckitem',
-					checked: true,
-					text: 'Narratives',
-					value: 'narratives'
-				},{
-					xtype: 'menucheckitem',
-					checked: true,
-					text: 'Interims',
-					value: 'interims'
-				},{
-					xtype: 'menucheckitem',
-					checked: true,
-					text: 'Standards',
-					value: 'standards'
-				}]
-			}
-		},{
-			xtype: 'tbseparator'
-		},{
-			xtype: 'tbtext',
-			text: 'Term: '
-		},{
-			flex: 1,
-
-			xtype: 'combobox',
-			itemId: 'progressReportsTermSelector',
-
-			emptyText: 'Current Term', // TODO: verify current term is in fact the default behavior of the backend when no term is selected
-
-			store: 'Terms',
-			valueField: 'ID',
-			displayField: 'Title',
-			queryMode: 'local',
-			forceSelection: true
-		},{
-			xtype: 'button',
-			text: 'Export',
-			action: 'export-reports',
-			glyph: 0xf064 // fa-share
-		}]
-	},{
-		xtype: 'dataview',
-		itemId: 'progressReportsList',
-		store: 'people.ProgressReports',
-		itemSelector: '.person-record',
-		emptyText: '<div style="text-align:center">No Progress Records</div>',
-		flex: 1,
-		autoScroll: true,
-		tpl: [
+        xtype: 'dataview',
+        itemId: 'progressReportsList',
+        store: 'people.ProgressReports',
+        itemSelector: '.person-record',
+        emptyText: '<div class="empty-text">No progress records found for selected type and term.</div>',
+        autoScroll: true,
+        tpl: [
             '<ol class="person-records rich-list">',
                 '<tpl for=".">',
                     '<li class="person-record rich-list-item clickable">',
@@ -107,6 +104,6 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                     '</li>',
                 '</tpl>',
             '</ol>'
-		]
-	}]
+        ]
+    }]
 });

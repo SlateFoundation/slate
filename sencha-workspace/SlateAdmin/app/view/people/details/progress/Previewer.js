@@ -8,8 +8,8 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     },
 
     layout: 'fit',
-    height: 400,
-    width: 1200,
+    height: 600,
+    width: 1166,
     modal: true,
     title: 'Report Preview',
     items: [{
@@ -93,6 +93,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             previewBox.setLoading(loadMask);
         }
 
-        previewBox.iframeEl.dom.src  = (apiHost ? 'http://' + apiHost : '') + loadingSrc+'?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl(loadingSrc+'?'+Ext.Object.toQueryString(params));
     }
 });

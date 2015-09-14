@@ -42,30 +42,9 @@ Ext.define('SlateAdmin.view.progress.standards.Printer', {
                 itemId: 'termSelector',
                 action: 'termSelector',
                 valueField: 'ID',
-                value: window.reportingTerm,
                 queryMode: 'local',
                 forceSelection: false,
-                store: {
-                    fields: [
-                        'Title',
-                        {
-                            name: 'ID',
-                            type: 'integer'
-
-                        }
-                    ],
-                    proxy: {
-                        type: 'slateapi',
-                        url: '/terms/json',
-						limitParam: false,
-						pageParam: false,
-						startParam: false,
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'data'
-                        }
-                    }
-                }
+                store: 'Terms'
             },{
                 name: 'advisorID',
                 xtype: 'combobox',

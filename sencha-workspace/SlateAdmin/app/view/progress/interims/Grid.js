@@ -72,27 +72,12 @@ Ext.define('SlateAdmin.view.progress.interims.Grid', {
         items: [{
             xtype: 'combobox',
             valueField: 'ID',
-            // ,value: window.currentTerm
             queryMode: 'local',
             flex: 1,
             itemId: 'termSelector',
             action: 'termSelector',
             displayField: 'Title',
-            value: 17,
-            store: {
-                fields: ['Title',{name:'ID',type:'integer'}],
-                proxy: {
-                    type: 'slateapi',
-                    url: '/terms',
-                    limitParam: false,
-                    pageParam: false,
-                    startParam: false,
-                    reader: {
-                        type: 'json',
-                        rootProperty: 'data'
-                    }
-                }
-            }
+            store: 'Terms'
         }]
     }],
     columns: [{

@@ -40,25 +40,8 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 displayField: 'Title',
                 itemId: 'termSelector',
                 valueField: 'ID',
-                value: window.reportingTerm,
                 queryMode: 'local',
-                store: {
-                    fields: [
-                        'Title',{name: 'ID', type: 'integer'}
-                    ],
-                    autoLoad: true,
-                    proxy: {
-                        type: 'slateapi',
-                        url: '/terms/json',
-                        limitParam: false,
-                        pageParam: false,
-                        startParam: false,
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'data'
-                        }
-                    }
-                }
+                store: 'Terms'
             },{
                 name: 'advisorID',
                 fieldLabel: 'Advisor',
@@ -99,26 +82,19 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 store: {
                     autoLoad: true,
                     fields: [
+                        'FirstName',
+                        'LastName',
                         {name: 'ID', type: 'int'},
                         {
                             name: 'FullName',
                             convert: function (v, r) {
-                                return r.raw.LastName + ', ' + r.raw.FirstName;
+                                return r.data.data[0].LastName + ', ' + r.data.data[0].FirstName;
                             }
                         }
                     ],
                     proxy: {
                         type: 'slateapi',
-                        url: '/narratives/json/authors',
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'data',
-                            transform: function (data) {
-                                return Ext.Array.map(data.data, function(value) {
-                                    value.FullName = value.LastName + ', ' + value.FirstName
-                                });
-                            }
-                        }
+                        url: '/narratives/authors'
                     }
                 }
             }]

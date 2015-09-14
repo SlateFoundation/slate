@@ -36,26 +36,9 @@ Ext.define('SlateAdmin.view.progress.interims.email.Manager', {
                 emptyText: 'Current Term',
                 displayField: 'Title',
 				queryMode: 'local',
-				value: window.currentTerm,
 				forceSelection: false,
                 valueField: 'ID',
-                store: {
-                    fields: [
-                        {name: 'ID', type: 'int'},
-                        'Title'
-                    ],
-                    proxy: {
-                        type: 'ajax',
-                        url: '/terms/json',
-						limitParam: false,
-						pageParam: false,
-						startParam: false,
-                        reader: {
-                            type: 'json',
-                            rootProperty: 'data'
-                        }
-                    }
-                }
+                store: 'Terms'
             },{
                 name: 'advisorID',
                 fieldLabel: 'Advisor',

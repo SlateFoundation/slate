@@ -8,7 +8,6 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         'Ext.grid.column.Date'
     ],
 
-    useArrows: true,
     rootVisible: false,
     store: 'TermsTree',
     viewConfig: {

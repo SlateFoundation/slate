@@ -132,7 +132,6 @@ Ext.define('SlateAdmin.controller.People', {
 //        selector: 'people-navpanel #searchOptionsForm'
     }],
 
-
     // controller template methods
     init: function() {
         var me = this;
