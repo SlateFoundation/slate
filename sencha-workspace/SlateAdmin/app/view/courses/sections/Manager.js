@@ -75,8 +75,8 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
 
             xtype: 'tabpanel',
             itemId: 'detailTabs',
-            bodyStyle: {
-                borderWidth: '1px 0 0'
+            defaults: {
+                bodyBorder: '1 0'
             }
         }]
     }],

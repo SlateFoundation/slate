@@ -10,31 +10,37 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
     split: true,
     border: false,
     store: 'people.progress.NoteRecipients',
+    cls: 'has-small-group-headers',
     columns: [{
+        flex: 1,
         xtype: 'templatecolumn',
         header: 'Name',
         dataIndex: 'FullName',
-        width: 120,
-        tpl: '<tpl if="Status">({Status})</tpl> <a href="mailto:{Email}" title="{Email}">{FullName}</a>  - ({Email})'
+        tpl: '<tpl if="Status">({Status})</tpl> <tpl if="Email"><a href="mailto:{Email}" title="{Email}">{FullName}</a><tpl else>{FullName}</tpl>'
     },{
+        width: 130,
         header: 'Relationship',
-        dataIndex: 'Label',
-        flex: 1
+        dataIndex: 'Label'
     }],
-    bbar: [{
-        xtype: 'tbfill'
-    },{
-        text: 'Add a custom recipient',
+    tbar: [{
+        text: 'Add Custom Recipient&hellip;',
         action: 'addCustomRecipientBtn',
-        icon: '/img/icons/fugue/card--plus.png',
+        cls: 'glyph-success',
+        glyph: 0xf055, // fa-plus-circle
         menu: {
+            width: 240,
             plain: true,
+            bodyPadding: '10 15',
             enableKeyNav: false,
+            defaults: {
+                labelAlign: 'top',
+                margin: '0 0 10'
+            },
             items: [{
                 xtype: 'combo',
                 name: 'Person',
                 itemId: 'customRecipientPersonCombo',
-                emptyText: 'First & Last name',
+                fieldLabel: 'Full name',
                 queryMode: 'remote',
                 queryParam: 'q',
                 allowBlank: false,
@@ -58,16 +64,18 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
             },{
                 xtype: 'textfield',
                 name: 'Email',
-                emptyText: 'Email Address',
+                fieldLabel: 'Email',
                 vtype: 'email',
                 allowBlank: false
             },{
                 xtype: 'textfield',
                 name: 'Label',
-                emptyText: 'Relationship to student (optional)'
+                fieldLabel: 'Relationship (optional)'
             },{
+                margin: '10 0',
                 xtype: 'button',
-                text: 'Save',
+                glyph: 0xf055, // fa-plus-circle
+                text: 'Add',
                 action: 'addRecepient'
             }]
         }
@@ -76,7 +84,8 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
 
         var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
             collapse: Ext.emptyFn,
-            groupHeaderTpl: '{name}'
+            groupHeaderTpl: '{name}',
+            collapsible: false,
         });
         this.selModel = Ext.create('Ext.selection.CheckboxModel',{
             checkOnly: true

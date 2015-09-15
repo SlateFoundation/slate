@@ -60,7 +60,6 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         },
         scroll: false,
         rootVisible: true,
-        useArrows: false,
         singleExpand: true,
         hideHeaders: true,
         viewConfig: {

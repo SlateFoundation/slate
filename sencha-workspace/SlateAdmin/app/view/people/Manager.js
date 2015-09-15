@@ -74,7 +74,10 @@ Ext.define('SlateAdmin.view.people.Manager', {
             flex: 1,
 
             xtype: 'tabpanel',
-            itemId: 'detailTabs'
+            itemId: 'detailTabs',
+            defaults: {
+                bodyBorder: '1 0'
+            }
         }]
     }],
 
