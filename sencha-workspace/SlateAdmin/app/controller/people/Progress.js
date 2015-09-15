@@ -453,8 +453,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         if (record.phantom) {
             record.save({
                 success: function (savedRecord) {
-                //	console.log(savedRecord);
-
                     Ext.getStore('people.ProgressReports').insert(0, {
                         ID: savedRecord.get('ID'),
                         AuthorUsername: savedRecord.get('Author').Username,
