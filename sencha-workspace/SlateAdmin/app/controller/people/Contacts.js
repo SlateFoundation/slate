@@ -410,6 +410,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         }
 
         if (editedRecord.dirty && editedRecord.isValid()) {
+            gridView.clearInvalid(editedRecord, 'value');
+
             editedRecord.save({
                 callback: function() {
                     // render any server-side validation errors
