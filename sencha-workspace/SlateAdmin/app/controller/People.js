@@ -365,7 +365,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (ev.getKey() == ev.ENTER) {
             if (query) {
-                Ext.util.History.add(['people', 'search', query]);
+                Ext.util.History.pushState(['people', 'search', query]);
             } else {
                 this.getAdvancedSearchForm().getForm().reset();
             }
@@ -893,14 +893,14 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (!query && rootGroupSelected) {
             // if there's no query and root group is selected, redirect to people/all
-            Ext.util.History.add('people/all');
+            Ext.util.History.pushState('people/all');
             return;
         }
 
         searchField.setValue(query);
 
         if (execute) {
-            Ext.util.History.add(query ? ['people', 'search', query] : 'people');
+            Ext.util.History.pushState(query ? ['people', 'search', query] : 'people');
         }
     },
 

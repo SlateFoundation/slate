@@ -152,7 +152,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.add(['course-sections', 'search', 'course:' + rec.get('Code')]);
+        Ext.util.History.pushState(['course-sections', 'search', 'course:' + rec.get('Code')]);
     },
 
     setFormValidity: function(form) {

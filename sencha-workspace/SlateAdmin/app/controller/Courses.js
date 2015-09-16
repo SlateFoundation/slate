@@ -557,7 +557,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             }
         });
 
-        Ext.util.History.add(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
+        Ext.util.History.pushState(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
     }
 
 

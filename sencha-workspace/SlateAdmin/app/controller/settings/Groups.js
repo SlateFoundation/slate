@@ -147,6 +147,6 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     },
 
     onBrowseMembersClick: function(grid,rec) {
-        Ext.util.History.add(['people', 'search', 'group:' + rec.get('Handle')]);
+        Ext.util.History.pushState(['people', 'search', 'group:' + rec.get('Handle')]);
     }
 });

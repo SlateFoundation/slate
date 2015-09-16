@@ -125,7 +125,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.add(['course-sections', 'search', 'department:' + rec.get('Handle')]);
+        Ext.util.History.pushState(['course-sections', 'search', 'department:' + rec.get('Handle')]);
     }
 
 });
