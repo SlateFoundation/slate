@@ -14,7 +14,7 @@ class MessagesRequestHandler extends \RecordsRequestHandler
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
     public static $accountLevelAPI = 'Staff';
-    public static $browseOrder = array('ID' => 'DESC');
+    public static $browseOrder = ['ID' => 'DESC'];
 
     public static function handleRecordRequest(\ActiveRecord $Message, $action = false)
     {
@@ -33,8 +33,7 @@ class MessagesRequestHandler extends \RecordsRequestHandler
 
     public static function handleMessageRecipientsRequest(Message $Message)
     {
-        if (in_array($_SERVER['REQUEST_METHOD'], array('POST','PUT'))) {
-
+        if (in_array($_SERVER['REQUEST_METHOD'], ['POST','PUT'])) {
             if (static::$responseMode == 'json') {
                 $_REQUEST = JSON::getRequestData();
             }
@@ -43,16 +42,15 @@ class MessagesRequestHandler extends \RecordsRequestHandler
                 return static::throwInvalidRequestError('Save expects "data" field as array of record deltas');
             }
 
-            $newPeople = array();
+            $newPeople = [];
 
             foreach ($_REQUEST['data'] AS $recipientData) {
-
                 if (!empty($recipientData['PersonID']) && is_numeric($recipientData['PersonID'])) {
                     // get by ID
                     if (!$RecipientPerson = Person::getByID($recipientData['PersonID'])) {
                         return static::throwNotFoundError('Recipient not found');
                     }
-                } elseif(!empty($recipientData['FullName']) && !empty($recipientData['Email'])) {
+                } elseif (!empty($recipientData['FullName']) && !empty($recipientData['Email'])) {
                     // try to create custom person
                     $nameData = Person::parseFullName($recipientData['FullName']);
 
@@ -66,20 +64,19 @@ class MessagesRequestHandler extends \RecordsRequestHandler
                 }
 #                \Debug::dump($RecipientPerson);
                 if (!empty($recipientData['Email'])) {
-                    $EmailContactPoint = \Emergence\People\ContactPoint\Email::getByWhere(array(
+                    $EmailContactPoint = \Emergence\People\ContactPoint\Email::getByWhere([
                         'PersonID' => $RecipientPerson->ID
                         ,'Data' => $recipientData['Email']
-                    ));
+                    ]);
 
 
                     if (!$EmailContactPoint) {
-                        $EmailContactPoint = \Emergence\People\ContactPoint\Email::create(array(
+                        $EmailContactPoint = \Emergence\People\ContactPoint\Email::create([
                             'PersonID' => $RecipientPerson->ID
-                        ));
-                        
+                        ]);
+
                         $EmailContactPoint->loadString($recipientData['Email']);
                         $EmailContactPoint->save();
-
                     }
                 }
 
@@ -92,18 +89,17 @@ class MessagesRequestHandler extends \RecordsRequestHandler
             // trigger send
             $Message->send();
 
-            return static::respond('recipientsAdded', array(
+            return static::respond('recipientsAdded', [
                 'success' => true
                 ,'data' => $Message->Recipients
                 ,'newPeople' => $newPeople
                 ,'message' => $Message->getData()
-            ));
+            ]);
         }
 
-        return static::respond('recipients', array(
+        return static::respond('recipients', [
             'success' => true
             ,'data' => $Message->Recipients
-        ));
+        ]);
     }
-
 }

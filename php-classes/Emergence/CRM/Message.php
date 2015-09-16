@@ -20,102 +20,102 @@ class Message extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $fields = array(
-        'ContextClass' => array(
+    public static $fields = [
+        'ContextClass' => [
             'type' => 'enum'
-            ,'values' => array(
+            ,'values' => [
                 \Emergence\People\Person::class
-            )
-        )
+            ]
+        ]
         ,'ContextID' => 'uint'
-        ,'AuthorID' => array(
+        ,'AuthorID' => [
             'type' => 'integer'
             ,'unsigned' => true
-        )
+        ]
         ,'Subject'
         ,'Message' => 'clob'
-        ,'MessageFormat' => array(
+        ,'MessageFormat' => [
             'type' => 'enum'
-            ,'values' => array('plain','html')
-        )
+            ,'values' => ['plain','html']
+        ]
 
-        ,'Status' => array(
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Private Draft','Shared Draft','Sent','Deleted')
+            ,'values' => ['Private Draft','Shared Draft','Sent','Deleted']
             ,'default' => 'Private Draft'
-        )
-        ,'ParentMessageID' => array(
+        ]
+        ,'ParentMessageID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-        ,'Source' => array(
+        ]
+        ,'Source' => [
             'type' => 'enum'
-            ,'values' => array('System','Direct','Email','Import')
+            ,'values' => ['System','Direct','Email','Import']
             ,'default' => 'Direct'
-        )
+        ]
 
-        ,'Sent' => array(
+        ,'Sent' => [
             'type' => 'timestamp'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
 
-    public static $relationships = array(
-        'Context' => array(
+    public static $relationships = [
+        'Context' => [
             'type' => 'context-parent'
-        )
-        ,'Author' => array(
+        ]
+        ,'Author' => [
             'type' => 'one-one'
             ,'class' => \Emergence\People\Person::class
-        )
-        ,'ParentMessage' => array(
+        ]
+        ,'ParentMessage' => [
             'type' => 'one-one'
             ,'class' => __CLASS__
-        )
-        ,'Recipients' => array(
+        ]
+        ,'Recipients' => [
             'type' => 'one-many'
             ,'class' => \Emergence\CRM\MessageRecipient::class
             ,'foreign' => 'MessageID'
-        )
-    );
+        ]
+    ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Context',
         'Author',
         'ParentMessage',
         'Recipients'
-    );
+    ];
 
-    public static $validators = array(
-        'Subject' => array(
+    public static $validators = [
+        'Subject' => [
 
             'required' => true,
             'errorMessage' => 'A subject is required'
-        ),
-        'Message' => array(
+        ],
+        'Message' => [
             'required' => true,
             'validator' => 'string_multiline',
             'errorMessage' => 'A message is required'
-        )
-    );
+        ]
+    ];
 
     public function addRecipient(\Emergence\People\Person $Person, \Emergence\People\ContactPoint\Email $EmailContactPoint)
     {
         try {
-            $MsgRecipient = MessageRecipient::create(array(
+            $MsgRecipient = MessageRecipient::create([
                 'MessageID' => $this->ID
                 ,'PersonID' => $Person->ID
                 ,'EmailContactID' => $EmailContactPoint->ID
-            ), true);
+            ], true);
         } catch (DuplicateKeyException $e) {
-            $MsgRecipient = MessageRecipient::getByWhere(array(
+            $MsgRecipient = MessageRecipient::getByWhere([
                 'MessageID' => $this->ID
                 ,'PersonID' => $Person->ID
-            ));
+            ]);
         }
 
         return $MsgRecipient;
@@ -123,18 +123,20 @@ class Message extends \VersionedRecord
 
     public function save($deep = true)
     {
-        if(!$this->Sent && $this->Status == 'Sent')
+        if (!$this->Sent && $this->Status == 'Sent') {
             $this->Sent = time();
+        }
 
-        if(!$this->Author)
+        if (!$this->Author) {
             $this->Author = $GLOBALS['Session']->Person;
+        }
 
         parent::save($deep);
     }
 
     public function send()
     {
-        $newEmailRecipients = array();
+        $newEmailRecipients = [];
 
         foreach ($this->Recipients AS $Recipient) {
             if ($Recipient->Status == 'Pending') {
@@ -146,7 +148,7 @@ class Message extends \VersionedRecord
         if (!count($newEmailRecipients)) {
             return 0;
         }
-        error_reporting(E_ALL);  
+        error_reporting(E_ALL);
         $success = \Emergence\Mailer\Mailer::send(
             $this->getEmailRecipientsList($newEmailRecipients)
             ,$this->getEmailSubject()
@@ -161,7 +163,6 @@ class Message extends \VersionedRecord
 
             return count($newEmailRecipients);
         } else {
-
             print_r(error_get_last());
             throw new \Exception('Failed to inject message into email system');
         }
@@ -170,11 +171,12 @@ class Message extends \VersionedRecord
 
     public function getEmailRecipientsList($recipients = false)
     {
-        if (!is_array($recipients)) $recipients = $this->Recipients;
+        if (!is_array($recipients)) {
+            $recipients = $this->Recipients;
+        }
 
         return array_map(function($Recipient) {
             if (!$Recipient->EmailContactID || $Recipient->Person->PrimaryEmailID == $Recipient->EmailContactID) {
-                
                 return $Recipient->Person->EmailRecipient;
             } else {
                 $Email = \Emergence\People\ContactPoint\Email::getByID($Recipient->EmailContactID);
@@ -193,10 +195,11 @@ class Message extends \VersionedRecord
     {
         $Sender = $GLOBALS['Session']->Person;
 
-        if ($Sender->ID != $this->AuthorID)
-            return sprintf(static::$forwardPrefixFormat, $Sender->Email, $Sender->FullName) . $this->Message;
-        else
+        if ($Sender->ID != $this->AuthorID) {
+            return sprintf(static::$forwardPrefixFormat, $Sender->Email, $Sender->FullName).$this->Message;
+        } else {
             return $this->Message;
+        }
     }
 
     public function getEmailFrom()
@@ -208,12 +211,13 @@ class Message extends \VersionedRecord
     {
         $replyTo = $this->getEmailRecipientsList();
 
-        if (!in_array($this->Author->EmailRecipient, $replyTo))
+        if (!in_array($this->Author->EmailRecipient, $replyTo)) {
             $replyTo[] = $this->Author->EmailRecipient;
+        }
 
-        return array(
+        return [
             'Reply-To: '.implode(', ', $replyTo)
             ,'X-MessageID: '.$this->ID
-        );
+        ];
     }
 }
