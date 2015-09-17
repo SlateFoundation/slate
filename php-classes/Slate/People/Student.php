@@ -6,9 +6,6 @@ use DB;
 use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\People\Groups\Group;
-use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
-use Slate\Courses\Section;
-use Slate\Courses\SectionParticipant;
 
 use Slate\Term;
 
@@ -31,42 +28,42 @@ class Student extends User
 {
     public static $fields = [
         'StudentNumber' => [
-            'type' => 'string'
-            ,'unique' => true
-            ,'notnull' => false
-            ,'accountLevelEnumerate' => 'Staff'
-        ]
-        ,'AdvisorID' => [
-            'type' => 'integer'
-            ,'unsigned' => true
-            ,'notnull' => false
-            ,'accountLevelEnumerate' => 'Staff'
-        ]
-        ,'GraduationYear' => [
-            'type' => 'year'
-            ,'notnull' => false
+            'type' => 'string',
+            'unique' => true,
+            'notnull' => false,
+            'accountLevelEnumerate' => 'Staff'
+        ],
+        'AdvisorID' => [
+            'type' => 'integer',
+            'unsigned' => true,
+            'notnull' => false,
+            'accountLevelEnumerate' => 'Staff'
+        ],
+        'GraduationYear' => [
+            'type' => 'year',
+            'notnull' => false
         ]
     ];
 
     public static $relationships = [
         'Advisor' => [
-            'type' => 'one-one'
-            ,'class' => 'Person'
-            ,'local' => 'AdvisorID'
-        ]
-        ,'Guardians' => [
-            'type' => 'many-many'
-            ,'class' => 'Person'
-            ,'linkClass' => 'Emergence\\People\\GuardianRelationship'
-            ,'linkLocal' => 'PersonID'
-            ,'linkForeign' => 'RelatedPersonID'
-            ,'conditions' => ['Link.Class = "Guardian"']
-        ]
-        ,'GuardianRelationships' => [
-            'type' => 'one-many'
-            ,'class' => 'Emergence\\People\\GuardianRelationship'
-            ,'foreign' => 'PersonID'
-            ,'conditions' => ['Class' => 'Guardian']
+            'type' => 'one-one',
+            'class' => 'Person',
+            'local' => 'AdvisorID'
+        ],
+        'Guardians' => [
+            'type' => 'many-many',
+            'class' => 'Person',
+            'linkClass' => 'Emergence\\People\\GuardianRelationship',
+            'linkLocal' => 'PersonID',
+            'linkForeign' => 'RelatedPersonID',
+            'conditions' => ['Link.Class = "Guardian"']
+        ],
+        'GuardianRelationships' => [
+            'type' => 'one-many',
+            'class' => 'Emergence\\People\\GuardianRelationship',
+            'foreign' => 'PersonID',
+            'conditions' => ['Class' => 'Guardian']
         ]
     ];
 
@@ -78,26 +75,26 @@ class Student extends User
 
     public static $searchConditions = [
         'StudentNumber' => [
-            'qualifiers' => ['any', 'studentnumber']
-            ,'points' => 2
-            ,'sql' => 'StudentNumber LIKE "%s%%"'
-        ]
-        ,'GraduationYear' => [
-            'qualifiers' => ['graduationyear','year']
-            ,'points' => 2
-            ,'sql' => 'GraduationYear=%u'
-        ]
-        ,'AdvisorID' => [
-            'qualifiers' => ['advisorid']
-            ,'points' => 1
-            ,'sql' => 'AdvisorID=%u'
+            'qualifiers' => ['any', 'studentnumber'],
+            'points' => 2,
+            'sql' => 'StudentNumber LIKE "%s%%"'
+        ],
+        'GraduationYear' => [
+            'qualifiers' => ['graduationyear','year'],
+            'points' => 2,
+            'sql' => 'GraduationYear=%u'
+        ],
+        'AdvisorID' => [
+            'qualifiers' => ['advisorid'],
+            'points' => 1,
+            'sql' => 'AdvisorID=%u'
         ]
     ];
 
     public static $validators = [
         'StudentNumber' => [
-            'required' => false
-            ,'errorMessage' => 'Unique student identifier missing'
+            'required' => false,
+            'errorMessage' => 'Unique student identifier missing'
         ]
     ];
 
@@ -109,8 +106,8 @@ class Student extends User
     public static function getDistinctAdvisors()
     {
         return Person::getAllByQuery(
-            'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName'
-            ,[
+            'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName',
+            [
                 static::$tableName
             ]
         );
@@ -151,7 +148,7 @@ class Student extends User
 
                 return $filterResult($Group->getAllPeople());
             case 'section':
-                if (!$Section = Section::getByHandle($groupHandle)) {
+                if (!$Section = CourseSection::getByHandle($groupHandle)) {
                     throw new \Exception('Section not found');
                 }
 
@@ -173,6 +170,24 @@ class Student extends User
                     break;
                 }
 
+                case 'narratives':
+                {
+                    $records = $summarizeRecords ? array_merge($records, static::getNarrativeReportsSummary($params, $search)) : array_merge($records, static::getNarrativeReports($params, $search));
+                    break;
+                }
+
+                case 'interims':
+                {
+                    $records = $summarizeRecords ? array_merge($records, static::getInterimReportsSummary($params, $search)) : array_merge($records, static::getInterimReports($params, $search));
+                    break;
+                }
+
+                case 'standards':
+                {
+                    $records = $summarizeRecords ? array_merge($records, static::getStandardsSummary($params, $search)) : array_merge($records, static::getStandards($params, $search));
+                    break;
+                }
+
             }
         }
 
@@ -182,8 +197,8 @@ class Student extends User
     public static function getProgressSearchConditions($reportType, $search)
     {
         $reportSearchTerms = [
-            'qualifierConditions' => []
-            ,'mode' => 'AND'
+            'qualifierConditions' => [],
+            'mode' => 'AND'
         ];
 
         $terms = preg_split('/\s+/', $search);
@@ -212,8 +227,8 @@ class Student extends User
                         'course' => [
                             'Sections.Handle="'.$term.'"'
                         ]
-                    ]
-                    ,'mode' => 'AND'
+                    ],
+                    'mode' => 'AND'
                 ];
                 //Reports will only have course section functionality for now. This is temporary.
             } elseif ($reportType == 'Standards' && $qualifier == 'any') {
@@ -233,9 +248,9 @@ class Student extends User
                 $sqlCondition = !empty($condition['sql']) ? sprintf($condition['sql'], \DB::escape($term)) : false;
 
                 $matchers[] = [
-                    'condition' => $sqlCondition
-                    ,'points' => $condition['points']
-                    ,'qualifier' => $qualifier
+                    'condition' => $sqlCondition,
+                    'points' => $condition['points'],
+                    'qualifier' => $qualifier
                 ];
             }
         }
@@ -259,11 +274,11 @@ class Student extends User
 
         $having = [];
         $select = [
-            'Note.ID'
-            ,'Note.Class'
-            ,'Note.Subject'
-            ,'Sent AS Date'
-            ,'People.Username AS AuthorUsername'
+            'Note.ID',
+            'Note.Class',
+            'Note.Subject',
+            'Sent AS Date',
+            'People.Username AS AuthorUsername'
         ];
 
         $queryParams = [
@@ -271,11 +286,11 @@ class Student extends User
             Person::$tableName
         ];
 
-        $termCondition = $params['Term'] == 'All' ? false : 'DATE(Note.Created) BETWEEN "'.$params['Term']->StartDate.'" AND "'.$params['Term']->EndDate.'"';
+        $termCondition = $params['Term'] == 'All' ? false : 'DATE(Note.Created) BETWEEN "' . $params['Term']->StartDate . '" AND "' . $params['Term']->EndDate . '"';
 
         $conditions = [
-            'ContextID='.$params['StudentID']
-            ,'ContextClass="'.\DB::escape(Person::class).'"'
+            'ContextID=' . $params['StudentID'],
+            'ContextClass="' . \DB::escape(Person::class).'"'
         ];
 
         if ($termCondition) {
@@ -288,7 +303,7 @@ class Student extends User
 
             if (!empty($matchedSearchConditions['qualifierConditions'])) {
                 foreach ($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
-                    $conditionString = '( ('.implode(') OR (', $qualifierConditions).') )';
+                    $conditionString = '( (' . implode(') OR (', $qualifierConditions) . ') )';
 
                     if ($matchedSearchConditions['mode'] == 'OR') {
                         $searchConditions = array_merge($searchConditions, $qualifierConditions);
@@ -324,23 +339,23 @@ class Student extends User
 
         $having = [];
         $select = [
-            'Class'
-            ,'Subject'
-            ,'Sent AS Date'
-            ,'Message'
-            ,'AuthorID'
-            ,'ContextID'
+            'Class',
+            'Subject',
+            'Sent AS Date',
+            'Message',
+            'AuthorID',
+            'ContextID'
         ];
 
         $queryParams = [
-             Note::$tableName
+             ProgressNote::$tableName
         ];
 
-        $termCondition = $params['Term'] == 'All' ? false : 'DATE(Created) BETWEEN "'.$params['Term']->StartDate.'" AND "'.$params['Term']->EndDate.'"';
+        $termCondition = $params['Term'] == 'All' ? false : 'DATE(Created) BETWEEN "' . $params['Term']->StartDate . '" AND "' . $params['Term']->EndDate . '"';
 
         $conditions = [
-            'ContextID='.$params['StudentID']
-            ,'ContextClass="'.\DB::escape(Person::class).'"'
+            'ContextID='.$params['StudentID'],
+            'ContextClass="'.\DB::escape(Person::class).'"'
         ];
 
         if ($termCondition) {
@@ -367,7 +382,7 @@ class Student extends User
             if ($matchedSearchConditions['mode'] == 'OR') {
                 $select[] = implode('+', array_map(function($c) {
                     return sprintf('IF(%s, %u, 0)', $c, 1);
-                }, $searchConditions)).' AS searchScore';
+                }, $searchConditions)) . ' AS searchScore';
 
                 $having[] = 'searchScore >= 1';
             }
