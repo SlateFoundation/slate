@@ -15,11 +15,13 @@ class EmailAddress implements IValidator
             'allowBlacklist' => false
         ), $options);
 
-        @list($username, $domain) = explode('@', $email, 2);
+        $emailParts = explode('@', $email, 2);
 
-        if (!$username || !$domain) {
+        if (count($emailParts) != 2) {
             return array(self::PARTS_MISSING => 'Email address must be in format username@domain');
         }
+
+        list($username, $domain) = $emailParts;
 
         if (!preg_match('/^[_a-zA-Z0-9-+]+(\.[_+a-zA-Z0-9-]+)*$/', $username)) {
             return array(self::USERNAME_INVALID => 'Username portion of address is invalid');
