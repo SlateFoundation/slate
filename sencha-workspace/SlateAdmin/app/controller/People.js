@@ -132,60 +132,59 @@ Ext.define('SlateAdmin.controller.People', {
 //        selector: 'people-navpanel #searchOptionsForm'
     }],
 
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'people-navpanel': {
-                expand: me.onNavPanelExpand
-            },
-            'people-navpanel jarvus-searchfield': {
-                specialkey: me.onSearchSpecialKey,
-                clear: me.onSearchClear
-            },
-            'people-navpanel people-advancedsearchform field': {
-                specialkey: me.onAdvancedSearchFormSpecialKey
-            },
-            'people-navpanel button[action=search]': {
-                click: me.onSearchClick
-            },
-            'people-navpanel #groups': {
-                //select: me.onGroupSelect
-                itemclick: me.onGroupSelect
-            },
-            'people-grid': {
-                select: { fn: me.onPersonSelect, buffer: 10 },
-                deselect: { fn: me.onPersonDeselect, buffer: 10 }
-            },
-            'people-manager #detailTabs': {
-                tabchange: me.onDetailTabChange
-            },
-            'people-grid button#exportResultsBtn menuitem[exportFormat]': {
-                click: me.onExportFormatButtonClick
-            },
-            'people-grid menu#csvExportColumns': {
-                beforeshow: me.onBeforeCsvExportColumnsMenuShow
-            }
+    control: {
+        'people-navpanel': {
+            expand: 'onNavPanelExpand'
+        },
+        'people-navpanel jarvus-searchfield': {
+            specialkey: 'onSearchSpecialKey',
+            clear: 'onSearchClear'
+        },
+        'people-navpanel people-advancedsearchform field': {
+            specialkey: 'onAdvancedSearchFormSpecialKey'
+        },
+        'people-navpanel button[action=search]': {
+            click: 'onSearchClick'
+        },
+        'people-navpanel #groups': {
+            //select: onGroupSelect
+            itemclick: 'onGroupSelect'
+        },
+        'people-grid': {
+            select: { fn: 'onPersonSelect', buffer: 10 },
+            deselect: { fn: 'onPersonDeselect', buffer: 10 }
+        },
+        'people-manager #detailTabs': {
+            tabchange: 'onDetailTabChange'
+        },
+        'people-grid button#exportResultsBtn menuitem[exportFormat]': {
+            click: 'onExportFormatButtonClick'
+        },
+        'people-grid menu#csvExportColumns': {
+            beforeshow: 'onBeforeCsvExportColumnsMenuShow'
+        }
 //            'people-grid #exportResultsBtn': {
-//                click: me.onExportResultsClick
+//                click: 'onExportResultsClick'
 //            },
 //            'people-grid #exportResultsBtn menu': {
-//                afterrender: me.onExportMenuRendered,
-//                exportfieldsrefill: me.onExportFieldsRefill
+//                afterrender: 'onExportMenuRendered',
+//                exportfieldsrefill: 'onExportFieldsRefill'
 //            },
 //            'people-grid #exportResultsBtn #exportTypeMenu menucheckitem': {
-//                checkchange: me.onExportTypeChange
+//                checkchange: 'onExportTypeChange'
 //            },
 //            'people-grid #exportResultsBtn #exportFieldsMenu menucheckitem': {
-//                checkchange: me.onExportFieldsChange
+//                checkchange: 'onExportFieldsChange'
 //            }
-        });
+    },
 
-        me.listen({
+    // controller template methods
+    init: function() {
+        this.listen({
             store: {
                 '#People': {
-                    load: me.onStoreLoad
+                    load: this.onStoreLoad,
+                    scope: this
                 }
             }
         });

@@ -30,27 +30,22 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
     }],
 
 
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
+    control: {
             'courses-sections-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
+            beforerender: 'onBeforeTabsRender'
             },
             'courses-sections-details-participants': {
-                sectionloaded: me.onSectionLoaded
+            sectionloaded: 'onSectionLoaded'
             },
             'courses-sections-details-participants field': {
-                specialkey: me.onFieldSpecialKey
+            specialkey: 'onFieldSpecialKey'
             },
             'courses-sections-details-participants button[action=add-participant]': {
-                click: me.onAddParticipantClick
+            click: 'onAddParticipantClick'
             },
             'courses-sections-details-participants grid': {
-                deleteclick: me.onDeleteParticipantClick
+            deleteclick: 'onDeleteParticipantClick'
             }
-        });
     },
 
 

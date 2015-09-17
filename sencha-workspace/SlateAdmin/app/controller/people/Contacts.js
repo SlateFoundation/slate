@@ -38,56 +38,48 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         selector: 'people-details-contacts grid#contactPoints'
     }],
 
+    control: {
+        'people-manager #detailTabs': {
+            beforerender: 'onBeforeTabsRender'
+        },
+        'people-details-contacts': {
+            personloaded: 'onPersonLoaded'
+        },
+        'people-details-contacts grid#relationships': {
+            beforeedit: 'onBeforeRelationshipsGridEdit',
+            edit: 'onRelationshipsGridEdit',
+            deleteclick: 'onRelationshipsGridDeleteClick',
+            guardianclick: 'onRelationshipsGridGuardianClick'
+        },
+        'people-details-contacts grid#contactPoints': {
+            beforeedit: 'onBeforeContactsGridEdit',
+            edit: 'onContactsGridEdit',
+            deleteclick: 'onContactsGridDeleteClick',
+            primaryclick: 'onContactsGridPrimaryClick'
+        }
+//            'people-details-contacts': {
+//                show: 'onContactsShow',
+//                afterrender: 'onContactsReady',
+//                edit: 'onCellEdit',
+//                cellclick: 'onCellClick',
+//                itemcontextmenu: 'onItemContextMenu'
+//            },
+//            'people-details-contacts button[name=relationshipAdd]': {
+//                click: 'onRelationshipAdd'
+//            },
+//            'contact-contextmenu menuitem[ref=btnDelete]':{
+//                click: 'onContactDelete'
+//            },
+//            'contact-contextmenu menuitem[ref=btnPrimary]':{
+//                click: 'onContactPrimary'
+//            }
+    },
+
 
     // controller template methods
     init: function() {
         // Start listening for events on views
         var me = this;
-
-        me.control({
-            'people-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
-            },
-            'people-details-contacts': {
-                personloaded: me.onPersonLoaded
-            },
-            'people-details-contacts grid#relationships': {
-                beforeedit: me.onBeforeRelationshipsGridEdit,
-                edit: me.onRelationshipsGridEdit,
-                deleteclick: me.onRelationshipsGridDeleteClick,
-                guardianclick: me.onRelationshipsGridGuardianClick
-            },
-            'people-details-contacts grid#contactPoints': {
-                beforeedit: me.onBeforeContactsGridEdit,
-                edit: me.onContactsGridEdit,
-                deleteclick: me.onContactsGridDeleteClick,
-                primaryclick: me.onContactsGridPrimaryClick
-            }
-//            'people-details-contacts': {
-//                show: me.onContactsShow,
-//                afterrender: me.onContactsReady,
-//                edit: me.onCellEdit,
-//                cellclick: me.onCellClick,
-//                itemcontextmenu: me.onItemContextMenu
-//            },
-//            'people-details-contacts button[name=relationshipAdd]': {
-//                click: me.onRelationshipAdd
-//            },
-//            'contact-contextmenu menuitem[ref=btnDelete]':{
-//                click: me.onContactDelete
-//            },
-//            'contact-contextmenu menuitem[ref=btnPrimary]':{
-//                click: me.onContactPrimary
-//            }
-        });
-
-//        me.listen({
-//            store: {
-//                '#people.ContactPointTemplates': {
-//                    load: me.onTemplatesStoreLoad
-//                }
-//            }
-//        });
 
 //        me.application.on('personselected', me.onPersonSelected, me);
 //        me.application.on('login', me.syncContacts, me);

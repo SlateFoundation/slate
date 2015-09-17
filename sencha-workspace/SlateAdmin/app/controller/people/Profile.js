@@ -40,29 +40,23 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         selector: 'people-manager'
     }],
 
-
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'people-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
-            },
-            'people-details-profile': {
-                personloaded: me.onPersonLoaded
-            },
-            'people-details-profile form': {
-                dirtychange: me.syncButtons,
-                validitychange: me.syncButtons
-            },
-            'people-details-profile button[action=cancel]': {
-                click: me.onCancelButtonClick
-            },
-            'people-details-profile button[action=save]': {
-                click: me.onSaveButtonClick
-            }
-        });
+    control: {
+        'people-manager #detailTabs': {
+            beforerender: 'onBeforeTabsRender'
+        },
+        'people-details-profile': {
+            personloaded: 'onPersonLoaded'
+        },
+        'people-details-profile form': {
+            dirtychange: 'syncButtons',
+            validitychange: 'syncButtons'
+        },
+        'people-details-profile button[action=cancel]': {
+            click: 'onCancelButtonClick'
+        },
+        'people-details-profile button[action=save]': {
+            click: 'onSaveButtonClick'
+        }
     },
 
 

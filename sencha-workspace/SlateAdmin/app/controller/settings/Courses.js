@@ -38,28 +38,23 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         xtype: 'courses-form-window'
     }],
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'courses-manager': {
-                show: me.onManagerShow,
-                edit: me.onCellEditorEdit,
-                browsecoursesclick: me.onBrowseCoursesClick,
-                deletecourseclick: me.onDeleteCourseClick
-            },
-            'courses-manager button[action=create-course]': {
-                click: me.onCreateCourseClick
-            },
-            'courses-form-window button[action="save"]': {
-                click: me.onSaveCourseClick
-            },
-            'courses-form-window form': {
-                fieldvaliditychange: me.setFormValidity,
-                fielderrorchange: me.setFormValidity
-            }
-        });
+	control: {
+        'courses-manager': {
+            show: 'onManagerShow',
+            edit: 'onCellEditorEdit',
+            browsecoursesclick: 'onBrowseCoursesClick',
+            deletecourseclick: 'onDeleteCourseClick'
+        },
+        'courses-manager button[action=create-course]': {
+            click: 'onCreateCourseClick'
+        },
+        'courses-form-window button[action="save"]': {
+            click: 'onSaveCourseClick'
+        },
+        'courses-form-window form': {
+            fieldvaliditychange: 'setFormValidity',
+            fielderrorchange: 'setFormValidity'
+        }
     },
 
 

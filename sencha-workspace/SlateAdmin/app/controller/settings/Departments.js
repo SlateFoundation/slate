@@ -31,21 +31,16 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     }],
 
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'departments-manager': {
-                show: me.onManagerShow,
-                edit: me.onCellEditorEdit,
-                browsecoursesclick: me.onBrowseCoursesClick,
-                deletedepartmentclick: me.onDeleteDepartmentClick
-            },
-            'departments-manager button[action=create-department]': {
-                click: me.onCreateDepartmentClick
-            }
-        });
+    control: {
+        'departments-manager': {
+            show: 'onManagerShow',
+            edit: 'onCellEditorEdit',
+            browsecoursesclick: 'onBrowseCoursesClick',
+            deletedepartmentclick: 'onDeleteDepartmentClick'
+        },
+        'departments-manager button[action=create-department]': {
+            click: 'onCreateDepartmentClick'
+        }
     },
 
 

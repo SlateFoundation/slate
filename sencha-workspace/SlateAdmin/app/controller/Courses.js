@@ -119,44 +119,44 @@ Ext.define('SlateAdmin.controller.Courses', {
 //        selector: 'course-editor'
     }],
 
+    control: {
+        'courses-navpanel': {
+            expand: 'onNavPanelExpand'
+        },
+        'courses-navpanel field': {
+            specialkey: 'onNavFieldSpecialKey'
+        },
+        'courses-navpanel button[action=search]': {
+            click: 'onSearchClick'
+        },
+        'courses-navpanel button[action=reset]': {
+            click: 'onResetClick'
+        },
+        'courses-sections-manager': {
+            sectioncommit: 'onSectionCommit'
+        },
+        'courses-sections-grid': {
+            select: { fn: 'onSectionSelect', buffer: 10 },
+            deselect: { fn: 'onSectionDeselect', buffer: 10 }
+        },
+        'courses-sections-manager #detailTabs': {
+            tabchange: 'onDetailTabChange'
+        }
+//            'courses-grid combobox[action=termSelector]': {
+//                change: 'onCourseTermChange'
+//            },
+//            'courses-grid': {
+//                select: 'onCourseSelect'
+//            },
+//            'courses-navpanel textfield[inputType=search]': {
+//                specialkey: 'onSearchSpecialKey'
+//            }
+    },
+
 
     // controller template methods
     init: function() {
-        var me = this;
-
-        me.control({
-            'courses-navpanel': {
-                expand: me.onNavPanelExpand
-            },
-            'courses-navpanel field': {
-                specialkey: me.onNavFieldSpecialKey
-            },
-            'courses-navpanel button[action=search]': {
-                click: me.onSearchClick
-            },
-            'courses-navpanel button[action=reset]': {
-                click: me.onResetClick
-            },
-            'courses-sections-manager': {
-                sectioncommit: me.onSectionCommit
-            },
-            'courses-sections-grid': {
-                select: { fn: me.onSectionSelect, buffer: 10 },
-                deselect: { fn: me.onSectionDeselect, buffer: 10 }
-            },
-            'courses-sections-manager #detailTabs': {
-                tabchange: me.onDetailTabChange
-            }
-//            'courses-grid combobox[action=termSelector]': {
-//                change: me.onCourseTermChange
-//            },
-//            'courses-grid': {
-//                select: me.onCourseSelect
-//            },
-//            'courses-navpanel textfield[inputType=search]': {
-//                specialkey: me.onSearchSpecialKey
-//            }
-        });
+        // var me = this;
 
 //        me.listen({
 //            store: {

@@ -25,22 +25,16 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         selector: 'people-details-courses #courseTermSelector'
     }],
 
-
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'people-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
-            },
-            'people-details-courses': {
-                personloaded: me.onPersonLoaded
-            },
-            'people-details-courses combobox[name=courseTermSelector]': {
-                change: me.onCourseTermSelect
-            }
-        });
+    control: {
+        'people-manager #detailTabs': {
+            beforerender: 'onBeforeTabsRender'
+        },
+        'people-details-courses': {
+            personloaded: 'onPersonLoaded'
+        },
+        'people-details-courses combobox[name=courseTermSelector]': {
+            change: 'onCourseTermSelect'
+        }
     },
 
 

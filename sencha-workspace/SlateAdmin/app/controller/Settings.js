@@ -21,15 +21,10 @@ Ext.define('SlateAdmin.controller.Settings', {
     }],
 
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'settings-navpanel': {
-                expand: me.onNavPanelExpand
-            }
-        });
+    control: {
+        'settings-navpanel': {
+            expand: 'onNavPanelExpand'
+        }
     },
 
     buildNavPanel: function() {
