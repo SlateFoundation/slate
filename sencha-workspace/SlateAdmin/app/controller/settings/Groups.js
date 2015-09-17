@@ -16,16 +16,15 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         'settings/groups': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'groups-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: 'settings-navpanel',
+        manager: {
+            selector: 'groups-manager',
+            autoCreate: true,
 
-        xtype: 'groups-manager'
-    }],
+            xtype: 'groups-manager'
+        }
+    },
 
     control: {
         'groups-manager': {

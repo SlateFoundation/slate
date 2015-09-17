@@ -12,34 +12,25 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress.narratives.WorksheetAssignments',
         'progress.narratives.People'
     ],
-    refs: [{
-        ref: 'narrativesGrid',
-        selector: 'progress-narratives-studentsgrid'
-    }, {
-        ref: 'narrativeEditor',
-        selector: 'progress-narratives-editor'
-    }, {
-        ref: 'narrativesManager',
-        autoCreate: true,
-        selector: 'progress-narratives-manager',
+    refs: {
+        narrativesGrid: 'progress-narratives-studentsgrid',
+        narrativeEditor: 'progress-narratives-editor',
+        narrativesManager: {
+            selector: 'progress-narratives-manager',
+            autoCreate: true,
 
-        xtype: 'progress-narratives-manager'
-    }, {
-        ref: 'narrativesPrinter',
-        autoCreate: true,
-        selector: 'progress-narratives-printer',
+            xtype: 'progress-narratives-manager'
+        },
+        narrativesPrinter: {
+            selector: 'progress-narratives-printer',
+            autoCreate: true,
 
-        xtype: 'progress-narratives-printer'
-    }, {
-        ref: 'narrativesPrintForm',
-        selector: 'progress-narratives-printer form'
-    }, {
-        ref: 'narrativesTermSelector',
-        selector: 'progress-narratives-grid #termSelector'
-    }, {
-        ref: 'narrativesWorksheetGrid',
-        selector: 'progress-narratives-grid'
-    }],
+            xtype: 'progress-narratives-printer'
+        },
+        narrativesPrintForm: 'progress-narratives-printer form',
+        narrativesTermSelector: 'progress-narratives-grid #termSelector',
+        narrativesWorksheetGrid: 'progress-narratives-grid'
+    },
     routes: {
         'progress/narratives': 'showNarratives',
         'progress/narratives/printing': 'showNarrativePrinting'

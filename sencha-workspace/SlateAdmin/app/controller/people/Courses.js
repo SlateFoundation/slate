@@ -11,19 +11,16 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         'people.details.Courses'
     ],
 
-    refs: [{
-        ref: 'coursesPanel',
-        selector: 'people-details-courses',
-        autoCreate: true,
+    refs: {
+        coursesPanel: {
+            selector: 'people-details-courses',
+            autoCreate: true,
 
-        xtype: 'people-details-courses'
-    },{
-        ref: 'coursesGrid',
-        selector: 'people-details-courses grid'
-    },{
-        ref: 'personCoursesTermSelector',
-        selector: 'people-details-courses #courseTermSelector'
-    }],
+            xtype: 'people-details-courses'
+        },
+        coursesGrid: 'people-details-courses grid',
+        personCoursesTermSelector: 'people-details-courses #courseTermSelector'
+    },
 
     control: {
         'people-manager #detailTabs': {

@@ -12,13 +12,14 @@ Ext.define('SlateAdmin.controller.Settings', {
         'settings': 'showSettings'
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'settings-navpanel',
-        autoCreate: true,
+    refs: {
+        navPanel: {
+            selector: 'settings-navpanel',
+            autoCreate: true,
 
-        xtype: 'settings-navpanel'
-    }],
+            xtype: 'settings-navpanel'
+        }
+    },
 
 
     control: {

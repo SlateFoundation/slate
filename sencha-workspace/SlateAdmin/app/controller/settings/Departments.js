@@ -19,16 +19,15 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
         'settings/departments': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'departments-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: 'settings-navpanel',
+        manager: {
+            selector: 'departments-manager',
+            autoCreate: true,
 
-        xtype: 'departments-manager'
-    }],
+            xtype: 'departments-manager'
+        }
+    },
 
 
     control: {

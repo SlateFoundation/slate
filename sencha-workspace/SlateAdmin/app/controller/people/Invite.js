@@ -15,16 +15,15 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         'people.Invitations'
     ],
 
-    refs: [{
-        ref: 'peopleGrid',
-        selector: 'people-grid'
-    },{
-        ref: 'invitationsWindow',
-        selector: 'people-invitationswindow',
-        autoCreate: true,
+    refs: {
+        peopleGrid: 'people-grid',
+        invitationsWindow: {
+            selector: 'people-invitationswindow',
+            autoCreate: true,
 
-        xtype: 'people-invitationswindow'
-    }],
+            xtype: 'people-invitationswindow'
+        }
+    },
 
     control: {
         'people-grid #sendInvitationsBtn': {

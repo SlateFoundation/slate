@@ -24,19 +24,16 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 //        'people.Relationships'
 //    ],
 
-    refs: [{
-        ref: 'contactsPanel',
-        selector: 'people-details-contacts',
-        autoCreate: true,
+    refs: {
+        contactsPanel: {
+            selector: 'people-details-contacts',
+            autoCreate: true,
 
-        xtype: 'people-details-contacts'
-    },{
-        ref: 'relationshipsGrid',
-        selector: 'people-details-contacts grid#relationships'
-    },{
-        ref: 'contactsGrid',
-        selector: 'people-details-contacts grid#contactPoints'
-    }],
+            xtype: 'people-details-contacts'
+        },
+        relationshipsGrid: 'people-details-contacts grid#relationships',
+        contactsGrid: 'people-details-contacts grid#contactPoints'
+    },
 
     control: {
         'people-manager #detailTabs': {

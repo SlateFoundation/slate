@@ -21,22 +21,24 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         'settings/courses': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'courses-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: {
+            ref: 'settingsNavPanel',
+            selector: 'settings-navpanel'
+        },
+        manager: {
+            selector: 'courses-manager',
+            autoCreate: true,
 
-        xtype: 'courses-manager'
-    },{
-        ref: 'coursesFormWindow',
-        selector: 'courses-form-window',
-        autoCreate: true,
+            xtype: 'courses-manager'
+        },
+        coursesFormWindow: {
+            selector: 'courses-form-window',
+            autoCreate: true,
 
-        xtype: 'courses-form-window'
-    }],
+            xtype: 'courses-form-window'
+        }
+    },
 
 	control: {
         'courses-manager': {

@@ -87,37 +87,21 @@ Ext.define('SlateAdmin.controller.Courses', {
 //        }
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'courses-navpanel',
-        autoCreate: true,
+    refs: {
+        navPanel: {
+            selector: 'courses-navpanel',
+            autoCreate: true,
 
-        xtype: 'courses-navpanel'
-    },{
-        ref: 'sectionsManager',
-        selector: 'courses-sections-manager',
-        autoCreate: true,
+            xtype: 'courses-navpanel'
+        },
+        sectionsManager: {
+            selector: 'courses-sections-manager',
+            autoCreate: true,
 
-        xtype: 'courses-sections-manager'
-    },{
-        ref: 'sectionsGrid',
-        selector: 'courses-sections-grid'
-//    },{
-//        ref: 'termSelector',
-//        selector: 'courses-grid #courseGridTermSelector'
-//    },{
-//        ref: 'courseHeader',
-//        selector: 'course-header'
-//    },{
-//        ref: 'courseRosterGrid',
-//        selector: 'course-rostergrid'
-//    },{
-//        ref: 'coursesSearchField',
-//        selector: 'courses-navpanel textfield[inputType=search]'
-//    },{
-//        ref: 'courseEditor',
-//        selector: 'course-editor'
-    }],
+            xtype: 'courses-sections-manager'
+        },
+        sectionsGrid: 'courses-sections-grid'
+    },
 
     control: {
         'courses-navpanel': {

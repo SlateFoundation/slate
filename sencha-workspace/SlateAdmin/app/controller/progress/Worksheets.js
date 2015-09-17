@@ -9,21 +9,17 @@ Ext.define('SlateAdmin.controller.progress.Worksheets', {
         'progress.standards.Worksheets',
         'progress.standards.Prompts'
     ],
-    refs: [{
-        ref: 'worksheetGrid',
-        selector: 'progress-standards-worksheets-grid'
-    }, {
-        ref: 'worksheetEditor',
-        selector: 'progress-standards-worksheets-editor'
-    }, {
-        ref: 'promptsGrid',
-        selector: 'progress-standards-worksheets-promptsgrid'
-    }, {
-        ref: 'worksheetsManager',
-        autoCreate: true,
-        selector: 'progress-standards-worksheets-manager',
-        xtype: 'progress-standards-worksheets-manager'
-    }],
+    refs: {
+        worksheetGrid: 'progress-standards-worksheets-grid',
+        worksheetEditor: 'progress-standards-worksheets-editor',
+        promptsGrid: 'progress-standards-worksheets-promptsgrid',
+        worksheetsManager: {
+            selector: 'progress-standards-worksheets-manager',
+            autoCreate: true,
+
+            xtype: 'progress-standards-worksheets-manager'
+        }
+    },
     routes: {
         'progress/standards/worksheets': 'showStandardsWorksheets'
     },

@@ -8,31 +8,20 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
         'courses.sections.details.Profile'
     ],
 
-    refs: [{
-        ref: 'profilePanel',
-        selector: 'courses-sections-details-profile',
-        autoCreate: true,
+    refs: {
+        profilePanel: {
+            selector: 'courses-sections-details-profile',
+            autoCreate: true,
 
-        xtype: 'courses-sections-details-profile'
-    },{
-        ref: 'profileForm',
-        selector: 'courses-sections-details-profile form'
-    },{
-        ref: 'cancelBtn',
-        selector: 'courses-sections-details-profile button[action=cancel]'
-    },{
-        ref: 'saveBtn',
-        selector: 'courses-sections-details-profile button[action=save]'
-    },{
-        ref: 'courseField',
-        selector: 'courses-sections-details-profile field[name=CourseID]'
-    },{
-        ref: 'codeField',
-        selector: 'courses-sections-details-profile field[name=Code]'
-    },{
-        ref: 'titleField',
-        selector: 'courses-sections-details-profile field[name=Title]'
-    }],
+            xtype: 'courses-sections-details-profile'
+        },
+        profileForm: 'courses-sections-details-profile form',
+        cancelBtn: 'courses-sections-details-profile button[action=cancel]',
+        saveBtn: 'courses-sections-details-profile button[action=save]',
+        courseField: 'courses-sections-details-profile field[name=CourseID]',
+        codeField: 'courses-sections-details-profile field[name=Code]',
+        titleField: 'courses-sections-details-profile field[name=Title]'
+    },
 
     control: {
         'courses-sections-manager': {

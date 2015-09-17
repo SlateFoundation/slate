@@ -16,55 +16,38 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
     models: [
         'course.Section'
     ],
-    refs: [{
-        ref: 'interimsEmailManager',
-        autoCreate: true,
-        selector: 'progress-interims-email-manager',
+    refs: {
+        interimsEmailManager: {
+            selector: 'progress-interims-email-manager',
+            autoCreate: true,
 
-        xtype: 'progress-interims-email-manager'
-    }, {
-        ref: 'interimsEmailSearchForm',
-        selector: 'progress-interims-email-manager form'
-    }, {
-        ref: 'interimsEmailGrid',
-        selector: 'progress-interims-email-grid'
-    }, {
-        ref: 'interimsManager',
-        autoCreate: true,
-        selector: 'progress-interims-manager',
+            xtype: 'progress-interims-email-manager'
+        },
+        interimsEmailSearchForm: {
+            selector: 'progress-interims-email-manager form'
+        },
+        interimsEmailGrid: 'progress-interims-email-grid',
+        interimsManager: {
+            selector: 'progress-interims-manager',
+            autoCreate: true,
 
-        xtype: 'progress-interims-manager'
-    }, {
-        ref: 'interimsGrid',
-        selector: 'progress-interims-grid'
-    }, {
-        ref: 'interimReport',
-        selector: 'progress-interims-report'
-    }, {
-        ref: 'interimDeleteBtn',
-        selector: 'progress-interims-report button[action=delete]'
-    }, {
-        ref: 'interimCancelBtn',
-        selector: 'progress-interims-report button[action=cancel]'
-    }, {
-        ref: 'interimSaveDraftBtn',
-        selector: 'progress-interims-report button[action=save][status=Draft]'
-    }, {
-        ref: 'interimPublishBtn',
-        selector: 'progress-interims-report button[action=save][status=Published]'
-    }, {
-        ref: 'interimsPrinter',
-        autoCreate: true,
-        selector: 'progress-interims-printer',
+            xtype: 'progress-interims-manager'
+        },
+        interimsGrid: 'progress-interims-grid',
+        interimReport: 'progress-interims-report',
+        interimDeleteBtn: 'progress-interims-report button[action=delete]',
+        interimCancelBtn: 'progress-interims-report button[action=cancel]',
+        interimSaveDraftBtn: 'progress-interims-report button[action=save][status=Draft]',
+        interimPublishBtn: 'progress-interims-report button[action=save][status=Published]',
+        interimsPrinter: {
+            selector: 'progress-interims-printer',
+            autoCreate: true,
 
-        xtype: 'progress-interims-printer'
-    }, {
-        ref: 'interimsPrintForm',
-        selector: 'progress-interims-printer form'
-    }, {
-        ref: 'interimsTermSelector',
-        selector: 'progress-interims-grid #termSelector'
-    }],
+            xtype: 'progress-interims-printer'
+        },
+        interimsPrintForm: 'progress-interims-printer form',
+        interimsTermSelector: 'progress-interims-grid #termSelector'
+    },
     routes: {
         'progress/interims': 'showInterims',
         'progress/interims/email': 'showInterimEmails',

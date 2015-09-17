@@ -16,44 +16,33 @@ Ext.define('SlateAdmin.controller.progress.Standards', {
         'people.Advisors'
     ],
 
-    refs: [{
-        ref: 'standardsPanel',
-        selector: 'progress-standards-printer'
-    }, {
-        ref: 'standardsPrintForm',
-        selector: 'progress-standards-printer form'
-    }, {
-        ref: 'studentEditor',
-        selector: 'progress-standards-assignments-studenteditor'
-    }, {
-        ref: 'studentsGrid',
-        selector: 'progress-standards-assignments-studentsgrid'
-    }, {
-        ref: 'standardsWorksheetForm',
-        selector: 'progress-standards-assignments-worksheetform'
-    }, {
-        ref: 'assignmentGrid',
-        selector: 'progress-standards-assignments-grid'
-    }, {
-        ref: 'standardsManager',
-        autoCreate: true,
-        selector: 'progress-standards-assignments-manager',
-        xtype: 'progress-standards-assignments-manager'
-    }, {
-        ref: 'standardsPrinter',
-        autoCreate: true,
-        selector: 'progress-standards-printer',
-        xtype: 'progress-standards-printer'
-    }, {
-        ref: 'standardsTermSelector',
-        selector: 'progress-standards-assignments-grid #termSelector'
-    }, {
-        ref: 'navPanel',
-        selector: 'progress-navpanel',
-        autoCreate: true,
+    refs: {
+        standardsPanel: 'progress-standards-printer',
+        standardsPrintForm: 'progress-standards-printer form',
+        studentEditor: 'progress-standards-assignments-studenteditor',
+        studentsGrid: 'progress-standards-assignments-studentsgrid',
+        standardsWorksheetForm: 'progress-standards-assignments-worksheetform',
+        assignmentGrid: 'progress-standards-assignments-grid',
+        standardsManager: {
+            selector: 'progress-standards-assignments-manager',
+            autoCreate: true,
 
-        xtype: 'progress-navpanel'
-    }],
+            xtype: 'progress-standards-assignments-manager'
+        },
+        standardsPrinter: {
+            selector: 'progress-standards-printer',
+            autoCreate: true,
+
+            xtype: 'progress-standards-printer'
+        },
+        standardsTermSelector: 'progress-standards-assignments-grid #termSelector',
+        navPanel: {
+            selector: 'progress-navpanel',
+            autoCreate: true,
+
+            xtype: 'progress-navpanel'
+        }
+    },
 
 
     routes: {

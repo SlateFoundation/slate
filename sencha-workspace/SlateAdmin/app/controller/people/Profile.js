@@ -11,34 +11,21 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         'people.details.Profile'
     ],
 
-    refs: [{
-        ref: 'profilePanel',
-        selector: 'people-details-profile',
-        autoCreate: true,
+    refs: {
+        profilePanel: {
+            selector: 'people-details-profile',
+            autoCreate: true,
 
-        xtype: 'people-details-profile'
-    },{
-        ref: 'profileForm',
-        selector: 'people-details-profile form'
-    },{
-        ref: 'cancelBtn',
-        selector: 'people-details-profile button[action=cancel]'
-    },{
-        ref: 'saveBtn',
-        selector: 'people-details-profile button[action=save]'
-    },{
-        ref: 'studentNumberField',
-        selector: 'people-details-profile field[name=StudentNumber]'
-    },{
-        ref: 'accountLevelField',
-        selector: 'people-details-profile field[name=AccountLevel]'
-    },{
-        ref: 'groupsField',
-        selector: 'people-details-profile field[name=groupIDs]'
-    },{
-        ref: 'manager',
-        selector: 'people-manager'
-    }],
+            xtype: 'people-details-profile'
+        },
+        profileForm: 'people-details-profile form',
+        cancelBtn: 'people-details-profile button[action=cancel]',
+        saveBtn: 'people-details-profile button[action=save]',
+        studentNumberField: 'people-details-profile field[name=StudentNumber]',
+        accountLevelField: 'people-details-profile field[name=AccountLevel]',
+        groupsField: 'people-details-profile field[name=groupIDs]',
+        manager: 'people-manager'
+    },
 
     control: {
         'people-manager #detailTabs': {

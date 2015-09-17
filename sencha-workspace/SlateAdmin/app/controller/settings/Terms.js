@@ -21,22 +21,21 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         'settings/terms': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'terms-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: 'settings-navpanel',
+        manager: {
+            selector: 'terms-manager',
+            autoCreate: true,
 
-        xtype: 'terms-manager'
-    },{
-        ref: 'termsFormWindow',
-        selector: 'terms-form-window',
-        autoCreate: true,
+            xtype: 'terms-manager'
+        },
+        termsFormWindow: {
+            selector: 'terms-form-window',
+            autoCreate: true,
 
-        xtype: 'terms-form-window'
-    }],
+            xtype: 'terms-form-window'
+        }
+    },
 
 
 	control: {

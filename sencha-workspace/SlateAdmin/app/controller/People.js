@@ -65,72 +65,28 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'people-navpanel',
-        autoCreate: true,
+    refs: {
+        navPanel: {
+            selector: 'people-navpanel',
+            autoCreate: true,
 
-        xtype: 'people-navpanel'
-    },{
-        ref: 'searchField',
-        selector: 'people-navpanel jarvus-searchfield'
-    },{
-        ref: 'advancedSearchForm',
-        selector: 'people-navpanel people-advancedsearchform'
-    },{
-        ref: 'groupsTree',
-        selector: 'people-navpanel #groups'
-    },{
-        ref: 'manager',
-        selector: 'people-manager',
-        autoCreate: true,
+            xtype: 'people-navpanel'
+        },
+        searchField: 'people-navpanel jarvus-searchfield',
+        advancedSearchForm:'people-navpanel people-advancedsearchform',
+        groupsTree: 'people-navpanel #groups',
+        manager: {
+            selector: 'people-manager',
+            autoCreate: true,
 
-        xtype: 'people-manager'
-    },{
-        ref: 'grid',
-        selector: 'people-grid'
-    },{
-        ref: 'exportResultsBtn',
-        selector: 'people-grid #exportResultsBtn'
-    },{
-        ref: 'sendInvitationsBtn',
-        selector: 'people-grid #sendInvitationsBtn'
-    },{
-        ref: 'selectionCountCmp',
-        selector: 'people-grid #selectionCount'
-    },{
-        ref: 'exportColumnsMenu',
-        selector: 'people-grid menu#csvExportColumns'
-//    },{
-//        ref: 'personMenu',
-//        autoCreate: true,
-//        selector: 'people-personmenu',
-//        xtype: 'people-personmenu'
-//    },{
-//        ref: 'personHeader',
-//        selector: 'people-manager #person-header'
-//    },{
-//        ref: 'peopleSearchField',
-//        selector: 'people-navpanel textfield[inputType=search]'
-//    },{
-//        ref: 'personProfile',
-//        selector: 'people-details-profile'
-//    },{
-//        ref: 'personCourses',
-//        selector: 'people-details-courses'
-//    },{
-//        ref: 'personContacts',
-//        selector: 'people-details-contacts'
-//    },{
-//        ref: 'personProgressNotes',
-//        selector: 'people-details-progressnotes'
-//    },{
-//        ref: 'peopleSearchField',
-//        selector: 'people-navpanel #peopleSearchField'
-//    },{
-//        ref: 'peopleSearchOptionsForm',
-//        selector: 'people-navpanel #searchOptionsForm'
-    }],
+            xtype: 'people-manager'
+        },
+        grid: 'people-grid',
+        exportResultsBtn: 'people-grid #exportResultsBtn',
+        sendInvitationsBtn: 'people-grid #sendInvitationsBtn',
+        selectionCountCmp: 'people-grid #selectionCount',
+        exportColumnsMenu: 'people-grid menu#csvExportColumns'
+    },
 
     control: {
         'people-navpanel': {

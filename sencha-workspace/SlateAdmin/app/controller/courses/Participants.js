@@ -12,22 +12,17 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         'courses.sections.details.Participants'
     ],
 
-    refs: [{
-        ref: 'participantsPanel',
-        selector: 'courses-sections-details-participants',
-        autoCreate: true,
+    refs: {
+        participantsPanel: {
+            selector: 'courses-sections-details-participants',
+            autoCreate: true,
 
-        xtype: 'courses-sections-details-participants'
-    },{
-        ref: 'participantsGrid',
-        selector: 'courses-sections-details-participants grid'
-    },{
-        ref: 'roleField',
-        selector: 'courses-sections-details-participants #roleField'
-    },{
-        ref: 'personField',
-        selector: 'courses-sections-details-participants #personField'
-    }],
+            xtype: 'courses-sections-details-participants'
+        },
+        participantsGrid: 'courses-sections-details-participants grid',
+        roleField: 'courses-sections-details-participants #roleField',
+        personField: 'courses-sections-details-participants #personField'
+    },
 
 
     control: {
