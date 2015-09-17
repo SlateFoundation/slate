@@ -61,22 +61,22 @@ class SectionsRequestHandler extends \RecordsRequestHandler
     public static function handleParticipantsRequest(Section $Section)
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
-        
+
         if ($personId = static::shiftPath()) {
             if (!ctype_digit($personId) || !$Participant = SectionParticipant::getByWhere(['CourseSectionID' => $Section->ID, 'PersonID' => $personId])) {
                 return static::throwNotFoundError();
             }
-            
+
             return static::handleParticipantRequest($Section, $Participant);
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $Participant = SectionParticipant::create($_POST);
-            
+
             if (!$Participant->validate()) {
                 return static::throwError(reset($Participant->validationErrors));
             }
-            
+
             try {
                 $Participant->save();
             } catch (\DuplicateKeyException $e) {
@@ -99,7 +99,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+        if (static::shiftPath() == 'delete' && $_SERVER['REQUEST_METHOD'] == 'POST') {
             $Participant->destroy();
 
             return static::respond('participantDeleted', array(
