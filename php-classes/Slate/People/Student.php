@@ -10,7 +10,22 @@ use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
-use Slate\Progress\Note;
+use Slate\Term;
+
+use Slate\Courses\Section as CourseSection;
+use Slate\Courses\SectionParticipant as CourseSectionParticipant;
+
+use Slate\Progress\Note as ProgressNote;
+
+use Slate\Standards\Prompt as StandardsPrompt;
+use Slate\Standards\PromptGrade  as StandardsPromptGrade;
+use Slate\Standards\WorksheetPrompt  as StandardsWorksheetPrompt;
+use Slate\Standards\Worksheet  as StandardsWorksheet;
+use Slate\Standards\WorksheetAssignment  as StandardsWorksheetAssignment;
+
+use Slate\Progress\Narratives\Report as NarrativeReport;
+
+use Slate\Progress\Interims\Report as InterimReport;
 
 class Student extends User
 {
@@ -252,8 +267,8 @@ class Student extends User
         ];
 
         $queryParams = [
-            Note::$tableName
-            ,Person::$tableName
+            ProgressNote::$tableName,
+            Person::$tableName
         ];
 
         $termCondition = $params['Term'] == 'All' ? false : 'DATE(Note.Created) BETWEEN "'.$params['Term']->StartDate.'" AND "'.$params['Term']->EndDate.'"';
@@ -298,7 +313,7 @@ class Student extends User
 
         $notes = array_map(function($note) {
             return $note->_record;
-        }, Note::getAllByQuery($sql, $queryParams));
+        }, ProgressNote::getAllByQuery($sql, $queryParams));
 
         return $notes;
     }
@@ -377,5 +392,524 @@ class Student extends User
         }
 
         return $notes;
+    }
+
+    protected static function getNarrativeReportsSummary($params, $search = false)
+    {
+        $sql = 'SELECT %s FROM `%s` Narrative INNER JOIN `%s` Course ON (Course.ID = Narrative.CourseSectionID) LEFT JOIN `%s` People ON (People.ID = Narrative.CreatorID) WHERE (%s) HAVING (%s)';
+
+        $having = [];
+        $select = [
+            'Narrative.ID',
+            'Narrative.Class',
+            'Grade',
+            'Narrative.Created AS Date',
+            'Course.Title AS CourseTitle',
+            'People.Username AS AuthorUsername'
+        ];
+
+        $queryParams = [
+            NarrativeReport::$tableName,
+            CourseSection::$tableName,
+            Person::$tableName
+        ];
+
+        $termCondition = $params['Term'] == 'All' ? false : 'Narrative.TermID IN (' . implode(',', $params['Term']->getContainedTermIDs()) . ')';
+
+        $conditions = [
+            'Narrative.StudentID='.$params['StudentID']
+        ];
+
+        if ($termCondition) {
+            $conditions[] = $termCondition;
+        }
+
+
+        if ($search) {
+            $matchedSearchConditions = static::getProgressSearchConditions('Narrative', $search);
+
+            $searchConditions = [];
+
+            if (!empty($matchedSearchConditions['qualifierConditions'])) {
+                foreach ($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
+                    $conditionString = '( ('.implode(') OR (', $qualifierConditions).') )';
+
+                    if ($matchedSearchConditions['mode'] == 'OR') {
+                        $searchConditions = array_merge($searchConditions, $qualifierConditions);
+                    } else {
+                        $conditions[] = $conditionString;
+                    }
+
+                }
+            }
+
+            if ($matchedSearchConditions['mode'] == 'OR') {
+                $select[] = implode('+', array_map(function($c) {
+                    return sprintf('IF(%s, %u, 0)', $c, 1);
+                }, $searchConditions)) . ' AS searchScore';
+
+                $having[] = 'searchScore >= 1';
+            }
+        }
+
+        array_unshift($queryParams, implode(',', $select));
+        $queryParams[] = $conditions ? implode(' AND ', $conditions) : '1';
+        $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
+
+        $narratives = DB::allRecords($sql, $queryParams);
+
+        $narratives = array_map(function($narrative){
+            $narrative['Subject'] = $narrative['CourseTitle'] . ' - ' . $narrative['Grade'];
+
+            return $narrative;
+        }, $narratives);
+
+        return $narratives;
+    }
+
+    protected static function getNarrativeReports($params, $search = false)
+    {
+        $sql = 'SELECT %s FROM `%s` Narrative WHERE (%s) HAVING (%s)';
+
+        $having = [];
+        $select = [
+            'Class',
+            'Grade',
+            'Created AS Date',
+            'StudentID',
+            'CourseSectionID',
+            'TermID',
+            'Assessment',
+            'Comments'
+        ];
+
+        $queryParams = [
+            NarrativeReport::$tableName
+        ];
+
+        $termCondition = $params['Term'] == 'All' ? false : 'Narrative.TermID IN ('.implode(',', $params['Term']->getContainedTermIDs()) . ')';
+
+        $conditions = [
+            'Narrative.StudentID='.$params['StudentID']
+        ];
+
+        if($termCondition) {
+            $conditions[] = $termCondition;
+        }
+
+        if($search) {
+            $matchedSearchConditions = static::getProgressSearchConditions('Narrative', $search);
+
+            $searchConditions = [];
+
+            if(!empty($matchedSearchConditions['qualifierConditions'])) {
+                foreach($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
+                    $conditionString = '( ('.implode(') OR (', $qualifierConditions).') )';
+
+                    if($matchedSearchConditions['mode'] == 'OR') {
+                        $searchConditions = array_merge($searchConditions, $qualifierConditions);
+                    } else {
+                        $conditions[] = $conditionString;
+                    }
+
+                }
+            }
+
+            if ($matchedSearchConditions['mode'] == 'OR') {
+                $select[] = implode('+', array_map(function($c) {
+                    return sprintf('IF(%s, %u, 0)', $c, 1);
+                }, $searchConditions)) . ' AS searchScore';
+
+                $having[] = 'searchScore >= 1';
+            }
+        }
+
+        array_unshift($queryParams, implode(',', $select));
+        $queryParams[] = $conditions ? implode(' AND ', $conditions) : '1';
+        $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
+
+        $narratives = DB::allRecords($sql, $queryParams);
+
+        foreach($narratives as &$narrative) {
+            $Section = CourseSection::getByID($narrative['CourseSectionID']);
+            $Teacher = $Section->Instructors[0];
+            $Student = Student::getByID($narrative['StudentID']);
+            $Advisor = $Student->Advisor;
+            $narrativeTerm = Term::getByID($narrative['TermID']);
+
+            $narrative['TeacherFullName'] = $Teacher->FullName;
+            $narrative['TeacherEmail'] = $Teacher->Email;
+            $narrative['AdvisorFullName'] = $Advisor ? $Advisor->FullName : '';
+            $narrative['AdvisorEmail'] = $Advisor ? $Advisor->Email: '';
+            $narrative['StudentFullName'] = $Student->FullName;
+            $narrative['TermTitle'] = $narrativeTerm->Title;
+            $narrative['SectionTitle'] = $Section->Title;
+        }
+
+        return $narratives;
+    }
+
+    protected static function getInterimReportsSummary($params, $search = false)
+    {
+        $sql = 'SELECT %s FROM `%s` Interim INNER JOIN `%s` Course ON (Course.ID = Interim.CourseSectionID) LEFT JOIN `%s` People ON (People.ID = Interim.CreatorID) WHERE (%s) HAVING (%s)';
+
+        $having = [];
+        $select = [
+            'Interim.ID',
+            'Interim.Class',
+            'Interim.Grade',
+            'Interim.Created AS Date',
+            'Course.Title AS CourseTitle',
+            'People.Username AS AuthorUsername'
+        ];
+
+        $queryParams = [
+            InterimReport::$tableName
+            ,CourseSection::$tableName
+            ,Person::$tableName
+        ];
+
+        $termCondition = $params['Term'] == 'All' ? false : 'Interim.TermID IN (' . implode(',', $params['Term']->getContainedTermIDs()) . ')';
+
+        $conditions = [
+            'Interim.StudentID='.$params['StudentID']
+        ];
+
+        if ($termCondition) {
+            $conditions[] = $termCondition;
+        }
+
+        if ($search) {
+            $matchedSearchConditions = static::getProgressSearchConditions('Interim', $search);
+
+            $searchConditions = [];
+
+            if(!empty($matchedSearchConditions['qualifierConditions'])) {
+                foreach($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
+                    $conditionString = '( ('.implode(') AND (', $qualifierConditions).') )';
+
+                    if($matchedSearchConditions['mode'] == 'OR') {
+                        $searchConditions = array_merge($searchConditions, $qualifierConditions);
+                    } else {
+                        $conditions[] = $conditionString;
+                    }
+
+                }
+            }
+
+            if($matchedSearchConditions['mode'] == 'OR') {
+                $select[] = implode('+', array_map(function($c) {
+                    return sprintf('IF(%s, %u, 0)', $c, 1);
+                }, $searchConditions)) . ' AS searchScore';
+
+                $having[] = 'searchScore >= 1';
+            }
+        }
+
+        array_unshift($queryParams, implode(',', $select));
+        $queryParams[] = $conditions ? implode(' AND ', $conditions) : '1';
+        $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
+
+        $interims = DB::allRecords($sql, $queryParams);
+
+        $interims = array_map(function($interim){
+            $interim['Subject'] = $interim['CourseTitle'] . ' - ' . $interim['Grade'];
+
+            return $interim;
+        }, $interims);
+
+        return $interims;
+    }
+
+    protected static function getInterimReports($params, $search)
+    {
+        $sql = 'SELECT %s FROM `%s` Interim WHERE (%s) HAVING (%s)';
+
+        $having = [];
+        $select = [
+            'Class',
+            'Grade',
+            'Created AS Date',
+            'CourseSectionID',
+            'StudentID',
+            'TermID',
+            'Comments'
+        ];
+
+        $queryParams = [
+            InterimReport::$tableName
+        ];
+
+        $termCondition = $params['Term'] == 'All' ? false : 'Interim.TermID IN (' . implode(',', $params['Term']->getContainedTermIDs()) . ')';
+
+        $conditions = [
+            'Interim.StudentID='.$params['StudentID']
+        ];
+
+        if ($termCondition) {
+            $conditions[] = $termCondition;
+        }
+
+        if ($search) {
+            $matchedSearchConditions = static::getProgressSearchConditions('Interim', $search);
+
+            $searchConditions = [];
+
+            if (!empty($matchedSearchConditions['qualifierConditions'])) {
+                foreach ($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
+                    $conditionString = '( ('.implode(') AND (', $qualifierConditions).') )';
+
+                    if ($matchedSearchConditions['mode'] == 'OR') {
+                        $searchConditions = array_merge($searchConditions, $qualifierConditions);
+                    } else {
+                        $conditions[] = $conditionString;
+                    }
+
+                }
+            }
+
+            if ($matchedSearchConditions['mode'] == 'OR') {
+                $select[] = implode('+', array_map(function($c) {
+                    return sprintf('IF(%s, %u, 0)', $c, 1);
+                }, $searchConditions)) . ' AS searchScore';
+
+                $having[] = 'searchScore >= 1';
+            }
+        }
+
+        array_unshift($queryParams, implode(',', $select));
+        $queryParams[] = $conditions ? implode(' AND ', static::mapConditions($conditions)) : '1';
+        $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
+
+        $interims = DB::allRecords($sql, $queryParams);
+
+        foreach ($interims as &$interim) {
+            $Section = CourseSection::getByID($interim['CourseSectionID']);
+            $Teacher = $Section->Instructors[0];
+            $Student = Student::getByID($interim['StudentID']);
+            $Advisor = $Student->Advisor;
+            $interimTerm = Term::getByID($interim['TermID']);
+
+            $interim['TeacherFullName'] = $Teacher->FullName;
+            $interim['TeacherEmail'] = $Teacher->Email;
+            $interim['AdvisorFullName'] = $Advisor ? $Advisor->FullName : '';
+            $interim['AdvisorEmail'] = $Advisor ? $Advisor->Email: '';
+            $interim['StudentFullName'] = $Student->FullName;
+            $interim['TermTitle'] = $interimTerm->Title;
+            $interim['SectionTitle'] = $Section->Title;
+        }
+
+        return $interims;
+    }
+
+    protected static function getStandardsSummary($params, $search = false)
+    {
+        $termIDs = $params['Term'] == 'All' ? false : array_unique(array_merge($params['Term']->getContainedTermIDs(), $params['Term']->getConcurrentTermIDs()));
+        $termIDString = $termIDs ? join(',', $termIDs) : false;
+
+        $standards = [];
+        $courseSectionSql = 'SELECT Sections.* FROM `%s` Participants INNER JOIN `%s` Sections ON (Participants.CourseSectionID = Sections.ID) WHERE (%s)';
+
+        $courseSectionQueryParams = [
+            CourseSectionParticipant::$tableName,
+            CourseSection::$tableName
+        ];
+
+        $courseSectionConditions = [
+            'Sections.Status="Live"',
+            'Participants.PersonID='.$params['StudentID']
+        ];
+
+        if ($termIDString) {
+            $courseSectionConditions[] = 'Sections.TermID IN ('.$termIDString.')';
+        }
+
+        if ($search) {
+            $searchConditions = static::getProgressSearchConditions('Standards', $search);
+
+            if (!empty($searchConditions['qualifierConditions'])) {
+                foreach ($searchConditions['qualifierConditions'] as $qualifierCondition) {
+                    $courseSectionConditions[] =  '(('.implode(') OR (', $qualifierCondition).'))';
+                }
+            }
+        }
+
+        $courseSectionQueryParams[] = $courseSectionConditions ? implode(' AND ', $courseSectionConditions) : '1';
+
+        $courseSections = CourseSection::getAllByQuery($courseSectionSql, $courseSectionQueryParams);
+
+        foreach ($courseSections as $Section) {
+            $worksheetConditions = [
+                'CourseSectionID' => $Section->ID
+            ];
+
+            if ($termIDString) {
+                $worksheetConditions[] = 'TermID IN (' . $termIDString . ')';
+            }
+
+            $worksheetAssignments = StandardsWorksheetAssignment::getAllByWhere($worksheetConditions);
+
+            foreach ($worksheetAssignments as $WorksheetAssignment) {
+                if ($WorksheetAssignment) {
+                    $scoredPrompts = DB::allRecords(
+                        'SELECT'.
+                        ' Grade.ID AS ID'.
+                        ' ,"Standards" AS Class'.
+                        ' ,Grade.Created Created'.
+                        ' ,WorksheetPrompt.PromptID'.
+                        ' ,Grade.Grade'.
+                        ' ,People.Username AS AuthorUsername'.
+                        ' FROM `standards_worksheet_prompts` WorksheetPrompt'.
+                        ' LEFT JOIN `%s` Grade ON (%s Grade.CourseSectionID = %u AND Grade.StudentID = %u AND Grade.PromptID = WorksheetPrompt.PromptID)'.
+                        ' LEFT JOIN `%s` People ON (People.ID = Grade.CreatorID)'.
+                        ' WHERE WorksheetPrompt.WorksheetID = %u AND Grade.Grade IS NOT NULL'.
+                        ' ORDER BY Grade.Created DESC',
+                        [
+                            StandardsPromptGrade::$tableName,
+                            $termIDString ? 'Grade.TermID = ' . $WorksheetAssignment->TermID . ' AND' : '',
+                            $WorksheetAssignment->CourseSectionID,
+                            $params['StudentID'],
+                            Person::$tableName,
+                            $WorksheetAssignment->WorksheetID
+                        ]
+                    );
+
+
+                    $totalPrompts = DB::oneValue('SELECT COUNT(*) FROM `%s` WHERE WorksheetID = %u', [
+                        StandardsWorksheetPrompt::$tableName,
+                        $WorksheetAssignment->WorksheetID
+                    ]);
+
+                    if (count($scoredPrompts) && count($scoredPrompts) == $totalPrompts) {
+                        $studentScore = 0;
+
+                        foreach ($scoredPrompts as $prompt) {
+                            $studentScore += $prompt['Grade'] != 'N/A' ? $prompt['Grade'] : 0;
+                        }
+
+                        $standard = [
+                            'ID' => null,
+                            'Date' => $scoredPrompts[0]['Created'],
+                            'Class' => 'Standards',
+                            'CourseSectionID' => $WorksheetAssignment->CourseSectionID,
+                            'TermID' => $WorksheetAssignment->TermID,
+                            'StudentID' => $params['StudentID'],
+                            'AuthorUsername' => $scoredPrompts[0]['AuthorUsername'],
+                            'Subject' => $WorksheetAssignment->CourseSection->Title . ' - ' . $studentScore . '/' . ($totalPrompts * 4) // total possible score on prompts
+                        ];
+
+                        $standards[] = $standard;
+                    }
+                }
+            }
+
+        }
+
+        return $standards;
+    }
+
+    protected static function getStandards($params, $search = false)
+    {
+        $termIDs = $params['Term'] == 'All' ? false : array_unique(array_merge($params['Term']->getContainedTermIDs(), $params['Term']->getConcurrentTermIDs()));
+        $termIDString = $termIDs ? join(',', $termIDs) : false;
+
+        $standards = [];
+        $courseSectionSql = 'SELECT Sections.* FROM `%s` Participants INNER JOIN `%s` Sections ON (Participants.CourseSectionID = Sections.ID) WHERE (%s)';
+
+        $courseSectionQueryParams = [
+            CourseSectionParticipant::$tableName,
+            CourseSection::$tableName
+        ];
+
+        $courseSectionConditions = [
+            'Sections.Status="Live"',
+            'Participants.PersonID='.$params['StudentID']
+        ];
+
+        if ($termIDString) {
+            $courseSectionConditions[] = 'Sections.TermID IN ('.$termIDString.')';
+        }
+
+        if ($search) {
+            $searchConditions = static::getProgressSearchConditions('Standards', $search);
+
+            if (!empty($searchConditions['qualifierConditions'])) {
+                foreach ($searchConditions['qualifierConditions'] as $qualifierCondition) {
+                    $courseSectionConditions[] =  '(('.implode(') OR (', $qualifierCondition).'))';
+                }
+            }
+        }
+
+        $courseSectionQueryParams[] = $courseSectionConditions ? implode(' AND ', $courseSectionConditions) : '1';
+
+        $courseSections = CourseSection::getAllByQuery($courseSectionSql, $courseSectionQueryParams);
+
+        foreach ($courseSections as $Section) {
+            $worksheetConditions = [
+                'CourseSectionID' => $Section->ID
+            ];
+
+            if ($termIDString) {
+                $worksheetConditions[] = 'TermID IN (' . $termIDString . ')';
+            }
+
+            $worksheetAssignments = StandardsWorksheetAssignment::getAllByWhere($worksheetConditions);
+
+            foreach ($worksheetAssignments as $WorksheetAssignment) {
+                if ($WorksheetAssignment) {
+                    $scoredPrompts = DB::allRecords(
+                        'SELECT'.
+                        ' Grade.ID AS ID,'.
+                        ' "Standards" AS Class,'.
+                        ' Grade.Created Created,'.
+                        ' WorksheetPrompt.PromptID,'.
+                        ' Grade.Grade,'.
+                        ' Prompt.Prompt AS Prompt,'.
+                        ' Grade.TermID AS TermID'.
+                        ' FROM `standards_worksheet_prompts` WorksheetPrompt'.
+                        ' LEFT JOIN `%s` Grade ON (%s Grade.CourseSectionID = %u AND Grade.StudentID = %u AND Grade.PromptID = WorksheetPrompt.PromptID)'.
+                        ' LEFT JOIN `%s` Prompt ON (Prompt.ID = WorksheetPrompt.PromptID)'.
+                        ' WHERE WorksheetPrompt.WorksheetID = %u AND Grade.Grade IS NOT NULL'.
+                        ' ORDER BY Grade.Created DESC',
+                        [
+                            StandardsPromptGrade::$tableName,
+                            $termIDString ? 'Grade.TermID IN (' . $termIDString . ') AND' : '',
+                            $WorksheetAssignment->CourseSectionID,
+                            $params['StudentID'],
+                            StandardsPrompt::$tableName,
+                            $WorksheetAssignment->WorksheetID
+                        ]
+                    );
+
+                    $totalPrompts = DB::oneValue('SELECT COUNT(*) FROM `%s` WHERE WorksheetID = %u', [
+                        StandardsWorksheetPrompt::$tableName,
+                        $WorksheetAssignment->WorksheetID
+                    ]);
+
+                    if (count($scoredPrompts) && count($scoredPrompts) == $totalPrompts) {
+                        $Student = Student::getByID($params['StudentID']);
+                        $Teacher = $Section->Instructors[0];
+                        $Advisor = $Student->Advisor;
+
+                        $standard = [
+                            'Date' => $scoredPrompts[0]['Created'],
+                            'Class' => 'Standards',
+                            'Prompts' => $scoredPrompts,
+                            'AdvisorFullName' => $Advisor ? $Advisor->FullName : '',
+                            'AdvisorEmail' => $Advisor ? $Advisor->Email : '',
+                            'StudentFullName' => $Student->FullName,
+                            'TermTitle' => $WorksheetAssignment->Term->Title,
+                            'SectionTitle' => $Section->Title,
+                            'TeacherFullName' => $Teacher->FullName,
+                            'TeacherEmail' => $Teacher->Email
+                        ];
+
+                        $standards[] = $standard;
+                    }
+                }
+            }
+        }
+
+        return $standards;
     }
 }
