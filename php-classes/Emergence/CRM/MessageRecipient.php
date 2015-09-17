@@ -12,68 +12,67 @@ class MessageRecipient extends \ActiveRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $fields = array(
+    public static $fields = [
         'ContextClass'
         ,'ContextID' => 'uint'
-        ,'MessageID' => array(
+        ,'MessageID' => [
             'type' => 'integer'
             ,'unsigned' => true
-        )
-        ,'PersonID' => array(
+        ]
+        ,'PersonID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'index' => true
-        )
-        ,'EmailContactID' => array(
+        ]
+        ,'EmailContactID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-        ,'Status' => array(
+        ]
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Pending','Sent','Bounced')
+            ,'values' => ['Pending','Sent','Bounced']
             ,'default' => 'Pending'
-        )
-        ,'Source' => array(
+        ]
+        ,'Source' => [
             'type' => 'enum'
-            ,'values' => array('System','Direct','Email','Import')
+            ,'values' => ['System','Direct','Email','Import']
             ,'default' => 'Direct'
-        )
-    );
+        ]
+    ];
 
 
-    public static $relationships = array(
-        'Context' => array(
+    public static $relationships = [
+        'Context' => [
             'type' => 'context-parent'
-        )
-        ,'Person' => array(
+        ]
+        ,'Person' => [
             'type' => 'one-one'
             ,'class' => 'Emergence\People\Person'
-        )
-        ,'Message' => array(
+        ]
+        ,'Message' => [
             'type' => 'one-one'
             ,'class' => 'Emergence\CRM\Message'
-        )
-        ,'EmailContact' => array(
+        ]
+        ,'EmailContact' => [
             'type' => 'one-one'
             ,'class' => 'Emergence\People\ContactPoints\Email'
-        )
-    );
+        ]
+    ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Context',
         'Person',
         'Message',
         'EmailContact'
-    );
+    ];
 
-    public static $indexes = array(
-        'MessageRecipient' => array(
-            'fields' => array('MessageID','PersonID')
+    public static $indexes = [
+        'MessageRecipient' => [
+            'fields' => ['MessageID','PersonID']
             ,'unique' => true
-        )
-    );
-
+        ]
+    ];
 }
