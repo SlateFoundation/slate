@@ -31,21 +31,21 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
 
     control: {
-            'courses-sections-manager #detailTabs': {
+        'courses-sections-manager #detailTabs': {
             beforerender: 'onBeforeTabsRender'
-            },
-            'courses-sections-details-participants': {
+        },
+        'courses-sections-details-participants': {
             sectionloaded: 'onSectionLoaded'
-            },
-            'courses-sections-details-participants field': {
+        },
+        'courses-sections-details-participants field': {
             specialkey: 'onFieldSpecialKey'
-            },
-            'courses-sections-details-participants button[action=add-participant]': {
+        },
+        'courses-sections-details-participants button[action=add-participant]': {
             click: 'onAddParticipantClick'
-            },
-            'courses-sections-details-participants grid': {
+        },
+        'courses-sections-details-participants grid': {
             deleteclick: 'onDeleteParticipantClick'
-            }
+        }
     },
 
 
@@ -95,8 +95,8 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
                 participantsPanel.setLoading('Removing participant&hellip;');
                 SlateAdmin.API.request({
-                    method: 'DELETE',
-                    url: section.toUrl() + '/participants/' + participant.get('PersonID'),
+                    method: 'POST',
+                    url: section.toUrl() + '/participants/' + participant.get('PersonID')+'/delete',
                     success: function(response) {
                         var responseData = response.data;
 
