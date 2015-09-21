@@ -57,12 +57,13 @@ Git::$repositories['slate-admin'] = [
     ]
 ];
 
-Git::$repositories['slate-theme'] = [
-    'remote' => 'https://github.com/SlateFoundation/slate-theme.git',
-    'originBranch' => 'releases/v2',
-    'workingBranch' => 'releases/v2',
-    'localOnly' => true,
-    'trees' => [
-        'sencha-workspace/packages/slate-theme' => '.'
-    ]
-];
+// Pulled in by chaki now
+#Git::$repositories['slate-theme'] = [
+#    'remote' => 'https://github.com/SlateFoundation/slate-theme.git',
+#    'originBranch' => 'releases/v2',
+#    'workingBranch' => 'releases/v2',
+#    'localOnly' => true,
+#    'trees' => [
+#        'sencha-workspace/packages/slate-theme' => '.'
+#    ]
+#];
