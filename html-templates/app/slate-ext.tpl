@@ -12,8 +12,3 @@
 {block body}
     {include includes/site.user-tools.tpl}
 {/block}
-
-{block js-app}
-    {$dwoo.parent}
-    {include includes/site.analytics.tpl}
-{/block}
