@@ -19,6 +19,4 @@
             });
         </script>
     {/if}
-
-    {include includes/site.analytics.tpl}
 {/block}
