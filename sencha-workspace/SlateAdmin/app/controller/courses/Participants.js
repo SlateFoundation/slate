@@ -90,8 +90,8 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
                 participantsPanel.setLoading('Removing participant&hellip;');
                 SlateAdmin.API.request({
-                    method: 'POST',
-                    url: section.toUrl() + '/participants/' + participant.get('PersonID')+'/delete',
+                    method: 'DELETE',
+                    url: section.toUrl() + '/participants/' + participant.get('PersonID'),
                     success: function(response) {
                         var responseData = response.data;
 
