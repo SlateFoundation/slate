@@ -99,7 +99,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        if (static::shiftPath() == 'delete' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
             $Participant->destroy();
 
             return static::respond('participantDeleted', array(
