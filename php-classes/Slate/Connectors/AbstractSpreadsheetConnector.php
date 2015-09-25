@@ -791,8 +791,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
         }
 
-        if (!empty($row['Password']) && ($User->isPhantom || !empty($Job->Config['updatePasswords']))) {
+        if (
+            !empty($row['Password']) &&
+            (
+                $User->isPhantom ||
+                (
+                    !empty($Job->Config['updatePasswords']) &&
+                    !$User->verifyPassword($row['Password'])
+                )
+            )
+        ) {
             $User->setClearPassword($row['Password']);
+            $results['password-updated']++;
         }
 
 
