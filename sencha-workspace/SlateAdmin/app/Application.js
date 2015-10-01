@@ -52,6 +52,10 @@ Ext.define('SlateAdmin.Application', {
         'sbg.Worksheets',
         'sbg.Narratives',
 
+        'Assets',
+        'assets.Editor',
+        'assets.Events',
+
         //<debug>
         'DeveloperTools'
         //</debug>
