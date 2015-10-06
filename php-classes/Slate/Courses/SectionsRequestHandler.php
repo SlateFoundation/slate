@@ -134,7 +134,20 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleStudentsRequest(Section $Section)
     {
-        $GLOBALS['Session']->requireAccountLevel('Staff');
+        if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
+            $userIsStudent = false;
+
+            foreach ($Section->Students AS $Student) {
+                if ($Student->ID == $GLOBALS['Session']->PersonID) {
+                    $userIsStudent = true;
+                    break;
+                }
+            }
+
+            if (!$userIsStudent) {
+                return static::throwUnauthorizedError();
+            }
+        }
 
         return static::respond('students', array(
             'data' => $Section->Students
@@ -210,4 +223,4 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 #            ));
 #        }
 #    }
-}
+}}
