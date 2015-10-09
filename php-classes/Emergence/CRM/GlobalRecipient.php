@@ -4,20 +4,13 @@ namespace Emergence\CRM;
 
 class GlobalRecipient extends \ActiveRecord
 {
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
-
     public static $tableName = 'global_message_recipients';
-    public static $singularNoun = 'global_message_recipient';
-    public static $pluralNoun = 'global_message_recipients';
+    public static $singularNoun = 'global message recipient';
+    public static $pluralNoun = 'global message recipients';
 
     public static $fields = [
-        'PersonID' => [
-            'type' => 'integer'
-            ,'unsigned' => true
-        ]
-        ,'Title'
+        'PersonID' => 'uint',
+        'Title'
     ];
 
     public static $validators = [
@@ -31,8 +24,8 @@ class GlobalRecipient extends \ActiveRecord
 
     public static $relationships = [
         'Person' => [
-            'type' => 'one-one'
-            ,'class' => 'Person'
+            'type' => 'one-one',
+            'class' => \Emergence\People\Person::class
         ]
     ];
 

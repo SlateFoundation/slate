@@ -17,49 +17,40 @@ class Message extends \VersionedRecord
     public static $singularNoun = 'message';
     public static $pluralNoun = 'messages';
 
-    // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
-
     public static $fields = [
         'ContextClass' => [
-            'type' => 'enum'
-            ,'values' => [
+            'type' => 'enum',
+            'values' => [
                 \Emergence\People\Person::class
             ]
-        ]
-        ,'ContextID' => 'uint'
-        ,'AuthorID' => [
-            'type' => 'integer'
-            ,'unsigned' => true
-        ]
-        ,'Subject'
-        ,'Message' => 'clob'
-        ,'MessageFormat' => [
-            'type' => 'enum'
-            ,'values' => ['plain','html']
-        ]
+        ],
+        'ContextID' => 'uint',
+        'AuthorID' => 'uint',
+        'Subject',
+        'Message' => 'clob',
+        'MessageFormat' => [
+            'type' => 'enum',
+            'values' => ['plain', 'html']
+        ],
 
-        ,'Status' => [
-            'type' => 'enum'
-            ,'values' => ['Private Draft','Shared Draft','Sent','Deleted']
-            ,'default' => 'Private Draft'
-        ]
-        ,'ParentMessageID' => [
-            'type' => 'integer'
-            ,'unsigned' => true
-            ,'notnull' => false
-        ]
-        ,'Source' => [
-            'type' => 'enum'
-            ,'values' => ['System','Direct','Email','Import']
-            ,'default' => 'Direct'
-        ]
+       'Status' => [
+            'type' => 'enum',
+            'values' => ['draft-private', 'draft-shared', 'sent', 'deleted'],
+            'default' => 'draft-private'
+        ],
+        'ParentMessageID' => [
+            'type' => 'uint',
+            'notnull' => false
+        ],
+        'Source' => [
+            'type' => 'enum',
+            'values' => ['system', 'direct', 'email', 'import'],
+            'default' => 'direct'
+        ],
 
-        ,'Sent' => [
-            'type' => 'timestamp'
-            ,'notnull' => false
+        'Sent' => [
+            'type' => 'timestamp',
+            'notnull' => false
         ]
     ];
 
@@ -67,19 +58,19 @@ class Message extends \VersionedRecord
     public static $relationships = [
         'Context' => [
             'type' => 'context-parent'
-        ]
-        ,'Author' => [
-            'type' => 'one-one'
-            ,'class' => \Emergence\People\Person::class
-        ]
-        ,'ParentMessage' => [
-            'type' => 'one-one'
-            ,'class' => __CLASS__
-        ]
-        ,'Recipients' => [
-            'type' => 'one-many'
-            ,'class' => \Emergence\CRM\MessageRecipient::class
-            ,'foreign' => 'MessageID'
+        ],
+        'Author' => [
+            'type' => 'one-one',
+            'class' => \Emergence\People\Person::class
+        ],
+        'ParentMessage' => [
+            'type' => 'one-one',
+            'class' => __CLASS__
+        ],
+        'Recipients' => [
+            'type' => 'one-many',
+            'class' => MessageRecipient::class,
+            'foreign' => 'MessageID'
         ]
     ];
 
@@ -92,7 +83,6 @@ class Message extends \VersionedRecord
 
     public static $validators = [
         'Subject' => [
-
             'required' => true,
             'errorMessage' => 'A subject is required'
         ],
@@ -107,14 +97,14 @@ class Message extends \VersionedRecord
     {
         try {
             $MsgRecipient = MessageRecipient::create([
-                'MessageID' => $this->ID
-                ,'PersonID' => $Person->ID
-                ,'EmailContactID' => $EmailContactPoint->ID
+                'MessageID' => $this->ID,
+                'PersonID' => $Person->ID,
+                'EmailContactID' => $EmailContactPoint->ID
             ], true);
         } catch (DuplicateKeyException $e) {
             $MsgRecipient = MessageRecipient::getByWhere([
-                'MessageID' => $this->ID
-                ,'PersonID' => $Person->ID
+                'MessageID' => $this->ID,
+                'PersonID' => $Person->ID
             ]);
         }
 
@@ -123,12 +113,13 @@ class Message extends \VersionedRecord
 
     public function save($deep = true)
     {
-        if (!$this->Sent && $this->Status == 'Sent') {
+        if (!$this->Sent && $this->Status == 'sent') {
             $this->Sent = time();
         }
 
         if (!$this->Author) {
-            $this->Author = $GLOBALS['Session']->Person;
+            $Author = $this->getUserFromEnvironment();
+            $this->Author = $Author ? $Author->ID : null;
         }
 
         parent::save($deep);
@@ -139,8 +130,8 @@ class Message extends \VersionedRecord
         $newEmailRecipients = [];
 
         foreach ($this->Recipients AS $Recipient) {
-            if ($Recipient->Status == 'Pending') {
-                $Recipient->Status = 'Sent';
+            if ($Recipient->Status == 'pending') {
+                $Recipient->Status = 'sent';
                 $newEmailRecipients[] = $Recipient;
             }
         }
@@ -150,15 +141,15 @@ class Message extends \VersionedRecord
         }
         error_reporting(E_ALL);
         $success = \Emergence\Mailer\Mailer::send(
-            $this->getEmailRecipientsList($newEmailRecipients)
-            ,$this->getEmailSubject()
-            ,$this->getEmailBody()
-            ,$this->getEmailFrom()
-            ,$this->getEmailHeaders()
+            $this->getEmailRecipientsList($newEmailRecipients),
+            $this->getEmailSubject(),
+            $this->getEmailBody(),
+            $this->getEmailFrom(),
+            $this->getEmailHeaders()
         );
 
         if ($success) {
-            $this->Status = 'Sent';
+            $this->Status = 'sent';
             $this->save();
 
             return count($newEmailRecipients);
@@ -216,8 +207,8 @@ class Message extends \VersionedRecord
         }
 
         return [
-            'Reply-To: '.implode(', ', $replyTo)
-            ,'X-MessageID: '.$this->ID
+            'Reply-To: '.implode(', ', $replyTo),
+            'X-MessageID: '.$this->ID
         ];
     }
 }

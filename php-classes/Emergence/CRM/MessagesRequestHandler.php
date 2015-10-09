@@ -18,16 +18,11 @@ class MessagesRequestHandler extends \RecordsRequestHandler
 
     public static function handleRecordRequest(\ActiveRecord $Message, $action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case 'recipients':
-            {
                 return static::handleMessageRecipientsRequest($Message);
-            }
-
             default:
-            {
                 return parent::handleRecordRequest($Message, $action);
-            }
         }
     }
 
@@ -62,11 +57,11 @@ class MessagesRequestHandler extends \RecordsRequestHandler
                     // fail
                     return static::throwInvalidRequestError('FullName or PersonID required');
                 }
-#                \Debug::dump($RecipientPerson);
+
                 if (!empty($recipientData['Email'])) {
                     $EmailContactPoint = \Emergence\People\ContactPoint\Email::getByWhere([
-                        'PersonID' => $RecipientPerson->ID
-                        ,'Data' => $recipientData['Email']
+                        'PersonID' => $RecipientPerson->ID,
+                        'Data' => $recipientData['Email']
                     ]);
 
 
@@ -86,20 +81,21 @@ class MessagesRequestHandler extends \RecordsRequestHandler
                     $newPeople[] = $RecipientPerson;
                 }
             }
+
             // trigger send
             $Message->send();
 
             return static::respond('recipientsAdded', [
-                'success' => true
-                ,'data' => $Message->Recipients
-                ,'newPeople' => $newPeople
-                ,'message' => $Message->getData()
+                'success' => true,
+                'data' => $Message->Recipients,
+                'newPeople' => $newPeople,
+                'message' => $Message->getData()
             ]);
         }
 
         return static::respond('recipients', [
-            'success' => true
-            ,'data' => $Message->Recipients
+            'success' => true,
+            'data' => $Message->Recipients
         ]);
     }
 }

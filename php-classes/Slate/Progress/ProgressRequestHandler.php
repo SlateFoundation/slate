@@ -9,72 +9,66 @@ class ProgressRequestHandler extends \RequestHandler
     public static $userResponseModes = [
         'application/json' => 'json'
     ];
+
     public static $searchConditions = [
         'ProgressNote' => [
             'Subject' => [
-                'qualifiers' => ['any']
-                ,'sql' => 'Subject LIKE "%%%s%%"'
+                'qualifiers' => ['any'],
+                'sql' => 'Subject LIKE "%%%s%%"'
+            ],
+            'Message' => [
+                'qualifiers' => ['any'],
+                'sql' => 'Message Like "%%%s%%"'
+            ],
+            'Author' => [
+                'qualifiers' => ['author'],
+                'sql' => 'AuthorID = (SELECT Author.ID FROM `people` Author WHERE Author.Username = "%s")'
             ]
-            ,'Message' => [
-                'qualifiers' => ['any']
-                ,'sql' => 'Message Like "%%%s%%"'
-            ]
-            ,'Author' => [
-                'qualifiers' => ['author']
-                ,'sql' => 'AuthorID = (SELECT Author.ID FROM `people` Author WHERE Author.Username = "%s")'
-            ]
-        ]
-        ,'Narrative' => [
+        ],
+        'Narrative' => [
             'Assessment' => [
-                'qualifiers' => ['any']
-                ,'sql' => 'Assessment LIKE "%%%s%%"'
-            ]
-            ,'Comments' => [
-                'qualifiers' => ['any']
-                ,'sql' => 'Comments Like "%%%s%%"'
-            ]
-            ,'Author' => [
-                'qualifiers' => ['author']
-                ,'sql' => 'Narrative.CreatorID = (SELECT Author.ID FROM `people` Author WHERE Author.Username = "%s")'
-            ]
-            ,'Course' => [
-                'qualifiers' => ['course']
-                ,'sql' => 'Narrative.CourseSectionID = (SELECT Course.ID FROM `course_sections` Course WHERE Course.Handle = "%s")'
-            ]
-        ]
-        ,'Interim' => [
+                'qualifiers' => ['any'],
+                'sql' => 'Assessment LIKE "%%%s%%"'
+            ],
             'Comments' => [
-                'qualifiers' => ['any']
-                ,'sql' => 'Comments Like "%%%s%%"'
+                'qualifiers' => ['any'],
+                'sql' => 'Comments Like "%%%s%%"'
+            ],
+            'Author' => [
+                'qualifiers' => ['author'],
+                'sql' => 'Narrative.CreatorID = (SELECT Author.ID FROM `people` Author WHERE Author.Username = "%s")'
+            ],
+            'Course' => [
+                'qualifiers' => ['course'],
+                'sql' => 'Narrative.CourseSectionID = (SELECT Course.ID FROM `course_sections` Course WHERE Course.Handle = "%s")'
             ]
-            ,'Author' => [
-                'qualifiers' => ['author']
-                ,'sql' => 'Interim.CreatorID = (SELECT Author.ID FROM people Author WHERE Author.Username = "%s")'
-            ]
-            ,'Course' => [
-                'qualifiers' => ['course']
-                ,'sql' => 'Interim.CourseSectionID = (SELECT Course.ID FROM `course_sections` Course WHERE Course.Handle = "%s")'
+        ],
+        'Interim' => [
+            'Comments' => [
+                'qualifiers' => ['any'],
+                'sql' => 'Comments Like "%%%s%%"'
+            ],
+            'Author' => [
+                'qualifiers' => ['author'],
+                'sql' => 'Interim.CreatorID = (SELECT Author.ID FROM people Author WHERE Author.Username = "%s")'
+            ],
+            'Course' => [
+                'qualifiers' => ['course'],
+                'sql' => 'Interim.CourseSectionID = (SELECT Course.ID FROM `course_sections` Course WHERE Course.Handle = "%s")'
             ]
         ]
     ];
+
     public static function handleRequest()
     {
-        switch (static::peekPath()) {
-            case 'json':
-                static::$responseMode = static::shiftPath();
-                break;
-        }
-
         return static::handleProgressRequest();
     }
 
     public static function handleProgressRequest()
     {
-        global $Session;
+        $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        $Session->requireAccountLevel('Staff');
-
-        if (!$_REQUEST['StudentID']) {
+        if (!$_REQUEST['StudentID'] || !ctype_digit($_REQUEST['StudentID'])) {
             return static::throwError('Must supply Student ID');
         }
 
@@ -106,12 +100,9 @@ class ProgressRequestHandler extends \RequestHandler
         $search = !empty($_REQUEST['q']) ? $_REQUEST['q'] : false;
 
 
-        switch (static::peekPath()) {
-            case 'export':
-            {
-                $summarizeRecords = false;
-                break;
-            }
+        if (static::peekPath() == 'export') {
+            static::shiftPath();
+            $summarizeRecords = false;
         }
 
         $records = $Person->getProgressRecords($reportTypes, $params, $summarizeRecords, $search);

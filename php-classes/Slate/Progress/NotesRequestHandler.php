@@ -3,11 +3,13 @@
 namespace Slate\Progress;
 
 use Emergence\People\Person;
+use Emergence\People\User;
 use Emergence\People\Relationship;
 
 use Emergence\CRM\Message;
 use Emergence\CRM\GlobalRecipient;
 
+use Slate\People\Student;
 use Slate\Progress\Note;
 use Slate\Courses\SectionParticipant;
 use Slate\Courses\Section;
@@ -18,45 +20,25 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
     public static $recordClass = Note::class;
     public static $globalRecipients = [];
 
-    public static function handleRequest()
-    {
-        if (0===strpos($_SERVER['CONTENT_TYPE'],'application/json')) {
-            $_REQUEST = \JSON::getRequestData();
-        }
-
-        return static::handleRecordsRequest();
-    }
-
     public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
         $conditions['Class'] = Note::class;
-        $conditions[] = sprintf('Status IN ("Shared Draft", "Sent") OR (Status = "Private Draft" AND AuthorID = %u)', $GLOBALS['Session']->PersonID);
+        $conditions[] = sprintf('Status IN ("draft-shared", "sent") OR (Status = "draft-private" AND AuthorID = %u)', $GLOBALS['Session']->PersonID);
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case 'progress':
-            {
                 return static::handleProgressNotesRequest();
-            }
-
             case 'recipients':
-            {
                 return static::handleRecipientsRequest();
-            }
-
             case 'addCustomRecipient':
-            {
                 return static::handleCustomRecipientRequest();
-            }
-
             default:
-            {
                 return parent::handleRecordsRequest($action);
-            }
         }
     }
 
@@ -68,7 +50,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         }
 
         if (!$Person && !empty($_REQUEST['username'])) {
-            $Person = \Emergence\People\User::getByUsername($_REQUEST['username']);
+            $Person = User::getByUsername($_REQUEST['username']);
         } elseif (!$Person && !empty($_REQUEST['personID'])) {
             $Person = Person::getByID($_REQUEST['personID']);
         } elseif (!$Person) {
@@ -77,27 +59,22 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
 
         switch ($action = static::shiftPath()) {
             case 'recipients':
-            {
                 return static::handleRecipientsRequest($Person, $Message);
-            }
-
             default:
-            {
                 return static::respond('notes', [
-                    'success' => true
-                    ,'data' => Slate\Progress\Note::getAllByWhere([
-                        'ContextClass' => 'Person'
-                        ,'ContextID' => $Person->ID
-                        ,sprintf('Status IN ("Shared Draft", "Sent") OR (Status = "Private Draft" AND AuthorID = %u)', $GLOBALS['Session']->PersonID)
+                    'success' => true,
+                    'data' => Note::getAllByWhere([
+                        'ContextClass' => 'Person',
+                        'ContextID' => $Person->ID,
+                        sprintf('Status IN ("draft-shared", "sent") OR (Status = "draft-private" AND AuthorID = %u)', $GLOBALS['Session']->PersonID)
                     ])
                 ]);
-            }
         }
     }
 
     public static function handleRecipientsRequest($Person = false, $Message = false)
     {
-        if (!$Person && !$Person = Person::getByID($_REQUEST['personID'])) {
+        if (!$Person && !($Person = Person::getByID($_REQUEST['personID']))) {
             return static::throwError('Person not found');
         }
 
@@ -107,8 +84,9 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
 
         // build list of suggested recipients
         $contacts = [];
+
         // the target person
-        $contacts[$Person->ID] = static::_getRecipientFromPerson($Person, ($Person->isA('Slate\\Student') ? 'Slate\\Student' : 'User'));
+        $contacts[$Person->ID] = static::_getRecipientFromPerson($Person, ($Person->isA(Student::class) ? 'Student' : 'User'));
 
         // related contacts
         foreach (Relationship::getAllByPerson($Person) AS $Relationship) {
@@ -128,12 +106,12 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             .' RIGHT JOIN `%s` InstructorPart ON(InstructorPart.CourseSectionID=StudentPart.CourseSectionID AND InstructorPart.Role = "Instructor")'
             .' LEFT JOIN course_sections Section ON (Section.ID = InstructorPart.CourseSectionID)'
             .' WHERE StudentPart.PersonID = %u AND StudentPart.Role = "Student" AND Section.TermID IN (%4$s)'
-            .' GROUP BY InstructorPart.PersonID'
-            ,[
-                SectionParticipant::$tableName
-                ,SectionParticipant::$tableName
-                ,$Person->ID
-                ,implode(',', $lastTerm->getConcurrentTermIDs())
+            .' GROUP BY InstructorPart.PersonID',
+            [
+                SectionParticipant::$tableName,
+                SectionParticipant::$tableName,
+                $Person->ID,
+                implode(',', $lastTerm->getConcurrentTermIDs())
             ]
         );
 
@@ -256,9 +234,9 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             if ($_REQUEST['Relationship']) {
                 if (!$Relationship = Relationship::getByWhere(['PersonID'=>$_REQUEST['StudentID'], 'RelatedPersonID' => $RecipientPerson->ID])) {
                     $Relationship = Relationship::create([
-                        'PersonID' => $_REQUEST['StudentID']
-                        ,'RelatedPersonID' => $RecipientPerson->ID
-                        ,'Label' => $_REQUEST['Label']
+                        'PersonID' => $_REQUEST['StudentID'],
+                        'RelatedPersonID' => $RecipientPerson->ID,
+                        'Label' => $_REQUEST['Label']
                     ], true);
                 }
             }
@@ -266,8 +244,8 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             $recipient = static::_getRecipientFromPerson($RecipientPerson, $Relationship->Label, 'Other', $email);
 
             return static::respond('notes', [
-                'success' => true
-                ,'data' => $recipient
+                'success' => true,
+                ,]'data' => $recipient
             ]);
         }
     }
@@ -275,11 +253,11 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
     protected static function _getRecipientFromPerson(Person $Person, $relationship = false, $relationshipGroup = false, $email = false)
     {
         return [
-            'PersonID' => $Person->ID
-            ,'FullName' => $Person->FullName
-            ,'Email' => !$email ? $Person->Email : $email
-            ,'Label' => $relationship
-            ,'RelationshipGroup' => $relationshipGroup
+            'PersonID' => $Person->ID,
+            'FullName' => $Person->FullName,
+            'Email' => !$email ? $Person->Email : $email,
+            'Label' => $relationship,
+            'RelationshipGroup' => $relationshipGroup
         ];
     }
 }

@@ -12,34 +12,26 @@ class Note extends \Emergence\CRM\Message
 
     public static $searchConditions = [
         'Subject' => [
-            'qualifiers' => ['any','subject','Subject']
-            ,'points' => 2
-            ,'sql' => 'Subject LIKE "%%%s%%"'
-        ]
-        ,'Message' => [
-            'qualifiers' => ['any','message','Message']
-            ,'points' => 2
-            ,'sql' => 'Message LIKE "%%%s%%"'
-        ]
-        ,'Person' => [
-            'qualifiers' => ['person','personId', 'personID']
-            ,'points' => 2
-            ,'sql' => 'ContextClass = "Person" AND ContextID = "%u"'
-        ]
-        ,'Author' => [
-            'qualifiers' => ['any','author']
-            ,'points' => 2
-            ,'sql' => 'AuthorID = (SELECT Author.ID FROM people Author WHERE Author.Username = "%s")'
+            'qualifiers' => ['any','subject','Subject'],
+            'points' => 2,
+            'sql' => 'Subject LIKE "%%%s%%"'
+        ],
+        'Message' => [
+            'qualifiers' => ['any','message','Message'],
+            'points' => 2,
+            'sql' => 'Message LIKE "%%%s%%"'
+        ],
+        'Person' => [
+            'qualifiers' => ['person','personId', 'personID'],
+            'points' => 2,
+            'sql' => 'ContextClass = "Person" AND ContextID = "%u"'
+        ],
+        'Author' => [
+            'qualifiers' => ['any','author'],
+            'points' => 2,
+            'sql' => 'AuthorID = (SELECT Author.ID FROM people Author WHERE Author.Username = "%s")'
         ]
     ];
-
-    //TODO: Implement emergence proxy to use dynimac fields instead
-    public function getData()
-    {
-        return array_merge(parent::getData(), [
-            'Author' => $this->Author ? $this->Author->getData() : null
-        ]);
-    }
 
     public function getEmailRecipientsList($recipients = false)
     {
@@ -57,8 +49,7 @@ class Note extends \Emergence\CRM\Message
         return sprintf(static::$subjectFormat, $this->Context->FullName, $this->Subject);
     }
 
-
-    //TODO: add to $validators ?
+    //TODO: migrate to $validators ?
     public function validate($deep = true)
     {
         // call parent
