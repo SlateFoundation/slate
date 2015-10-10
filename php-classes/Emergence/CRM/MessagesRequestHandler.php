@@ -29,7 +29,7 @@ class MessagesRequestHandler extends \RecordsRequestHandler
     public static function handleMessageRecipientsRequest(Message $Message)
     {
         if (in_array($_SERVER['REQUEST_METHOD'], ['POST','PUT'])) {
-            if (static::$responseMode == 'json') {
+            if (0 === strpos($_SERVER['CONTENT_TYPE'], 'application/json')) {
                 $_REQUEST = JSON::getRequestData();
             }
 
