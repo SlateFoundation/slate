@@ -144,7 +144,7 @@ class Message extends \VersionedRecord
 
         if (!$this->Author) {
             $Author = $this->getUserFromEnvironment();
-            $this->Author = $Author ? $Author->ID : null;
+            $this->AuthorID = $Author ? $Author->ID : null;
         }
 
         parent::save($deep);
