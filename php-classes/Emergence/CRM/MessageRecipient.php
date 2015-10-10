@@ -10,8 +10,6 @@ class MessageRecipient extends \ActiveRecord
     public static $pluralNoun = 'message recipients';
 
     public static $fields = [
-        'ContextClass',
-        'ContextID' => 'uint',
         'MessageID' => 'uint',
         'PersonID' => [
             'type' => 'uint',
