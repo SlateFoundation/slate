@@ -2,6 +2,7 @@
 
 namespace Emergence\CRM;
 
+use DuplicateKeyException;
 use Emergence\People\ContactPoints\Email;
 
 class Message extends \VersionedRecord
