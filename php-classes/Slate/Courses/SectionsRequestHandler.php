@@ -223,4 +223,4 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 #            ));
 #        }
 #    }
-}}
+}

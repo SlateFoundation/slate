@@ -151,8 +151,8 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
 
 
         return static::respond('noteRecipients', [
-            'success' => true
-            ,'data' => array_values($contacts)
+            'success' => true,
+            'data' => array_values($contacts)
         ]);
     }
 
@@ -245,7 +245,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
 
             return static::respond('notes', [
                 'success' => true,
-                ,]'data' => $recipient
+                'data' => $recipient
             ]);
         }
     }
