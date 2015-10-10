@@ -17,6 +17,8 @@ class Message extends \VersionedRecord
     public static $singularNoun = 'message';
     public static $pluralNoun = 'messages';
 
+    public static $subClasses = [__CLASS__];
+
     public static $fields = [
         'ContextClass' => [
             'type' => 'enum',
