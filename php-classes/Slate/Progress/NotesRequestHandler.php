@@ -96,31 +96,30 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             $contacts[$Relationship->RelatedPersonID] = static::_getRecipientFromPerson($Relationship->RelatedPerson, $Relationship->Label, 'Related Contacts');
         }
 
-        $lastTerm = Term::getCurrent();
-        $lastTerm = $lastTerm ? $lastTerm : Term::getLastTerm();
-
         // instructors
-        $studentInstructors = \DB::allRecords(
-            'SELECT InstructorPart.PersonID AS instructorID, GROUP_CONCAT(InstructorPart.CourseSectionID SEPARATOR ",") AS sectionIDs'
-            .' FROM `%s` StudentPart'
-            .' RIGHT JOIN `%s` InstructorPart ON(InstructorPart.CourseSectionID=StudentPart.CourseSectionID AND InstructorPart.Role = "Instructor")'
-            .' LEFT JOIN course_sections Section ON (Section.ID = InstructorPart.CourseSectionID)'
-            .' WHERE StudentPart.PersonID = %u AND StudentPart.Role = "Student" AND Section.TermID IN (%4$s)'
-            .' GROUP BY InstructorPart.PersonID',
-            [
-                SectionParticipant::$tableName,
-                SectionParticipant::$tableName,
-                $Person->ID,
-                implode(',', $lastTerm->getConcurrentTermIDs())
-            ]
-        );
+        if ($Term = Term::getClosest()) {
+            $studentInstructors = \DB::allRecords(
+                'SELECT TeacherPart.PersonID AS instructorID, GROUP_CONCAT(TeacherPart.CourseSectionID SEPARATOR ",") AS sectionIDs'
+                .' FROM `%s` StudentPart'
+                .' RIGHT JOIN `%s` TeacherPart ON(TeacherPart.CourseSectionID=StudentPart.CourseSectionID AND TeacherPart.Role = "Teacher")'
+                .' LEFT JOIN course_sections Section ON (Section.ID = TeacherPart.CourseSectionID)'
+                .' WHERE StudentPart.PersonID = %u AND StudentPart.Role = "Student" AND Section.TermID IN (%4$s)'
+                .' GROUP BY TeacherPart.PersonID',
+                [
+                    SectionParticipant::$tableName,
+                    SectionParticipant::$tableName,
+                    $Person->ID,
+                    implode(',', $Term->getConcurrentTermIDs())
+                ]
+            );
 
-        foreach ($studentInstructors AS $si) {
-            $sectionCodes = array_map(function($sectionID) {
-                return Section::getByID($sectionID)->Course->Code;
-            }, explode(',', $si['sectionIDs']));
+            foreach ($studentInstructors AS $si) {
+                $sectionCodes = array_map(function($sectionID) {
+                    return Section::getByID($sectionID)->Course->Code;
+                }, explode(',', $si['sectionIDs']));
 
-            $contacts[$si['instructorID']] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), 'Teacher ('.join(', ',$sectionCodes).')', 'Teachers');
+                $contacts[$si['instructorID']] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), 'Teacher ('.join(', ',$sectionCodes).')', 'Teachers');
+            }
         }
 
         // advisor
