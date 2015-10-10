@@ -95,6 +95,29 @@ class Message extends \VersionedRecord
         ]
     ];
 
+    public static $searchConditions = [
+        'Subject' => [
+            'qualifiers' => ['any','subject','Subject'],
+            'points' => 2,
+            'sql' => 'Subject LIKE "%%%s%%"'
+        ],
+        'Message' => [
+            'qualifiers' => ['any','message','Message'],
+            'points' => 2,
+            'sql' => 'Message LIKE "%%%s%%"'
+        ],
+        'Person' => [
+            'qualifiers' => ['person','personId', 'personID'],
+            'points' => 2,
+            'sql' => 'ContextClass = "Person" AND ContextID = "%u"'
+        ],
+        'Author' => [
+            'qualifiers' => ['any','author'],
+            'points' => 2,
+            'sql' => 'AuthorID = (SELECT Author.ID FROM people Author WHERE Author.Username = "%s")'
+        ]
+    ];
+
     public function addRecipient(\Emergence\People\Person $Person, \Emergence\People\ContactPoint\Email $EmailContactPoint)
     {
         try {
