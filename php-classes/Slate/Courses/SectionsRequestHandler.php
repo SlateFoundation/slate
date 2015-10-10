@@ -60,23 +60,23 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleParticipantsRequest(Section $Section)
     {
-        $GLOBALS['Session']->requireAccountLevel('Staff');
-        
         if ($personId = static::shiftPath()) {
             if (!ctype_digit($personId) || !$Participant = SectionParticipant::getByWhere(['CourseSectionID' => $Section->ID, 'PersonID' => $personId])) {
                 return static::throwNotFoundError();
             }
-            
+
             return static::handleParticipantRequest($Section, $Participant);
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $GLOBALS['Session']->requireAccountLevel('Staff');
+
             $Participant = SectionParticipant::create($_POST);
-            
+
             if (!$Participant->validate()) {
                 return static::throwError(reset($Participant->validationErrors));
             }
-            
+
             try {
                 $Participant->save();
             } catch (\DuplicateKeyException $e) {
@@ -89,6 +89,21 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             ));
         }
 
+        if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
+            $userIsParticipant = false;
+
+            foreach ($Section->Participants AS $Participant) {
+                if ($Participant->PersonID == $GLOBALS['Session']->PersonID) {
+                    $userIsParticipant = true;
+                    break;
+                }
+            }
+
+            if (!$userIsParticipant) {
+                return static::throwUnauthorizedError();
+            }
+        }
+
         return static::respond('sectionParticipants', array(
             'success' => true
             ,'data' => $Section->Participants
@@ -97,15 +112,19 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
     {
-        $GLOBALS['Session']->requireAccountLevel('Staff');
-
         if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+            $GLOBALS['Session']->requireAccountLevel('Staff');
+
             $Participant->destroy();
 
             return static::respond('participantDeleted', array(
                 'success' => true,
                 'data' => $Participant
             ));
+        }
+
+        if (!$GLOBALS['Session']->hasAccountLevel('Staff') && $GLOBALS['Session']->PersonID != $Participant->PersonID) {
+            return static::throwUnauthorizedError();
         }
 
         return static::respond('participant', array(
@@ -115,7 +134,20 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleStudentsRequest(Section $Section)
     {
-        $GLOBALS['Session']->requireAccountLevel('Staff');
+        if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
+            $userIsStudent = false;
+
+            foreach ($Section->Students AS $Student) {
+                if ($Student->ID == $GLOBALS['Session']->PersonID) {
+                    $userIsStudent = true;
+                    break;
+                }
+            }
+
+            if (!$userIsStudent) {
+                return static::throwUnauthorizedError();
+            }
+        }
 
         return static::respond('students', array(
             'data' => $Section->Students

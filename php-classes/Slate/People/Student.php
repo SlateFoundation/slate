@@ -10,79 +10,81 @@ use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
+use Slate\Progress\Note;
+
 class Student extends User
 {
-    public static $fields = array(
-        'StudentNumber' => array(
+    public static $fields = [
+        'StudentNumber' => [
             'type' => 'string'
             ,'unique' => true
             ,'notnull' => false
             ,'accountLevelEnumerate' => 'Staff'
-        )
-        ,'AdvisorID' => array(
+        ]
+        ,'AdvisorID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
             ,'accountLevelEnumerate' => 'Staff'
-        )
-        ,'GraduationYear' => array(
+        ]
+        ,'GraduationYear' => [
             'type' => 'year'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Advisor' => array(
+    public static $relationships = [
+        'Advisor' => [
             'type' => 'one-one'
             ,'class' => 'Person'
             ,'local' => 'AdvisorID'
-        )
-        ,'Guardians' => array(
+        ]
+        ,'Guardians' => [
             'type' => 'many-many'
             ,'class' => 'Person'
             ,'linkClass' => 'Emergence\\People\\GuardianRelationship'
             ,'linkLocal' => 'PersonID'
             ,'linkForeign' => 'RelatedPersonID'
-            ,'conditions' => array('Link.Class = "Guardian"')
-        )
-        ,'GuardianRelationships' => array(
+            ,'conditions' => ['Link.Class = "Guardian"']
+        ]
+        ,'GuardianRelationships' => [
             'type' => 'one-many'
             ,'class' => 'Emergence\\People\\GuardianRelationship'
             ,'foreign' => 'PersonID'
-            ,'conditions' => array('Class' => 'Guardian')
-        )
-    );
+            ,'conditions' => ['Class' => 'Guardian']
+        ]
+    ];
 
-    public static $dynamicFields = array(
-        'Advisor' => array(
+    public static $dynamicFields = [
+        'Advisor' => [
             'accountLevelEnumerate' => 'Staff'
-        )
-    );
+        ]
+    ];
 
-    public static $searchConditions = array(
-        'StudentNumber' => array(
-            'qualifiers' => array('any', 'studentnumber')
+    public static $searchConditions = [
+        'StudentNumber' => [
+            'qualifiers' => ['any', 'studentnumber']
             ,'points' => 2
             ,'sql' => 'StudentNumber LIKE "%s%%"'
-        )
-        ,'GraduationYear' => array(
-            'qualifiers' => array('graduationyear','year')
+        ]
+        ,'GraduationYear' => [
+            'qualifiers' => ['graduationyear','year']
             ,'points' => 2
             ,'sql' => 'GraduationYear=%u'
-        )
-        ,'AdvisorID' => array(
-            'qualifiers' => array('advisorid')
+        ]
+        ,'AdvisorID' => [
+            'qualifiers' => ['advisorid']
             ,'points' => 1
             ,'sql' => 'AdvisorID=%u'
-        )
-    );
+        ]
+    ];
 
-    public static $validators = array(
-        'StudentNumber' => array(
+    public static $validators = [
+        'StudentNumber' => [
             'required' => false
             ,'errorMessage' => 'Unique student identifier missing'
-        )
-    );
+        ]
+    ];
 
     public static function getByStudentNumber($number)
     {
@@ -93,9 +95,9 @@ class Student extends User
     {
         return Person::getAllByQuery(
             'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName'
-            ,array(
+            ,[
                 static::$tableName
-            )
+            ]
         );
     }
 
@@ -107,9 +109,9 @@ class Student extends User
     public static function getAllByListIdentifier($identifier, $includeDisabled = false)
     {
         if (!$identifier) {
-            return array();
+            return [];
         }
-        
+
         $filterResult = function ($people) use ($includeDisabled) {
             return array_values(array_filter($people, function($Person) use ($includeDisabled) {
                 return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
@@ -121,10 +123,10 @@ class Student extends User
         }
 
         if (preg_match('/^\d+(,\d+)*$/', $identifier)) {
-            return $filterResult(static::getAllByWhere('ID IN (' . $identifier . ')'));
+            return $filterResult(static::getAllByWhere('ID IN ('.$identifier.')'));
         }
 
-        list ($groupType, $groupHandle) = explode(' ', $identifier, 2);
+        list($groupType, $groupHandle) = explode(' ', $identifier, 2);
 
         switch ($groupType) {
             case 'group':
