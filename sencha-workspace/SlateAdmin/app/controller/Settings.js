@@ -12,24 +12,20 @@ Ext.define('SlateAdmin.controller.Settings', {
         'settings': 'showSettings'
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'settings-navpanel',
-        autoCreate: true,
+    refs: {
+        navPanel: {
+            selector: 'settings-navpanel',
+            autoCreate: true,
 
-        xtype: 'settings-navpanel'
-    }],
+            xtype: 'settings-navpanel'
+        }
+    },
 
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'settings-navpanel': {
-                expand: me.onNavPanelExpand
-            }
-        });
+    control: {
+        'settings-navpanel': {
+            expand: 'onNavPanelExpand'
+        }
     },
 
     buildNavPanel: function() {

@@ -51,19 +51,19 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             emptyText: 'No related people',
             getRowClass: function(record) {
                 var cls = record.get('Class') == 'Emergence\\People\\GuardianRelationship' ? 'relationship-guardian' : 'relationship-nonguardian';
-                
+
                 if (record.phantom) {
                     cls += ' slate-grid-phantom';
                 }
-                
+
                 if (record.dirty) {
                     cls += ' slate-grid-dirty';
                 }
-                
+
                 if (!record.get('InverseRelationship')) {
                     cls += ' relationship-noinverse';
                 }
-                
+
                 return cls;
             }
         },
@@ -98,15 +98,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                                 var path = ['people', 'search', 'related-to-id:'+relationship.PersonID],
                                     relatedPerson = relationship.RelatedPerson,
                                     relatedUsername = relatedPerson.Username;
-    
+
                                 if (relatedUsername) {
                                     path.push(relatedUsername);
                                 } else {
                                     path.push('?id='+relatedPerson.ID);
                                 }
-                                
+
                                 path.push('contacts');
-                                
+
                                 return Ext.util.History.encodeRouteArray(path);
                             }
                         }
@@ -128,7 +128,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                                         value = Ext.Array.clean([value.FirstName, value.MiddleName, value.LastName]).join(' ');
                                     }
                                 }
-                                
+
                                 this.callParent([value || null, doSelect]);
                             }
                         }
@@ -227,7 +227,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             autoScroll: false,
             getRowClass: function(record) {
                 var cls = '';
-                
+
                 switch (record.get('Class')) {
                     case 'Emergence\\People\\ContactPoint\\Email':
                         cls = 'contact-email';
@@ -248,19 +248,19 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         cls = 'contact-unknown';
                         break;
                 }
-                
+
                 if (record.phantom) {
                     cls += ' slate-grid-phantom';
                 }
-                
+
                 if (record.dirty) {
                     cls += ' slate-grid-dirty';
                 }
-                
+
                 if (record.get('Primary')) {
                     cls += ' contact-primary';
                 }
-                
+
                 return cls;
             }
         },
@@ -281,7 +281,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     {
                         getHeaderConfig: function(values) {
                             var title, typeCls, glyph;
-                            
+
                             switch (values.groupValue) {
                                 case 'Emergence\\People\\ContactPoint\\Email':
                                     title = 'Email Addresses';
@@ -345,7 +345,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             comboField.expand();
                         },
                         select: function(comboField) {
-                            comboField.collapse();
+                            comboField.up('editor').completeEdit();
                         }
                     }
                 },
@@ -369,7 +369,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         editors = me.up('grid').findPlugin('cellediting').editors,
                         editor = editors.getByKey(editorId),
                         field;
-                        
+
                     if (editor) {
                         return editor;
                     }
@@ -390,15 +390,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             field = Ext.create('Ext.form.field.Text');
                             break;
                     }
-                    
+
                     editor = Ext.create('SlateAdmin.widget.grid.ContactPointCellEditor', {
                         floating: true,
                         editorId: editorId,
                         field: field
                     });
-                    
+
                     editors.add(editor);
-                    
+
                     return editor;
                 }
             },

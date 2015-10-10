@@ -87,76 +87,60 @@ Ext.define('SlateAdmin.controller.Courses', {
 //        }
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'courses-navpanel',
-        autoCreate: true,
+    refs: {
+        navPanel: {
+            selector: 'courses-navpanel',
+            autoCreate: true,
 
-        xtype: 'courses-navpanel'
-    },{
-        ref: 'sectionsManager',
-        selector: 'courses-sections-manager',
-        autoCreate: true,
+            xtype: 'courses-navpanel'
+        },
+        sectionsManager: {
+            selector: 'courses-sections-manager',
+            autoCreate: true,
 
-        xtype: 'courses-sections-manager'
-    },{
-        ref: 'sectionsGrid',
-        selector: 'courses-sections-grid'
-//    },{
-//        ref: 'termSelector',
-//        selector: 'courses-grid #courseGridTermSelector'
-//    },{
-//        ref: 'courseHeader',
-//        selector: 'course-header'
-//    },{
-//        ref: 'courseRosterGrid',
-//        selector: 'course-rostergrid'
-//    },{
-//        ref: 'coursesSearchField',
-//        selector: 'courses-navpanel textfield[inputType=search]'
-//    },{
-//        ref: 'courseEditor',
-//        selector: 'course-editor'
-    }],
+            xtype: 'courses-sections-manager'
+        },
+        sectionsGrid: 'courses-sections-grid'
+    },
+
+    control: {
+        'courses-navpanel': {
+            expand: 'onNavPanelExpand'
+        },
+        'courses-navpanel field': {
+            specialkey: 'onNavFieldSpecialKey'
+        },
+        'courses-navpanel button[action=search]': {
+            click: 'onSearchClick'
+        },
+        'courses-navpanel button[action=reset]': {
+            click: 'onResetClick'
+        },
+        'courses-sections-manager': {
+            sectioncommit: 'onSectionCommit'
+        },
+        'courses-sections-grid': {
+            select: { fn: 'onSectionSelect', buffer: 10 },
+            deselect: { fn: 'onSectionDeselect', buffer: 10 }
+        },
+        'courses-sections-manager #detailTabs': {
+            tabchange: 'onDetailTabChange'
+        }
+//            'courses-grid combobox[action=termSelector]': {
+//                change: 'onCourseTermChange'
+//            },
+//            'courses-grid': {
+//                select: 'onCourseSelect'
+//            },
+//            'courses-navpanel textfield[inputType=search]': {
+//                specialkey: 'onSearchSpecialKey'
+//            }
+    },
 
 
     // controller template methods
     init: function() {
-        var me = this;
-
-        me.control({
-            'courses-navpanel': {
-                expand: me.onNavPanelExpand
-            },
-            'courses-navpanel field': {
-                specialkey: me.onNavFieldSpecialKey
-            },
-            'courses-navpanel button[action=search]': {
-                click: me.onSearchClick
-            },
-            'courses-navpanel button[action=reset]': {
-                click: me.onResetClick
-            },
-            'courses-sections-manager': {
-                sectioncommit: me.onSectionCommit
-            },
-            'courses-sections-grid': {
-                select: { fn: me.onSectionSelect, buffer: 10 },
-                deselect: { fn: me.onSectionDeselect, buffer: 10 }
-            },
-            'courses-sections-manager #detailTabs': {
-                tabchange: me.onDetailTabChange
-            }
-//            'courses-grid combobox[action=termSelector]': {
-//                change: me.onCourseTermChange
-//            },
-//            'courses-grid': {
-//                select: me.onCourseSelect
-//            },
-//            'courses-navpanel textfield[inputType=search]': {
-//                specialkey: me.onSearchSpecialKey
-//            }
-        });
+        // var me = this;
 
 //        me.listen({
 //            store: {
@@ -233,7 +217,6 @@ Ext.define('SlateAdmin.controller.Courses', {
             ExtHistory = Ext.util.History,
             sectionsManager = me.getSectionsManager(),
             sectionsResultStore = me.getCoursesSectionsResultStore(),
-            navPanel = me.getNavPanel(),
             sectionsResultProxy = sectionsResultStore.getProxy();
 
         ExtHistory.suspendState();
@@ -251,10 +234,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         me.syncSearchForm();
 
         // activate manager
-        navPanel.suspendEvents();
         me.getNavPanel().expand();
-        navPanel.resumeEvents();
-
         me.application.getController('Viewport').loadCard(sectionsManager);
 
         // resume layouts and insert a small delay to allow layouts to flush before triggering store load so loading mask can size correctly
@@ -561,7 +541,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             }
         });
 
-        Ext.util.History.add(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
+        Ext.util.History.pushState(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
     }
 
 

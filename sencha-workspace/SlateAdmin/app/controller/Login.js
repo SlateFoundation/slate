@@ -15,24 +15,23 @@ Ext.define('SlateAdmin.controller.Login', {
 
         xtype: 'slateadmin-loginwindow'
     }],
-    
-    
+
+    control: {
+        'slateadmin-loginwindow button[action=login]': {
+            click: 'doLogin'
+        },
+        'slateadmin-loginwindow textfield': {
+            specialkey: 'onLoginSpecialKey'
+        }
+    },
+
 	// controller template methods
     init: function() {
         var me = this;
 
-        me.control({
-            'slateadmin-loginwindow button[action=login]': {
-                click: me.doLogin
-            },
-            'slateadmin-loginwindow textfield': {
-                specialkey: me.onLoginSpecialKey
-            }
-        });
-
         me.application.on('sessionexpired', me.onSessionExpired, me);
     },
-    
+
 
     // event handlers
     onSessionExpired: function(connection, response, options) {
@@ -70,9 +69,9 @@ Ext.define('SlateAdmin.controller.Login', {
 
 
         loginWindow.setLoading('Logging in&hellip;');
-//                      
+//
 //      lastRequest.success = lastRequest.success ? Ext.Function.createSequence(lastRequest.success, removeLoadmask, me) : removeLoadmask;
-//      
+//
         Ext.Ajax.request({
             url: '/login/json',
             method: 'POST',
@@ -89,7 +88,7 @@ Ext.define('SlateAdmin.controller.Login', {
 
                 me.application.fireEvent('login');
 
-//              Ext.Function.defer(Ext.Ajax.request, 1000, Ext.Ajax, [lastRequest]);        
+//              Ext.Function.defer(Ext.Ajax.request, 1000, Ext.Ajax, [lastRequest]);
             },
             failure: function(res) {
                 var r = Ext.decode(res.responseText);

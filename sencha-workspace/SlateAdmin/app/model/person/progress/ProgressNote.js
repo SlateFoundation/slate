@@ -58,12 +58,7 @@ Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
     ],
     proxy: {
         type: 'slaterecords',
-        writer: {
-            type: 'json',
-            rootProperty: 'data',
-            writeAllFields: false,
-            allowSingle: false
-        },
-        url: '/notes'
+        url: '/notes',
+        include: ['Author']
     }
 });

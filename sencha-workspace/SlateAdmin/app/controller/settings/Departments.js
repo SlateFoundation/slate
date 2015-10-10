@@ -19,33 +19,27 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
         'settings/departments': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'departments-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: 'settings-navpanel',
+        manager: {
+            selector: 'departments-manager',
+            autoCreate: true,
 
-        xtype: 'departments-manager'
-    }],
+            xtype: 'departments-manager'
+        }
+    },
 
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'departments-manager': {
-                show: me.onManagerShow,
-                edit: me.onCellEditorEdit,
-                browsecoursesclick: me.onBrowseCoursesClick,
-                deletedepartmentclick: me.onDeleteDepartmentClick
-            },
-            'departments-manager button[action=create-department]': {
-                click: me.onCreateDepartmentClick
-            }
-        });
+    control: {
+        'departments-manager': {
+            show: 'onManagerShow',
+            edit: 'onCellEditorEdit',
+            browsecoursesclick: 'onBrowseCoursesClick',
+            deletedepartmentclick: 'onDeleteDepartmentClick'
+        },
+        'departments-manager button[action=create-department]': {
+            click: 'onCreateDepartmentClick'
+        }
     },
 
 
@@ -125,7 +119,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.add(['course-sections', 'search', 'department:' + rec.get('Handle')]);
+        Ext.util.History.pushState(['course-sections', 'search', 'department:' + rec.get('Handle')]);
     }
 
 });

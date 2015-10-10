@@ -11,13 +11,14 @@ Ext.define('SlateAdmin.controller.Progress', {
         'progress': 'showProgress'
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'progress-navpanel',
-        autoCreate: true,
-
-        xtype: 'progress-navpanel'
-    }],
+    refs: {
+        navPanel: {
+            selector: 'progress-navpanel',
+            autoCreate: true,
+    
+            xtype: 'progress-navpanel'
+        }
+    },
 
 
     control: {

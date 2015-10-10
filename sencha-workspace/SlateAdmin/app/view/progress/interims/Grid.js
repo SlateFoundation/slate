@@ -17,7 +17,7 @@ Ext.define('SlateAdmin.view.progress.interims.Grid', {
         emptyText: 'You are not currently an instructor for any students'
     },
     initComponent: function () {
-    //	The scope of getFragmentHeader is the domwindow so for now we use initComponent to pass scope through getSectionTitle
+    //The scope of getFragmentHeader is the domwindow so for now we use initComponent to pass scope through getSectionTitle
 
         var me = this;
 

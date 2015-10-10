@@ -8,61 +8,44 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
         'courses.sections.details.Profile'
     ],
 
-    refs: [{
-        ref: 'profilePanel',
-        selector: 'courses-sections-details-profile',
-        autoCreate: true,
-        
-        xtype: 'courses-sections-details-profile'
-    },{
-        ref: 'profileForm',
-        selector: 'courses-sections-details-profile form'
-    },{
-        ref: 'cancelBtn',
-        selector: 'courses-sections-details-profile button[action=cancel]'
-    },{
-        ref: 'saveBtn',
-        selector: 'courses-sections-details-profile button[action=save]'
-    },{
-        ref: 'courseField',
-        selector: 'courses-sections-details-profile field[name=CourseID]'
-    },{
-        ref: 'codeField',
-        selector: 'courses-sections-details-profile field[name=Code]'
-    },{
-        ref: 'titleField',
-        selector: 'courses-sections-details-profile field[name=Title]'
-    }],
+    refs: {
+        profilePanel: {
+            selector: 'courses-sections-details-profile',
+            autoCreate: true,
 
+            xtype: 'courses-sections-details-profile'
+        },
+        profileForm: 'courses-sections-details-profile form',
+        cancelBtn: 'courses-sections-details-profile button[action=cancel]',
+        saveBtn: 'courses-sections-details-profile button[action=save]',
+        courseField: 'courses-sections-details-profile field[name=CourseID]',
+        codeField: 'courses-sections-details-profile field[name=Code]',
+        titleField: 'courses-sections-details-profile field[name=Title]'
+    },
 
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'courses-sections-manager': {
-                selectedsectionchange: me.onSelectedSectionChange
-            },
-            'courses-sections-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
-            },
-            'courses-sections-details-profile': {
-                sectionloaded: me.onSectionLoaded
-            },
-            'courses-sections-details-profile form': {
-                dirtychange: me.syncButtons,
-                validitychange: me.syncButtons
-            },
-            'courses-sections-details-profile button[action=cancel]': {
-                click: me.onCancelButtonClick
-            },
-            'courses-sections-details-profile button[action=save]': {
-                click: me.onSaveButtonClick
-            },
-            'courses-sections-details-profile combobox[name=CourseID]': {
-                select: me.onCourseSelect
-            }
-        });
+    control: {
+        'courses-sections-manager': {
+            selectedsectionchange: 'onSelectedSectionChange'
+        },
+        'courses-sections-manager #detailTabs': {
+            beforerender: 'onBeforeTabsRender'
+        },
+        'courses-sections-details-profile': {
+            sectionloaded: 'onSectionLoaded'
+        },
+        'courses-sections-details-profile form': {
+            dirtychange: 'syncButtons',
+            validitychange: 'syncButtons'
+        },
+        'courses-sections-details-profile button[action=cancel]': {
+            click: 'onCancelButtonClick'
+        },
+        'courses-sections-details-profile button[action=save]': {
+            click: 'onSaveButtonClick'
+        },
+        'courses-sections-details-profile combobox[name=CourseID]': {
+            select: 'onCourseSelect'
+        }
     },
 
 
@@ -73,7 +56,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
         // switch to the profile tab and focus first field if this is a phantom
         if (section && section.phantom) {
             manager.detailTabs.setActiveTab(me.getProfilePanel());
-            
+
             Ext.defer(function() {
                 me.getProfileForm().down('field[readOnly=false][disabled=false]').focus();
             }, 100);
@@ -83,7 +66,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
     onBeforeTabsRender: function(detailTabs) {
         detailTabs.add(this.getProfilePanel());
     },
-    
+
     onSectionLoaded: function(profilePanel, section) {
         var me = this;
 
@@ -96,7 +79,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
             profilePanel.setLoading(false);
         });
     },
-    
+
     onCancelButtonClick: function() {
         this.getProfileForm().getForm().reset();
     },
@@ -108,7 +91,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
             section = form.getRecord();
 
         profileForm.setLoading('Saving&hellip;');
-        
+
         form.updateRecord(section);
 
         section.save({
@@ -118,7 +101,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
                 record.commit();
 
 //                record.fireEvent('afterCommit', record); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
-                
+
                 profileForm.loadRecord(record);
 
                 profileForm.setLoading(false);
@@ -128,24 +111,24 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
                     errorMessage = 'There was a problem saving your changes, please double-check your changes and try again',
                     failed,
                     validationErrors;
-                
+
                 if (rawData && (failed = rawData.failed) && failed[0] && (validationErrors = failed[0].validationErrors)) {
                     Ext.Object.each(validationErrors, function(fieldName, error) {
                         var field = profileForm.getForm().findField(fieldName);
-                        
+
                         if (field) {
                             profileForm.getForm().findField(fieldName).markInvalid(error);
                         }
                     });
                     validationErrors = 'You\'ve tried to make invalid changes, please check the highlighted field(s) for details';
                 }
-                
+
                 Ext.Msg.alert('Not saved', validationErrors);
                 profileForm.setLoading(false);
             }
         });
     },
-    
+
     onCourseSelect: function() {
         this.syncEmptyText();
     },
@@ -159,7 +142,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
             titleField = me.getTitleField(),
             courseId = courseField.getValue(),
             course = courseId && courseField.findRecordByValue(courseId);
-        
+
         codeField.emptyText = course ? (course.get('Code') + '-000') : 'ABCD-000';
         codeField.applyEmptyText();
 
@@ -172,7 +155,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
             profileForm = me.getProfileForm(),
             valid = profileForm.isValid(),
             dirty = profileForm.isDirty();
-        
+
         me.getCancelBtn().setDisabled(!dirty);
         me.getSaveBtn().setDisabled(!dirty || !valid);
     }

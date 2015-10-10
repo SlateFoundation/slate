@@ -12,45 +12,35 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         'courses.sections.details.Participants'
     ],
 
-    refs: [{
-        ref: 'participantsPanel',
-        selector: 'courses-sections-details-participants',
-        autoCreate: true,
+    refs: {
+        participantsPanel: {
+            selector: 'courses-sections-details-participants',
+            autoCreate: true,
 
-        xtype: 'courses-sections-details-participants'
-    },{
-        ref: 'participantsGrid',
-        selector: 'courses-sections-details-participants grid'
-    },{
-        ref: 'roleField',
-        selector: 'courses-sections-details-participants #roleField'
-    },{
-        ref: 'personField',
-        selector: 'courses-sections-details-participants #personField'
-    }],
+            xtype: 'courses-sections-details-participants'
+        },
+        participantsGrid: 'courses-sections-details-participants grid',
+        roleField: 'courses-sections-details-participants #roleField',
+        personField: 'courses-sections-details-participants #personField'
+    },
 
 
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'courses-sections-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
-            },
-            'courses-sections-details-participants': {
-                sectionloaded: me.onSectionLoaded
-            },
-            'courses-sections-details-participants field': {
-                specialkey: me.onFieldSpecialKey
-            },
-            'courses-sections-details-participants button[action=add-participant]': {
-                click: me.onAddParticipantClick
-            },
-            'courses-sections-details-participants grid': {
-                deleteclick: me.onDeleteParticipantClick
-            }
-        });
+    control: {
+        'courses-sections-manager #detailTabs': {
+            beforerender: 'onBeforeTabsRender'
+        },
+        'courses-sections-details-participants': {
+            sectionloaded: 'onSectionLoaded'
+        },
+        'courses-sections-details-participants field': {
+            specialkey: 'onFieldSpecialKey'
+        },
+        'courses-sections-details-participants button[action=add-participant]': {
+            click: 'onAddParticipantClick'
+        },
+        'courses-sections-details-participants grid': {
+            deleteclick: 'onDeleteParticipantClick'
+        }
     },
 
 

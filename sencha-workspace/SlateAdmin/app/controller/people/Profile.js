@@ -11,58 +11,39 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         'people.details.Profile'
     ],
 
-    refs: [{
-        ref: 'profilePanel',
-        selector: 'people-details-profile',
-        autoCreate: true,
+    refs: {
+        profilePanel: {
+            selector: 'people-details-profile',
+            autoCreate: true,
 
-        xtype: 'people-details-profile'
-    },{
-        ref: 'profileForm',
-        selector: 'people-details-profile form'
-    },{
-        ref: 'cancelBtn',
-        selector: 'people-details-profile button[action=cancel]'
-    },{
-        ref: 'saveBtn',
-        selector: 'people-details-profile button[action=save]'
-    },{
-        ref: 'studentNumberField',
-        selector: 'people-details-profile field[name=StudentNumber]'
-    },{
-        ref: 'accountLevelField',
-        selector: 'people-details-profile field[name=AccountLevel]'
-    },{
-        ref: 'groupsField',
-        selector: 'people-details-profile field[name=groupIDs]'
-    },{
-        ref: 'manager',
-        selector: 'people-manager'
-    }],
+            xtype: 'people-details-profile'
+        },
+        profileForm: 'people-details-profile form',
+        cancelBtn: 'people-details-profile button[action=cancel]',
+        saveBtn: 'people-details-profile button[action=save]',
+        studentNumberField: 'people-details-profile field[name=StudentNumber]',
+        accountLevelField: 'people-details-profile field[name=AccountLevel]',
+        groupsField: 'people-details-profile field[name=groupIDs]',
+        manager: 'people-manager'
+    },
 
-
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'people-manager #detailTabs': {
-                beforerender: me.onBeforeTabsRender
-            },
-            'people-details-profile': {
-                personloaded: me.onPersonLoaded
-            },
-            'people-details-profile form': {
-                dirtychange: me.syncButtons,
-                validitychange: me.syncButtons
-            },
-            'people-details-profile button[action=cancel]': {
-                click: me.onCancelButtonClick
-            },
-            'people-details-profile button[action=save]': {
-                click: me.onSaveButtonClick
-            }
-        });
+    control: {
+        'people-manager #detailTabs': {
+            beforerender: 'onBeforeTabsRender'
+        },
+        'people-details-profile': {
+            personloaded: 'onPersonLoaded'
+        },
+        'people-details-profile form': {
+            dirtychange: 'syncButtons',
+            validitychange: 'syncButtons'
+        },
+        'people-details-profile button[action=cancel]': {
+            click: 'onCancelButtonClick'
+        },
+        'people-details-profile button[action=save]': {
+            click: 'onSaveButtonClick'
+        }
     },
 
 

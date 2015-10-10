@@ -21,47 +21,41 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         'settings/terms': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'terms-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: 'settings-navpanel',
+        manager: {
+            selector: 'terms-manager',
+            autoCreate: true,
 
-        xtype: 'terms-manager'
-    },{
-        ref: 'termsFormWindow',
-        selector: 'terms-form-window',
-        autoCreate: true,
+            xtype: 'terms-manager'
+        },
+        termsFormWindow: {
+            selector: 'terms-form-window',
+            autoCreate: true,
 
-        xtype: 'terms-form-window'
-    }],
+            xtype: 'terms-form-window'
+        }
+    },
 
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'terms-manager': {
-                show: me.onManagerShow,
-                edit: me.onCellEditorEdit,
-                browsecoursesclick: me.onBrowseCoursesClick,
-                createtermclick: me.onCreateTermClick,
-                deletetermclick: me.onDeleteTermClick
-            },
-            'terms-manager button[action=create-term]': {
-                click: me.onCreateTermClick
-            },
-            'terms-form-window button[action="save"]': {
-                click: me.onSaveTermClick
-            },
-            'terms-form-window form': {
-                fieldvaliditychange: me.setFormValidity,
-                fielderrorchange: me.setFormValidity
-            }
-        });
+	control: {
+        'terms-manager': {
+            show: 'onManagerShow',
+            edit: 'onCellEditorEdit',
+            browsecoursesclick: 'onBrowseCoursesClick',
+            createtermclick: 'onCreateTermClick',
+            deletetermclick: 'onDeleteTermClick'
+        },
+        'terms-manager button[action=create-term]': {
+            click: 'onCreateTermClick'
+        },
+        'terms-form-window button[action="save"]': {
+            click: 'onSaveTermClick'
+        },
+        'terms-form-window form': {
+            fieldvaliditychange: 'setFormValidity',
+            fielderrorchange: 'setFormValidity'
+        }
     },
 
 
@@ -193,7 +187,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.add(['course-sections', 'search', 'term:' + rec.get('Handle')]);
+        Ext.util.History.pushState(['course-sections', 'search', 'term:' + rec.get('Handle')]);
     },
 
     setFormValidity: function(form) {

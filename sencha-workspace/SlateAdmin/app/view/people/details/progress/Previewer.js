@@ -26,7 +26,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             afterrender: {
                 fn: function (previewBox) {
                     this.mon(previewBox.iframeEl, 'load', function () {
-                    	previewBox.setDisabled(false);
+                        previewBox.setDisabled(false);
                         previewBox.setLoading(false);
                     }, this);
                 },

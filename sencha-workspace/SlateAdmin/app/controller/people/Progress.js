@@ -18,49 +18,34 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         'person.progress.ProgressNote'
     ],
 
-    refs: [{
-        ref: 'progressPanel',
-        selector: 'people-details-progress',
-        autoCreate: true,
+    refs: {
+        progressPanel: {
+            selector: 'people-details-progress',
+            autoCreate: true,
 
-        xtype: 'people-details-progress'
-    }, {
-        ref: 'progressList',
-        selector: 'people-details-progress dataview'
-    }, {
-        ref: 'peopleManager',
-        selector: 'people-manager'
-    }, {
-        ref: 'reportSearchField',
-        selector: 'people-details-progress #notesSearch'
-    }, {
-        ref: 'termSelector',
-        selector: 'people-details-progress #progressReportsTermSelector'
-    },{
-        ref: 'reportPreviewer',
-        selector: 'people-details-progress-previewer',
-        autoCreate: true,
+            xtype: 'people-details-progress'
+        },
+        progressList: 'people-details-progress dataview',
+        peopleManager: 'people-manager',
+        reportSearchField: 'people-details-progress #notesSearch',
+        termSelector: 'people-details-progress #progressReportsTermSelector',
+        reportPreviewer: {
+            selector: 'people-details-progress-previewer',
+            autoCreate: true,
 
-        xtype: 'people-details-progress-previewer'
-    },{
-        ref: 'noteEditorCt',
-        selector: 'people-details-progress-note-editwindow #progressNoteCt'
-    },{
-        ref: 'progressNoteForm',
-        selector: 'people-details-progress-note-form'
-    },{
-        ref: 'progressNoteViewer',
-        selector: 'people-details-progress-note-viewer'
-    },{
-        ref: 'progressNoteRecipientGrid',
-        selector: 'people-details-progress-note-recipientgrid'
-    },{
-        ref: 'progressNoteEditorWindow',
-        selector: 'people-details-progress-note-editwindow',
-        autoCreate: true,
+            xtype: 'people-details-progress-previewer'
+        },
+        noteEditorCt: 'people-details-progress-note-editwindow #progressNoteCt',
+        progressNoteForm: 'people-details-progress-note-form',
+        progressNoteViewer: 'people-details-progress-note-viewer',
+        progressNoteRecipientGrid: 'people-details-progress-note-recipientgrid',
+        progressNoteEditorWindow: {
+            selector: 'people-details-progress-note-editwindow',
+            autoCreate: true,
 
-        xtype: 'people-details-progress-note-editwindow'
-    }],
+            xtype: 'people-details-progress-note-editwindow'
+        }
+    },
 
     control: {
         'people-manager #detailTabs': {
@@ -453,8 +438,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         if (record.phantom) {
             record.save({
                 success: function (savedRecord) {
-                //	console.log(savedRecord);
-
                     Ext.getStore('people.ProgressReports').insert(0, {
                         ID: savedRecord.get('ID'),
                         AuthorUsername: savedRecord.get('Author').Username,

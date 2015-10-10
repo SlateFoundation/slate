@@ -21,45 +21,42 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         'settings/courses': 'showManager'
     },
 
-    refs: [{
-        ref: 'settingsNavPanel',
-        selector: 'settings-navpanel'
-    },{
-        ref: 'manager',
-        selector: 'courses-manager',
-        autoCreate: true,
+    refs: {
+        settingsNavPanel: {
+            ref: 'settingsNavPanel',
+            selector: 'settings-navpanel'
+        },
+        manager: {
+            selector: 'courses-manager',
+            autoCreate: true,
 
-        xtype: 'courses-manager'
-    },{
-        ref: 'coursesFormWindow',
-        selector: 'courses-form-window',
-        autoCreate: true,
+            xtype: 'courses-manager'
+        },
+        coursesFormWindow: {
+            selector: 'courses-form-window',
+            autoCreate: true,
 
-        xtype: 'courses-form-window'
-    }],
+            xtype: 'courses-form-window'
+        }
+    },
 
-	// controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'courses-manager': {
-                show: me.onManagerShow,
-                edit: me.onCellEditorEdit,
-                browsecoursesclick: me.onBrowseCoursesClick,
-                deletecourseclick: me.onDeleteCourseClick
-            },
-            'courses-manager button[action=create-course]': {
-                click: me.onCreateCourseClick
-            },
-            'courses-form-window button[action="save"]': {
-                click: me.onSaveCourseClick
-            },
-            'courses-form-window form': {
-                fieldvaliditychange: me.setFormValidity,
-                fielderrorchange: me.setFormValidity
-            }
-        });
+	control: {
+        'courses-manager': {
+            show: 'onManagerShow',
+            edit: 'onCellEditorEdit',
+            browsecoursesclick: 'onBrowseCoursesClick',
+            deletecourseclick: 'onDeleteCourseClick'
+        },
+        'courses-manager button[action=create-course]': {
+            click: 'onCreateCourseClick'
+        },
+        'courses-form-window button[action="save"]': {
+            click: 'onSaveCourseClick'
+        },
+        'courses-form-window form': {
+            fieldvaliditychange: 'setFormValidity',
+            fielderrorchange: 'setFormValidity'
+        }
     },
 
 
@@ -152,7 +149,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.add(['course-sections', 'search', 'course:' + rec.get('Code')]);
+        Ext.util.History.pushState(['course-sections', 'search', 'course:' + rec.get('Code')]);
     },
 
     setFormValidity: function(form) {

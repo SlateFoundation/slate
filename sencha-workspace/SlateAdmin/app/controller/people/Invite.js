@@ -15,39 +15,32 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         'people.Invitations'
     ],
 
-    refs: [{
-        ref: 'peopleGrid',
-        selector: 'people-grid'
-    },{
-        ref: 'invitationsWindow',
-        selector: 'people-invitationswindow',
-        autoCreate: true,
+    refs: {
+        peopleGrid: 'people-grid',
+        invitationsWindow: {
+            selector: 'people-invitationswindow',
+            autoCreate: true,
 
-        xtype: 'people-invitationswindow'
-    }],
+            xtype: 'people-invitationswindow'
+        }
+    },
 
-
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.control({
-            'people-grid #sendInvitationsBtn': {
-                click: me.onOpenClick
-            },
-            'people-invitationspanel grid checkcolumn': {
-                headerclick: me.onGridCheckHeaderClick
-            },
-            'people-invitationspanel grid': {
-                select: me.onGridSelect
-            },
-            'people-invitationspanel button[action=cancel]': {
-                click: me.onCancelClick
-            },
-            'people-invitationspanel button[action=send]': {
-                click: me.onSendClick
-            }
-        });
+    control: {
+        'people-grid #sendInvitationsBtn': {
+            click: 'onOpenClick'
+        },
+        'people-invitationspanel grid checkcolumn': {
+            headerclick: 'onGridCheckHeaderClick'
+        },
+        'people-invitationspanel grid': {
+            select: 'onGridSelect'
+        },
+        'people-invitationspanel button[action=cancel]': {
+            click: 'onCancelClick'
+        },
+        'people-invitationspanel button[action=send]': {
+            click: 'onSendClick'
+        }
     },
 
 

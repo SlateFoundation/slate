@@ -65,127 +65,82 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
-    refs: [{
-        ref: 'navPanel',
-        selector: 'people-navpanel',
-        autoCreate: true,
+    refs: {
+        navPanel: {
+            selector: 'people-navpanel',
+            autoCreate: true,
 
-        xtype: 'people-navpanel'
-    },{
-        ref: 'searchField',
-        selector: 'people-navpanel jarvus-searchfield'
-    },{
-        ref: 'advancedSearchForm',
-        selector: 'people-navpanel people-advancedsearchform'
-    },{
-        ref: 'groupsTree',
-        selector: 'people-navpanel #groups'
-    },{
-        ref: 'manager',
-        selector: 'people-manager',
-        autoCreate: true,
+            xtype: 'people-navpanel'
+        },
+        searchField: 'people-navpanel jarvus-searchfield',
+        advancedSearchForm:'people-navpanel people-advancedsearchform',
+        groupsTree: 'people-navpanel #groups',
+        manager: {
+            selector: 'people-manager',
+            autoCreate: true,
 
-        xtype: 'people-manager'
-    },{
-        ref: 'grid',
-        selector: 'people-grid'
-    },{
-        ref: 'exportResultsBtn',
-        selector: 'people-grid #exportResultsBtn'
-    },{
-        ref: 'sendInvitationsBtn',
-        selector: 'people-grid #sendInvitationsBtn'
-    },{
-        ref: 'selectionCountCmp',
-        selector: 'people-grid #selectionCount'
-    },{
-        ref: 'exportColumnsMenu',
-        selector: 'people-grid menu#csvExportColumns'
-//    },{
-//        ref: 'personMenu',
-//        autoCreate: true,
-//        selector: 'people-personmenu',
-//        xtype: 'people-personmenu'
-//    },{
-//        ref: 'personHeader',
-//        selector: 'people-manager #person-header'
-//    },{
-//        ref: 'peopleSearchField',
-//        selector: 'people-navpanel textfield[inputType=search]'
-//    },{
-//        ref: 'personProfile',
-//        selector: 'people-details-profile'
-//    },{
-//        ref: 'personCourses',
-//        selector: 'people-details-courses'
-//    },{
-//        ref: 'personContacts',
-//        selector: 'people-details-contacts'
-//    },{
-//        ref: 'personProgressNotes',
-//        selector: 'people-details-progressnotes'
-//    },{
-//        ref: 'peopleSearchField',
-//        selector: 'people-navpanel #peopleSearchField'
-//    },{
-//        ref: 'peopleSearchOptionsForm',
-//        selector: 'people-navpanel #searchOptionsForm'
-    }],
+            xtype: 'people-manager'
+        },
+        grid: 'people-grid',
+        exportResultsBtn: 'people-grid #exportResultsBtn',
+        sendInvitationsBtn: 'people-grid #sendInvitationsBtn',
+        selectionCountCmp: 'people-grid #selectionCount',
+        exportColumnsMenu: 'people-grid menu#csvExportColumns'
+    },
+
+    control: {
+        'people-navpanel': {
+            expand: 'onNavPanelExpand'
+        },
+        'people-navpanel jarvus-searchfield': {
+            specialkey: 'onSearchSpecialKey',
+            clear: 'onSearchClear'
+        },
+        'people-navpanel people-advancedsearchform field': {
+            specialkey: 'onAdvancedSearchFormSpecialKey'
+        },
+        'people-navpanel button[action=search]': {
+            click: 'onSearchClick'
+        },
+        'people-navpanel #groups': {
+            //select: onGroupSelect
+            itemclick: 'onGroupSelect'
+        },
+        'people-grid': {
+            select: { fn: 'onPersonSelect', buffer: 10 },
+            deselect: { fn: 'onPersonDeselect', buffer: 10 }
+        },
+        'people-manager #detailTabs': {
+            tabchange: 'onDetailTabChange'
+        },
+        'people-grid button#exportResultsBtn menuitem[exportFormat]': {
+            click: 'onExportFormatButtonClick'
+        },
+        'people-grid menu#csvExportColumns': {
+            beforeshow: 'onBeforeCsvExportColumnsMenuShow'
+        }
+//            'people-grid #exportResultsBtn': {
+//                click: 'onExportResultsClick'
+//            },
+//            'people-grid #exportResultsBtn menu': {
+//                afterrender: 'onExportMenuRendered',
+//                exportfieldsrefill: 'onExportFieldsRefill'
+//            },
+//            'people-grid #exportResultsBtn #exportTypeMenu menucheckitem': {
+//                checkchange: 'onExportTypeChange'
+//            },
+//            'people-grid #exportResultsBtn #exportFieldsMenu menucheckitem': {
+//                checkchange: 'onExportFieldsChange'
+//            }
+    },
 
     // controller template methods
     init: function() {
-        var me = this;
-
-        me.control({
-            'people-navpanel': {
-                expand: me.onNavPanelExpand
-            },
-            'people-navpanel jarvus-searchfield': {
-                specialkey: me.onSearchSpecialKey,
-                clear: me.onSearchClear
-            },
-            'people-navpanel people-advancedsearchform field': {
-                specialkey: me.onAdvancedSearchFormSpecialKey
-            },
-            'people-navpanel button[action=search]': {
-                click: me.onSearchClick
-            },
-            'people-navpanel #groups': {
-                //select: me.onGroupSelect
-                itemclick: me.onGroupSelect
-            },
-            'people-grid': {
-                select: { fn: me.onPersonSelect, buffer: 10 },
-                deselect: { fn: me.onPersonDeselect, buffer: 10 }
-            },
-            'people-manager #detailTabs': {
-                tabchange: me.onDetailTabChange
-            },
-            'people-grid button#exportResultsBtn menuitem[exportFormat]': {
-                click: me.onExportFormatButtonClick
-            },
-            'people-grid menu#csvExportColumns': {
-                beforeshow: me.onBeforeCsvExportColumnsMenuShow
-            }
-//            'people-grid #exportResultsBtn': {
-//                click: me.onExportResultsClick
-//            },
-//            'people-grid #exportResultsBtn menu': {
-//                afterrender: me.onExportMenuRendered,
-//                exportfieldsrefill: me.onExportFieldsRefill
-//            },
-//            'people-grid #exportResultsBtn #exportTypeMenu menucheckitem': {
-//                checkchange: me.onExportTypeChange
-//            },
-//            'people-grid #exportResultsBtn #exportFieldsMenu menucheckitem': {
-//                checkchange: me.onExportFieldsChange
-//            }
-        });
-
-        me.listen({
+        this.listen({
             store: {
                 '#People': {
-                    load: me.onStoreLoad
+                    load: this.onStoreLoad,
+                    scope: this
                 }
             }
         });
@@ -365,7 +320,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (ev.getKey() == ev.ENTER) {
             if (query) {
-                Ext.util.History.add(['people', 'search', query]);
+                Ext.util.History.pushState(['people', 'search', query]);
             } else {
                 this.getAdvancedSearchForm().getForm().reset();
             }
@@ -893,14 +848,14 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (!query && rootGroupSelected) {
             // if there's no query and root group is selected, redirect to people/all
-            Ext.util.History.add('people/all');
+            Ext.util.History.pushState('people/all');
             return;
         }
 
         searchField.setValue(query);
 
         if (execute) {
-            Ext.util.History.add(query ? ['people', 'search', query] : 'people');
+            Ext.util.History.pushState(query ? ['people', 'search', query] : 'people');
         }
     },
 
