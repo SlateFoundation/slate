@@ -32,6 +32,7 @@ Ext.define('SlateAdmin.model.sbg.narrative.WorksheetAssignment', {
             type: 'integer'
         }, {
             name: 'TermID',
+            critical: true,
             type: 'integer'
         }
     ],

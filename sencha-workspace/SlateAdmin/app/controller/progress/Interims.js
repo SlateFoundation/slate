@@ -248,7 +248,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
         interim.save({
             success: function (record, operation) {
-                var r = Ext.decode(operation.response.responseText),
+                var r = Ext.decode(operation.getResponse().responseText),
                     savedInterim = r.data[0];
 
                 me.getInterimsManager().setInterimSaved(true);

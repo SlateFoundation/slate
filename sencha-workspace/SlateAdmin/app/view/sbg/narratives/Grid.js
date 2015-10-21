@@ -51,8 +51,8 @@ Ext.define('SlateAdmin.view.sbg.narratives.Grid', {
             store: {
                 fields: ['ID', 'Title', 'Handle'],
                 proxy:{
-                    type: 'ajax',
-                    url: '/standards/json/worksheets',
+                    type: 'slateapi',
+                    url: '/standards/worksheets',
                     limitParam: false,
                     pageParam: false,
                     startParam: false,

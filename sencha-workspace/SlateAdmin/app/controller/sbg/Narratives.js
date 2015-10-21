@@ -232,7 +232,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
             selModel = worksheetGrid.getSelectionModel();
 
         selModel.deselectAll();
-        selModel.select(operation.records[0]);
+        selModel.select(operation.getRecords()[0]);
     },
 
     onSavedReportsToggle: function (button, pressed) {
@@ -325,7 +325,6 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
         });
 
         form.add(fieldArray);
-        form.doComponentLayout();
 
         editor.setLoading(false);
 
@@ -421,19 +420,20 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
 
         editor.setLoading(true);
 
-        editor.getForm().submit({
+        SlateAdmin.API.request({
             url: '/sbg/narratives/worksheet-save',
             submitEmptyText: false,
-            params: {
+            method: 'POST',
+            params: Ext.Object.merge({
                 courseSectionID: narrative.get('CourseSectionID'),
                 termID: narrative.get('TermID'),
                 studentID: narrative.get('StudentID'),
                 narrativeID: narrative.get('ID'),
                 Status: reportData.Status
-            },
-            success: function (f, action) {
+            }, editor.getForm().getValues()),
+            success: function (resposne) {
 
-                r = Ext.decode(action.response.responseText);
+                 r = Ext.decode(resposne.responseText);
 
                 if (editor) {
                     editor.setLoading(false);
@@ -475,7 +475,6 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
 
         if (combo.findRecordByValue(newValue)) {
             nextCombo = combo.nextNode('combo');
-            combo.triggerBlur();
 
             if (nextCombo) {
                 nextCombo.focus();

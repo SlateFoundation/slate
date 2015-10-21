@@ -156,7 +156,7 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
     },
 
     onDirtyDescription: function (field) {
-        field.addClass('dirty').removeCls('saved');
+        field.addCls('dirty').removeCls('saved');
     },
 
     onStandardsAssignmentEdit: function (editor, e) {
@@ -174,7 +174,7 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
             selModel = assignmentGrid.getSelectionModel();
 
         selModel.deselectAll();
-        selModel.select(operation.records[0]);
+        selModel.select(operation.getRecords()[0]);
     },
 
     onTermChange: function (field, newValue, oldValue) {
@@ -239,8 +239,6 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
             manager = me.getStandardsManager(),
             termSelector = me.getStandardsTermSelector(),
             termID = termSelector.getValue();
-
-        me.loadedStudent = record;
 
         manager.setStudent(record);
 
@@ -368,7 +366,6 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
 
         if (combo.findRecordByValue(newValue)) {
             nextCombo = combo.nextNode('combo');
-            combo.triggerBlur();
 
             if (nextCombo) {
                 nextCombo.focus();
@@ -384,30 +381,32 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
             manager = me.getStandardsManager(),
             section = manager.getSection(),
             student = manager.getStudent(),
-            termID = termSelector.getValue(),
-            termSelector = me.getStandardsTermSelector();
+            termSelector = me.getStandardsTermSelector(),
+            termID = termSelector.getValue();
 
 
         worksheetForm.setLoading(true);
-        worksheetForm.getForm().submit({
+        SlateAdmin.API.request({
             url: '/sbg/standards/student-worksheet',
-            params: {
+            method: 'POST',
+            params: Ext.Object.merge({
                 courseSectionID: section.get('CourseSectionID'),
                 termID: termID,
                 studentID: student.get('ID')
-            },
-            success: function (form, action) {
+            }, worksheetForm.getForm().getValues()),
+            success: function (action) {
 
-                var studentGrid = me.getStudentsGrid(),
+                var result = Ext.decode(action.responseText),
+                    studentGrid = me.getStudentsGrid(),
                     studentSelModel = studentGrid.getSelectionModel(),
                     worksheetsStore = Ext.getStore('sbg.standards.WorksheetStudents');
 
-                if (!action.result.success) {
+                if (!result.success) {
                     Ext.Msg.alert('Save failed', 'Failed to save grades, please backup your last changes and reload before continuing work');
                     return;
                 }
 
-                student.set('PromptsGraded', action.result.data.length);
+                student.set('PromptsGraded', result.data.length);
                 student.commit();
 
                 worksheetForm.setLoading(false);
@@ -416,7 +415,7 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
                     studentSelModel.select(worksheetsStore.getAt(worksheetsStore.find('ID', studentSelModel.getSelection()[0].get('ID')) + 1));
                 }
             },
-            failure: function (form, action) {
+            failure: function () {
                 worksheetForm.setLoading(false);
             }
         });
