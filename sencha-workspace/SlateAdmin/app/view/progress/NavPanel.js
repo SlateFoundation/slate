@@ -2,28 +2,38 @@
 Ext.define('SlateAdmin.view.progress.NavPanel', {
     extend: 'SlateAdmin.view.LinksNavPanel',
     xtype: 'progress-navpanel',
-
+ //TODO: Delete extra link when nav panel arrow collapse is fixed
     title: 'Student Progress',
     data: [
         {
-            href: '#progress/standards', text: 'Standards Based Grades', 
+            href: '#progress/standards', text: 'Standards Based Grades',
             children: [{
                 href: '#progress/standards/worksheets', text: 'Manage Worksheets'
             },{
                 href: '#progress/standards/printing', text: 'Search & Print'
             }]
-        }, { 
-            href: '#progress/narratives', text: 'Narrative Reports', 
+        }, {
+            href: '#progress/standards/worksheets', text: 'Manage Worksheets'
+        },{
+            href: '#progress/standards/printing', text: 'Search & Print'
+        }, {
+            href: '#progress/narratives', text: 'Narrative Reports',
             children: [{
                 href: '#progress/narratives/printing', text: 'Search & Print'
             }]
         }, {
-            href: '#progress/interims', text: 'Interim Reports', 
+            href: '#progress/narratives/printing', text: 'Search & Print'
+        }, {
+            href: '#progress/interims', text: 'Interim Reports',
             children: [{
                 href: '#progress/interims/printing', text: 'Search & Print'
             },{
                 href: '#progress/interims/email', text: 'Email'
-            }] 
+            }]
+        }, {
+            href: '#progress/interims/printing', text: 'Search & Print'
+        },{
+            href: '#progress/interims/email', text: 'Email'
         }
     ]
 });
