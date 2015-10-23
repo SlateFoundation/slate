@@ -6,19 +6,19 @@ class ManageSlate implements \Slate\UI\ILinksSource
 {
     public static $parentTree = 'Tools';
 
-	public static function getLinks($context = null)
-	{
-		if (!empty($_SESSION['User']) && $_SESSION['User']->hasAccountLevel('Staff')) {
-			$manageLinks = static::getManageLinks();
+    public static function getLinks($context = null)
+    {
+        $manageLinks = static::getManageLinks();
 
-            return static::$parentTree ? [static::$parentTree => $manageLinks] : $manageLinks;
-		}
-
-		return [];
-	}
+        return !empty($manageLinks) && static::$parentTree ? [static::$parentTree => $manageLinks] : $manageLinks;
+    }
 
     public static function getManageLinks()
     {
+        if (empty($_SESSION['User']) || !$_SESSION['User']->hasAccountLevel('Staff')) {
+            return [];
+        }
+
         return [
             'Manage Slate' => [
                 '_href' => '/manage',
