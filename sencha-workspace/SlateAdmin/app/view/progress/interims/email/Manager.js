@@ -53,13 +53,13 @@ Ext.define('SlateAdmin.view.progress.interims.email.Manager', {
                         {
                             name: 'FullName',
                             convert: function (v, r) {
-                                return r.raw.LastName + ', ' + r.raw.FirstName;
+                                return r.data.LastName + ', ' + r.data.FirstName;
                             }
                         }
                     ],
                     proxy: {
-                        type: 'ajax',
-                        url: '/advisors/json',
+                        type: 'slateapi',
+                        url: '/advisors',
                         reader: {
                             type: 'json',
                             rootProperty: 'data'
@@ -79,13 +79,13 @@ Ext.define('SlateAdmin.view.progress.interims.email.Manager', {
                         {
                             name: 'FullName',
                             convert: function (v, r) {
-                                return r.raw.LastName + ', ' + r.raw.FirstName;
+                                return r.data.LastName + ', ' + r.data.FirstName;
                             }
                         }
                     ],
                     proxy: {
-                        type: 'ajax',
-                        url: '/people/json/',
+                        type: 'slateapi',
+                        url: '/people',
                         reader: {
                             type: 'json',
                             rootProperty: 'data'
@@ -184,6 +184,6 @@ Ext.define('SlateAdmin.view.progress.interims.email.Manager', {
         var previewBox = this.down('#previewBox');
         previewBox.enable();
         previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        previewBox.iframeEl.dom.src = '/interims/singleEmailPreview?'+Ext.Object.toQueryString(params);
+        previewBox.iframeEl.dom.src = SlateAdmin.API.buildUrl('/interims/singleEmailPreview?'+Ext.Object.toQueryString(params));
     }
 });

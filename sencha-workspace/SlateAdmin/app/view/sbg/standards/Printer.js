@@ -146,22 +146,15 @@ Ext.define('SlateAdmin.view.sbg.standards.Printer', {
     loadPrint: function (params) {
         var me = this,
             filterForm = me.getComponent('filterForm'),
-            previewBox = me.getComponent('previewBox'),
-            printLoadingInterval;
+            previewBox = me.getComponent('previewBox');
 
-        params.downloadToken = Math.random();
+        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        SlateAdmin.API.downloadFile('/sbg/standards/print?'+Ext.Object.toQueryString(params), function () {
+            filterForm.setLoading(false);
+        });
 
-        if (SlateAdmin.API.getHost()) {
-            printLoadingInterval = setInterval(function () {
-                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
-                    clearInterval(printLoadingInterval);
-                    filterForm.setLoading(false);
-                }
-            }, 500);
-
-            filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        }
-
-        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl('/standards/print??'+Ext.Object.toQueryString(params));
+        setTimeout(function() {
+            filterForm.setLoading(false);
+        }, 1000);
     }
 });

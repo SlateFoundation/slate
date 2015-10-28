@@ -69,6 +69,9 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
         'sbg-standards-assignments-grid button[action=myClassesToggle]': {
             toggle: 'onMyClassesToggle'
         },
+        'sbg-standards-assignments-grid combo[name=worksheetCombo]': {
+            select: 'onAssignmentGridWorksheetSelect'
+        },
         'sbg-standards-assignments-studenteditor textareafield': {
             change: {
                 fn: 'onDescriptionChange',
@@ -127,6 +130,10 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
         } else {
             me.loadWorksheets();
         }
+    },
+
+    onAssignmentGridWorksheetSelect: function (combo) {
+        combo.up('editor').completeEdit();
     },
 
     onPrinterActivate: function (manager) {

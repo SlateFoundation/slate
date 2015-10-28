@@ -22,8 +22,7 @@ Ext.define('SlateAdmin.view.sbg.standards.assignments.Grid', {
         text: 'My classes only',
         //width: '30%',
         action: 'myClassesToggle',
-        enableToggle: true,
-        pressed: true
+        enableToggle: true
     },{
         xtype: 'tbspacer'
     },{
@@ -49,6 +48,7 @@ Ext.define('SlateAdmin.view.sbg.standards.assignments.Grid', {
         field: {
             xtype: 'combo',
             mode: 'local',
+            name: 'worksheetCombo',
             store: {
                 fields: ['ID', 'Title', 'Handle'],
                 proxy:{

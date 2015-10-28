@@ -35,8 +35,8 @@ Ext.define('SlateAdmin.controller.sbg.Worksheets', {
             activate: 'onWorksheetsActivate'
         },
         'sbg-standards-worksheets-grid': {
-            itemclick: 'onWorksheetClick',
-            edit: 'onStandardsWorksheetEdit'
+            itemclick: 'onWorksheetClick'
+            // edit: 'onStandardsWorksheetEdit'
         },
         'sbg-standards-worksheets-grid button[action=createWorksheet]': {
             click: 'onAddWorksheetClick'
