@@ -75,7 +75,7 @@ Ext.define('SlateAdmin.controller.sbg.Worksheets', {
         Ext.MessageBox.confirm('Deleting Prompt', 'Are you absolutely sure you want to delete this prompt. You won\'t be able to see it again.', function (value) {
             if (value == 'yes') {
                 editor.setLoading('Deleting&hellip;');
-                record.destroy({
+                record.erase({
                     callback: function () {
                         editor.setLoading(false);
                     }
