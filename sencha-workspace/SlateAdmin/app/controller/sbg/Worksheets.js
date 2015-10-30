@@ -188,8 +188,8 @@ Ext.define('SlateAdmin.controller.sbg.Worksheets', {
             if (value == 'yes') {
                 record.set('Status', 'Hidden');
 
-                Ext.getStore('sbg.standards.Worksheets').load();
-
+                Ext.getStore('sbg.standards.Worksheets').remove(record);
+                
                 editor.disable();
             }
         }, this);
