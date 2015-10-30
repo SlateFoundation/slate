@@ -49,6 +49,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
                 displayField: 'FullName',
                 queryMode: 'local',
                 typeAhead: true,
+                allowBlank: true,
                 store: 'people.Advisors'
             },{
                 name: 'studentID',
