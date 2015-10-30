@@ -146,6 +146,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
     onMyClassesToggle: function (btn, pressed) {
         var termSelector = this.getNarrativesTermSelector(),
             termID = termSelector.getValue();
+
         Ext.getStore('sbg.narratives.WorksheetAssignments').load({
             url: '/standards/' + (pressed ? 'my-sections': 'term-sections'),
             params: {
@@ -497,7 +498,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
         }
 
         worksheetStore.load({
-            url: '/sbg/standards/my-sections',
+            url: '/sbg/standards/term-sections',
             params: {
                 termID: term
             }

@@ -21,8 +21,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Grid', {
         xtype: 'button',
         text: 'My classes only',
         action: 'myClassesToggle',
-        enableToggle: true,
-        pressed: true
+        enableToggle: true
     },{
         xtype: 'tbspacer'
     },{
