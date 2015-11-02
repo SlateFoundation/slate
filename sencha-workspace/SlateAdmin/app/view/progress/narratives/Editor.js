@@ -24,7 +24,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Editor',{
             xtype: 'displayfield',
             fieldLabel: 'Section',
             disabled: true,
-            disabledClass: '',
+            disabledCls: '',
             setValue : function (v) {
                 if (this.rendered) {
                     return this.inputEl.dom.innerHTML =
@@ -38,7 +38,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Editor',{
             xtype: 'displayfield',
             fieldLabel: 'Student',
             disabled: true,
-            disabledClass: '',
+            disabledCls: '',
             setValue : function (v) {
                 if (this.rendered) {
                     return this.inputEl.dom.innerHTML =
