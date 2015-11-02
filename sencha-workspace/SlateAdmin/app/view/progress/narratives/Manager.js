@@ -3,7 +3,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     extend: 'Ext.Container',
     xtype: 'progress-narratives-manager',
     requires: [
-        'SlateAdmin.view.progress.narratives.Grid',
+        'SlateAdmin.view.progress.narratives.SectionsGrid',
         'SlateAdmin.view.progress.narratives.StudentsGrid',
         'SlateAdmin.view.progress.narratives.Editor'
     ],
@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     items: [{
         region: 'west',
         split: true,
-        xtype: 'progress-narratives-grid',
+        xtype: 'progress-narratives-sectionsgrid',
         width: 250
     },{
         region: 'center',

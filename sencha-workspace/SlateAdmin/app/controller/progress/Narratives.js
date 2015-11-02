@@ -1,4 +1,12 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
+
+/**
+ * TODO:
+ * - Sort control statements
+ * - Sort methods
+ * - Remove redundant "narrative" ref prefixing
+ * - Remove all SBG code from core
+ */
 Ext.define('SlateAdmin.controller.progress.Narratives', {
     extend: 'Ext.app.Controller',
 
@@ -8,28 +16,31 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     ],
     stores: [
         'people.Advisors',
+        'progress.narratives.Sections',
         'progress.narratives.Reports',
-        'progress.narratives.WorksheetAssignments',
         'progress.narratives.People'
     ],
     refs: {
-        narrativesGrid: 'progress-narratives-studentsgrid',
-        narrativeEditor: 'progress-narratives-editor',
         narrativesManager: {
             selector: 'progress-narratives-manager',
             autoCreate: true,
 
             xtype: 'progress-narratives-manager'
         },
+        sectionsGrid: 'progress-narratives-sectionsgrid',
+        narrativesTermSelector: 'progress-narratives-sectionsgrid #termSelector',
+        narrativesMyClassesToggleBtn: 'progress-narratives-sectionsgrid button[action=myClassesToggle]',
+        narrativesWorksheetGrid: 'progress-narratives-sectionsgrid',
+        narrativesGrid: 'progress-narratives-studentsgrid',
+        narrativeEditor: 'progress-narratives-editor',
+
         narrativesPrinter: {
             selector: 'progress-narratives-printer',
             autoCreate: true,
 
             xtype: 'progress-narratives-printer'
         },
-        narrativesPrintForm: 'progress-narratives-printer form',
-        narrativesTermSelector: 'progress-narratives-grid #termSelector',
-        narrativesWorksheetGrid: 'progress-narratives-grid'
+        narrativesPrintForm: 'progress-narratives-printer form'
     },
     routes: {
         'progress/narratives': 'showNarratives',
@@ -76,14 +87,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress-narratives-studentsgrid button[action=loadSavedReports]': {
             toggle: 'onSavedReportsToggle'
         },
-        'progress-narratives-grid #termSelector': {
+        narrativesTermSelector: {
             change: 'onTermChange'
         },
-        'progress-narratives-grid': {
-            select: 'loadSection',
-            edit: 'onNarrativeAssignmentEdit'
+        sectionsGrid: {
+            select: 'loadSection'
+            //edit: 'onNarrativeAssignmentEdit'
         },
-        'progress-narratives-grid button[action=myClassesToggle]': {
+        narrativesMyClassesToggleBtn: {
             toggle: 'onMyClassesToggle'
         }
     },
@@ -98,23 +109,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         this.application.getController('Viewport').loadCard(this.getNarrativesPrinter());
     },
 
+
     //event handlers
     onManagerActivate: function (manager) {
-        var me = this,
-            termStore = Ext.getStore('Terms');
-
-            // ensure terms are loaded
-        if (!termStore.isLoaded()) {
-            manager.setLoading('Loading terms&hellip;');
-            termStore.load({
-                callback: function () {
-                    manager.setLoading(false);
-                    me.loadWorksheets();
-                }
-            });
-        } else {
-            me.loadWorksheets();
-        }
+        this.syncSections();
     },
 
     onPrinterActivate: function (manager) {
@@ -143,39 +141,23 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
     },
 
-    onMyClassesToggle: function (btn, pressed) {
-        var termSelector = this.getNarrativesTermSelector(),
-            termID = termSelector.getValue();
-
-        Ext.getStore('progress.narratives.WorksheetAssignments').load({
-            url: '/standards/' + (pressed ? 'my-sections': 'term-sections'),
-            params: {
-                termID: termID
-            }
-        });
+    onMyClassesToggle: function () {
+        this.syncSections();
     },
 
-    onTermChange: function (field, newValue, oldValue) {
-        var grid = this.getNarrativesWorksheetGrid(),
-            btn = grid.down('button[action=myClassesToggle]');
-
-        Ext.getStore('progress.narratives.WorksheetAssignments').load({
-            url: '/standards/' + (btn.pressed ? 'my-sections' : 'term-sections'),
-            params: {
-                termID: newValue
-            }
-        });
+    onTermChange: function () {
+        this.syncSections();
     },
 
-    onNarrativeAssignmentEdit: function (editor, e) {
-        var store = Ext.getStore('progress.narratives.WorksheetAssignments');
+    // onNarrativeAssignmentEdit: function (editor, e) {
+    //     var store = Ext.getStore('progress.narratives.WorksheetAssignments');
 
-        if (e.field == 'WorksheetID' && e.orignalValue != e.value && !e.originalValue) {
-            store.on('write', this.onNarrativeWorksheetAssignmentWrite, this, {
-                single: true
-            });
-        }
-    },
+    //     if (e.field == 'WorksheetID' && e.orignalValue != e.value && !e.originalValue) {
+    //         store.on('write', this.onNarrativeWorksheetAssignmentWrite, this, {
+    //             single: true
+    //         });
+    //     }
+    // },
 
     onBeforeNarrativeSelect: function (view, record) {
         var me = this,
@@ -228,13 +210,13 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         this.saveReport('Published');
     },
 
-    onNarrativeWorksheetAssignmentWrite: function (store, operation) {
-        var worksheetGrid = this.getNarrativesWorksheetGrid(),
-            selModel = worksheetGrid.getSelectionModel();
+    // onNarrativeWorksheetAssignmentWrite: function (store, operation) {
+    //     var worksheetGrid = this.getNarrativesWorksheetGrid(),
+    //         selModel = worksheetGrid.getSelectionModel();
 
-        selModel.deselectAll();
-        selModel.select(operation.getRecords()[0]);
-    },
+    //     selModel.deselectAll();
+    //     selModel.select(operation.getRecords()[0]);
+    // },
 
     onSavedReportsToggle: function (button, pressed) {
         var editor = this.getNarrativeEditor(),
@@ -485,23 +467,46 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
     },
 
-    loadWorksheets: function() {
-         var termSelector = this.getNarrativesTermSelector(),
-            termStore = Ext.getStore('Terms'),
-            term = termSelector.getValue(),
-            reportingTerm = termStore.getReportingTerm(),
-            worksheetStore = Ext.getStore('progress.narratives.WorksheetAssignments');
 
-        if(!term && reportingTerm) {
-            term = reportingTerm.getId();
-            termSelector.setValue(term);
+    // controller methods
+    syncSections: function() {
+        var me = this,
+            sectionsStore = Ext.getStore('progress.narratives.Sections'),
+            sectionsProxy = sectionsStore.getProxy(),
+            managerCt = me.getNarrativesManager(),
+            myClassesToggleBtn = me.getNarrativesMyClassesToggleBtn(),
+            termSelector = me.getNarrativesTermSelector(),
+            termsStore = termSelector.getStore(),
+            term = termSelector.getValue();
+
+        // ensure terms are loaded
+        if (!termsStore.isLoaded()) {
+            termsStore.on('load', function() {
+                managerCt.setLoading(false);
+                me.syncSections();
+            }, me, { single: true });
+
+            if (!termsStore.isLoading()) {
+                termsStore.load();
+            }
+
+            return;
         }
 
-        worksheetStore.load({
-            url: '/sbg/standards/term-sections',
-            params: {
-                termID: term
+        // ensure a term is selected
+        if (!term) {
+            term = termsStore.getReportingTerm() || termsStore.getCurrentTerm();
+            if (term) {
+                termSelector.setValue(term);
+            } else {
+                Ext.Msg.alert('No term available', 'No current or reporting term could be detected, please select a term');
             }
-        });
+
+            return; // setting the term will call this function again via the change event
+        }
+
+        sectionsProxy.setExtraParam('enrolled_user', myClassesToggleBtn.pressed ? 'current' : '');
+        sectionsProxy.setExtraParam('term', term);
+        sectionsStore.loadIfDirty();
     }
 });
