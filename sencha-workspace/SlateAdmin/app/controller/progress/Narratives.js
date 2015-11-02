@@ -21,18 +21,17 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress.narratives.People'
     ],
     refs: {
-        narrativesManager: {
+        managerCt: {
             selector: 'progress-narratives-manager',
             autoCreate: true,
 
             xtype: 'progress-narratives-manager'
         },
         sectionsGrid: 'progress-narratives-sectionsgrid',
-        narrativesTermSelector: 'progress-narratives-sectionsgrid #termSelector',
-        narrativesMyClassesToggleBtn: 'progress-narratives-sectionsgrid button[action=myClassesToggle]',
-        narrativesWorksheetGrid: 'progress-narratives-sectionsgrid',
-        narrativesGrid: 'progress-narratives-studentsgrid',
-        narrativeEditor: 'progress-narratives-editor',
+        termSelector: 'progress-narratives-sectionsgrid #termSelector',
+        myClassesToggleBtn: 'progress-narratives-sectionsgrid button[action=myClassesToggle]',
+        studentsGrid: 'progress-narratives-studentsgrid',
+        editorForm: 'progress-narratives-editor',
 
         narrativesPrinter: {
             selector: 'progress-narratives-printer',
@@ -47,9 +46,20 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress/narratives/printing': 'showNarrativePrinting'
     },
     control: {
-        'progress-narratives-manager': {
+        managerCt: {
             activate: 'onManagerActivate'
         },
+
+        sectionsGrid: {
+            select: 'loadSection'
+        },
+        termSelector: {
+            change: 'onTermChange'
+        },
+        myClassesToggleBtn: {
+            toggle: 'onMyClassesToggle'
+        },
+
         'progress-narratives-studentsgrid': {
             select: 'onNarrativeSelect',
             beforeselect: 'onBeforeNarrativeSelect'
@@ -86,23 +96,13 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         },
         'progress-narratives-studentsgrid button[action=loadSavedReports]': {
             toggle: 'onSavedReportsToggle'
-        },
-        narrativesTermSelector: {
-            change: 'onTermChange'
-        },
-        sectionsGrid: {
-            select: 'loadSection'
-            //edit: 'onNarrativeAssignmentEdit'
-        },
-        narrativesMyClassesToggleBtn: {
-            toggle: 'onMyClassesToggle'
         }
     },
 
 
-    //route handlers
+    // route handlers
     showNarratives: function () {
-        this.application.getController('Viewport').loadCard(this.getNarrativesManager());
+        this.application.getController('Viewport').loadCard(this.getManagerCt());
     },
 
     showNarrativePrinting: function () {
@@ -110,12 +110,12 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     },
 
 
-    //event handlers
-    onManagerActivate: function (manager) {
+    // event handlers
+    onManagerActivate: function () {
         this.syncSections();
     },
 
-    onPrinterActivate: function (manager) {
+    onPrinterActivate: function (managerCt) {
         var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
             selectedTerm = termSelector.getValue(),
             termStore = Ext.getStore('Terms'),
@@ -123,14 +123,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             onTermLoad = function () {
                 if(!selectedTerm) {
                     termSelector.setValue(termStore.getReportingTerm().getId());
-                    manager.setLoading(false);
+                    managerCt.setLoading(false);
                 }
 
 
             };
 
         if(!termStore.isLoaded()) {
-            manager.setLoading('Loading terms&hellip;');
+            managerCt.setLoading('Loading terms&hellip;');
             termStore.load({
                 callback: onTermLoad
             });
@@ -162,17 +162,17 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     onBeforeNarrativeSelect: function (view, record) {
         var me = this,
             editor = me.getNarrativeEditor(),
-            manager = me.getNarrativesManager(),
+            managerCt = me.getManagerCt(),
             grid = me.getNarrativesGrid(),
-            narrative = manager.getNarrative(),
+            narrative = managerCt.getNarrative(),
             isDirty = editor.isDirty(),
-            narrativeSaved = manager.getNarrativeSaved();
+            narrativeSaved = managerCt.getNarrativeSaved();
 
             if (!narrativeSaved && narrative && isDirty) {
                 Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
                     if (btn == 'yes') {
-                        manager.setNarrativeSaved(true);
-                        manager.updateNarrative(narrative);
+                        managerCt.setNarrativeSaved(true);
+                        managerCt.updateNarrative(narrative);
 
                         grid.getSelectionModel().select([record]);
                     }
@@ -185,21 +185,20 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     onNarrativeSelect: function (view, record) {
         var me = this,
             editor = me.getNarrativeEditor(),
-            manager = me.getNarrativesManager(),
+            managerCt = me.getManagerCt(),
             assignment = editor.getWorksheet();
 
         editor.enable();
         editor.body.scrollTo('top', 0);
 
-        manager.setNarrative(record);
-        manager.setNarrativeSaved(true);
+        managerCt.setNarrative(record);
+        managerCt.setNarrativeSaved(true);
 
         me.loadStandards(assignment.get('WorksheetID') ? record : false);
     },
 
     onEditorDirtyChange: function (field, dirty) {
-        var manager = this.getNarrativesManager();
-        manager.setNarrativeSaved(false);
+        this.getManagerCt().setNarrativeSaved(false);
     },
 
     onNarrativeSaved: function () {
@@ -209,14 +208,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     onNarrativeFinished: function () {
         this.saveReport('Published');
     },
-
-    // onNarrativeWorksheetAssignmentWrite: function (store, operation) {
-    //     var worksheetGrid = this.getNarrativesWorksheetGrid(),
-    //         selModel = worksheetGrid.getSelectionModel();
-
-    //     selModel.deselectAll();
-    //     selModel.select(operation.getRecords()[0]);
-    // },
 
     onSavedReportsToggle: function (button, pressed) {
         var editor = this.getNarrativeEditor(),
@@ -255,7 +246,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     //helper functions
     loadSection: function (view, record) {
         var me = this,
-            termSelector = me.getNarrativesTermSelector(),
+            termSelector = me.getTermSelector(),
             termID = termSelector.getValue(),
             grid = me.getNarrativesGrid();
 
@@ -273,15 +264,15 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     revertChanges: function () {
         var me = this,
-            manager = me.getNarrativesManager(),
+            managerCt = me.getManagerCt(),
             courseWorksheteID = me.getNarrativesWorksheetGrid().getSelectionModel().getSelection()[0].get('WorksheetID');
 
         Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes', function (btn) {
             if (btn == 'yes') {
-                var narartive = manager.getNarrative();
-                manager.updateNarrative(narartive);
+                var narartive = managerCt.getNarrative();
+                managerCt.updateNarrative(narartive);
                 me.loadStandards(courseWorksheteID ? narartive : false);
-                manager.setNarrativeSaved(true);
+                managerCt.setNarrativeSaved(true);
             }
         });
     },
@@ -355,10 +346,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     saveReport: function (newStatus) {
         var me = this,
-            manager = me.getNarrativesManager(),
+            managerCt = me.getManagerCt(),
             editor = me.getNarrativeEditor(),
             reportData  = editor.getValues(),
-            narrative = manager.getNarrative();
+            narrative = managerCt.getNarrative();
 
         if (newStatus == 'Published' || (!newStatus && reportData.Status == 'Published')) {
             if (!reportData.Grade) {
@@ -376,7 +367,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     doSaveReport: function (narrative, reportData) {
         var me = this,
-            manager = me.getNarrativesManager(),
+            managerCt = me.getManagerCt(),
             editor = me.getNarrativeEditor(),
             grid = me.getNarrativesGrid(),
             selModel = grid.getSelectionModel(),
@@ -426,7 +417,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
                 narrative.commit();
 
-                manager.setNarrativeSaved(true);
+                managerCt.setNarrativeSaved(true);
 
                 selModel.selectNext();
             },
@@ -473,9 +464,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         var me = this,
             sectionsStore = Ext.getStore('progress.narratives.Sections'),
             sectionsProxy = sectionsStore.getProxy(),
-            managerCt = me.getNarrativesManager(),
-            myClassesToggleBtn = me.getNarrativesMyClassesToggleBtn(),
-            termSelector = me.getNarrativesTermSelector(),
+            managerCt = me.getManagerCt(),
+            myClassesToggleBtn = me.getMyClassesToggleBtn(),
+            termSelector = me.getTermSelector(),
             termsStore = termSelector.getStore(),
             term = termSelector.getValue();
 
