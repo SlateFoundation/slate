@@ -59,7 +59,7 @@ Ext.define('SlateAdmin.view.progress.interims.email.Manager', {
                     ],
                     proxy: {
                         type: 'slateapi',
-                        url: '/advisors',
+                        url: '/people/*advisors',
                         reader: {
                             type: 'json',
                             rootProperty: 'data'
