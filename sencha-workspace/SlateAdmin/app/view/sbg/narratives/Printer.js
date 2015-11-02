@@ -95,7 +95,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
                     ],
                     proxy: {
                         type: 'slateapi',
-                        url: '/sbg/narratives/authors'
+                        url: '/progress/narratives/authors'
                     }
                 }
             }]
@@ -155,7 +155,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
         }, this, { single: true, delay: 10 })
 
         SlateAdmin.API.request({
-            url: '/sbg/narratives/print/preview',
+            url: '/progress/narratives/print/preview',
             params: params,
             scope: this,
             success: function (res) {
@@ -176,7 +176,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
 
         filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
         // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        SlateAdmin.API.downloadFile('/sbg/narratives/print?'+Ext.Object.toQueryString(params), function () {
+        SlateAdmin.API.downloadFile('/progress/narratives/print?'+Ext.Object.toQueryString(params), function () {
             filterForm.setLoading(false);
         });
 

@@ -44,10 +44,10 @@ Ext.define('SlateAdmin.model.sbg.Narrative', {
     proxy: {
         type: 'slaterecords',
         api: {
-            read: '/sbg/narratives/reports/mystudents',
-            create: '/sbg/narratives/reports/save',
-            update: '/sbg/narratives/reports/save',
-            destroy: '/sbg/narratives/reports/destroy'
+            read: '/progress/narratives/reports/mystudents',
+            create: '/progress/narratives/reports/save',
+            update: '/progress/narratives/reports/save',
+            destroy: '/progress/narratives/reports/destroy'
         }
     }
 });

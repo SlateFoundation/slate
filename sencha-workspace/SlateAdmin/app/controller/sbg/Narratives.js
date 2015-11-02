@@ -243,9 +243,9 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
         editor.disable();
 
         if (pressed) {
-            store.load({url: '/sbg/narratives/all'});
+            store.load({url: '/progress/narratives/all'});
         } else {
-            store.load({url: '/sbg/narratives/mystudents'});
+            store.load({url: '/progress/narratives/mystudents'});
         }
 
     },
@@ -422,7 +422,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
         editor.setLoading(true);
 
         SlateAdmin.API.request({
-            url: '/sbg/narratives/worksheet-save',
+            url: '/progress/narratives/worksheet-save',
             submitEmptyText: false,
             method: 'POST',
             params: Ext.Object.merge({
