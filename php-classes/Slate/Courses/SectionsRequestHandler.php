@@ -8,7 +8,7 @@ use Emergence\People\Person;
 use Emergence\CMS\BlogPost;
 use Emergence\CMS\BlogRequestHandler;
 #use SpreadSheetWriter;
-#use Slate\Term;
+use Slate\Term;
 #use Slate\Courses\SectionParticipant;
 
 class SectionsRequestHandler extends \RecordsRequestHandler
@@ -173,6 +173,17 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
+        if (!empty($_REQUEST['term'])) {
+            if ($_REQUEST['term'] == 'current') {
+                if (!$Term = Term::getClosest()) {
+                    return static::throwInvalidRequestError('No current term could be found');
+                }
+            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
+
+            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
+        }
 #        if (empty($_REQUEST['AllCourses']) && $GLOBALS['Session']->PersonID) {
 #            $conditions[] = 'ID IN (SELECT CourseSectionID FROM course_section_participants WHERE PersonID = '.$GLOBALS['Session']->PersonID.')';
 #        }
