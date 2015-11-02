@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.sbg.narratives.Grid', {
+Ext.define('SlateAdmin.view.progress.narratives.Grid', {
     extend: 'Ext.grid.Panel',
-    xtype: 'sbg-narratives-grid',
+    xtype: 'progress-narratives-grid',
     requires: [
         'Ext.grid.column.Template',
         'Ext.form.field.ComboBox',
@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Grid', {
         'Ext.button.Button'
     ],
 
-    store: 'sbg.narratives.WorksheetAssignments',
+    store: 'progress.narratives.WorksheetAssignments',
     componentCls: 'progress-narratives-grid',
     plugins: [{
         ptype: 'cellediting',

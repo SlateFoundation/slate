@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.model.sbg.Narrative', {
+Ext.define('SlateAdmin.model.progress.narratives.Report', {
     extend: 'Ext.data.Model',
     requires: [
         'Ext.data.proxy.Ajax',

@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.sbg.narratives.Editor',{
+Ext.define('SlateAdmin.view.progress.narratives.Editor',{
     extend: 'Ext.form.Panel',
-    xtype: 'sbg-narratives-editor',
+    xtype: 'progress-narratives-editor',
 
     config: {
         worksheet: null

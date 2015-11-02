@@ -1,11 +1,11 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.sbg.narratives.Manager',{
+Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     extend: 'Ext.Container',
-    xtype: 'sbg-narratives-manager',
+    xtype: 'progress-narratives-manager',
     requires: [
-        'SlateAdmin.view.sbg.narratives.Grid',
-        'SlateAdmin.view.sbg.narratives.StudentsGrid',
-        'SlateAdmin.view.sbg.narratives.Editor'
+        'SlateAdmin.view.progress.narratives.Grid',
+        'SlateAdmin.view.progress.narratives.StudentsGrid',
+        'SlateAdmin.view.progress.narratives.Editor'
     ],
 
     layout: 'border',
@@ -18,17 +18,17 @@ Ext.define('SlateAdmin.view.sbg.narratives.Manager',{
     items: [{
         region: 'west',
         split: true,
-        xtype: 'sbg-narratives-grid',
+        xtype: 'progress-narratives-grid',
         width: 250
     },{
         region: 'center',
-        xtype: 'sbg-narratives-studentsgrid',
+        xtype: 'progress-narratives-studentsgrid',
         disabled: true,
         width: 250
     },{
         region: 'east',
         split: true,
-        xtype: 'sbg-narratives-editor',
+        xtype: 'progress-narratives-editor',
         trackResetOnLoad: true,
         disabled: true,
         flex: 1
@@ -37,6 +37,6 @@ Ext.define('SlateAdmin.view.sbg.narratives.Manager',{
 
     //helper functions
     updateNarrative: function(narrative){
-        this.down('sbg-narratives-editor').loadRecord(narrative);
+        this.down('progress-narratives-editor').loadRecord(narrative);
     }
 });

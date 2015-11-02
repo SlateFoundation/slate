@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
+Ext.define('SlateAdmin.view.progress.narratives.Printer', {
     extend: 'Ext.container.Container',
-    xtype: 'sbg-narratives-printer',
+    xtype: 'progress-narratives-printer',
     requires: [
         'Ext.layout.container.VBox',
         'Ext.layout.container.HBox',
@@ -58,7 +58,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
                 queryMode: 'remote',
                 queryParam: 'q',
                 hideTrigger: true,
-                store: 'sbg.narratives.People',
+                store: 'progress.narratives.People',
                 listConfig: {
                     getInnerTpl: function () {
                         return '{LastName}, {FirstName}';

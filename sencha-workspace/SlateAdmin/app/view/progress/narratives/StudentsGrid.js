@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.sbg.narratives.StudentsGrid',{
+Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
     extend: 'Ext.grid.Panel',
-    xtype: 'sbg-narratives-studentsgrid',
+    xtype: 'progress-narratives-studentsgrid',
 
     viewConfig: {
         getRowClass: function(record) {
@@ -9,7 +9,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.StudentsGrid',{
         },
         emptyText: 'You are not currently an instructor for any students'
     },
-    store: 'sbg.Narratives',
+    store: 'progress.narratives.Reports',
     columns: [{
         xtype: 'templatecolumn',
         dataIndex: 'Student',

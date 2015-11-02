@@ -1,89 +1,89 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.controller.sbg.Narratives', {
+Ext.define('SlateAdmin.controller.progress.Narratives', {
     extend: 'Ext.app.Controller',
 
     views: [
-        'sbg.narratives.Manager',
-        'sbg.narratives.Printer'
+        'progress.narratives.Manager',
+        'progress.narratives.Printer'
     ],
     stores: [
         'people.Advisors',
-        'sbg.Narratives',
-        'sbg.narratives.WorksheetAssignments',
-        'sbg.narratives.People'
+        'progress.narratives.Reports',
+        'progress.narratives.WorksheetAssignments',
+        'progress.narratives.People'
     ],
     refs: {
-        narrativesGrid: 'sbg-narratives-studentsgrid',
-        narrativeEditor: 'sbg-narratives-editor',
+        narrativesGrid: 'progress-narratives-studentsgrid',
+        narrativeEditor: 'progress-narratives-editor',
         narrativesManager: {
-            selector: 'sbg-narratives-manager',
+            selector: 'progress-narratives-manager',
             autoCreate: true,
 
-            xtype: 'sbg-narratives-manager'
+            xtype: 'progress-narratives-manager'
         },
         narrativesPrinter: {
-            selector: 'sbg-narratives-printer',
+            selector: 'progress-narratives-printer',
             autoCreate: true,
 
-            xtype: 'sbg-narratives-printer'
+            xtype: 'progress-narratives-printer'
         },
-        narrativesPrintForm: 'sbg-narratives-printer form',
-        narrativesTermSelector: 'sbg-narratives-grid #termSelector',
-        narrativesWorksheetGrid: 'sbg-narratives-grid'
+        narrativesPrintForm: 'progress-narratives-printer form',
+        narrativesTermSelector: 'progress-narratives-grid #termSelector',
+        narrativesWorksheetGrid: 'progress-narratives-grid'
     },
     routes: {
         'progress/narratives': 'showNarratives',
         'progress/narratives/printing': 'showNarrativePrinting'
     },
     control: {
-        'sbg-narratives-manager': {
+        'progress-narratives-manager': {
             activate: 'onManagerActivate'
         },
-        'sbg-narratives-studentsgrid': {
+        'progress-narratives-studentsgrid': {
             select: 'onNarrativeSelect',
             beforeselect: 'onBeforeNarrativeSelect'
         },
-        'sbg-narratives-printer': {
+        'progress-narratives-printer': {
             activate: 'onPrinterActivate'
         },
-        'sbg-narratives-printer button[action=clear-filters]': {
+        'progress-narratives-printer button[action=clear-filters]': {
             click: 'onNarrativesClearFiltersClick'
         },
-        'sbg-narratives-printer button[action=preview]': {
+        'progress-narratives-printer button[action=preview]': {
             click: 'onNarrativesPreviewClick'
         },
-        'sbg-narratives-printer button[action=print-pdf]': {
+        'progress-narratives-printer button[action=print-pdf]': {
             click: 'onNarrativesPrintPdfClick'
         },
-        'sbg-narratives-printer button[action=print-browser]': {
+        'progress-narratives-printer button[action=print-browser]': {
             click: 'onNarrativesPrintBrowserClick'
         },
-        'sbg-narratives-editor button[action=revertChanges]': {
+        'progress-narratives-editor button[action=revertChanges]': {
             click: 'revertChanges'
         },
-        'sbg-narratives-editor button[action=saveDraft]': {
+        'progress-narratives-editor button[action=saveDraft]': {
             click: 'onNarrativeSaved'
         },
-        'sbg-narratives-editor button[action=saveFinished]': {
+        'progress-narratives-editor button[action=saveFinished]': {
             click: 'onNarrativeFinished'
         },
-        'sbg-narratives-editor combo': {
+        'progress-narratives-editor combo': {
             change: 'onComboValueChange'
         },
-        'sbg-narratives-editor': {
+        'progress-narratives-editor': {
             dirtychange: 'onEditorDirtyChange'
         },
-        'sbg-narratives-studentsgrid button[action=loadSavedReports]': {
+        'progress-narratives-studentsgrid button[action=loadSavedReports]': {
             toggle: 'onSavedReportsToggle'
         },
-        'sbg-narratives-grid #termSelector': {
+        'progress-narratives-grid #termSelector': {
             change: 'onTermChange'
         },
-        'sbg-narratives-grid': {
+        'progress-narratives-grid': {
             select: 'loadSection',
             edit: 'onNarrativeAssignmentEdit'
         },
-        'sbg-narratives-grid button[action=myClassesToggle]': {
+        'progress-narratives-grid button[action=myClassesToggle]': {
             toggle: 'onMyClassesToggle'
         }
     },
@@ -147,7 +147,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
         var termSelector = this.getNarrativesTermSelector(),
             termID = termSelector.getValue();
 
-        Ext.getStore('sbg.narratives.WorksheetAssignments').load({
+        Ext.getStore('progress.narratives.WorksheetAssignments').load({
             url: '/standards/' + (pressed ? 'my-sections': 'term-sections'),
             params: {
                 termID: termID
@@ -159,7 +159,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
         var grid = this.getNarrativesWorksheetGrid(),
             btn = grid.down('button[action=myClassesToggle]');
 
-        Ext.getStore('sbg.narratives.WorksheetAssignments').load({
+        Ext.getStore('progress.narratives.WorksheetAssignments').load({
             url: '/standards/' + (btn.pressed ? 'my-sections' : 'term-sections'),
             params: {
                 termID: newValue
@@ -168,7 +168,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
     },
 
     onNarrativeAssignmentEdit: function (editor, e) {
-        var store = Ext.getStore('sbg.narratives.WorksheetAssignments');
+        var store = Ext.getStore('progress.narratives.WorksheetAssignments');
 
         if (e.field == 'WorksheetID' && e.orignalValue != e.value && !e.originalValue) {
             store.on('write', this.onNarrativeWorksheetAssignmentWrite, this, {
@@ -281,7 +281,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
 
         me.getNarrativeEditor().setWorksheet(record);
 
-        Ext.getStore('sbg.Narratives').load({
+        Ext.getStore('progress.narratives.Reports').load({
             params: {
                 courseSectionID: record.get('CourseSectionID'),
                 termID: termID
@@ -480,7 +480,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
             if (nextCombo) {
                 nextCombo.focus();
             } else {
-                combo.up('sbg-narratives-editor').down('htmleditor').focus(true, 100);
+                combo.up('progress-narratives-editor').down('htmleditor').focus(true, 100);
             }
         }
     },
@@ -490,7 +490,7 @@ Ext.define('SlateAdmin.controller.sbg.Narratives', {
             termStore = Ext.getStore('Terms'),
             term = termSelector.getValue(),
             reportingTerm = termStore.getReportingTerm(),
-            worksheetStore = Ext.getStore('sbg.narratives.WorksheetAssignments');
+            worksheetStore = Ext.getStore('progress.narratives.WorksheetAssignments');
 
         if(!term && reportingTerm) {
             term = reportingTerm.getId();

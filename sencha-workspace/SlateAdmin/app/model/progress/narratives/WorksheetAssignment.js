@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.model.sbg.narrative.WorksheetAssignment', {
+Ext.define('SlateAdmin.model.progress.narratives.WorksheetAssignment', {
     extend: 'Ext.data.Model',
     requires: [
         'Ext.data.proxy.Ajax',

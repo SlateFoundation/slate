@@ -1,13 +1,10 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.store.sbg.Narratives',{
+Ext.define('SlateAdmin.store.progress.narratives.Reports',{
     extend: 'Ext.data.Store',
-    requires: [
-        'SlateAdmin.model.sbg.Narrative'
-    ],
 
+    model: 'SlateAdmin.model.progress.narratives.Report',
     autoLoad: false,
     autoSync: false,
-    model: 'SlateAdmin.model.sbg.Narrative',
     groupers: [{
         property: 'CourseSectionID'
     }],
