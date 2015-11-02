@@ -6,20 +6,24 @@
  * - Sort methods
  * - Remove redundant "narrative" ref prefixing
  * - Remove all SBG code from core
+ * - Move printer functionality to its own controller
  */
 Ext.define('SlateAdmin.controller.progress.Narratives', {
     extend: 'Ext.app.Controller',
+
 
     views: [
         'progress.narratives.Manager',
         'progress.narratives.Printer'
     ],
+
     stores: [
         'people.Advisors',
         'progress.narratives.Sections',
-        'progress.narratives.Reports',
-        'progress.narratives.People'
+        'progress.narratives.Students',
+        'progress.narratives.Reports'
     ],
+
     refs: {
         managerCt: {
             selector: 'progress-narratives-manager',
@@ -27,9 +31,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
             xtype: 'progress-narratives-manager'
         },
-        sectionsGrid: 'progress-narratives-sectionsgrid',
-        termSelector: 'progress-narratives-sectionsgrid #termSelector',
         myClassesToggleBtn: 'progress-narratives-sectionsgrid button[action=myClassesToggle]',
+        termSelector: 'progress-narratives-sectionsgrid #termSelector',
+        sectionsGrid: 'progress-narratives-sectionsgrid',
         studentsGrid: 'progress-narratives-studentsgrid',
         editorForm: 'progress-narratives-editor',
 
@@ -41,23 +45,25 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         },
         narrativesPrintForm: 'progress-narratives-printer form'
     },
+
     routes: {
         'progress/narratives': 'showNarratives',
         'progress/narratives/printing': 'showNarrativePrinting'
     },
+
     control: {
         managerCt: {
             activate: 'onManagerActivate'
         },
 
-        sectionsGrid: {
-            select: 'loadSection'
+        myClassesToggleBtn: {
+            toggle: 'onMyClassesToggle'
         },
         termSelector: {
             change: 'onTermChange'
         },
-        myClassesToggleBtn: {
-            toggle: 'onMyClassesToggle'
+        sectionsGrid: {
+            select: 'onSectionSelect'
         },
 
         'progress-narratives-studentsgrid': {
@@ -99,6 +105,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
     },
 
+    listen: {
+        store: {
+            '#progress.narratives.Students': {
+                load: 'onStudentsStoreLoad'
+            }
+        }
+    },
+
 
     // route handlers
     showNarratives: function () {
@@ -113,6 +127,57 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     // event handlers
     onManagerActivate: function () {
         this.syncSections();
+    },
+
+    onMyClassesToggle: function () {
+        this.syncSections();
+    },
+
+    onTermChange: function () {
+        this.syncSections();
+    },
+
+    onSectionSelect: function (sectionsGrid, section) {
+        var me = this,
+            studentsGrid = me.getStudentsGrid(),
+            studentsStore = studentsGrid.getStore(),
+            reportsStore = Ext.getStore('progress.narratives.Reports'),
+            reportsProxy = reportsStore.getProxy();
+
+        // reset stores
+        studentsStore.removeAll();
+        reportsStore.removeAll();
+
+        // configure grid
+        studentsGrid.enable();
+
+        // configure and load stores
+        studentsStore.getProxy().setUrl('/sections/'+section.get('Code')+'/students');
+        studentsStore.load();
+
+        reportsProxy.setExtraParam('term', me.getTermSelector().getValue());
+        reportsProxy.setExtraParam('course_section', section.get('Code'));
+        reportsStore.load();
+    },
+
+    onStudentsStoreLoad: function() {
+        var me = this,
+            studentsView = me.getStudentsGrid().getView(),
+            reportsStore = Ext.getStore('progress.narratives.Reports');
+
+        if (reportsStore.isLoading()) {
+            studentsView.setLoading('Loading reports&hellip;');
+            reportsStore.on('load', function() {
+                studentsView.setLoading(false);
+
+                // restore original loading text
+                studentsView.loadMask.msg = studentsView.loadingText;
+
+                me.syncReportsToStudents();
+            }, me, { single: true });
+        } else {
+            me.syncReportsToStudents();
+        }
     },
 
     onPrinterActivate: function (managerCt) {
@@ -140,24 +205,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             advisorStore.load();
         }
     },
-
-    onMyClassesToggle: function () {
-        this.syncSections();
-    },
-
-    onTermChange: function () {
-        this.syncSections();
-    },
-
-    // onNarrativeAssignmentEdit: function (editor, e) {
-    //     var store = Ext.getStore('progress.narratives.WorksheetAssignments');
-
-    //     if (e.field == 'WorksheetID' && e.orignalValue != e.value && !e.originalValue) {
-    //         store.on('write', this.onNarrativeWorksheetAssignmentWrite, this, {
-    //             single: true
-    //         });
-    //     }
-    // },
 
     onBeforeNarrativeSelect: function (view, record) {
         var me = this,
@@ -244,24 +291,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
 
     //helper functions
-    loadSection: function (view, record) {
-        var me = this,
-            termSelector = me.getTermSelector(),
-            termID = termSelector.getValue(),
-            grid = me.getNarrativesGrid();
-
-        grid.enable();
-
-        me.getNarrativeEditor().setWorksheet(record);
-
-        Ext.getStore('progress.narratives.Reports').load({
-            params: {
-                courseSectionID: record.get('CourseSectionID'),
-                termID: termID
-            }
-        });
-    },
-
     revertChanges: function () {
         var me = this,
             managerCt = me.getManagerCt(),
@@ -499,5 +528,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         sectionsProxy.setExtraParam('enrolled_user', myClassesToggleBtn.pressed ? 'current' : '');
         sectionsProxy.setExtraParam('term', term);
         sectionsStore.loadIfDirty();
+    },
+
+    syncReportsToStudents: function() {
+        console.info('syncStudentReports');
     }
 });
