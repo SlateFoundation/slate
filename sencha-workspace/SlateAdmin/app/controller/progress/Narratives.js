@@ -35,20 +35,23 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         termSelector: 'progress-narratives-sectionsgrid #termSelector',
         sectionsGrid: 'progress-narratives-sectionsgrid',
         studentsGrid: 'progress-narratives-studentsgrid',
-        editorForm: 'progress-narratives-editor',
+        editorForm: 'progress-narratives-editorform',
+        revertChangesBtn: 'progress-narratives-editorform button#revertChangesBtn',
+        saveDraftBtn: 'progress-narratives-editorform button#saveDraftBtn',
+        saveFinishedBtn: 'progress-narratives-editorform button#saveFinishedBtn'
 
-        narrativesPrinter: {
-            selector: 'progress-narratives-printer',
-            autoCreate: true,
+        // narrativesPrinter: {
+        //     selector: 'progress-narratives-printer',
+        //     autoCreate: true,
 
-            xtype: 'progress-narratives-printer'
-        },
-        narrativesPrintForm: 'progress-narratives-printer form'
+        //     xtype: 'progress-narratives-printer'
+        // },
+        // narrativesPrintForm: 'progress-narratives-printer form'
     },
 
     routes: {
-        'progress/narratives': 'showNarratives',
-        'progress/narratives/printing': 'showNarrativePrinting'
+        'progress/narratives': 'showNarratives'
+        // 'progress/narratives/printing': 'showNarrativePrinting'
     },
 
     control: {
@@ -66,43 +69,44 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             select: 'onSectionSelect'
         },
 
-        'progress-narratives-studentsgrid': {
-            select: 'onNarrativeSelect',
-            beforeselect: 'onBeforeNarrativeSelect'
+        studentsGrid: {
+            beforeselect: 'onBeforeStudentSelect',
+            select: 'onStudentSelect'
         },
-        'progress-narratives-printer': {
-            activate: 'onPrinterActivate'
+
+
+        editorForm: {
+            dirtychange: 'onEditorFormDirtyChange',
+            validitychange: 'onEditorFormValidityChange'
         },
-        'progress-narratives-printer button[action=clear-filters]': {
-            click: 'onNarrativesClearFiltersClick'
-        },
-        'progress-narratives-printer button[action=preview]': {
-            click: 'onNarrativesPreviewClick'
-        },
-        'progress-narratives-printer button[action=print-pdf]': {
-            click: 'onNarrativesPrintPdfClick'
-        },
-        'progress-narratives-printer button[action=print-browser]': {
-            click: 'onNarrativesPrintBrowserClick'
-        },
-        'progress-narratives-editor button[action=revertChanges]': {
-            click: 'revertChanges'
-        },
-        'progress-narratives-editor button[action=saveDraft]': {
-            click: 'onNarrativeSaved'
-        },
-        'progress-narratives-editor button[action=saveFinished]': {
-            click: 'onNarrativeFinished'
-        },
-        'progress-narratives-editor combo': {
+        'progress-narratives-editorform combo': {
             change: 'onComboValueChange'
         },
-        'progress-narratives-editor': {
-            dirtychange: 'onEditorDirtyChange'
+        revertChangesBtn: {
+            click: 'onRevertChangesClick'
         },
-        'progress-narratives-studentsgrid button[action=loadSavedReports]': {
-            toggle: 'onSavedReportsToggle'
+        saveDraftBtn: {
+            click: 'onSaveDraftClick'
+        },
+        saveFinishedBtn: {
+            click: 'onSaveFinishedClick'
         }
+
+        // 'progress-narratives-printer': {
+        //     activate: 'onPrinterActivate'
+        // },
+        // 'progress-narratives-printer button[action=clear-filters]': {
+        //     click: 'onNarrativesClearFiltersClick'
+        // },
+        // 'progress-narratives-printer button[action=preview]': {
+        //     click: 'onNarrativesPreviewClick'
+        // },
+        // 'progress-narratives-printer button[action=print-pdf]': {
+        //     click: 'onNarrativesPrintPdfClick'
+        // },
+        // 'progress-narratives-printer button[action=print-browser]': {
+        //     click: 'onNarrativesPrintBrowserClick'
+        // }
     },
 
     listen: {
@@ -119,9 +123,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         this.application.getController('Viewport').loadCard(this.getManagerCt());
     },
 
-    showNarrativePrinting: function () {
-        this.application.getController('Viewport').loadCard(this.getNarrativesPrinter());
-    },
+    // showNarrativePrinting: function () {
+    //     this.application.getController('Viewport').loadCard(this.getNarrativesPrinter());
+    // },
 
 
     // event handlers
@@ -180,204 +184,128 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
     },
 
-    onPrinterActivate: function (managerCt) {
-        var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
-            selectedTerm = termSelector.getValue(),
-            termStore = Ext.getStore('Terms'),
-            advisorStore = Ext.getStore('people.Advisors'),
-            onTermLoad = function () {
-                if(!selectedTerm) {
-                    termSelector.setValue(termStore.getReportingTerm().getId());
-                    managerCt.setLoading(false);
+    onBeforeStudentSelect: function (studentsGrid, student) {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            loadedReport = editorForm.getRecord();
+
+        if (loadedReport && editorForm.isDirty()) {
+            Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
+                if (btn != 'yes') {
+                    return;
                 }
 
-
-            };
-
-        if(!termStore.isLoaded()) {
-            managerCt.setLoading('Loading terms&hellip;');
-            termStore.load({
-                callback: onTermLoad
+                editorForm.reset();
+                me.getStudentsGrid().getSelectionModel().select([student]);
             });
-        }
 
-        if(!advisorStore.isLoaded()) {
-            advisorStore.load();
+            return false;
         }
     },
 
-    onBeforeNarrativeSelect: function (view, record) {
+    onStudentSelect: function (studentsGrid, student) {
         var me = this,
-            editor = me.getNarrativeEditor(),
-            managerCt = me.getManagerCt(),
-            grid = me.getNarrativesGrid(),
-            narrative = managerCt.getNarrative(),
-            isDirty = editor.isDirty(),
-            narrativeSaved = managerCt.getNarrativeSaved();
+            editorForm = me.getEditorForm(),
+            report = student.get('report'),
+            section, term;
 
-            if (!narrativeSaved && narrative && isDirty) {
-                Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
-                    if (btn == 'yes') {
-                        managerCt.setNarrativeSaved(true);
-                        managerCt.updateNarrative(narrative);
+        if (!report) {
+            section = me.getSectionsGrid().getSelection()[0];
+            term = me.getTermSelector().getSelection();
 
-                        grid.getSelectionModel().select([record]);
-                    }
-                });
+            report = me.getProgressNarrativesReportsStore().add({
+                StudentID: student.getId(),
+                CourseSectionID: section.getId(),
+                TermID: term.getId(),
 
-                return false;
-            }
-    },
-
-    onNarrativeSelect: function (view, record) {
-        var me = this,
-            editor = me.getNarrativeEditor(),
-            managerCt = me.getManagerCt(),
-            assignment = editor.getWorksheet();
-
-        editor.enable();
-        editor.body.scrollTo('top', 0);
-
-        managerCt.setNarrative(record);
-        managerCt.setNarrativeSaved(true);
-
-        me.loadStandards(assignment.get('WorksheetID') ? record : false);
-    },
-
-    onEditorDirtyChange: function (field, dirty) {
-        this.getManagerCt().setNarrativeSaved(false);
-    },
-
-    onNarrativeSaved: function () {
-        this.saveReport('Draft');
-    },
-
-    onNarrativeFinished: function () {
-        this.saveReport('Published');
-    },
-
-    onSavedReportsToggle: function (button, pressed) {
-        var editor = this.getNarrativeEditor(),
-            store = Ext.getStore('progress.Narratives');
-
-        editor.disable();
-
-        if (pressed) {
-            store.load({url: '/progress/narratives/all'});
-        } else {
-            store.load({url: '/progress/narratives/mystudents'});
+                student: student,
+                section: section,
+                term: term
+            })[0];
         }
 
+        editorForm.enable();
+        editorForm.setScrollY(0, true);
+        editorForm.loadRecord(report);
     },
 
-    onNarrativesPreviewClick: function () {
-        var formValues = this.getNarrativesPrintForm().getForm().getValues();
-        this.getNarrativesPrinter().loadPreview(formValues);
+    onEditorFormDirtyChange: function() {
+        this.syncFormButtons();
     },
 
-    onNarrativesPrintPdfClick: function () {
-        var formValues = this.getNarrativesPrintForm().getForm().getValues();
-        this.getNarrativesPrinter().loadPrint(formValues);
+    onEditorFormValidityChange: function() {
+        this.syncFormButtons();
     },
 
-    onNarrativesPrintBrowserClick: function () {
-        var formValues = this.getNarrativesPrintForm().getForm().getValues();
-        this.getNarrativesPrinter().loadPreview(formValues, true);
-    },
-
-    onNarrativesClearFiltersClick: function () {
-        this.getNarrativesPrintForm().getForm().reset();
-    },
-
-
-    //helper functions
-    revertChanges: function () {
-        var me = this,
-            managerCt = me.getManagerCt(),
-            courseWorksheteID = me.getNarrativesWorksheetGrid().getSelectionModel().getSelection()[0].get('WorksheetID');
+    onRevertChangesClick: function() {
+        var me = this;
 
         Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes', function (btn) {
             if (btn == 'yes') {
-                var narartive = managerCt.getNarrative();
-                managerCt.updateNarrative(narartive);
-                me.loadStandards(courseWorksheteID ? narartive : false);
-                managerCt.setNarrativeSaved(true);
+                me.getEditorForm().reset();
             }
         });
     },
 
-    loadStandards: function (record) {
-        var me = this,
-            editor = me.getNarrativeEditor(),
-            form = editor.down('#standardsForm'),
-            fieldArray = [];
-
-        form.removeAll(true);
-
-        if (!record) {
-            return form.update('No worksheet selected for this narrative');
-        }
-
-        editor.setLoading(true);
-        form.update('');
-
-        Ext.each(record.get('Prompts'), function (grade) {
-
-            fieldArray.push(me.configurePromptField(grade));
-
-        });
-
-        form.add(fieldArray);
-
-        editor.setLoading(false);
-
+    onSaveDraftClick: function () {
+        this.saveReport('Draft');
     },
 
-    configurePromptField: function (grade) {
-
-        return {
-            xtype: 'container',
-            cls: 'label-component-ct',
-            padding: '4 8',
-            layout: 'hbox',
-            items: [
-                {
-                    xtype: 'combobox',
-                    cls: 'field-component-labeled',
-                    store: ['1', '2', '3', '4', 'N/A'],
-                    queryMode: 'local',
-                    name: 'prompt-' + grade.PromptID,
-                    value: grade.Grade || null,
-                    width: 50
-                },
-                {
-                    xtype: 'component',
-                    cls: 'field-label-component',
-                    itemId: 'prompt-label-' + grade.PromptID,
-                    html: grade.Prompt,
-                    flex: 1,
-                    padding: '4 8',
-                    listeners: {
-                        render: function (labelCmp) {
-                            labelCmp.mon(labelCmp.getEl(), 'click', function (ev, t) {
-                                var fieldCmp = labelCmp.prev('combobox');
-
-                                if (fieldCmp) {
-                                    fieldCmp.focus();
-                                }
-                            });
-                        }
-                    }
-                }
-            ]
-        };
+    onSaveFinishedClick: function () {
+        this.saveReport('Published');
     },
+
+    // onPrinterActivate: function (managerCt) {
+    //     var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
+    //         selectedTerm = termSelector.getValue(),
+    //         termStore = Ext.getStore('Terms'),
+    //         advisorStore = Ext.getStore('people.Advisors'),
+    //         onTermLoad = function () {
+    //             if(!selectedTerm) {
+    //                 termSelector.setValue(termStore.getReportingTerm().getId());
+    //                 managerCt.setLoading(false);
+    //             }
+
+
+    //         };
+
+    //     if(!termStore.isLoaded()) {
+    //         managerCt.setLoading('Loading terms&hellip;');
+    //         termStore.load({
+    //             callback: onTermLoad
+    //         });
+    //     }
+
+    //     if(!advisorStore.isLoaded()) {
+    //         advisorStore.load();
+    //     }
+    // },
+
+    // onNarrativesPreviewClick: function () {
+    //     var formValues = this.getNarrativesPrintForm().getForm().getValues();
+    //     this.getNarrativesPrinter().loadPreview(formValues);
+    // },
+
+    // onNarrativesPrintPdfClick: function () {
+    //     var formValues = this.getNarrativesPrintForm().getForm().getValues();
+    //     this.getNarrativesPrinter().loadPrint(formValues);
+    // },
+
+    // onNarrativesPrintBrowserClick: function () {
+    //     var formValues = this.getNarrativesPrintForm().getForm().getValues();
+    //     this.getNarrativesPrinter().loadPreview(formValues, true);
+    // },
+
+    // onNarrativesClearFiltersClick: function () {
+    //     this.getNarrativesPrintForm().getForm().reset();
+    // },
+
 
     saveReport: function (newStatus) {
         var me = this,
             managerCt = me.getManagerCt(),
-            editor = me.getNarrativeEditor(),
-            reportData  = editor.getValues(),
+            editorForm = me.getEditorForm(),
+            reportData  = editorForm.getValues(),
             narrative = managerCt.getNarrative();
 
         if (newStatus == 'Published' || (!newStatus && reportData.Status == 'Published')) {
@@ -397,7 +325,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     doSaveReport: function (narrative, reportData) {
         var me = this,
             managerCt = me.getManagerCt(),
-            editor = me.getNarrativeEditor(),
+            editorForm = me.getEditorForm(),
             grid = me.getNarrativesGrid(),
             selModel = grid.getSelectionModel(),
             prompts = narrative.get('Prompts'),
@@ -421,7 +349,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         narrative.set('Prompts', prompts);
 
 
-        editor.setLoading(true);
+        editorForm.setLoading(true);
 
         SlateAdmin.API.request({
             url: '/progress/narratives/worksheet-save',
@@ -433,13 +361,13 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                 studentID: narrative.get('StudentID'),
                 narrativeID: narrative.get('ID'),
                 Status: reportData.Status
-            }, editor.getForm().getValues()),
+            }, editorForm.getForm().getValues()),
             success: function (resposne) {
 
                  r = Ext.decode(resposne.responseText);
 
-                if (editor) {
-                    editor.setLoading(false);
+                if (editorForm) {
+                    editorForm.setLoading(false);
                 }
 
                 me.mergeNarrative(narrative, r);
@@ -451,7 +379,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                 selModel.selectNext();
             },
             failure: function (form, action) {
-                editor.setLoading(false);
+                editorForm.setLoading(false);
             }
         });
     },
@@ -482,7 +410,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             if (nextCombo) {
                 nextCombo.focus();
             } else {
-                combo.up('progress-narratives-editor').down('htmleditor').focus(true, 100);
+                combo.up('progress-narratives-editorform').down('htmleditor').focus(true, 100);
             }
         }
     },
@@ -532,5 +460,16 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     syncReportsToStudents: function() {
         console.info('syncStudentReports');
+    },
+
+    syncFormButtons: function() {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            isDirty = editorForm.isDirty(),
+            isValid = editorForm.isValid();
+
+        me.getRevertChangesBtn().setDisabled(!isDirty);
+        me.getSaveDraftBtn().setDisabled(!isDirty || !isValid);
+        me.getSaveFinishedBtn().setDisabled(!isDirty || !isValid);
     }
 });
