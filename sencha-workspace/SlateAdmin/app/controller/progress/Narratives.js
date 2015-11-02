@@ -80,7 +80,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             validitychange: 'onEditorFormValidityChange'
         },
         'progress-narratives-editorform combo': {
-            change: 'onComboValueChange'
+            select: 'onComboSelect'
         },
         revertChangesBtn: {
             click: 'onRevertChangesClick'
@@ -401,17 +401,12 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         narrative.set('Prompts', prompts);
     },
 
-    onComboValueChange: function (combo, newValue) {
-        var nextCombo;
+    onComboSelect: function (combo, newValue) {
+        var fields = this.getEditorForm().query('field, htmleditor'),
+            nextFieldIndex = fields.indexOf(combo) + 1;
 
-        if (combo.findRecordByValue(newValue)) {
-            nextCombo = combo.nextNode('combo');
-
-            if (nextCombo) {
-                nextCombo.focus();
-            } else {
-                combo.up('progress-narratives-editorform').down('htmleditor').focus(true, 100);
-            }
+        if (nextFieldIndex < fields.length) {
+            fields[nextFieldIndex].focus(true, 100);
         }
     },
 
