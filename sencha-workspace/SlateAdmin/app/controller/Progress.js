@@ -28,7 +28,7 @@ Ext.define('SlateAdmin.controller.Progress', {
     },
 
     buildNavPanel: function () {
-        return location.search.match(/\Wenablesbg(\W|$)/) && this.getNavPanel();
+        return this.getNavPanel();
     },
 
 
