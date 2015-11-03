@@ -2,8 +2,9 @@
 
 namespace Slate\Progress\Narratives;
 
-use \Slate\Term;
-use \Emergence\People\Person;
+use Slate\Term;
+use Slate\Courses\Section;
+use Emergence\People\Person;
 
 class ReportsRequestHandler extends \RecordsRequestHandler
 {
@@ -38,16 +39,25 @@ class ReportsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
-        if (!empty($_REQUEST['termID'])) {
-            $term = Term::getByWhere(['ID' => $_REQUEST['termID']]);
-            //MICS::dump($term, 'this',true);
-            $concurrentTerms = $term->getConcurrentTermIDs();
-            $containedTerms = $term->getContainedTermIDs();
-            $termIDs = array_unique(array_merge($concurrentTerms, $containedTerms));
+        if (!empty($_REQUEST['term'])) {
+            if ($_REQUEST['term'] == 'current') {
+                if (!$Term = Term::getClosest()) {
+                    return static::throwInvalidRequestError('No current term could be found');
+                }
+            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
 
-            $conditions[] = sprintf('TermID IN (%s)',join(',',$termIDs));
+            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
         }
 
+        if (!empty($_REQUEST['course_section'])) {
+            if (!$Section = Section::getByHandle($_REQUEST['course_section'])) {
+                return static::throwNotFoundError('course_section not found');
+            }
+
+            $conditions['CourseSectionID'] = $Section->ID;
+        }
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
