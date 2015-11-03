@@ -53,7 +53,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
 
                 loadingSrc = '/standards/print/preview';
                 loadMask = {msg: 'Loading Narrative&hellip;'};
-                loadingSrc = '/narratives/print/preview';
+                loadingSrc = '/progress/narratives/print/preview';
                 params = {
                     narrativeID: report.get('ID')
                 }

@@ -1,42 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html manifest="">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
         <title>Manage Slate</title>
+        <link rel='stylesheet' type='text/css' href='resources/slate-frame/main.css'>
+        <style>
+            #ext-viewport {
+                padding-top: 2.75em;
+            }
+        </style>
+        <link rel='stylesheet' type='text/css' href='resources/slate-frame/fonts/lato.css'>
+        <link rel='stylesheet' type='text/css' href='resources/slate-frame/fonts/sanchez.css'>
+        <link rel='stylesheet' type='text/css' href='resources/slate-frame/fonts/font-awesome.css'>
 
-        <link rel='stylesheet' type='text/css' href='http://dev-ryon-v1.node0.slate.is/css/main.css'>
-        
-        <link rel='stylesheet' type='text/css' href='http://dev-ryon-v1.node0.slate.is/css/fonts/lato.css'>
-        <link rel='stylesheet' type='text/css' href='http://dev-ryon-v1.node0.slate.is/css/fonts/sanchez.css'>
-        <link rel='stylesheet' type='text/css' href='http://dev-ryon-v1.node0.slate.is/css/fonts/font-awesome.css'>
-	<script>
-	    window.Ext = window.Ext || { };
-	    Ext.scopeCss = true;
-	</script>
+        <script>
+            window.Ext = window.Ext || { };
+            Ext.scopeCss = true;
+        </script>
     </head>
-
-    <body class="loading">
+    <body>
         <div class="slate-omnibar site">
             <div class="inner">
                 <ul class="omnibar-items">
                     <li class="omnibar-item">
-                        <a class="omnibar-link root-link" href="/"> <img class="slate-logo" src="http://dev-ryon-v1.node0.slate.is/img/slate-logo-white.svg" width="41" height="32" alt="Slate"> </a>
+                        <a class="omnibar-link root-link" href="/"> <img class="slate-logo" src="resources/slate-frame/img/slate-logo-white.svg" width="41" height="32" alt="Slate"> </a>
                     </li>
                     <li class="omnibar-item omnibar-search-item">
                         <form class="omnibar-search-form" action="/search">
-                            <input class="omnibar-search-field" name="q" type="search" placeholder="Search" required=""> </form>
+                            <input class="omnibar-search-field" name="q" type="search" placeholder="Search" required="">
+                        </form>
                     </li>
-                    <li class="omnibar-item icon-courses" data-icon="courses" data-href="/courses" data-label="Courses"> <a href="/courses" class="omnibar-link" title="Courses">
-                                
-                                Courses
-                            </a> </li>
-                    <li class="omnibar-item icon-tools" data-label="Tools" data-icon="tools"> <span class="omnibar-link" title="Tools">
-                                
-                                Tools
-                            </span>
+                    <li class="omnibar-item icon-courses" data-icon="courses" data-href="/courses" data-label="Courses">
+                        <a href="/courses" class="omnibar-link" title="Courses">
+                        Courses
+                        </a>
+                        <div class="omnibar-menu-ct">
+                            <ul class="omnibar-menu">
+                                <li class="omnibar-menu-item" data-id="BIO-1" data-label="Biology" data-shortlabel="BIO-1" data-icon="chemistry" data-href="/sections/BIO-1">
+                                    <a class="omnibar-menu-link" href="/sections/BIO-1" title="Biology">
+                                        <figure class="omnibar-menu-icon">
+                                            <div class="omnibar-menu-image-ct">
+                                                <svg class="omnibar-menu-image-bg">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
+                                                </svg>
+                                                <svg class="omnibar-menu-image">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-chemistry"></use>
+                                                </svg>
+                                            </div>
+                                            <figcaption class="omnibar-menu-label">
+                                                BIO-1
+                                            </figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
+                                <li class="omnibar-menu-item" data-id="ENG-1" data-label="English" data-shortlabel="ENG-1" data-icon="writing" data-href="/sections/ENG-1">
+                                    <a class="omnibar-menu-link" href="/sections/ENG-1" title="English">
+                                        <figure class="omnibar-menu-icon">
+                                            <div class="omnibar-menu-image-ct">
+                                                <svg class="omnibar-menu-image-bg">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
+                                                </svg>
+                                                <svg class="omnibar-menu-image">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-writing"></use>
+                                                </svg>
+                                            </div>
+                                            <figcaption class="omnibar-menu-label">
+                                                ENG-1
+                                            </figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
+                                <li class="omnibar-menu-item" data-id="BIO-2" data-label="Biology" data-shortlabel="BIO-2" data-icon="chemistry" data-href="/sections/BIO-2">
+                                    <a class="omnibar-menu-link" href="/sections/BIO-2" title="Biology">
+                                        <figure class="omnibar-menu-icon">
+                                            <div class="omnibar-menu-image-ct">
+                                                <svg class="omnibar-menu-image-bg">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
+                                                </svg>
+                                                <svg class="omnibar-menu-image">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-chemistry"></use>
+                                                </svg>
+                                            </div>
+                                            <figcaption class="omnibar-menu-label">
+                                                BIO-2
+                                            </figcaption>
+                                        </figure>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="omnibar-item icon-tools" data-label="Tools" data-icon="tools">
+                        <span class="omnibar-link" title="Tools">
+                        Tools
+                        </span>
                         <div class="omnibar-menu-ct">
                             <ul class="omnibar-menu">
                                 <li class="omnibar-menu-item" data-href="/manage" data-icon="tools" data-label="Manage Slate">
@@ -44,10 +103,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> Manage Slate </figcaption>
@@ -59,10 +118,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> People </figcaption>
@@ -74,10 +133,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> Course Sections </figcaption>
@@ -89,10 +148,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> Settings </figcaption>
@@ -104,10 +163,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> Pages </figcaption>
@@ -119,10 +178,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-gapps"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gapps"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> Google Apps </figcaption>
@@ -134,10 +193,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-gmail"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gmail"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Email </figcaption>
@@ -149,10 +208,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-gdrive"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gdrive"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Drive </figcaption>
@@ -164,10 +223,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-gcal"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gcal"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Calendar </figcaption>
@@ -179,10 +238,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-gsites"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gsites"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Sites </figcaption>
@@ -194,10 +253,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-network"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-network"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> Canvas </figcaption>
@@ -209,10 +268,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> Example Tool </figcaption>
@@ -224,10 +283,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Narratives </figcaption>
@@ -239,10 +298,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Standards </figcaption>
@@ -254,10 +313,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Interims </figcaption>
@@ -269,10 +328,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Growth Dashboard </figcaption>
@@ -284,10 +343,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Competency-Based Learning</small> Teacher Dashboard </figcaption>
@@ -299,10 +358,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Competency-Based Learning » Exports</small> Demonstrations </figcaption>
@@ -314,10 +373,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Competency-Based Learning » Exports</small> Progress </figcaption>
@@ -329,10 +388,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Assets</small> Manager </figcaption>
@@ -344,10 +403,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Assets</small> My Assets </figcaption>
@@ -359,62 +418,32 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-tools"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> <small class="muted">Assets</small> Classroom Assets </figcaption>
                                         </figure>
                                     </a>
                                 </li>
-                                <li class="omnibar-menu-item" data-label="chris (Developer)" data-href="/people/chris" data-iconsrc="http://dev-ryon-v1.node0.slate.is/thumbnail/1/48x48/cropped">
-                                    <a class="omnibar-menu-link" href="/people/chris" title="chris (Developer)">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-link"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Cool People</small> chris (Developer) </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-label="ryon (Developer)" data-href="/people/ryon" data-iconsrc="http://dev-ryon-v1.node0.slate.is/thumbnail/2/48x48/cropped">
-                                    <a class="omnibar-menu-link" href="/people/ryon" title="ryon (Developer)">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-link"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Cool People</small> ryon (Developer) </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </li>
-                    <li class="omnibar-item " data-shortlabel="Ryon" data-href="/people/ryon" data-iconsrc="http://dev-ryon-v1.node0.slate.is/thumbnail/2/48x48/cropped" data-label="Ryon Coleman">
-                        <a href="/people/ryon" class="omnibar-link" title="Ryon Coleman"> <img class="omnibar-link-image" src="http://dev-ryon-v1.node0.slate.is/thumbnail/2/48x48/cropped" alt="Ryon Coleman" width="24" height="24"> Ryon </a>
+                    <li class="omnibar-item " data-shortlabel="Bill" data-href="/people/bill" data-iconsrc="http://www.fillmurray.com/48/48" data-label="Bill Murray">
+                        <a href="/people/bill" class="omnibar-link" title="Bill Murray"> <img class="omnibar-link-image" src="http://www.fillmurray.com/48/48" alt="Bill Murray" width="24" height="24"> Bill </a>
                         <div class="omnibar-menu-ct">
                             <ul class="omnibar-menu">
-                                <li class="omnibar-menu-item" data-icon="user" data-href="/people/ryon" data-label="My Profile">
-                                    <a class="omnibar-menu-link" href="/people/ryon" title="My Profile">
+                                <li class="omnibar-menu-item" data-icon="user" data-href="/people/bill" data-label="My Profile">
+                                    <a class="omnibar-menu-link" href="/people/bill" title="My Profile">
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-user"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-user"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> My Profile </figcaption>
@@ -426,10 +455,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-gearhead"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gearhead"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> Edit Profile </figcaption>
@@ -441,10 +470,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-writing"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-writing"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> My Drafts </figcaption>
@@ -456,10 +485,10 @@
                                         <figure class="omnibar-menu-icon">
                                             <div class="omnibar-menu-image-ct">
                                                 <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-squircle"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
                                                 </svg>
                                                 <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://dev-ryon-v1.node0.slate.is/img/slate-icons/slate-icons.svg#icon-logout"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-logout"></use>
                                                 </svg>
                                             </div>
                                             <figcaption class="omnibar-menu-label"> Log Out </figcaption>
@@ -481,7 +510,7 @@
             SiteEnvironment.appMode = "development";
             SiteEnvironment.appBaseUrl = '/app/SlateAdmin/';
         </script>
-        
+
         <!-- The line below must be kept intact for Sencha Cmd to build your application -->
         <script id="microloader" type="text/javascript" src="bootstrap.js"></script>
     </body>
