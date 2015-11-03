@@ -45,19 +45,19 @@ class Report extends \VersionedRecord
         ],
 
         // TODO: comment out so sites can configure
-        'Grade' => [
-            'type' => 'enum',
-            'values' => ['A','B','C','D','F','Inc'],
-            'notnull' => false
-        ],
-        'Assessment' => [
-            'type' => 'clob',
-            'notnull' => false
-        ],
-        'Comments' => [
-            'type' => 'clob',
-            'notnull' => false
-        ]
+#        'Grade' => [
+#            'type' => 'enum',
+#            'values' => ['A','B','C','D','F','Inc'],
+#            'notnull' => false
+#        ],
+#        'Assessment' => [
+#            'type' => 'clob',
+#            'notnull' => false
+#        ],
+#        'Comments' => [
+#            'type' => 'clob',
+#            'notnull' => false
+#        ]
     ];
 
 
@@ -84,20 +84,20 @@ class Report extends \VersionedRecord
         ]
     ];
 
-    public function validate($deep = true)
-    {
-        // call parent
-        parent::validate($deep);
-
-        $this->_validator->validate([
-            'field' => 'Grade',
-            'validator' => 'selection',
-            'choices' => static::getFieldOptions('Grade', 'values'),
-            'required' => ($this->Status=='Published'),
-            'errorMessage' => 'Grade is require before publishing'
-        ]);
-
-        // save results
-        return $this->finishValidation();
-    }
+#    public function validate($deep = true)
+#    {
+#        // call parent
+#        parent::validate($deep);
+#
+#        $this->_validator->validate([
+#            'field' => 'Grade',
+#            'validator' => 'selection',
+#            'choices' => static::getFieldOptions('Grade', 'values'),
+#            'required' => ($this->Status=='Published'),
+#            'errorMessage' => 'Grade is require before publishing'
+#        ]);
+#
+#        // save results
+#        return $this->finishValidation();
+#    }
 }
