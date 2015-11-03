@@ -35,8 +35,8 @@ Ext.define('SlateAdmin.controller.sbg.Worksheets', {
             activate: 'onWorksheetsActivate'
         },
         'sbg-standards-worksheets-grid': {
-            itemclick: 'onWorksheetClick',
-            edit: 'onStandardsWorksheetEdit'
+            itemclick: 'onWorksheetClick'
+            // edit: 'onStandardsWorksheetEdit'
         },
         'sbg-standards-worksheets-grid button[action=createWorksheet]': {
             click: 'onAddWorksheetClick'
@@ -75,7 +75,7 @@ Ext.define('SlateAdmin.controller.sbg.Worksheets', {
         Ext.MessageBox.confirm('Deleting Prompt', 'Are you absolutely sure you want to delete this prompt. You won\'t be able to see it again.', function (value) {
             if (value == 'yes') {
                 editor.setLoading('Deleting&hellip;');
-                record.destroy({
+                record.erase({
                     callback: function () {
                         editor.setLoading(false);
                     }
@@ -188,8 +188,8 @@ Ext.define('SlateAdmin.controller.sbg.Worksheets', {
             if (value == 'yes') {
                 record.set('Status', 'Hidden');
 
-                Ext.getStore('sbg.standards.Worksheets').load();
-
+                Ext.getStore('sbg.standards.Worksheets').remove(record);
+                
                 editor.disable();
             }
         }, this);

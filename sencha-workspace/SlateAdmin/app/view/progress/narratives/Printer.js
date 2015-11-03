@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
+Ext.define('SlateAdmin.view.progress.narratives.Printer', {
     extend: 'Ext.container.Container',
-    xtype: 'sbg-narratives-printer',
+    xtype: 'progress-narratives-printer',
     requires: [
         'Ext.layout.container.VBox',
         'Ext.layout.container.HBox',
@@ -49,6 +49,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
                 displayField: 'FullName',
                 queryMode: 'local',
                 typeAhead: true,
+                allowBlank: true,
                 store: 'people.Advisors'
             },{
                 name: 'studentID',
@@ -57,7 +58,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
                 queryMode: 'remote',
                 queryParam: 'q',
                 hideTrigger: true,
-                store: 'sbg.narratives.People',
+                store: 'progress.narratives.People',
                 listConfig: {
                     getInnerTpl: function () {
                         return '{LastName}, {FirstName}';
@@ -94,7 +95,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
                     ],
                     proxy: {
                         type: 'slateapi',
-                        url: '/sbg/narratives/authors'
+                        url: '/progress/narratives/authors'
                     }
                 }
             }]
@@ -154,7 +155,7 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
         }, this, { single: true, delay: 10 })
 
         SlateAdmin.API.request({
-            url: '/sbg/narratives/print/preview',
+            url: '/progress/narratives/print/preview',
             params: params,
             scope: this,
             success: function (res) {
@@ -173,21 +174,14 @@ Ext.define('SlateAdmin.view.sbg.narratives.Printer', {
         var filterForm = this.getComponent('filterForm'),
             previewBox = this.getComponent('previewBox');
 
-        params.downloadToken = Math.random();
-
-
         filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-
-        var printLoadingInterval = setInterval(function () {
-
-            if(Ext.util.Cookies.get('downloadToken') == params.downloadToken)
-            {
-                clearInterval(printLoadingInterval);
-                filterForm.setLoading(false);
-            }
-        }, 500);
-
         // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        previewBox.iframeEl.dom.src = SlateAdmin.API.buildUrl('/narratives/print?'+Ext.Object.toQueryString(params));
+        SlateAdmin.API.downloadFile('/progress/narratives/print?'+Ext.Object.toQueryString(params), function () {
+            filterForm.setLoading(false);
+        });
+
+        setTimeout(function() {
+            filterForm.setLoading(false);
+        }, 1000);
     }
 });
