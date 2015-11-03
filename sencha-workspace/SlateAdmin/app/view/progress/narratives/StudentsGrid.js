@@ -6,9 +6,10 @@ Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
         'Ext.grid.column.Date'
     ],
 
+    cls: 'progress-narratives-studentsgrid',
     viewConfig: {
-        getRowClass: function(record) {
-            return 'status-'+record.get('Status');
+        getRowClass: function(student) {
+            return 'status-' + (student.get('report_status') || 'pending').toLowerCase();
         },
         emptyText: 'You are not currently an instructor for any students',
         loadingText: 'Loading students&hellip;'
@@ -25,6 +26,12 @@ Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
     //     sortable: true,
     //     width: 60,
     //     align: 'center'
+    },{
+        width: 80,
+
+        text: 'Status',
+        dataIndex: 'report_status',
+        emptyCellText: '&mdash;'
     },{
         width: 148,
 

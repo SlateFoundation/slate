@@ -248,6 +248,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         editorForm.enable();
         editorForm.setScrollY(0, true);
         editorForm.loadRecord(report);
+        me.syncFormButtons();
     },
 
     onEditorFormDirtyChange: function() {
@@ -362,6 +363,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
                 if (success) {
                     report.get('student').set({
+                        report_status: report.get('Status'),
                         report_modified: report.get('Modified') || report.get('Created')
                     }, { dirty: false });
                     editorForm.loadRecord(report);
@@ -432,6 +434,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             report = reportsStore.query('StudentID', student.getId()).first();
             student.set({
                 report: report || null,
+                report_status: report ? report.get('Status') : null,
                 report_modified: report ? report.get('Modified') || report.get('Created') : null
             }, { dirty: false });
 
@@ -451,11 +454,12 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     syncFormButtons: function() {
         var me = this,
             editorForm = me.getEditorForm(),
+            reportStatus = editorForm.getRecord().get('Status'),
             isDirty = editorForm.isDirty(),
             isValid = editorForm.isValid();
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
-        me.getSaveDraftBtn().setDisabled(!isDirty || !isValid);
-        me.getSaveFinishedBtn().setDisabled(!isDirty || !isValid);
+        me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'Draft') || !isValid);
+        me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'Published') || !isValid);
     }
 });
