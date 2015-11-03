@@ -243,6 +243,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                 section: section,
                 term: term
             })[0];
+
+            student.set('report', report, { dirty: false });
         }
 
         editorForm.enable();
