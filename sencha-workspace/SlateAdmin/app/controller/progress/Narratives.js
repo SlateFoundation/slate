@@ -2,10 +2,6 @@
 
 /**
  * TODO:
- * - Sort control statements
- * - Sort methods
- * - Remove redundant "narrative" ref prefixing
- * - Remove all SBG code from core
  * - Move printer functionality to its own controller
  */
 Ext.define('SlateAdmin.controller.progress.Narratives', {
@@ -316,10 +312,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             editorForm = me.getEditorForm(),
             formData  = editorForm.getValues(),
             report = editorForm.getRecord();
-            // grid = me.getNarrativesGrid(),
-            // selModel = grid.getSelectionModel(),
-            // prompts = narrative.get('Prompts'),
-            // r;;
 
         report.beginEdit();
 
@@ -344,9 +336,13 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                 managerCt.setLoading(false);
 
                 if (success) {
+                    report.get('student').set({
+                        report_modified: report.get('Modified') || report.get('Created')
+                    }, { dirty: false });
+                    editorForm.loadRecord(report);
                     me.getStudentsGrid().getSelectionModel().selectNext();
                 } else {
-                    debugger;
+                    Ext.Msg.alert('Failed to save report', 'This report failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
                 }
             }
         });
@@ -396,7 +392,35 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     },
 
     syncReportsToStudents: function() {
-        console.info('syncStudentReports');
+        var section = this.getSectionsGrid().getSelection()[0],
+            termsStore = Ext.getStore('Terms'),
+            studentsStore = Ext.getStore('progress.narratives.Students'),
+            reportsStore = Ext.getStore('progress.narratives.Reports'),
+            studentsLength = studentsStore.getCount(), i = 0, student,
+            report;
+
+        studentsStore.beginUpdate();
+        reportsStore.beginUpdate();
+
+        for (; i < studentsLength; i++) {
+            student = studentsStore.getAt(i);
+            report = reportsStore.query('StudentID', student.getId()).first();
+            student.set({
+                report: report || null,
+                report_modified: report ? report.get('Modified') || report.get('Created') : null
+            }, { dirty: false });
+
+            if (report) {
+                report.set({
+                    student: student,
+                    section: section,
+                    term: termsStore.getById(report.get('TermID')) || null
+                }, { dirty: false });
+            }
+        }
+
+        reportsStore.endUpdate();
+        studentsStore.endUpdate();
     },
 
     syncFormButtons: function() {

@@ -29,9 +29,9 @@ Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
         width: 148,
 
         xtype: 'datecolumn',
-        text: 'Updated',
-        dataIndex: 'Updated',
-        format: 'n/j/y g:h A',
+        text: 'Last Modified',
+        dataIndex: 'report_modified',
+        format: 'n/j/y g:i A',
         emptyCellText: '&mdash;'
     }]
 });
