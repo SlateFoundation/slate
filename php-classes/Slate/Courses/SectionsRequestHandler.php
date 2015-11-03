@@ -4,11 +4,14 @@
 
 namespace Slate\Courses;
 
+use DB;
+
 use Emergence\People\Person;
+use Emergence\People\User;
 use Emergence\CMS\BlogPost;
 use Emergence\CMS\BlogRequestHandler;
 #use SpreadSheetWriter;
-#use Slate\Term;
+use Slate\Term;
 #use Slate\Courses\SectionParticipant;
 
 class SectionsRequestHandler extends \RecordsRequestHandler
@@ -173,23 +176,37 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
-#        if (empty($_REQUEST['AllCourses']) && $GLOBALS['Session']->PersonID) {
-#            $conditions[] = 'ID IN (SELECT CourseSectionID FROM course_section_participants WHERE PersonID = '.$GLOBALS['Session']->PersonID.')';
-#        }
-#
-#        if (!empty($_REQUEST['TermID'])) {
-#            $term = Term::getByID($_REQUEST['TermID']);
-#            $concurrentTerms = $term->getConcurrentTermIDs();
-#            $containedTerms = $term->getContainedTermIDs();
-#            $termIDs = array_unique(array_merge($concurrentTerms, $containedTerms));
-#
-#            $conditions[] = sprintf('TermID IN (%s)',join(',',$termIDs));
-#        }
-#
-#        if (!empty($_REQUEST['start']) && !empty($_REQUEST['limit'])) {
-#            $options['offset'] = $_REQUEST['start'];
-#            $options['limit'] = $_REQUEST['limit'];
-#        }
+        if (!empty($_REQUEST['term'])) {
+            if ($_REQUEST['term'] == 'current') {
+                if (!$Term = Term::getClosest()) {
+                    return static::throwInvalidRequestError('No current term could be found');
+                }
+            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
+
+            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
+        }
+
+        if (!empty($_REQUEST['enrolled_user'])) {
+            if ($_REQUEST['enrolled_user'] == 'current') {
+                $GLOBALS['Session']->requireAuthentication();
+                $EnrolledUser = $GLOBALS['Session']->Person;
+            } elseif (!$EnrolledUser = User::getByHandle($_REQUEST['enrolled_user'])) {
+                return static::throwNotFoundError('enrolled_user not found');
+            }
+
+            $enrolledSectionIds = DB::allValues(
+                'ID',
+                'SELECT ID FROM `%s` WHERE PersonID = %u',
+                [
+                    SectionParticipant::$tableName,
+                    $EnrolledUser->ID
+                ]
+            );
+
+            $conditions[] = sprintf('ID IN (%s)', count($enrolledSectionIds) ? join(',', $enrolledSectionIds) : '0');
+        }
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
