@@ -237,6 +237,15 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         this.syncFormButtons();
     },
 
+    onComboSelect: function (combo, newValue) {
+        var fields = this.getEditorForm().query('field, htmleditor'),
+            nextFieldIndex = fields.indexOf(combo) + 1;
+
+        if (nextFieldIndex < fields.length) {
+            fields[nextFieldIndex].focus(true, 100);
+        }
+    },
+
     onRevertChangesClick: function() {
         var me = this;
 
@@ -305,109 +314,42 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         var me = this,
             managerCt = me.getManagerCt(),
             editorForm = me.getEditorForm(),
-            reportData  = editorForm.getValues(),
-            narrative = managerCt.getNarrative();
+            formData  = editorForm.getValues(),
+            report = editorForm.getRecord();
+            // grid = me.getNarrativesGrid(),
+            // selModel = grid.getSelectionModel(),
+            // prompts = narrative.get('Prompts'),
+            // r;;
 
-        if (newStatus == 'Published' || (!newStatus && reportData.Status == 'Published')) {
-            if (!reportData.Grade) {
-                Ext.Msg.alert('Report not saved', 'Narrative report cannot be marked finished without a grade');
-                return false;
-            }
-        }
+        report.beginEdit();
 
         if (newStatus) {
-            reportData.Status = newStatus;
+            report.set('Status', newStatus);
         }
 
-        me.doSaveReport(narrative, reportData);
-    },
+        report.set(formData);
 
-    doSaveReport: function (narrative, reportData) {
-        var me = this,
-            managerCt = me.getManagerCt(),
-            editorForm = me.getEditorForm(),
-            grid = me.getNarrativesGrid(),
-            selModel = grid.getSelectionModel(),
-            prompts = narrative.get('Prompts'),
-            r;
-
-        for (var field in reportData) {
-            var splitField = field.split('-');
-
-            if (splitField.length == 1) {
-                narrative.set(field, reportData[field]);
-            } else if (splitField[0] == 'prompt') {
-                var prompt = {
-                    PromptID: splitField[1],
-                    Grade: reportData[field]
-                };
-
-                prompts.push(prompt);
-            }
+        // TODO: remove this check and instead publish a cancelable beforesave event for plugin to handle this
+        if (report.get('Status') == 'Published' && !report.get('Grade')) {
+            Ext.Msg.alert('Report not saved', 'Narrative report cannot be marked finished without a grade');
+            return false;
         }
 
-        narrative.set('Prompts', prompts);
+        report.endEdit();
 
+        managerCt.setLoading('Saving report&hellip');
 
-        editorForm.setLoading(true);
+        report.save({
+            callback: function(report, operation, success) {
+                managerCt.setLoading(false);
 
-        SlateAdmin.API.request({
-            url: '/progress/narratives/worksheet-save',
-            submitEmptyText: false,
-            method: 'POST',
-            params: Ext.Object.merge({
-                courseSectionID: narrative.get('CourseSectionID'),
-                termID: narrative.get('TermID'),
-                studentID: narrative.get('StudentID'),
-                narrativeID: narrative.get('ID'),
-                Status: reportData.Status
-            }, editorForm.getForm().getValues()),
-            success: function (resposne) {
-
-                 r = Ext.decode(resposne.responseText);
-
-                if (editorForm) {
-                    editorForm.setLoading(false);
+                if (success) {
+                    me.getStudentsGrid().getSelectionModel().selectNext();
+                } else {
+                    debugger;
                 }
-
-                me.mergeNarrative(narrative, r);
-
-                narrative.commit();
-
-                managerCt.setNarrativeSaved(true);
-
-                selModel.selectNext();
-            },
-            failure: function (form, action) {
-                editorForm.setLoading(false);
             }
         });
-    },
-
-    mergeNarrative: function (narrative, saveResponse) {
-        var prompts = [],
-            savedPrompts = saveResponse.standards;
-
-        narrative.set('Updated', saveResponse.data.Updated);
-
-        for (var key in savedPrompts) {
-            prompts.push({
-                'PromptID': savedPrompts[key].PromptID,
-                'Grade': savedPrompts[key].Grade,
-                'Prompt': savedPrompts[key].Prompt.Prompt
-            });
-        }
-
-        narrative.set('Prompts', prompts);
-    },
-
-    onComboSelect: function (combo, newValue) {
-        var fields = this.getEditorForm().query('field, htmleditor'),
-            nextFieldIndex = fields.indexOf(combo) + 1;
-
-        if (nextFieldIndex < fields.length) {
-            fields[nextFieldIndex].focus(true, 100);
-        }
     },
 
 

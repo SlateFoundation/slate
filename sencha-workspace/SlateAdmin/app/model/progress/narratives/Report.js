@@ -2,10 +2,13 @@
 Ext.define('SlateAdmin.model.progress.narratives.Report', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'SlateAdmin.proxy.Records',
+        'Ext.data.identifier.Negative'
     ],
 
     idProperty: 'ID',
+    identifier: 'negative',
+
     fields: [
         {
             name: 'ID',
@@ -21,17 +24,21 @@ Ext.define('SlateAdmin.model.progress.narratives.Report', {
             name: 'Created',
             type: 'date',
             dateFormat: 'timestamp',
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: 'CreatorID',
             type: 'int',
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
-            name: 'RevisionID',
-            type: 'int',
-            allowNull: true
+            name: 'Modified',
+            type: 'date',
+            dateFormat: 'timestamp',
+            allowNull: true,
+            persist: false
         },
         {
             name: 'StudentID',
@@ -49,12 +56,6 @@ Ext.define('SlateAdmin.model.progress.narratives.Report', {
             name: 'Status',
             type: 'string',
             defaultValue: 'Draft'
-        },
-        {
-            name: 'Updated',
-            type: 'date',
-            dateFormat: 'timestamp',
-            allowNull: true
         },
         {
             name: 'Grade',
