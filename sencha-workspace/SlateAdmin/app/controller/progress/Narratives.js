@@ -348,10 +348,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         report.set(formData);
 
         // TODO: remove this check and instead publish a cancelable beforesave event for plugin to handle this
-        if (report.get('Status') == 'Published' && !report.get('Grade')) {
-            Ext.Msg.alert('Report not saved', 'Narrative report cannot be marked finished without a grade');
-            return false;
-        }
+        // if (report.get('Status') == 'Published' && !report.get('Grade')) {
+        //     Ext.Msg.alert('Report not saved', 'Narrative report cannot be marked finished without a grade');
+        //     return false;
+        // }
 
         report.endEdit();
 
