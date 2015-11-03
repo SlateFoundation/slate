@@ -34,21 +34,21 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                     checked: true,
                     text: 'Progress Notes',
                     value: 'progressnotes'
-                // },{
-                //     xtype: 'menucheckitem',
-                //     checked: true,
-                //     text: 'Narratives',
-                //     value: 'narratives'
-                // },{
-                //     xtype: 'menucheckitem',
-                //     checked: true,
-                //     text: 'Interims',
-                //     value: 'interims'
-                // },{
-                //     xtype: 'menucheckitem',
-                //     checked: true,
-                //     text: 'Standards',
-                //     value: 'standards'
+                },{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Narratives',
+                    value: 'narratives'
+                },{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Interims',
+                    value: 'interims'
+                },{
+                    xtype: 'menucheckitem',
+                    checked: true,
+                    text: 'Standards',
+                    value: 'standards'
                 }]
             }
         },{

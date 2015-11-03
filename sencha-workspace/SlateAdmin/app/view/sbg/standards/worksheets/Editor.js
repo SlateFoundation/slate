@@ -28,7 +28,7 @@ Ext.define('SlateAdmin.view.sbg.standards.worksheets.Editor', {
         name: 'Description',
         itemId: 'Description'
     }, {
-        xtype: 'progress-standards-worksheets-promptsgrid',
+        xtype: 'sbg-standards-worksheets-promptsgrid',
         flex: 1
     }]
 });

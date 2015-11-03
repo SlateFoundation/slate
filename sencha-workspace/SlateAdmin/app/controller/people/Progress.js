@@ -132,7 +132,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         ]);
         progressProxy.setExtraParam('termID', selectedTerm);
 
-        me.bufferedDoFilter(true);
+        me.doFilter(true);
     },
 
     onComposeProgressNoteClick: function () {

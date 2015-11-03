@@ -17,6 +17,7 @@ Ext.define('SlateAdmin.model.sbg.standard.WorksheetAssignment', {
             persist: false
         }, {
             name: 'ID',
+            critical: true,
             type: 'integer'
         }, {
             name: 'Created',
@@ -29,9 +30,11 @@ Ext.define('SlateAdmin.model.sbg.standard.WorksheetAssignment', {
             type: 'integer'
         }, {
             name: 'WorksheetID',
+            critical: true,
             type: 'integer'
         }, {
             name: 'TermID',
+            critical: true,
             type: 'integer'
         }
     ],

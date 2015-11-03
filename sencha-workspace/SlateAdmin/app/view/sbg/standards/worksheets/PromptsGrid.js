@@ -60,9 +60,9 @@ Ext.define('SlateAdmin.view.sbg.standards.worksheets.PromptsGrid', {
         width: 30,
         items: [{
             tooltip: 'Delete Prompt',
-            icon: '/img/icons/silk/delete.png',
+            icon: 'resources/icons/silk/delete.png',
             handler: function (grid, index) {
-                this.up('progress-standards-worksheets-promptsgrid').fireEvent('itemdeleteclick', index);
+                this.up('sbg-standards-worksheets-promptsgrid').fireEvent('itemdeleteclick', index);
             }
         }]
     }]

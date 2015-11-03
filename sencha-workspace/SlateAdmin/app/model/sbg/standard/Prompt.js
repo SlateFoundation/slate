@@ -2,7 +2,6 @@
 Ext.define('SlateAdmin.model.sbg.standard.Prompt', {
     extend: 'Ext.data.Model',
     requires: [
-        'Ext.data.proxy.Ajax',
         'SlateAdmin.proxy.Records'
     ],
 
@@ -30,9 +29,6 @@ Ext.define('SlateAdmin.model.sbg.standard.Prompt', {
     proxy: {
         type: 'slaterecords',
         url: '/sbg/standards/prompts',
-        extraParams: {
-            format: 'json'
-        },
         reader: {
             type: 'json',
             rootProperty: 'data'

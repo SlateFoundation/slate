@@ -22,7 +22,7 @@ Ext.define('SlateAdmin.model.sbg.SectionStudent', {
     proxy: {
         type: 'slaterecords',
         api:{
-            read: '/standards/section-students'
+            read: '/sbg/standards/section-students'
         },
         reader: {
             type: 'json',
