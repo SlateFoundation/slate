@@ -62,6 +62,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             change: 'onTermChange'
         },
         sectionsGrid: {
+            beforeselect: 'onBeforeSectionSelect',
             select: 'onSectionSelect'
         },
 
@@ -137,16 +138,40 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         this.syncSections();
     },
 
+    onBeforeSectionSelect: function(sectionsSelModel, section) {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            loadedReport = editorForm.getRecord();
+
+        if (loadedReport && editorForm.isDirty()) {
+            Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
+                if (btn != 'yes') {
+                    return;
+                }
+
+                editorForm.reset();
+                sectionsSelModel.select([section]);
+            });
+
+            return false;
+        }
+    },
+
     onSectionSelect: function (sectionsGrid, section) {
         var me = this,
             studentsGrid = me.getStudentsGrid(),
             studentsStore = studentsGrid.getStore(),
             reportsStore = Ext.getStore('progress.narratives.Reports'),
-            reportsProxy = reportsStore.getProxy();
+            reportsProxy = reportsStore.getProxy(),
+            editorForm = me.getEditorForm();
 
         // reset stores
         studentsStore.removeAll();
         reportsStore.removeAll();
+
+        // reset form
+        editorForm.disable();
+        editorForm.reset(true);
 
         // configure grid
         studentsGrid.enable();
@@ -180,7 +205,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
     },
 
-    onBeforeStudentSelect: function (studentsGrid, student) {
+    onBeforeStudentSelect: function (studentsSelModel, student) {
         var me = this,
             editorForm = me.getEditorForm(),
             loadedReport = editorForm.getRecord();
@@ -192,7 +217,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                 }
 
                 editorForm.reset();
-                me.getStudentsGrid().getSelectionModel().select([student]);
+                studentsSelModel.select([student]);
             });
 
             return false;
