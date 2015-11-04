@@ -46,14 +46,7 @@ Git::$repositories['slate-admin'] = [
                 '#^/bootstrap\\.#' // don't sync generated bootstrap files
             ]
         ],
-        'site-root/manage.php',
-
-        // TODO: eliminate for standalone packages
-        'sencha-workspace/packages/emergence-apikit',
-        'sencha-workspace/packages/jarvus-apikit',
-        'sencha-workspace/packages/jarvus-ext-lazydata',
-        'sencha-workspace/packages/jarvus-ext-routing',
-        'sencha-workspace/packages/jarvus-ext-searchfield'
+        'site-root/manage.php'
     ]
 ];
 
