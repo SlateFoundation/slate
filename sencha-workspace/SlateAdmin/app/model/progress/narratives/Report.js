@@ -89,6 +89,8 @@ Ext.define('SlateAdmin.model.progress.narratives.Report', {
     ],
     proxy: {
         type: 'slaterecords',
-        url: '/progress/narratives/reports'
+        url: '/progress/narratives/reports',
+        limitParam: null,
+        startParam: null
     }
 });
