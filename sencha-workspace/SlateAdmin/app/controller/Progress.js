@@ -15,7 +15,7 @@ Ext.define('SlateAdmin.controller.Progress', {
         navPanel: {
             selector: 'progress-navpanel',
             autoCreate: true,
-    
+
             xtype: 'progress-navpanel'
         }
     },
@@ -23,7 +23,7 @@ Ext.define('SlateAdmin.controller.Progress', {
 
     control: {
         'progress-navpanel': {
-            expand: 'onNavPanelExpand'
+            beforeexpand: 'onNavPanelBeforeExpand'
         }
     },
 
@@ -43,7 +43,7 @@ Ext.define('SlateAdmin.controller.Progress', {
 
 
     // event handlers
-    onNavPanelExpand: function (navPanel) {
+    onNavPanelBeforeExpand: function (navPanel) {
         Ext.util.History.pushState('progress', 'Student Progress');
     },
 

@@ -105,7 +105,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 
     control: {
         'courses-navpanel': {
-            expand: 'onNavPanelExpand'
+            beforeexpand: 'onNavPanelBeforeExpand'
         },
         'courses-navpanel field': {
             specialkey: 'onNavFieldSpecialKey'
@@ -259,7 +259,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 
 
     // event handlers
-    onNavPanelExpand: function(navPanel) {
+    onNavPanelBeforeExpand: function(navPanel) {
         Ext.util.History.pushState('course-sections', 'Course Sections');
     },
 

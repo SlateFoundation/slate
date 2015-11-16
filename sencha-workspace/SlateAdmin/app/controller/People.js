@@ -90,7 +90,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     control: {
         'people-navpanel': {
-            expand: 'onNavPanelExpand'
+            beforeexpand: 'onNavPanelBeforeExpand'
         },
         'people-navpanel jarvus-searchfield': {
             specialkey: 'onSearchSpecialKey',
@@ -303,7 +303,7 @@ Ext.define('SlateAdmin.controller.People', {
      * @param {SlateAdmin.view.people.NavPanel} navPanel The navigation panel
      * @return {void}
      */
-    onNavPanelExpand: function() {
+    onNavPanelBeforeExpand: function() {
         this.syncState();
     },
 
