@@ -21,6 +21,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     ],
 
     refs: {
+        progressNavPanel: 'progress-navpanel',
+
         managerCt: {
             selector: 'progress-narratives-manager',
             autoCreate: true,
@@ -117,7 +119,19 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     // route handlers
     showNarratives: function () {
-        this.application.getController('Viewport').loadCard(this.getManagerCt());
+        var me = this,
+            navPanel = me.getProgressNavPanel();
+
+        Ext.suspendLayouts();
+
+        Ext.util.History.suspendState();
+        navPanel.setActiveLink('progress/narratives');
+        navPanel.expand();
+        Ext.util.History.resumeState(false); // false to discard any changes to state
+
+        me.application.getController('Viewport').loadCard(me.getManagerCt());
+
+        Ext.resumeLayouts(true);
     },
 
     // showNarrativePrinting: function () {
