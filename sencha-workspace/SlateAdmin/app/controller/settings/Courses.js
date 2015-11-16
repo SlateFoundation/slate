@@ -111,7 +111,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
     onSaveCourseClick: function() {
         var me = this,
-            manager = me.getManager();
+            manager = me.getManager(),
             win = me.getCoursesFormWindow(),
             form = win.down('form'),
             course = me.getCourseCourseModel().create(form.getValues());
