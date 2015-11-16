@@ -68,7 +68,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
         Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/terms');
-        navPanel.expand(false);
+        navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());

@@ -66,7 +66,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
         Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/courses');
-        navPanel.expand(false);
+        navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());
