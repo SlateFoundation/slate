@@ -22,10 +22,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     refs: {
-        settingsNavPanel: {
-            ref: 'settingsNavPanel',
-            selector: 'settings-navpanel'
-        },
+        settingsNavPanel: 'settings-navpanel',
         manager: {
             selector: 'courses-manager',
             autoCreate: true,
