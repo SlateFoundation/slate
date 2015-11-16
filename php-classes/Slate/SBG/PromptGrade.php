@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 use Slate\Term;
 use Slate\Courses\Section;
@@ -9,10 +9,10 @@ use Slate\People\Student;
 class PromptGrade extends \VersionedRecord
 {
     // VersionedRecord configuration
-    public static $historyTable = 'history_standards_prompt_grades';
+    public static $historyTable = 'history_sbg_prompt_grades';
 
     // ActiveRecord configuration
-    public static $tableName = 'standards_prompt_grades';
+    public static $tableName = 'sbg_prompt_grades';
     public static $singularNoun = 'standards prompt grade';
     public static $pluralNoun = 'standards prompt grades';
 

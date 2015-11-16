@@ -1,13 +1,13 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 use HandleBehavior;
 
 class Worksheet extends \ActiveRecord
 {
     // ActiveRecord configuration
-    public static $tableName = 'standards_worksheets';
+    public static $tableName = 'sbg_worksheets';
     public static $singularNoun = 'standards worksheet';
     public static $pluralNoun = 'standards worksheets';
 

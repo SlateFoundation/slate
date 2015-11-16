@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 use Slate\Term;
 use Slate\Courses\Section;
@@ -8,7 +8,7 @@ use Slate\Courses\Section;
 class WorksheetAssignment extends \ActiveRecord
 {
     // ActiveRecord configuration
-    public static $tableName = 'standards_worksheet_assignments';
+    public static $tableName = 'sbg_worksheet_assignments';
 
     public static $fields = [
         'TermID' => 'uint',

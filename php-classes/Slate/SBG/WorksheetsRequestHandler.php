@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 class WorksheetsRequestHandler extends \RecordsRequestHandler
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 class WorksheetPrompt extends \ActiveRecord
 {
     // ActiveRecord configuration
-    public static $tableName = 'standards_worksheet_prompts';
+    public static $tableName = 'sbg_worksheet_prompts';
 
     public static $fields = [
         'WorksheetID' => 'uint',

@@ -1,11 +1,11 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 class Prompt extends \ActiveRecord
 {
     // ActiveRecord configuration
-    public static $tableName = 'standards_prompts';
+    public static $tableName = 'sbg_prompts';
     public static $singularNoun = 'standards prompt';
     public static $pluralNoun = 'standards prompts';
 

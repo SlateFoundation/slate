@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 use Site, TemplateResponse, DB;
 use Emergence\Mailer\Mailer;
