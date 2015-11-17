@@ -43,4 +43,19 @@ class WorksheetPrompt extends \ActiveRecord
             'unique' => true
         ]
     ];
+
+    public function destroy()
+    {
+        $this->Status = 'deleted';
+        $this->save();
+
+        return true;
+    }
+
+    public static function delete($id)
+    {
+        $Prompt = static::getbyId($id);
+
+        return $Prompt ? $Prompt->destroy() : false;
+    }
 }

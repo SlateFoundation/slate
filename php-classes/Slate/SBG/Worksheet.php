@@ -83,4 +83,23 @@ class Worksheet extends \ActiveRecord
             return 0;
         }
     }
+
+    public function destroy()
+    {
+        foreach ($this->Prompts AS $Prompt) {
+            $Prompt->destroy();
+        }
+
+        $this->Status = 'deleted';
+        $this->save();
+
+        return true;
+    }
+
+    public static function delete($id)
+    {
+        $Worksheet = static::getbyId($id);
+
+        return $Worksheet ? $Worksheet->destroy() : false;
+    }
 }
