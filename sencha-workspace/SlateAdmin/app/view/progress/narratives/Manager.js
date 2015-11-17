@@ -13,13 +13,11 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     items: [{
         region: 'west',
         split: true,
-        xtype: 'progress-narratives-sectionsgrid',
-        width: 250
+        xtype: 'progress-narratives-sectionsgrid'
     },{
         region: 'center',
         xtype: 'progress-narratives-studentsgrid',
-        disabled: true,
-        width: 250
+        disabled: true
     },{
         region: 'east',
         split: true,

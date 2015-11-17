@@ -6,6 +6,7 @@ Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
         'Ext.grid.column.Date'
     ],
 
+    width: 250,
     cls: 'progress-narratives-studentsgrid',
     viewConfig: {
         getRowClass: function(student) {

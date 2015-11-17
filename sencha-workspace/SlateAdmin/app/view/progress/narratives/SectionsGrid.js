@@ -10,6 +10,7 @@ Ext.define('SlateAdmin.view.progress.narratives.SectionsGrid', {
         'Ext.button.Button'
     ],
 
+    width: 250,
     store: 'progress.narratives.Sections',
     componentCls: 'progress-narratives-grid',
     plugins: [{
