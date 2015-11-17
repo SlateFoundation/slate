@@ -28,9 +28,9 @@ class Worksheet extends \ActiveRecord
 
     public static $relationships = [
         'Prompts' => [
-            'type' => 'many-many',
-            'class' => Prompt::class,
-            'linkClass' => WorksheetPrompt::class
+            'type' => 'one-many',
+            'class' => WorksheetPrompt::class,
+            'order' => 'Position'
         ]
     ];
 

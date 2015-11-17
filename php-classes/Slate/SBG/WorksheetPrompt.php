@@ -6,13 +6,22 @@ class WorksheetPrompt extends \ActiveRecord
 {
     // ActiveRecord configuration
     public static $tableName = 'sbg_worksheet_prompts';
+    public static $singularNoun = 'standards worksheet prompt';
+    public static $pluralNoun = 'standards worksheet prompts';
+    public static $collectionRoute = '/sbg/worksheet-prompts';
+    public static $updateOnDuplicateKey = true;
 
     public static $fields = [
         'WorksheetID' => 'uint',
-        'PromptID' => 'uint',
         'Position' => [
             'type' => 'uint',
-            'default' => 0
+            'default' => 1
+        ],
+        'Prompt' => 'string',
+        'Status' => [
+            'type' => 'enum',
+            'values' => ['published', 'deleted'],
+            'default' => 'published'
         ]
     ];
 
@@ -20,21 +29,17 @@ class WorksheetPrompt extends \ActiveRecord
         'Worksheet' => [
             'type' => 'one-one',
             'class' => Worksheet::class
-        ],
-        'Prompt' => [
-            'type' => 'one-one',
-            'class' => Prompt::class
         ]
     ];
 
     public static $validators = [
         'Worksheet' => 'require-relationship',
-        'Prompt' => 'require-relationship'
+        'Prompt'
     ];
 
     public static $indexes = [
         'WorksheetPrompt' => [
-            'fields' => ['WorksheetID', 'PromptID'],
+            'fields' => ['WorksheetID', 'Prompt'],
             'unique' => true
         ]
     ];
