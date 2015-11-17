@@ -10,6 +10,7 @@ class Worksheet extends \ActiveRecord
     public static $tableName = 'sbg_worksheets';
     public static $singularNoun = 'standards worksheet';
     public static $pluralNoun = 'standards worksheets';
+    public static $collectionRoute = '/sbg/worksheets';
 
     public static $fields = [
         'Title',
