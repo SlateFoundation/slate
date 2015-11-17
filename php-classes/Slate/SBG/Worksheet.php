@@ -71,12 +71,16 @@ class Worksheet extends \ActiveRecord
 
     public static function getTotalPrompts(Worksheet $Worksheet)
     {
-        return (int)\DB::oneValue(
-            'SELECT COUNT(*) FROM `%s` WHERE WorksheetID = %u',
-            [
-                WorksheetPrompt::$tableName,
-                $Worksheet->ID
-            ]
-        );
+        try {
+            return (int)\DB::oneValue(
+                'SELECT COUNT(*) FROM `%s` WHERE WorksheetID = %u',
+                [
+                    WorksheetPrompt::$tableName,
+                    $Worksheet->ID
+                ]
+            );
+        } catch (\TableNotFoundException $e) {
+            return 0;
+        }
     }
 }
