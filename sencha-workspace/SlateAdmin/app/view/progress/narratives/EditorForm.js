@@ -92,8 +92,7 @@ Ext.define('SlateAdmin.view.progress.narratives.EditorForm',{
 
         text: 'Revert Changes'
     },{
-        xtype: 'tbspacer',
-        flex: 1
+        xtype: 'tbfill'
     },{
         itemId: 'saveDraftBtn',
 
