@@ -18,8 +18,8 @@ class Worksheet extends \ActiveRecord
         ],
         'Status' => [
             'type' => 'enum',
-            'values' => ['Live','Hidden','Deleted'],
-            'default' => 'Live'
+            'values' => ['published', 'deleted'],
+            'default' => 'published'
         ],
         'Description' => [
             'notnull' => false
