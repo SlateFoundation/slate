@@ -265,6 +265,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         editorForm.setScrollY(0, true);
         editorForm.loadRecord(report);
         me.syncFormButtons();
+
+        me.fireEvent('reportload', report);
     },
 
     onEditorFormDirtyChange: function() {
@@ -372,6 +374,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         report.endEdit();
 
         managerCt.setLoading('Saving report&hellip');
+
+        me.fireEvent('beforereportsave', report);
 
         report.save({
             callback: function(report, operation, success) {
