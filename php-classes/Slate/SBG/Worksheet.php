@@ -1,15 +1,16 @@
 <?php
 
-namespace Slate\Standards;
+namespace Slate\SBG;
 
 use HandleBehavior;
 
 class Worksheet extends \ActiveRecord
 {
     // ActiveRecord configuration
-    public static $tableName = 'standards_worksheets';
+    public static $tableName = 'sbg_worksheets';
     public static $singularNoun = 'standards worksheet';
     public static $pluralNoun = 'standards worksheets';
+    public static $collectionRoute = '/sbg/worksheets';
 
     public static $fields = [
         'Title',
@@ -18,8 +19,8 @@ class Worksheet extends \ActiveRecord
         ],
         'Status' => [
             'type' => 'enum',
-            'values' => ['Live','Hidden','Deleted'],
-            'default' => 'Live'
+            'values' => ['published', 'deleted'],
+            'default' => 'published'
         ],
         'Description' => [
             'notnull' => false
@@ -28,9 +29,9 @@ class Worksheet extends \ActiveRecord
 
     public static $relationships = [
         'Prompts' => [
-            'type' => 'many-many',
-            'class' => Prompt::class,
-            'linkClass' => WorksheetPrompt::class
+            'type' => 'one-many',
+            'class' => WorksheetPrompt::class,
+            'order' => 'Position'
         ]
     ];
 
@@ -70,12 +71,35 @@ class Worksheet extends \ActiveRecord
 
     public static function getTotalPrompts(Worksheet $Worksheet)
     {
-        return (int)\DB::oneValue(
-            'SELECT COUNT(*) FROM `%s` WHERE WorksheetID = %u',
-            [
-                WorksheetPrompt::$tableName,
-                $Worksheet->ID
-            ]
-        );
+        try {
+            return (int)\DB::oneValue(
+                'SELECT COUNT(*) FROM `%s` WHERE WorksheetID = %u',
+                [
+                    WorksheetPrompt::$tableName,
+                    $Worksheet->ID
+                ]
+            );
+        } catch (\TableNotFoundException $e) {
+            return 0;
+        }
+    }
+
+    public function destroy()
+    {
+        foreach ($this->Prompts AS $Prompt) {
+            $Prompt->destroy();
+        }
+
+        $this->Status = 'deleted';
+        $this->save();
+
+        return true;
+    }
+
+    public static function delete($id)
+    {
+        $Worksheet = static::getbyId($id);
+
+        return $Worksheet ? $Worksheet->destroy() : false;
     }
 }

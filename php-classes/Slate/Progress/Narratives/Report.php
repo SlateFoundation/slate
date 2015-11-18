@@ -43,21 +43,10 @@ class Report extends \VersionedRecord
             'type' => 'timestamp'
             ,'notnull' => false
         ],
-
-        // TODO: comment out so sites can configure
-#        'Grade' => [
-#            'type' => 'enum',
-#            'values' => ['A','B','C','D','F','Inc'],
-#            'notnull' => false
-#        ],
-#        'Assessment' => [
-#            'type' => 'clob',
-#            'notnull' => false
-#        ],
-#        'Comments' => [
-#            'type' => 'clob',
-#            'notnull' => false
-#        ]
+        'Notes' => [
+            'type' => 'clob',
+            'notnull' => false
+        ]
     ];
 
 
