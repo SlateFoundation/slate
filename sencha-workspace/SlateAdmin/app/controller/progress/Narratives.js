@@ -386,7 +386,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                         report_status: report.get('Status'),
                         report_modified: report.get('Modified') || report.get('Created')
                     }, { dirty: false });
+
                     editorForm.loadRecord(report);
+
+                    me.fireEvent('reportsave', report);
+
                     me.getStudentsGrid().getSelectionModel().selectNext();
                 } else {
                     Ext.Msg.alert('Failed to save report', 'This report failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
