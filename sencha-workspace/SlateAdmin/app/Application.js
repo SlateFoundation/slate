@@ -49,9 +49,6 @@ Ext.define('SlateAdmin.Application', {
         'progress.Interims',
         'progress.Narratives',
 
-        'sbg.Standards',
-        'sbg.Worksheets',
-
         //<debug>
         'DeveloperTools'
         //</debug>
