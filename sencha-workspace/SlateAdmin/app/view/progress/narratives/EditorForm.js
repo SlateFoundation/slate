@@ -55,35 +55,13 @@ Ext.define('SlateAdmin.view.progress.narratives.EditorForm',{
 
                 return this.getTpl('displayTpl').apply(v.getData());
             }
-        // },{
-        //     name: 'Grade',
-        //     xtype: 'combo',
-        //     fieldLabel: 'Overall grade',
-        //     mode: 'local',
-        //     store: ['A', 'B', 'C', 'D', 'F', 'Inc'],
-        //     triggerAction: 'all',
-        //     forceSelection: true,
-        //     selectOnFocus: true,
-        //     emptyText: '-',
-        //     width: 150
         }]
-    // }, {
-    //     xtype: 'fieldset',
-    //     itemId: 'standardsForm',
-    //     padding: '5 0'
     },{
         xtype: 'textarea',
         anchor: '100%',
         grow: true,
         name: 'Notes',
         fieldLabel: 'Notes from Teacher',
-        labelAlign: 'top'
-    },{
-        xtype: 'textarea',
-        anchor: '100%',
-        grow: true,
-        name: 'Quote',
-        fieldLabel: 'Quote about Student',
         labelAlign: 'top'
     }],
     buttonAlign: 'center',
@@ -92,8 +70,7 @@ Ext.define('SlateAdmin.view.progress.narratives.EditorForm',{
 
         text: 'Revert Changes'
     },{
-        xtype: 'tbspacer',
-        flex: 1
+        xtype: 'tbfill'
     },{
         itemId: 'saveDraftBtn',
 

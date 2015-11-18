@@ -22,10 +22,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     refs: {
-        settingsNavPanel: {
-            ref: 'settingsNavPanel',
-            selector: 'settings-navpanel'
-        },
+        settingsNavPanel: 'settings-navpanel',
         manager: {
             selector: 'courses-manager',
             autoCreate: true,
@@ -69,7 +66,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
         Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/courses');
-        navPanel.expand(false);
+        navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());
@@ -114,7 +111,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
     onSaveCourseClick: function() {
         var me = this,
-            manager = me.getManager();
+            manager = me.getManager(),
             win = me.getCoursesFormWindow(),
             form = win.down('form'),
             course = me.getCourseCourseModel().create(form.getValues());

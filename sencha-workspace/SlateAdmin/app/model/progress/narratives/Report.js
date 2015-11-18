@@ -67,11 +67,6 @@ Ext.define('SlateAdmin.model.progress.narratives.Report', {
             type: 'string',
             allowNull: true
         },
-        {
-            name: 'Quote',
-            type: 'string',
-            allowNull: true
-        },
 
         // local-only fileds
         {

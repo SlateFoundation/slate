@@ -48,7 +48,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
         Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/groups');
-        navPanel.expand(false);
+        navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());

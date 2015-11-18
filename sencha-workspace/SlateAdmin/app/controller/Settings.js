@@ -24,7 +24,7 @@ Ext.define('SlateAdmin.controller.Settings', {
 
     control: {
         'settings-navpanel': {
-            expand: 'onNavPanelExpand'
+            beforeexpand: 'onNavPanelBeforeExpand'
         }
     },
 
@@ -44,7 +44,7 @@ Ext.define('SlateAdmin.controller.Settings', {
 
 
     // event handlers
-    onNavPanelExpand: function(navPanel) {
+    onNavPanelBeforeExpand: function(navPanel) {
         Ext.util.History.pushState('settings', 'Settings');
     },
 

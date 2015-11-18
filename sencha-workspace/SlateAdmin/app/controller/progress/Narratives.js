@@ -21,6 +21,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     ],
 
     refs: {
+        progressNavPanel: 'progress-navpanel',
+
         managerCt: {
             selector: 'progress-narratives-manager',
             autoCreate: true,
@@ -117,7 +119,19 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     // route handlers
     showNarratives: function () {
-        this.application.getController('Viewport').loadCard(this.getManagerCt());
+        var me = this,
+            navPanel = me.getProgressNavPanel();
+
+        Ext.suspendLayouts();
+
+        Ext.util.History.suspendState();
+        navPanel.setActiveLink('progress/narratives');
+        navPanel.expand();
+        Ext.util.History.resumeState(false); // false to discard any changes to state
+
+        me.application.getController('Viewport').loadCard(me.getManagerCt());
+
+        Ext.resumeLayouts(true);
     },
 
     // showNarrativePrinting: function () {
@@ -251,6 +265,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         editorForm.setScrollY(0, true);
         editorForm.loadRecord(report);
         me.syncFormButtons();
+
+        me.fireEvent('reportload', report);
     },
 
     onEditorFormDirtyChange: function() {
@@ -359,6 +375,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
         managerCt.setLoading('Saving report&hellip');
 
+        me.fireEvent('beforereportsave', report);
+
         report.save({
             callback: function(report, operation, success) {
                 managerCt.setLoading(false);
@@ -368,7 +386,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                         report_status: report.get('Status'),
                         report_modified: report.get('Modified') || report.get('Created')
                     }, { dirty: false });
+
                     editorForm.loadRecord(report);
+
+                    me.fireEvent('reportsave', report);
+
                     me.getStudentsGrid().getSelectionModel().selectNext();
                 } else {
                     Ext.Msg.alert('Failed to save report', 'This report failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
@@ -456,9 +478,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     syncFormButtons: function() {
         var me = this,
             editorForm = me.getEditorForm(),
-            reportStatus = editorForm.getRecord().get('Status'),
+            report = editorForm.getRecord(),
+            reportStatus = report && report.get('Status'),
             isDirty = editorForm.isDirty(),
             isValid = editorForm.isValid();
+
+        if (!report) {
+            return;
+        }
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
         me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'Draft') || !isValid);
