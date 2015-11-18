@@ -474,9 +474,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     syncFormButtons: function() {
         var me = this,
             editorForm = me.getEditorForm(),
-            reportStatus = editorForm.getRecord().get('Status'),
+            report = editorForm.getRecord(),
+            reportStatus = report && report.get('Status'),
             isDirty = editorForm.isDirty(),
             isValid = editorForm.isValid();
+
+        if (!report) {
+            return;
+        }
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
         me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'Draft') || !isValid);
