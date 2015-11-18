@@ -11,9 +11,16 @@ class WorksheetAssignmentsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
-        if (!empty($_REQUEST['termID'])) {
-            $Term = Slate\Term::getByID($_REQUEST['termID']);
-            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
+        if (!empty($_REQUEST['term'])) {
+            if ($_REQUEST['term'] == 'current') {
+                if (!$Term = Term::getClosest()) {
+                    return static::throwInvalidRequestError('No current term could be found');
+                }
+            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
+
+            $conditions['TermID'] = $Term->ID;
         }
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);

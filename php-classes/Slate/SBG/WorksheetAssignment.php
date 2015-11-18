@@ -9,6 +9,10 @@ class WorksheetAssignment extends \ActiveRecord
 {
     // ActiveRecord configuration
     public static $tableName = 'sbg_worksheet_assignments';
+    public static $singularNoun = 'standards worksheet assignment';
+    public static $pluralNoun = 'standards worksheet assignments';
+    public static $collectionRoute = '/sbg/worksheet-assignments';
+    public static $updateOnDuplicateKey = true;
 
     public static $fields = [
         'TermID' => 'uint',
@@ -45,7 +49,7 @@ class WorksheetAssignment extends \ActiveRecord
 
     public static $indexes = [
         'WorksheetAssignment' => [
-            'fields' => ['TermID', 'CourseSectionID', 'WorksheetID'],
+            'fields' => ['TermID', 'CourseSectionID'],
             'unique' => true
         ]
     ];
