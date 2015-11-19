@@ -297,11 +297,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     },
 
     onSaveDraftClick: function () {
-        this.saveReport('Draft');
+        this.saveReport('draft');
     },
 
     onSaveFinishedClick: function () {
-        this.saveReport('Published');
+        this.saveReport('published');
     },
 
     // onPrinterActivate: function (managerCt) {
@@ -488,7 +488,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
-        me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'Draft') || !isValid);
-        me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'Published') || !isValid);
+        me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'draft') || !isValid);
+        me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'published') || !isValid);
     }
 });
