@@ -5,7 +5,8 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     requires: [
         'SlateAdmin.view.progress.narratives.SectionsGrid',
         'SlateAdmin.view.progress.narratives.StudentsGrid',
-        'SlateAdmin.view.progress.narratives.EditorForm'
+        'SlateAdmin.view.progress.narratives.EditorForm',
+        'SlateAdmin.view.progress.narratives.SectionNotesForm'
     ],
 
     layout: 'border',
@@ -28,6 +29,16 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
         flex: 1,
 
         xtype: 'progress-narratives-editorform',
+        disabled: true
+    },{
+        region: 'south',
+        split: true,
+
+        xtype: 'progress-narratives-sectionnotesform',
+        collapsible :true,
+        collapsed: true,
+        stateful: true,
+        stateId: 'progress-narratives-sectionnotesform',
         disabled: true
     }]
 });
