@@ -10,6 +10,10 @@ Ext.define('SlateAdmin.view.progress.narratives.SectionNotesForm',{
     title: 'Section Notes',
     bodyPadding: 10,
     trackResetOnLoad: true,
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     defaults: {
         anchor: '100%',
         labelAlign: 'top'
@@ -17,7 +21,7 @@ Ext.define('SlateAdmin.view.progress.narratives.SectionNotesForm',{
     items: [{
         xtype: 'textareafield',
         name: 'Notes',
-        grow: true,
+        flex: 1,
         emptyText: 'Optional notes to include in every student\'s report'
     }],
     buttons: [{
