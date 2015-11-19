@@ -82,6 +82,12 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         sectionNotesForm: {
             dirtychange: 'onSectionNotesFormDirtyChange'
         },
+        sectionNotesRevertBtn: {
+            click: 'onSectionNotesRevertBtnClick'
+        },
+        sectionNotesSaveBtn: {
+            click: 'onSectionNotesSaveBtnClick'
+        },
 
         editorForm: {
             dirtychange: 'onEditorFormDirtyChange',
@@ -190,6 +196,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             term = me.getTermSelector().getSelection(),
             termHandle = me.getTermSelector().getValue(),
             sectionCode = section.get('Code'),
+            sectionNotesForm = me.getSectionNotesForm(),
             SectionNotesModel = me.getProgressNarrativesSectionNotesModel();
 
         // reset stores
@@ -212,6 +219,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         reportsStore.load();
 
         // load section notes model
+        sectionNotesForm.enable();
+        sectionNotesForm.setLoading('Loading notes&hellip;');
         SectionNotesModel.getProxy().createOperation('read', {
             params: {
                 term: termHandle,
@@ -222,8 +231,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                     return;
                 }
 
-                var sectionNotesForm = me.getSectionNotesForm();
-
                 if (!(sectionNotes = sectionNotes[0])) {
                     sectionNotes = new SectionNotesModel({
                         TermID: term.getId(),
@@ -231,7 +238,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                     });
                 }
 
-                sectionNotesForm.enable();
+                sectionNotesForm.setLoading(false);
                 sectionNotesForm.loadRecord(sectionNotes);
                 me.syncSectionNotesFormButtons();
             }
@@ -310,6 +317,34 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     onSectionNotesFormDirtyChange: function() {
         this.syncSectionNotesFormButtons();
+    },
+
+    onSectionNotesRevertBtnClick: function() {
+        this.getSectionNotesForm().reset();
+    },
+
+    onSectionNotesSaveBtnClick: function() {
+        var sectionNotesForm = this.getSectionNotesForm(),
+            sectionNotes = sectionNotesForm.getRecord();
+
+        sectionNotesForm.updateRecord(sectionNotes);
+
+        if (!sectionNotes.dirty) {
+            return;
+        }
+
+        sectionNotesForm.setLoading('Saving notes&hellip;');
+        sectionNotes.save({
+            callback: function(sectionNotes, operation, success) {
+                sectionNotesForm.setLoading(false);
+
+                if (success) {
+                    sectionNotesForm.loadRecord(sectionNotes);
+                } else {
+                    Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
+                }
+            }
+        });
     },
 
     onEditorFormDirtyChange: function() {
