@@ -20,6 +20,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress.narratives.Reports'
     ],
 
+    models: [
+        'progress.narratives.SectionNotes'
+    ],
+
     refs: {
         progressNavPanel: 'progress-navpanel',
 
@@ -33,6 +37,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         termSelector: 'progress-narratives-sectionsgrid #termSelector',
         sectionsGrid: 'progress-narratives-sectionsgrid',
         studentsGrid: 'progress-narratives-studentsgrid',
+        sectionNotesForm: 'progress-narratives-sectionnotesform',
         editorForm: 'progress-narratives-editorform',
         revertChangesBtn: 'progress-narratives-editorform button#revertChangesBtn',
         saveDraftBtn: 'progress-narratives-editorform button#saveDraftBtn',
@@ -177,7 +182,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             studentsStore = studentsGrid.getStore(),
             reportsStore = Ext.getStore('progress.narratives.Reports'),
             reportsProxy = reportsStore.getProxy(),
-            editorForm = me.getEditorForm();
+            editorForm = me.getEditorForm(),
+            term = me.getTermSelector().getSelection(),
+            termHandle = me.getTermSelector().getValue(),
+            sectionCode = section.get('Code'),
+            SectionNotesModel = me.getProgressNarrativesSectionNotesModel();
 
         // reset stores
         studentsStore.removeAll();
@@ -194,9 +203,35 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         studentsStore.getProxy().setUrl('/sections/'+section.get('Code')+'/students');
         studentsStore.load();
 
-        reportsProxy.setExtraParam('term', me.getTermSelector().getValue());
-        reportsProxy.setExtraParam('course_section', section.get('Code'));
+        reportsProxy.setExtraParam('term', termHandle);
+        reportsProxy.setExtraParam('course_section', sectionCode);
         reportsStore.load();
+
+        // load section notes model
+        SectionNotesModel.getProxy().createOperation('read', {
+            params: {
+                term: termHandle,
+                course_section: sectionCode
+            },
+            callback: function(sectionNotes, operation, success) {
+                if (!success) {
+                    return;
+                }
+
+                var sectionNotesForm = me.getSectionNotesForm();
+
+                if (!(sectionNotes = sectionNotes[0])) {
+                    sectionNotes = new SectionNotesModel({
+                        TermID: term.getId(),
+                        CourseSectionID: section.getId()
+                    });
+                }
+
+                sectionNotesForm.loadRecord(sectionNotes);
+                sectionNotesForm.enable();
+
+            }
+        }).execute();
     },
 
     onStudentsStoreLoad: function() {
