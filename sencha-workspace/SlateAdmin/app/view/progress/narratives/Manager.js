@@ -12,18 +12,22 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     componentCls: 'progress-narratives-manager',
     items: [{
         region: 'west',
+        weight: 100,
         split: true,
+
         xtype: 'progress-narratives-sectionsgrid'
     },{
         region: 'center',
+
         xtype: 'progress-narratives-studentsgrid',
         disabled: true
     },{
         region: 'east',
         split: true,
+        weight: 100,
+        flex: 1,
+
         xtype: 'progress-narratives-editorform',
-        trackResetOnLoad: true,
-        disabled: true,
-        flex: 1
+        disabled: true
     }]
 });
