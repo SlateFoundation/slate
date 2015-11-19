@@ -9,6 +9,7 @@ Ext.define('SlateAdmin.view.progress.narratives.SectionNotesForm',{
 
     title: 'Section Notes',
     bodyPadding: 10,
+    trackResetOnLoad: true,
     defaults: {
         anchor: '100%',
         labelAlign: 'top'

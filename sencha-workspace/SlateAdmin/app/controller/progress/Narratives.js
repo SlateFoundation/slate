@@ -38,6 +38,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         sectionsGrid: 'progress-narratives-sectionsgrid',
         studentsGrid: 'progress-narratives-studentsgrid',
         sectionNotesForm: 'progress-narratives-sectionnotesform',
+        sectionNotesRevertBtn: 'progress-narratives-sectionnotesform button#revertBtn',
+        sectionNotesSaveBtn: 'progress-narratives-sectionnotesform button#saveBtn',
         editorForm: 'progress-narratives-editorform',
         revertChangesBtn: 'progress-narratives-editorform button#revertChangesBtn',
         saveDraftBtn: 'progress-narratives-editorform button#saveDraftBtn',
@@ -77,7 +79,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             beforeselect: 'onBeforeStudentSelect',
             select: 'onStudentSelect'
         },
-
+        sectionNotesForm: {
+            dirtychange: 'onSectionNotesFormDirtyChange'
+        },
 
         editorForm: {
             dirtychange: 'onEditorFormDirtyChange',
@@ -227,9 +231,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
                     });
                 }
 
-                sectionNotesForm.loadRecord(sectionNotes);
                 sectionNotesForm.enable();
-
+                sectionNotesForm.loadRecord(sectionNotes);
+                me.syncSectionNotesFormButtons();
             }
         }).execute();
     },
@@ -302,6 +306,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         me.syncFormButtons();
 
         me.fireEvent('reportload', report);
+    },
+
+    onSectionNotesFormDirtyChange: function() {
+        this.syncSectionNotesFormButtons();
     },
 
     onEditorFormDirtyChange: function() {
@@ -508,6 +516,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
         reportsStore.endUpdate();
         studentsStore.endUpdate();
+    },
+
+    syncSectionNotesFormButtons: function() {
+        var me = this,
+            isDirty = this.getSectionNotesForm().isDirty();
+
+        me.getSectionNotesRevertBtn().setDisabled(!isDirty);
+        me.getSectionNotesSaveBtn().setDisabled(!isDirty);
     },
 
     syncFormButtons: function() {
