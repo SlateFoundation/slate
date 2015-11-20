@@ -55,7 +55,7 @@ Ext.define('SlateAdmin.view.progress.narratives.EditorForm',{
         anchor: '100%',
         grow: true,
         name: 'Notes',
-        fieldLabel: 'Notes from Teacher',
+        fieldLabel: 'Comments',
         labelAlign: 'top'
     }],
     buttonAlign: 'center',
