@@ -35,8 +35,8 @@ class Report extends \VersionedRecord
 
         'Status' => [
             'type' => 'enum',
-            'values' => ['Draft','Published'],
-            'default' => 'Draft'
+            'values' => ['draft', 'published'],
+            'default' => 'draft'
         ],
         'Updated' => [
             'type' => 'timestamp'
