@@ -2,8 +2,6 @@
 
 namespace Slate\Progress\Narratives;
 
-use DuplicateKeyException;
-
 class Report extends \VersionedRecord
 {
     // VersionedRecord configuration
