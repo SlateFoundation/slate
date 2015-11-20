@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * TODO: deprecate this class
+ */
+
 namespace Slate\Progress\Narratives;
 
 use Slate\Term;

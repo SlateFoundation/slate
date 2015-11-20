@@ -2,8 +2,6 @@
 
 namespace Slate\Progress\Narratives;
 
-use DuplicateKeyException;
-
 class Report extends \VersionedRecord
 {
     // VersionedRecord configuration
@@ -13,6 +11,7 @@ class Report extends \VersionedRecord
     public static $tableName = 'narrative_reports';
     public static $singularNoun = 'narrative report';
     public static $pluralNoun = 'narrative reports';
+    public static $collectionRoute = '/progress/narratives/reports';
     public static $updateOnDuplicateKey = true;
     public static $trackModified = true;
 
@@ -21,7 +20,7 @@ class Report extends \VersionedRecord
     public static $subClasses = [__CLASS__];
 
     public static $fields = [
-        'StudentID' => [
+        'TermID' => [
             'type' => 'integer',
             'unsigned' => true
         ],
@@ -29,15 +28,15 @@ class Report extends \VersionedRecord
             'type' => 'integer',
             'unsigned' => true
         ],
-        'TermID' => [
+        'StudentID' => [
             'type' => 'integer',
             'unsigned' => true
         ],
 
         'Status' => [
             'type' => 'enum',
-            'values' => ['Draft','Published'],
-            'default' => 'Draft'
+            'values' => ['draft', 'published'],
+            'default' => 'draft'
         ],
         'Updated' => [
             'type' => 'timestamp'
@@ -52,7 +51,7 @@ class Report extends \VersionedRecord
 
     public static $indexes = [
         'NarrativeReport' => [
-            'fields' => ['StudentID', 'CourseSectionID', 'TermID'],
+            'fields' => ['TermID', 'CourseSectionID', 'StudentID'],
             'unique' => true
         ]
     ];
@@ -72,21 +71,4 @@ class Report extends \VersionedRecord
             'class' => \Slate\Term::class
         ]
     ];
-
-#    public function validate($deep = true)
-#    {
-#        // call parent
-#        parent::validate($deep);
-#
-#        $this->_validator->validate([
-#            'field' => 'Grade',
-#            'validator' => 'selection',
-#            'choices' => static::getFieldOptions('Grade', 'values'),
-#            'required' => ($this->Status=='Published'),
-#            'errorMessage' => 'Grade is require before publishing'
-#        ]);
-#
-#        // save results
-#        return $this->finishValidation();
-#    }
 }
