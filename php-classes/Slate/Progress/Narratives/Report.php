@@ -11,6 +11,7 @@ class Report extends \VersionedRecord
     public static $tableName = 'narrative_reports';
     public static $singularNoun = 'narrative report';
     public static $pluralNoun = 'narrative reports';
+    public static $collectionRoute = '/progress/narratives/reports';
     public static $updateOnDuplicateKey = true;
     public static $trackModified = true;
 
