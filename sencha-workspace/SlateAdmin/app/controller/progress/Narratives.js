@@ -20,6 +20,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         'progress.narratives.Reports'
     ],
 
+    models: [
+        'progress.narratives.SectionNotes'
+    ],
+
     refs: {
         progressNavPanel: 'progress-navpanel',
 
@@ -33,6 +37,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         termSelector: 'progress-narratives-sectionsgrid #termSelector',
         sectionsGrid: 'progress-narratives-sectionsgrid',
         studentsGrid: 'progress-narratives-studentsgrid',
+        sectionNotesForm: 'progress-narratives-sectionnotesform',
+        sectionNotesRevertBtn: 'progress-narratives-sectionnotesform button#revertBtn',
+        sectionNotesSaveBtn: 'progress-narratives-sectionnotesform button#saveBtn',
         editorForm: 'progress-narratives-editorform',
         revertChangesBtn: 'progress-narratives-editorform button#revertChangesBtn',
         saveDraftBtn: 'progress-narratives-editorform button#saveDraftBtn',
@@ -72,7 +79,15 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             beforeselect: 'onBeforeStudentSelect',
             select: 'onStudentSelect'
         },
-
+        sectionNotesForm: {
+            dirtychange: 'onSectionNotesFormDirtyChange'
+        },
+        sectionNotesRevertBtn: {
+            click: 'onSectionNotesRevertBtnClick'
+        },
+        sectionNotesSaveBtn: {
+            click: 'onSectionNotesSaveBtnClick'
+        },
 
         editorForm: {
             dirtychange: 'onEditorFormDirtyChange',
@@ -177,7 +192,12 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             studentsStore = studentsGrid.getStore(),
             reportsStore = Ext.getStore('progress.narratives.Reports'),
             reportsProxy = reportsStore.getProxy(),
-            editorForm = me.getEditorForm();
+            editorForm = me.getEditorForm(),
+            term = me.getTermSelector().getSelection(),
+            termHandle = me.getTermSelector().getValue(),
+            sectionCode = section.get('Code'),
+            sectionNotesForm = me.getSectionNotesForm(),
+            SectionNotesModel = me.getProgressNarrativesSectionNotesModel();
 
         // reset stores
         studentsStore.removeAll();
@@ -194,9 +214,35 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         studentsStore.getProxy().setUrl('/sections/'+section.get('Code')+'/students');
         studentsStore.load();
 
-        reportsProxy.setExtraParam('term', me.getTermSelector().getValue());
-        reportsProxy.setExtraParam('course_section', section.get('Code'));
+        reportsProxy.setExtraParam('term', termHandle);
+        reportsProxy.setExtraParam('course_section', sectionCode);
         reportsStore.load();
+
+        // load section notes model
+        sectionNotesForm.enable();
+        sectionNotesForm.setLoading('Loading notes&hellip;');
+        SectionNotesModel.getProxy().createOperation('read', {
+            params: {
+                term: termHandle,
+                course_section: sectionCode
+            },
+            callback: function(sectionNotes, operation, success) {
+                if (!success) {
+                    return;
+                }
+
+                if (!(sectionNotes = sectionNotes[0])) {
+                    sectionNotes = new SectionNotesModel({
+                        TermID: term.getId(),
+                        CourseSectionID: section.getId()
+                    });
+                }
+
+                sectionNotesForm.setLoading(false);
+                sectionNotesForm.loadRecord(sectionNotes);
+                me.syncSectionNotesFormButtons();
+            }
+        }).execute();
     },
 
     onStudentsStoreLoad: function() {
@@ -269,6 +315,38 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         me.fireEvent('reportload', report);
     },
 
+    onSectionNotesFormDirtyChange: function() {
+        this.syncSectionNotesFormButtons();
+    },
+
+    onSectionNotesRevertBtnClick: function() {
+        this.getSectionNotesForm().reset();
+    },
+
+    onSectionNotesSaveBtnClick: function() {
+        var sectionNotesForm = this.getSectionNotesForm(),
+            sectionNotes = sectionNotesForm.getRecord();
+
+        sectionNotesForm.updateRecord(sectionNotes);
+
+        if (!sectionNotes.dirty) {
+            return;
+        }
+
+        sectionNotesForm.setLoading('Saving notes&hellip;');
+        sectionNotes.save({
+            callback: function(sectionNotes, operation, success) {
+                sectionNotesForm.setLoading(false);
+
+                if (success) {
+                    sectionNotesForm.loadRecord(sectionNotes);
+                } else {
+                    Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
+                }
+            }
+        });
+    },
+
     onEditorFormDirtyChange: function() {
         this.syncFormButtons();
     },
@@ -297,11 +375,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     },
 
     onSaveDraftClick: function () {
-        this.saveReport('Draft');
+        this.saveReport('draft');
     },
 
     onSaveFinishedClick: function () {
-        this.saveReport('Published');
+        this.saveReport('published');
     },
 
     // onPrinterActivate: function (managerCt) {
@@ -475,6 +553,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         studentsStore.endUpdate();
     },
 
+    syncSectionNotesFormButtons: function() {
+        var me = this,
+            isDirty = this.getSectionNotesForm().isDirty();
+
+        me.getSectionNotesRevertBtn().setDisabled(!isDirty);
+        me.getSectionNotesSaveBtn().setDisabled(!isDirty);
+    },
+
     syncFormButtons: function() {
         var me = this,
             editorForm = me.getEditorForm(),
@@ -488,7 +574,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
-        me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'Draft') || !isValid);
-        me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'Published') || !isValid);
+        me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'draft') || !isValid);
+        me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'published') || !isValid);
     }
 });

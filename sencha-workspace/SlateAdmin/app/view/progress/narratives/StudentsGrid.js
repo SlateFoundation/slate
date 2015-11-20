@@ -8,6 +8,7 @@ Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
 
     width: 250,
     cls: 'progress-narratives-studentsgrid',
+
     viewConfig: {
         getRowClass: function(student) {
             return 'status-' + (student.get('report_status') || 'pending').toLowerCase();
@@ -21,12 +22,6 @@ Ext.define('SlateAdmin.view.progress.narratives.StudentsGrid',{
 
         text: 'Student',
         dataIndex: 'FullName'
-    // },{
-    //     dataIndex: 'Grade',
-    //     header: 'Grade',
-    //     sortable: true,
-    //     width: 60,
-    //     align: 'center'
     },{
         width: 80,
 

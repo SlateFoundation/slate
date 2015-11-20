@@ -5,25 +5,41 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
     requires: [
         'SlateAdmin.view.progress.narratives.SectionsGrid',
         'SlateAdmin.view.progress.narratives.StudentsGrid',
-        'SlateAdmin.view.progress.narratives.EditorForm'
+        'SlateAdmin.view.progress.narratives.EditorForm',
+        'SlateAdmin.view.progress.narratives.SectionNotesForm'
     ],
 
     layout: 'border',
     componentCls: 'progress-narratives-manager',
     items: [{
         region: 'west',
+        weight: 100,
         split: true,
+
         xtype: 'progress-narratives-sectionsgrid'
     },{
         region: 'center',
+
         xtype: 'progress-narratives-studentsgrid',
         disabled: true
     },{
         region: 'east',
         split: true,
+        weight: 100,
+        flex: 1,
+
         xtype: 'progress-narratives-editorform',
-        trackResetOnLoad: true,
-        disabled: true,
-        flex: 1
+        disabled: true
+    },{
+        region: 'south',
+        split: true,
+
+        xtype: 'progress-narratives-sectionnotesform',
+        collapsible :true,
+        collapsed: true,
+        titleCollapse: true,
+        stateful: true,
+        stateId: 'progress-narratives-sectionnotesform',
+        disabled: true
     }]
 });

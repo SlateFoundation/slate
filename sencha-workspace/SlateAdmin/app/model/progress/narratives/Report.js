@@ -55,7 +55,7 @@ Ext.define('SlateAdmin.model.progress.narratives.Report', {
         {
             name: 'Status',
             type: 'string',
-            defaultValue: 'Draft'
+            defaultValue: 'draft'
         },
         // {
         //     name: 'Grade',

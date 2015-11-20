@@ -3,18 +3,12 @@ Ext.define('SlateAdmin.view.progress.narratives.EditorForm',{
     extend: 'Ext.form.Panel',
     xtype: 'progress-narratives-editorform',
     requires: [
-        'Ext.form.field.HtmlEditor'
+        'Ext.form.field.TextArea'
     ],
 
-    viewConfig: {
-        getRowClass: function (record) {
-            return 'status-'+record.get('Status');
-        },
-        emptyText: 'You are not currently an instructor for any students'
-    },
-    border: false,
+
+    trackResetOnLoad: true,
     bodyPadding: 10,
-    disabled: true,
     autoScroll: true,
     items: [{
         xtype: 'fieldset',
@@ -61,7 +55,7 @@ Ext.define('SlateAdmin.view.progress.narratives.EditorForm',{
         anchor: '100%',
         grow: true,
         name: 'Notes',
-        fieldLabel: 'Notes from Teacher',
+        fieldLabel: 'Comments',
         labelAlign: 'top'
     }],
     buttonAlign: 'center',
