@@ -37,6 +37,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Manager',{
         xtype: 'progress-narratives-sectionnotesform',
         collapsible :true,
         collapsed: true,
+        titleCollapse: true,
         stateful: true,
         stateId: 'progress-narratives-sectionnotesform',
         disabled: true
