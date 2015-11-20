@@ -72,21 +72,4 @@ class Report extends \VersionedRecord
             'class' => \Slate\Term::class
         ]
     ];
-
-#    public function validate($deep = true)
-#    {
-#        // call parent
-#        parent::validate($deep);
-#
-#        $this->_validator->validate([
-#            'field' => 'Grade',
-#            'validator' => 'selection',
-#            'choices' => static::getFieldOptions('Grade', 'values'),
-#            'required' => ($this->Status=='Published'),
-#            'errorMessage' => 'Grade is require before publishing'
-#        ]);
-#
-#        // save results
-#        return $this->finishValidation();
-#    }
 }
