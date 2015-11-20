@@ -20,7 +20,7 @@ class Report extends \VersionedRecord
     public static $subClasses = [__CLASS__];
 
     public static $fields = [
-        'StudentID' => [
+        'TermID' => [
             'type' => 'integer',
             'unsigned' => true
         ],
@@ -28,7 +28,7 @@ class Report extends \VersionedRecord
             'type' => 'integer',
             'unsigned' => true
         ],
-        'TermID' => [
+        'StudentID' => [
             'type' => 'integer',
             'unsigned' => true
         ],
@@ -51,7 +51,7 @@ class Report extends \VersionedRecord
 
     public static $indexes = [
         'NarrativeReport' => [
-            'fields' => ['StudentID', 'CourseSectionID', 'TermID'],
+            'fields' => ['TermID', 'CourseSectionID', 'StudentID'],
             'unique' => true
         ]
     ];
