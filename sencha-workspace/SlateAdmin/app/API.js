@@ -62,6 +62,6 @@ Ext.define('SlateAdmin.API', {
     // allow API host to be overridden via apiHost param
     if (pageParams.apiHost) {
         API.setHostname(pageParams.apiHost);
-        API.setUseSSL(false);
+        API.setUseSSL(!!pageParams.apiSSL);
     }
 });
