@@ -442,7 +442,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
                 if (!empty($row['SectionCode'])) {
                     $Record->Code = $row['SectionCode'];
-            }
+                }
             }
 
 
@@ -659,6 +659,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
                         if ($Mapping) {
                             $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
+
+                            if (!$Section) {
+                                $Job->log(sprintf('Section #%u not found for mapping #%u from %s', $Mapping->ContextID, $Mapping->ID, $Mapping->ExternalIdentifier), LogLevel::ERROR);
+                                $results['failed']['orphan-mapping'][$sectionIdentifier]++;
+                                continue;
+                            }
                         } else {
                             $results['failed']['section-not-found'][$sectionIdentifier]++;
                             continue;
