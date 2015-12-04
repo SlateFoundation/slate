@@ -439,6 +439,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // create new section
             if (!$Record) {
                 $Record = Section::create();
+
+                if (!empty($row['SectionCode'])) {
+                    $Record->Code = $row['SectionCode'];
+            }
             }
 
 
