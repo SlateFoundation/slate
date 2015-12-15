@@ -10,13 +10,13 @@ class Postal extends AbstractPoint
 
     public static $sortWeight = 100;
 
-    public static $templates = array(
-        'Home Address' => array(
+    public static $templates = [
+        'Home Address' => [
             'class' => __CLASS__
-            ,'alternateLabels' => array('Work Address')
+            ,'alternateLabels' => ['Work Address']
             ,'placeholder' => '123 Street Rd, Unit 123, Exampletown, PA 12345'
-        )
-    );
+        ]
+    ];
 
     public $name;
     public $number;
@@ -46,18 +46,18 @@ class Postal extends AbstractPoint
             } elseif (preg_match('/^([a-zA-Z]{2})\s+(\d{5}(-\d{4})?)$/', $segment, $matches)) {
                 $this->state = $matches[1];
                 $this->postal = $matches[2];
-            } elseif(preg_match('/^\d{5}(-\d{4})?$/', $segment)) {
+            } elseif (preg_match('/^\d{5}(-\d{4})?$/', $segment)) {
                 $this->postal = $segment;
-            } elseif(preg_match('/^[a-zA-Z]{2}$/', $segment)) {
+            } elseif (preg_match('/^[a-zA-Z]{2}$/', $segment)) {
                 $this->state = $segment;
-            } elseif(!$this->unit && $this->street && preg_match('/^(apartment|apt\\.?|suite|ste\\.?|unit)\s+(.*)$/i', $segment)) {
+            } elseif (!$this->unit && $this->street && preg_match('/^(apartment|apt\\.?|suite|ste\\.?|unit)\s+(.*)$/i', $segment)) {
                 $this->unit = $segment;
-            } elseif(!$this->city && $this->street) {
+            } elseif (!$this->city && $this->street) {
                 $this->city = $segment;
-            } elseif(!$this->unit && $this->city && !$this->state && !$this->postal) {
+            } elseif (!$this->unit && $this->city && !$this->state && !$this->postal) {
                 $this->unit = $this->city;
                 $this->city = $segment;
-            } elseif(!$this->name) {
+            } elseif (!$this->name) {
                 $this->name = $segment;
             }
         }
@@ -126,7 +126,7 @@ class Postal extends AbstractPoint
 
     public function serialize()
     {
-        return json_encode(array(
+        return json_encode([
             'name' => $this->name
             ,'number' => $this->number
             ,'street' => $this->street
@@ -134,7 +134,7 @@ class Postal extends AbstractPoint
             ,'city' => $this->city
             ,'state' => $this->state
             ,'postal' => $this->postal
-        ));
+        ]);
     }
 
     public function unserialize($serialized)

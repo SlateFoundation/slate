@@ -10,23 +10,23 @@ use Slate\Courses\SectionParticipant;
 
 class PeopleRequestHandler extends \PeopleRequestHandler
 {
-    public static $userResponseModes = array(
+    public static $userResponseModes = [
         'application/json' => 'json'
         ,'text/csv' => 'csv'
         ,'application/pdf' => 'pdf'
-    );
+    ];
 
     public static function handleRecordsRequest($action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
             case '*advisors':
-                return static::respond('advisors', array(
+                return static::respond('advisors', [
                     'data' => Student::getDistinctAdvisors()
-                ));
+                ]);
             case '*graduation-years':
-                return static::respond('graduation-years', array(
+                return static::respond('graduation-years', [
                     'data' => Student::getDistinctGraduationYears()
-                ));
+                ]);
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -56,16 +56,16 @@ class PeopleRequestHandler extends \PeopleRequestHandler
             return static::throwNotFoundError('Term not found');
         }
 
-        return static::respond('sections', array(
+        return static::respond('sections', [
             'data' => Section::getAllByQuery(
                 'SELECT sections.* FROM `%s` participants INNER JOIN `%s` sections ON (participants.CourseSectionID = sections.ID) WHERE sections.Status = "Live" AND participants.PersonID = %u AND sections.TermID IN (%s)'
-                ,array(
+                ,[
                     SectionParticipant::$tableName
                     ,Section::$tableName
                     ,$Person->ID
                     ,implode(',', $Term->getRelatedTermIDs())
-                )
+                ]
             )
-        ));
+        ]);
     }
 }

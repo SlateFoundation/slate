@@ -7,22 +7,22 @@ class URL implements IValidator
     const URL_INVALID = 'url_invalid';
     const SCHEME_NOT_ALLOWED = 'scheme_not_allowed';
 
-    public static $defaultAllowedSchemes = array('http', 'https');
+    public static $defaultAllowedSchemes = ['http', 'https'];
 
-    public static function isInvalid($url, array $options = array())
+    public static function isInvalid($url, array $options = [])
     {
-        $options = array_merge(array(
+        $options = array_merge([
             'allowedSchemes' => static::$defaultAllowedSchemes
-        ), $options);
+        ], $options);
 
         $scheme = parse_url($url, PHP_URL_SCHEME);
 
         if ($scheme === false) {
-            return array(URL_INVALID => 'Not a valid URL');
+            return [URL_INVALID => 'Not a valid URL'];
         }
 
         if (!in_array(strtolower($scheme), $options['allowedSchemes'])) {
-            return array(SCHEME_NOT_ALLOWED => 'URL must start with one of: ' . implode(', ', $options['allowedSchemes']));
+            return [SCHEME_NOT_ALLOWED => 'URL must start with one of: '.implode(', ', $options['allowedSchemes'])];
         }
 
         return false;

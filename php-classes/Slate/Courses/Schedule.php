@@ -18,30 +18,30 @@ class Schedule extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $fields = array(
-        'Title' => array(
+    public static $fields = [
+        'Title' => [
             'fulltext' => true
             ,'notnull' => false
-        )
-        ,'Handle' => array(
+        ]
+        ,'Handle' => [
             'unique' => true
             ,'notnull' => false
-        )
+        ]
 
-        ,'Status' => array(
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
+        ]
 
-        ,'Description' => array(
+        ,'Description' => [
             'type' => 'clob'
             ,'fulltext' => true
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
     public static $validators = [
         'Title' => [
@@ -50,12 +50,12 @@ class Schedule extends \VersionedRecord
         ]
     ];
 
-    public static $relationships = array(
-        'Blocks' => array(
+    public static $relationships = [
+        'Blocks' => [
             'type' => 'one-many'
             ,'class' => ScheduleBlock::class
-        )
-    );
+        ]
+    ];
 
 
     public static function getOrCreateByHandle($handle)
@@ -63,10 +63,10 @@ class Schedule extends \VersionedRecord
         if ($Schedule = static::getByHandle($handle)) {
             return $Schedule;
         } else {
-            return static::create(array(
+            return static::create([
                 'Title' => $handle
                 ,'Handle' => $handle
-            ), true);
+            ], true);
         }
     }
 

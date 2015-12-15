@@ -17,50 +17,50 @@ class Course extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
     public static $collectionRoute = '/courses';
 
-    public static $fields = array(
-        'Title' => array(
+    public static $fields = [
+        'Title' => [
             'fulltext' => true
-        )
-        ,'Code' => array(
+        ]
+        ,'Code' => [
             'unique' => true
-        )
-        ,'Status' => array(
+        ]
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
-        ,'Description' => array(
+        ]
+        ,'Description' => [
             'type' => 'clob'
             ,'fulltext' => true
             ,'notnull' => false
-        )
-        ,'Prerequisites' => array(
+        ]
+        ,'Prerequisites' => [
             'type' => 'clob'
             ,'notnull' => false
-        )
-        ,'DepartmentID' => array(
+        ]
+        ,'DepartmentID' => [
             'type' => 'uint'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Department' => array(
+    public static $relationships = [
+        'Department' => [
             'type' => 'one-one'
             ,'class' => Department::class
-        )
-        ,'Sections' => array(
+        ]
+        ,'Sections' => [
             'type' => 'one-many'
             ,'class' => Section::class
-        )
-    );
+        ]
+    ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Department' => 'Department'
-    );
+    ];
 
     public static $validators = [
         'Title'

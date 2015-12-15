@@ -4,163 +4,163 @@ namespace Emergence\People;
 
 class Relationship extends \VersionedRecord
 {
-    public static $templates = array(
-        'mother' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
-            ,'Person' => array('Gender' => 'Female')
-            ,'Inverse' => array(
+    public static $templates = [
+        'mother' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            ,'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
                 'Male' => 'son'
                 ,'Female' => 'daughter'
                 ,'Neutral' => 'child'
-            )
-        )
-        ,'father' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
-            ,'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'father' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            ,'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'son'
                 ,'Female' => 'daughter'
                 ,'Neutral' => 'child'
-            )
-        )
-        ,'parent' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'parent' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            ,'Inverse' => [
                 'Male' => 'son'
                 ,'Female' => 'daughter'
                 ,'Neutral' => 'child'
-            )
-        )
-        ,'guardian' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
+            ]
+        ]
+        ,'guardian' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
             ,'Inverse' => 'dependent'
-        )
-        ,'grandmother' => array(
-            'Person' => array('Gender' => 'Female')
-            ,'Inverse' => array(
+        ]
+        ,'grandmother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
                 'Male' => 'grandson'
                 ,'Female' => 'granddaughter'
                 ,'Neutral' => 'grandchild'
-            )
-        )
-        ,'grandfather' => array(
-            'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'grandfather' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'grandson'
                 ,'Female' => 'granddaughter'
                 ,'Neutral' => 'grandchild'
-            )
-        )
-        ,'grandparent' => array(
-            'Inverse' => array(
+            ]
+        ]
+        ,'grandparent' => [
+            'Inverse' => [
                 'Male' => 'grandson'
                 ,'Female' => 'granddaughter'
                 ,'Neutral' => 'grandchild'
-            )
-        )
-        ,'stepmother' => array(
-            'Person' => array('Gender' => 'Female')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'stepmother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
                 'Male' => 'stepson'
                 ,'Female' => 'stepdaughter'
                 ,'Neutral' => 'stepchild'
-            )
-        )
-        ,'stepfather' => array(
-            'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'stepfather' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'stepson'
                 ,'Female' => 'stepdaughter'
                 ,'Neutral' => 'stepchild'
-            )
-        )
-        ,'stepparent' => array(
-            'Inverse' => array(
+            ]
+        ]
+        ,'stepparent' => [
+            'Inverse' => [
                 'Male' => 'stepson'
                 ,'Female' => 'stepdaughter'
                 ,'Neutral' => 'stepchild'
-            )
-        )
-        ,'foster mother' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
-            ,'Person' => array('Gender' => 'Female')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'foster mother' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            ,'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
                 'Male' => 'foster son'
                 ,'Female' => 'foster daughter'
                 ,'Neutral' => 'foster child'
-            )
-        )
-        ,'foster father' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
-            ,'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'foster father' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            ,'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'foster son'
                 ,'Female' => 'foster daughter'
                 ,'Neutral' => 'foster child'
-            )
-        )
-        ,'foster parent' => array(
-            'Relationship' => array('Class' => 'Emergence\\People\\GuardianRelationship')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'foster parent' => [
+            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            ,'Inverse' => [
                 'Male' => 'foster son'
                 ,'Female' => 'foster daughter'
                 ,'Neutral' => 'foster child'
-            )
-        )
-        ,'aunt' => array(
-            'Person' => array('Gender' => 'Female')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'aunt' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
                 'Male' => 'nephew'
                 ,'Female' => 'niece'
                 ,'Neutral' => 'nibling'
-            )
-        )
-        ,'uncle' => array(
-            'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'uncle' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'nephew'
                 ,'Female' => 'niece'
                 ,'Neutral' => 'nibling'
-            )
-        )
-        ,'pibling' => array(
-            'Inverse' => array(
+            ]
+        ]
+        ,'pibling' => [
+            'Inverse' => [
                 'Male' => 'nephew'
                 ,'Female' => 'niece'
                 ,'Neutral' => 'nibling'
-            )
-        )
-        ,'sister' => array(
-            'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'sister' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'brother'
                 ,'Female' => 'sister'
                 ,'Neutral' => 'sibling'
-            )
-        )
-        ,'brother' => array(
-            'Person' => array('Gender' => 'Male')
-            ,'Inverse' => array(
+            ]
+        ]
+        ,'brother' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
                 'Male' => 'brother'
                 ,'Female' => 'sister'
                 ,'Neutral' => 'sibling'
-            )
-        )
-        ,'sibling' => array(
-            'Inverse' => array(
+            ]
+        ]
+        ,'sibling' => [
+            'Inverse' => [
                 'Male' => 'brother'
                 ,'Female' => 'sister'
                 ,'Neutral' => 'sibling'
-            )
-        )
-        ,'cousin' => array(
-            'Inverse' => array(
+            ]
+        ]
+        ,'cousin' => [
+            'Inverse' => [
                 'Male' => 'cousin'
                 ,'Female' => 'cousin'
                 ,'Neutral' => 'cousin'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
 
     // VersionedRecord configuration
@@ -175,64 +175,64 @@ class Relationship extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__, 'Emergence\People\GuardianRelationship');
+    public static $subClasses = [__CLASS__, 'Emergence\People\GuardianRelationship'];
 
-    public static $fields = array(
-        'PersonID' => array(
+    public static $fields = [
+        'PersonID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'index' => true
-        )
-        ,'RelatedPersonID' => array(
+        ]
+        ,'RelatedPersonID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'index' => true
-        )
+        ]
         ,'Label'
-        ,'Notes' => array(
+        ,'Notes' => [
             'notnull' => false
-        )
-    );
+        ]
+    ];
 
 
-    public static $relationships = array(
-        'Person' => array(
+    public static $relationships = [
+        'Person' => [
             'type' => 'one-one'
             ,'class' => 'Person'
-        )
-        ,'RelatedPerson' => array(
+        ]
+        ,'RelatedPerson' => [
             'type' => 'one-one'
             ,'class' => 'Person'
-        )
-        ,'InverseRelationship' => array(
+        ]
+        ,'InverseRelationship' => [
             'type' => 'one-one'
             ,'class' => __CLASS__
             ,'local' => 'PersonID'
             ,'foreign' => 'RelatedPersonID'
-            ,'conditions' => array(__CLASS__, 'getInverseRelationshipConditions')
-        )
-    );
+            ,'conditions' => [__CLASS__, 'getInverseRelationshipConditions']
+        ]
+    ];
 
-    public static $searchConditions = array(
-        'PersonID' => array(
-            'qualifiers' => array('any', 'personid')
+    public static $searchConditions = [
+        'PersonID' => [
+            'qualifiers' => ['any', 'personid']
             ,'points' => 2
             ,'sql' => 'PersonID LIKE "%%%s%%"',
-        )
-    );
+        ]
+    ];
 
-    public static $indexes = array(
-        'PersonRelationship' => array(
-            'fields' => array('PersonID', 'RelatedPersonID')
+    public static $indexes = [
+        'PersonRelationship' => [
+            'fields' => ['PersonID', 'RelatedPersonID']
             ,'unique' => true
-        )
-    );
+        ]
+    ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Person',
         'RelatedPerson',
         'InverseRelationship'
-    );
+    ];
 
 
     public function validate($deep = true)
@@ -253,15 +253,15 @@ class Relationship extends \VersionedRecord
             if ($this->PersonID == $this->RelatedPersonID) {
                 $this->_validator->addError('RelatedPerson', 'A person can not be related to themselves');
             } else {
-                $conditions = array(
+                $conditions = [
                     'PersonID' => $this->PersonID,
                     'RelatedPersonID' => $this->RelatedPersonID
-                );
-    
+                ];
+
                 if (!$this->isPhantom) {
                     $conditions[] = "ID != $this->ID";
                 }
-    
+
                 if (static::getByWhere($conditions)) {
                     $this->_validator->addError('RelatedPerson', 'There is already a relationship defined between these people');
                 }
@@ -280,6 +280,6 @@ class Relationship extends \VersionedRecord
 
     public static function getInverseRelationshipConditions($Relationship)
     {
-        return array('PersonID' => $Relationship->RelatedPersonID);
+        return ['PersonID' => $Relationship->RelatedPersonID];
     }
 }

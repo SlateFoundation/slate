@@ -8,23 +8,23 @@ class Network extends AbstractPoint
 
     public static $sortWeight = 50;
 
-    public static $networkLinkFormats = array(
+    public static $networkLinkFormats = [
         'twitter.com' => 'http://twitter.com/%s',
         'facebook.com' => 'http://facebook.com/%s'
-    );
+    ];
 
-    public static $templates = array(
-        'Twitter' => array(
+    public static $templates = [
+        'Twitter' => [
             'class' => __CLASS__
             ,'network' => 'twitter.com'
             ,'pattern' => '/^[A-Za-z0-9_]{1,15}$/'
-        )
-        ,'Facebook' => array(
+        ]
+        ,'Facebook' => [
             'class' => __CLASS__
             ,'network' => 'facebook.com'
             ,'pattern' => '/^(\d+|[a-zA-Z\d.]{5,})$/'
-        )
-    );
+        ]
+    ];
 
     public $network;
     public $username;
@@ -60,7 +60,7 @@ class Network extends AbstractPoint
 
             if (is_string($format)) {
                 $url = sprintf($format, urlencode($this->username));
-            } elseif(is_callable($format)) {
+            } elseif (is_callable($format)) {
                 $url = call_user_func($format, $this->username, $this->network);
             } else {
                 throw new \Exception('Network formatter must be string or callable');
@@ -110,7 +110,7 @@ class Network extends AbstractPoint
         }
 
         if ($errors = \Validators\FQDN::isInvalid($this->network)) {
-            $this->_validator->addError('network', 'Network invalid:' .reset($errors));
+            $this->_validator->addError('network', 'Network invalid:'.reset($errors));
         }
 
         // save results

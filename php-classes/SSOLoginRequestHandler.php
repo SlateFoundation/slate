@@ -2,28 +2,30 @@
 
 class SSOLoginRequestHandler extends LoginRequestHandler
 {
-    static public $enableSAML2 = true;
-    static public $dumpResponse = false;
+    public static $enableSAML2 = true;
+    public static $dumpResponse = false;
 
-    static public $nameIdFormat = 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress';
+    public static $nameIdFormat = 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress';
 
-    static public $entityDomain;
-    static public $privateKey;
-    static public $certificate;
+    public static $entityDomain;
+    public static $privateKey;
+    public static $certificate;
 
 
-    static protected function onLoginComplete(Session $Session, $returnURL)
+    protected static function onLoginComplete(Session $Session, $returnURL)
     {
         if (static::$enableSAML2) {
             static::handleSAML2Request($Session);
         }
     }
 
-    static protected function onLogoutComplete(Session $Session, $returnURL) {}
+    protected static function onLogoutComplete(Session $Session, $returnURL)
+    {
+    }
 
 
 
-    static protected function handleSAML2Request(Session $Session)
+    protected static function handleSAML2Request(Session $Session)
     {
         try {
             $binding = SAML2_Binding::getCurrentBinding();
@@ -54,22 +56,22 @@ class SSOLoginRequestHandler extends LoginRequestHandler
         $sc->SubjectConfirmationData->NotOnOrAfter = $assertion->getNotOnOrAfter();
         $sc->SubjectConfirmationData->Recipient = $request->getAssertionConsumerServiceURL();
         $sc->SubjectConfirmationData->InResponseTo = $request->getId();
-        $assertion->setSubjectConfirmation(array($sc));
+        $assertion->setSubjectConfirmation([$sc]);
 
         // set NameID
-        $assertion->setNameId(array(
+        $assertion->setNameId([
             'Format' => static::$nameIdFormat
             ,'Value' => $Session->Person->Username.'@'.static::$entityDomain
-        ));
-        $response->setAssertions(array($assertion));
+        ]);
+        $response->setAssertions([$assertion]);
 
 
         // create signature
-        $privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, array('type' => 'private'));
+        $privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA1, ['type' => 'private']);
         $privateKey->loadKey(static::$privateKey);
 
         $response->setSignatureKey($privateKey);
-        $response->setCertificates(array(static::$certificate));
+        $response->setCertificates([static::$certificate]);
 
 
         // send response

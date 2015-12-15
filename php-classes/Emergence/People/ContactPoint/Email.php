@@ -10,21 +10,21 @@ class Email extends AbstractPoint
 
     public static $sortWeight = 1000;
 
-    public static $templates = array(
-        'School Email' => array(
+    public static $templates = [
+        'School Email' => [
             'class' => __CLASS__
             ,'placeholder' => ''
-        )
-        ,'Work Email' => array(
+        ]
+        ,'Work Email' => [
             'class' => __CLASS__
-            ,'alternateLabels' => array('Personal Email')
+            ,'alternateLabels' => ['Personal Email']
             ,'placeholder' => 'username@example.com'
-        )
-    );
+        ]
+    ];
 
     public $address;
 
-    static function __classLoaded()
+    public static function __classLoaded()
     {
         static::$templates['School Email']['placeholder'] = 'username@'.\Site::getConfig('primary_hostname');
         return parent::__classLoaded();
@@ -58,7 +58,7 @@ class Email extends AbstractPoint
         $string = $this->address;
 
         if ($this->Person && $this->Person->FullName) {
-            $string = $this->Person->FullName . " <$string>";
+            $string = $this->Person->FullName." <$string>";
         }
 
         return $string;
@@ -95,7 +95,7 @@ class Email extends AbstractPoint
 
         // check for duplicate
         if ($this->isFieldDirty('Data')) {
-            $conditions = array();
+            $conditions = [];
 
             if (!$this->isPhantom) {
                 $conditions[] = "ID != $this->ID";

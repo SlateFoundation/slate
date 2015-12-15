@@ -4,23 +4,23 @@ namespace Emergence\Events;
 
 class FeedEvent extends Event
 {
-    public static $fields = array(
-        'UID' => array(
+    public static $fields = [
+        'UID' => [
             'type' => 'string'
             ,'unique' => true
-        )
+        ]
         ,'FeedID' => 'uint'
-        ,'Imported' => array(
+        ,'Imported' => [
             'type' => 'timestamp'
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Feed' => array(
+    public static $relationships = [
+        'Feed' => [
             'type' => 'one-one'
             ,'class' => 'Emergence\Events\Feed'
-        )
-    );
+        ]
+    ];
 
     public static function getByUID($uid)
     {

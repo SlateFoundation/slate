@@ -10,7 +10,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
     public static $accountLevelAPI = 'Staff';
-    public static $browseOrder = array('ID' => 'ASC');
+    public static $browseOrder = ['ID' => 'ASC'];
 
     public static function handleRecordsRequest($action = false)
     {
@@ -34,12 +34,12 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
             return strcmp($a['class'], $b['class']);
         });
 
-        return static::respond('templates', array(
+        return static::respond('templates', [
             'data' => array_values($templates)
-        ));
+        ]);
     }
 
-    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
         if (!empty($_REQUEST['person']) && ctype_digit($_REQUEST['person'])) {
             $conditions['PersonID'] = $_REQUEST['person'];
@@ -85,7 +85,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
         if (isset($data['String'])) {
             $ContactPoint->loadString($data['String']);
             unset($data['String']);
-        } elseif(isset($data['Data'])) {
+        } elseif (isset($data['Data'])) {
             $ContactPoint->unserialize($data['Data']);
             unset($data['Data']);
         }

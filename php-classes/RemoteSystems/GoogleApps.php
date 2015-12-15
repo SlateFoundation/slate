@@ -7,9 +7,9 @@ class GoogleApps
     public static $apiToken;
     public static $domain;
 
-    public static function executeRequest($path, $requestMethod = 'GET', $params = array(), $headers = array())
+    public static function executeRequest($path, $requestMethod = 'GET', $params = [], $headers = [])
     {
-        $url = 'https://www.googleapis.com' . $path;
+        $url = 'https://www.googleapis.com'.$path;
 
         $params['domain'] = static::$domain;
 
@@ -17,7 +17,7 @@ class GoogleApps
         $ch = curl_init();
 
         if ($requestMethod == 'GET') {
-            $url .= '?' . (is_string($params) ? $params : http_build_query($params));
+            $url .= '?'.(is_string($params) ? $params : http_build_query($params));
         } else {
             if ($requestMethod == 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
@@ -33,19 +33,19 @@ class GoogleApps
         }
 
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge(array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge([
             sprintf('Authorization: Bearer %s', static::$apiToken)
             ,'Content-Type: application/json'
-        ), $headers));
+        ], $headers));
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        
+
         $response = curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        
+
         switch ($responseCode) {
             case 200:
                 return json_decode($response, true);
@@ -54,7 +54,7 @@ class GoogleApps
         }
     }
 
-    public static function getAllResults($path, $resultsKey, $params = array())
+    public static function getAllResults($path, $resultsKey, $params = [])
     {
         if (!isset($params['maxResults'])) {
             $params['maxResults'] = 500;
@@ -70,9 +70,9 @@ class GoogleApps
         $results = $page[$resultsKey];
 
         while (!empty($page['nextPageToken'])) {
-            $page = static::executeRequest($path, 'GET', array_merge($params, array(
+            $page = static::executeRequest($path, 'GET', array_merge($params, [
                 'pageToken' => $page['nextPageToken']
-            )));
+            ]));
 
             $results = array_merge($results, $page[$resultsKey]);
         }
@@ -80,7 +80,7 @@ class GoogleApps
         return $results;
     }
 
-    public static function getAllUsers($params = array())
+    public static function getAllUsers($params = [])
     {
         return static::getAllResults('/admin/directory/v1/users', 'users', $params);
     }

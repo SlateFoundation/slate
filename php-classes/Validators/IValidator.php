@@ -4,5 +4,5 @@ namespace Validators;
 
 interface IValidator
 {
-    public static function isInvalid($data, array $options = array());
+    public static function isInvalid($data, array $options = []);
 }

@@ -10,12 +10,12 @@ class Feed extends \ActiveRecord
     public static $pluralNoun = 'feeds';
     public static $collectionRoute = '/feeds';
 
-    public static $fields = array(
+    public static $fields = [
         'Title'
         ,'Link'
-        ,'MinimumDate' => array(
+        ,'MinimumDate' => [
             'type' => 'timestamp'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 }

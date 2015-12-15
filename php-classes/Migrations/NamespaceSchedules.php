@@ -10,6 +10,5 @@ class NamespaceSchedules extends AbstractMigration
         static::addSql('UPDATE `course_schedules` SET `Class` = "Slate\\\\Courses\\\\Schedule"');
         static::addSql('ALTER TABLE `history_course_schedules` CHANGE  `Class`  `Class` ENUM("Slate\\\\Courses\\\\Schedule") NOT NULL');
         static::addSql('UPDATE `history_course_schedules` SET `Class` = "Slate\\\\Courses\\\\Schedule"');
-
     }
 }

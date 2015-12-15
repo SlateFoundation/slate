@@ -53,7 +53,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
         // init results struct
-        $results = array();
+        $results = [];
 
 
         // uncap execution time
@@ -86,26 +86,26 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
     public static function pushUsers(Job $Job, $pretend = true, $verbose = false)
     {
         // initialize results
-        $results = array();
+        $results = [];
 
 
-    	// get existing users and map by email address
-		$googleUsers = array();
-        $googleIds = array();
+        // get existing users and map by email address
+        $googleUsers = [];
+        $googleIds = [];
 
-		foreach (GoogleApps::getAllUsers(array('fields' => 'users(id,name,primaryEmail)')) AS $googleUser) {
+        foreach (GoogleApps::getAllUsers(['fields' => 'users(id,name,primaryEmail)']) AS $googleUser) {
             $googleUsername = strstr($googleUser['primaryEmail'], '@', true);
-			$googleUsers[$googleUsername] = $googleUser;
+            $googleUsers[$googleUsername] = $googleUser;
             $googleIds[$googleUser['id']] = $googleUsername;
-		}
+        }
 
         $Job->log(sprintf('Loaded %u users from Google Apps for analysis', count($googleUsers)));
         $results['analyzed']['remote'] = count($googleUsers);
 
 
         // iterate over Slate users
-    	$slateUsers = array();
-        $slateOnlyUsers = array();
+        $slateUsers = [];
+        $slateOnlyUsers = [];
 
         foreach (User::getAllByWhere('Username IS NOT NULL') AS $User) {
             $slateUsers[] = $User->Username;
@@ -124,12 +124,12 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
             // try to match existing remote user by mapped id
-            $Mapping = Mapping::getByWhere(array(
+            $Mapping = Mapping::getByWhere([
                 'ContextClass' => $User->getRootClass(),
                 'ContextID' => $User->ID,
                 'Connector' => static::getConnectorId(),
                 'ExternalKey' => 'user[id]'
-            ));
+            ]);
 
             if ($Mapping && array_key_exists($Mapping->ExternalIdentifier, $googleIds)) {
                 $googleUser = $googleUsers[$googleIds[$Mapping->ExternalIdentifier]];
@@ -144,7 +144,6 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
             // update existing remote user
             if ($googleUser) {
-                
                 if (!$DomainEmailPoint) {
                     $Job->log("Cannot update existing remote user $User->Username because they don't have an email contact point matching the domain", LogLevel::ERROR);
                     $results['outcome']['failed']['no-domain-email-contact-point']++;
@@ -153,27 +152,27 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
                 // compare records and prepare changes
-                $changes = array();
-                
+                $changes = [];
+
                 if ($googleUser['name']['givenName'] != $User->FirstName) {
-                    $changes['name.givenName'] = array(
+                    $changes['name.givenName'] = [
                         'from' => $googleUser['name']['givenName'],
                         'to' => $User->FirstName
-                    );
+                    ];
                 }
 
                 if ($googleUser['name']['familyName'] != $User->LastName) {
-                    $changes['name.familyName'] = array(
+                    $changes['name.familyName'] = [
                         'from' => $googleUser['name']['familyName'],
                         'to' => $User->LastName
-                    );
+                    ];
                 }
-                
+
                 if ($googleUser['primaryEmail'] != $DomainEmailPoint->address) {
-                    $changes['primaryEmail'] = array(
+                    $changes['primaryEmail'] = [
                         'from' => $googleUser['primaryEmail'],
                         'to' => $DomainEmailPoint->address
-                    );
+                    ];
                 }
 
 
@@ -182,13 +181,13 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                     $Job->log(sprintf('mapping external identifier %s to user %s', $googleUser['id'], $User->Username), LogLevel::NOTICE);
                     $results['mapping']['saved-from-match']++;
 
-    				$Mapping = Mapping::create(array(
-						'Context' => $User,
-						'Source' => 'matching',
+                    $Mapping = Mapping::create([
+                        'Context' => $User,
+                        'Source' => 'matching',
                         'Connector' => static::getConnectorId(),
-						'ExternalKey' => 'user[id]',
-						'ExternalIdentifier' => $googleUser['id']
-					), !$pretend);
+                        'ExternalKey' => 'user[id]',
+                        'ExternalIdentifier' => $googleUser['id']
+                    ], !$pretend);
                 }
 
 
@@ -203,11 +202,11 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                         );
                     }
 
-                    $Job->log(array(
+                    $Job->log([
                         'action' => 'update',
                         'changes' => $changes,
                         'message' => "Updated user $User->Username"
-                    ), LogLevel::NOTICE);
+                    ], LogLevel::NOTICE);
 
                     $results['outcome']['updated']++;
                 } else {
@@ -215,7 +214,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                     $results['outcome']['untouched']++;
                 }
 
-    			$results['matched']['both']++;
+                $results['matched']['both']++;
                 continue;
             }
 
@@ -223,7 +222,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
             // consider creating a new remote user
             $slateOnlyUsers[] = $User->Username;
 
-			$results['matched']['only-local']++;
+            $results['matched']['only-local']++;
 
             if (!$User->AssignedPassword) {
                 $Job->log("Cannot create user $User->Username because AssignedPassword is not available");
@@ -239,49 +238,47 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
             // proceed with creating a new remote user
-			if ($pretend) {
+            if ($pretend) {
                 $Job->log("Creating user $User->Username", LogLevel::NOTICE);
                 $results['outcome']['created']++;
-			} else {
-				$googleResponse = GoogleApps::createUser(array(
-					'name' => array(
-						'givenName' => $User->FirstName,
-						'familyName' => $User->LastName
-					),
-					'password' => $User->AssignedPassword,
-					'primaryEmail' => $DomainEmailPoint->address
-				));
+            } else {
+                $googleResponse = GoogleApps::createUser([
+                    'name' => [
+                        'givenName' => $User->FirstName,
+                        'familyName' => $User->LastName
+                    ],
+                    'password' => $User->AssignedPassword,
+                    'primaryEmail' => $DomainEmailPoint->address
+                ]);
 
-				if (empty($googleResponse['error'])) {
+                if (empty($googleResponse['error'])) {
                     $Job->log("Created user $User->Username, saving mapping to Google id '$googleResponse[id]'", LogLevel::NOTICE);
                     $results['outcome']['created']++;
                     $results['mapping']['saved-from-create']++;
 
-					$Mapping = Mapping::create(array(
-						'Context' => $User,
-						'Source' => 'creation',
+                    $Mapping = Mapping::create([
+                        'Context' => $User,
+                        'Source' => 'creation',
                         'Connector' => static::getConnectorId(),
-						'ExternalKey' => 'user[id]',
-						'ExternalIdentifier' => $googleResponse['id']
-					), true);
-				} else {
+                        'ExternalKey' => 'user[id]',
+                        'ExternalIdentifier' => $googleResponse['id']
+                    ], true);
+                } else {
                     $Job->log("Failed to create user $User->Username, received error from Google: $googleResponse[error]", LogLevel::ERROR);
-					$results['outcome']['failed']['api-error'][$googleResponse['error']]++;
-				}
-			}
-
-
+                    $results['outcome']['failed']['api-error'][$googleResponse['error']]++;
+                }
+            }
         } // end of Slate users loop
 
 
         // process extra remote users
         $googleOnlyUsers = array_diff(array_keys($googleUsers), $slateUsers);
         $results['matched']['only-remote'] = count($googleOnlyUsers);
-        
+
         foreach ($googleOnlyUsers AS $googleUsername) {
             $Job->log("Ignoring unmatched remote user $googleUsername", LogLevel::DEBUG);
         }
-        
+
 
         // print review spreadsheets
 #        print "<h1>Users to create in Google Apps</h1><pre>Username,First name,Last name,Account Type,Graduation year,Student ID\n";

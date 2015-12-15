@@ -6,7 +6,7 @@ class ValidationException extends \Exception
 {
     protected $_errors;
 
-    public function __construct($message = null, $errors = array(), $code = 0, Exception $previous = null)
+    public function __construct($message = null, $errors = [], $code = 0, Exception $previous = null)
     {
         if (!count($errors)) {
             $errors['invalid'] = $message ? $message : 'Value is invalid';

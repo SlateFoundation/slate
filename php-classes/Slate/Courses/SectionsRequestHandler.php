@@ -48,10 +48,10 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                 return static::handleParticipantsRequest($Section);
             case 'post':
                 $GLOBALS['Session']->requireAuthentication();
-                return BlogRequestHandler::handleCreateRequest(BlogPost::create(array(
+                return BlogRequestHandler::handleCreateRequest(BlogPost::create([
                     'Class' => 'Emergence\CMS\BlogPost',
                     'Context' => $Section
-                )));
+                ]));
             case 'students':
                 return static::handleStudentsRequest($Section);
 #            case 'rss':
@@ -86,10 +86,10 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                 return static::throwError('Person is already a participant in this section.');
             }
 
-            return static::respond('participantAdded', array(
+            return static::respond('participantAdded', [
                 'success' => true,
                 'data' => $Participant
-            ));
+            ]);
         }
 
         if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
@@ -107,10 +107,10 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             }
         }
 
-        return static::respond('sectionParticipants', array(
+        return static::respond('sectionParticipants', [
             'success' => true
             ,'data' => $Section->Participants
-        ));
+        ]);
     }
 
     public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
@@ -120,19 +120,19 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
             $Participant->destroy();
 
-            return static::respond('participantDeleted', array(
+            return static::respond('participantDeleted', [
                 'success' => true,
                 'data' => $Participant
-            ));
+            ]);
         }
 
         if (!$GLOBALS['Session']->hasAccountLevel('Staff') && $GLOBALS['Session']->PersonID != $Participant->PersonID) {
             return static::throwUnauthorizedError();
         }
 
-        return static::respond('participant', array(
+        return static::respond('participant', [
             'data' => $Participant
-        ));
+        ]);
     }
 
     public static function handleStudentsRequest(Section $Section)
@@ -152,9 +152,9 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             }
         }
 
-        return static::respond('students', array(
+        return static::respond('students', [
             'data' => $Section->Students
-        ));
+        ]);
     }
 
 #    public static function getBlogsByCourseSection(Section $Section)
@@ -174,7 +174,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 #        ));
 #    }
 
-    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
         if (!empty($_REQUEST['term'])) {
             if ($_REQUEST['term'] == 'current') {

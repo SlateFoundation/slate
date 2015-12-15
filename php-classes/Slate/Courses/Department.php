@@ -15,30 +15,30 @@ class Department extends \VersionedRecord
     public static $pluralNoun = 'course departments';
     public static $collectionRoute = '/departments';
 
-    public static $fields = array(
-        'Title' => array(
+    public static $fields = [
+        'Title' => [
             'fulltext' => true
-        )
-        ,'Handle' => array(
+        ]
+        ,'Handle' => [
             'unique' => true
-        )
-        ,'Code' => array(
+        ]
+        ,'Code' => [
             'unique' => true
             ,'notnull' => false
-        )
+        ]
 
-        ,'Status' => array(
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
+        ]
 
-        ,'Description' => array(
+        ,'Description' => [
             'type' => 'clob'
             ,'fulltext' => true
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
     public static $validators = [
         'Title' => [
@@ -46,13 +46,13 @@ class Department extends \VersionedRecord
         ]
     ];
 
-    public static $relationships = array(
-        'Courses' => array(
+    public static $relationships = [
+        'Courses' => [
             'type' => 'one-many'
             ,'class' => 'Slate\\Courses\\Course'
             ,'foreign' => 'DepartmentID'
-        )
-    );
+        ]
+    ];
 
 
     public static function getOrCreateByTitle($title)
@@ -60,9 +60,9 @@ class Department extends \VersionedRecord
         if ($Department = static::getByField('Title', $title)) {
             return $Department;
         } else {
-            return static::create(array(
+            return static::create([
                 'Title' => $title
-            ), true);
+            ], true);
         }
     }
 

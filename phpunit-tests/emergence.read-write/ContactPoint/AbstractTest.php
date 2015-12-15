@@ -12,12 +12,12 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
     protected static $targetClassName;
 
     protected static $Person;
-    protected static $personTestData = array(
+    protected static $personTestData = [
         'FirstName' => 'TestCaseFirstName',
         'LastName' => 'TestCaseLastName'
-    );
+    ];
 
-    protected static $extraPeople = array();
+    protected static $extraPeople = [];
 
     public static function setUpBeforeClass()
     {
@@ -29,10 +29,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $deletedPoints = 0;
         $deletedExtraPeople = 0;
 
-        DB::nonQuery('DELETE FROM `%s` WHERE PersonID = %u', array(
+        DB::nonQuery('DELETE FROM `%s` WHERE PersonID = %u', [
             AbstractPoint::$tableName
             ,static::$Person->ID
-        ));
+        ]);
 
         $deletedPoints += DB::affectedRows();
 
@@ -47,10 +47,10 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
                 $deletedExtraPeople++;
             }
 
-            DB::nonQuery('DELETE FROM `%s` WHERE PersonID = %u', array(
+            DB::nonQuery('DELETE FROM `%s` WHERE PersonID = %u', [
                 AbstractPoint::$tableName
                 ,$extraPerson->ID
-            ));
+            ]);
 
             $deletedPoints += DB::affectedRows();
         }
@@ -138,7 +138,7 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(static::$Person->$primaryField, 'Primary field is null initially');
         $this->assertFalse(static::$Person->isDirty, 'Person is not dirty initially');
 
-        $newFirstName = static::$Person->FirstName = static::$personTestData['FirstName'] . 'Changed';
+        $newFirstName = static::$Person->FirstName = static::$personTestData['FirstName'].'Changed';
         $this->assertTrue(static::$Person->isDirty, 'Person is dirty after changing first name');
 
         $Point = $className::fromString($value, static::$Person, true);
@@ -171,9 +171,9 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $primaryRelationship = substr($primaryField, 0, -2);
         $this->assertTrue(Person::relationshipExists($primaryRelationship), 'Person class has relationship defined matching target class $personPrimaryField');
 
-        $Person = Person::create(array_merge(static::$personTestData, array(
+        $Person = Person::create(array_merge(static::$personTestData, [
             $primaryRelationship => $className::fromString($value)
-        )));
+        ]));
         static::$extraPeople[] = $Person; // register before any tests to ensure destruction if test fails
         $Person->save();
 
@@ -227,8 +227,8 @@ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
         $Point = $className::fromString($value, static::$Person, true);
 
         try {
-            static::$extraPeople[] = Person::create(array_merge(static::$personTestData, array($primaryRelationship => $Point)), true);
-        } catch(RecordValidationException $e) {
+            static::$extraPeople[] = Person::create(array_merge(static::$personTestData, [$primaryRelationship => $Point]), true);
+        } catch (RecordValidationException $e) {
             $this->assertArrayHasKey($primaryField, $e->validationErrors, 'Validation errors contain PrimaryEmailID key');
             $this->assertEquals($e->validationErrors[$primaryField], $primaryRelationship.' already belongs to another person');
             $Point->destroy();

@@ -10,7 +10,7 @@ class Slate
     public static $webTools = [];
     public static $manageTools = [];
 
-    static function __classLoaded()
+    public static function __classLoaded()
     {
         if (empty(static::$schoolName)) {
             static::$schoolName = Site::getConfig('label');
@@ -21,16 +21,16 @@ class Slate
         }
     }
 
-    public static $siteWidgets = array(
+    public static $siteWidgets = [
         'calendar' => true
-    );
+    ];
 
     public static function getWidgetConfig($id)
     {
         $widgetConfig = static::$siteWidgets[$id];
 
         if (!is_array($widgetConfig)) {
-            $widgetConfig = $widgetConfig === true ? array() : null;
+            $widgetConfig = $widgetConfig === true ? [] : null;
         }
 
         if ($widgetConfig !== null && (!array_key_exists('enabled', $widgetConfig) || $widgetConfig['enabled'] !== false)) {
@@ -39,15 +39,15 @@ class Slate
 
         return $widgetConfig;
     }
-    
+
     public static function generateUserEmail(Emergence\People\User $User)
     {
-        if (is_callable(static::$generateUserEmail)) { 
-            return call_user_func(static::$generateUserEmail, $User, static::$userEmailDomain); 
+        if (is_callable(static::$generateUserEmail)) {
+            return call_user_func(static::$generateUserEmail, $User, static::$userEmailDomain);
         } elseif (static::$userEmailDomain && $User->Username) {
-            return $User->Username . '@' . static::$userEmailDomain; 
-        }  else { 
-            return null; 
+            return $User->Username.'@'.static::$userEmailDomain;
+        } else {
+            return null;
         }
     }
 }

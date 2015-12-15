@@ -6,18 +6,18 @@ use \Emergence\People\ContactPoint\Network;
 
 class NetworkTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $networkIds = array(
-        'twitter.com/username' => array(
+    protected static $networkIds = [
+        'twitter.com/username' => [
             'serialized' => 'twitter.com/username',
             'string' => 'username on twitter.com',
             'html' => '<a class="contact-link contact-network contact-network-composite network-twitter_com" href="http://twitter.com/username">username on twitter.com</a>'
-        ),
-        'example.com/username' => array(
+        ],
+        'example.com/username' => [
             'serialized' => 'example.com/username',
             'string' => 'username on example.com',
             'html' => '<span class="contact-network-fuzzy network-example_com">username on <a class="contact-link contact-network contact-network-networkonly network-example_com" href="http://example.com">example.com</a></span>'
-        )
-    );
+        ]
+    ];
 
     public function testSerialize()
     {
