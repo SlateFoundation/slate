@@ -8,6 +8,8 @@ use Emergence\Connectors\Job;
 use Emergence\Connectors\Mapping;
 use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 use Emergence\Util\Capitalizer;
+
+use Exception;
 use Psr\Log\LogLevel;
 
 use Slate\People\Student;
@@ -195,8 +197,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static function pullStudents(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
     {
         // check input
-        static::_requireColumns('students', $spreadsheet, static::$studentRequiredColumns, static::$studentColumns);
-
+        try {
+            static::_requireColumns('students', $spreadsheet, static::$studentRequiredColumns, static::$studentColumns);
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
 
         // initialize results
         $results = [
@@ -232,7 +238,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $results['failed'][$e->getMessageKey()]++;
                 }
 
-                $Job->log($e->getMessage(), LogLevel::ERROR);
+                $Job->logException($e);
                 continue;
             }
 
@@ -290,7 +296,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $results['failed'][$e->getMessageKey()]++;
                 }
 
-                $Job->log($e->getMessage(), LogLevel::ERROR);
+                $Job->logException($e);
                 continue;
             }
 
@@ -350,7 +356,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $results['failed'][$e->getMessageKey()]++;
                 }
 
-                $Job->log($e->getMessage(), LogLevel::ERROR);
+                $Job->logException($e);
                 continue;
             }
 
@@ -375,11 +381,13 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         static::_requireColumns('Sections', $spreadsheet, static::$sectionRequiredColumns, static::$sectionColumns);
 
         if (empty($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm required to import sections');
+            $Job->logException(new Exception('masterTerm required to import sections'));
+            return false;
         }
 
         if (!$MasterTerm = Term::getByHandle($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm not found');
+            $Job->logException(new Exception('masterTerm not found'));
+            return false;
         }
 
 
@@ -585,11 +593,13 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         static::_requireColumns('Enrollments', $spreadsheet, static::$enrollmentRequiredColumns, static::$enrollmentColumns);
 
         if (empty($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm required to import sections');
+            $Job->logException(new Exception('masterTerm required to import enrollments'));
+            return false;
         }
 
         if (!$MasterTerm = Term::getByHandle($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm not found');
+            $Job->logException(new Exception('masterTerm not found'));
+            return false;
         }
 
 
