@@ -197,8 +197,8 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             }
 
             $enrolledSectionIds = DB::allValues(
-                'ID',
-                'SELECT ID FROM `%s` WHERE PersonID = %u',
+                'CourseSectionID',
+                'SELECT CourseSectionID FROM `%s` WHERE PersonID = %u',
                 [
                     SectionParticipant::$tableName,
                     $EnrolledUser->ID
