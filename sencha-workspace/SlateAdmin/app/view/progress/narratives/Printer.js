@@ -1,7 +1,8 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
+/*jslint browser: true, undef: true, laxbreak: true *//*global Ext*/
 Ext.define('SlateAdmin.view.progress.narratives.Printer', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.Container',
     xtype: 'progress-narratives-printer',
+
     requires: [
         'Ext.layout.container.VBox',
         'Ext.layout.container.HBox',
@@ -10,15 +11,55 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
         'Ext.form.field.ComboBox',
         'Ext.util.Cookies'
     ],
+
     componentCls: 'progress-narratives-printer',
+
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
+
     items: [{
         xtype: 'form',
         itemId: 'filterForm',
         bodyPadding: 5,
+        dockedItems: [{
+            dock: 'bottom',
+            xtype: 'container',
+            layout: {
+                type: 'hbox',
+                align: 'middle'
+            },
+            defaults: {
+                margin: '0 8px 4px 8px'
+            },
+            items: [{
+                xtype: 'tbfill'
+            },{
+                xtype: 'button',
+                text: 'Preview',
+                action: 'preview'
+            },{
+                xtype: 'button',
+                text: 'Print to PDF',
+                action: 'print-pdf'
+            },{
+                xtype: 'button',
+                text: 'Print via Browser',
+                action: 'print-browser'
+            },{
+                xtype: 'button',
+                text: 'Email to Parents',
+                action: 'email',
+                disabled: true
+            },{
+                xtype: 'button',
+                text: 'Clear Filters',
+                action: 'clear-filters'
+            },{
+                xtype: 'tbfill'
+            }]
+        }],
         items: [{
             xtype: 'fieldset',
             title: 'Filter reports by&hellip;',
@@ -58,7 +99,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 queryMode: 'remote',
                 queryParam: 'q',
                 hideTrigger: true,
-                store: 'progress.narratives.People',
+                //store: 'progress.narratives.People',
                 listConfig: {
                     getInnerTpl: function () {
                         return '{LastName}, {FirstName}';
@@ -74,6 +115,7 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                         }
                     }
                 }
+/*
             },{
                 name: 'authorID',
                 fieldLabel: 'Author',
@@ -98,30 +140,8 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                         url: '/progress/narratives/authors'
                     }
                 }
+*/
             }]
-        }],
-        bbar: [{
-            xtype: 'tbfill'
-        },{
-            text: 'Preview',
-            action: 'preview'
-        },{
-            text: 'Print to PDF',
-            action: 'print-pdf'
-        },{
-            text: 'Print via Browser',
-            action: 'print-browser'
-        },{
-            text: 'Email to Parents',
-            action: 'email',
-            disabled: true
-        },{
-            xtype: 'tbseparator'
-        },{
-            text: 'Clear Filters',
-            action: 'clear-filters'
-        },{
-            xtype: 'tbfill'
         }]
     },{
         xtype: 'component',
@@ -133,55 +153,5 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
         renderSelectors: {
             iframeEl: 'iframe'
         }
-    }],
-
-
-
-    // helper functions
-    loadPreview: function (params, invokePrintDialog) {
-        var previewBox = this.getComponent('previewBox'),
-            iframeEl = previewBox.iframeEl;
-
-        previewBox.enable();
-        previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-
-        iframeEl.on('load', function () {
-            this.fireEvent('previewload', this, previewBox);
-            previewBox.setLoading(false);
-
-            if (invokePrintDialog) {
-                iframeEl.dom.contentWindow.print();
-            }
-        }, this, { single: true, delay: 10 })
-
-        SlateAdmin.API.request({
-            url: '/progress/narratives/print/preview',
-            params: params,
-            scope: this,
-            success: function (res) {
-                var previewBox = this.getComponent('previewBox'),
-                    doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
-                doc.open();
-                doc.write(res.responseText);
-                doc.close();
-            }
-        });
-
-
-    },
-
-    loadPrint: function (params) {
-        var filterForm = this.getComponent('filterForm'),
-            previewBox = this.getComponent('previewBox');
-
-        filterForm.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
-        // use iframe for loading, setting window.location cancels all current loading operations (like the ext loading spinner we just showed)
-        SlateAdmin.API.downloadFile('/progress/narratives/print?'+Ext.Object.toQueryString(params), function () {
-            filterForm.setLoading(false);
-        });
-
-        setTimeout(function() {
-            filterForm.setLoading(false);
-        }, 1000);
-    }
+    }]
 });
