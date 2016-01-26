@@ -1,16 +1,9 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-
-/**
- * TODO:
- * - Move printer functionality to its own controller
- */
+/*jslint browser: true, undef: true, white: true, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.controller.progress.Narratives', {
     extend: 'Ext.app.Controller',
 
-
     views: [
-        'progress.narratives.Manager',
-        'progress.narratives.Printer'
+        'progress.narratives.Manager'
     ],
 
     stores: [
@@ -44,19 +37,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         revertChangesBtn: 'progress-narratives-editorform button#revertChangesBtn',
         saveDraftBtn: 'progress-narratives-editorform button#saveDraftBtn',
         saveFinishedBtn: 'progress-narratives-editorform button#saveFinishedBtn'
-
-        // narrativesPrinter: {
-        //     selector: 'progress-narratives-printer',
-        //     autoCreate: true,
-
-        //     xtype: 'progress-narratives-printer'
-        // },
-        // narrativesPrintForm: 'progress-narratives-printer form'
     },
 
     routes: {
         'progress/narratives': 'showNarratives'
-        // 'progress/narratives/printing': 'showNarrativePrinting'
     },
 
     control: {
@@ -105,22 +89,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         saveFinishedBtn: {
             click: 'onSaveFinishedClick'
         }
-
-        // 'progress-narratives-printer': {
-        //     activate: 'onPrinterActivate'
-        // },
-        // 'progress-narratives-printer button[action=clear-filters]': {
-        //     click: 'onNarrativesClearFiltersClick'
-        // },
-        // 'progress-narratives-printer button[action=preview]': {
-        //     click: 'onNarrativesPreviewClick'
-        // },
-        // 'progress-narratives-printer button[action=print-pdf]': {
-        //     click: 'onNarrativesPrintPdfClick'
-        // },
-        // 'progress-narratives-printer button[action=print-browser]': {
-        //     click: 'onNarrativesPrintBrowserClick'
-        // }
     },
 
     listen: {
@@ -148,11 +116,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
         Ext.resumeLayouts(true);
     },
-
-    // showNarrativePrinting: function () {
-    //     this.application.getController('Viewport').loadCard(this.getNarrativesPrinter());
-    // },
-
 
     // event handlers
     onManagerActivate: function () {
@@ -381,52 +344,6 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     onSaveFinishedClick: function () {
         this.saveReport('published');
     },
-
-    // onPrinterActivate: function (managerCt) {
-    //     var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
-    //         selectedTerm = termSelector.getValue(),
-    //         termStore = Ext.getStore('Terms'),
-    //         advisorStore = Ext.getStore('people.Advisors'),
-    //         onTermLoad = function () {
-    //             if(!selectedTerm) {
-    //                 termSelector.setValue(termStore.getReportingTerm().getId());
-    //                 managerCt.setLoading(false);
-    //             }
-
-
-    //         };
-
-    //     if(!termStore.isLoaded()) {
-    //         managerCt.setLoading('Loading terms&hellip;');
-    //         termStore.load({
-    //             callback: onTermLoad
-    //         });
-    //     }
-
-    //     if(!advisorStore.isLoaded()) {
-    //         advisorStore.load();
-    //     }
-    // },
-
-    // onNarrativesPreviewClick: function () {
-    //     var formValues = this.getNarrativesPrintForm().getForm().getValues();
-    //     this.getNarrativesPrinter().loadPreview(formValues);
-    // },
-
-    // onNarrativesPrintPdfClick: function () {
-    //     var formValues = this.getNarrativesPrintForm().getForm().getValues();
-    //     this.getNarrativesPrinter().loadPrint(formValues);
-    // },
-
-    // onNarrativesPrintBrowserClick: function () {
-    //     var formValues = this.getNarrativesPrintForm().getForm().getValues();
-    //     this.getNarrativesPrinter().loadPreview(formValues, true);
-    // },
-
-    // onNarrativesClearFiltersClick: function () {
-    //     this.getNarrativesPrintForm().getForm().reset();
-    // },
-
 
     saveReport: function (newStatus) {
         var me = this,
