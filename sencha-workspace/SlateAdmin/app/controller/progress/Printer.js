@@ -48,11 +48,9 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
 
     showNarrativePrinting: function () {
         this.application.getController('Viewport').loadCard(this.getNarrativesPrinter());
-        //this.application.getController('Viewport').loadCard(this.getManagerCt());
     },
 
     onPrinterActivate: function (managerCt) {
-        console.log('onPrinterActivate');
         var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
             selectedTerm = termSelector.getValue(),
             termStore = Ext.getStore('Terms'),
