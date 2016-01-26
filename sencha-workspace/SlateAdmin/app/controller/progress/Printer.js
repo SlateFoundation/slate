@@ -25,7 +25,9 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
 
             xtype: 'progress-narratives-printer'
         },
-        narrativesPrintForm: 'progress-narratives-printer form'
+        narrativesPrintForm: 'progress-narratives-printer form#filterForm',
+        narrativesPrintPreviewBox: 'progress-narratives-printer component#previewBox'
+
     },
 
     control: {
@@ -33,13 +35,13 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
             activate: 'onPrinterActivate'
         },
         'progress-narratives-printer button[action=clear-filters]': {
-            click: 'onNarrativesClearFiltersClick'
+            click: 'onClearFiltersClick'
         },
         'progress-narratives-printer button[action=preview]': {
             click: 'onNarrativesPreviewClick'
         },
         'progress-narratives-printer button[action=print-pdf]': {
-            click: 'onNarrativesPrintPdfClick'
+            click: 'onPrintPdfClick'
         },
         'progress-narratives-printer button[action=print-browser]': {
             click: 'onNarrativesPrintBrowserClick'
@@ -77,21 +79,64 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
     },
 
     onNarrativesPreviewClick: function () {
-        var formValues = this.getNarrativesPrintForm().getForm().getValues();
-        this.getNarrativesPrinter().loadPreview(formValues);
-    },
-
-    onNarrativesPrintPdfClick: function () {
-        var formValues = this.getNarrativesPrintForm().getForm().getValues();
-        this.getNarrativesPrinter().loadPrint(formValues);
+        this.loadPreview();
     },
 
     onNarrativesPrintBrowserClick: function () {
-        var formValues = this.getNarrativesPrintForm().getForm().getValues();
-        this.getNarrativesPrinter().loadPreview(formValues, true);
+        this.loadPreview(true);
     },
 
-    onNarrativesClearFiltersClick: function () {
+    onPrintPdfClick: function () {
+        var form = this.getNarrativesPrintForm(),
+            params = form.getForm().getValues();
+            previewBox = this.getNarrativesPrintPreviewBox();
+
+        form.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
+        // use iframe for loading, setting window.location cancels all current loading operations
+
+        SlateAdmin.API.downloadFile('/progress/narratives/reports/print?'+Ext.Object.toQueryString(params), function () {
+            form.setLoading(false);
+        });
+
+        setTimeout(function() {
+            form.setLoading(false);
+        }, 1000);
+    },
+
+    onClearFiltersClick: function () {
         this.getNarrativesPrintForm().getForm().reset();
+    },
+
+    loadPreview: function (invokePrintDialog) {
+        var params = this.getNarrativesPrintForm().getForm().getValues();
+            previewBox = this.getNarrativesPrintPreviewBox();
+            iframeEl = previewBox.iframeEl;
+
+        previewBox.enable();
+        previewBox.setLoading({msg: 'Downloading reports&hellip;'});
+
+        iframeEl.on('load', function () {
+            this.fireEvent('previewload', this, previewBox);
+            previewBox.setLoading(false);
+
+            if (invokePrintDialog) {
+                iframeEl.dom.contentWindow.print();
+            }
+        }, this, { single: true, delay: 10 });
+
+        SlateAdmin.API.request({
+            url: '/progress/narratives/reports/print/preview',
+            params: params,
+            scope: this,
+            success: function (res) {
+                var doc = document.getElementById(previewBox.iframeEl.dom.id).contentWindow.document;
+
+                doc.open();
+                doc.write(res.responseText);
+                doc.close();
+            }
+        });
+
     }
+
 });
