@@ -96,24 +96,21 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 name: 'studentID',
                 fieldLabel: 'Student',
                 emptyText: 'All',
-                queryMode: 'remote',
-                queryParam: 'q',
-                hideTrigger: true,
-                //store: 'progress.narratives.People',
-                listConfig: {
-                    getInnerTpl: function () {
-                        return '{LastName}, {FirstName}';
-                    }
-                },
-                displayTpl: '<tpl for=".">{LastName}, {FirstName}</tpl>',
-                listeners: {
-                    beforequery: function (qe) {
-                        if (!qe) {
-                            return false;
-                        } else {
-                            qe.query += ' class:Student';
+                displayField: 'FullName',
+                queryMode: 'local',
+                anyMatch: true,
+                store: {
+                    type: 'chained',
+                    source: 'people.People',
+                    filters: [
+                        function(rec) {
+                            return (rec.get('Class')==='Slate\\People\\Student');
                         }
-                    }
+                    ],
+                    sorters: [{
+                        property: 'LastName',
+                        direction: 'asc'
+                    }]
                 }
 /*
             },{
