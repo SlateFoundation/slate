@@ -7,7 +7,9 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
     ],
 
     stores: [
+        'Terms',
         'people.Advisors',
+        'people.People',
         'progress.narratives.Sections',
         'progress.narratives.Students'
     ],
@@ -26,7 +28,9 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
             xtype: 'progress-narratives-printer'
         },
         narrativesPrintForm: 'progress-narratives-printer form#filterForm',
-        narrativesPrintPreviewBox: 'progress-narratives-printer component#previewBox'
+        narrativesPrintPreviewBox: 'progress-narratives-printer component#previewBox',
+
+        studentCombo: 'progress-narratives-printer combo#studentCombo'
 
     },
 
@@ -45,6 +49,9 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         },
         'progress-narratives-printer button[action=print-browser]': {
             click: 'onNarrativesPrintBrowserClick'
+        },
+        studentCombo: {
+            beforequery: 'onStudentComboBeforeQuery'
         }
     },
 
@@ -53,17 +60,17 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
     },
 
     onPrinterActivate: function (managerCt) {
-        var termSelector = this.getNarrativesPrinter().down('combo[name=termID]'),
+        var me = this,
+            termSelector = me.getNarrativesPrinter().down('combo[name=termID]'),
             selectedTerm = termSelector.getValue(),
-            termStore = Ext.getStore('Terms'),
-            advisorStore = Ext.getStore('people.Advisors'),
+            termStore = me.getTermsStore(),
+            advisorStore = me.getPeopleAdvisorsStore(),
+            //peopleStore = me.getPeoplePeopleStore(),
             onTermLoad = function () {
                 if(!selectedTerm) {
                     termSelector.setValue(termStore.getReportingTerm().getId());
                     managerCt.setLoading(false);
                 }
-
-
             };
 
         if(!termStore.isLoaded()) {
@@ -76,6 +83,12 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         if(!advisorStore.isLoaded()) {
             advisorStore.load();
         }
+
+/*
+        if(!peopleStore.isLoaded()) {
+            peopleStore.load();
+        }
+*/
     },
 
     onNarrativesPreviewClick: function () {
@@ -94,7 +107,7 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         form.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
         // use iframe for loading, setting window.location cancels all current loading operations
 
-        SlateAdmin.API.downloadFile('/progress/narratives/reports/print?'+Ext.Object.toQueryString(params), function () {
+        SlateAdmin.API.downloadFile('/progress/narratives/reports?'+Ext.Object.toQueryString(params), function () {
             form.setLoading(false);
         });
 
@@ -125,7 +138,11 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         }, this, { single: true, delay: 10 });
 
         SlateAdmin.API.request({
-            url: '/progress/narratives/reports/print/preview',
+            //url: '/progress/narratives/reports/print/preview',
+            url: '/progress/narratives/reports',
+            headers: {
+                'Accept': 'text/html'
+            },
             params: params,
             scope: this,
             success: function (res) {
@@ -136,6 +153,17 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
                 doc.close();
             }
         });
+
+    },
+
+    onStudentComboBeforeQuery: function(queryPlan) {
+        console.log('onStudentComboBeforeQuery');
+        console.log(queryPlan);
+        if (queryPlan.query) {
+            queryPlan.query += ' class:Student';
+        } else {
+            queryPlan.query += 'class:Student';
+        }
 
     }
 

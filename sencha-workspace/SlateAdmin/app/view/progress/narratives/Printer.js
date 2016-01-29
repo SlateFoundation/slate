@@ -94,23 +94,15 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 store: 'people.Advisors'
             },{
                 name: 'studentID',
+                itemId: 'studentCombo',
                 fieldLabel: 'Student',
                 emptyText: 'All',
                 displayField: 'FullName',
-                queryMode: 'local',
+                queryMode: 'remote',
+                queryParam: 'q',
                 anyMatch: true,
                 store: {
-                    type: 'chained',
-                    source: 'people.People',
-                    filters: [
-                        function(rec) {
-                            return (rec.get('Class')==='Slate\\People\\Student');
-                        }
-                    ],
-                    sorters: [{
-                        property: 'LastName',
-                        direction: 'asc'
-                    }]
+                    xclass: 'SlateAdmin.store.people.People'
                 }
 /*
             },{
