@@ -111,11 +111,6 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                     }
                 }
 /*
-                store: {
-                    xclass: 'SlateAdmin.store.people.People'
-                }
-*/
-/*
             },{
                 name: 'authorID',
                 fieldLabel: 'Author',
