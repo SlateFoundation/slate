@@ -102,8 +102,19 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                 queryParam: 'q',
                 anyMatch: true,
                 store: {
+                    model: 'SlateAdmin.model.person.Person',
+                    proxy: {
+                        type: 'slaterecords',
+                        url: '/people',
+                        startParam: false,
+                        limitParam: false
+                    }
+                }
+/*
+                store: {
                     xclass: 'SlateAdmin.store.people.People'
                 }
+*/
 /*
             },{
                 name: 'authorID',
