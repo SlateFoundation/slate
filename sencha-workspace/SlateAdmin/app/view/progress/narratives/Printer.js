@@ -110,32 +110,24 @@ Ext.define('SlateAdmin.view.progress.narratives.Printer', {
                         limitParam: false
                     }
                 }
-/*
             },{
                 name: 'authorID',
+                itemId: 'authorCombo',
                 fieldLabel: 'Author',
-                emptyText: 'Any',
+                emptyText: 'All',
                 displayField: 'FullName',
-                typeAhead: true,
+                queryMode: 'remote',
+                queryParam: 'q',
+                anyMatch: true,
                 store: {
-                    autoLoad: true,
-                    fields: [
-                        'FirstName',
-                        'LastName',
-                        {name: 'ID', type: 'int'},
-                        {
-                            name: 'FullName',
-                            convert: function (v, r) {
-                                return r.data.data[0].LastName + ', ' + r.data.data[0].FirstName;
-                            }
-                        }
-                    ],
+                    model: 'SlateAdmin.model.person.Person',
                     proxy: {
-                        type: 'slateapi',
-                        url: '/progress/narratives/authors'
+                        type: 'slaterecords',
+                        url: '/progress/narratives/reports/authors',
+                        startParam: false,
+                        limitParam: false
                     }
                 }
-*/
             }]
         }]
     },{
