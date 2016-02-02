@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true, white: true, laxbreak: true *//*global Ext,SlateAdmin*/
-Ext.define('SlateAdmin.controller.progress.Printer', {
+Ext.define('SlateAdmin.controller.progress.narratives.Printer', {
     extend: 'Ext.app.Controller',
 
     views: [
