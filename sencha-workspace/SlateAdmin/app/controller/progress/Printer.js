@@ -55,8 +55,21 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         }
     },
 
+    // route handlers
     showNarrativePrinting: function () {
-        this.application.getController('Viewport').loadCard(this.getNarrativesPrinter());
+        var me = this,
+            navPanel = me.getProgressNavPanel();
+
+        Ext.suspendLayouts();
+
+        Ext.util.History.suspendState();
+        navPanel.setActiveLink('progress/narratives/printing');
+        navPanel.expand();
+        Ext.util.History.resumeState(false); // false to discard any changes to state
+
+        me.application.getController('Viewport').loadCard(me.getNarrativesPrinter());
+
+        Ext.resumeLayouts(true);
     },
 
     onPrinterActivate: function (managerCt) {
@@ -107,7 +120,7 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         form.setLoading({msg: 'Preparing PDF, please wait, this may take a minute&hellip;'});
         // use iframe for loading, setting window.location cancels all current loading operations
 
-        SlateAdmin.API.downloadFile('/progress/narratives/reports?'+Ext.Object.toQueryString(params), function () {
+        SlateAdmin.API.downloadFile('/progress/narratives/reports/print?'+Ext.Object.toQueryString(params), function () {
             form.setLoading(false);
         });
 
@@ -138,8 +151,7 @@ Ext.define('SlateAdmin.controller.progress.Printer', {
         }, this, { single: true, delay: 10 });
 
         SlateAdmin.API.request({
-            //url: '/progress/narratives/reports/print/preview',
-            url: '/progress/narratives/reports',
+            url: '/progress/narratives/reports/print/preview',
             headers: {
                 'Accept': 'text/html'
             },
