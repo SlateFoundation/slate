@@ -1,4 +1,4 @@
-/*jslint browser: true, undef: true *//*global Ext,SlateAdmin*/
+/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.progress.NavPanel', {
     extend: 'SlateAdmin.view.LinksNavPanel',
     xtype: 'progress-navpanel',
@@ -27,6 +27,8 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
                 href: '#progress/narratives', text: 'Narrative Reports',
                 children: [{
                     href: '#progress/narratives/printing', text: 'Search & Print'
+                },{
+                    href: '#progress/narratives/email', text: 'Email'
                 }]
             }, {
                 href: '#progress/narratives/printing', text: 'Search & Print'
@@ -44,10 +46,12 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
             }
         ] : [
             {
-                href: '#progress/narratives', text: 'Narrative Reports',
+                href: '#progress/narratives', text: 'Narrative Reports'
             }, {
                 href: '#progress/narratives/printing', text: '↳ Search & Print'
+            },{
+                href: '#progress/narratives/email', text: 'Email'
             }
-        ]
+        ];
     }
 });
