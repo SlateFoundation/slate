@@ -66,6 +66,8 @@ class Location extends \VersionedRecord
 
     public static function getOrCreateByHandle($handle, $title = null)
     {
+        $handle = HandleBehavior::transformText($handle);
+
         if ($Location = static::getByHandle($handle)) {
             return $Location;
         } else {
