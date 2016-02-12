@@ -6,18 +6,18 @@ use \Emergence\People\ContactPoint\Link;
 
 class LinkTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $links = array(
-        'http://example.com/?key1=value1&key2=value2' => array(
+    protected static $links = [
+        'http://example.com/?key1=value1&key2=value2' => [
             'serialized' => 'http://example.com/?key1=value1&key2=value2',
             'string' => 'http://example.com/?key1=value1&key2=value2',
             'html' => '<a class="contact-link contact-url" href="http://example.com/?key1=value1&amp;key2=value2">http://example.com/?key1=value1&amp;key2=value2</a>'
-        ),
-        'https://username:password@www.example.com/path/to/resource?key1=value1&key2=value2' => array(
+        ],
+        'https://username:password@www.example.com/path/to/resource?key1=value1&key2=value2' => [
             'serialized' => 'https://username:password@www.example.com/path/to/resource?key1=value1&key2=value2',
             'string' => 'https://username:password@www.example.com/path/to/resource?key1=value1&key2=value2',
             'html' => '<a class="contact-link contact-url" href="https://username:password@www.example.com/path/to/resource?key1=value1&amp;key2=value2">https://username:password@www.example.com/path/to/resource?key1=value1&amp;key2=value2</a>'
-        )
-    );
+        ]
+    ];
 
     public function testSerialize()
     {

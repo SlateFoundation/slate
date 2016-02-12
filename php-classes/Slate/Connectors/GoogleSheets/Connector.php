@@ -42,7 +42,7 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
 
 
         // init results struct
-        $results = array();
+        $results = [];
 
 
         // execute tasks based on available spreadsheets

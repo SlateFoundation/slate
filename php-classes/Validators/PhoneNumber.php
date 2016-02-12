@@ -9,12 +9,12 @@ class PhoneNumber implements IValidator
     const LENGTH_OUT_OF_RANGE = 'length_out_of_range';
 
 
-    public static function isInvalid($phone, array $options = array())
+    public static function isInvalid($phone, array $options = [])
     {
-        $options = array_merge(array(
+        $options = array_merge([
             'country' => null,
             'allowFictitious' => false
-        ), $options);
+        ], $options);
 
         // flatten array
         if (is_array($phone)) {
@@ -29,18 +29,18 @@ class PhoneNumber implements IValidator
             case 'US':
             case 'CA':
                 // strip leading 1
-                if ( (strlen($phone) == 11) && ($phone[0] == '1') ) {
+                if ((strlen($phone) == 11) && ($phone[0] == '1')) {
                     $phone = substr($phone, 1);
                 }
 
                 if (strlen($phone) != 10) {
-                    return array(LENGTH_NOT_10 => 'US/CA phone number must be 10 digits');
+                    return [LENGTH_NOT_10 => 'US/CA phone number must be 10 digits'];
                 }
 
                 break;
             default:
                 if (strlen($phone) < 8 || strlen($phone) > 15) {
-                    return array(LENGTH_OUT_OF_RANGE => 'Phone number must be between 8 and 15 digits');
+                    return [LENGTH_OUT_OF_RANGE => 'Phone number must be between 8 and 15 digits'];
                 }
 
                 break;
@@ -57,14 +57,14 @@ class PhoneNumber implements IValidator
 
                 if ($area == '800') {
                     $fictitious = ($prefix == '555' && $line == '0199');
-                } elseif(in_array($area, array('844','855','866','877','888'))) {
+                } elseif (in_array($area, ['844','855','866','877','888'])) {
                     $fictitious = ($prefix == '555');
                 } else {
                     $fictitious = ($prefix == '555' && substr($line, 0, 2) == '01');
                 }
 
                 if ($fictitious) {
-                    return array(self::FICTITIOUS => 'Phone number reserved for fictitious use');
+                    return [self::FICTITIOUS => 'Phone number reserved for fictitious use'];
                 }
             }
         }

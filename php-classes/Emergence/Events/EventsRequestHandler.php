@@ -9,12 +9,12 @@ class EventsRequestHandler extends \RecordsRequestHandler
     public static $accountLevelRead = false;
     public static $accountLevelBrowse = false;
     public static $accountLevelWrite = 'Staff';
-    public static $browseOrder = array('StartTime');
-    public static $browseConditions = array(
+    public static $browseOrder = ['StartTime'];
+    public static $browseConditions = [
         'StartTime >= CURRENT_TIMESTAMP'
-    );
+    ];
 
-    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
         // allow staff to download all articles via JSON
         if ($GLOBALS['Session']->hasAccountLevel('Staff') && static::$responseMode == 'json') {

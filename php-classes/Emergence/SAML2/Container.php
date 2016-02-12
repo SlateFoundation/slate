@@ -61,7 +61,7 @@ class Container extends \SAML2_Compat_AbstractContainer
     /**
      * {@inheritdoc}
      */
-    public function redirect($url, $data = array())
+    public function redirect($url, $data = [])
     {
         Site::redirect($url, $data);
     }
@@ -69,7 +69,7 @@ class Container extends \SAML2_Compat_AbstractContainer
     /**
      * {@inheritdoc}
      */
-    public function postRedirect($url, $data = array())
+    public function postRedirect($url, $data = [])
     {
         print('<html><body onload="document.getElementsByTagName(\'input\')[0].click();">');
         printf('<form method="POST" action="%s"><input type="submit" style="display:none">', htmlspecialchars($url));

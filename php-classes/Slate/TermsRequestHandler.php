@@ -6,7 +6,7 @@ class TermsRequestHandler extends \RecordsRequestHandler
 {
     public static $recordClass = 'Slate\\Term';
     public static $browseLimit = false;
-    public static $browseOrder = array('Left' => 'ASC');
+    public static $browseOrder = ['Left' => 'ASC'];
 
     public static function handleRecordsRequest($action = false)
     {
@@ -20,16 +20,16 @@ class TermsRequestHandler extends \RecordsRequestHandler
 
     public static function handleYearsRequest()
     {
-        return static::respond('years', array(
+        return static::respond('years', [
             'success' => true
             ,'data' => Term::getAllByWhere(
-                array('ParentID IS NULL')
-                ,array('order' => array('Left' => 'DESC'))
+                ['ParentID IS NULL']
+                ,['order' => ['Left' => 'DESC']]
             )
-        ));
+        ]);
     }
 
-    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
         if (!empty($_GET['includeCurrent'])) {
             $currentTerm = Term::getCurrent();

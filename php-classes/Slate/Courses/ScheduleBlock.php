@@ -12,43 +12,43 @@ class ScheduleBlock extends \ActiveRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $fields = array(
-        'ScheduleID' => array(
+    public static $fields = [
+        'ScheduleID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'index' => true
-        )
+        ]
 
-        ,'StartOffset' => array(
+        ,'StartOffset' => [
             'type' => 'integer'
             ,'unsigned' => true
-        )
-        ,'EndOffset' => array(
+        ]
+        ,'EndOffset' => [
             'type' => 'integer'
             ,'unsigned' => true
-        )
+        ]
 
-        ,'Status' => array(
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
+        ]
 
-        ,'Title' => array(
+        ,'Title' => [
             'notnull' => false
-        )
-        ,'Description' => array(
+        ]
+        ,'Description' => [
             'type' => 'clob'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Schedule' => array(
+    public static $relationships = [
+        'Schedule' => [
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Schedule'
-        )
-    );
+        ]
+    ];
 }

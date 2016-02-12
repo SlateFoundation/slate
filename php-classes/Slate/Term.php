@@ -22,70 +22,70 @@ class Term extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $fields = array(
-        'Title' => array(
+    public static $fields = [
+        'Title' => [
             'fulltext' => true
             ,'notnull' => false
-        )
-        ,'Handle' => array(
+        ]
+        ,'Handle' => [
             'unique' => true
             ,'notnull' => false
-        )
+        ]
 
-        ,'Status' => array(
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
-        ,'StartDate' => array(
+        ]
+        ,'StartDate' => [
             'type' => 'date'
             ,'notnull' => false
-        )
-        ,'EndDate' => array(
+        ]
+        ,'EndDate' => [
             'type' => 'date'
             ,'notnull' => false
-        )
+        ]
 
-        ,'ParentID' => array(
+        ,'ParentID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-        ,'Left' => array(
+        ]
+        ,'Left' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'unique' => true
             ,'notnull' => false
-        )
-        ,'Right' => array(
+        ]
+        ,'Right' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Parent' => array(
+    public static $relationships = [
+        'Parent' => [
             'type' => 'one-one'
             ,'class' => __CLASS__
-        )
-    );
+        ]
+    ];
 
-    public static $searchConditions = array(
-        'Title' => array(
-            'qualifiers' => array('any','title')
+    public static $searchConditions = [
+        'Title' => [
+            'qualifiers' => ['any','title']
             ,'points' => 2
             ,'sql' => 'Title LIKE "%%%s%%"'
-        )
-        ,'Handle' => array(
-            'qualifiers' => array('any','handle')
+        ]
+        ,'Handle' => [
+            'qualifiers' => ['any','handle']
             ,'points' => 2
             ,'sql' => 'Handle LIKE "%%%s%%"'
-        )
-    );
-    
+        ]
+    ];
+
     public static function getClosest()
     {
         if ($Term = static::getCurrent()) {
@@ -105,7 +105,7 @@ class Term extends \VersionedRecord
 
     public static function getCurrent()
     {
-        return static::getByWhere('CURRENT_DATE BETWEEN StartDate AND EndDate', array('order' => '`Right` - `Left`'));
+        return static::getByWhere('CURRENT_DATE BETWEEN StartDate AND EndDate', ['order' => '`Right` - `Left`']);
     }
 
     public static function getCurrentReporting()
@@ -121,22 +121,22 @@ class Term extends \VersionedRecord
 
     public static function getLastTerm()
     {
-        return static::getByWhere('Status = "Live"', array('order' => 'EndDate DESC, `Right` - `Left`'));
+        return static::getByWhere('Status = "Live"', ['order' => 'EndDate DESC, `Right` - `Left`']);
     }
 
     public static function getPrevious()
     {
-        return static::getByWhere('Status = "Live" AND EndDate < CURRENT_TIMESTAMP', array('order' => 'EndDate DESC, `Right` - `Left`'));
+        return static::getByWhere('Status = "Live" AND EndDate < CURRENT_TIMESTAMP', ['order' => 'EndDate DESC, `Right` - `Left`']);
     }
 
     public static function getNext()
     {
-        return static::getByWhere('Status = "Live" AND StartDate > CURRENT_TIMESTAMP', array('order' => 'StartDate ASC, `Right` - `Left`'));
+        return static::getByWhere('Status = "Live" AND StartDate > CURRENT_TIMESTAMP', ['order' => 'StartDate ASC, `Right` - `Left`']);
     }
 
     public static function getAllMaster()
     {
-        return static::getAllByWhere('ParentID IS NULL', array('order' => 'StartDate DESC'));
+        return static::getAllByWhere('ParentID IS NULL', ['order' => 'StartDate DESC']);
     }
 
     public static function getOrCreateByHandle($handle)
@@ -144,10 +144,10 @@ class Term extends \VersionedRecord
         if ($Term = static::getByHandle($handle)) {
             return $Term;
         } else {
-            return static::create(array(
+            return static::create([
                 'Title' => $handle
                 ,'Handle' => $handle
-            ), true);
+            ], true);
         }
     }
 
@@ -156,9 +156,9 @@ class Term extends \VersionedRecord
         if ($Term = static::getByField('Title', $title)) {
             return $Term;
         } else {
-            return static::create(array(
+            return static::create([
                 'Title' => $title
-            ), true);
+            ], true);
         }
     }
 
@@ -167,11 +167,11 @@ class Term extends \VersionedRecord
         // call parent
         parent::validate();
 
-        $this->_validator->validate(array(
+        $this->_validator->validate([
             'field' => 'Title'
             ,'errorMessage' => 'A title is required'
             ,'required' => false
-        ));
+        ]);
 
         // implement handles
         HandleBehavior::onValidate($this, $this->_validator);
@@ -198,7 +198,7 @@ class Term extends \VersionedRecord
         return DB::allValues(
             'ID'
             ,'SELECT ID FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left DESC'
-            ,array(static::$tableName, $this->Left, $this->Right)
+            ,[static::$tableName, $this->Left, $this->Right]
         );
     }
 
@@ -207,7 +207,7 @@ class Term extends \VersionedRecord
         return DB::allValues(
             'ID'
             ,'SELECT ID FROM `%s` Term WHERE Term.Left >= %u AND Term.Right <= %u ORDER BY Term.Left DESC'
-            ,array(static::$tableName, $this->Left, $this->Right)
+            ,[static::$tableName, $this->Left, $this->Right]
         );
     }
 
@@ -216,7 +216,7 @@ class Term extends \VersionedRecord
         return DB::allValues(
             'ID'
             ,'SELECT ID FROM `%1$s` Term WHERE (Term.Left >= %2$u AND Term.Right <= %3$u) OR (Term.Left <= %2$u AND Term.Right >= %3$u) ORDER BY Term.Left DESC'
-            ,array(static::$tableName, $this->Left, $this->Right)
+            ,[static::$tableName, $this->Left, $this->Right]
         );
     }
 
@@ -224,7 +224,7 @@ class Term extends \VersionedRecord
     {
         return static::getByQuery(
             'SELECT * FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left ASC LIMIT 1'
-            ,array(static::$tableName, $this->Left, $this->Right)
+            ,[static::$tableName, $this->Left, $this->Right]
         );
     }
 
@@ -232,7 +232,7 @@ class Term extends \VersionedRecord
     {
         return static::getByQuery(
             'SELECT * FROM `%s` Term WHERE Term.Right < %u AND Term.Right - Term.Left = %u ORDER BY Term.Right DESC LIMIT 1'
-            ,array(static::$tableName, $this->Left, $this->Right - $this->Left)
+            ,[static::$tableName, $this->Left, $this->Right - $this->Left]
         );
     }
 
@@ -240,18 +240,18 @@ class Term extends \VersionedRecord
     {
         return static::getByQuery(
             'SELECT * FROM `%s` Term WHERE Term.Left > %u AND Term.Right - Term.Left = %u ORDER BY Term.Left ASC LIMIT 1'
-            ,array(static::$tableName, $this->Right, $this->Right - $this->Left)
+            ,[static::$tableName, $this->Right, $this->Right - $this->Left]
         );
     }
 
     public function getFuzzyTitle()
     {
         // TODO: figure out what this is used for and update to use new q/s/y prefix scheme
-        $regexTermArray = array(
+        $regexTermArray = [
             '/(\d{4}-\d{2}): (\d{1,}\w{2} Quarter)/' => 'Quarter'
             ,'/(\d{4}-\d{2})\.S(\d{1})/' => 'Semester'
             ,'/(\d{4}-\d{2})/' => 'School Year'
-        );
+        ];
 
         foreach ($regexTermArray as $regex => $term) {
             preg_match($regex, $this->Title, $matches);
@@ -260,7 +260,7 @@ class Term extends \VersionedRecord
                 $fuzzyTitle = $matches[1];
 
                 if ($term == 'Quarter') {
-                    $fuzzyTitle .= ' '. $matches[2];
+                    $fuzzyTitle .= ' '.$matches[2];
                 } elseif ($term == 'Semester') {
                     $semester = $matches[2] == 1 ? '1st' : '2nd' ;
                     $fuzzyTitle .=  ' '.$semester.' Semester';
@@ -268,7 +268,6 @@ class Term extends \VersionedRecord
 
                 return $fuzzyTitle;
             }
-
         }
     }
 }

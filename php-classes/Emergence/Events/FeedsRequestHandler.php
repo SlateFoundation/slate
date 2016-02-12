@@ -25,9 +25,9 @@ class FeedsRequestHandler extends \RecordsRequestHandler
         $feed = new \intouch\ical\iCal($_REQUEST['url']);
         $feedTitle = $feed->getCalendarInfo()->getTitle();
 
-        return static::respond('linkTest', array(
+        return static::respond('linkTest', [
             'success' => $feedTitle ? true : false
             ,'data' => $feedTitle
-        ));
+        ]);
     }
 }

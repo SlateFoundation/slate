@@ -18,61 +18,63 @@ class Location extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $fields = array(
-        'Title' => array(
+    public static $fields = [
+        'Title' => [
             'fulltext' => true
-        )
-        ,'Handle' => array(
+        ]
+        ,'Handle' => [
             'unique' => true
-        )
-        ,'Status' => array(
+        ]
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
-        ,'Description' => array(
+        ]
+        ,'Description' => [
             'type' => 'clob'
             ,'fulltext' => true
             ,'notnull' => false
-        )
-        ,'ParentID' => array(
+        ]
+        ,'ParentID' => [
             'type' => 'uint'
             ,'notnull' => false
-        )
-        ,'Left' => array(
+        ]
+        ,'Left' => [
             'type' => 'uint'
             ,'notnull' => false
             ,'unique' => true
-        )
-        ,'Right' => array(
+        ]
+        ,'Right' => [
             'type' => 'uint'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Parent' => array(
+    public static $relationships = [
+        'Parent' => [
             'type' => 'one-one'
             ,'class' => __CLASS__
-        )
-    );
+        ]
+    ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Parent'
-    );
+    ];
 
 
     public static function getOrCreateByHandle($handle, $title = null)
     {
+        $handle = HandleBehavior::transformText($handle);
+
         if ($Location = static::getByHandle($handle)) {
             return $Location;
         } else {
-            return static::create(array(
+            return static::create([
                 'Title' => $title ? $title : $handle
                 ,'Handle' => $handle
-            ), true);
+            ], true);
         }
     }
 
@@ -81,10 +83,10 @@ class Location extends \VersionedRecord
         // call parent
         parent::validate();
 
-        $this->_validator->validate(array(
+        $this->_validator->validate([
             'field' => 'Title'
             ,'errorMessage' => 'A title is required'
-        ));
+        ]);
 
         // implement handles
         HandleBehavior::onValidate($this, $this->_validator);

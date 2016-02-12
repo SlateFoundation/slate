@@ -6,13 +6,13 @@ class Link extends AbstractPoint
 {
     public static $defaultLabel = 'Link';
 
-    public static $templates = array(
-        'Website' => array(
+    public static $templates = [
+        'Website' => [
             'class' => __CLASS__
             ,'placeholder' => 'http://example.com'
             ,'pattern' => '/^https?:\\/\\/.*$/i'
-        )
-    );
+        ]
+    ];
 
     public $url;
 

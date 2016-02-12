@@ -54,7 +54,7 @@ class EmailTest extends AbstractTest
 
         try {
             $EmailPoint2 = Email::fromString(static::$testValue, static::$Person, true);
-        } catch(RecordValidationException $e) {
+        } catch (RecordValidationException $e) {
             $this->assertArrayHasKey('Data', $e->validationErrors, 'Validation errors contain Data key');
             $this->assertEquals($e->validationErrors['Data'], 'Cannot create an email contact point that matches an existing email contact point', 'Validation errors contain duplicate value error under Data key');
 
@@ -81,7 +81,7 @@ class EmailTest extends AbstractTest
 
         try {
             $EmailPoint2->save();
-        } catch(RecordValidationException $e) {
+        } catch (RecordValidationException $e) {
             $this->assertArrayHasKey('Data', $e->validationErrors, 'Validation errors contain Data key');
             $this->assertEquals($e->validationErrors['Data'], 'Cannot create an email contact point that matches an existing email contact point', 'Validation errors contain duplicate value error under Data key');
 
@@ -98,9 +98,9 @@ class EmailTest extends AbstractTest
         $username = 'test-username';
         $password = 'test-password';
 
-        static::$extraPeople[] = $User = User::create(array_merge(static::$personTestData, array(
+        static::$extraPeople[] = $User = User::create(array_merge(static::$personTestData, [
             'Username' => $username
-        )));
+        ]));
         $User->setClearPassword($password);
         $User->save();
 

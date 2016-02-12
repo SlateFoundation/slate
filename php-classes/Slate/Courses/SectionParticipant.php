@@ -5,63 +5,63 @@ namespace Slate\Courses;
 class SectionParticipant extends \ActiveRecord
 {
     // ActiveRecord configuration
-    static $tableName = 'course_section_participants';
+    public static $tableName = 'course_section_participants';
     public static $singularNoun = 'course participant';
     public static $pluralNoun = 'course participants';
 
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    static $fields = array(
-        'CourseSectionID' => array(
+    public static $fields = [
+        'CourseSectionID' => [
             'type' => 'integer'
             ,'unsigned' => true
-        )
-        ,'PersonID' => array(
+        ]
+        ,'PersonID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'index' => true
-        )
-        ,'Role' => array(
+        ]
+        ,'Role' => [
             'type' => 'enum'
-            ,'values' => array('Observer','Student','Assistant','Teacher')
-        )
-        ,'StartDate' => array(
+            ,'values' => ['Observer','Student','Assistant','Teacher']
+        ]
+        ,'StartDate' => [
             'type' => 'timestamp'
             ,'notnull' => false
-        )
-        ,'EndDate' => array(
+        ]
+        ,'EndDate' => [
             'type' => 'timestamp'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $indexes = array(
-        'Participant' => array(
-            'fields' => array('CourseSectionID','PersonID')
+    public static $indexes = [
+        'Participant' => [
+            'fields' => ['CourseSectionID','PersonID']
             ,'unique' => true
-        )
-    );
+        ]
+    ];
 
-    static $relationships = array(
-        'Section' => array(
+    public static $relationships = [
+        'Section' => [
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Section'
             ,'local' => 'CourseSectionID'
-        )
-        ,'Person' => array(
+        ]
+        ,'Person' => [
             'type' => 'one-one'
             ,'class' => 'Person'
-        )
-    );
+        ]
+    ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Section'
         ,'Person'
-    );
-    
+    ];
+
     public static $validators = [
         'CourseSectionID' => [
             'validator' => 'number',
@@ -73,15 +73,15 @@ class SectionParticipant extends \ActiveRecord
         ]
     ];
 
-    public static function create($values = array(), $save = false)
+    public static function create($values = [], $save = false)
     {
         try {
             $Participant = parent::create($values, $save);
         } catch (\DuplicateKeyException $e) {
-            $Participant = static::getByWhere(array(
+            $Participant = static::getByWhere([
                 'CourseSectionID' => $values['Section'] ? $values['Section']->ID : $values['SectionID']
                 ,'PersonID' => $values['Person'] ? $values['Person']->ID : $values['PersonID']
-            ));
+            ]);
 
             if (!empty($values['Role'])) {
                 $Participant->Role = $values['Role'];
@@ -94,5 +94,4 @@ class SectionParticipant extends \ActiveRecord
 
         return $Participant;
     }
-
 }

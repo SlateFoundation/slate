@@ -8,7 +8,7 @@ class RegistrationRequestHandler extends \RequestHandler
     public static $enableRegistration = true;
     public static $onRegisterComplete;
     public static $applyRegistrationData;
-    public static $registrationFields = array(
+    public static $registrationFields = [
         'FirstName'
         ,'LastName'
         ,'Gender'
@@ -17,7 +17,7 @@ class RegistrationRequestHandler extends \RequestHandler
         ,'Password'
         ,'Location'
         ,'About'
-    );
+    ];
 
     public static function handleRequest()
     {
@@ -32,7 +32,7 @@ class RegistrationRequestHandler extends \RequestHandler
         }
     }
 
-    public static function handleRegistrationRequest($overrideFields = array())
+    public static function handleRegistrationRequest($overrideFields = [])
     {
         if ($GLOBALS['Session']->PersonID) {
             return static::throwError('You are already logged in. Please log out if you need to register a new account.');
@@ -62,16 +62,16 @@ class RegistrationRequestHandler extends \RequestHandler
             }
 
             // save person fields
-            $User->setFields(array_merge($requestFields, array(
+            $User->setFields(array_merge($requestFields, [
                 'AccountLevel' => User::$fields['AccountLevel']['default']
-            ), $overrideFields));
+            ], $overrideFields));
 
             if (!empty($_REQUEST['Password'])) {
                 $User->setClearPassword($_REQUEST['Password']);
             }
 
             // additional checks
-            $additionalErrors = array();
+            $additionalErrors = [];
             if (empty($_REQUEST['Password']) || (strlen($_REQUEST['Password']) < User::$minPasswordLength)) {
                 $additionalErrors['Password'] = 'Password must be at least '.User::$minPasswordLength.' characters long.';
             } elseif (empty($_REQUEST['PasswordConfirm']) || ($_REQUEST['Password'] != $_REQUEST['PasswordConfirm'])) {
@@ -80,7 +80,7 @@ class RegistrationRequestHandler extends \RequestHandler
 
             // configurable hook
             if (is_callable(static::$applyRegistrationData)) {
-                call_user_func_array(static::$applyRegistrationData, array($User, $_REQUEST, &$additionalErrors));
+                call_user_func_array(static::$applyRegistrationData, [$User, $_REQUEST, &$additionalErrors]);
             }
 
             // validate
@@ -89,23 +89,23 @@ class RegistrationRequestHandler extends \RequestHandler
                 $User->save();
 
                 // upgrade session
-                $GLOBALS['Session'] = $GLOBALS['Session']->changeClass('UserSession', array(
+                $GLOBALS['Session'] = $GLOBALS['Session']->changeClass('UserSession', [
                     'PersonID' => $User->ID
-                ));
+                ]);
 
                 // send welcome email
-                \Emergence\Mailer\Mailer::sendFromTemplate($User->EmailRecipient, 'registerComplete', array(
+                \Emergence\Mailer\Mailer::sendFromTemplate($User->EmailRecipient, 'registerComplete', [
                     'User' => $User
-                ));
+                ]);
 
                 if (is_callable(static::$onRegisterComplete)) {
                     call_user_func(static::$onRegisterComplete, $User, $_REQUEST);
                 }
 
-                return static::respond('registerComplete', array(
+                return static::respond('registerComplete', [
                     'success' => true
                     ,'data' => $User
-                ));
+                ]);
             }
 
             if (count($additionalErrors)) {
@@ -118,10 +118,10 @@ class RegistrationRequestHandler extends \RequestHandler
             $User->setFields($overrideFields);
         }
 
-        return static::respond('register', array(
+        return static::respond('register', [
             'success' => false
             ,'data' => $User
-        ));
+        ]);
     }
 
 
@@ -137,20 +137,20 @@ class RegistrationRequestHandler extends \RequestHandler
             } elseif (!$User->PrimaryEmail) {
                 $error = 'Unforunately, there is no email address on file for this account. Please contact an administrator.';
             } else {
-                $Token = \PasswordToken::create(array(
+                $Token = \PasswordToken::create([
                     'CreatorID' => $User->ID
-                ), true);
+                ], true);
 
                 $Token->sendEmail($User->PrimaryEmail->toRecipientString());
 
-                return static::respond('recoverPasswordComplete', array(
+                return static::respond('recoverPasswordComplete', [
                     'success' => true
-                ));
+                ]);
             }
         }
 
-        return static::respond('recoverPassword', array(
+        return static::respond('recoverPassword', [
             'error' => isset($error) ? $error : false
-        ));
+        ]);
     }
 }

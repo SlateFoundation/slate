@@ -9,7 +9,7 @@ class Event extends \ActiveRecord
     // support subclassing
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
     public static $collectionRoute = '/events';
 
     // ActiveRecord configuration
@@ -17,74 +17,74 @@ class Event extends \ActiveRecord
     public static $singularNoun = 'event';
     public static $pluralNoun = 'events';
 
-    public static $fields = array(
-        'Handle' => array(
+    public static $fields = [
+        'Handle' => [
             'unique' => true
-        )
+        ]
         ,'Title'
-        ,'Status' => array(
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Published', 'Deleted')
+            ,'values' => ['Hidden','Published', 'Deleted']
             ,'default' => 'Published'
-        )
-        ,'StartTime' => array(
+        ]
+        ,'StartTime' => [
             'type' => 'timestamp'
-        )
-        ,'EndTime' => array(
+        ]
+        ,'EndTime' => [
             'type' => 'timestamp'
             ,'notnull' => false
-        )
-        ,'Location' => array(
+        ]
+        ,'Location' => [
             'type' => 'string'
             ,'notnull' => false
-        )
-        ,'Description' => array(
+        ]
+        ,'Description' => [
             'type' => 'clob'
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Comments' => array(
+    public static $relationships = [
+        'Comments' => [
             'type' => 'context-children'
             ,'class' => 'Comment'
-            ,'order' => array('ID' => 'DESC')
-        )
-    );
+            ,'order' => ['ID' => 'DESC']
+        ]
+    ];
 
-    public static $searchConditions = array(
-        'Title' => array(
-            'qualifiers' => array('any', 'title')
+    public static $searchConditions = [
+        'Title' => [
+            'qualifiers' => ['any', 'title']
             ,'points' => 3
             ,'sql' => 'Title Like "%%%s%%"'
-        )
-        ,'Handle' => array(
-            'qualifiers' => array('any', 'handle')
+        ]
+        ,'Handle' => [
+            'qualifiers' => ['any', 'handle']
             ,'points' => 3
             ,'sql' => 'Handle Like "%%%s%%"'
-        )
-        ,'Description' => array(
-            'qualifiers' => array('any', 'description')
+        ]
+        ,'Description' => [
+            'qualifiers' => ['any', 'description']
             ,'points' => 1
             ,'sql' => 'Description Like "%%%s%%"'
-        )
-        ,'Location' => array(
-            'qualifiers' => array('any', 'location')
+        ]
+        ,'Location' => [
+            'qualifiers' => ['any', 'location']
             ,'points' => 2
             ,'sql' => 'Location Like "%%%s%%"'
-        )
-    );
+        ]
+    ];
 
 
-    public static function getUpcoming($options = array(), $conditions = array())
+    public static function getUpcoming($options = [], $conditions = [])
     {
         $conditions[] = 'EndTime >= CURRENT_TIMESTAMP';
         $conditions['Status'] = 'Published';
 
-        $options = array_merge(array(
+        $options = array_merge([
             'limit' => is_numeric($options) ? $options : 10
             ,'order' => 'StartTime'
-        ), is_array($options) ? $options : array());
+        ], is_array($options) ? $options : []);
 
         return static::getAllByWhere($conditions, $options);
     }
@@ -93,7 +93,7 @@ class Event extends \ActiveRecord
     {
         $dateFormat = 'Y-m-d';
         $timeFormat = 'Y-m-d H:i:s';
-        $dates = array();
+        $dates = [];
         $oneDay = 3600*24;
 
         foreach ($events AS &$Event) {
@@ -112,26 +112,26 @@ class Event extends \ActiveRecord
                     $endTime = strtotime(date($dateFormat, $startTime + $oneDay));
                 }
 
-                $dates[date($dateFormat, $startTime)][] = array(
+                $dates[date($dateFormat, $startTime)][] = [
                     'start' => $startTime
                     ,'end' => $endTime
                     ,'Event' => &$Event
-                );
+                ];
             }
         }
 
         return $dates;
     }
 
-    public static function getUntil($when, $options = array(), $conditions = array())
+    public static function getUntil($when, $options = [], $conditions = [])
     {
         $conditions[] = 'EndTime >= CURRENT_TIMESTAMP';
         $conditions[] = 'StartTime <= FROM_UNIXTIME('.strtotime($when).')';
         $conditions['Status'] = 'Published';
 
-        $options = array_merge(array(
+        $options = array_merge([
             'order' => 'StartTime'
-        ), is_array($options) ? $options : array());
+        ], is_array($options) ? $options : []);
 
         return static::getAllByWhere($conditions, $options);
     }
@@ -141,23 +141,23 @@ class Event extends \ActiveRecord
         // call parent
         parent::validate();
 
-        $this->_validator->validate(array(
+        $this->_validator->validate([
             'field' => 'Title'
             ,'errorMessage' => 'Please enter the title of the event'
-        ));
+        ]);
 
-        $this->_validator->validate(array(
+        $this->_validator->validate([
             'field' => 'StartTime'
             ,'validator' => 'datetime'
             ,'errorMessage' => 'Please provide the start time for the event'
-        ));
+        ]);
 
-        $this->_validator->validate(array(
+        $this->_validator->validate([
             'field' => 'Description'
             ,'validator' => 'string_multiline'
             ,'required' => false
             ,'errorMessage' => 'Please provide a description for the event'
-        ));
+        ]);
 
         HandleBehavior::onValidate($this, $this->_validator);
 

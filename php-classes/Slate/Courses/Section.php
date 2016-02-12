@@ -21,134 +21,134 @@ class Section extends \VersionedRecord
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
     public static $defaultClass = __CLASS__;
-    public static $subClasses = array(__CLASS__);
+    public static $subClasses = [__CLASS__];
 
-    public static $searchConditions = array(
-        'Code' => array(
-            'qualifiers' => array('any','code')
+    public static $searchConditions = [
+        'Code' => [
+            'qualifiers' => ['any','code']
             ,'points' => 3
             ,'sql' => 'Code LIKE "%%%s%%"'
-        ),
-        'Title' => array(
-            'qualifiers' => array('any','title')
+        ],
+        'Title' => [
+            'qualifiers' => ['any','title']
             ,'points' => 2
             ,'sql' => 'Title LIKE "%%%s%%"'
-        ),
-        'Teacher' => array(
-            'qualifiers' => array('teacher')
+        ],
+        'Teacher' => [
+            'qualifiers' => ['teacher']
             ,'callback' => 'getTeacherSearchSql'
-        ),
-        'Course' => array(
-            'qualifiers' => array('course')
+        ],
+        'Course' => [
+            'qualifiers' => ['course']
             ,'callback' => 'getCourseSearchSql'
-        ),
-        'Department' => array(
-            'qualifiers' => array('department')
+        ],
+        'Department' => [
+            'qualifiers' => ['department']
             ,'callback' => 'getDepartmentSearchSql'
-        ),
-        'Term' => array(
-            'qualifiers' => array('term')
+        ],
+        'Term' => [
+            'qualifiers' => ['term']
             ,'callback' => 'getTermSearchSql'
-        ),
-        'Schedule' => array(
-            'qualifiers' => array('schedule')
+        ],
+        'Schedule' => [
+            'qualifiers' => ['schedule']
             ,'callback' => 'getScheduleSearchSql'
-        ),
-        'Location' => array(
-            'qualifiers' => array('location')
+        ],
+        'Location' => [
+            'qualifiers' => ['location']
             ,'callback' => 'getLocationSearchSql'
-        )
-    );
+        ]
+    ];
 
-    public static $fields = array(
-        'CourseID' => array(
+    public static $fields = [
+        'CourseID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'index' => true
-        )
-        ,'Title' => array(
+        ]
+        ,'Title' => [
             'notnull' => true
-        )
-        ,'Code' => array(
+        ]
+        ,'Code' => [
             'unique' => true
-        )
-        ,'Status' => array(
+        ]
+        ,'Status' => [
             'type' => 'enum'
-            ,'values' => array('Hidden','Live','Deleted')
+            ,'values' => ['Hidden','Live','Deleted']
             ,'default' => 'Live'
-        )
-        ,'Notes' => array(
+        ]
+        ,'Notes' => [
             'type' => 'clob'
             ,'fulltext' => true
             ,'notnull' => false
-        )
-        ,'StudentsCapacity' => array(
+        ]
+        ,'StudentsCapacity' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-        ,'TermID' => array(
+        ]
+        ,'TermID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-        ,'ScheduleID' => array(
+        ]
+        ,'ScheduleID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-        ,'LocationID' => array(
+        ]
+        ,'LocationID' => [
             'type' => 'integer'
             ,'unsigned' => true
             ,'notnull' => false
-        )
-    );
+        ]
+    ];
 
-    public static $relationships = array(
-        'Course' => array(
+    public static $relationships = [
+        'Course' => [
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Course'
-        )
-        ,'Term' => array(
+        ]
+        ,'Term' => [
             'type' => 'one-one'
             ,'class' => 'Slate\\Term'
-        )
-        ,'Schedule' => array(
+        ]
+        ,'Schedule' => [
             'type' => 'one-one'
             ,'class' => 'Slate\\Courses\\Schedule'
-        )
-        ,'Location' => array(
+        ]
+        ,'Location' => [
             'type' => 'one-one'
             ,'class' => 'Emergence\\Locations\\Location'
-        )
-        ,'Participants' => array(
+        ]
+        ,'Participants' => [
             'type' => 'one-many'
             ,'class' => 'Slate\\Courses\\SectionParticipant'
             ,'foreign' => 'CourseSectionID'
             ,'order' => 'Role DESC, (SELECT CONCAT(LastName,FirstName) FROM people WHERE people.id = PersonID)'
-        )
-        ,'Teachers' => array(
+        ]
+        ,'Teachers' => [
             'type' => 'many-many'
             ,'class' => 'Person'
             ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
             ,'linkLocal' => 'CourseSectionID'
             ,'linkForeign' => 'PersonID'
-            ,'conditions' => array('Link.Role = "Teacher"')
-        )
-        ,'Students' => array(
+            ,'conditions' => ['Link.Role = "Teacher"']
+        ]
+        ,'Students' => [
             'type' => 'many-many'
             ,'class' => 'Person'
             ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
             ,'linkLocal' => 'CourseSectionID'
             ,'linkForeign' => 'PersonID'
-            ,'conditions' => array('Link.Role = "Student"')
-        )
-        ,'Mappings' => array(
+            ,'conditions' => ['Link.Role = "Student"']
+        ]
+        ,'Mappings' => [
             'type' => 'context-children'
             ,'class' => 'Emergence\Connectors\Mapping'
             ,'contextClass' => __CLASS__
-        )
-    );
+        ]
+    ];
 
     public static $validators = [
         'Course' => [
@@ -157,24 +157,24 @@ class Section extends \VersionedRecord
         ]
     ];
 
-    public static $dynamicFields = array(
+    public static $dynamicFields = [
         'Course'
         ,'Term'
         ,'Schedule'
         ,'Location'
-        ,'StudentsCount' => array(
+        ,'StudentsCount' => [
             'method' => 'getStudentsCount'
-        )
-    );
+        ]
+    ];
 
-    public static $sorters = array(
-        'CourseTitle' => array(__CLASS__, 'sortCourseTitle')
-    );
+    public static $sorters = [
+        'CourseTitle' => [__CLASS__, 'sortCourseTitle']
+    ];
 
 
     public static function sortCourseTitle($dir, $name)
     {
-        return '(SELECT Course.Title FROM courses Course WHERE Course.ID = CourseSection.CourseID) ' . $dir;
+        return '(SELECT Course.Title FROM courses Course WHERE Course.ID = CourseSection.CourseID) '.$dir;
     }
 
     public function save($deep = true)
@@ -186,18 +186,18 @@ class Section extends \VersionedRecord
 
         // generate short code
         if (!$this->Code) {
-            $this->Code = HandleBehavior::getUniqueHandle("\\Slate\\Courses\\Section", $this->Course->Code, array(
+            $this->Code = HandleBehavior::getUniqueHandle("\\Slate\\Courses\\Section", $this->Course->Code, [
                 'handleField' => 'Code'
                 ,'incrementerFormat' => '%s-%03u'
                 ,'alwaysSuffix' => true
                 ,'case' => 'upper'
-            ));
+            ]);
         }
 
         // call parent
         parent::save($deep);
     }
-    
+
     public function getHandle()
     {
         return $this->Code;
@@ -215,7 +215,7 @@ class Section extends \VersionedRecord
 
     public static function assignCourses($personID, $courses, $role='Student')
     {
-        $assignedCourses = array();
+        $assignedCourses = [];
 
         foreach ($courses AS $courseTitle) {
             if (!$courseTitle) {
@@ -233,11 +233,11 @@ class Section extends \VersionedRecord
 
     public function assignParticipant($personID, $role)
     {
-        $participantData = array(
+        $participantData = [
             'CourseSectionID' => $this->ID
             ,'PersonID' => $personID
             ,'role' => $role
-        );
+        ];
 
         try {
             return SectionParticipant::create($participantData, true);
@@ -245,7 +245,7 @@ class Section extends \VersionedRecord
             return SectionParticipant::getByWhere($participantData);
         }
     }
-    
+
     public function getStudentsCount()
     {
         try {
@@ -259,16 +259,16 @@ class Section extends \VersionedRecord
             return 0;
         }
     }
-    
+
     // search SQL generators
     protected static function getTeacherSearchSql($term, $condition)
     {
         $Teacher = \Emergence\People\User::getByUsername($term);
-        
+
         if (!$Teacher) {
             return 'FALSE';
         }
-        
+
         try {
             $sectionIds = \DB::allValues(
                 'CourseSectionID'
@@ -278,15 +278,15 @@ class Section extends \VersionedRecord
                     ,$Teacher->ID
                 ]
             );
-        }  catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException $e) {
             return 'FALSE';
         }
-        
+
         if (!count($sectionIds)) {
             return 'FALSE';
         }
 
-        return 'ID IN (' . implode(',', $sectionIds) . ')';
+        return 'ID IN ('.implode(',', $sectionIds).')';
     }
 
     protected static function getCourseSearchSql($term, $condition)
@@ -299,11 +299,11 @@ class Section extends \VersionedRecord
     protected static function getDepartmentSearchSql($term, $condition)
     {
         $Department = Department::getByHandle($term);
-        
+
         if (!$Department) {
             return 'FALSE';
         }
-        
+
         $courseIds = \DB::allValues(
             'ID'
             ,'SELECT ID FROM `%s` Course WHERE Course.DepartmentID = %u'
@@ -312,22 +312,22 @@ class Section extends \VersionedRecord
                 ,$Department->ID
             ]
         );
-        
+
         if (!count($courseIds)) {
             return 'FALSE';
         }
 
-        return 'CourseID IN (' . implode(',', $courseIds) . ')';
+        return 'CourseID IN ('.implode(',', $courseIds).')';
     }
 
     protected static function getTermSearchSql($term, $condition)
     {
         $Term = \Slate\Term::getByHandle($term);
-        
+
         if ($Term) {
-            return 'TermID IN (' . implode(',', $Term->getRelatedTermIds()) . ')';
+            return 'TermID IN ('.implode(',', $Term->getRelatedTermIds()).')';
         }
-        
+
         return 'FALSE';
     }
 

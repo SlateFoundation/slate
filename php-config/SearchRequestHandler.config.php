@@ -1,78 +1,78 @@
 <?php
 
 if ($GLOBALS['Session']->hasAccountLevel('User')) {
-    SearchRequestHandler::$searchClasses['User'] = array(
-        'fields' => array(
-            array(
+    SearchRequestHandler::$searchClasses['User'] = [
+        'fields' => [
+            [
                 'field' => 'FirstName'
                 ,'method' => 'like'
-            ), array(
+            ], [
                 'field' => 'LastName'
                 ,'method' => 'like'
-                ), array(
+                ], [
                 'field' => 'Username'
                 ,'method' => 'like'
-            ), array(
+            ], [
                 'field' => 'FullName'
                 ,'method' => 'sql'
                 ,'sql' => 'CONCAT(FirstName," ",LastName) = "%s"'
-            )
-        )
-        ,'conditions' => array('AccountLevel != "Deleted"')
-    );
+            ]
+        ]
+        ,'conditions' => ['AccountLevel != "Deleted"']
+    ];
 }
 
-SearchRequestHandler::$searchClasses['Tag'] = array(
-    'fields' => array(
+SearchRequestHandler::$searchClasses['Tag'] = [
+    'fields' => [
         'Title'
-        ,array(
+        ,[
             'field' => 'Handle'
             ,'method' => 'like'
-        )
-    )
-);
+        ]
+    ]
+];
 
-SearchRequestHandler::$searchClasses['Slate\Courses\Section'] = array(
-    'fields' => array(
+SearchRequestHandler::$searchClasses['Slate\Courses\Section'] = [
+    'fields' => [
         'Title'
-        ,array(
+        ,[
             'field' => 'Code'
             ,'method' => 'like'
-        )
-    )
-    ,'conditions' => array('Status = "Live"')
-);
+        ]
+    ]
+    ,'conditions' => ['Status = "Live"']
+];
 
-SearchRequestHandler::$searchClasses['Emergence\CMS\Page'] = array(
-    'fields' => array(
+SearchRequestHandler::$searchClasses['Emergence\CMS\Page'] = [
+    'fields' => [
         'Title'
-        ,array(
+        ,[
             'field' => 'Handle'
             ,'method' => 'like'
-        )
-    )
-    ,'conditions' => array('Class' => 'Emergence\CMS\Page', 'Status' => 'Published', 'Published IS NULL OR Published <= CURRENT_TIMESTAMP')
-);
+        ]
+    ]
+    ,'conditions' => ['Class' => 'Emergence\CMS\Page', 'Status' => 'Published', 'Published IS NULL OR Published <= CURRENT_TIMESTAMP']
+];
 
-SearchRequestHandler::$searchClasses['Emergence\CMS\BlogPost'] = array(
-    'fields' => array(
+SearchRequestHandler::$searchClasses['Emergence\CMS\BlogPost'] = [
+    'fields' => [
         'Title'
-        ,array(
+        ,[
             'field' => 'Handle'
             ,'method' => 'like'
-        )
-    )
-    ,'conditions' => array('Class' => 'Emergence\CMS\BlogPost', 'Status' => 'Published', 'Published IS NULL OR Published <= CURRENT_TIMESTAMP')
-);
+        ]
+    ]
+    ,'conditions' => ['Class' => 'Emergence\CMS\BlogPost', 'Status' => 'Published', 'Published IS NULL OR Published <= CURRENT_TIMESTAMP']
+];
 
-SearchRequestHandler::$searchClasses['Emergence\Events\Event'] = array(
-    'fields' => array(
+SearchRequestHandler::$searchClasses['Emergence\Events\Event'] = [
+    'fields' => [
         'Title'
         ,'Description'
-        ,array(
+        ,[
             'field' => 'Handle'
             ,'method' => 'like'
-        )
-    )
-    ,'conditions' => array('Status = "Published"')
-);
+        ]
+    ]
+    ,'conditions' => ['Status = "Published"']
+];

@@ -16,10 +16,9 @@ abstract class AbstractMigration
 
     public static function upgrade()
     {
-
     }
 
-    protected static function addSql($sql, $params = array())
+    protected static function addSql($sql, $params = [])
     {
         if (static::$printLog) {
             print(DB::prepareQuery($sql, $params).';'.PHP_EOL);
@@ -42,10 +41,10 @@ abstract class AbstractMigration
 
     public static function getAllBySequence()
     {
-        $migrations = array();
+        $migrations = [];
 
         Emergence_FS::cacheTree('php-classes/Migrations');
-    
+
         foreach (Emergence_FS::getTreeFiles('php-classes/Migrations') AS $migrationNode) {
             if (!is_a($migrationNode, 'SiteFile')) {
                 continue;
@@ -63,7 +62,7 @@ abstract class AbstractMigration
 #    
 #            $migrations[$migrationClass] = $migrationClass::$sequence;
         }
-        
+
         return $migrations;
     }
 }

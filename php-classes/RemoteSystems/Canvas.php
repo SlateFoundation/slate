@@ -8,15 +8,15 @@ class Canvas
     public static $apiToken;
     public static $accountID;
 
-    public static function executeRequest($path, $requestMethod = 'GET', $params = array(), $headers = array())
+    public static function executeRequest($path, $requestMethod = 'GET', $params = [], $headers = [])
     {
-        $url = 'https://'.static::$canvasHost . '/api/v1/' . $path;
+        $url = 'https://'.static::$canvasHost.'/api/v1/'.$path;
 
         // confugre cURL
         $ch = curl_init();
 
         if ($requestMethod == 'GET') {
-            $url .= '?' . (is_string($params) ? $params : http_build_query($params));
+            $url .= '?'.(is_string($params) ? $params : http_build_query($params));
         } else {
             if ($requestMethod == 'POST') {
                 curl_setopt($ch, CURLOPT_POST, true);
@@ -32,9 +32,9 @@ class Canvas
         }
 
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge(array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge([
             sprintf('Authorization: Bearer %s', static::$apiToken)
-        ), $headers));
+        ], $headers));
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -115,11 +115,11 @@ class Canvas
         return static::executeRequest("courses/$courseID", 'PUT', $data);
     }
 
-    static public function deleteCourse($courseID, $event = 'conclude')
+    public static function deleteCourse($courseID, $event = 'conclude')
     {
-        return static::executeRequest("courses/$courseID", 'DELETE', array(
+        return static::executeRequest("courses/$courseID", 'DELETE', [
             'event' => $event
-        ));
+        ]);
     }
 
 
@@ -131,7 +131,7 @@ class Canvas
 
     public static function getSectionsByCourse($courseID)
     {
-        return static::executeRequest("courses/$courseID/sections", 'GET', array('per_page' => 1000));
+        return static::executeRequest("courses/$courseID/sections", 'GET', ['per_page' => 1000]);
     }
 
     public static function createSection($courseID, $data)
@@ -144,7 +144,7 @@ class Canvas
         return static::executeRequest("sections/$sectionID", 'PUT', $data);
     }
 
-    static public function deleteSection($sectionID)
+    public static function deleteSection($sectionID)
     {
         return static::executeRequest("sections/$sectionID", 'DELETE');
     }
@@ -153,7 +153,7 @@ class Canvas
     // Enrollments: https://canvas.instructure.com/doc/api/enrollments.html
     public static function getEnrollmentsBySection($sectionID)
     {
-        return static::executeRequest("sections/$sectionID/enrollments", 'GET', array('per_page' => 1000));
+        return static::executeRequest("sections/$sectionID/enrollments", 'GET', ['per_page' => 1000]);
     }
 
     public static function createEnrollmentsForSection($sectionID, $data)
@@ -163,8 +163,8 @@ class Canvas
 
     public static function deleteEnrollmentsForCourse($courseID, $enrollmentID, $task = 'conclude')
     {
-        return static::executeRequest("courses/$courseID/enrollments/$enrollmentID", 'DELETE', array(
+        return static::executeRequest("courses/$courseID/enrollments/$enrollmentID", 'DELETE', [
             'task' => $task
-        ));
+        ]);
     }
 }

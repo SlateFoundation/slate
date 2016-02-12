@@ -8,7 +8,8 @@ class DashboardRequestHandler extends \RequestHandler
 {
     public static $sources = [];
 
-    public static function handleRequest() {
+    public static function handleRequest()
+    {
         $GLOBALS['Session']->requireAuthentication();
 
         return parent::respond('dashboard', [

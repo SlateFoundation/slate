@@ -8,6 +8,8 @@ use Emergence\Connectors\Job;
 use Emergence\Connectors\Mapping;
 use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 use Emergence\Util\Capitalizer;
+
+use Exception;
 use Psr\Log\LogLevel;
 
 use Slate\People\Student;
@@ -53,7 +55,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // column maps
-    public static $studentColumns = array(
+    public static $studentColumns = [
         'Key' => 'ForeignKey',
         'School ID Number' => 'StudentNumber',
             'Student ID' => 'StudentNumber',
@@ -79,9 +81,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 #        'Email',
 #        'Phone',
 #        'Postal Address'
-    );
+    ];
 
-    public static $alumniColumns = array(
+    public static $alumniColumns = [
         'Username' => 'Username',
         'Password' => 'Password',
         'Email' => 'Email',
@@ -97,9 +99,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             'Birthday' => 'BirthDate',
         'Graduation Year' => 'GraduationYear',
             'Graduation' => 'GraduationYear'
-    );
+    ];
 
-    public static $staffColumns = array(
+    public static $staffColumns = [
         'First Name' => 'FirstName',
             'First' => 'FirstName',
         'Last Name' => 'LastName',
@@ -119,9 +121,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         'Email' => 'Email',
 #        'Phone',
 #        'Postal Address'
-    );
+    ];
 
-    public static $sectionColumns = array(
+    public static $sectionColumns = [
         'Section ID' => 'SectionExternal',
         'Section Code' => 'SectionCode',
             'Section code' => 'SectionCode',
@@ -138,39 +140,39 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             '# of Students' => 'StudentsCapacity',
             'Seats' => 'StudentsCapacity',
         'Notes' => 'Notes'
-    );
+    ];
 
-    public static $enrollmentColumns = array(
+    public static $enrollmentColumns = [
         'School ID Number' => 'StudentNumber',
             'School ID' => 'StudentNumber',
             'Student Number' => 'StudentNumber'
-    );
+    ];
 
 
     // minimum required columns
-    public static $studentRequiredColumns = array(
+    public static $studentRequiredColumns = [
         'StudentNumber',
         'FirstName',
         'LastName'
-    );
+    ];
 
-    public static $alumniRequiredColumns = array(
+    public static $alumniRequiredColumns = [
         'FirstName',
         'LastName'
-    );
+    ];
 
-    public static $staffRequiredColumns = array(
+    public static $staffRequiredColumns = [
         'FirstName',
         'LastName'
-    );
+    ];
 
-    public static $sectionRequiredColumns = array(
+    public static $sectionRequiredColumns = [
         'CourseCode'
-    );
+    ];
 
-    public static $enrollmentRequiredColumns = array(
+    public static $enrollmentRequiredColumns = [
         'StudentNumber'
-    );
+    ];
 
 
     // workflow implementations
@@ -195,13 +197,17 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static function pullStudents(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
     {
         // check input
-        static::_requireColumns('students', $spreadsheet, static::$studentRequiredColumns, static::$studentColumns);
-
+        try {
+            static::_requireColumns('students', $spreadsheet, static::$studentRequiredColumns, static::$studentColumns);
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
 
         // initialize results
-        $results = array(
+        $results = [
             'analyzed' => 0
-        );
+        ];
 
 
         // loop through rows
@@ -232,7 +238,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $results['failed'][$e->getMessageKey()]++;
                 }
 
-                $Job->log($e->getMessage(), LogLevel::ERROR);
+                $Job->logException($e);
                 continue;
             }
 
@@ -257,9 +263,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         static::_requireColumns('alumni', $spreadsheet, static::$alumniRequiredColumns, static::$alumniColumns);
 
         // initialize results
-        $results = array(
+        $results = [
             'analyzed' => 0
-        );
+        ];
 
 
         // loop through rows
@@ -290,7 +296,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $results['failed'][$e->getMessageKey()]++;
                 }
 
-                $Job->log($e->getMessage(), LogLevel::ERROR);
+                $Job->logException($e);
                 continue;
             }
 
@@ -315,9 +321,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         static::_requireColumns('staff', $spreadsheet, static::$staffRequiredColumns, static::$staffColumns);
 
         // initialize results
-        $results = array(
+        $results = [
             'analyzed' => 0
-        );
+        ];
 
 
         // loop through rows
@@ -334,9 +340,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
-                $Record = User::create(array(
+                $Record = User::create([
                     'AccountLevel' => 'Staff'
-                ));
+                ]);
             }
 
 
@@ -350,7 +356,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $results['failed'][$e->getMessageKey()]++;
                 }
 
-                $Job->log($e->getMessage(), LogLevel::ERROR);
+                $Job->logException($e);
                 continue;
             }
 
@@ -375,18 +381,20 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         static::_requireColumns('Sections', $spreadsheet, static::$sectionRequiredColumns, static::$sectionColumns);
 
         if (empty($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm required to import sections');
+            $Job->logException(new Exception('masterTerm required to import sections'));
+            return false;
         }
 
         if (!$MasterTerm = Term::getByHandle($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm not found');
+            $Job->logException(new Exception('masterTerm not found'));
+            return false;
         }
 
 
         // initialize results
-        $results = array(
+        $results = [
             'analyzed' => 0
-        );
+        ];
 
 
         // loop through rows
@@ -419,12 +427,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             if (!empty($row['SectionExternal'])) {
                 $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $row['SectionExternal']);
 
-                $Mapping = Mapping::getByWhere(array(
+                $Mapping = Mapping::getByWhere([
                     'ContextClass' => Section::getStaticRootClass(),
                     'Connector' => static::getConnectorId(),
                     'ExternalKey' => static::$sectionForeignKeyName,
                     'ExternalIdentifier' => $externalIdentifier
-                ));
+                ]);
 
                 if ($Mapping) {
                     $Record = $Mapping->Context;
@@ -439,6 +447,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // create new section
             if (!$Record) {
                 $Record = Section::create();
+
+                if (!empty($row['SectionCode'])) {
+                    $Record->Code = $row['SectionCode'];
+                }
             }
 
 
@@ -462,10 +474,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // apply values from spreadsheet
             if (!$Record->Course = Course::getByCode($row['CourseCode'])) {
-                $Record->Course = Course::create(array(
+                $Record->Course = Course::create([
                     'Code' => $row['CourseCode'],
                     'Title' => $row['CourseCode']
-                ));
+                ]);
             }
 
             if (!empty($row['Term'])) {
@@ -546,13 +558,13 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // save mapping
             if (!$Mapping && $externalIdentifier) {
-                $Mapping = Mapping::create(array(
+                $Mapping = Mapping::create([
                     'Context' => $Record
                     ,'Source' => 'creation'
                     ,'Connector' => static::getConnectorId()
                     ,'ExternalKey' => static::$sectionForeignKeyName
                     ,'ExternalIdentifier' => $externalIdentifier
-                ), !$pretend);
+                ], !$pretend);
 
                 $Job->log(sprintf('mapping external identifier %s to section %s', $externalIdentifier, $Record->getTitle()), LogLevel::NOTICE);
             }
@@ -581,21 +593,23 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         static::_requireColumns('Enrollments', $spreadsheet, static::$enrollmentRequiredColumns, static::$enrollmentColumns);
 
         if (empty($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm required to import sections');
+            $Job->logException(new Exception('masterTerm required to import enrollments'));
+            return false;
         }
 
         if (!$MasterTerm = Term::getByHandle($Job->Config['masterTerm'])) {
-            throw new \Exception('masterTerm not found');
+            $Job->logException(new Exception('masterTerm not found'));
+            return false;
         }
 
 
         // initialize results
-        $rostersBySection = array();
-        $sectionsByIdentifier = array();
-        $results = array(
+        $rostersBySection = [];
+        $sectionsByIdentifier = [];
+        $results = [
             'analyzed' => 0,
             'analyzed-enrollments' => 0
-        );
+        ];
 
 
         // loop through rows for incoming roster
@@ -636,7 +650,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
                 // Optionally split code based user value
                 if (!$Job->Config['enrollmentDivider']) {
-                    $sectionIdentifiers = array($sectionIdentifier);
+                    $sectionIdentifiers = [$sectionIdentifier];
                 } else {
                     $sectionIdentifiers = explode($Job->Config['enrollmentDivider'], $sectionIdentifier);
                 }
@@ -646,15 +660,21 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     // get cached section or look up mapping
                     if (!$Section = $sectionsByIdentifier[$sectionIdentifier]) {
                         $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
-                        $Mapping = Mapping::getByWhere(array(
+                        $Mapping = Mapping::getByWhere([
                             'ContextClass' => Section::getStaticRootClass(),
                             'Connector' => static::getConnectorId(),
                             'ExternalKey' => static::$sectionForeignKeyName,
                             'ExternalIdentifier' => $externalIdentifier
-                        ));
+                        ]);
 
                         if ($Mapping) {
                             $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
+
+                            if (!$Section) {
+                                $Job->log(sprintf('Section #%u not found for mapping #%u from %s', $Mapping->ContextID, $Mapping->ID, $Mapping->ExternalIdentifier), LogLevel::ERROR);
+                                $results['failed']['orphan-mapping'][$sectionIdentifier]++;
+                                continue;
+                            }
                         } else {
                             $results['failed']['section-not-found'][$sectionIdentifier]++;
                             continue;
@@ -686,12 +706,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     {
         // try to get existing account by foreign key column
         if (!empty($row['ForeignKey'])) {
-            $Mapping = Mapping::getByWhere(array(
+            $Mapping = Mapping::getByWhere([
                 'ContextClass' => User::getStaticRootClass(),
                 'Connector' => static::getConnectorId(),
                 'ExternalKey' => static::$personForeignKeyName,
                 'ExternalIdentifier' => $row['ForeignKey']
-            ));
+            ]);
 
             if ($Mapping) {
                 return $Mapping->Context;
@@ -719,7 +739,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
             // check if the domain matches the user email domain and try a username lookup
-            list ($emailLocal, $emailDomain) = explode('@', $row['Email'], 2);
+            list($emailLocal, $emailDomain) = explode('@', $row['Email'], 2);
             if (strcasecmp($emailDomain, Slate::$userEmailDomain) == 0 && ($User = User::getByUsername($emailLocal))) {
                 return $User;
             }
@@ -769,14 +789,14 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             if (!empty($row['Username'])) {
                 $User->Username = $row['Username'];
             } else {
-                $domainConstraints = array();
+                $domainConstraints = [];
                 if (!$User->isPhantom) {
-                    $domainConstraints[] = 'ID != ' . $User->ID;
+                    $domainConstraints[] = 'ID != '.$User->ID;
                 }
 
-                $User->Username = User::getUniqueUsername($User->FirstName, $User->LastName, array(
+                $User->Username = User::getUniqueUsername($User->FirstName, $User->LastName, [
                     'domainConstraints' => $domainConstraints
-                ));
+                ]);
 
                 if ($User->isPhantom) {
                     $Job->log(sprintf('Assigned username %s', $User->Username), LogLevel::DEBUG);
@@ -854,12 +874,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 );
             }
         } elseif (!empty($row['AdvisorForeignKey'])) {
-            $Mapping = Mapping::getByWhere(array(
+            $Mapping = Mapping::getByWhere([
                 'ContextClass' => User::getStaticRootClass(),
                 'Connector' => static::getConnectorId(),
                 'ExternalKey' => static::$personForeignKeyName,
                 'ExternalIdentifier' => $row['AdvisorForeignKey']
-            ));
+            ]);
 
             if (!$Mapping) {
                 throw new RemoteRecordInvalid(
@@ -881,7 +901,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $User->PrimaryEmail->Label = 'Imported Email';
             }
 
-            $User->ContactPoints = array_merge($User->ContactPoints, array($User->PrimaryEmail));
+            $User->ContactPoints = array_merge($User->ContactPoints, [$User->PrimaryEmail]);
         } elseif (Slate::$userEmailDomain && $Job->Config['autoAssignEmail']) {
             // if one is already set and updateUsernames is enabled, check if this contact point should be updated
             if ($User->PrimaryEmail) {
@@ -895,13 +915,13 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $User->PrimaryEmail = Email::fromString(Slate::generateUserEmail($User));
                 $User->PrimaryEmail->Label = 'School Email';
 
-                $User->ContactPoints = array_merge($User->ContactPoints, array($User->PrimaryEmail));
+                $User->ContactPoints = array_merge($User->ContactPoints, [$User->PrimaryEmail]);
                 $Job->log(sprintf('Assigned auto-generated email address %o', $User->PrimaryEmail) , LogLevel::DEBUG);
             }
         }
 
         if ($User->PrimaryEmail) {
-            $logEntry = $Job->logRecordDelta($User->PrimaryEmail, array(
+            $logEntry = $Job->logRecordDelta($User->PrimaryEmail, [
                 'messageRenderer' => function($logEntry) use ($User) {
                     return sprintf(
                         '%s user %s primary email to %s',
@@ -910,7 +930,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                         $logEntry['record']->toString()
                     );
                 }
-            ));
+            ]);
 
             if ($logEntry) {
                 if ($logEntry['action'] == 'create') {
@@ -985,10 +1005,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     );
                 }
 
-                $primaryGroup = Group::create(array(
-                    'Name' => 'Class of ' . $User->GraduationYear,
+                $primaryGroup = Group::create([
+                    'Name' => 'Class of '.$User->GraduationYear,
                     'Parent' => $parentGroup
-                ));
+                ]);
 
                 $Job->log(sprintf('create graduation group for %s', $primaryGroup->Name), LogLevel::NOTICE);
             }
@@ -997,16 +1017,16 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             if (!empty($row['Group'])) {
                 $parentGroup = $primaryGroup;
 
-                $primaryGroup = Group::getByWhere(array(
+                $primaryGroup = Group::getByWhere([
                     'ParentID' => $parentGroup->ID,
                     'Name' => $row['Group']
-                ));
+                ]);
 
                 if (!$primaryGroup) {
-                    $primaryGroup = Group::create(array(
+                    $primaryGroup = Group::create([
                         'Name' => $row['Group'],
                         'Parent' => $parentGroup
-                    ));
+                    ]);
 
                     $Job->log(sprintf('create group %s in graduation group %s', $primaryGroup->Name, $parentGroup->Name), LogLevel::NOTICE);
                 }
@@ -1038,10 +1058,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // assign to determined group if needed
             if (!$foundGroup) {
                 $Job->log(sprintf('add %s to group %s', $User->getTitle(), $primaryGroup->isPhantom ? $primaryGroup->Name : $primaryGroup->getFullPath()), LogLevel::NOTICE);
-                $membership = GroupMember::create(array(
+                $membership = GroupMember::create([
                     'Group' => $primaryGroup
-                ));
-                $User->GroupMemberships = array_merge($User->GroupMemberships, array($membership));
+                ]);
+                $User->GroupMemberships = array_merge($User->GroupMemberships, [$membership]);
                 $results['added-to-group'][$primaryGroup->Name]++;
             }
         }
@@ -1056,25 +1076,25 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _getPersonLogOptions()
     {
-        return array(
-            'labelRenderers' => array(
+        return [
+            'labelRenderers' => [
                 'AdvisorID' => 'Advisor'
-            ),
-            'valueRenderers' => array(
+            ],
+            'valueRenderers' => [
                 'AdvisorID' => function($advisorId) {
                     return $advisorId ? User::getByID($advisorId)->getTitle() : null;
                 }
-            )
-        );
+            ]
+        ];
     }
 
     protected static function _getOrCreateParticipant(Section $Section, User $User, $role, $pretend = true)
     {
         if ($pretend) {
-            $Participant = SectionParticipant::getByWhere(array(
+            $Participant = SectionParticipant::getByWhere([
                 'CourseSectionID' => $Section->ID,
                 'PersonID' => $User->ID
-            ));
+            ]);
 
             if ($Participant) {
                 $Participant->Role = $role;
@@ -1084,11 +1104,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         }
 
         if (!$Participant) {
-            $Participant = SectionParticipant::create(array(
+            $Participant = SectionParticipant::create([
                 'Section' => $Section,
                 'Person' => $User,
                 'Role' => $role
-            ), !$pretend);
+            ], !$pretend);
         }
 
         return $Participant;
@@ -1096,7 +1116,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _logParticipant(Job $Job, SectionParticipant $Participant)
     {
-        return $Job->logRecordDelta($Participant, array(
+        return $Job->logRecordDelta($Participant, [
             'messageRenderer' => function($logEntry) {
                 $User = $logEntry['record']->Person;
                 $Section = $logEntry['record']->Section;
@@ -1108,7 +1128,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     return sprintf('Updated user %s in section %s to role %s', $User->getTitle(), $Section->getTitle(), $Role);
                 }
             }
-        ));
+        ]);
     }
 
     protected static $_currentMasterTerm;

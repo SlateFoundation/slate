@@ -6,58 +6,58 @@ use \Emergence\People\ContactPoint\Phone;
 
 class PhoneTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $phoneNumbers = array(
-        '1234567890' => array(
+    protected static $phoneNumbers = [
+        '1234567890' => [
             'serialized' => '1234567890',
             'string' => '(123) 456-7890',
             'html' => '<a class="contact-link contact-phone" href="tel:+11234567890">(123) 456-7890</a>'
-        ),
-        '5555555555' => array(
+        ],
+        '5555555555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '+15555555555' => array(
+        ],
+        '+15555555555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '+1 (555) 555.5555' => array(
+        ],
+        '+1 (555) 555.5555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '555.555.5555' => array(
+        ],
+        '555.555.5555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '555-555.5555' => array(
+        ],
+        '555-555.5555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '555.555-5555' => array(
+        ],
+        '555.555-5555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '(555)555.5555' => array(
+        ],
+        '(555)555.5555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '1-555-555-5555' => array(
+        ],
+        '1-555-555-5555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        ),
-        '15555555555' => array(
+        ],
+        '15555555555' => [
             'serialized' => '5555555555',
             'string' => '(555) 555-5555',
             'html' => '<a class="contact-link contact-phone" href="tel:+15555555555">(555) 555-5555</a>'
-        )
-    );
+        ]
+    ];
 
     public function testSerialize()
     {

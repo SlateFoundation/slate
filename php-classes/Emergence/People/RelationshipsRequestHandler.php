@@ -12,7 +12,7 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
     public static $accountLevelAPI = 'Staff';
-    public static $browseOrder = array('ID' => 'ASC');
+    public static $browseOrder = ['ID' => 'ASC'];
 
     public static function handleRecordsRequest($action = false)
     {
@@ -26,19 +26,19 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
 
     public static function handleTemplatesRequest()
     {
-        $templates = array();
+        $templates = [];
 
         foreach (Relationship::$templates AS $label => $options) {
             $options['Relationship']['Label'] = $label;
             $templates[] = $options;
         }
 
-        return static::respond('templates', array(
+        return static::respond('templates', [
             'data' => $templates
-        ));
+        ]);
     }
 
-    public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
         if (!empty($_REQUEST['person']) && ctype_digit($_REQUEST['person'])) {
             $conditions['PersonID'] = $_REQUEST['person'];

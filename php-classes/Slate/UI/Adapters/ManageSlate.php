@@ -41,6 +41,6 @@ class ManageSlate implements \Slate\UI\ILinksSource
                     '_icon' => 'records'
                 ]
             ]
-		];
+        ];
     }
 }

@@ -6,18 +6,18 @@ use \Emergence\People\ContactPoint\Email;
 
 class EmailTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $emailAddresses = array(
-        'username@example.com' => array(
+    protected static $emailAddresses = [
+        'username@example.com' => [
             'serialized' => 'username@example.com',
             'string' => 'username@example.com',
             'html' => '<a class="contact-link contact-email" href="mailto:username%40example.com">username@example.com</a>'
-        ),
-        'username+suffix@example.com' => array(
+        ],
+        'username+suffix@example.com' => [
             'serialized' => 'username+suffix@example.com',
             'string' => 'username+suffix@example.com',
             'html' => '<a class="contact-link contact-email" href="mailto:username%2Bsuffix%40example.com">username+suffix@example.com</a>'
-        )
-    );
+        ]
+    ];
 
     public function testSerialize()
     {
