@@ -67,6 +67,18 @@ Ext.define('SlateAdmin.model.progress.narratives.Report', {
             type: 'string',
             allowNull: true
         },
+        {
+            name: 'StudentFirstName',
+            type: 'string',
+            allowNull: true,
+            mapping: 'Student.FirstName'
+        },
+        {
+            name: 'StudentLastName',
+            type: 'string',
+            allowNull: true,
+            mapping: 'Student.LastName'
+        },
 
         // local-only fileds
         {
