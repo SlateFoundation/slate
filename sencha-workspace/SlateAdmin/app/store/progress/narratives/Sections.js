@@ -10,5 +10,5 @@ Ext.define('SlateAdmin.store.progress.narratives.Sections', {
     proxy: {
         type: 'slaterecords',
         url: '/sections'
-    },
+    }
 });

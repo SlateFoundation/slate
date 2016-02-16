@@ -85,7 +85,7 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
         var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
             collapse: Ext.emptyFn,
             groupHeaderTpl: '{name}',
-            collapsible: false,
+            collapsible: false
         });
         this.selModel = Ext.create('Ext.selection.CheckboxModel',{
             checkOnly: true
