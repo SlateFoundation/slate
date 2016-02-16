@@ -60,7 +60,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         me.listen({
             store: {
                 '#progress.narratives.Reports': {
-                    load: this.onReportStoreLoad,
+                    load: me.onReportStoreLoad,
                     scope: me
                 }
             }
@@ -92,10 +92,11 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
     },
 
     onTermComboRender: function (combo) {
-        var mailer = this.getNarrativesMailer(),
+        var me = this,
+            mailer = me.getNarrativesMailer(),
             store = combo.getStore();
 
-        store.addListener('load',this.onTermComboStoreLoad,this);
+        store.addListener('load',me.onTermComboStoreLoad,me);
 
         if(!store.isLoaded()) {
             mailer.setLoading('Loading terms&hellip;');
@@ -177,7 +178,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
     onNarrativesMailerGridSelect: function (row, rec) {
         var me = this,
-            previewBox = this.getNarrativesMailerPreviewBox();
+            previewBox = me.getNarrativesMailerPreviewBox();
 
         query = {
             q: 'narrativeID:'+rec.get('ID')
@@ -187,7 +188,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         previewBox.setLoading({msg: 'Loading previewreports&hellip;'});
 
         previewBox.iframeEl.on('load', function () {
-            me.fireEvent('previewload', this, previewBox);
+            me.fireEvent('previewload', me, previewBox);
             previewBox.setLoading(false);
         }, me, { single: true, delay: 10 });
 
