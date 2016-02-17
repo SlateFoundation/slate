@@ -5,6 +5,8 @@ Ext.define('SlateAdmin.store.people.Advisors', {
     model: 'SlateAdmin.model.person.Person',
     proxy: {
         type: 'slaterecords',
-        url: '/people/*advisors'
+        url: '/people/*advisors',
+        startParam: false,
+        limitParam: false
     }
 });
