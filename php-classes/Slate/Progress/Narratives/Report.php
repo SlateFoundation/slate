@@ -71,4 +71,85 @@ class Report extends \VersionedRecord
             'class' => \Slate\Term::class
         ]
     ];
+
+    public static $searchConditions = array(
+        'narrativeID' => array(
+            'qualifiers' => array('narrativeid')
+            ,'points' => 2
+            ,'sql' => 'ID=%u'
+        )
+        ,'termID' => array(
+            'qualifiers' => array('termid')
+            ,'points' => 2
+            ,'sql' => 'TermID=%u'
+        )
+        ,'studentID' => array(
+            'qualifiers' => array('studentid')
+            ,'points' => 2
+            ,'sql' => 'StudentID=%u'
+        )
+        ,'authorID' => array(
+            'qualifiers' => array('authorid')
+            ,'points' => 2
+            ,'sql' => 'CreatorID=%u'
+        )
+        ,'advisorID' => array(
+            'qualifiers' => array('advisorid')
+            ,'points' => 2
+            ,'sql' => 'StudentID in (Select ID from people where AdvisorID=%u)'
+        )
+    );
+
+    public static $dynamicFields = array(
+        'Student'
+        ,'EmailRecipients' => array(
+            'method' => 'getEmailRecipients'
+        )
+    );
+
+    public function getEmailRecipients()
+    {
+        $recipients = [];
+        $student = $this->Student;
+
+        if ($student->PrimaryEmailID && \Validators::email($student->Email))
+        {
+            // TODO: do we want the email address or recipient name?
+            $recipients[] = $student->EmailRecipient;
+            //$recipients[] = $student->Email;
+        }
+
+        $recipientTypes = explode(',' , $_REQUEST['Recipients']);
+
+        if (in_array('Advisor',$recipientTypes)) {
+            $advisor = $student->Advisor;
+
+            if ($advisor && $advisor->PrimaryEmailID && \Validators::email($advisor->Email)) {
+                // TODO: do we want the email address or recipient name?
+                $recipients[] = $student->Advisor->EmailRecipient;
+                //$recipients[] = $student->Advisor->Email;
+            }
+        }
+
+        if (in_array('Parents',$recipientTypes)) {
+
+            $guardianRelationships = Relationship::getAllByWhere(array(
+                'PersonID' => $student->ID
+                ,'Class' => 'Emergence\\People\\GuardianRelationship'
+            ));
+
+            foreach($guardianRelationships as $guardianRelationship)
+            {
+                $relatedPerson = $guardianRelationship->RelatedPerson;
+                if ($relatedPerson->PrimaryEmailID && \Validators::email($relatedPerson->Email))
+                {
+                    // TODO: do we want the email address or recipient name?
+                    $recipients[] = $relatedPerson->EmailRecipient;
+                    //$recipients[] = $relatedPerson->Email;
+                }
+            }
+        }
+
+        return $recipients;
+    }
 }
