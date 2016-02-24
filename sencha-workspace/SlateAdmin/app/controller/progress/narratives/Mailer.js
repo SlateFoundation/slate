@@ -67,7 +67,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         });
     },
 
-    // route handlers
+    // route handler
     showNarrativeMailer: function () {
         var me = this,
             navPanel = me.getProgressNavPanel();
@@ -165,7 +165,14 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
     },
 
     onClearFiltersClick: function () {
-        this.getNarrativesMailerForm().getForm().reset();
+        var me = this,
+            store = me.getProgressNarrativesReportsStore(),
+            preview = document.getElementById(me.getNarrativesMailerPreviewBox().iframeEl.dom.id);
+
+        me.getNarrativesMailerForm().getForm().reset();
+        store.clearFilter(true);
+        store.removeAll();
+        preview.src = 'about:blank';
     },
 
     onStudentComboBeforeQuery: function(queryPlan) {
