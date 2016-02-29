@@ -124,6 +124,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             formValues = me.getNarrativesMailerForm().getForm().getValues(),
             recipients = formValues.Recipients,
             store = me.getProgressNarrativesReportsStore(),
+            currentTerm = me.getTermCombo().getStore().getReportingTerm().getId(),
             filters = [],
             params = { include: 'Student,EmailRecipients' };
 
@@ -134,6 +135,8 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         // Set filters
         if (formValues.termID) {
             filters.push({property: 'termID', value: formValues.termID.toString()});
+        } else {
+            filters.push({property: 'termID', value: currentTerm.toString()});
         }
 
         if (formValues.advisorID) {
