@@ -19,11 +19,23 @@ Ext.define('SlateAdmin.view.progress.narratives.MailerGrid', {
         header: 'Recipients',
         dataIndex: 'EmailRecipients',
         scope: this,
-        renderer: function (val) {
-            if (!val) {
+        renderer: function (recipients) {
+            if (!recipients) {
                 return 'No recipients';
             }
-            return '<ul class="recipients-list"><li>' + val.join('</li><li>') + '</li></ul>';
+
+            var recipientText = '<ul class="recipients-list">',
+                recipientCount = recipients.length,
+                i = 0;
+
+            if (recipientCount>0) {
+                for (;i<recipientCount;i++) {
+                    //recipientText += '<li>' + recipients[i].emailName+ '</li>';
+                    recipientText += '<li>"' + recipients[i].emailName + '" &lt;' + recipients[i].emailAddress + '&gt;</li>';
+                }
+                recipientText += '</ul>';
+                return recipientText;
+            }
         },
         flex: 1
     }],
