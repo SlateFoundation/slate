@@ -50,6 +50,9 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         },
         narrativesMailerGrid: {
             select: 'onNarrativesMailerGridSelect'
+        },
+        'progress-narratives-mailergrid button[action="send-all"]': {
+            click: 'onSendAllClick'
         }
     },
 
@@ -214,6 +217,10 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
                 doc.close();
             }
         });
+    },
+
+    onSendAllClick: function() {
+        console.log('send all click');
     }
 
 });
