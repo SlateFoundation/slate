@@ -223,7 +223,19 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
     },
 
     onSendAllClick: function() {
-        console.log('send all click');
+        var store = this.getProgressNarrativesReportsStore(),
+            proxy = store.getProxy(),
+            filters = proxy.encodeFilters(store.getFilters().getRange()),
+            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters, send_emails: 1 });
+
+        SlateAdmin.API.request({
+            url: proxy.getUrl(),
+            params: params,
+            scope: this,
+            success: function (res) {
+                console.log(res);
+            }
+        });
     }
 
 });
