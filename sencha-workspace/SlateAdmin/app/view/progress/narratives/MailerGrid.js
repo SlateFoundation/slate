@@ -23,15 +23,6 @@ Ext.define('SlateAdmin.view.progress.narratives.MailerGrid', {
             if (!val) {
                 return 'No recipients';
             }
-
-/*
-            v = Ext.Array.map (v, function (recipient) {
-                //return recipient.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                return recipient.replace(/"/g, "").replace(/<(.*)>/g, '<span class="recipient-contact">$1</span>');
-            });
-*/
-
-            //return v.join('<br>');
             return '<ul class="recipients-list"><li>' + val.join('</li><li>') + '</li></ul>';
         },
         flex: 1
