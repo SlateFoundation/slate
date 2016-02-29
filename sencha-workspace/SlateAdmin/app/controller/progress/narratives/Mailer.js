@@ -86,7 +86,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
     // event handlers
     onReportStoreLoad: function (store,records) {
-        var total = this.getNarrativesMailerGrid().down('#interimEmailTotalText');
+        var total = this.getNarrativesMailerGrid().down('#total');
 
         total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
     },

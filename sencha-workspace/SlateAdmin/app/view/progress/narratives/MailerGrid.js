@@ -31,11 +31,11 @@ Ext.define('SlateAdmin.view.progress.narratives.MailerGrid', {
         xtype: 'tbfill'
     },{
         xtype: 'tbtext',
-        itemId: 'interimEmailTotalText',
+        itemId: 'total',
         text: '0 Reports'
     },{
         xtype: 'button',
         text: 'Send All Emails',
-        action: 'interim-email-send'
+        action: 'send-all'
     }]
 });
