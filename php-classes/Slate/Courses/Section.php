@@ -260,6 +260,18 @@ class Section extends \VersionedRecord
         }
     }
 
+    public function getParticipant($person)
+    {
+        if ($person instanceof \Emergence\People\IPerson) {
+            $person = $person->ID;
+        }
+
+        return SectionParticipant::getByWhere([
+            'CourseSectionID' => $this->ID,
+            'PersonID' => $person
+        ]);
+    }
+
     // search SQL generators
     protected static function getTeacherSearchSql($term, $condition)
     {
