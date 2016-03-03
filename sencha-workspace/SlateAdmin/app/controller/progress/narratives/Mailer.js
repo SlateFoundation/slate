@@ -223,17 +223,31 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
     },
 
     onSendAllClick: function() {
-        var store = this.getProgressNarrativesReportsStore(),
+        var me = this,
+            grid = me.getNarrativesMailerGrid(),
+            store = me.getProgressNarrativesReportsStore(),
             proxy = store.getProxy(),
             filters = proxy.encodeFilters(store.getFilters().getRange()),
-            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters, send_emails: 1 });
+            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters, send_emails: 1 }),
+            msg;
+
+        grid.mask('Sending emails');
 
         SlateAdmin.API.request({
             url: proxy.getUrl(),
             params: params,
-            scope: this,
+            scope: me,
             success: function (res) {
-                console.log(res);
+                grid.unmask();
+                msg = '<p>' + res.data.successful + ' emails sent successfully.</p>';
+                if (res.data.failed > 0) {
+                    msg += '<p>' + res.data.failed+ ' emails were not able to be sent.<ul>';
+                    Ext.Array.each(res.data.errors, function(err) {
+                        msg += '<li>' + err + '</li>';
+                    });
+                    msg += '</ul></p>';
+                }
+                Ext.Msg.alert('Results',msg);
             }
         });
     }
