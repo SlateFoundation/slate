@@ -9,7 +9,8 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
     control: {
         termCombo: {
-            afterrender: 'onTermComboRender'
+            afterrender: 'onTermComboRender',
+            storeload: 'onTermComboStoreLoad'
         },
         studentCombo: {
             beforequery: 'onStudentComboBeforeQuery'
@@ -99,11 +100,22 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             mailer = me.getNarrativesMailer(),
             store = combo.getStore();
 
-        store.addListener('load',me.onTermComboStoreLoad,me);
+        combo.relayEvents(store, ['load'], 'store');
 
         if(!store.isLoaded()) {
             mailer.setLoading('Loading terms&hellip;');
             store.load();
+        }
+    },
+
+    onTermComboStoreLoad: function (store) {
+        var me = this,
+            mailer = me.getNarrativesMailer(),
+            combo = me.getTermCombo();
+
+        if (!combo.getValue()) {
+            combo.setValue(store.getReportingTerm().getId());
+            mailer.setLoading(false);
         }
     },
 
@@ -244,18 +256,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         var total = this.getNarrativesMailerGrid().down('#total');
 
         total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
-    },
-
-    onTermComboStoreLoad: function () {
-        var me = this,
-            mailer = me.getNarrativesMailer(),
-            combo = me.getTermCombo(),
-            store = combo.getStore();
-
-        if (!combo.getValue()) {
-            combo.setValue(store.getReportingTerm().getId());
-            mailer.setLoading(false);
-        }
     }
+
 
 });
