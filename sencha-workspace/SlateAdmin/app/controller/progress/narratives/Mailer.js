@@ -12,7 +12,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             afterrender: 'onTermComboRender',
             storeload: 'onTermComboStoreLoad'
         },
-        studentCombo: {
+        'progress-narratives-mailer combo#studentCombo': {
             beforequery: 'onStudentComboBeforeQuery'
         },
         'progress-narratives-mailer button[action=clear-filters]': {
@@ -64,8 +64,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         narrativesMailerForm: 'progress-narratives-mailer form#filterForm',
         narrativesMailerGrid: 'progress-narratives-mailergrid',
         narrativesMailerPreviewBox: 'progress-narratives-mailer component#previewBox',
-        termCombo: 'progress-narratives-mailer combo#termCombo',
-        studentCombo: 'progress-narratives-mailer combo#studentCombo'
+        termCombo: 'progress-narratives-mailer combo#termCombo'
     },
 
 
