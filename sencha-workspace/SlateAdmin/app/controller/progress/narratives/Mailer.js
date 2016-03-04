@@ -164,7 +164,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         }
 
         store.clearFilter(true);
-        store.setFilters(filters);
+        store.addFilter(filters, true);
 
         // add recipients to params if requested
         if (recipients) {
