@@ -29,6 +29,14 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         }
     },
 
+    listen: {
+        store: {
+            '#progress.narratives.Reports': {
+                load: 'onReportStoreLoad'
+            }
+        }
+    },
+
 
     // controller configuration
     views: [
@@ -58,21 +66,6 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         narrativesMailerPreviewBox: 'progress-narratives-mailer component#previewBox',
         termCombo: 'progress-narratives-mailer combo#termCombo',
         studentCombo: 'progress-narratives-mailer combo#studentCombo'
-    },
-
-
-    // controller template methods
-    init: function() {
-        var me = this;
-
-        me.listen({
-            store: {
-                '#progress.narratives.Reports': {
-                    load: me.onReportStoreLoad,
-                    scope: me
-                }
-            }
-        });
     },
 
 
@@ -257,6 +250,5 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
         total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
     }
-
 
 });
