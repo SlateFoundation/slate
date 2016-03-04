@@ -2,6 +2,34 @@
 Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
     extend: 'Ext.app.Controller',
 
+    // entry points
+    routes: {
+        'progress/narratives/email': 'showNarrativeMailer'
+    },
+
+    control: {
+        termCombo: {
+            afterrender: 'onTermComboRender'
+        },
+        studentCombo: {
+            beforequery: 'onStudentComboBeforeQuery'
+        },
+        'progress-narratives-mailer button[action=clear-filters]': {
+            click: 'onClearFiltersClick'
+        },
+        'progress-narratives-mailer button[action=search]': {
+            click: 'onSearchClick'
+        },
+        narrativesMailerGrid: {
+            select: 'onNarrativesMailerGridSelect'
+        },
+        'progress-narratives-mailergrid button[action="send-all"]': {
+            click: 'onSendAllClick'
+        }
+    },
+
+
+    // controller configuration
     views: [
         'progress.narratives.Mailer',
         'progress.narratives.MailerGrid'
@@ -14,10 +42,6 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         'progress.narratives.Students',
         'progress.narratives.Reports'
     ],
-
-    routes: {
-        'progress/narratives/email': 'showNarrativeMailer'
-    },
 
     refs: {
         progressNavPanel: 'progress-navpanel',
@@ -35,26 +59,6 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         studentCombo: 'progress-narratives-mailer combo#studentCombo'
     },
 
-    control: {
-        'progress-narratives-mailer button[action=clear-filters]': {
-            click: 'onClearFiltersClick'
-        },
-        'progress-narratives-mailer button[action=search]': {
-            click: 'onSearchClick'
-        },
-        termCombo: {
-            afterrender: 'onTermComboRender'
-        },
-        studentCombo: {
-            beforequery: 'onStudentComboBeforeQuery'
-        },
-        narrativesMailerGrid: {
-            select: 'onNarrativesMailerGridSelect'
-        },
-        'progress-narratives-mailergrid button[action="send-all"]': {
-            click: 'onSendAllClick'
-        }
-    },
 
     // controller template methods
     init: function() {
@@ -69,6 +73,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             }
         });
     },
+
 
     // route handler
     showNarrativeMailer: function () {
@@ -87,13 +92,8 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         Ext.resumeLayouts(true);
     },
 
+
     // event handlers
-    onReportStoreLoad: function (store,records) {
-        var total = this.getNarrativesMailerGrid().down('#total');
-
-        total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
-    },
-
     onTermComboRender: function (combo) {
         var me = this,
             mailer = me.getNarrativesMailer(),
@@ -107,16 +107,23 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         }
     },
 
-    onTermComboStoreLoad: function () {
-        var me = this,
-            mailer = me.getNarrativesMailer(),
-            combo = me.getTermCombo(),
-            store = combo.getStore();
-
-        if (!combo.getValue()) {
-            combo.setValue(store.getReportingTerm().getId());
-            mailer.setLoading(false);
+    onStudentComboBeforeQuery: function(queryPlan) {
+        if (queryPlan.query) {
+            queryPlan.query += ' class:Student';
+        } else {
+            queryPlan.query += 'class:Student';
         }
+    },
+
+    onClearFiltersClick: function () {
+        var me = this,
+            store = me.getProgressNarrativesReportsStore(),
+            preview = document.getElementById(me.getNarrativesMailerPreviewBox().iframeEl.dom.id);
+
+        me.getNarrativesMailerForm().getForm().reset();
+        store.clearFilter(true);
+        store.removeAll();
+        preview.src = 'about:blank';
     },
 
     onSearchClick: function () {
@@ -168,25 +175,6 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         store.getProxy().setExtraParams(params);
         store.load();
 
-    },
-
-    onClearFiltersClick: function () {
-        var me = this,
-            store = me.getProgressNarrativesReportsStore(),
-            preview = document.getElementById(me.getNarrativesMailerPreviewBox().iframeEl.dom.id);
-
-        me.getNarrativesMailerForm().getForm().reset();
-        store.clearFilter(true);
-        store.removeAll();
-        preview.src = 'about:blank';
-    },
-
-    onStudentComboBeforeQuery: function(queryPlan) {
-        if (queryPlan.query) {
-            queryPlan.query += ' class:Student';
-        } else {
-            queryPlan.query += 'class:Student';
-        }
     },
 
     onNarrativesMailerGridSelect: function (row, rec) {
@@ -250,6 +238,24 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
                 Ext.Msg.alert('Results',msg);
             }
         });
+    },
+
+    onReportStoreLoad: function (store,records) {
+        var total = this.getNarrativesMailerGrid().down('#total');
+
+        total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
+    },
+
+    onTermComboStoreLoad: function () {
+        var me = this,
+            mailer = me.getNarrativesMailer(),
+            combo = me.getTermCombo(),
+            store = combo.getStore();
+
+        if (!combo.getValue()) {
+            combo.setValue(store.getReportingTerm().getId());
+            mailer.setLoading(false);
+        }
     }
 
 });
