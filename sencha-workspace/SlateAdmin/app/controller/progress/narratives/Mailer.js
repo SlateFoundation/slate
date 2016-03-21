@@ -135,33 +135,10 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             formValues = me.getNarrativesMailerForm().getForm().getValues(),
             recipients = formValues.Recipients,
             store = me.getProgressNarrativesReportsStore(),
-            currentTerm = me.getTermCombo().getStore().getReportingTerm().getId(),
-            filters = [],
+            filters = me.grabFilters(),
             params = { include: 'Student,EmailRecipients' };
 
-        /*
-         * TODO: - toString() can be removed when/if this pull request is merged:
-         * https://github.com/JarvusInnovations/emergence-apikit/pull/4
-         */
-        // Set filters
-        if (formValues.termID) {
-            filters.push({property: 'termID', value: formValues.termID.toString()});
-        } else {
-            filters.push({property: 'termID', value: currentTerm.toString()});
-        }
-
-        if (formValues.advisorID) {
-            filters.push({property: 'advisorID', value: formValues.advisorID.toString()});
-        }
-
-        if (formValues.studentID) {
-            filters.push({property: 'studentID', value: formValues.studentID.toString()});
-        }
-
-        if (formValues.authorID) {
-            filters.push({property: 'authorID', value: formValues.authorID.toString()});
-        }
-
+        filters = this.grabFilters();
         store.clearFilter(true);
         store.addFilter(filters, true);
 
@@ -220,13 +197,13 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             store = me.getProgressNarrativesReportsStore(),
             proxy = store.getProxy(),
             filters = proxy.encodeFilters(store.getFilters().getRange()),
-            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters, send_emails: 1 }),
+            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters }),
             msg;
 
         grid.mask('Sending emails');
 
         SlateAdmin.API.request({
-            url: proxy.getUrl(),
+            url: proxy.getUrl()+'/email',
             params: params,
             scope: me,
             success: function (res) {
@@ -248,6 +225,55 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         var total = this.getNarrativesMailerGrid().down('#total');
 
         total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
+    },
+
+
+    // custom controller methods
+    grabParams: function() {
+        var filters = this.grabFilters(),
+            params = [],
+            filtersLength = filters.length,
+            i = 0, param;
+
+        for (; i<filtersLength; i++) {
+            param = {};
+            param[filters[i].property] = filters[i].value;
+            params.push(param);
+        }
+        return params;
+    },
+
+    grabFilters: function () {
+        var me = this,
+            formValues = me.getNarrativesMailerForm().getForm().getValues(),
+            currentTerm = me.getTermCombo().getStore().getReportingTerm().getId(),
+            filters = [];
+
+        /*
+         * TODO: - toString() can be removed when/if this pull request is merged:
+         * https://github.com/JarvusInnovations/emergence-apikit/pull/4
+         */
+        // Set filters
+        if (formValues.termID) {
+            filters.push({property: 'termID', value: formValues.termID.toString()});
+        } else {
+            filters.push({property: 'termID', value: currentTerm.toString()});
+        }
+
+        if (formValues.advisorID) {
+            filters.push({property: 'advisorID', value: formValues.advisorID.toString()});
+        }
+
+        if (formValues.studentID) {
+            filters.push({property: 'studentID', value: formValues.studentID.toString()});
+        }
+
+        if (formValues.authorID) {
+            filters.push({property: 'authorID', value: formValues.authorID.toString()});
+        }
+
+        return filters;
+
     }
 
 });
