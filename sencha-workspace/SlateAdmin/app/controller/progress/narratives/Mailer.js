@@ -208,15 +208,19 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             scope: me,
             success: function (res) {
                 grid.unmask();
-                msg = '<p>' + res.data.successful + ' emails sent successfully.</p>';
-                if (res.data.failed > 0) {
-                    msg += '<p>' + res.data.failed+ ' emails were not able to be sent.<ul>';
-                    Ext.Array.each(res.data.errors, function(err) {
-                        msg += '<li>' + err + '</li>';
-                    });
-                    msg += '</ul></p>';
+                if (res && res.data && res.data) {
+                    msg = '<p>' + res.data.successful + ' emails sent successfully.</p>';
+                    if (res.data.failed > 0) {
+                        msg += '<p>' + res.data.failed+ ' emails were not able to be sent.<ul>';
+                        Ext.Array.each(res.data.errors, function(err) {
+                            msg += '<li>' + err + '</li>';
+                        });
+                        msg += '</ul></p>';
+                    }
+                    Ext.Msg.alert('Results',msg);
+                } else {
+                    Ext.Msg.alert('An error occurred while trying to send emails.  Please check logs for details');
                 }
-                Ext.Msg.alert('Results',msg);
             }
         });
     },
