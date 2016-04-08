@@ -1,14 +1,13 @@
 // overrides
-$base-color: #1f83b1 !default;
-$body-background-color: transparent !default;
-$color: #333 !default;
-$font-family: Lato !default;
-$font-size: 14px !default;
-
+$base-color:            dynamic(#1f83b1);
+$body-background-color: dynamic(transparent);
+$color:                 dynamic(#333);
+$font-family:           dynamic(Lato);
+$font-size:             dynamic(14px);
 
 // custom
-$dark-ui-color: #153b4c !default;
-$muted-color: #777 !default;
+$dark-ui-color: dynamic(#153b4c);
+$muted-color:   dynamic(#777);
 
 /**
   * General line color

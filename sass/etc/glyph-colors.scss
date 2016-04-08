@@ -6,36 +6,36 @@
     }
 }
 
-$base-color: #1f83b1 !default;
-$accent-color: saturate($base-color, 100%) !default;
+$base-color: dynamic(#1f83b1);
+$accent-color: dynamic(saturate($base-color, 100%));
 
 /** 
   * Color for "inactive" or muted glyphs
   */
-$glyph-inactive-color: #c9c9c9 !default; // gray
+$glyph-inactive-color: dynamic(#c9c9c9); // gray
 
 /** 
   * Color for star glyph (e.g., primary contact point)
   */
-$glyph-star-color: #daa520 !default; // goldenrod
+$glyph-star-color: dynamic(#daa520); // goldenrod
 
 /** 
   * Color for shield glyph (e.g., guardian)
   */
-$glyph-shield-color: #158 !default; // cobalt
+$glyph-shield-color: dynamic(#158); // cobalt
 
 /**
   * Color for ambulance glyph (e.g., emergency contact)
   */
-$glyph-emergency-color: red !default;
+$glyph-emergency-color: dynamic(red);
 
 /** 
   * Color for success messages or positive actions (such as Save)
   */
-$success-color: #5fb31d !default;
+$success-color: dynamic(#5fb31d);
 
 /** 
   * Color for error messages (stronger than warnings)
   * or negative/destructive actions (such as Delete)
   */
-$danger-color: #b3241d !default;
+$danger-color: dynamic(#b3241d);
