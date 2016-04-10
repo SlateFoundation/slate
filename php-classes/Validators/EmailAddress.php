@@ -18,7 +18,7 @@ class EmailAddress implements IValidator
         $emailParts = explode('@', $email, 2);
 
         if (count($emailParts) != 2) {
-            return array(self::PARTS_MISSING => 'Email address must be in format username@domain');
+            return [self::PARTS_MISSING => 'Email address must be in format username@domain'];
         }
 
         list($username, $domain) = $emailParts;
