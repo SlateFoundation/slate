@@ -2,6 +2,8 @@
 
 namespace Slate\Progress\Narratives;
 
+use Emergence\People\Relationship;
+
 class Report extends \VersionedRecord
 {
     // VersionedRecord configuration
@@ -114,20 +116,23 @@ class Report extends \VersionedRecord
 
         if ($student->PrimaryEmailID && \Validators::email($student->Email))
         {
-            // TODO: do we want the email address or recipient name?
-            $recipients[] = $student->EmailRecipient;
-            //$recipients[] = $student->Email;
+            $recipients[] = [
+                'emailName' => $student->FullName,
+                'emailAddress' => $student->Email,
+                'emailRecipient' => $student->EmailRecipient
+            ];
         }
 
         $recipientTypes = explode(',' , $_REQUEST['Recipients']);
 
         if (in_array('Advisor',$recipientTypes)) {
             $advisor = $student->Advisor;
-
             if ($advisor && $advisor->PrimaryEmailID && \Validators::email($advisor->Email)) {
-                // TODO: do we want the email address or recipient name?
-                $recipients[] = $student->Advisor->EmailRecipient;
-                //$recipients[] = $student->Advisor->Email;
+                $recipients[] = [
+                    'emailName' => $advisor->FullName,
+                    'emailAddress' => $advisor->Email,
+                    'emailRecipient' => $advisor->EmailRecipient
+                ];
             }
         }
 
@@ -143,9 +148,11 @@ class Report extends \VersionedRecord
                 $relatedPerson = $guardianRelationship->RelatedPerson;
                 if ($relatedPerson->PrimaryEmailID && \Validators::email($relatedPerson->Email))
                 {
-                    // TODO: do we want the email address or recipient name?
-                    $recipients[] = $relatedPerson->EmailRecipient;
-                    //$recipients[] = $relatedPerson->Email;
+                    $recipients[] = [
+                        'emailName' => $relatedPerson->FullName,
+                        'emailAddress' => $relatedPerson->Email,
+                        'emailRecipient' => $relatedPerson->EmailRecipient
+                    ];
                 }
             }
         }
