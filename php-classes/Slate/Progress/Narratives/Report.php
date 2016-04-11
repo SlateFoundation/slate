@@ -137,7 +137,7 @@ class Report extends \VersionedRecord
 
             $guardianRelationships = Relationship::getAllByWhere([
                 'PersonID' => $student->ID
-                ,'Class' => 'Emergence\\People\\GuardianRelationship'
+                ,'Class' => Emergence\People\GuardianRelationship::class
             ]);
 
             foreach($guardianRelationships as $guardianRelationship) {
