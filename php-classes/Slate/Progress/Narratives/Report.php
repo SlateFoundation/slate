@@ -34,7 +34,6 @@ class Report extends \VersionedRecord
             'type' => 'integer',
             'unsigned' => true
         ],
-
         'Status' => [
             'type' => 'enum',
             'values' => ['draft', 'published'],
@@ -49,7 +48,6 @@ class Report extends \VersionedRecord
             'notnull' => false
         ]
     ];
-
 
     public static $indexes = [
         'NarrativeReport' => [
@@ -74,48 +72,47 @@ class Report extends \VersionedRecord
         ]
     ];
 
-    public static $searchConditions = array(
-        'narrativeID' => array(
-            'qualifiers' => array('narrativeid')
-            ,'points' => 2
-            ,'sql' => 'ID=%u'
-        )
-        ,'termID' => array(
-            'qualifiers' => array('termid')
-            ,'points' => 2
-            ,'sql' => 'TermID=%u'
-        )
-        ,'studentID' => array(
-            'qualifiers' => array('studentid')
-            ,'points' => 2
-            ,'sql' => 'StudentID=%u'
-        )
-        ,'authorID' => array(
-            'qualifiers' => array('authorid')
-            ,'points' => 2
-            ,'sql' => 'CreatorID=%u'
-        )
-        ,'advisorID' => array(
-            'qualifiers' => array('advisorid')
-            ,'points' => 2
-            ,'sql' => 'StudentID in (Select ID from people where AdvisorID=%u)'
-        )
-    );
+    public static $searchConditions = [
+        'narrativeID' => [
+            'qualifiers' => ['narrativeid'],
+            'points' => 2,
+            'sql' => 'ID=%u'
+        ],
+        'termID' => [
+            'qualifiers' => ['termid'],
+            'points' => 2,
+            'sql' => 'TermID=%u'
+        ],
+        'studentID' => [
+            'qualifiers' => ['studentid'],
+            'points' => 2,
+            'sql' => 'StudentID=%u'
+        ],
+        'authorID' => [
+            'qualifiers' => ['authorid'],
+            'points' => 2,
+            'sql' => 'CreatorID=%u'
+        ],
+        'advisorID' => [
+            'qualifiers' => ['advisorid'],
+            'points' => 2,
+            'sql' => 'StudentID in (Select ID from people where AdvisorID=%u)'
+        ]
+    ];
 
-    public static $dynamicFields = array(
-        'Student'
-        ,'EmailRecipients' => array(
+    public static $dynamicFields = [
+        'Student',
+        'EmailRecipients' => [
             'method' => 'getEmailRecipients'
-        )
-    );
+        ]
+    ];
 
     public function getEmailRecipients()
     {
         $recipients = [];
         $student = $this->Student;
 
-        if ($student->PrimaryEmailID && \Validators::email($student->Email))
-        {
+        if ($student->PrimaryEmailID && \Validators::email($student->Email)) {
             $recipients[] = [
                 'emailName' => $student->FullName,
                 'emailAddress' => $student->Email,
@@ -138,16 +135,14 @@ class Report extends \VersionedRecord
 
         if (in_array('Parents',$recipientTypes)) {
 
-            $guardianRelationships = Relationship::getAllByWhere(array(
+            $guardianRelationships = Relationship::getAllByWhere([
                 'PersonID' => $student->ID
                 ,'Class' => 'Emergence\\People\\GuardianRelationship'
-            ));
+            ]);
 
-            foreach($guardianRelationships as $guardianRelationship)
-            {
+            foreach($guardianRelationships as $guardianRelationship) {
                 $relatedPerson = $guardianRelationship->RelatedPerson;
-                if ($relatedPerson->PrimaryEmailID && \Validators::email($relatedPerson->Email))
-                {
+                if ($relatedPerson->PrimaryEmailID && \Validators::email($relatedPerson->Email)) {
                     $recipients[] = [
                         'emailName' => $relatedPerson->FullName,
                         'emailAddress' => $relatedPerson->Email,
