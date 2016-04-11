@@ -50,6 +50,10 @@ class LinkUtil
 
                 foreach ($value->Items AS $TagItem) {
                     try {
+                        if (!$TagItem->Context) {
+                            continue;
+                        }
+
                         $children[$TagItem->Context->getHandle()] = [
                             '_href' => $TagItem->Context->getUrl(),
                             '_label' => $TagItem->Context->getTitle()
