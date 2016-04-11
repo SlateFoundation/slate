@@ -31,6 +31,8 @@ class ReportsRequestHandler extends \RecordsRequestHandler
                 return static::handleAllNarrativesRequest();
             case 'print':
                 return static::handlePrintRequest();
+            case 'email':
+                return static::handleEmailRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -231,5 +233,59 @@ class ReportsRequestHandler extends \RecordsRequestHandler
             readfile($filePath.'.pdf');
             exit();
         }
+    }
+
+    public static function handleEmailRequest()
+    {
+
+        if (empty($_REQUEST['q'])) {
+            return static::throwInvalidRequestError('No query specified');
+        }
+
+        $query = $_REQUEST['q'];
+        $reports = Report::getAllBySearch($query);
+
+        static::sendEmails($reports);
+
+    }
+
+    public static function sendEmails($reports) {
+
+        $successCount = 0;
+        $failCount = 0;
+        $errors = [];
+
+        foreach ($reports as $report) {
+
+            $term = $report->Term;
+            $subject = 'Your Standards-Based Report Card for '.$term->Title;
+
+
+            $html = \Emergence\Dwoo\Engine::getSource('progress/narratives/narrativeReports', [
+                'Term' => $term,
+                'data' => [$report]
+            ]);
+
+            $recipients = $report->getEmailRecipients();
+
+            foreach ($recipients as $recipient) {
+                $success = \Email::send('hello@jarv.us', $subject, $html);
+                //$success = \Email::send($recipient['emailAddress'], $subject, $html);
+                if ($success) {
+                    $successCount++;
+                } else {
+                    $failCount++;
+                    $errors[] = 'Failed sending email to "'.$recipient['emailName'].'" &lt;'.$recipient['emailAddress'].'&gt;';
+                }
+            }
+        }
+
+        $result = [
+            'successful' => $successCount,
+            'failed' => $failCount,
+            'errors' => $errors
+        ];
+
+        return parent::respond($responseID, $result , 'json');
     }
 }
