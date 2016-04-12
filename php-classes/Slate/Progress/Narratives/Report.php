@@ -102,13 +102,18 @@ class Report extends \VersionedRecord
 
     public static $dynamicFields = [
         'Student',
-        'EmailRecipients' => [
-            'method' => 'getEmailRecipients'
-        ]
+        'SelfRecipients' => [
+            'method' => 'getSelfRecipients'
+        ],
+        'AdvisorRecipients' => [
+            'method' => 'getAdvisorRecipients'
+        ],
+        'GuardianRecipients' => [
+            'method' => 'getGuardianRecipients'
+        ],
     ];
 
-    public function getEmailRecipients()
-    {
+    public function getSelfRecipients() {
         $recipients = [];
         $student = $this->Student;
 
@@ -120,35 +125,43 @@ class Report extends \VersionedRecord
             ];
         }
 
-        $recipientTypes = explode(',' , $_REQUEST['Recipients']);
+        return $recipients;
 
-        if (in_array('Advisor',$recipientTypes)) {
-            $advisor = $student->Advisor;
-            if ($advisor && $advisor->PrimaryEmailID && \Validators::email($advisor->Email)) {
-                $recipients[] = [
-                    'emailName' => $advisor->FullName,
-                    'emailAddress' => $advisor->Email,
-                    'emailRecipient' => $advisor->EmailRecipient
-                ];
-            }
+    }
+
+    public function getAdvisorRecipients() {
+        $recipients = [];
+        $student = $this->Student;
+        $advisor = $student->Advisor;
+
+        if ($advisor && $advisor->PrimaryEmailID && \Validators::email($advisor->Email)) {
+            $recipients[] = [
+                'emailName' => $advisor->FullName,
+                'emailAddress' => $advisor->Email,
+                'emailRecipient' => $advisor->EmailRecipient
+            ];
         }
 
-        if (in_array('Parents',$recipientTypes)) {
+        return $recipients;
+    }
 
-            $guardianRelationships = Relationship::getAllByWhere([
-                'PersonID' => $student->ID
-                ,'Class' => Emergence\People\GuardianRelationship::class
-            ]);
+    public function getGuardianRecipients() {
+        $recipients = [];
+        $student = $this->Student;
 
-            foreach($guardianRelationships as $guardianRelationship) {
-                $relatedPerson = $guardianRelationship->RelatedPerson;
-                if ($relatedPerson->PrimaryEmailID && \Validators::email($relatedPerson->Email)) {
-                    $recipients[] = [
-                        'emailName' => $relatedPerson->FullName,
-                        'emailAddress' => $relatedPerson->Email,
-                        'emailRecipient' => $relatedPerson->EmailRecipient
-                    ];
-                }
+        $guardianRelationships = Relationship::getAllByWhere([
+            'PersonID' => $student->ID,
+            'Class' => \Emergence\People\GuardianRelationship::class
+        ]);
+
+        foreach($guardianRelationships as $guardianRelationship) {
+            $relatedPerson = $guardianRelationship->RelatedPerson;
+            if ($relatedPerson->PrimaryEmailID && \Validators::email($relatedPerson->Email)) {
+                $recipients[] = [
+                    'emailName' => $relatedPerson->FullName,
+                    'emailAddress' => $relatedPerson->Email,
+                    'emailRecipient' => $relatedPerson->EmailRecipient
+                ];
             }
         }
 
