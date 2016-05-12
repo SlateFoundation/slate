@@ -1,0 +1,44 @@
+[submodule "slate-theme"]
+	path = sencha-workspace/packages/slate-theme
+	url = https://github.com/SlateFoundation/slate-theme.git
+	branch = master
+[submodule "jarvus-hotfixes"]
+	path = sencha-workspace/packages/jarvus-hotfixes
+	url = https://github.com/JarvusInnovations/sencha-hotfixes.git
+	branch = ext/5/1/1/451
+[submodule "jarvus-apikit"]
+	path = sencha-workspace/packages/jarvus-apikit
+	url = https://github.com/JarvusInnovations/jarvus-apikit.git
+	branch = master
+[submodule "emergence-apikit"]
+	path = sencha-workspace/packages/emergence-apikit
+	url = https://github.com/JarvusInnovations/emergence-apikit.git
+	branch = master
+[submodule "jarvus-ext-searchfield"]
+	path = sencha-workspace/packages/jarvus-ext-searchfield
+	url = https://github.com/JarvusInnovations/jarvus-ext-searchfield.git
+	branch = master
+[submodule "jarvus-ext-glyphs"]
+	path = sencha-workspace/packages/jarvus-ext-glyphs
+	url = https://github.com/JarvusInnovations/jarvus-ext-glyphs.git
+	branch = master
+[submodule "jarvus-ext-actionevents"]
+	path = sencha-workspace/packages/jarvus-ext-actionevents
+	url = https://github.com/JarvusInnovations/jarvus-ext-actionevents.git
+	branch = master
+[submodule "jarvus-ext-routing"]
+	path = sencha-workspace/packages/jarvus-ext-routing
+	url = https://github.com/JarvusInnovations/jarvus-ext-routing.git
+	branch = ext/5/1/1/451
+[submodule "jarvus-lazydata"]
+	path = sencha-workspace/packages/jarvus-lazydata
+	url = https://github.com/JarvusInnovations/jarvus-lazydata.git
+	branch = ext/5/1/1/451
+[submodule "jarvus-ext-treerecords"]
+	path = sencha-workspace/packages/jarvus-ext-treerecords
+	url = https://github.com/JarvusInnovations/jarvus-ext-treerecords.git
+	branch = master
+[submodule "jarvus-griderrors"]
+	path = sencha-workspace/packages/jarvus-griderrors
+	url = https://github.com/JarvusInnovations/jarvus-griderrors.git
+	branch = master
