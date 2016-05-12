@@ -42,3 +42,7 @@
 	path = sencha-workspace/packages/jarvus-griderrors
 	url = https://github.com/JarvusInnovations/jarvus-griderrors.git
 	branch = master
+[submodule "ext-5.1.1.451"]
+	path = sencha-workspace/ext-5.1.1.451
+	url = https://github.com/JarvusInnovations/extjs.git
+	branch = 5.1.1.451
