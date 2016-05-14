@@ -1,24 +1,22 @@
 # SlateAdmin
-The full-screen ExtJS app powering /manage on Slate V1, extracted from SlateFoundation/slate and upgraded to ExtJS 5
+This [Ext JS 5.1](http://docs.sencha.com/extjs/5.1/) app provides a user interface for administrators of Slate.
 
-## Getting started with development
-1. Install latest 6.x Sencha CMD
-2. Clone this repository
-3. `cd slate-admin/sencha-workspace/packages`
-4. `./get-packages.sh`
-5. `cd ../SlateAdmin`
-6. `sencha app build`
+## Getting started with client-side UI application development
+1. [Install latest 6.x Sencha CMD](https://www.sencha.com/products/extjs/cmd-download/)
+2. `git clone --recursive -b develop git@github.com:SlateFoundation/slate-admin.git`
+3. `cd ./slate-admin/sencha-workspace/SlateAdmin`
+4. `sencha app build`
 
-Then run a web server from the main `slate-admin` directory or higher in your file tree and navigate to the
-`sencha-workspace/SlateAdmin` folder in your browser. If you don't have a server you can run `sencha web start`
-to run a basic local server.
+If you have a version of GIT older than 1.6, get a newer version of git.
 
-The first time you build the app, it will download the correct version of the framework from Sencha.
+To load the UI, run a web server from `sencha-workspace` or higher in your file tree and navigate to the subdirectory
+for the app you want to run in your browser. If you don't have a server you can run `sencha web start` to run a basic
+local server at [http://localhost:1841](http://localhost:1841).
 
 ## Connecting to a server
 You can connect SlateAdmin to any remote Slate instance that has CORS enabled by appending the query
-paramater `apiHost` when loading the page. SlateAdmin.Application.init detects it and passes it
-to SlateAdmin.API.setHostname. SlateAdmin doesn't (yet) have a way to catch authentication errors
+paramater `apiHost` when loading the page. `SlateAdmin.Application.init` detects it and passes it
+to `SlateAdmin.API.setHostname`. SlateAdmin doesn't (yet) have a way to catch authentication errors
 and show a login prompt, so you'll just need to login to the site manually in another browser tab
 when you catch an error for now.
 
