@@ -6,9 +6,6 @@ use Emergence\People\Relationship;
 
 class Report extends \VersionedRecord
 {
-    // VersionedRecord configuration
-    public static $historyTable = 'history_narrative_reports';
-
     // ActiveRecord configuration
     public static $tableName = 'narrative_reports';
     public static $singularNoun = 'narrative report';
@@ -38,10 +35,6 @@ class Report extends \VersionedRecord
             'type' => 'enum',
             'values' => ['draft', 'published'],
             'default' => 'draft'
-        ],
-        'Updated' => [
-            'type' => 'timestamp'
-            ,'notnull' => false
         ],
         'Notes' => [
             'type' => 'clob',
