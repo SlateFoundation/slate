@@ -1,9 +1,11 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.store.progress.narratives.Reports', {
-    extend: 'Ext.data.Store',
+    extend: 'Slate.store.TermReports',
 
-    model: 'SlateAdmin.model.progress.narratives.Report',
-    autoLoad: false,
-    autoSync: false,
-    remoteFilter: true
+
+    config: {
+        autoLoad: false,
+        autoSync: false,
+        remoteFilter: true
+    }
 });
