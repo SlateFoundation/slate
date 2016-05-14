@@ -46,3 +46,7 @@
 	path = sencha-workspace/ext-5.1.1.451
 	url = https://github.com/JarvusInnovations/extjs.git
 	branch = 5.1.1.451
+[submodule "slate-core-data"]
+	path = sencha-workspace/packages/slate-core-data
+	url = https://github.com/SlateFoundation/slate-core-data.git
+	branch = master

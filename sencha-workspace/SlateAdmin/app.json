@@ -53,7 +53,8 @@
         "jarvus-ext-actionevents",
         "jarvus-ext-glyphs",
         "jarvus-ext-treerecords",
-        "jarvus-griderrors"
+        "jarvus-griderrors",
+        "slate-core-data"
     ],
 
     /**
