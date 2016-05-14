@@ -58,11 +58,6 @@ Ext.define('Slate.model.TermReport', {
             type: 'string',
             defaultValue: 'draft'
         },
-        // {
-        //     name: 'Grade',
-        //     type: 'string',
-        //     allowNull: true
-        // },
         {
             name: 'Notes',
             type: 'string',
@@ -95,8 +90,9 @@ Ext.define('Slate.model.TermReport', {
             persist: false
         }
     ],
+
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/progress/narratives/reports',
         limitParam: null,
         startParam: null
