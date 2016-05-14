@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('Slate.model.Section', {
+Ext.define('Slate.model.CourseSection', {
     extend: 'Ext.data.Model',
     requires: [
         'Slate.proxy.Records',
