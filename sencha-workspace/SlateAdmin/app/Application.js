@@ -49,10 +49,10 @@ Ext.define('SlateAdmin.Application', {
         'progress.Interims',
         'progress.Narratives',
         'progress.narratives.Printer',
-        'progress.narratives.Mailer',
+        'progress.narratives.Mailer'
 
         //<debug>
-        'DeveloperTools'
+        ,'DeveloperTools'
         //</debug>
     ],
 
