@@ -9,6 +9,7 @@ namespace Slate\Progress\Narratives;
 use Slate\Term;
 use Slate\Courses\Section;
 use Emergence\People\Person;
+use Slate\People\Student;
 
 class ReportsRequestHandler extends \RecordsRequestHandler
 {
@@ -64,6 +65,25 @@ class ReportsRequestHandler extends \RecordsRequestHandler
             }
 
             $conditions['CourseSectionID'] = $Section->ID;
+            $responseData['course_section'] = $Section;
+        }
+
+        if (!empty($_REQUEST['students'])) {
+            $studentIds = [];
+
+            foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
+                $studentIds[] = $Student->ID;
+            }
+
+            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
+        }
+
+        if (!empty($_REQUEST['status'])) {
+            if (!in_array($_REQUEST['status'], Report::getFieldOptions('Status', 'values'))) {
+                return static::throwInvalidRequestError('Invalid status');
+            }
+
+            $conditions['Status'] = $_REQUEST['status'];
         }
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
