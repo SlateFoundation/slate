@@ -55,6 +55,7 @@ class ReportsRequestHandler extends \RecordsRequestHandler
             }
 
             $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
+            $responseData['term'] = $Term;
         }
 
         if (!empty($_REQUEST['course_section'])) {
