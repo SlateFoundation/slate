@@ -126,7 +126,7 @@ class Student extends User
             return $filterResult(static::getAllByWhere('ID IN ('.$identifier.')'));
         }
 
-        list($groupType, $groupHandle) = explode(' ', $identifier, 2);
+        list($groupType, $groupHandle) = preg_split('/[\s:\-]/', $identifier, 2);
 
         switch ($groupType) {
             case 'group':
