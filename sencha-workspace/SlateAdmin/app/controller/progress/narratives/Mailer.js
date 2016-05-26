@@ -240,6 +240,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         }
     },
 
+
     // custom controller methods
     grabParams: function() {
         var filters = this.grabFilters(),
