@@ -152,7 +152,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
             params = Ext.apply({
                 Recipients: recipients
-            },params);
+            }, params);
         }
 */
 
@@ -200,7 +200,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             store = me.getProgressNarrativesReportsStore(),
             proxy = store.getProxy(),
             filters = proxy.encodeFilters(store.getFilters().getRange()),
-            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters }),
+            params = Ext.apply(Ext.apply({}, proxy.getExtraParams()), { q: filters }),
             msg;
 
         grid.mask('Sending emails');
@@ -220,7 +220,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
                         });
                         msg += '</ul></p>';
                     }
-                    Ext.Msg.alert('Results',msg);
+                    Ext.Msg.alert('Results', msg);
                 } else {
                     Ext.Msg.alert('An error occurred while trying to send emails.  Please check logs for details');
                 }
@@ -232,7 +232,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
      * TODO: This store is used in multiple places.  When/if this application is upgraded to Ext JS 6,
      * this might be better handled in a handler for the grid's load event, which does not exist in Ext JS 5
      */
-    onReportStoreLoad: function (store,records) {
+    onReportStoreLoad: function (store, records) {
         var grid = this.getNarrativesMailerGrid();
 
         if (grid && grid.down('#total') && records) {
