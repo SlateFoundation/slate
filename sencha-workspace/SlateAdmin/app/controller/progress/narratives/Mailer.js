@@ -136,12 +136,14 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             recipients = formValues.Recipients,
             store = me.getProgressNarrativesReportsStore(),
             filters = me.grabFilters(),
-            params = { include: 'Student,EmailRecipients' };
+//            params = { include: 'Student,EmailRecipients' };
+            params = { include: 'Student,SelfRecipients,AdvisorRecipients,GuardianRecipients' };
 
         filters = this.grabFilters();
         store.clearFilter(true);
         store.addFilter(filters, true);
 
+/*
         // add recipients to params if requested
         if (recipients) {
             if (Ext.isArray(recipients)) {
@@ -152,6 +154,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
                 Recipients: recipients
             },params);
         }
+*/
 
         store.getProxy().setExtraParams(params);
         store.load();
@@ -225,12 +228,17 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         });
     },
 
+    /*
+     * TODO: This store is used in multiple places.  When/if this application is upgraded to Ext JS 6,
+     * this might be better handled in a handler for the grid's load event, which does not exist in Ext JS 5
+     */
     onReportStoreLoad: function (store,records) {
-        var total = this.getNarrativesMailerGrid().down('#total');
+        var grid = this.getNarrativesMailerGrid();
 
-        total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
+        if (grid && grid.down('#total') && records) {
+            grid.down('#total').setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
+        }
     },
-
 
     // custom controller methods
     grabParams: function() {
