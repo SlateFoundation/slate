@@ -162,6 +162,15 @@ class Term extends \VersionedRecord
         }
     }
 
+    public static function getClosestGraduationYear()
+    {
+        if (!$Term = static::getClosest()) {
+            return null;
+        }
+        
+        return (int)substr($Term->getMaster()->EndDate, 0, 4);
+    }
+
     public function validate($deep = true)
     {
         // call parent
