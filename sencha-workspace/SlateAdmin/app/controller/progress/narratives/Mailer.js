@@ -63,6 +63,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         },
         narrativesMailerForm: 'progress-narratives-mailer form#filterForm',
         narrativesMailerGrid: 'progress-narratives-mailergrid',
+        narrativesMailerGridTotal: 'progress-narratives-mailergrid component#total',
         narrativesMailerPreviewBox: 'progress-narratives-mailer component#previewBox',
         termCombo: 'progress-narratives-mailer combo#termCombo'
     },
@@ -233,10 +234,11 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
      * this might be better handled in a handler for the grid's load event, which does not exist in Ext JS 5
      */
     onReportStoreLoad: function (store, records) {
-        var grid = this.getNarrativesMailerGrid();
+        var grid = this.getNarrativesMailerGrid(),
+            total = this.getNarrativesMailerGridTotal();
 
-        if (grid && grid.down('#total') && records) {
-            grid.down('#total').setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
+        if (grid && total && records) {
+            total.setText(records.length + ' Report' + (records.length == 1 ? ' ' : 's'));
         }
     },
 
