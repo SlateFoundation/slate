@@ -63,6 +63,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         },
         narrativesMailerForm: 'progress-narratives-mailer form#filterForm',
         narrativesMailerGrid: 'progress-narratives-mailergrid',
+        narrativesMailerGridTotal: 'progress-narratives-mailergrid component#total',
         narrativesMailerPreviewBox: 'progress-narratives-mailer component#previewBox',
         termCombo: 'progress-narratives-mailer combo#termCombo'
     },
@@ -135,36 +136,15 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             formValues = me.getNarrativesMailerForm().getForm().getValues(),
             recipients = formValues.Recipients,
             store = me.getProgressNarrativesReportsStore(),
-            currentTerm = me.getTermCombo().getStore().getReportingTerm().getId(),
-            filters = [],
-            params = { include: 'Student,EmailRecipients' };
+            filters = me.grabFilters(),
+//            params = { include: 'Student,EmailRecipients' };
+            params = { include: 'Student,SelfRecipients,AdvisorRecipients,GuardianRecipients' };
 
-        /*
-         * TODO: - toString() can be removed when/if this pull request is merged:
-         * https://github.com/JarvusInnovations/emergence-apikit/pull/4
-         */
-        // Set filters
-        if (formValues.termID) {
-            filters.push({property: 'termID', value: formValues.termID.toString()});
-        } else {
-            filters.push({property: 'termID', value: currentTerm.toString()});
-        }
-
-        if (formValues.advisorID) {
-            filters.push({property: 'advisorID', value: formValues.advisorID.toString()});
-        }
-
-        if (formValues.studentID) {
-            filters.push({property: 'studentID', value: formValues.studentID.toString()});
-        }
-
-        if (formValues.authorID) {
-            filters.push({property: 'authorID', value: formValues.authorID.toString()});
-        }
-
+        filters = this.grabFilters();
         store.clearFilter(true);
         store.addFilter(filters, true);
 
+/*
         // add recipients to params if requested
         if (recipients) {
             if (Ext.isArray(recipients)) {
@@ -173,8 +153,9 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
             params = Ext.apply({
                 Recipients: recipients
-            },params);
+            }, params);
         }
+*/
 
         store.getProxy().setExtraParams(params);
         store.load();
@@ -220,34 +201,94 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
             store = me.getProgressNarrativesReportsStore(),
             proxy = store.getProxy(),
             filters = proxy.encodeFilters(store.getFilters().getRange()),
-            params = Ext.apply(Ext.apply({},proxy.getExtraParams()),{ q: filters, send_emails: 1 }),
+            params = Ext.apply(Ext.apply({}, proxy.getExtraParams()), { q: filters }),
             msg;
 
         grid.mask('Sending emails');
 
         SlateAdmin.API.request({
-            url: proxy.getUrl(),
+            url: proxy.getUrl()+'/email',
             params: params,
             scope: me,
             success: function (res) {
                 grid.unmask();
-                msg = '<p>' + res.data.successful + ' emails sent successfully.</p>';
-                if (res.data.failed > 0) {
-                    msg += '<p>' + res.data.failed+ ' emails were not able to be sent.<ul>';
-                    Ext.Array.each(res.data.errors, function(err) {
-                        msg += '<li>' + err + '</li>';
-                    });
-                    msg += '</ul></p>';
+                if (res && res.data && res.data) {
+                    msg = '<p>' + res.data.successful + ' emails sent successfully.</p>';
+                    if (res.data.failed > 0) {
+                        msg += '<p>' + res.data.failed+ ' emails were not able to be sent.<ul>';
+                        Ext.Array.each(res.data.errors, function(err) {
+                            msg += '<li>' + err + '</li>';
+                        });
+                        msg += '</ul></p>';
+                    }
+                    Ext.Msg.alert('Results', msg);
+                } else {
+                    Ext.Msg.alert('An error occurred while trying to send emails.  Please check logs for details');
                 }
-                Ext.Msg.alert('Results',msg);
             }
         });
     },
 
-    onReportStoreLoad: function (store,records) {
-        var total = this.getNarrativesMailerGrid().down('#total');
+    /*
+     * TODO: This store is used in multiple places.  When/if this application is upgraded to Ext JS 6,
+     * this might be better handled in a handler for the grid's load event, which does not exist in Ext JS 5
+     */
+    onReportStoreLoad: function (store, records) {
+        var grid = this.getNarrativesMailerGrid(),
+            total = this.getNarrativesMailerGridTotal();
 
-        total.setText(records.length + ' Report' + (records.length == 1 ? '    ' : 's'));
+        if (grid && total && records) {
+            total.setText(records.length + ' Report' + (records.length == 1 ? ' ' : 's'));
+        }
+    },
+
+
+    // custom controller methods
+    grabParams: function() {
+        var filters = this.grabFilters(),
+            params = [],
+            filtersLength = filters.length,
+            i = 0, param;
+
+        for (; i<filtersLength; i++) {
+            param = {};
+            param[filters[i].property] = filters[i].value;
+            params.push(param);
+        }
+        return params;
+    },
+
+    grabFilters: function () {
+        var me = this,
+            formValues = me.getNarrativesMailerForm().getForm().getValues(),
+            currentTerm = me.getTermCombo().getStore().getReportingTerm().getId(),
+            filters = [];
+
+        /*
+         * TODO: - toString() can be removed when/if this pull request is merged:
+         * https://github.com/JarvusInnovations/emergence-apikit/pull/4
+         */
+        // Set filters
+        if (formValues.termID) {
+            filters.push({property: 'termID', value: formValues.termID.toString()});
+        } else {
+            filters.push({property: 'termID', value: currentTerm.toString()});
+        }
+
+        if (formValues.advisorID) {
+            filters.push({property: 'advisorID', value: formValues.advisorID.toString()});
+        }
+
+        if (formValues.studentID) {
+            filters.push({property: 'studentID', value: formValues.studentID.toString()});
+        }
+
+        if (formValues.authorID) {
+            filters.push({property: 'authorID', value: formValues.authorID.toString()});
+        }
+
+        return filters;
+
     }
 
 });
