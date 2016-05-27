@@ -1,28 +1,38 @@
-$button-default-background-gradient:            'none' !default;
-$button-default-background-gradient-disabled:   'none' !default;
-$button-default-background-gradient-focus:      'none' !default;
-$button-default-background-gradient-over:       'none' !default;
-$button-default-background-gradient-pressed:    'none' !default;
+$button-default-background-gradient:            dynamic('none');
+$button-default-background-gradient-disabled:   dynamic('none');
+$button-default-background-gradient-focus:      dynamic('none');
+$button-default-background-gradient-over:       dynamic('none');
+$button-default-background-gradient-pressed:    dynamic('none');
 
-$button-toolbar-background-gradient:            'none' !default;
-$button-toolbar-background-gradient-disabled:   'none' !default;
-$button-toolbar-background-gradient-focus:      'none' !default;
-$button-toolbar-background-gradient-over:       'none' !default;
-$button-toolbar-background-gradient-pressed:    'none' !default;
+$button-toolbar-background-gradient:            dynamic('none');
+$button-toolbar-background-gradient-disabled:   dynamic('none');
+$button-toolbar-background-gradient-focus:      dynamic('none');
+$button-toolbar-background-gradient-over:       dynamic('none');
+$button-toolbar-background-gradient-pressed:    dynamic('none');
 
-$button-toolbar-background-color: #f9f9f9 !default;
-$button-toolbar-background-color-over: white !default;
-$button-toolbar-background-color-focus: $button-toolbar-background-color-over !default;
-$button-toolbar-background-color-disabled: transparent !default;
+$button-toolbar-background-color:               dynamic(#f9f9f9);
+$button-toolbar-background-color-over:          dynamic(white);
+$button-toolbar-background-color-focus:         dynamic($button-toolbar-background-color-over);
+$button-toolbar-background-color-disabled:      dynamic(transparent);
 
-$button-toolbar-border-color: rgba(#d5d5d5, 0) !default;
-$button-toolbar-border-color-disabled: transparent !default;
+$button-toolbar-border-color:                   dynamic(rgba(#d5d5d5, 0));
+$button-toolbar-border-color-disabled:          dynamic(transparent);
 
-$button-small-border-width: 0 !default;
+$button-small-border-width:     dynamic(0 0 1px);
+$button-medium-border-width:    dynamic(0 0 1px);
+$button-large-border-width:     dynamic(0 0 1px);
 
-$button-small-icon-size:    $glyph-size !default;
-$button-medium-icon-size:   $glyph-size !default;
-$button-large-icon-size:    $glyph-size * 2 !default;
+$button-small-font-size:        dynamic($font-size * .9);
+$button-medium-font-size:       dynamic($font-size);
+$button-large-font-size:        dynamic($font-size * 1.1);
+
+$button-small-font-weight:      dynamic(normal);
+$button-medium-font-weight:     dynamic(normal);
+$button-large-font-weight:      dynamic(normal);
+
+$button-small-icon-size:        dynamic($glyph-size);
+$button-medium-icon-size:       dynamic($glyph-size);
+$button-large-icon-size:        dynamic($glyph-size * 2);
 
 $button-default-glyph-opacity:  .6;
 $button-toolbar-glyph-opacity:  .9;

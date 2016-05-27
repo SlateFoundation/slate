@@ -3,6 +3,16 @@
 @include glyph-color('accent',  $accent-color);
 
 .x-btn {
+    text-decoration: none !important;
+}
+
+.x-btn-default-small,
+.x-btn-default-medium,
+.x-btn-default-large {
+    letter-spacing: .01em;
+
+    -moz-osx-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
 }
 
 .x-btn-default-toolbar-medium {
