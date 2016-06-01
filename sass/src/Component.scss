@@ -4,4 +4,10 @@
 .x-body {
     font-size: 16px;
     -webkit-font-smoothing: subpixel-antialiased;
+
+    hr {
+        border: 1px solid $border-color;
+        border-width: 1px 0 0;
+        margin: 1.5em 0;
+    }
 }
