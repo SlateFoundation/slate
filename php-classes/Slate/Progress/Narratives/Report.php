@@ -62,6 +62,11 @@ class Report extends \VersionedRecord
         'Term' => [
             'type' => 'one-one',
             'class' => \Slate\Term::class
+        ],
+        'SectionNotes' => [
+            'type' => 'one-one',
+            'class' => SectionNotes::class,
+            'link' => ['TermID', 'CourseSectionID']
         ]
     ];
 
