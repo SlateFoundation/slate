@@ -37,6 +37,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     // group assignments
     public static $studentsRootGroup = 'students';
+    public static $studentsGraduationYearGroups = true;
     public static $alumniRootGroup = 'alumni';
     public static $staffRootGroup = 'staff';
     public static $teachersRootGroup = 'teachers';
@@ -988,54 +989,68 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // determine primary group
-        $primaryGroup = null;
+        $Group = null;
 
-        if ($User->GraduationYear && static::$studentsRootGroup) {
-            // get class group from cache or database
-            $groupHandle = 'class_of_'.$User->GraduationYear;
-
-            if (!$primaryGroup = Group::getByHandle($groupHandle)) {
-                $parentGroupHandle = $User->GraduationYear >= $currentGraduationYear ? static::$studentsRootGroup : static::$alumniRootGroup;
-                if (!$parentGroup = Group::getByHandle($parentGroupHandle)) {
-                    throw new RemoteRecordInvalid(
-                        'student-root-group-not-found',
-                        sprintf('Student root group "%s" does not exist', $parentGroupHandle),
-                        $row,
-                        $parentGroupHandle
-                    );
-                }
-
-                $primaryGroup = Group::create([
-                    'Name' => 'Class of '.$User->GraduationYear,
-                    'Parent' => $parentGroup
-                ]);
-
-                $Job->log(sprintf('create graduation group for %s', $primaryGroup->Name), LogLevel::NOTICE);
+        if (
+            $User->isA(Student::class)
+            && (
+                $rootGroupHandle = (
+                    $User->GraduationYear >= $currentGraduationYear
+                    ? static::$studentsRootGroup
+                    : static::$alumniRootGroup
+                )
+            )
+        ) {
+            // get root group initially for either student or alumni
+            if (!$Group = Group::getByHandle($rootGroupHandle)) {
+                throw new RemoteRecordInvalid(
+                    'student-root-group-not-found',
+                    sprintf('Student root group "%s" does not exist', $rootGroupHandle),
+                    $row,
+                    $rootGroupHandle
+                );
             }
 
-            // if Group is set, get or create as subgroup of graduation group
-            if (!empty($row['Group'])) {
-                $parentGroup = $primaryGroup;
 
-                $primaryGroup = Group::getByWhere([
-                    'ParentID' => $parentGroup->ID,
+            // move down to graduation year group if enabled
+            if (static::$studentsGraduationYearGroups) {
+                $ParentGroup = $Group;
+
+                // try to get existing "Class of YYYY" group
+                if (!$Group = Group::getByHandle("class_of_$User->GraduationYear")) {
+                    $Group = Group::create([
+                        'Name' => 'Class of '.$User->GraduationYear,
+                        'Parent' => $ParentGroup
+                    ]);
+
+                    $Job->log(sprintf('create graduation group %s under %s', $Group->Name, $ParentGroup->Name), LogLevel::NOTICE);
+                }
+            }
+
+
+            // move down to custom subgroup if provided
+            if ($Group && !empty($row['Group'])) {
+                $ParentGroup = $Group;
+
+                $Group = Group::getByWhere([
+                    'ParentID' => $ParentGroup->ID,
                     'Name' => $row['Group']
                 ]);
 
-                if (!$primaryGroup) {
-                    $primaryGroup = Group::create([
+                if (!$Group) {
+                    $Group = Group::create([
                         'Name' => $row['Group'],
-                        'Parent' => $parentGroup
+                        'Parent' => $ParentGroup
                     ]);
 
-                    $Job->log(sprintf('create group %s in graduation group %s', $primaryGroup->Name, $parentGroup->Name), LogLevel::NOTICE);
+                    $Job->log(sprintf('create group %s under group %s', $Group->Name, $ParentGroup->Name), LogLevel::NOTICE);
                 }
             }
+
         } elseif ($User->hasAccountLevel('Staff') && static::$staffRootGroup) {
             $groupHandle = $User->AccountLevel == 'Teacher' ? static::$teachersRootGroup : static::$staffRootGroup;
-            $primaryGroup = Group::getByHandle($groupHandle);
 
-            if (!$primaryGroup) {
+            if ($groupHandle && !($Group = Group::getByHandle($groupHandle))) {
                 throw new RemoteRecordInvalid(
                     'staff-root-group-not-found',
                     sprintf('Staff root group "%s" does not exist', $groupHandle),
@@ -1045,11 +1060,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
         }
 
-        if ($primaryGroup) {
+
+        if ($Group) {
             // check if user is already in the determined primary group or a subgroup of it
             $foundGroup = null;
             foreach ($User->Groups AS $currentGroup) {
-                if ($currentGroup->Left >= $primaryGroup->Left && $currentGroup->Right <= $primaryGroup->Right) {
+                if ($currentGroup->Left >= $Group->Left && $currentGroup->Right <= $Group->Right) {
                     $foundGroup = $currentGroup;
                     break;
                 }
@@ -1057,12 +1073,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // assign to determined group if needed
             if (!$foundGroup) {
-                $Job->log(sprintf('add %s to group %s', $User->getTitle(), $primaryGroup->isPhantom ? $primaryGroup->Name : $primaryGroup->getFullPath()), LogLevel::NOTICE);
+                $Job->log(sprintf('add %s to group %s', $User->getTitle(), $Group->isPhantom ? $Group->Name : $Group->getFullPath()), LogLevel::NOTICE);
                 $membership = GroupMember::create([
-                    'Group' => $primaryGroup
+                    'Group' => $Group
                 ]);
                 $User->GroupMemberships = array_merge($User->GroupMemberships, [$membership]);
-                $results['added-to-group'][$primaryGroup->Name]++;
+                $results['added-to-group'][$Group->Name]++;
             }
         }
 
