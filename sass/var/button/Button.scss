@@ -34,5 +34,8 @@ $button-small-icon-size:        dynamic($glyph-size);
 $button-medium-icon-size:       dynamic($glyph-size);
 $button-large-icon-size:        dynamic($glyph-size * 2);
 
-$button-default-glyph-opacity:  .6;
-$button-toolbar-glyph-opacity:  .9;
+$button-default-glyph-opacity:  dynamic(.6);
+$button-toolbar-glyph-opacity:  dynamic(.9);
+
+$button-normal-background-color:    dynamic(#999);
+$button-normal-border-color:        dynamic(#666);

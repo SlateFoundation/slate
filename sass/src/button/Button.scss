@@ -2,6 +2,24 @@
 @include glyph-color('success', $success-color);
 @include glyph-color('accent',  $accent-color);
 
+@include extjs-button-small-ui(
+    $ui: 'normal',
+    $background-color: $button-normal-background-color,
+    $border-color: $button-normal-border-color
+);
+
+@include extjs-button-medium-ui(
+    $ui: 'normal',
+    $background-color: $button-normal-background-color,
+    $border-color: $button-normal-border-color
+);
+
+@include extjs-button-large-ui(
+    $ui: 'normal',
+    $background-color: $button-normal-background-color,
+    $border-color: $button-normal-border-color
+);
+
 .x-btn {
     text-decoration: none !important;
 }
