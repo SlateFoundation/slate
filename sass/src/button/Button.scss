@@ -20,6 +20,27 @@
     $border-color: $button-normal-border-color
 );
 
+@include extjs-button-small-ui(
+    $ui: 'light',
+    $background-color: $button-light-background-color,
+    $border-color: $button-light-border-color,
+    $color: $button-light-color
+);
+
+@include extjs-button-medium-ui(
+    $ui: 'light',
+    $background-color: $button-light-background-color,
+    $border-color: $button-light-border-color,
+    $color: $button-light-color
+);
+
+@include extjs-button-large-ui(
+    $ui: 'light',
+    $background-color: $button-light-background-color,
+    $border-color: $button-light-border-color,
+    $color: $button-light-color
+);
+
 .x-btn {
     text-decoration: none !important;
 }
@@ -29,7 +50,7 @@
 .x-btn-default-large {
     letter-spacing: .01em;
 
-    -moz-osx-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -45,4 +66,17 @@
 .x-btn-icon-left.x-btn-button-default-toolbar-medium > .x-btn-icon-el-default-toolbar-medium {
     margin-left: 4px;
     margin-right: -2px;
+}
+
+.x-btn-wrap-light-medium.x-btn-arrow-right::after {
+    color: $color;
+    content: '\f0d7'; // fa-caret-down
+    font-family: FontAwesome;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    text-align: right;
+
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
 }
