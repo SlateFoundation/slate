@@ -20,7 +20,7 @@ Ext.define('Slate.API', {
 
     // allow API host to be overridden via apiHost param
     if (pageParams.apiHost) {
-        API.setHost(pageParams.apiHost);
+        API.setHost(pageParams.apiHost.replace(/(^[a-zA-Z]+:\/\/)?([^/]+).*/, '$2'));
         API.setUseSSL(!!pageParams.apiSSL);
     }
 });
