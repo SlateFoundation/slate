@@ -68,6 +68,10 @@
     margin-right: -2px;
 }
 
+.x-btn-glyph {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
 .x-btn-wrap-light-medium.x-btn-arrow-right::after {
     color: $color;
     content: '\f0d7'; // fa-caret-down
