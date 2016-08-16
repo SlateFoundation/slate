@@ -5,25 +5,25 @@
 }
 
 .x-tree-icon-parent {
-    background-image: inline-image('tree/folder-closed.svg');
+    background-image: theme-background-image('tree/folder-closed', 'svg');
 
     .x-grid-tree-node-expanded & {
-        background-image: inline-image('tree/folder-open.svg');
+        background-image: theme-background-image('tree/folder-open', 'svg');
     }
 }
 
 .x-tree-icon-leaf {
-    background-image: inline-image('tree/file.svg');
+    background-image: theme-background-image('tree/file', 'svg');
 }
 
 .x-tree-no-lines {
     .x-tree-expander {
-        background-image: inline-image('tree/plus.svg');
+        background-image: theme-background-image('tree/plus', 'svg');
         background-position: center;
         background-size: 11px;
     }
 
     .x-grid-tree-node-expanded .x-tree-expander {
-        background-image: inline-image('tree/minus.svg');
+        background-image: theme-background-image('tree/minus', 'svg');
     }
 }
