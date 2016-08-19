@@ -1,0 +1,9 @@
+.x-panel-header-default {
+    .x-form-item-label-default {
+        color: white;
+    }
+}
+
+.x-header-noborder {
+    border-width: 0; // not sure why this rule is missing from framework css
+}
