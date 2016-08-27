@@ -15,17 +15,7 @@ Git::$repositories['slate'] = [
         ],
         'mail-handlers',
         'php-classes',
-        'php-config' => [
-            'exclude' => [
-                '#^/Site\\.config\\.php$#', // don't sync local site config
-                '#^/Git\\.config\\.php$#', // don't sync this file
-
-                // dev site overrides that should be preserved
-                '#^/Emergence/People/RegistrationRequestHandler\\.config\\.php$#',
-                '#^/Slate/UI/\w+\\.config\\.php$#',
-                '#^/RemoteSystems/\w+\\.config\\.php$#'
-            ]
-        ],
+        'php-config',
         'php-migrations',
         'phpunit-tests',
         'sencha-workspace/pages',
