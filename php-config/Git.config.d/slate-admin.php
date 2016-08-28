@@ -4,7 +4,6 @@ Git::$repositories['slate-admin'] = [
     'remote' => 'https://github.com/SlateFoundation/slate-admin.git',
     'originBranch' => 'development',
     'workingBranch' => 'development',
-    'localOnly' => true,
     'trees' => [
         'docs/slate-admin',
         'html-templates/app/SlateAdmin',
