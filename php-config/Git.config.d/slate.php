@@ -24,7 +24,7 @@ Git::$repositories['slate'] = [
                 '#^/SAML2(/|$)#',
 
                 // from xmlseclibs layer:
-                '#^/XMLSec[^.]+\.php$#'
+                '#^/RobRichards(/|$)#'
             ]
         ],
         'php-config' => [
