@@ -80,13 +80,6 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         }
     },
 
-    associations: [{
-        type: 'hasOne',
-        model: 'SlateAdmin.model.person.Relationship',
-        associationKey: 'InverseRelationship',
-        getterName: 'getInverseRelationship'
-    }],
-
     proxy: {
         type: 'slaterecords',
         url: '/relationships',
