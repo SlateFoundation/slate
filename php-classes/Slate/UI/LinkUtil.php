@@ -64,7 +64,7 @@ class LinkUtil
                 }
 
                 $value = [
-                    '_label' => $value->getTitle(),
+                    '_label' => is_string($key) ? $key : $value->getTitle(),
                     '_href' => $value->getUrl()
                 ];
 
@@ -73,7 +73,7 @@ class LinkUtil
                 }
             } elseif ($value instanceof ActiveRecord) {
                 $value = [
-                    '_label' => $value->getTitle(),
+                    '_label' => is_string($key) ? $key : $value->getTitle(),
                     '_href' => $value->getUrl(),
                     '_iconSrc' => $context && property_exists($context, 'preferredIconSize') && $context::$preferredIconSize ? $value->getThumbnailURL($context::$preferredIconSize) : null
                 ];
