@@ -58,6 +58,29 @@ class Relationship extends \VersionedRecord
                 ,'Neutral' => 'grandchild'
             ]
         ]
+        ,'great grandmother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
+                'Male' => 'great grandson'
+                ,'Female' => 'great granddaughter'
+                ,'Neutral' => 'great grandchild'
+            ]
+        ]
+        ,'great grandfather' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
+                'Male' => 'great grandson'
+                ,'Female' => 'great granddaughter'
+                ,'Neutral' => 'great grandchild'
+            ]
+        ]
+        ,'great grandparent' => [
+            'Inverse' => [
+                'Male' => 'great grandson'
+                ,'Female' => 'great granddaughter'
+                ,'Neutral' => 'great grandchild'
+            ]
+        ]
         ,'stepmother' => [
             'Person' => ['Gender' => 'Female']
             ,'Inverse' => [
