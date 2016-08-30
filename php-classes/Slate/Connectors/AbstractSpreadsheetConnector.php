@@ -49,11 +49,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $onUserNotFound;
     public static $onApplyUserChanges;
 
-    public static $onBeforeValidateRecord;
-    public static $onValidateRecord;
-    public static $onBeforeSaveRecord;
-    public static $onSaveRecord;
-
 
     // column maps
     public static $studentColumns = [
