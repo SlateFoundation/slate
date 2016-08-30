@@ -764,7 +764,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _applyUserChanges(Job $Job, User $User, array $row, array &$results)
     {
-        $currentGraduationYear = date('Y', strtotime(static::_getCurrentMasterTerm($Job)->EndDate));
+        $currentGraduationYear = Term::getClosestGraduationYear();
         $autoCapitalize = $Job->Config['autoCapitalize'];
         $_formatPronoun = function($string, $familyName = false) use ($autoCapitalize) {
             return $autoCapitalize ? Capitalizer::capitalizePronoun($string, $familyName) : $string;
