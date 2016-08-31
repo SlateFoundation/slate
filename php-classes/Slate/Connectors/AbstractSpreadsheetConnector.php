@@ -996,6 +996,26 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
             $User->Advisor = $Mapping->Context;
+        } elseif (($advisorNameSplit = !empty($row['AdvisorFirstName']) && !empty($row['AdvisorLastName'])) || !empty($row['AdvisorFullName'])) {
+            if ($advisorNameSplit) {
+                $Advisor = User::getByFullName($row['AdvisorFirstName'], $row['AdvisorLastName']);
+            } else {
+                $advisorName = User::parseFullName($row['AdvisorFullName']);
+                $Advisor = User::getByFullName($advisorName['FirstName'], $advisorName['rLastName']);
+            }
+
+            if (!$Advisor) {
+                $fullName = $advisorNameSplit ? $row['AdvisorFirstName'] . ' ' . $row['AdvisorLastName'] : $row['AdvisorFullName'];
+
+                throw new RemoteRecordInvalid(
+                    'advisor-not-found-by-name',
+                    sprintf('Teacher not found for full name "%s"', $fullName),
+                    $row,
+                    $fullName
+                );
+            }
+
+            $User->Advisor = $Advisor;
         }
 
 
