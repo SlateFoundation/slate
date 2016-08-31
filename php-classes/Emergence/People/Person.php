@@ -32,6 +32,9 @@ class Person extends VersionedRecord implements \Emergence\People\IPerson
         ,'MiddleName' => [
             'notnull' => false
         ]
+        ,'PreferredName' => [
+            'default' => null
+        ]
         ,'Gender' => [
             'type' => 'enum'
             ,'values' => ['Male','Female']
