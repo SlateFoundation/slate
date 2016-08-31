@@ -49,6 +49,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $onUserNotFound;
     public static $onApplyUserChanges;
 
+    public static $filterPerson;
+    public static $filterSection;
+    public static $filterEnrollment;
+
 
     // column maps
     public static $studentColumns = [
@@ -218,6 +222,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             static::_logRow($Job, 'student', $results['analyzed'], $row);
 
 
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping student row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
+
+
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = Student::create();
@@ -276,6 +292,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             static::_logRow($Job, 'alumni', $results['analyzed'], $row);
 
 
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping student row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
+
+
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = Student::create();
@@ -332,6 +360,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // start logging analysis
             $results['analyzed']++;
             static::_logRow($Job, 'staff', $results['analyzed'], $row);
+
+
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping student row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
 
 
             // get existing user or start creating a new one
@@ -403,6 +443,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // start logging analysis
             $results['analyzed']++;
             static::_logRow($Job, 'sections', $results['analyzed'], $row);
+
+
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterSection($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping section row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
 
 
             // check required fields
@@ -619,6 +671,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             static::_logRow($Job, 'enrollments', $results['analyzed'], $row);
 
 
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterEnrollment($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping enrollment row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
+
+
             // check required fields
             if (empty($row['StudentNumber'])) {
                 $results['failed']['missing-student-number']++;
@@ -698,6 +762,51 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // protected methods
+    protected static function _filterPerson(Job $Job, array $row)
+    {
+        $filterResult = false;
+
+        if (is_callable(static::$filterPerson)) {
+            $filterResult = call_user_func(static::$filterPerson, $Job, $row);
+
+            if ($filterResult === true) {
+                $filterResult = 'no-reason';
+            }
+        }
+
+        return $filterResult;
+    }
+
+    protected static function _filterSection(Job $Job, array $row)
+    {
+        $filterResult = false;
+
+        if (is_callable(static::$filterSection)) {
+            $filterResult = call_user_func(static::$filterSection, $Job, $row);
+
+            if ($filterResult === true) {
+                $filterResult = 'no-reason';
+            }
+        }
+
+        return $filterResult;
+    }
+
+    protected static function _filterEnrollment(Job $Job, array $row)
+    {
+        $filterResult = false;
+
+        if (is_callable(static::$filterEnrollment)) {
+            $filterResult = call_user_func(static::$filterEnrollment, $Job, $row);
+
+            if ($filterResult === true) {
+                $filterResult = 'no-reason';
+            }
+        }
+
+        return $filterResult;
+    }
+
     protected static function _getPerson(Job $Job, array $row)
     {
         // try to get existing account by foreign key column
