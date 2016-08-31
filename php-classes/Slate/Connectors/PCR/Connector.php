@@ -13,13 +13,13 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
     public static $studentColumns = [
         'alternate id' => 'ForeignKey',
         'student id' => 'StudentNumber',
-        'student nickname' => 'PreferredName', // TODO: import
+        'student nickname' => 'PreferredName',
         'student first name' => 'FirstName',
         'student middle name' => 'MiddleName',
         'student last name' => 'LastName',
         'sex' => 'Gender',
         'year grad' => 'GraduationYear',
-        'advisor first name' => 'AdvisorFirstName', // TODO: support
+        'advisor first name' => 'AdvisorFirstName',
         'advisor last name' => 'AdvisorLastName'
     ];
 
