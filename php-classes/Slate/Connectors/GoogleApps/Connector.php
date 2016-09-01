@@ -64,8 +64,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
         if (!empty($Job->Config['pushUsers'])) {
             $results['push-users'] = static::pushUsers(
                 $Job,
-                $pretend,
-                $verbose
+                $pretend
             );
         }
 
@@ -83,7 +82,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
     // task handlers
-    public static function pushUsers(Job $Job, $pretend = true, $verbose = false)
+    public static function pushUsers(Job $Job, $pretend = true)
     {
         // initialize results
         $results = [];
