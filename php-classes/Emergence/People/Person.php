@@ -4,9 +4,11 @@ namespace Emergence\People;
 
 use DB;
 use VersionedRecord;
-use Group;
+use PhotoMedia;
+use Emergence\Comments\Comment;
+use Emergence\CRM\Message;
 
-class Person extends VersionedRecord implements \Emergence\People\IPerson
+class Person extends VersionedRecord implements IPerson
 {
     // support subclassing
     public static $rootClass = __CLASS__;
@@ -76,59 +78,59 @@ class Person extends VersionedRecord implements \Emergence\People\IPerson
     public static $relationships = [
         'GroupMemberships' => [
             'type' => 'one-many'
-            ,'class' => 'GroupMember'
+            ,'class' => Groups\GroupMember::class
             ,'indexField' => 'GroupID'
             ,'foreign' => 'PersonID'
         ]
         ,'Notes' => [
             'type' => 'context-children'
-            ,'class' => 'Note'
-            ,'contextClass' => 'Person'
+            ,'class' => Message::class
+            ,'contextClass' => Person::class
             ,'order' => ['ID' => 'DESC']
         ]
         ,'Groups' => [
             'type' => 'many-many'
-            ,'class' => 'Group'
-            ,'linkClass' => 'GroupMember'
+            ,'class' => Groups\Group::class
+            ,'linkClass' => Groups\GroupMember::class
             ,'linkLocal' => 'PersonID'
             ,'linkForeign' => 'GroupID'
         ]
         ,'PrimaryPhoto' => [
             'type' => 'one-one'
-            ,'class' => 'PhotoMedia'
+            ,'class' => PhotoMedia::class
             ,'local' => 'PrimaryPhotoID'
         ]
         ,'Photos' => [
             'type' => 'context-children'
-            ,'class' => 'PhotoMedia'
+            ,'class' => PhotoMedia::class
             ,'contextClass' => __CLASS__
         ]
         ,'Comments' => [
             'type' => 'context-children'
-            ,'class' => 'Comment'
+            ,'class' => Comment::class
             ,'contextClass' => __CLASS__
             ,'order' => ['ID' => 'DESC']
         ]
         ,'PrimaryEmail' => [
             'type' => 'one-one'
-            ,'class' => '\\Emergence\\People\\ContactPoint\\Email'
+            ,'class' => ContactPoint\Email::class
         ]
         ,'PrimaryPhone' => [
             'type' => 'one-one'
-            ,'class' => '\\Emergence\\People\\ContactPoint\\Phone'
+            ,'class' => ContactPoint\Phone::class
         ]
         ,'PrimaryPostal' => [
             'type' => 'one-one'
-            ,'class' => '\\Emergence\\People\\ContactPoint\\Postal'
+            ,'class' => ContactPoint\Postal::class
         ]
         ,'ContactPoints' => [
             'type' => 'one-many'
-            ,'class' => '\\Emergence\\People\\ContactPoint\\AbstractPoint'
+            ,'class' => ContactPoint\AbstractPoint::class
             ,'foreign' => 'PersonID'
         ]
         ,'Relationships' => [
             'type' => 'one-many'
-            ,'class' => 'Emergence\\People\\Relationship'
+            ,'class' => Relationship::class
             ,'foreign' => 'PersonID'
         ]
     ];
@@ -175,7 +177,7 @@ class Person extends VersionedRecord implements \Emergence\People\IPerson
             'qualifiers' => ['group']
             ,'points' => 1
             ,'join' => [
-                'className' => 'GroupMember'
+                'className' => Groups\GroupMember::class
                 ,'aliasName' => 'GroupMember'
                 ,'localField' => 'ID'
                 ,'foreignField' => 'PersonID'
@@ -389,7 +391,7 @@ class Person extends VersionedRecord implements \Emergence\People\IPerson
 
     public static function getGroupConditions($handle, $matchedCondition)
     {
-        $group = Group::getByHandle($handle);
+        $group = Groups\Group::getByHandle($handle);
 
         if (!$group) {
             return false;
