@@ -197,7 +197,7 @@ class User extends Person
     {
         // apply default options
         $options = array_merge(
-            ['incrementerFormat' => '%s%u'],
+            ['suffixFormat' => '%s%u'],
             is_string(static::$usernameGenerator) || is_callable(static::$usernameGenerator) ? ['format' => static::$usernameGenerator] : static::$usernameGenerator,
             $options,
             ['handleField' => 'Username']

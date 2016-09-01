@@ -188,7 +188,7 @@ class Section extends \VersionedRecord
         if (!$this->Code) {
             $this->Code = HandleBehavior::getUniqueHandle("\\Slate\\Courses\\Section", $this->Course->Code, [
                 'handleField' => 'Code'
-                ,'incrementerFormat' => '%s-%03u'
+                ,'suffixFormat' => '%s-%03u'
                 ,'alwaysSuffix' => true
                 ,'case' => 'upper'
             ]);
