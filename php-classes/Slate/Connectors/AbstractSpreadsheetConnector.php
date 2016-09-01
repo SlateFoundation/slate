@@ -888,6 +888,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             $User->MiddleName = $_formatPronoun($row['MiddleName']);
         }
 
+        if (!empty($row['PreferredName'])) {
+            $User->PreferredName = $_formatPronoun($row['PreferredName']);
+        }
+
 
         // apply account
         if (!$User->Username || !empty($Job->Config['updateUsernames'])) {
