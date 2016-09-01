@@ -1141,7 +1141,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             // move down to graduation year group if enabled
-            if (static::$studentsGraduationYearGroups) {
+            if (static::$studentsGraduationYearGroups && $User->GraduationYear) {
                 $ParentGroup = $Group;
 
                 // try to get existing "Class of YYYY" group
