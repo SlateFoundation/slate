@@ -153,10 +153,11 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                 // compare records and prepare changes
                 $changes = [];
 
-                if ($googleUser['name']['givenName'] != $User->FirstName) {
+                $givenName = $User->PreferredName ?: $User->FirstName;
+                if ($googleUser['name']['givenName'] != $givenName) {
                     $changes['name.givenName'] = [
                         'from' => $googleUser['name']['givenName'],
-                        'to' => $User->FirstName
+                        'to' => $givenName
                     ];
                 }
 
