@@ -398,7 +398,7 @@ class Person extends VersionedRecord implements IPerson
         }
 
         $containedGroups = DB::allRecords('SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
-            Group::$tableName
+            Groups\Group::$tableName
             ,$group->Left
             ,$group->Right
         ]);
