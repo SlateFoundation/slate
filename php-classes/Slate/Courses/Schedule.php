@@ -96,7 +96,9 @@ class Schedule extends \VersionedRecord
     public function save($deep = true)
     {
         // implement handles
-        HandleBehavior::onSave($this);
+        HandleBehavior::onSave($this, preg_replace('/\s+/', '', $this->Title), [
+            'case' => null
+        ]);
 
         // call parent
         parent::save($deep);
