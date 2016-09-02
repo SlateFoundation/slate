@@ -1069,7 +1069,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Advisor = User::getByFullName($row['AdvisorFirstName'], $row['AdvisorLastName']);
             } else {
                 $advisorName = User::parseFullName($row['AdvisorFullName']);
-                $Advisor = User::getByFullName($advisorName['FirstName'], $advisorName['rLastName']);
+                $Advisor = User::getByFullName($advisorName['FirstName'], $advisorName['LastName']);
             }
 
             if (!$Advisor) {
