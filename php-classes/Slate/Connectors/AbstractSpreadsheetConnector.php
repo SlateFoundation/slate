@@ -24,6 +24,7 @@ use Slate\Term;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
+use Slate\Courses\Department;
 use Slate\Courses\Schedule;
 use Emergence\Locations\Location;
 
@@ -48,6 +49,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $sectionTitleFormatter;
     public static $onUserNotFound;
     public static $onApplyUserChanges;
+    public static $onApplySectionChanges;
 
     public static $filterPerson;
     public static $filterSection;
@@ -435,9 +437,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         // loop through rows
         while ($row = $spreadsheet->getNextRow()) {
-            $row = static::_readRow($row, static::$sectionColumns);
             $Record = null;
             $Mapping = null;
+
+            // process input row through column mapping
+            $row = static::_readSection($Job, $row);
 
 
             // start logging analysis
@@ -501,7 +505,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             }
 
-
             // get teacher, but add later
             $Teacher = null;
             if (!empty($row['TeacherUsername'])) {
@@ -510,69 +513,45 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $Job->log(sprintf('Teacher not found for username "%s"', $row['TeacherUsername']), LogLevel::ERROR);
                     continue;
                 }
-            } elseif (!empty($row['TeacherFullName'])) {
-                $teacherName = User::parseFullName($row['TeacherFullName']);
-                if (!$Teacher = User::getByFullName($teacherName['FirstName'], $teacherName['LastName'])) {
-                    $results['failed']['teacher-not-found-by-name'][$row['TeacherFullName']]++;
-                    $Job->log(sprintf('Teacher not found for full name "%s"', $row['TeacherFullName']), LogLevel::ERROR);
+            } elseif (($teacherNameSplit = !empty($row['TeacherFirstName']) && !empty($row['TeacherLastName'])) || !empty($row['TeacherFullName'])) {
+                if ($teacherNameSplit) {
+                    $Teacher = User::getByFullName($row['TeacherFirstName'], $row['TeacherLastName']);
+                } else {
+                    $teacherName = User::parseFullName($row['TeacherFullName']);
+                    $Teacher = User::getByFullName($teacherName['FirstName'], $teacherName['LastName']);
+                }
+
+                if (!$Teacher) {
+                    $fullName = $teacherNameSplit ? $row['TeacherFirstName'] . ' ' . $row['TeacherLastName'] : $row['TeacherFullName'];
+                    $results['failed']['teacher-not-found-by-name'][$fullName]++;
+                    $Job->log(sprintf('Teacher not found for full name "%s"', $fullName), LogLevel::ERROR);
                     continue;
                 }
+            }
+
+
+            // get or create course
+            if (!$Record->Course = Course::getByCode($row['CourseCode'])) {
+                $Record->Course = Course::create([
+                    'Code' => $row['CourseCode'],
+                    'Title' => $row['CourseTitle'] ?: $row['CourseCode'],
+                    'Department' => !empty($row['DepartmentTitle']) ? Department::getOrCreateByTitle($row['DepartmentTitle']) : null
+                ]);
             }
 
 
             // apply values from spreadsheet
-            if (!$Record->Course = Course::getByCode($row['CourseCode'])) {
-                $Record->Course = Course::create([
-                    'Code' => $row['CourseCode'],
-                    'Title' => $row['CourseCode']
-                ]);
-            }
-
-            if (!empty($row['Term'])) {
-                if (!$Record->Term = Term::getByHandle($row['Term'])) {
-                    $results['failed']['term-not-found'][$row['Term']]++;
-                    $Job->log(sprintf('Term not found for handle "%s"', $row['Term']), LogLevel::ERROR);
-                    continue;
+            try {
+                static::_applySectionChanges($Job, $MasterTerm, $Record, $row, $results);
+            } catch (RemoteRecordInvalid $e) {
+                if ($e->getValueKey()) {
+                    $results['failed'][$e->getMessageKey()][$e->getValueKey()]++;
+                } else {
+                    $results['failed'][$e->getMessageKey()]++;
                 }
 
-                if ($Record->Term->Left < $MasterTerm->Left || $Record->Term->Left > $MasterTerm->Right) {
-                    $results['failed']['term-outside-master'][$row['Term']]++;
-                    $Job->log(sprintf('Term "%s" is not within the selected master term', $row['Term']), LogLevel::ERROR);
-                    continue;
-                }
-            }
-
-            if (!empty($row['Schedule'])) {
-                $Record->Schedule = Schedule::getOrCreateByHandle($row['Schedule']);
-            }
-
-            if (!empty($row['Location'])) {
-                $Record->Location = Location::getOrCreateByHandle('room-'.$row['Location'], 'Room '.$row['Location']);
-            }
-
-            if (!empty($row['StudentsCapacity'])) {
-                $Record->StudentsCapacity = $row['StudentsCapacity'];
-            }
-
-            if (!empty($row['Notes'])) {
-                $Record->Notes = $row['Notes'];
-            }
-
-
-            // set title
-            $title = null;
-            if (!empty($row['Title'])) {
-                $title = $row['Title'];
-            } elseif (!$Record->Title) {
-                $title = $Record->Course->Code;
-            }
-
-            if ($title) {
-                if (is_callable(static::$sectionTitleFormatter)) {
-                    $title = call_user_func(static::$sectionTitleFormatter, $title, $Record, $Teacher);
-                }
-
-                $Record->Title = $title;
+                $Job->logException($e);
+                continue;
             }
 
 
@@ -595,6 +574,28 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $results['updated']++;
             } else {
                 $results['unmodified']++;
+            }
+
+
+            // log related changes
+            if ($Record->Course) {
+                $Job->logRecordDelta($Record->Course);
+            }
+
+            if ($Record->Course->Department) {
+                $Job->logRecordDelta($Record->Course->Department);
+            }
+
+             if ($Record->Term) {
+                $Job->logRecordDelta($Record->Term);
+            }
+
+            if ($Record->Schedule) {
+                $Job->logRecordDelta($Record->Schedule);
+            }
+
+            if ($Record->Location) {
+                $Job->logRecordDelta($Record->Location);
             }
 
 
@@ -762,6 +763,18 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // protected methods
+    protected static function _readSection($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$sectionColumns);
+
+        static::_fireEvent('readSection', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
     protected static function _filterPerson(Job $Job, array $row)
     {
         $filterResult = false;
@@ -1230,6 +1243,70 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             ]
         ];
+    }
+
+    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row, array &$results)
+    {
+        if (!empty($row['Term'])) {
+            if (!$Section->Term = Term::getByHandle($row['Term'])) {
+                throw new RemoteRecordInvalid(
+                    'term-not-found',
+                    sprintf('Term not found for handle "%s"', $row['Term']),
+                    $row,
+                    $row['Term']
+                );
+            }
+        }
+
+        if (!empty($row['Schedule'])) {
+            $Section->Schedule = Schedule::getOrCreateByTitle($row['Schedule']);
+        }
+
+        if (!empty($row['Location'])) {
+            $Section->Location = Location::getOrCreateByHandle('room-'.$row['Location'], 'Room '.$row['Location']);
+        }
+
+        if (!empty($row['StudentsCapacity'])) {
+            $Section->StudentsCapacity = $row['StudentsCapacity'];
+        }
+
+        if (!empty($row['Notes'])) {
+            $Section->Notes = $row['Notes'];
+        }
+
+
+        // set title
+        $title = null;
+        if (!empty($row['Title'])) {
+            $title = $row['Title'];
+        } elseif (!$Section->Title) {
+            $title = $Section->Course->Title ?: $Section->Course->Code;
+        }
+
+        if ($title) {
+            if (is_callable(static::$sectionTitleFormatter)) {
+                $title = call_user_func(static::$sectionTitleFormatter, $title, $Record, $Teacher);
+            }
+
+            $Section->Title = $title;
+        }
+
+
+        // check section term
+        if ($Section->Term->Left < $MasterTerm->Left || $Record->Term->Left > $MasterTerm->Right) {
+            throw new RemoteRecordInvalid(
+                'term-outside-master',
+                sprintf('Term "%s" is not within the selected master term', $row['Term']),
+                $row,
+                $row['Term']
+            );
+        }
+
+
+        // call configurable hook
+        if (is_callable(static::$onApplySectionChanges)) {
+            call_user_func(static::$onApplySectionChanges, $Job, $Section, $row);
+        }
     }
 
     protected static function _getOrCreateParticipant(Section $Section, User $User, $role, $pretend = true)
