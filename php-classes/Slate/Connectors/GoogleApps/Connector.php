@@ -194,12 +194,18 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                 // log and apply changes
                 if (count($changes)) {
                     if (!$pretend) {
-                        GoogleApps::patchUser(
-                            $googleUser['id'],
-                            DataUtil::extractToFromDelta(
-                                DataUtil::expandDottedKeysToTree($changes)
-                            )
-                        );
+                        try {
+                            GoogleApps::patchUser(
+                                $googleUser['id'],
+                                DataUtil::extractToFromDelta(
+                                    DataUtil::expandDottedKeysToTree($changes)
+                                )
+                            );
+                        } catch (\Exception $e) {
+                            $Job->log("Failed to patch Google user $googleUser[id], got response code {$e->getCode()}", LogLevel::ERROR);
+                            $results['outcome']['request-failed'][$e->getCode()]++;
+                            continue;
+                        }
                     }
 
                     $Job->log([
@@ -282,31 +288,31 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
         // print review spreadsheets
 #        print "<h1>Users to create in Google Apps</h1><pre>Username,First name,Last name,Account Type,Graduation year,Student ID\n";
-#        
+#
 #        foreach ($slateOnlyUsers AS $username) {
 #            $User = User::getByUsername($username);
 #            print "$User->Username,$User->FirstName,$User->LastName,$User->AccountLevel,$User->GraduationYear,$User->StudentNumber\n";
 #        }
-#        
+#
 #        print "</pre>";
 #
 #        print "<h1>Users to remove from Google Apps</h1><pre>Username,Given name,Family name\n";
-#        
+#
 #        foreach ($googleOnlyUsers AS $username) {
 #            $userData = $googleUsers[$username];
 #            print "$username,$userData[givenName],$userData[familyName]\n";
 #        }
-#        
+#
 #        print "</pre>";
 #
 #        print "<h1>Changes to users in Google Apps</h1><pre>Username,Field,Existing value,New value\n";
-#        
+#
 #        foreach ($googleChanges AS $username => $changes) {
 #            foreach ($changes AS $field => $delta) {
 #                print "$username,$field,$delta[from],$delta[to]\n";
 #            }
 #        }
-#        
+#
 #        print "</pre>";
 
         return $results;
