@@ -70,6 +70,17 @@ class Schedule extends \VersionedRecord
         }
     }
 
+    public static function getOrCreateByTitle($title, $save = false)
+    {
+        if ($Schedule = static::getByField('Title', $title)) {
+            return $Schedule;
+        } else {
+            return static::create([
+                'Title' => $title
+            ], $save);
+        }
+    }
+
     public function validate($deep = true)
     {
         // call parent
