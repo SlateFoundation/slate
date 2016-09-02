@@ -216,7 +216,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
 
             // process input row through column mapping
-            $row = static::_readRow($row, static::$studentColumns);
+            $row = static::_readStudent($Job, $row);
 
 
             // start logging analysis
@@ -286,7 +286,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
 
             // process input row through column mapping
-            $row = static::_readRow($row, static::$alumniColumns);
+            $row = static::_readAlumni($Job, $row);
 
 
             // start logging analysis
@@ -356,7 +356,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
 
             // process input row through column mapping
-            $row = static::_readRow($row, static::$staffColumns);
+            $row = static::_readStaff($Job, $row);
 
 
             // start logging analysis
@@ -663,8 +663,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         // loop through rows for incoming roster
         while ($row = $spreadsheet->getNextRow()) {
-            $row = static::_readRow($row, static::$enrollmentColumns);
             $Record = null;
+
+
+            // process input row through column mapping
+            $row = static::_readEnrollment($Job, $row);
 
 
             // start logging analysis
@@ -763,11 +766,59 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // protected methods
+    protected static function _readStudent($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$studentColumns);
+
+        static::_fireEvent('readStudent', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readAlumni($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$alumniColumns);
+
+        static::_fireEvent('readAlumni', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readStaff($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$staffColumns);
+
+        static::_fireEvent('readStaff', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
     protected static function _readSection($Job, array $row)
     {
         $row = static::_readRow($row, static::$sectionColumns);
 
         static::_fireEvent('readSection', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readEnrollment($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$enrollmentColumns);
+
+        static::_fireEvent('readEnrollment', [
             'Job' => $Job,
             'row' => &$row
         ]);
