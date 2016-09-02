@@ -151,14 +151,14 @@ class Term extends \VersionedRecord
         }
     }
 
-    public static function getOrCreateByTitle($title)
+    public static function getOrCreateByTitle($title, $save = false)
     {
         if ($Term = static::getByField('Title', $title)) {
             return $Term;
         } else {
             return static::create([
                 'Title' => $title
-            ], true);
+            ], $save);
         }
     }
 
@@ -167,7 +167,7 @@ class Term extends \VersionedRecord
         if (!$Term = static::getClosest()) {
             return null;
         }
-        
+
         return (int)substr($Term->getMaster()->EndDate, 0, 4);
     }
 

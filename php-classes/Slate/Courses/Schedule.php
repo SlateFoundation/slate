@@ -58,7 +58,7 @@ class Schedule extends \VersionedRecord
     ];
 
 
-    public static function getOrCreateByHandle($handle)
+    public static function getOrCreateByHandle($handle, $save = false)
     {
         if ($Schedule = static::getByHandle($handle)) {
             return $Schedule;
@@ -66,7 +66,7 @@ class Schedule extends \VersionedRecord
             return static::create([
                 'Title' => $handle
                 ,'Handle' => $handle
-            ], true);
+            ], $save);
         }
     }
 
