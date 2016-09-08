@@ -230,12 +230,6 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
             $results['matched']['only-local']++;
 
-            if (!$User->AssignedPassword) {
-                $Job->log("Cannot create user $User->Username because AssignedPassword is not available");
-                $results['outcome']['failed']['no-assigned-password']++;
-                continue;
-            }
-
             if (!$DomainEmailPoint) {
                 $Job->log("Cannot create user $User->Username because they don't have an email contact point matching the domain");
                 $results['outcome']['failed']['no-domain-email-contact-point']++;
@@ -254,7 +248,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                             'givenName' => $User->FirstName,
                             'familyName' => $User->LastName
                         ],
-                        'password' => $User->AssignedPassword,
+                        'password' => User::generatePassword(), // google requires a password, but we won't be storing it
                         'primaryEmail' => $DomainEmailPoint->address
                     ]);
                 } catch (\Exception $e) {
