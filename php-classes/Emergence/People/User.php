@@ -231,7 +231,7 @@ class User extends Person
         return array_search($accountLevel, self::$fields['AccountLevel']['values']);
     }
 
-    protected static function generatePassword($length = 8)
+    public static function generatePassword($length = 8)
     {
         $chars = ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's' ,'t', 'u', 'v', 'w', 'x', 'y', 'z'];
         $password = '';
