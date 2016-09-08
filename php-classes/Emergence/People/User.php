@@ -24,12 +24,18 @@ class User extends Person
         ]
         ,'Password' => [
             'type' => 'string'
+            ,'default' => null
             ,'excludeFromData' => true
         ]
         ,'AccountLevel' => [
             'type' => 'enum'
             ,'values' => ['Disabled','Contact','User','Staff','Administrator','Developer']
             ,'default' => 'User'
+        ]
+        ,'TemporaryPassword' => [
+            'type' => 'string'
+            ,'default' => null
+            ,'excludeFromData' => true
         ]
     ];
 
@@ -108,11 +114,6 @@ class User extends Person
             $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
         }
 
-        // generate password if none provided
-        if (!$this->Password) {
-            $this->setClearPassword(static::generatePassword());
-        }
-
         return parent::save($deep);
     }
 
@@ -176,10 +177,18 @@ class User extends Person
     public function setClearPassword($password)
     {
         $this->Password = password_hash($password, PASSWORD_DEFAULT);
+        $this->TemporaryPassword = null;
 
         if (is_callable(static::$onPasswordSet)) {
             call_user_func(static::$onPasswordSet, $password, $this);
         }
+    }
+
+    public function setTemporaryPassword($temporaryPassword = null)
+    {
+        $temporaryPassword = $temporaryPassword ?: static::generatePassword();
+        $this->setClearPassword($temporaryPassword);
+        $this->TemporaryPassword = $temporaryPassword;
     }
 
     public function hasAccountLevel($accountLevel)
