@@ -106,7 +106,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
         $slateUsers = [];
         $slateOnlyUsers = [];
 
-        foreach (User::getAllByWhere('Username IS NOT NULL') AS $User) {
+        foreach (User::getAllByWhere('Username IS NOT NULL AND AccountLevel != "Disabled"') AS $User) {
             $slateUsers[] = $User->Username;
             $googleUser = null;
             $results['analyzed']['local']++;
