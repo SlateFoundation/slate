@@ -202,7 +202,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                                 )
                             );
                         } catch (\Exception $e) {
-                            $Job->log("Failed to patch Google user $googleUser[id], got response code {$e->getCode()}", LogLevel::ERROR);
+                            $Job->log("Failed to patch Google user $googleUser[id]: {$e->getMessage()}", LogLevel::ERROR);
                             $results['outcome']['request-failed'][$e->getCode()]++;
                             continue;
                         }
@@ -248,14 +248,20 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                 $Job->log("Creating user $User->Username", LogLevel::NOTICE);
                 $results['outcome']['created']++;
             } else {
-                $googleResponse = GoogleApps::createUser([
-                    'name' => [
-                        'givenName' => $User->FirstName,
-                        'familyName' => $User->LastName
-                    ],
-                    'password' => $User->AssignedPassword,
-                    'primaryEmail' => $DomainEmailPoint->address
-                ]);
+                try {
+                    $googleResponse = GoogleApps::createUser([
+                        'name' => [
+                            'givenName' => $User->FirstName,
+                            'familyName' => $User->LastName
+                        ],
+                        'password' => $User->AssignedPassword,
+                        'primaryEmail' => $DomainEmailPoint->address
+                    ]);
+                } catch (\Exception $e) {
+                    $Job->log("Failed to create Google user for $User->Username: {$e->getMessage()}", LogLevel::ERROR);
+                    $results['outcome']['request-failed'][$e->getCode()]++;
+                    continue;
+                }
 
                 if (empty($googleResponse['error'])) {
                     $Job->log("Created user $User->Username, saving mapping to Google id '$googleResponse[id]'", LogLevel::NOTICE);
