@@ -231,7 +231,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
             $results['matched']['only-local']++;
 
             if (!$DomainEmailPoint) {
-                $Job->log("Skipping user $User->Username because they don't have an email contact point matching the domain", LogLevel::INFO);
+                $Job->log("Skipping user $User->Username because they don't have an email contact point matching the domain", LogLevel::DEBUG);
                 $results['outcome']['skipped']['no-domain-email-contact-point']++;
                 continue;
             }
