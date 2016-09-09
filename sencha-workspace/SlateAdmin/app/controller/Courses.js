@@ -414,6 +414,7 @@ Ext.define('SlateAdmin.controller.Courses', {
                 }
 
                 selModel.select(sectionRecord, false, true);
+                sectionsGrid.ensureVisible(sectionRecord);
             } else {
                 selModel.deselectAll(true);
             }
