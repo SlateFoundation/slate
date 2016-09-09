@@ -239,6 +239,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = Student::create();
+                $Record->setTemporaryPassword();
             }
 
 
@@ -309,6 +310,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = Student::create();
+                $Record->setTemporaryPassword();
             }
 
 
@@ -381,6 +383,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Record = User::create([
                     'AccountLevel' => 'Staff'
                 ]);
+                $Record->setTemporaryPassword();
             }
 
 
