@@ -5,7 +5,7 @@ Ext.define('SlateAdmin.model.course.Section', {
         'SlateAdmin.proxy.Records'
     ],
 
-    
+
     // model config
     idProperty: 'ID',
 
@@ -89,9 +89,21 @@ Ext.define('SlateAdmin.model.course.Section', {
         type: 'slaterecords',
         url: '/sections'
     },
-    
+
+    getDisplayName: function() {
+        return this.get('Title');
+    },
+
     toUrl: function() {
-        return '/sections/' + this.get('Code');
+        return 'course-sections/lookup/' + this.get('Code');
+    },
+
+    getLink: function() {
+        var me = this,
+            displayName = me.getDisplayName(),
+            url = me.toUrl();
+
+        return url ? '<a href="#'+url+'">'+displayName+'</a>' : displayName;
     }
 
 

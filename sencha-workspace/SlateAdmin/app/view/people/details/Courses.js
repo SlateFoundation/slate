@@ -69,7 +69,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 dataIndex: 'Title',
                 flex: 1,
                 renderer: function(v, m, r){
-                    return '<a href="#courses/'+r.get('Handle')+'">'+v+'<a/>';
+                    return r.getLink();
                 }
             },{
                 header: 'Schedule',
