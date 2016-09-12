@@ -27,6 +27,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         cancelBtn: 'people-details-profile button[action=cancel]',
         saveBtn: 'people-details-profile button[action=save]',
         loginFieldSet: 'people-details-profile fieldset#loginFields',
+        usernameField: 'people-details-profile field[name=Username]',
         studentNumberField: 'people-details-profile field[name=StudentNumber]',
         temporaryPasswordField: 'people-details-profile field[name=TemporaryPassword]',
         resetTemporaryPasswordBtn: 'people-details-profile button[action=reset-temporary-password]',
@@ -82,11 +83,13 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             groupsField = me.getGroupsField(),
             groupsStore = groupsField.getStore(),
             siteEnv = window.SiteEnvironment || {},
-            siteUserAccountLevel = siteEnv.user && siteEnv.user.AccountLevel;
+            siteUserAccountLevel = siteEnv.user && siteEnv.user.AccountLevel,
+            siteUserIsAdmin = siteUserAccountLevel == 'Administrator' || siteUserAccountLevel == 'Developer';
 
         me.getStudentNumberField().setVisible(personClass == 'Slate\\People\\Student');
         me.getLoginFieldSet().setVisible(personClass != 'Emergence\\People\\Person');
-        me.getTemporaryPasswordField().setVisible(siteUserAccountLevel == 'Administrator' || siteUserAccountLevel == 'Developer');
+        me.getTemporaryPasswordField().setVisible(siteUserIsAdmin);
+        me.getUsernameField().setReadOnly(!siteUserIsAdmin);
 
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
         if (groupsStore.isLoaded()) {
