@@ -4,6 +4,11 @@
  */
 Ext.define('SlateAdmin.controller.people.Profile', {
     extend: 'Ext.app.Controller',
+    requires: [
+        'Ext.window.MessageBox',
+        'Slate.API'
+    ],
+
 
     // controller config
     views: [
@@ -21,8 +26,10 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         profileForm: 'people-details-profile form',
         cancelBtn: 'people-details-profile button[action=cancel]',
         saveBtn: 'people-details-profile button[action=save]',
+        loginFieldSet: 'people-details-profile fieldset#loginFields',
         studentNumberField: 'people-details-profile field[name=StudentNumber]',
-        accountLevelField: 'people-details-profile field[name=AccountLevel]',
+        temporaryPasswordField: 'people-details-profile field[name=TemporaryPassword]',
+        resetTemporaryPasswordBtn: 'people-details-profile button[action=reset-temporary-password]',
         groupsField: 'people-details-profile field[name=groupIDs]',
         manager: 'people-manager'
     },
@@ -38,11 +45,14 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             dirtychange: 'syncButtons',
             validitychange: 'syncButtons'
         },
-        'people-details-profile button[action=cancel]': {
+        cancelBtn: {
             click: 'onCancelButtonClick'
         },
-        'people-details-profile button[action=save]': {
+        saveBtn: {
             click: 'onSaveButtonClick'
+        },
+        resetTemporaryPasswordBtn: {
+            click: 'onResetTemporaryPasswordClick'
         }
     },
 
@@ -70,10 +80,13 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             personClass = person.get('Class'),
             profileForm = me.getProfileForm(),
             groupsField = me.getGroupsField(),
-            groupsStore = groupsField.getStore();
+            groupsStore = groupsField.getStore(),
+            siteEnv = window.SiteEnvironment || {},
+            siteUserAccountLevel = siteEnv.user && siteEnv.user.AccountLevel;
 
         me.getStudentNumberField().setVisible(personClass == 'Slate\\People\\Student');
-        me.getAccountLevelField().setVisible(personClass != 'Emergence\\People\\Person');
+        me.getLoginFieldSet().setVisible(personClass != 'Emergence\\People\\Person');
+        me.getTemporaryPasswordField().setVisible(siteUserAccountLevel == 'Administrator' || siteUserAccountLevel == 'Developer');
 
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
         if (groupsStore.isLoaded()) {
@@ -145,6 +158,42 @@ Ext.define('SlateAdmin.controller.people.Profile', {
                 profileForm.setLoading(false);
             }
         });
+    },
+
+    onResetTemporaryPasswordClick: function(resetTemporaryPasswordBtn) {
+        var person = this.getProfileForm().getRecord(),
+            temporaryPasswordField = this.getTemporaryPasswordField();
+
+        Ext.Msg.confirm(
+            'Reissue Temporary Password',
+            '<p>Are you sure you want to issue a new temporary password for this user?</p><p>They will no longer be able to log in with their existing password.</p>',
+            function(btnId) {
+                if (btnId != 'yes') {
+                    return;
+                }
+
+                resetTemporaryPasswordBtn.disable();
+
+                Slate.API.request({
+                    method: 'POST',
+                    url: '/people/'+person.get('Username')+'/*temporary-password',
+                    callback: function(options, success, response) {
+                        var temporaryPassword = success && response.data && response.data.temporaryPassword;
+
+                        resetTemporaryPasswordBtn.enable();
+
+                        if (!temporaryPassword) {
+                            Ext.Msg.alert('Failed to reissue', 'A new temporary password could not be reissued at this time');
+                            return;
+                        }
+
+                        person.set('TemporaryPassword', temporaryPassword, { dirty: false });
+                        temporaryPasswordField.setValue(temporaryPassword);
+                        temporaryPasswordField.resetOriginalValue();
+                    }
+                });
+            }
+        );
     },
 
     // internal methods

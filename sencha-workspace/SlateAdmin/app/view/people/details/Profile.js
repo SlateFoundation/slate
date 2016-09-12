@@ -4,6 +4,8 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
     xtype: 'people-details-profile',
     requires: [
         'Ext.form.Panel',
+        'Ext.form.FieldSet',
+        'Ext.form.FieldContainer',
         'Ext.form.field.Tag',
         'SlateAdmin.proxy.Records',
         'SlateAdmin.model.person.Group'
@@ -40,61 +42,123 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         bodyPadding: '15 10 10',
         trackResetOnLoad: true,
         autoScroll: true,
-        defaultType: 'textfield',
         fieldDefaults: {
             labelAlign: 'right',
             labelPad: 10,
             labelSeparator: '',
             anchor: '100%'
         },
+        defaults: {
+            xtype: 'fieldset',
+            defaultType: 'textfield'
+        },
         items: [{
             xtype: 'displayfield',
             name: 'Class',
             fieldLabel: 'Record Class'
         },{
-            name: 'FirstName',
-            fieldLabel: 'First Name'
+            xtype: 'fieldset',
+            itemId: 'loginFields',
+
+            title: 'Login',
+            items: [{
+                xtype: 'combo',
+                store: 'people.AccountLevels',
+                fieldLabel: 'Account Level',
+                queryMode: 'local',
+                valueField: 'value',
+                displayField: 'value',
+                name: 'AccountLevel',
+                emptyText: '(None)',
+                triggerAction: 'all',
+                editable: false
+            },{
+                xtype: 'textfield',
+                name: 'Username',
+                fieldLabel: 'Username'
+            },{
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Temporary Password',
+                layout: 'hbox',
+                items: [{
+                    flex: 1,
+
+                    xtype: 'textfield',
+                    name: 'TemporaryPassword',
+                    readOnly: true,
+                    emptyText: 'Personal password in effect'
+                },{
+                    xtype: 'button',
+                    action: 'reset-temporary-password',
+                    text: 'Reissue',
+                    glyph: 0xf084 // fa-key
+                }]
+            }]
         },{
-            name: 'MiddleName',
-            fieldLabel: 'Middle Name'
+            xtype: 'fieldset',
+            itemId: 'personalFields',
+
+            title: 'Personal',
+            items: [{
+                name: 'PreferredName',
+                fieldLabel: 'Preferred Name'
+            },{
+                name: 'FirstName',
+                fieldLabel: 'First Name'
+            },{
+                name: 'MiddleName',
+                fieldLabel: 'Middle Name'
+            },{
+                name: 'LastName',
+                fieldLabel: 'Last Name'
+            },{
+                xtype: 'combo',
+                name: 'Gender',
+                fieldLabel: 'Gender',
+                forceSelection: true,
+                queryMode: 'local',
+                store: ['Male', 'Female']
+            },{
+                xtype: 'datefield',
+                name: 'BirthDate',
+                fieldLabel: 'Birth Date'
+            }]
         },{
-            name: 'LastName',
-            fieldLabel: 'Last Name'
+            xtype: 'fieldset',
+            itemId: 'schoolFields',
+
+            title: 'School',
+            items: [{
+                name: 'StudentNumber',
+                fieldLabel: 'Student #'
+            },{
+                xtype: 'tagfield',
+                name: 'groupIDs',
+                fieldLabel: 'Groups',
+                multiSelect: true,
+                delimiter: ',',
+                anchor: '100%',
+                queryMode: 'local',
+                stacked: true,
+                anyMatch: true,
+                lazyAutoLoad: false,
+                store: 'people.Groups',
+                displayField: 'namesPath',
+                valueField: 'ID'
+            }]
         },{
-            xtype: 'combo',
-            name: 'Gender',
-            fieldLabel: 'Gender',
-            forceSelection: true,
-            queryMode: 'local',
-            store: ['Male', 'Female']
-        },{
-            name: 'StudentNumber',
-            fieldLabel: 'Student #'
-        },{
-            xtype: 'combo',
-            store: 'people.AccountLevels',
-            fieldLabel: 'Account Level',
-            queryMode: 'local',
-            valueField: 'value',
-            displayField: 'value',
-            name: 'AccountLevel',
-            emptyText: '(None)',
-            triggerAction: 'all',
-            editable: false
-        },{
-            xtype: 'tagfield',
-            name: 'groupIDs',
-            fieldLabel: 'Groups',
-            multiSelect: true,
-            delimiter: ',',
-            anchor: '100%',
-            queryMode: 'local',
-            stacked: true,
-            anyMatch: true,
-            lazyAutoLoad: false,
-            store: 'people.Groups',
-            displayField: 'namesPath',
-            valueField: 'ID'
+            xtype: 'fieldset',
+            itemId: 'profileFields',
+
+            title: 'Profile',
+            items: [{
+                name: 'Location',
+                fieldLabel: 'Location'
+            },{
+                xtype: 'textarea',
+                name: 'About',
+                fieldLabel: 'About Me'
+            }]
         }]
     }
 });

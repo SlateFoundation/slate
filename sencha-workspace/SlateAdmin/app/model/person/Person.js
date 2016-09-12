@@ -11,16 +11,7 @@ Ext.define('SlateAdmin.model.person.Person', {
     idProperty: 'ID',
 
     fields: [
-        'Username',
-        'FirstName',
-        'MiddleName',
-        'LastName',
-        'Gender',
-        'AccountLevel',
-        'Email',
-        'Phone',
-        'StudentNumber',
-        'groupIDs',
+        // person fields
         {
             name: 'ID',
             type: 'integer'
@@ -61,20 +52,20 @@ Ext.define('SlateAdmin.model.person.Person', {
             allowNull: true
         },
         {
-            name: 'Advisor',
+            name: 'FirstName'
+        },
+        {
+            name: 'LastName'
+        },
+        {
+            name: 'MiddleName',
             allowNull: true,
-            sortType: function(v) {
-                return v ? v.LastName : '_';
-            }
+            defaultValue: null
         },
         {
-            name: 'AdvisorID',
-            allowNull: true
-        },
-        {
-            name: 'GraduationYear',
-            type: 'integer',
-            allowNull: true
+            name: 'PreferredName',
+            allowNull: true,
+            defaultValue: null
         },
         {
             name: 'FullName',
@@ -82,6 +73,78 @@ Ext.define('SlateAdmin.model.person.Person', {
             convert: function(v,r) {
                 return r.get('FirstName') + ' ' + r.get('LastName');
             }
+        },
+        {
+            name: 'Gender',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'BirthDate',
+            type: 'date',
+            dateFormat: 'Y-m-d',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'About',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'Location',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'groupIDs',
+            allowNull: true,
+            defaultValue: null
+        },
+
+
+        // user fields
+        {
+            name: 'Username',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'AccountLevel',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'TemporaryPassword',
+            allowNull: true,
+            defaultValue: null
+        },
+
+
+        // student fields
+        {
+            name: 'StudentNumber',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'Advisor',
+            allowNull: true,
+            defaultValue: null,
+            sortType: function(v) {
+                return v ? v.LastName : '_';
+            }
+        },
+        {
+            name: 'AdvisorID',
+            allowNull: true,
+            defaultValue: null
+        },
+        {
+            name: 'GraduationYear',
+            type: 'integer',
+            allowNull: true,
+            defaultValue: null
         }
     ],
 
