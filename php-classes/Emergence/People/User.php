@@ -35,7 +35,7 @@ class User extends Person
         ,'TemporaryPassword' => [
             'type' => 'string'
             ,'default' => null
-            ,'excludeFromData' => true
+            ,'accountLevelEnumerate' => 'Administrator'
         ]
     ];
 
