@@ -29,6 +29,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         loginFieldSet: 'people-details-profile fieldset#loginFields',
         usernameField: 'people-details-profile field[name=Username]',
         studentNumberField: 'people-details-profile field[name=StudentNumber]',
+        temporaryPasswordFieldCt: 'people-details-profile fieldcontainer#temporaryPasswordFieldCt',
         temporaryPasswordField: 'people-details-profile field[name=TemporaryPassword]',
         resetTemporaryPasswordBtn: 'people-details-profile button[action=reset-temporary-password]',
         groupsField: 'people-details-profile field[name=groupIDs]',
@@ -88,7 +89,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
         me.getStudentNumberField().setVisible(personClass == 'Slate\\People\\Student');
         me.getLoginFieldSet().setVisible(personClass != 'Emergence\\People\\Person');
-        me.getTemporaryPasswordField().setVisible(siteUserIsAdmin);
+        me.getTemporaryPasswordFieldCt().setVisible(siteUserIsAdmin);
         me.getUsernameField().setReadOnly(!siteUserIsAdmin);
 
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load

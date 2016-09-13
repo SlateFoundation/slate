@@ -78,6 +78,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
                 fieldLabel: 'Username'
             },{
                 xtype: 'fieldcontainer',
+                itemId: 'temporaryPasswordFieldCt',
                 fieldLabel: 'Temporary Password',
                 layout: 'hbox',
                 items: [{
