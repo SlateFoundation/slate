@@ -59,6 +59,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         },{
             xtype: 'fieldset',
             itemId: 'loginFields',
+            hidden: true,
 
             title: 'Login',
             items: [{
@@ -75,12 +76,14 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             },{
                 xtype: 'textfield',
                 name: 'Username',
-                fieldLabel: 'Username'
+                fieldLabel: 'Username',
+                readOnly: true
             },{
                 xtype: 'fieldcontainer',
                 itemId: 'temporaryPasswordFieldCt',
                 fieldLabel: 'Temporary Password',
                 layout: 'hbox',
+                hidden: true,
                 items: [{
                     flex: 1,
 
@@ -131,7 +134,8 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             title: 'School',
             items: [{
                 name: 'StudentNumber',
-                fieldLabel: 'Student #'
+                fieldLabel: 'Student #',
+                hidden: true
             },{
                 xtype: 'tagfield',
                 name: 'groupIDs',
