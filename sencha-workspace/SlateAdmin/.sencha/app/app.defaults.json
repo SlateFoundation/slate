@@ -48,7 +48,7 @@
      * dev time, add the following entry to this js list :
      *
      *      {
-     *          "path": "${ext.dir}/build/ext-all-debug.js"
+     *          "path": "${framework.dir}/build/ext-all-debug.js"
      *      }
      *
      * Note: when using ext-all-debug.js, you also need to disable the loadOrder portion
@@ -57,7 +57,7 @@
      */
     "js": [
         {
-            "path": "${ext.dir}/build/ext-all-rtl-debug.js"
+            "path": "${framework.dir}/build/ext-all-rtl-debug.js"
         },
         {
             "path": "app.js",
