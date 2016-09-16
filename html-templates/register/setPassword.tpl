@@ -15,7 +15,7 @@
         <div class="notify error">{$error|escape}</div>
     {/if}
 
-    <form method="POST" class="generic single">
+    <form method="POST" class="generic single" id="slate-set-password-form">
         <input type="hidden" name="returnUrl" value="{refill field=returnUrl default=$returnUrl}">
 
         <fieldset class="shrink">
@@ -28,4 +28,40 @@
             </div>
         </fieldset>
     </form>
+
+    {if RemoteSystems\GoogleApps::$domain}
+        <script src="https://ssl.gstatic.com/accounts/chrome/users-1.0.js"></script>
+        <script>
+            google.principal.initialize(function() {
+                var passwordForm = document.getElementById('slate-set-password-form'),
+                    token = Math.random(),
+                    addedPassword;
+
+                passwordForm.addEventListener('submit', function(ev) {
+                    var password = passwordForm.password.value;
+
+                    // skip add call if form invalid or entered password has already been sent
+                    if (!password || password != passwordForm.passwordConfirm.value || password == addedPassword) {
+                        return;
+                    }
+
+                    ev.preventDefault();
+                    addedPassword = password;
+
+                    google.principal.add({
+                        token: token,
+                        user: {cat($.User->Username, '@', RemoteSystems\GoogleApps::$domain)|json_encode},
+                        passwordBytes: password,
+                        keyType: 'KEY_TYPE_PASSWORD_PLAIN'
+                    }, function() {
+                        google.principal.complete({
+                            token: token
+                        }, function() {
+                            passwordForm.submit();
+                        });
+                    });
+                })
+            });
+        </script>
+    {/if}
 {/block}
