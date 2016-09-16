@@ -11,9 +11,9 @@
 
     <p>
     {if $returnUrl}
-        <a href="{$returnUrl|escape}">Continue to {$returnUrl|escape}</a>
+        <a class="button submit" href="{$returnUrl|escape}">Finish logging in</a>
     {else}
-        <a href="/dashboard">Continue to your dashboard</a>
+        <a class="button submit" href="/dashboard">Continue to your dashboard</a>
     {/if}
     </p>
 {/block}
