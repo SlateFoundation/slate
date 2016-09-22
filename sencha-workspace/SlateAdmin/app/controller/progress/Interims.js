@@ -285,7 +285,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             }
             me.getInterimReport().setLoading({msg: 'Deleting&hellip;'});
 
-            interim.destroy({
+            interim.erase({
                 success: function (record, operation) {
                     manager.unloadInterim();
 
