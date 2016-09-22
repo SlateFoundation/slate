@@ -94,34 +94,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
     onPersonLoaded: function (progressPanel, person) {
         var me = this,
-            termSelector = me.getTermSelector(),
-            termsStore = Ext.getStore('Terms'),
             progressProxy = Ext.getStore('people.ProgressReports').getProxy(),
-            selectedTerm = termSelector.getValue();
-
-        // ensure terms are loaded
-        if (!termsStore.isLoaded()) {
-            progressPanel.setLoading('Loading terms&hellip;');
-            termsStore.load({
-                callback: function () {
-                    me.onPersonLoaded(progressPanel, person);
-                }
-            });
-
-            return;
-        }
-
-        if (!selectedTerm) {
-            selectedTerm = termsStore.getCurrentTerm();
-            if (selectedTerm) {
-                selectedTerm = selectedTerm.getId();
-            }
-        }
-
-        progressPanel.setLoading(false);
-
-        // push selected term to combo
-        termSelector.setValue(selectedTerm);
+            selectedTerm = me.getTermSelector().getValue();
 
         progressProxy.setExtraParam('StudentID', person.getId());
         progressProxy.setExtraParam('reportTypes[]', [
@@ -130,7 +104,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             'narratives',
             'interims'
         ]);
-        progressProxy.setExtraParam('termID', selectedTerm);
+        progressProxy.setExtraParam('termID', selectedTerm || 0);
 
         me.doFilter(true);
     },

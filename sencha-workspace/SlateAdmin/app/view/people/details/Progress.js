@@ -63,7 +63,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             xtype: 'combobox',
             itemId: 'progressReportsTermSelector',
             name: 'progressReportsTermSelector',
-            emptyText: 'Current',
+            emptyText: 'Any',
             store: 'Terms',
             valueField: 'ID',
             displayField: 'Title',
