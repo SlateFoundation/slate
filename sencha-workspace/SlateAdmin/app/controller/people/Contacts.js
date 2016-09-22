@@ -19,6 +19,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         'people.ContactPointTemplates',
         'people.RelationshipTemplates'
     ],
+
+    models: [
+        'person.Relationship'
+    ],
 //    stores: [
 //        'people.ContactPoints',
 //        'people.Relationships'
@@ -314,11 +318,20 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             return;
         }
 
-        var relatedPerson = record.get('RelatedPerson');
+        var me = this,
+            relatedPerson = record.get('RelatedPerson');
 
         Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0} {1}?', relatedPerson.FirstName, relatedPerson.LastName), function(btn) {
-            if (btn == 'yes') {
-                record.destroy();
+            if (btn != 'yes') {
+                return;
+            }
+
+            var inverseData = record.get('InverseRelationship');
+
+            record.erase();
+
+            if (inverseData) {
+                me.getPersonRelationshipModel().create(inverseData).erase();
             }
         });
     },
