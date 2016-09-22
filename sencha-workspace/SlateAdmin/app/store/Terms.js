@@ -12,6 +12,10 @@ Ext.define('SlateAdmin.store.Terms', {
             includeCurrent: true
         }
     },
+    sorters: [{
+        property: 'Right',
+        direction: 'DESC'
+    }],
 
     getCurrentTerm: function() {
         var me = this,
