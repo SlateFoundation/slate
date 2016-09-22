@@ -4,7 +4,7 @@ Ext.define('SlateAdmin.store.TermsTree', {
 
     model: 'SlateAdmin.model.Term',
     root: {
-        text: 'All People',
+        text: 'All Terms',
         ID: null
     },
 
