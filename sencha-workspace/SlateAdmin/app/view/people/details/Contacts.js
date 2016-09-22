@@ -194,16 +194,16 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             getTip: function(v, meta, record) {
                                 return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' guardian';
                             }
-                        },
-                        {
-                            action: 'emergency',
-                            iconCls: 'relationship-emergency glyph-emergency',
-                            glyph: 0xf0f9, // fa-ambulance
-                            getTip: function(v, meta, record) {
-                                // TODO make this work
-                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' emergency contact';
-                            }
                         }
+                        // {
+                        //     action: 'emergency',
+                        //     iconCls: 'relationship-emergency glyph-emergency',
+                        //     glyph: 0xf0f9, // fa-ambulance
+                        //     getTip: function(v, meta, record) {
+                        //         // TODO make this work
+                        //         return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' emergency contact';
+                        //     }
+                        // }
                     ]
                 }
             ]
