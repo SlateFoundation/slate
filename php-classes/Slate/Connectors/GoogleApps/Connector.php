@@ -64,8 +64,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
         if (!empty($Job->Config['pushUsers'])) {
             $results['push-users'] = static::pushUsers(
                 $Job,
-                $pretend,
-                $verbose
+                $pretend
             );
         }
 
@@ -83,7 +82,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
     // task handlers
-    public static function pushUsers(Job $Job, $pretend = true, $verbose = false)
+    public static function pushUsers(Job $Job, $pretend = true)
     {
         // initialize results
         $results = [];
@@ -107,7 +106,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
         $slateUsers = [];
         $slateOnlyUsers = [];
 
-        foreach (User::getAllByWhere('Username IS NOT NULL') AS $User) {
+        foreach (User::getAllByWhere('Username IS NOT NULL AND AccountLevel != "Disabled"') AS $User) {
             $slateUsers[] = $User->Username;
             $googleUser = null;
             $results['analyzed']['local']++;
@@ -154,10 +153,11 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                 // compare records and prepare changes
                 $changes = [];
 
-                if ($googleUser['name']['givenName'] != $User->FirstName) {
+                $givenName = $User->PreferredName ?: $User->FirstName;
+                if ($googleUser['name']['givenName'] != $givenName) {
                     $changes['name.givenName'] = [
                         'from' => $googleUser['name']['givenName'],
-                        'to' => $User->FirstName
+                        'to' => $givenName
                     ];
                 }
 
@@ -194,12 +194,18 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                 // log and apply changes
                 if (count($changes)) {
                     if (!$pretend) {
-                        GoogleApps::patchUser(
-                            $googleUser['id'],
-                            DataUtil::extractToFromDelta(
-                                DataUtil::expandDottedKeysToTree($changes)
-                            )
-                        );
+                        try {
+                            GoogleApps::patchUser(
+                                $googleUser['id'],
+                                DataUtil::extractToFromDelta(
+                                    DataUtil::expandDottedKeysToTree($changes)
+                                )
+                            );
+                        } catch (\Exception $e) {
+                            $Job->log("Failed to patch Google user $googleUser[id]: {$e->getMessage()}", LogLevel::ERROR);
+                            $results['outcome']['request-failed'][$e->getCode()]++;
+                            continue;
+                        }
                     }
 
                     $Job->log([
@@ -224,15 +230,9 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
             $results['matched']['only-local']++;
 
-            if (!$User->AssignedPassword) {
-                $Job->log("Cannot create user $User->Username because AssignedPassword is not available");
-                $results['outcome']['failed']['no-assigned-password']++;
-                continue;
-            }
-
             if (!$DomainEmailPoint) {
-                $Job->log("Cannot create user $User->Username because they don't have an email contact point matching the domain");
-                $results['outcome']['failed']['no-domain-email-contact-point']++;
+                $Job->log("Skipping user $User->Username because they don't have an email contact point matching the domain", LogLevel::DEBUG);
+                $results['outcome']['skipped']['no-domain-email-contact-point']++;
                 continue;
             }
 
@@ -242,14 +242,20 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                 $Job->log("Creating user $User->Username", LogLevel::NOTICE);
                 $results['outcome']['created']++;
             } else {
-                $googleResponse = GoogleApps::createUser([
-                    'name' => [
-                        'givenName' => $User->FirstName,
-                        'familyName' => $User->LastName
-                    ],
-                    'password' => $User->AssignedPassword,
-                    'primaryEmail' => $DomainEmailPoint->address
-                ]);
+                try {
+                    $googleResponse = GoogleApps::createUser([
+                        'name' => [
+                            'givenName' => $User->FirstName,
+                            'familyName' => $User->LastName
+                        ],
+                        'password' => User::generatePassword(), // google requires a password, but we won't be storing it
+                        'primaryEmail' => $DomainEmailPoint->address
+                    ]);
+                } catch (\Exception $e) {
+                    $Job->log("Failed to create Google user for $User->Username: {$e->getMessage()}", LogLevel::ERROR);
+                    $results['outcome']['request-failed'][$e->getCode()]++;
+                    continue;
+                }
 
                 if (empty($googleResponse['error'])) {
                     $Job->log("Created user $User->Username, saving mapping to Google id '$googleResponse[id]'", LogLevel::NOTICE);
@@ -282,31 +288,31 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
         // print review spreadsheets
 #        print "<h1>Users to create in Google Apps</h1><pre>Username,First name,Last name,Account Type,Graduation year,Student ID\n";
-#        
+#
 #        foreach ($slateOnlyUsers AS $username) {
 #            $User = User::getByUsername($username);
 #            print "$User->Username,$User->FirstName,$User->LastName,$User->AccountLevel,$User->GraduationYear,$User->StudentNumber\n";
 #        }
-#        
+#
 #        print "</pre>";
 #
 #        print "<h1>Users to remove from Google Apps</h1><pre>Username,Given name,Family name\n";
-#        
+#
 #        foreach ($googleOnlyUsers AS $username) {
 #            $userData = $googleUsers[$username];
 #            print "$username,$userData[givenName],$userData[familyName]\n";
 #        }
-#        
+#
 #        print "</pre>";
 #
 #        print "<h1>Changes to users in Google Apps</h1><pre>Username,Field,Existing value,New value\n";
-#        
+#
 #        foreach ($googleChanges AS $username => $changes) {
 #            foreach ($changes AS $field => $delta) {
 #                print "$username,$field,$delta[from],$delta[to]\n";
 #            }
 #        }
-#        
+#
 #        print "</pre>";
 
         return $results;

@@ -50,7 +50,7 @@ class GoogleApps
             case 200:
                 return json_decode($response, true);
             default:
-                throw new \Exception("Got HTTP status $responseCode from Google API");
+                throw new \Exception("Got HTTP status $responseCode from Google API: $response", $responseCode);
         }
     }
 

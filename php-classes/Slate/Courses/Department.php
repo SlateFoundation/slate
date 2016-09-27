@@ -55,14 +55,14 @@ class Department extends \VersionedRecord
     ];
 
 
-    public static function getOrCreateByTitle($title)
+    public static function getOrCreateByTitle($title, $save = false)
     {
         if ($Department = static::getByField('Title', $title)) {
             return $Department;
         } else {
             return static::create([
                 'Title' => $title
-            ], true);
+            ], $save);
         }
     }
 

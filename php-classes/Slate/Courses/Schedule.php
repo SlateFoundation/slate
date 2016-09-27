@@ -58,7 +58,7 @@ class Schedule extends \VersionedRecord
     ];
 
 
-    public static function getOrCreateByHandle($handle)
+    public static function getOrCreateByHandle($handle, $save = false)
     {
         if ($Schedule = static::getByHandle($handle)) {
             return $Schedule;
@@ -66,7 +66,18 @@ class Schedule extends \VersionedRecord
             return static::create([
                 'Title' => $handle
                 ,'Handle' => $handle
-            ], true);
+            ], $save);
+        }
+    }
+
+    public static function getOrCreateByTitle($title, $save = false)
+    {
+        if ($Schedule = static::getByField('Title', $title)) {
+            return $Schedule;
+        } else {
+            return static::create([
+                'Title' => $title
+            ], $save);
         }
     }
 
@@ -85,7 +96,9 @@ class Schedule extends \VersionedRecord
     public function save($deep = true)
     {
         // implement handles
-        HandleBehavior::onSave($this);
+        HandleBehavior::onSave($this, preg_replace('/\s+/', '', $this->Title), [
+            'case' => null
+        ]);
 
         // call parent
         parent::save($deep);

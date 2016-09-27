@@ -188,7 +188,7 @@ class Section extends \VersionedRecord
         if (!$this->Code) {
             $this->Code = HandleBehavior::getUniqueHandle("\\Slate\\Courses\\Section", $this->Course->Code, [
                 'handleField' => 'Code'
-                ,'incrementerFormat' => '%s-%03u'
+                ,'suffixFormat' => '%s-%03u'
                 ,'alwaysSuffix' => true
                 ,'case' => 'upper'
             ]);
@@ -258,6 +258,18 @@ class Section extends \VersionedRecord
         } catch (TableNotFoundException $e) {
             return 0;
         }
+    }
+
+    public function getParticipant($person)
+    {
+        if ($person instanceof \Emergence\People\IPerson) {
+            $person = $person->ID;
+        }
+
+        return SectionParticipant::getByWhere([
+            'CourseSectionID' => $this->ID,
+            'PersonID' => $person
+        ]);
     }
 
     // search SQL generators

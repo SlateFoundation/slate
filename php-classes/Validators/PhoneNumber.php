@@ -34,13 +34,13 @@ class PhoneNumber implements IValidator
                 }
 
                 if (strlen($phone) != 10) {
-                    return [LENGTH_NOT_10 => 'US/CA phone number must be 10 digits'];
+                    return [self::LENGTH_NOT_10 => 'US/CA phone number must be 10 digits'];
                 }
 
                 break;
             default:
                 if (strlen($phone) < 8 || strlen($phone) > 15) {
-                    return [LENGTH_OUT_OF_RANGE => 'Phone number must be between 8 and 15 digits'];
+                    return [self::LENGTH_OUT_OF_RANGE => 'Phone number must be between 8 and 15 digits'];
                 }
 
                 break;

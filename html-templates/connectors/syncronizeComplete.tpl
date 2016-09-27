@@ -20,7 +20,7 @@
         .sync-log .level-notice     { color: orange; }
         .sync-log .level-info       { color: skyblue; }
         .sync-log .level-debug      { color: lightgray; display: none; }
-        
+
         .sync-log.show-debug .level-debug {
             display: block;
         }
@@ -65,9 +65,9 @@
                 </dl>
             {/if}
 
-            {if $entry.exception}
+            {*if $entry.exception}
                 <details><pre>{$entry.exception|print_r:true|escape}</pre></details>
-            {/if}
+            {/if*}
         </article>
     {/foreach}
     </section>

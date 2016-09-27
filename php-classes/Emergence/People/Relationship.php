@@ -58,6 +58,29 @@ class Relationship extends \VersionedRecord
                 ,'Neutral' => 'grandchild'
             ]
         ]
+        ,'great grandmother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
+                'Male' => 'great grandson'
+                ,'Female' => 'great granddaughter'
+                ,'Neutral' => 'great grandchild'
+            ]
+        ]
+        ,'great grandfather' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
+                'Male' => 'great grandson'
+                ,'Female' => 'great granddaughter'
+                ,'Neutral' => 'great grandchild'
+            ]
+        ]
+        ,'great grandparent' => [
+            'Inverse' => [
+                'Male' => 'great grandson'
+                ,'Female' => 'great granddaughter'
+                ,'Neutral' => 'great grandchild'
+            ]
+        ]
         ,'stepmother' => [
             'Person' => ['Gender' => 'Female']
             ,'Inverse' => [
@@ -105,6 +128,75 @@ class Relationship extends \VersionedRecord
                 'Male' => 'foster son'
                 ,'Female' => 'foster daughter'
                 ,'Neutral' => 'foster child'
+            ]
+        ]
+        ,'godmother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
+                'Male' => 'godson'
+                ,'Female' => 'goddaughter'
+                ,'Neutral' => 'godchild'
+            ]
+        ]
+        ,'godfather' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
+                'Male' => 'godson'
+                ,'Female' => 'goddaughter'
+                ,'Neutral' => 'godchild'
+            ]
+        ]
+        ,'godparent' => [
+            'Inverse' => [
+                'Male' => 'godson'
+                ,'Female' => 'goddaughter'
+                ,'Neutral' => 'godchild'
+            ]
+        ]
+        ,'host mother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
+                'Male' => 'host son'
+                ,'Female' => 'host daughter'
+                ,'Neutral' => 'host child'
+            ]
+        ]
+        ,'host father' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
+                'Male' => 'host son'
+                ,'Female' => 'host daughter'
+                ,'Neutral' => 'host child'
+            ]
+        ]
+        ,'host parent' => [
+            'Inverse' => [
+                'Male' => 'host son'
+                ,'Female' => 'host daughter'
+                ,'Neutral' => 'host child'
+            ]
+        ]
+        ,'host grandmother' => [
+            'Person' => ['Gender' => 'Female']
+            ,'Inverse' => [
+                'Male' => 'host grandson'
+                ,'Female' => 'host granddaughter'
+                ,'Neutral' => 'host grandchild'
+            ]
+        ]
+        ,'host grandfather' => [
+            'Person' => ['Gender' => 'Male']
+            ,'Inverse' => [
+                'Male' => 'host grandson'
+                ,'Female' => 'host granddaughter'
+                ,'Neutral' => 'host grandchild'
+            ]
+        ]
+        ,'host grandparent' => [
+            'Inverse' => [
+                'Male' => 'host grandson'
+                ,'Female' => 'host granddaughter'
+                ,'Neutral' => 'host grandchild'
             ]
         ]
         ,'aunt' => [
@@ -159,6 +251,9 @@ class Relationship extends \VersionedRecord
                 ,'Female' => 'cousin'
                 ,'Neutral' => 'cousin'
             ]
+        ]
+        ,'coach' => [
+            'Inverse' => 'trainee'
         ]
     ];
 

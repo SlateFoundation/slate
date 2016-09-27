@@ -6,6 +6,7 @@ use DB;
 use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\People\Groups\Group;
+use Emergence\People\GuardianRelationship;
 use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
@@ -36,20 +37,20 @@ class Student extends User
     public static $relationships = [
         'Advisor' => [
             'type' => 'one-one'
-            ,'class' => 'Person'
+            ,'class' => Person::class
             ,'local' => 'AdvisorID'
         ]
         ,'Guardians' => [
             'type' => 'many-many'
-            ,'class' => 'Person'
-            ,'linkClass' => 'Emergence\\People\\GuardianRelationship'
+            ,'class' => Person::class
+            ,'linkClass' => GuardianRelationship::class
             ,'linkLocal' => 'PersonID'
             ,'linkForeign' => 'RelatedPersonID'
             ,'conditions' => ['Link.Class = "Guardian"']
         ]
         ,'GuardianRelationships' => [
             'type' => 'one-many'
-            ,'class' => 'Emergence\\People\\GuardianRelationship'
+            ,'class' => GuardianRelationship::class
             ,'foreign' => 'PersonID'
             ,'conditions' => ['Class' => 'Guardian']
         ]
@@ -126,7 +127,7 @@ class Student extends User
             return $filterResult(static::getAllByWhere('ID IN ('.$identifier.')'));
         }
 
-        list($groupType, $groupHandle) = explode(' ', $identifier, 2);
+        list($groupType, $groupHandle) = preg_split('/[\s:\-]/', $identifier, 2);
 
         switch ($groupType) {
             case 'group':

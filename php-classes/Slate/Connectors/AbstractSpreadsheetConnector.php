@@ -24,6 +24,7 @@ use Slate\Term;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
+use Slate\Courses\Department;
 use Slate\Courses\Schedule;
 use Emergence\Locations\Location;
 
@@ -37,6 +38,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     // group assignments
     public static $studentsRootGroup = 'students';
+    public static $studentsGraduationYearGroups = true;
     public static $alumniRootGroup = 'alumni';
     public static $staffRootGroup = 'staff';
     public static $teachersRootGroup = 'teachers';
@@ -47,11 +49,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $sectionTitleFormatter;
     public static $onUserNotFound;
     public static $onApplyUserChanges;
+    public static $onApplySectionChanges;
 
-    public static $onBeforeValidateRecord;
-    public static $onValidateRecord;
-    public static $onBeforeSaveRecord;
-    public static $onSaveRecord;
+    public static $filterPerson;
+    public static $filterSection;
+    public static $filterEnrollment;
 
 
     // column maps
@@ -214,7 +216,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
 
             // process input row through column mapping
-            $row = static::_readRow($row, static::$studentColumns);
+            $row = static::_readStudent($Job, $row);
 
 
             // start logging analysis
@@ -222,9 +224,22 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             static::_logRow($Job, 'student', $results['analyzed'], $row);
 
 
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping student row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
+
+
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = Student::create();
+                $Record->setTemporaryPassword();
             }
 
 
@@ -272,7 +287,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
 
             // process input row through column mapping
-            $row = static::_readRow($row, static::$alumniColumns);
+            $row = static::_readAlumni($Job, $row);
 
 
             // start logging analysis
@@ -280,9 +295,22 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             static::_logRow($Job, 'alumni', $results['analyzed'], $row);
 
 
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping student row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
+
+
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = Student::create();
+                $Record->setTemporaryPassword();
             }
 
 
@@ -330,7 +358,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         while ($row = $spreadsheet->getNextRow()) {
 
             // process input row through column mapping
-            $row = static::_readRow($row, static::$staffColumns);
+            $row = static::_readStaff($Job, $row);
 
 
             // start logging analysis
@@ -338,11 +366,24 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             static::_logRow($Job, 'staff', $results['analyzed'], $row);
 
 
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping student row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
+
+
             // get existing user or start creating a new one
             if (!$Record = static::_getPerson($Job, $row)) {
                 $Record = User::create([
                     'AccountLevel' => 'Staff'
                 ]);
+                $Record->setTemporaryPassword();
             }
 
 
@@ -399,14 +440,28 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         // loop through rows
         while ($row = $spreadsheet->getNextRow()) {
-            $row = static::_readRow($row, static::$sectionColumns);
             $Record = null;
             $Mapping = null;
+
+            // process input row through column mapping
+            $row = static::_readSection($Job, $row);
 
 
             // start logging analysis
             $results['analyzed']++;
             static::_logRow($Job, 'sections', $results['analyzed'], $row);
+
+
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterSection($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping section row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
 
 
             // check required fields
@@ -453,7 +508,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             }
 
-
             // get teacher, but add later
             $Teacher = null;
             if (!empty($row['TeacherUsername'])) {
@@ -462,69 +516,45 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     $Job->log(sprintf('Teacher not found for username "%s"', $row['TeacherUsername']), LogLevel::ERROR);
                     continue;
                 }
-            } elseif (!empty($row['TeacherFullName'])) {
-                $teacherName = User::parseFullName($row['TeacherFullName']);
-                if (!$Teacher = User::getByFullName($teacherName['FirstName'], $teacherName['LastName'])) {
-                    $results['failed']['teacher-not-found-by-name'][$row['TeacherFullName']]++;
-                    $Job->log(sprintf('Teacher not found for full name "%s"', $row['TeacherFullName']), LogLevel::ERROR);
+            } elseif (($teacherNameSplit = !empty($row['TeacherFirstName']) && !empty($row['TeacherLastName'])) || !empty($row['TeacherFullName'])) {
+                if ($teacherNameSplit) {
+                    $Teacher = User::getByFullName($row['TeacherFirstName'], $row['TeacherLastName']);
+                } else {
+                    $teacherName = User::parseFullName($row['TeacherFullName']);
+                    $Teacher = User::getByFullName($teacherName['FirstName'], $teacherName['LastName']);
+                }
+
+                if (!$Teacher) {
+                    $fullName = $teacherNameSplit ? $row['TeacherFirstName'] . ' ' . $row['TeacherLastName'] : $row['TeacherFullName'];
+                    $results['failed']['teacher-not-found-by-name'][$fullName]++;
+                    $Job->log(sprintf('Teacher not found for full name "%s"', $fullName), LogLevel::ERROR);
                     continue;
                 }
+            }
+
+
+            // get or create course
+            if (!$Record->Course = Course::getByCode($row['CourseCode'])) {
+                $Record->Course = Course::create([
+                    'Code' => $row['CourseCode'],
+                    'Title' => $row['CourseTitle'] ?: $row['CourseCode'],
+                    'Department' => !empty($row['DepartmentTitle']) ? Department::getOrCreateByTitle($row['DepartmentTitle']) : null
+                ]);
             }
 
 
             // apply values from spreadsheet
-            if (!$Record->Course = Course::getByCode($row['CourseCode'])) {
-                $Record->Course = Course::create([
-                    'Code' => $row['CourseCode'],
-                    'Title' => $row['CourseCode']
-                ]);
-            }
-
-            if (!empty($row['Term'])) {
-                if (!$Record->Term = Term::getByHandle($row['Term'])) {
-                    $results['failed']['term-not-found'][$row['Term']]++;
-                    $Job->log(sprintf('Term not found for handle "%s"', $row['Term']), LogLevel::ERROR);
-                    continue;
+            try {
+                static::_applySectionChanges($Job, $MasterTerm, $Record, $row, $results);
+            } catch (RemoteRecordInvalid $e) {
+                if ($e->getValueKey()) {
+                    $results['failed'][$e->getMessageKey()][$e->getValueKey()]++;
+                } else {
+                    $results['failed'][$e->getMessageKey()]++;
                 }
 
-                if ($Record->Term->Left < $MasterTerm->Left || $Record->Term->Left > $MasterTerm->Right) {
-                    $results['failed']['term-outside-master'][$row['Term']]++;
-                    $Job->log(sprintf('Term "%s" is not within the selected master term', $row['Term']), LogLevel::ERROR);
-                    continue;
-                }
-            }
-
-            if (!empty($row['Schedule'])) {
-                $Record->Schedule = Schedule::getOrCreateByHandle($row['Schedule']);
-            }
-
-            if (!empty($row['Location'])) {
-                $Record->Location = Location::getOrCreateByHandle('room-'.$row['Location'], 'Room '.$row['Location']);
-            }
-
-            if (!empty($row['StudentsCapacity'])) {
-                $Record->StudentsCapacity = $row['StudentsCapacity'];
-            }
-
-            if (!empty($row['Notes'])) {
-                $Record->Notes = $row['Notes'];
-            }
-
-
-            // set title
-            $title = null;
-            if (!empty($row['Title'])) {
-                $title = $row['Title'];
-            } elseif (!$Record->Title) {
-                $title = $Record->Course->Code;
-            }
-
-            if ($title) {
-                if (is_callable(static::$sectionTitleFormatter)) {
-                    $title = call_user_func(static::$sectionTitleFormatter, $title, $Record, $Teacher);
-                }
-
-                $Record->Title = $title;
+                $Job->logException($e);
+                continue;
             }
 
 
@@ -547,6 +577,28 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $results['updated']++;
             } else {
                 $results['unmodified']++;
+            }
+
+
+            // log related changes
+            if ($Record->Course) {
+                $Job->logRecordDelta($Record->Course);
+            }
+
+            if ($Record->Course->Department) {
+                $Job->logRecordDelta($Record->Course->Department);
+            }
+
+             if ($Record->Term) {
+                $Job->logRecordDelta($Record->Term);
+            }
+
+            if ($Record->Schedule) {
+                $Job->logRecordDelta($Record->Schedule);
+            }
+
+            if ($Record->Location) {
+                $Job->logRecordDelta($Record->Location);
             }
 
 
@@ -614,13 +666,28 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         // loop through rows for incoming roster
         while ($row = $spreadsheet->getNextRow()) {
-            $row = static::_readRow($row, static::$enrollmentColumns);
             $Record = null;
+
+
+            // process input row through column mapping
+            $row = static::_readEnrollment($Job, $row);
 
 
             // start logging analysis
             $results['analyzed']++;
             static::_logRow($Job, 'enrollments', $results['analyzed'], $row);
+
+
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterEnrollment($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->log(sprintf(
+                    'Skipping enrollment row #%03u due to filter: %s',
+                    $results['analyzed'],
+                    $filterReason
+                ), LogLevel::NOTICE);
+                continue;
+            }
 
 
             // check required fields
@@ -702,6 +769,111 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // protected methods
+    protected static function _readStudent($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$studentColumns);
+
+        static::_fireEvent('readStudent', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readAlumni($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$alumniColumns);
+
+        static::_fireEvent('readAlumni', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readStaff($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$staffColumns);
+
+        static::_fireEvent('readStaff', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readSection($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$sectionColumns);
+
+        static::_fireEvent('readSection', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _readEnrollment($Job, array $row)
+    {
+        $row = static::_readRow($row, static::$enrollmentColumns);
+
+        static::_fireEvent('readEnrollment', [
+            'Job' => $Job,
+            'row' => &$row
+        ]);
+
+        return $row;
+    }
+
+    protected static function _filterPerson(Job $Job, array $row)
+    {
+        $filterResult = false;
+
+        if (is_callable(static::$filterPerson)) {
+            $filterResult = call_user_func(static::$filterPerson, $Job, $row);
+
+            if ($filterResult === true) {
+                $filterResult = 'no-reason';
+            }
+        }
+
+        return $filterResult;
+    }
+
+    protected static function _filterSection(Job $Job, array $row)
+    {
+        $filterResult = false;
+
+        if (is_callable(static::$filterSection)) {
+            $filterResult = call_user_func(static::$filterSection, $Job, $row);
+
+            if ($filterResult === true) {
+                $filterResult = 'no-reason';
+            }
+        }
+
+        return $filterResult;
+    }
+
+    protected static function _filterEnrollment(Job $Job, array $row)
+    {
+        $filterResult = false;
+
+        if (is_callable(static::$filterEnrollment)) {
+            $filterResult = call_user_func(static::$filterEnrollment, $Job, $row);
+
+            if ($filterResult === true) {
+                $filterResult = 'no-reason';
+            }
+        }
+
+        return $filterResult;
+    }
+
     protected static function _getPerson(Job $Job, array $row)
     {
         // try to get existing account by foreign key column
@@ -763,7 +935,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _applyUserChanges(Job $Job, User $User, array $row, array &$results)
     {
-        $currentGraduationYear = date('Y', strtotime(static::_getCurrentMasterTerm($Job)->EndDate));
+        $currentGraduationYear = Term::getClosestGraduationYear();
         $autoCapitalize = $Job->Config['autoCapitalize'];
         $_formatPronoun = function($string, $familyName = false) use ($autoCapitalize) {
             return $autoCapitalize ? Capitalizer::capitalizePronoun($string, $familyName) : $string;
@@ -781,6 +953,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         if (!empty($row['MiddleName'])) {
             $User->MiddleName = $_formatPronoun($row['MiddleName']);
+        }
+
+        if (!empty($row['PreferredName'])) {
+            $User->PreferredName = $_formatPronoun($row['PreferredName']);
         }
 
 
@@ -891,6 +1067,26 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
             $User->Advisor = $Mapping->Context;
+        } elseif (($advisorNameSplit = !empty($row['AdvisorFirstName']) && !empty($row['AdvisorLastName'])) || !empty($row['AdvisorFullName'])) {
+            if ($advisorNameSplit) {
+                $Advisor = User::getByFullName($row['AdvisorFirstName'], $row['AdvisorLastName']);
+            } else {
+                $advisorName = User::parseFullName($row['AdvisorFullName']);
+                $Advisor = User::getByFullName($advisorName['FirstName'], $advisorName['LastName']);
+            }
+
+            if (!$Advisor) {
+                $fullName = $advisorNameSplit ? $row['AdvisorFirstName'] . ' ' . $row['AdvisorLastName'] : $row['AdvisorFullName'];
+
+                throw new RemoteRecordInvalid(
+                    'advisor-not-found-by-name',
+                    sprintf('Teacher not found for full name "%s"', $fullName),
+                    $row,
+                    $fullName
+                );
+            }
+
+            $User->Advisor = $Advisor;
         }
 
 
@@ -988,54 +1184,68 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // determine primary group
-        $primaryGroup = null;
+        $Group = null;
 
-        if ($User->GraduationYear && static::$studentsRootGroup) {
-            // get class group from cache or database
-            $groupHandle = 'class_of_'.$User->GraduationYear;
-
-            if (!$primaryGroup = Group::getByHandle($groupHandle)) {
-                $parentGroupHandle = $User->GraduationYear >= $currentGraduationYear ? static::$studentsRootGroup : static::$alumniRootGroup;
-                if (!$parentGroup = Group::getByHandle($parentGroupHandle)) {
-                    throw new RemoteRecordInvalid(
-                        'student-root-group-not-found',
-                        sprintf('Student root group "%s" does not exist', $parentGroupHandle),
-                        $row,
-                        $parentGroupHandle
-                    );
-                }
-
-                $primaryGroup = Group::create([
-                    'Name' => 'Class of '.$User->GraduationYear,
-                    'Parent' => $parentGroup
-                ]);
-
-                $Job->log(sprintf('create graduation group for %s', $primaryGroup->Name), LogLevel::NOTICE);
+        if (
+            $User->isA(Student::class)
+            && (
+                $rootGroupHandle = (
+                    $User->GraduationYear >= $currentGraduationYear
+                    ? static::$studentsRootGroup
+                    : static::$alumniRootGroup
+                )
+            )
+        ) {
+            // get root group initially for either student or alumni
+            if (!$Group = Group::getByHandle($rootGroupHandle)) {
+                throw new RemoteRecordInvalid(
+                    'student-root-group-not-found',
+                    sprintf('Student root group "%s" does not exist', $rootGroupHandle),
+                    $row,
+                    $rootGroupHandle
+                );
             }
 
-            // if Group is set, get or create as subgroup of graduation group
-            if (!empty($row['Group'])) {
-                $parentGroup = $primaryGroup;
 
-                $primaryGroup = Group::getByWhere([
-                    'ParentID' => $parentGroup->ID,
+            // move down to graduation year group if enabled
+            if (static::$studentsGraduationYearGroups && $User->GraduationYear) {
+                $ParentGroup = $Group;
+
+                // try to get existing "Class of YYYY" group
+                if (!$Group = Group::getByHandle("class_of_$User->GraduationYear")) {
+                    $Group = Group::create([
+                        'Name' => 'Class of '.$User->GraduationYear,
+                        'Parent' => $ParentGroup
+                    ]);
+
+                    $Job->log(sprintf('create graduation group %s under %s', $Group->Name, $ParentGroup->Name), LogLevel::NOTICE);
+                }
+            }
+
+
+            // move down to custom subgroup if provided
+            if ($Group && !empty($row['Group'])) {
+                $ParentGroup = $Group;
+
+                $Group = Group::getByWhere([
+                    'ParentID' => $ParentGroup->ID,
                     'Name' => $row['Group']
                 ]);
 
-                if (!$primaryGroup) {
-                    $primaryGroup = Group::create([
+                if (!$Group) {
+                    $Group = Group::create([
                         'Name' => $row['Group'],
-                        'Parent' => $parentGroup
+                        'Parent' => $ParentGroup
                     ]);
 
-                    $Job->log(sprintf('create group %s in graduation group %s', $primaryGroup->Name, $parentGroup->Name), LogLevel::NOTICE);
+                    $Job->log(sprintf('create group %s under group %s', $Group->Name, $ParentGroup->Name), LogLevel::NOTICE);
                 }
             }
+
         } elseif ($User->hasAccountLevel('Staff') && static::$staffRootGroup) {
             $groupHandle = $User->AccountLevel == 'Teacher' ? static::$teachersRootGroup : static::$staffRootGroup;
-            $primaryGroup = Group::getByHandle($groupHandle);
 
-            if (!$primaryGroup) {
+            if ($groupHandle && !($Group = Group::getByHandle($groupHandle))) {
                 throw new RemoteRecordInvalid(
                     'staff-root-group-not-found',
                     sprintf('Staff root group "%s" does not exist', $groupHandle),
@@ -1045,11 +1255,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
         }
 
-        if ($primaryGroup) {
+
+        if ($Group) {
             // check if user is already in the determined primary group or a subgroup of it
             $foundGroup = null;
             foreach ($User->Groups AS $currentGroup) {
-                if ($currentGroup->Left >= $primaryGroup->Left && $currentGroup->Right <= $primaryGroup->Right) {
+                if ($currentGroup->Left >= $Group->Left && $currentGroup->Right <= $Group->Right) {
                     $foundGroup = $currentGroup;
                     break;
                 }
@@ -1057,12 +1268,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // assign to determined group if needed
             if (!$foundGroup) {
-                $Job->log(sprintf('add %s to group %s', $User->getTitle(), $primaryGroup->isPhantom ? $primaryGroup->Name : $primaryGroup->getFullPath()), LogLevel::NOTICE);
+                $Job->log(sprintf('add %s to group %s', $User->getTitle(), $Group->isPhantom ? $Group->Name : $Group->getFullPath()), LogLevel::NOTICE);
                 $membership = GroupMember::create([
-                    'Group' => $primaryGroup
+                    'Group' => $Group
                 ]);
                 $User->GroupMemberships = array_merge($User->GroupMemberships, [$membership]);
-                $results['added-to-group'][$primaryGroup->Name]++;
+                $results['added-to-group'][$Group->Name]++;
             }
         }
 
@@ -1086,6 +1297,70 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             ]
         ];
+    }
+
+    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row, array &$results)
+    {
+        if (!empty($row['Term'])) {
+            if (!$Section->Term = Term::getByHandle($row['Term'])) {
+                throw new RemoteRecordInvalid(
+                    'term-not-found',
+                    sprintf('Term not found for handle "%s"', $row['Term']),
+                    $row,
+                    $row['Term']
+                );
+            }
+        }
+
+        if (!empty($row['Schedule'])) {
+            $Section->Schedule = Schedule::getOrCreateByTitle($row['Schedule']);
+        }
+
+        if (!empty($row['Location'])) {
+            $Section->Location = Location::getOrCreateByHandle('room-'.$row['Location'], 'Room '.$row['Location']);
+        }
+
+        if (!empty($row['StudentsCapacity'])) {
+            $Section->StudentsCapacity = $row['StudentsCapacity'];
+        }
+
+        if (!empty($row['Notes'])) {
+            $Section->Notes = $row['Notes'];
+        }
+
+
+        // set title
+        $title = null;
+        if (!empty($row['Title'])) {
+            $title = $row['Title'];
+        } elseif (!$Section->Title) {
+            $title = $Section->Course->Title ?: $Section->Course->Code;
+        }
+
+        if ($title) {
+            if (is_callable(static::$sectionTitleFormatter)) {
+                $title = call_user_func(static::$sectionTitleFormatter, $title, $Record, $Teacher);
+            }
+
+            $Section->Title = $title;
+        }
+
+
+        // check section term
+        if ($Section->Term->Left < $MasterTerm->Left || $Record->Term->Left > $MasterTerm->Right) {
+            throw new RemoteRecordInvalid(
+                'term-outside-master',
+                sprintf('Term "%s" is not within the selected master term', $row['Term']),
+                $row,
+                $row['Term']
+            );
+        }
+
+
+        // call configurable hook
+        if (is_callable(static::$onApplySectionChanges)) {
+            call_user_func(static::$onApplySectionChanges, $Job, $Section, $row);
+        }
     }
 
     protected static function _getOrCreateParticipant(Section $Section, User $User, $role, $pretend = true)

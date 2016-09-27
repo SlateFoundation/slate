@@ -2,6 +2,9 @@
 
 namespace Emergence\People;
 
+use LoginRequestHandler;
+
+
 class RegistrationRequestHandler extends \RequestHandler
 {
     // configurables
@@ -24,6 +27,8 @@ class RegistrationRequestHandler extends \RequestHandler
         switch ($action = static::shiftPath()) {
             case 'recover':
                 return static::handleRecoverPasswordRequest();
+            case 'set-password':
+                return static::handleSetPasswordRequest();
             case '':
             case false:
                 return static::handleRegistrationRequest();
@@ -151,6 +156,41 @@ class RegistrationRequestHandler extends \RequestHandler
 
         return static::respond('recoverPassword', [
             'error' => isset($error) ? $error : false
+        ]);
+    }
+
+    public static function handleSetPasswordRequest()
+    {
+        $GLOBALS['Session']->requireAuthentication();
+        $User = $GLOBALS['Session']->Person;
+
+        if (!$User->TemporaryPassword || !$User->verifyPassword($User->TemporaryPassword)) {
+            return static::throwInvalidRequestError('Since your account is no longer using a temporary password, please visit your profile and confirm your current password to change it');
+        }
+
+        $error = null;
+        $returnUrl = LoginRequestHandler::getReturnUrl();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (empty($_POST['password']) || (strlen($_POST['password']) < User::$minPasswordLength)) {
+                $error = 'Your new password must be at least '.User::$minPasswordLength.' characters long.';
+            } elseif (empty($_POST['passwordConfirm']) || ($_POST['password'] != $_POST['passwordConfirm'])) {
+                $error = 'Please enter your new password a second time for confirmation.';
+            } else {
+                $User->setClearPassword($_POST['password']);
+                $User->save();
+
+                return static::respond('setPasswordComplete', [
+                    'success' => true,
+                    'returnUrl' => $returnUrl
+                ]);
+            }
+        }
+
+        return static::respond('setPassword', [
+            'success' => !$error,
+            'error' => $error,
+            'returnUrl' => $returnUrl
         ]);
     }
 }

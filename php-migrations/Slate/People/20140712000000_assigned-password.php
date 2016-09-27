@@ -1,14 +1,22 @@
 <?php
 
+$skipped = false;
+
 // skip if people table not generated yet
-if (!DB::oneRecord('SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA = SCHEMA() AND TABLE_NAME = "people"')) {
-    print("Skipping migration because table doesn't exist yet\n");
+if (!static::tableExists('people')) {
+    print("Skipping migration because table `people` doesn't exist yet\n");
     return static::STATUS_SKIPPED;
 }
 
 // skip if people table already has AssignedPassword column
-if (DB::oneRecord('SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = SCHEMA() AND TABLE_NAME = "people" AND COLUMN_NAME = "AssignedPassword"')) {
-    print("Skipping migration because table already has AssignedPassword column\n");
+if (static::columnExists('people', 'AssignedPassword')) {
+    print("Skipping migration because table `people` already has column `AssignedPassword`\n");
+    return static::STATUS_SKIPPED;
+}
+
+// skip if people table does not have a legacy PasswordClear column to rename
+if (!static::columnExists('people', 'PasswordClear')) {
+    print("Skipping migration because table `people` does not have legacy column `PasswordClear`\n");
     return static::STATUS_SKIPPED;
 }
 

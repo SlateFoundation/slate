@@ -24,12 +24,18 @@ class User extends Person
         ]
         ,'Password' => [
             'type' => 'string'
+            ,'default' => null
             ,'excludeFromData' => true
         ]
         ,'AccountLevel' => [
             'type' => 'enum'
             ,'values' => ['Disabled','Contact','User','Staff','Administrator','Developer']
             ,'default' => 'User'
+        ]
+        ,'TemporaryPassword' => [
+            'type' => 'string'
+            ,'default' => null
+            ,'accountLevelEnumerate' => 'Administrator'
         ]
     ];
 
@@ -108,11 +114,6 @@ class User extends Person
             $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
         }
 
-        // generate password if none provided
-        if (!$this->Password) {
-            $this->setClearPassword(static::generatePassword());
-        }
-
         return parent::save($deep);
     }
 
@@ -176,10 +177,18 @@ class User extends Person
     public function setClearPassword($password)
     {
         $this->Password = password_hash($password, PASSWORD_DEFAULT);
+        $this->TemporaryPassword = null;
 
         if (is_callable(static::$onPasswordSet)) {
             call_user_func(static::$onPasswordSet, $password, $this);
         }
+    }
+
+    public function setTemporaryPassword($temporaryPassword = null)
+    {
+        $temporaryPassword = $temporaryPassword ?: static::generatePassword();
+        $this->setClearPassword($temporaryPassword);
+        $this->TemporaryPassword = $temporaryPassword;
     }
 
     public function hasAccountLevel($accountLevel)
@@ -197,7 +206,7 @@ class User extends Person
     {
         // apply default options
         $options = array_merge(
-            ['incrementerFormat' => '%s%u'],
+            ['suffixFormat' => '%s%u'],
             is_string(static::$usernameGenerator) || is_callable(static::$usernameGenerator) ? ['format' => static::$usernameGenerator] : static::$usernameGenerator,
             $options,
             ['handleField' => 'Username']
@@ -231,7 +240,7 @@ class User extends Person
         return array_search($accountLevel, self::$fields['AccountLevel']['values']);
     }
 
-    protected static function generatePassword($length = 8)
+    public static function generatePassword($length = 8)
     {
         $chars = ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's' ,'t', 'u', 'v', 'w', 'x', 'y', 'z'];
         $password = '';

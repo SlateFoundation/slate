@@ -75,6 +75,7 @@ Ext.define('Site.widget.Login', {
                 window.location.reload();
             },
             failure: function(response) {
+                loginForm.dom.action = '/login?_LOGIN[return]='+encodeURIComponent(location.pathname + location.search);
                 loginForm.dom.submit();
             }
         });
