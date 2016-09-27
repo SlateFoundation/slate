@@ -156,7 +156,7 @@ Ext.define('SlateAdmin.model.person.Person', {
     proxy: {
         type: 'slaterecords',
         url: '/people',
-        include: 'groupIDs'
+        include: ['groupIDs', 'Advisor']
     },
 
 
