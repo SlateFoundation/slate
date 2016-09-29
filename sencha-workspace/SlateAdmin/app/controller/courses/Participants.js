@@ -91,7 +91,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
                 participantsPanel.setLoading('Removing participant&hellip;');
                 SlateAdmin.API.request({
                     method: 'DELETE',
-                    url: section.toUrl() + '/participants/' + participant.get('PersonID'),
+                    url: '/sections/' + section.get('Code') + '/participants/' + participant.get('PersonID'),
                     success: function(response) {
                         var responseData = response.data;
 
@@ -133,7 +133,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         participantsPanel.setLoading('Adding participant&hellip;');
         SlateAdmin.API.request({
             method: 'POST',
-            url: section.toUrl() + '/participants',
+            url: '/sections/' + section.get('Code') + '/participants',
             params: {
                 CourseSectionID: section.getId(),
                 PersonID: personId,
