@@ -660,8 +660,8 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $studentsBySection = [];
         $sectionsByIdentifier = [];
         $results = [
-            'analyzed' => 0,
-            'analyzed-enrollments' => 0
+            'rows-analyzed' => 0,
+            'enrollments-analyzed' => 0
         ];
 
 
@@ -675,7 +675,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             // start logging analysis
-            $results['analyzed']++;
+            $results['rows-analyzed']++;
             static::_logRow($Job, 'enrollments', $results['analyzed'], $row);
 
 
@@ -714,7 +714,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
 
                 $Participant = null;
-                $results['analyzed-enrollments']++;
+                $results['enrollments-analyzed']++;
 
                 // Optionally split code based user value
                 if (!$Job->Config['enrollmentDivider']) {
@@ -744,7 +744,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                                 continue;
                             }
                         } else {
-                            $results['failed']['section-not-found'][$sectionIdentifier]++;
+                            $results['enrollments-failed']['section-not-found'][$sectionIdentifier]++;
                             continue;
                         }
                     }
@@ -759,7 +759,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     } elseif ($logEntry['action'] == 'update') {
                         $results['enrollments-updated']++;
                     }
-
 
                     // record enrollment in cache for pruning phase
                     $studentsBySection[$Section->ID][] = $Student->ID;
