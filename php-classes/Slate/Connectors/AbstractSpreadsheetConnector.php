@@ -2,6 +2,7 @@
 
 namespace Slate\Connectors;
 
+use DB;
 use Slate;
 use SpreadsheetReader;
 use Emergence\Connectors\Job;
@@ -656,7 +657,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // initialize results
-        $rostersBySection = [];
+        $studentsBySection = [];
         $sectionsByIdentifier = [];
         $results = [
             'analyzed' => 0,
@@ -758,11 +759,48 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     } elseif ($logEntry['action'] == 'update') {
                         $results['enrollments-updated']++;
                     }
+
+
+                    // record enrollment in cache for pruning phase
+                    $studentsBySection[$Section->ID][] = $Student->ID;
                 }
             }
         }
 
-        // TODO: remove stale enrollments
+
+        // scan current roster for students to remove
+        foreach ($studentsBySection AS $sectionId => $studentIds) {
+            $enrolledStudentIds = DB::allValues(
+                'PersonID',
+                'SELECT PersonID FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"',
+                [
+                    SectionParticipant::$tableName,
+                    $sectionId
+                ]
+            );
+
+            $removeStudentIds = array_diff($enrolledStudentIds, $studentIds);
+
+            if (count($removeStudentIds)) {
+                if (!$pretend) {
+                    DB::nonQuery(
+                        'DELETE FROM `%s` WHERE CourseSectionID = %u AND Role = "Student" AND PersonID IN (%s)',
+                        [
+                            SectionParticipant::$tableName,
+                            $sectionId,
+                            implode(',', $removeStudentIds)
+                        ]
+                    );
+                }
+
+                $results['enrollments-removed'] += count($removeStudentIds);
+
+                foreach ($removeStudentIds AS $studentId) {
+                    $Job->log(sprintf('Removed user %s from section %s with role Student', User::getByID($studentId)->getTitle(), Section::getByID($sectionId)->getTitle()));
+                }
+            }
+        }
+
 
         return $results;
     }
