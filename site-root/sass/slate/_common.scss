@@ -32,14 +32,16 @@ body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
-.site.header {
-    background-image: image-url('header.jpg');
-    background-size: cover;
-    background-position: top;
-    position: relative;
+@if $hero-header-image {
+    .site.header {
+        background-image: image-url('header.jpg');
+        background-size: cover;
+        background-position: top;
+        position: relative;
 
-    &.reveal-hero {
-        height: 560px;
+        &.reveal-hero {
+            height: 560px;
+        }
     }
 }
 
@@ -84,29 +86,29 @@ body {
     &.has-image {
         background-color: #444;
         border-top: 2px solid #444;
-        
+
         .footer-info {
             background: rgba(white, .9);
             float: right;
             padding: 2em 1.5em;
             width: 250px;
         }
-    
+
         > .inner {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
             padding: 0;
         }
-    
+
         address {
             display: inline-block;
         }
-    
+
         small {
             clear: both;
             display: block;
             margin: 1em 0 0;
-        }        
+        }
     }
 }
