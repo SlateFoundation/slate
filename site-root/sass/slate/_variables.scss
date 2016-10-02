@@ -13,6 +13,8 @@ $heading-font:  Sanchez, Lato, Rockwell, 'Rockwell Std', Georgia, serif !default
 
 $omnibar-height: 2.75em;
 
+$hero-header-image: image-url('header.jpg') !default;
+
 // button colors
 $button-color:      mix(#dfdfdf, $accent-color, 95%) !default;
 $destructive-color: #ff332e !default;
