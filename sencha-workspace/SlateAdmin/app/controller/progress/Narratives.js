@@ -7,7 +7,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     ],
 
     stores: [
-        'people.Advisors',
+        'Terms',
         'progress.narratives.Sections',
         'progress.narratives.Students',
         'progress.narratives.Reports'
