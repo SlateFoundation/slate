@@ -11,46 +11,28 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
             return data;
         }
 
-        return location.search.match(/\Wenablesbg(\W|$)/) ? [
+        return [
             {
-                href: '#progress/standards', text: 'Standards Based Grades',
-                children: [{
-                    href: '#progress/standards/worksheets', text: 'Manage Worksheets'
-                },{
-                    href: '#progress/standards/printing', text: 'Search & Print'
-                }]
-            }, {
-                href: '#progress/standards/worksheets', text: 'Manage Worksheets'
-            },{
-                href: '#progress/standards/printing', text: 'Search & Print'
-            }, {
-                href: '#progress/narratives', text: 'Narrative Reports',
-                children: [{
-                    href: '#progress/narratives/printing', text: 'Search & Print'
-                },{
-                    href: '#progress/narratives/email', text: 'Email'
-                }]
-            }, {
-                href: '#progress/narratives/printing', text: 'Search & Print'
-            }, {
-                href: '#progress/interims', text: 'Interim Reports',
-                children: [{
-                    href: '#progress/interims/printing', text: 'Search & Print'
-                },{
-                    href: '#progress/interims/email', text: 'Email'
-                }]
-            }, {
-                href: '#progress/interims/printing', text: 'Search & Print'
-            },{
-                href: '#progress/interims/email', text: 'Email'
-            }
-        ] : [
+                href: '#progress/interims', text: 'Section Interim Reports',
+                children: [
+                    {
+                        href: '#progress/interims/print', text: 'Search & Print'
+                    }
+                    // {
+                    //     href: '#progress/interims/email', text: 'Email'
+                    // }
+                ]
+            },
             {
-                href: '#progress/narratives', text: 'Narrative Reports'
-            }, {
-                href: '#progress/narratives/printing', text: '↳ Search & Print'
-            },{
-                href: '#progress/narratives/email', text: 'Email'
+                href: '#progress/narratives', text: 'Section Term Reports',
+                children: [
+                    {
+                        href: '#progress/narratives/print', text: 'Search & Print'
+                    }
+                    // {
+                    //     href: '#progress/narratives/email', text: 'Email'
+                    // }
+                ]
             }
         ];
     }
