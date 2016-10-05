@@ -69,13 +69,6 @@ Ext.define('Slate.model.progress.SectionInterimReport', {
             allowNull: true
         },
 
-        // TODO: move to scienceleadership-interims package
-        {
-            name: 'Grade',
-            type: 'string',
-            allowNull: true
-        },
-
 
         // virtual fields
         {
