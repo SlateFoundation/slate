@@ -2,7 +2,7 @@
 Ext.define('SlateAdmin.view.LinksNavPanel', {
     extend: 'Ext.Panel',
     xtype: 'links-navpanel',
-    
+
     config: {
         activeLink: null
     },
@@ -11,10 +11,13 @@ Ext.define('SlateAdmin.view.LinksNavPanel', {
         '<ul class="slate-nav-list">',
             '<tpl for=".">',
                 '<li class="slate-nav-list-item"><a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">{text}</a></li>',
+                '<tpl for="children">',
+                    '<li class="slate-nav-list-item"><a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">↳ {text}</a></li>',
+                '</tpl>',
             '</tpl>',
         '</ul>'
     ],
-    
+
     onRender: function() {
         var me = this,
             activeLink = me.getActiveLink();
@@ -25,7 +28,7 @@ Ext.define('SlateAdmin.view.LinksNavPanel', {
             me.setActiveLink(activeLink);
         }
     },
-    
+
     applyActiveLink: function(link) {
         if (Ext.isArray(link)) {
             link = Ext.util.History.encodeRouteArray(link);
@@ -45,7 +48,7 @@ Ext.define('SlateAdmin.view.LinksNavPanel', {
             if (newLink && !Ext.isString(newLink)) {
                 newLink.addCls('selected');
             }
-            
+
             if (oldLink && !Ext.isString(oldLink)) {
                 oldLink.removeCls('selected');
             }
