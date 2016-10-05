@@ -1,437 +1,474 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.controller.progress.Interims', {
     extend: 'Ext.app.Controller',
 
-    views: [
-        'progress.interims.Manager',
-        'progress.interims.Printer',
-        'progress.interims.email.Manager'
-    ],
-    stores: [
-        'progress.Interims',
-        'progress.interims.Emails',
-        'progress.interims.People',
-        'Terms'
-    ],
-    models: [
-        'course.Section'
-    ],
-    refs: {
-        interimsEmailManager: {
-            selector: 'progress-interims-email-manager',
-            autoCreate: true,
 
-            xtype: 'progress-interims-email-manager'
-        },
-        interimsEmailSearchForm: {
-            selector: 'progress-interims-email-manager form'
-        },
-        interimsEmailGrid: 'progress-interims-email-grid',
-        interimsManager: {
+    views: [
+        'progress.interims.Manager'
+    ],
+
+    stores: [
+        'Terms',
+        'progress.interims.Sections',
+        'progress.interims.Students',
+        'progress.interims.Reports'
+    ],
+
+    refs: {
+        progressNavPanel: 'progress-navpanel',
+
+        managerCt: {
             selector: 'progress-interims-manager',
             autoCreate: true,
 
             xtype: 'progress-interims-manager'
         },
-        interimsGrid: 'progress-interims-grid',
-        interimReport: 'progress-interims-report',
-        interimDeleteBtn: 'progress-interims-report button[action=delete]',
-        interimCancelBtn: 'progress-interims-report button[action=cancel]',
-        interimSaveDraftBtn: 'progress-interims-report button[action=save][status=Draft]',
-        interimPublishBtn: 'progress-interims-report button[action=save][status=Published]',
-        interimsPrinter: {
-            selector: 'progress-interims-printer',
-            autoCreate: true,
+        myClassesToggleBtn: 'progress-interims-sectionsgrid button[action=myClassesToggle]',
+        termSelector: 'progress-interims-sectionsgrid #termSelector',
+        sectionsGrid: 'progress-interims-sectionsgrid',
+        studentsGrid: 'progress-interims-studentsgrid',
+        editorForm: 'progress-interims-editorform',
+        revertChangesBtn: 'progress-interims-editorform button#revertChangesBtn',
+        saveDraftBtn: 'progress-interims-editorform button#saveDraftBtn',
+        saveFinishedBtn: 'progress-interims-editorform button#saveFinishedBtn'
+    },
 
-            xtype: 'progress-interims-printer'
-        },
-        interimsPrintForm: 'progress-interims-printer form',
-        interimsTermSelector: 'progress-interims-grid #termSelector'
-    },
     routes: {
-        'progress/interims': 'showInterims',
-        'progress/interims/email': 'showInterimEmail',
-        'progress/interims/print': 'showInterimPrint'
+        'progress/interims': 'showInterims'
     },
+
     control: {
-        'progress-interims-manager': {
-            activate: 'onInterimsActivate'
+        managerCt: {
+            activate: 'onManagerActivate'
         },
-        'progress-interims-grid': {
-            beforeselect: 'onBeforeInterimReportSelect',
-            select: 'onInterimReportSelect',
-            deselect: 'onInterimReportDeselect'
+
+        myClassesToggleBtn: {
+            toggle: 'onMyClassesToggle'
         },
-        'progress-interims-report button[action=delete]': {
-            click: 'onInterimDeleteClick'
-        },
-        'progress-interims-report button[action=cancel]': {
-            click: 'onInterimCancelClick'
-        },
-        'progress-interims-report button[action=save]': {
-            click: 'onInterimSaveClick'
-        },
-        'progress-interims-printer': {
-            activate: 'onPrinterActivate'
-        },
-        'progress-interims-printer button[action=preview]': {
-            click: 'onInterimsPreviewClick'
-        },
-        'progress-interims-printer button[action=print]': {
-            click: 'onInterimsPrintClick'
-        },
-        'progress-interims-printer button[action=save-csv]': {
-            click: 'onInterimsSaveCsvClick'
-        },
-        'progress-interims-printer button[action=clear-filters]': {
-            click: 'onInterimsClearFiltersClick'
-        },
-        'progress-interims-email-manager button[action=interim-email-search]': {
-            click: 'onInterimEmailSearchClick'
-        },
-        'progress-interims-email-manager button[action=clear-filters]': {
-            click: 'onInterimEmailClearFiltersClick'
-        },
-        'progress-interims-email-grid': {
-            select: 'onStudentInterimEmailSelect'
-        },
-        'progress-interims-email-grid button[action=interim-email-send]': {
-            click: 'onInterimEmailSendClick'
-        },
-        'progress-interims-grid #termSelector': {
+        termSelector: {
             change: 'onTermChange'
         },
-        'progress-interims-report': {
-            dirtychange: 'onInterimEditorDirtyChange'
+        sectionsGrid: {
+            beforeselect: 'onBeforeSectionSelect',
+            select: 'onSectionSelect'
+        },
+
+        studentsGrid: {
+            beforeselect: 'onBeforeStudentSelect',
+            select: 'onStudentSelect'
+        },
+        sectionNotesForm: {
+            dirtychange: 'onSectionNotesFormDirtyChange'
+        },
+        sectionNotesRevertBtn: {
+            click: 'onSectionNotesRevertBtnClick'
+        },
+        sectionNotesSaveBtn: {
+            click: 'onSectionNotesSaveBtnClick'
+        },
+
+        editorForm: {
+            dirtychange: 'onEditorFormDirtyChange',
+            validitychange: 'onEditorFormValidityChange'
+        },
+        'progress-interims-editorform combo': {
+            select: 'onComboSelect'
+        },
+        revertChangesBtn: {
+            click: 'onRevertChangesClick'
+        },
+        saveDraftBtn: {
+            click: 'onSaveDraftClick'
+        },
+        saveFinishedBtn: {
+            click: 'onSaveFinishedClick'
+        }
+    },
+
+    listen: {
+        store: {
+            '#progress.interims.Students': {
+                load: 'onStudentsStoreLoad'
+            }
         }
     },
 
 
-    //route handlers
+    // route handlers
     showInterims: function () {
-        this.application.getController('Viewport').loadCard(this.getInterimsManager());
-    },
-
-    showInterimEmail: function () {
-        this.application.getController('Viewport').loadCard(this.getInterimsEmailManager());
-    },
-
-    showInterimPrint: function () {
-        var advisorsStore = Ext.getStore('people.Advisors');
-
-        if (!advisorsStore.isLoaded()) {
-            advisorsStore.load();
-        }
-        this.application.getController('Viewport').loadCard(this.getInterimsPrinter());
-    },
-
-
-    //event handlers
-    onInterimsActivate: function (manager) {
         var me = this,
-            termStore = Ext.getStore('Terms');
+            navPanel = me.getProgressNavPanel();
 
-            // ensure terms are loaded
-        if (!termStore.isLoaded()) {
-            manager.setLoading('Loading terms&hellip;');
-            termStore.load({
-                callback: function () {
-                    manager.setLoading(false);
-                    me.loadMyStudents();
-                }
-            });
-        } else {
-            me.loadMyStudents();
-        }
+        Ext.suspendLayouts();
+
+        Ext.util.History.suspendState();
+        navPanel.setActiveLink('progress/interims');
+        navPanel.expand();
+        Ext.util.History.resumeState(false); // false to discard any changes to state
+
+        me.application.getController('Viewport').loadCard(me.getManagerCt());
+
+        Ext.resumeLayouts(true);
     },
 
-    onPrinterActivate: function (manager) {
-        var termSelector = this.getInterimsPrinter().down('combo[name=termID]'),
-            selectedTerm = termSelector.getValue(),
-            termStore = Ext.getStore('Terms'),
-            advisorStore = Ext.getStore('people.Advisors'),
-            onTermLoad = function () {
-                if(!selectedTerm) {
-                    termSelector.setValue(termStore.getReportingTerm().getId());
-                    manager.setLoading(false);
-                }
-
-
-            };
-
-        if(!termStore.isLoaded()) {
-            manager.setLoading('Loading terms&hellip;');
-            termStore.load({
-                callback: onTermLoad
-            });
-        }
-
-        if(!advisorStore.isLoaded()) {
-            advisorStore.load();
-        }
+    // event handlers
+    onManagerActivate: function () {
+        this.syncSections();
     },
 
-    onTermChange: function (field, newValue, oldValue) {
-        Ext.getStore('progress.Interims').load({
-            params: {
-                termID: newValue
-            }
-        });
+    onMyClassesToggle: function () {
+        this.syncSections();
     },
 
-    onBeforeInterimReportSelect: function (rowModel, record) {
+    onTermChange: function () {
+        this.syncSections();
+    },
+
+    onBeforeSectionSelect: function(sectionsSelModel, section) {
         var me = this,
-            editor = me.getInterimReport(),
-            manager = me.getInterimsManager(),
-            interim = manager.getInterim(),
-            interimSaved = manager.getInterimSaved(),
-            isDirty = editor.isDirty();
+            editorForm = me.getEditorForm(),
+            loadedReport = editorForm.getRecord();
 
-        if (!interimSaved && interim && isDirty) {
+        if (loadedReport && editorForm.isDirty()) {
             Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
-                if (btn == 'yes') {
-                    manager.updateInterim(record);
-                    manager.setInterimSaved(true);
-
-                    rowModel.select([record]);
+                if (btn != 'yes') {
+                    return;
                 }
+
+                editorForm.reset();
+                sectionsSelModel.select([section]);
             });
 
             return false;
         }
     },
 
-    onInterimReportSelect: function (rowModel, record, index) {
-        this.getInterimsManager().updateInterim(record);
-    },
-
-    onInterimReportDeselect: function (rowModel, record, index) {
-        this.getInterimsManager().unloadInterim(record);
-    },
-
-    onInterimCancelClick: function (btn, ev) {
-        Ext.Msg.confirm('Cancelin Changes', 'Are you sure you want to cancel your changes', function (btn) {
-            if (btn == 'yes') {
-                this.getInterimsManager().unloadInterim();
-            }
-        }, this);
-    },
-
-    onInterimEditorDirtyChange: function () {
-        this.getInterimsManager().setInterimSaved(false);
-    },
-
-    onInterimSaveClick: function (btn, ev) {
+    onSectionSelect: function (sectionsGrid, section) {
         var me = this,
-            report = me.getInterimReport(),
-            grade = report.down('#courseGrade').getValue(),
-            reportData = report.getValues(false, true),
-            manager = me.getInterimsManager(),
-            interim = manager.getInterim();
+            studentsGrid = me.getStudentsGrid(),
+            studentsStore = studentsGrid.getStore(),
+            reportsStore = me.getProgressInterimsReportsStore(),
+            reportsProxy = reportsStore.getProxy(),
+            editorForm = me.getEditorForm(),
+            termHandle = me.getTermSelector().getValue(),
+            sectionCode = section.get('Code');
 
-        report.setLoading('Saving&hellip;');
+        // reset stores
+        studentsStore.removeAll();
+        reportsStore.removeAll();
 
-        reportData.Status = btn.status;
-        reportData.Grade = reportData.Grade ? reportData.Grade : grade;
+        // reset form
+        editorForm.disable();
+        editorForm.reset(true);
 
-        if (reportData.Status == 'Published' && !reportData.Grade) {
-            Ext.Msg.alert('Report Incomplete', 'You must select a grade before publishing a report.');
-            report.setLoading(false);
+        // configure grid
+        studentsGrid.enable();
+
+        // configure and load stores
+        studentsStore.getProxy().setUrl('/sections/'+section.get('Code')+'/students');
+        studentsStore.load();
+
+        reportsProxy.setExtraParam('term', termHandle);
+        reportsProxy.setExtraParam('course_section', sectionCode);
+        reportsStore.load();
+    },
+
+    onStudentsStoreLoad: function() {
+        var me = this,
+            studentsView = me.getStudentsGrid().getView(),
+            reportsStore = me.getProgressInterimsReportsStore();
+
+        if (reportsStore.isLoading()) {
+            studentsView.setLoading('Loading reports&hellip;');
+            reportsStore.on('load', function() {
+                studentsView.setLoading(false);
+
+                // restore original loading text
+                studentsView.loadMask.msg = studentsView.loadingText;
+
+                me.syncReportsToStudents();
+            }, me, { single: true });
+        } else {
+            me.syncReportsToStudents();
+        }
+    },
+
+    onBeforeStudentSelect: function (studentsSelModel, student) {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            loadedReport = editorForm.getRecord();
+
+        if (loadedReport && editorForm.isDirty()) {
+            Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
+                if (btn != 'yes') {
+                    return;
+                }
+
+                editorForm.reset();
+                studentsSelModel.select([student]);
+            });
+
             return false;
         }
-
-        if (reportData.Comments == '<br>') {
-            reportData.Comments = null;
-        }
-
-        interim.set(reportData);
-
-        interim.save({
-            success: function (record, operation) {
-                var r = Ext.decode(operation.getResponse().responseText),
-                    savedInterim = r.data[0];
-
-                me.getInterimsManager().setInterimSaved(true);
-
-                interim.set('Saved', savedInterim.Saved);
-
-                interim.commit();
-                report.setLoading(false);
-
-                if (!me.getInterimsGrid().getSelectionModel().selectNext()) {
-                    me.getInterimsManager().unloadInterim();
-                }
-            },
-            failure: function () {
-                report.setLoading(false);
-            }
-        });
     },
 
-    onInterimDeleteClick: function () {
+    onStudentSelect: function (studentsGrid, student) {
         var me = this,
-            manager = me.getInterimsManager(),
-            interim = manager.getInterim(),
-            grid = me.getInterimsGrid(),
-            interimStore = grid.getStore();
+            editorForm = me.getEditorForm(),
+            report = student.get('report'),
+            section, term;
 
-        if (interim.get('Status') == 'Phantom') {
-            return true;
+        if (!report) {
+            section = me.getSectionsGrid().getSelection()[0];
+            term = me.getTermSelector().getSelection();
+
+            report = me.getProgressInterimsReportsStore().add({
+                StudentID: student.getId(),
+                CourseSectionID: section.getId(),
+                TermID: term.getId(),
+
+                student: student,
+                section: section,
+                term: term
+            })[0];
+
+            student.set('report', report, { dirty: false });
         }
 
-        Ext.Msg.confirm('Delete report?', 'Are you sure you want to delete this interim report?', function (btn) {
-            if (btn != 'yes') {
-                return;
-            }
-            me.getInterimReport().setLoading({msg: 'Deleting&hellip;'});
+        editorForm.enable();
+        editorForm.setScrollY(0, true);
+        editorForm.loadRecord(report);
+        me.syncFormButtons();
 
-            interim.erase({
-                success: function (record, operation) {
-                    manager.unloadInterim();
+        me.fireEvent('reportload', report);
+    },
 
-                    var phantomRecord = interimStore.add({
-                        Class: interim.get('Class'),
-                        Section: interim.get('Section'),
-                        Student: interim.get('Student'),
-                        Term: interim.get('Term'),
-                        TermID: interim.get('TermID'),
-                        StudentID: interim.get('StudentID'),
-                        CourseSectionID: interim.get('CourseSectionID'),
-                        Status: 'Phantom'
-                    });
+    onSectionNotesFormDirtyChange: function() {
+        this.syncSectionNotesFormButtons();
+    },
 
-                    interimStore.sort({
-                        fn: function (r1, r2) {
-                            var student1 = r1.get('Student'),
-                                student2 = r2.get('Student');
+    onSectionNotesRevertBtnClick: function() {
+        this.getSectionNotesForm().reset();
+    },
 
-                                if (student1.LastName < student2.LastName) {
-                                    return -1;
-                                } else {
-                                    return 1;
-                                }
-                        }
-                    });
+    onSectionNotesSaveBtnClick: function() {
+        var sectionNotesForm = this.getSectionNotesForm(),
+            sectionNotes = sectionNotesForm.getRecord();
 
-                    grid.getSelectionModel().select(phantomRecord);
+        sectionNotesForm.updateRecord(sectionNotes);
 
-                    me.getInterimReport().setLoading(false);
-                },
-                failure: function () {
-                    me.getInterimReport().setLoading(false);
+        if (!sectionNotes.dirty) {
+            return;
+        }
+
+        sectionNotesForm.setLoading('Saving notes&hellip;');
+        sectionNotes.save({
+            callback: function(sectionNotes, operation, success) {
+                sectionNotesForm.setLoading(false);
+
+                if (success) {
+                    sectionNotesForm.loadRecord(sectionNotes);
+                } else {
+                    Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
                 }
-            });
-        });
-    },
-
-    onInterimsPreviewClick: function () {
-        var formValues = this.getInterimsPrintForm().getForm().getValues();
-        this.getInterimsPrinter().loadPreview(formValues);
-    },
-
-    onInterimsPrintClick: function () {
-        var formValues = this.getInterimsPrintForm().getForm().getValues();
-        this.getInterimsPrinter().loadPrint(formValues);
-    },
-
-    onInterimEmailSearchClick: function () {
-        var formValues = this.getInterimsEmailSearchForm().getForm().getValues(),
-            recipients = formValues.Recipients,
-            emailStore = Ext.getStore('progress.interims.Emails'),
-            emailProxy = emailStore.getProxy();
-
-        formValues.Recipients = Array.isArray(recipients) ? recipients.join(',') :  [recipients].join(',');
-
-        formValues = Ext.apply({
-            Recipients: null,
-            termID: null,
-            advisorID: null,
-            authorID: null,
-            studentID: null
-        }, formValues);
-
-        for (var key in formValues) {
-            emailProxy.setExtraParam(key, formValues[key]);
-        }
-
-        emailStore.load({
-            scope: this,
-            callback: function (records) {
-                this.getInterimsEmailGrid().down('#interimEmailTotalText').setText(records.length + ' Report' + (records.length == 1 ? '' : 's'));
             }
         });
     },
 
-    onStudentInterimEmailSelect: function (grid, record) {
-        var emailManager = this.getInterimsEmailManager(),
-            formValues = this.getInterimsEmailSearchForm().getForm().getValues(),
-            recipients = formValues.Recipients,
-            key;
-
-        formValues.Recipients = Array.isArray(recipients) ? recipients.join(',') :  [recipients].join(',');
-
-
-        formValues = Ext.apply(formValues,{
-            studentID: record.get('Student').ID
-        });
-
-        emailManager.loadStudentPreview(formValues);
+    onEditorFormDirtyChange: function() {
+        this.syncFormButtons();
     },
 
-    onInterimEmailSendClick: function () {
-        var emailStore = Ext.getStore('progress.interims.Emails'),
-            formValues = this.getInterimsEmailSearchForm().getForm().getValues(),
-            recipients = formValues.Recipients;
+    onEditorFormValidityChange: function() {
+        this.syncFormButtons();
+    },
 
-        if (!emailStore.getCount()) {
-            return Ext.Msg.alert('User Error', 'Must load interims before sending');
+    onComboSelect: function (combo, newValue) {
+        var fields = this.getEditorForm().query('field, htmleditor'),
+            nextFieldIndex = fields.indexOf(combo) + 1;
+
+        if (nextFieldIndex < fields.length) {
+            fields[nextFieldIndex].focus(true, 100);
         }
+    },
 
-        formValues.Recipients = Array.isArray(recipients) ? recipients.join(',') :  [recipients].join(',');
+    onRevertChangesClick: function() {
+        var me = this;
 
-        formValues = Ext.apply({
-            sendEmails: true
-        }, formValues);
-
-        Ext.Msg.confirm('Sending Interim Emails', 'Are you sure you want to send these interims?', function (btn) {
+        Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes', function (btn) {
             if (btn == 'yes') {
-                Ext.Ajax.request({
-                    url: '/interims/email',
-                    params: formValues
-                });
+                me.getEditorForm().reset();
             }
         });
     },
 
-    onInterimsSaveCsvClick: function () {
-        var formValues = this.getInterimsPrintForm().getForm().getValues();
-        this.getInterimsPrinter().downloadCsv(formValues);
+    onSaveDraftClick: function () {
+        this.saveReport('draft');
     },
 
-    onInterimsClearFiltersClick: function () {
-        this.getInterimsPrintForm().getForm().reset();
+    onSaveFinishedClick: function () {
+        this.saveReport('published');
     },
 
-    onInterimEmailClearFiltersClick: function () {
-        this.getInterimsEmailSearchForm().getForm().reset();
-    },
+    saveReport: function (newStatus) {
+        var me = this,
+            managerCt = me.getManagerCt(),
+            editorForm = me.getEditorForm(),
+            formData = editorForm.getValues(),
+            report = editorForm.getRecord();
 
-    loadMyStudents: function () {
-        var termSelector = this.getInterimsTermSelector(),
-            termStore = Ext.getStore('Terms'),
-            term = termSelector.getValue(),
-            reportingTerm = termStore.getReportingTerm();
+        report.beginEdit();
 
-        if(!term && reportingTerm) {
-           term = reportingTerm.getId();
-           termSelector.setValue(term);
+        if (newStatus) {
+            report.set('Status', newStatus);
         }
 
-        Ext.getStore('progress.Interims').load({
-            url: '/interims/mystudents',
-            params: {
-                termID: term
+        report.set(formData);
+
+        // TODO: remove this check and instead publish a cancelable beforesave event for plugin to handle this
+        // if (report.get('Status') == 'Published' && !report.get('Grade')) {
+        //     Ext.Msg.alert('Report not saved', 'Narrative report cannot be marked finished without a grade');
+        //     return false;
+        // }
+
+        report.endEdit();
+
+        managerCt.setLoading('Saving report&hellip');
+
+        me.fireEvent('beforereportsave', report);
+
+        report.save({
+            callback: function(report, operation, success) {
+                var student = report.get('student');
+
+                managerCt.setLoading(false);
+
+                if (success) {
+                    student.beginEdit();
+                    me.syncStudent(student);
+                    student.endEdit();
+
+                    editorForm.loadRecord(report);
+
+                    me.fireEvent('reportsave', report);
+
+                    if (!me.getStudentsGrid().getSelectionModel().selectNext()) {
+                        me.syncFormButtons();
+                    }
+                } else {
+                    Ext.Msg.alert('Failed to save report', 'This report failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
+                }
             }
         });
+    },
+
+
+    // controller methods
+    syncSections: function() {
+        var me = this,
+            sectionsStore = me.getProgressInterimsSectionsStore(),
+            sectionsProxy = sectionsStore.getProxy(),
+            managerCt = me.getManagerCt(),
+            myClassesToggleBtn = me.getMyClassesToggleBtn(),
+            termSelector = me.getTermSelector(),
+            termsStore = termSelector.getStore(),
+            term = termSelector.getValue();
+
+        // ensure terms are loaded
+        if (!termsStore.isLoaded()) {
+            termsStore.on('load', function() {
+                managerCt.setLoading(false);
+                me.syncSections();
+            }, me, { single: true });
+
+            if (!termsStore.isLoading()) {
+                termsStore.load();
+            }
+
+            return;
+        }
+
+        // ensure a term is selected
+        if (!term) {
+            term = termsStore.getReportingTerm() || termsStore.getCurrentTerm();
+            if (term) {
+                termSelector.setValue(term);
+            } else {
+                Ext.Msg.alert('No term available', 'No current or reporting term could be detected, please select a term');
+            }
+
+            return; // setting the term will call this function again via the change event
+        }
+
+        sectionsProxy.setExtraParam('enrolled_user', myClassesToggleBtn.pressed ? 'current' : '');
+        sectionsProxy.setExtraParam('term', term);
+        sectionsStore.loadIfDirty();
+    },
+
+    syncReportsToStudents: function() {
+        var me = this,
+            section = me.getSectionsGrid().getSelection()[0],
+            termsStore = me.getTermsStore(),
+            studentsStore = me.getProgressInterimsStudentsStore(),
+            reportsStore = me.getProgressInterimsReportsStore(),
+            studentsLength = studentsStore.getCount(), i = 0, student,
+            report;
+
+        studentsStore.beginUpdate();
+        reportsStore.beginUpdate();
+
+        for (; i < studentsLength; i++) {
+            student = studentsStore.getAt(i);
+            report = reportsStore.query('StudentID', student.getId()).first();
+
+            student.beginEdit();
+            student.set('report', report || null, { dirty: false });
+            me.syncStudent(student);
+            student.endEdit();
+
+            if (report) {
+                report.set({
+                    student: student,
+                    section: section,
+                    term: termsStore.getById(report.get('TermID')) || null
+                }, { dirty: false });
+            }
+        }
+
+        reportsStore.endUpdate();
+        studentsStore.endUpdate();
+    },
+
+    syncSectionNotesFormButtons: function() {
+        var me = this,
+            isDirty = this.getSectionNotesForm().isDirty();
+
+        me.getSectionNotesRevertBtn().setDisabled(!isDirty);
+        me.getSectionNotesSaveBtn().setDisabled(!isDirty);
+    },
+
+    syncFormButtons: function() {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            report = editorForm.getRecord(),
+            reportStatus = report && report.get('Status'),
+            isDirty = editorForm.isDirty(),
+            isValid = editorForm.isValid();
+
+        if (!report) {
+            return;
+        }
+
+        me.getRevertChangesBtn().setDisabled(!isDirty);
+        me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'draft') || !isValid);
+        me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'published') || !isValid);
+    },
+
+    syncStudent: function(student) {
+        var report = student.get('report');
+
+        student.set({
+            report_status: report ? report.get('Status') : null,
+            report_modified: report ? report.get('Modified') || report.get('Created') : null
+        }, { dirty: false });
     }
 });
