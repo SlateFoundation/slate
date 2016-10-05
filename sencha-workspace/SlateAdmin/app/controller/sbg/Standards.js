@@ -47,7 +47,7 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
 
     routes: {
         'progress/standards': 'showStandards',
-        'progress/standards/printing': 'showStandardsPrinting'
+        'progress/standards/print': 'showStandardsPrint'
     },
 
     control: {
@@ -108,7 +108,7 @@ Ext.define('SlateAdmin.controller.sbg.Standards', {
         me.application.getController('Viewport').loadCard(me.getStandardsManager());
     },
 
-    showStandardsPrinting: function () {
+    showStandardsPrint: function () {
         this.application.getController('Viewport').loadCard(this.getStandardsPrinter());
     },
 

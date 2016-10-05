@@ -15,7 +15,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Printer', {
     ],
 
     routes: {
-        'progress/narratives/printing': 'showNarrativePrinting'
+        'progress/narratives/print': 'showNarrativePrint'
     },
 
     refs: {
@@ -56,14 +56,14 @@ Ext.define('SlateAdmin.controller.progress.narratives.Printer', {
     },
 
     // route handlers
-    showNarrativePrinting: function () {
+    showNarrativePrint: function () {
         var me = this,
             navPanel = me.getProgressNavPanel();
 
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('progress/narratives/printing');
+        navPanel.setActiveLink('progress/narratives/print');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 

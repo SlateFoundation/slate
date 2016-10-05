@@ -50,8 +50,8 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
     },
     routes: {
         'progress/interims': 'showInterims',
-        'progress/interims/email': 'showInterimEmails',
-        'progress/interims/printing': 'showInterimPrinting'
+        'progress/interims/email': 'showInterimEmail',
+        'progress/interims/print': 'showInterimPrint'
     },
     control: {
         'progress-interims-manager': {
@@ -112,11 +112,11 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         this.application.getController('Viewport').loadCard(this.getInterimsManager());
     },
 
-    showInterimEmails: function () {
+    showInterimEmail: function () {
         this.application.getController('Viewport').loadCard(this.getInterimsEmailManager());
     },
 
-    showInterimPrinting: function () {
+    showInterimPrint: function () {
         var advisorsStore = Ext.getStore('people.Advisors');
 
         if (!advisorsStore.isLoaded()) {

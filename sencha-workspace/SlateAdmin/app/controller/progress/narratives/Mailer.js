@@ -77,7 +77,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('progress/narratives/printing');
+        navPanel.setActiveLink('progress/narratives/print');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
