@@ -5,6 +5,7 @@ Git::$repositories['slate'] = [
     'originBranch' => 'development',
     'workingBranch' => 'development',
     'trees' => [
+        'content-blocks',
         'dwoo-plugins',
         'event-handlers',
         'html-templates' => [
