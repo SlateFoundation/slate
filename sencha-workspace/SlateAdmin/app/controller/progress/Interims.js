@@ -223,7 +223,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
             report = me.getProgressInterimsReportsStore().add({
                 StudentID: student.getId(),
-                CourseSectionID: section.getId(),
+                SectionID: section.getId(),
                 TermID: term.getId(),
 
                 student: student,
