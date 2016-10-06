@@ -30,6 +30,8 @@ Git::$repositories['slate'] = [
         ],
         'php-config' => [
             'exclude' => [
+                '#^/Site.config.d(/|$)#', // don't sync local site config
+
                 // from emergence-saml2 layer:
                 '#^/Emergence/Connectors/SAML2\.config\.php$#',
                 '#^/SAML2/Compat/ContainerSingleton\.config\.php$#',
