@@ -234,6 +234,8 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             student.set('report', report, { dirty: false });
         }
 
+        me.fireEvent('beforereportload', report);
+
         editorForm.enable();
         editorForm.setScrollY(0, true);
         editorForm.loadRecord(report);
