@@ -16,10 +16,10 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
                 text: 'Section Interim Reports',
                 href: '#progress/interims',
                 children: [
-                    {
-                        text: 'Search & Print',
-                        href: '#progress/interims/print'
-                    }
+                    // {
+                    //     text: 'Search & Print',
+                    //     href: '#progress/interims/print'
+                    // }
                     // {
                     //     text: 'Email',
                     //     href: '#progress/interims/email'
@@ -30,10 +30,10 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
                 text: 'Section Term Reports',
                 href: '#progress/narratives',
                 children: [
-                    {
-                        text: 'Search & Print',
-                        href: '#progress/narratives/print'
-                    }
+                    // {
+                    //     text: 'Search & Print',
+                    //     href: '#progress/narratives/print'
+                    // }
                     // {
                     //     text: 'Email',
                     //     href: '#progress/narratives/email'
