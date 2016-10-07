@@ -4,34 +4,45 @@ Ext.define('SlateAdmin.view.progress.interims.SectionsGrid', {
     requires: [
         'Ext.grid.column.Template',
         'Ext.toolbar.Spacer',
-        'Ext.button.Button'
+        'Ext.form.field.ComboBox',
+        'Ext.form.field.Checkbox'
     ],
 
 
     width: 250,
     store: 'progress.interims.Sections',
     componentCls: 'progress-interims-grid',
-    tbar: [
+    dockedItems: [
         {
-            xtype: 'button',
-            text: 'My classes only',
-            action: 'myClassesToggle',
-            enableToggle: true
+            dock: 'top',
+
+            xtype: 'toolbar',
+            items: [
+                {
+                    itemId: 'termSelector',
+                    flex: 1,
+
+                    xtype: 'combobox',
+
+                    queryMode: 'local',
+                    store: 'Terms',
+                    valueField: 'Handle',
+                    displayField: 'Title',
+                    forceSelection: true
+                }
+            ]
         },
         {
-            xtype: 'tbspacer'
-        },
-        {
-            itemId: 'termSelector',
-            flex: 1,
+            dock: 'top',
 
-            xtype: 'combobox',
-
-            queryMode: 'local',
-            store: 'Terms',
-            valueField: 'Handle',
-            displayField: 'Title',
-            forceSelection: true
+            xtype: 'toolbar',
+            items: [
+                {
+                    xtype: 'checkboxfield',
+                    boxLabel: 'Show only my classes',
+                    name: 'myClassesOnly'
+                }
+            ]
         }
     ],
     columns: [{

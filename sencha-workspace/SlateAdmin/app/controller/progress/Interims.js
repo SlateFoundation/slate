@@ -22,7 +22,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
             xtype: 'progress-interims-manager'
         },
-        myClassesToggleBtn: 'progress-interims-sectionsgrid button[action=myClassesToggle]',
+        myClassesOnlyCheckbox: 'progress-interims-sectionsgrid checkboxfield[name=myClassesOnly]',
         termSelector: 'progress-interims-sectionsgrid #termSelector',
         sectionsGrid: 'progress-interims-sectionsgrid',
         studentsGrid: 'progress-interims-studentsgrid',
@@ -41,8 +41,8 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             activate: 'onManagerActivate'
         },
 
-        myClassesToggleBtn: {
-            toggle: 'onMyClassesToggle'
+        myClassesOnlyCheckbox: {
+            change: 'onMyClassesOnlyCheckboxChange'
         },
         termSelector: {
             change: 'onTermChange'
@@ -115,7 +115,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         this.syncSections();
     },
 
-    onMyClassesToggle: function () {
+    onMyClassesOnlyCheckboxChange: function () {
         this.syncSections();
     },
 
@@ -368,7 +368,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             sectionsStore = me.getProgressInterimsSectionsStore(),
             sectionsProxy = sectionsStore.getProxy(),
             managerCt = me.getManagerCt(),
-            myClassesToggleBtn = me.getMyClassesToggleBtn(),
+            myClassesOnlyCheckbox = me.getMyClassesOnlyCheckbox(),
             termSelector = me.getTermSelector(),
             termsStore = termSelector.getStore(),
             term = termSelector.getValue();
@@ -399,7 +399,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             return; // setting the term will call this function again via the change event
         }
 
-        sectionsProxy.setExtraParam('enrolled_user', myClassesToggleBtn.pressed ? 'current' : '');
+        sectionsProxy.setExtraParam('enrolled_user', myClassesOnlyCheckbox.getValue() ? 'current' : '');
         sectionsProxy.setExtraParam('term', term);
         sectionsStore.loadIfDirty();
     },
