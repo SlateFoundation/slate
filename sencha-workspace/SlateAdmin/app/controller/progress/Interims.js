@@ -45,6 +45,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
             change: 'onMyClassesOnlyCheckboxChange'
         },
         termSelector: {
+            beforeselect: 'onBeforeTermSelect',
             change: 'onTermChange'
         },
         sectionsGrid: {
@@ -117,6 +118,25 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
     onMyClassesOnlyCheckboxChange: function () {
         this.syncSections();
+    },
+
+    onBeforeTermSelect: function(termSelector, term) {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            loadedReport = editorForm.getRecord();
+
+        if (loadedReport && editorForm.isDirty()) {
+            Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
+                if (btn != 'yes') {
+                    return;
+                }
+
+                editorForm.reset();
+                termSelector.select(term);
+            });
+
+            return false;
+        }
     },
 
     onTermChange: function () {
