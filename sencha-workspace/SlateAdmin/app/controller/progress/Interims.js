@@ -87,6 +87,9 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
     listen: {
         store: {
+            '#progress.interims.Sections': {
+                load: 'onSectionsStoreLoad'
+            },
             '#progress.interims.Students': {
                 load: 'onStudentsStoreLoad'
             }
@@ -141,6 +144,17 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
     onTermChange: function () {
         this.syncSections();
+    },
+
+    onSectionsStoreLoad: function() {
+        var sectionsGrid = this.getSectionsGrid(),
+            section = sectionsGrid.getSelection()[0];
+
+        // reselect section if already selected
+        if (section) {
+            sectionsGrid.setSelection(null);
+            sectionsGrid.setSelection(section);
+        }
     },
 
     onBeforeSectionSelect: function(sectionsSelModel, section) {
