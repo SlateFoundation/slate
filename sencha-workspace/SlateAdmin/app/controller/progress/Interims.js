@@ -147,13 +147,30 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
     },
 
     onSectionsStoreLoad: function() {
-        var sectionsGrid = this.getSectionsGrid(),
-            section = sectionsGrid.getSelection()[0];
+        var me = this,
+            sectionsGrid = me.getSectionsGrid(),
+            section = sectionsGrid.getSelection()[0],
+            studentsGrid = me.getStudentsGrid(),
+            studentsStore = studentsGrid.getStore(),
+            reportsStore = me.getProgressInterimsReportsStore(),
+            editorForm = me.getEditorForm();
 
         // reselect section if already selected
         if (section) {
             sectionsGrid.setSelection(null);
             sectionsGrid.setSelection(section);
+        } else {
+            // reset stores
+            studentsStore.removeAll();
+            studentsGrid.getView().clearEmptyEl(); // PRIVATE: clearEmptyEl to remove empty text
+            reportsStore.removeAll();
+
+            // reset form
+            editorForm.disable();
+            editorForm.reset(true);
+
+            // reset students list
+            studentsGrid.disable();
         }
     },
 
