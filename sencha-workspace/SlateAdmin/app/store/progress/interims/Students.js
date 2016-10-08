@@ -10,6 +10,16 @@ Ext.define('SlateAdmin.store.progress.interims.Students', {
         pageSize: false,
         proxy: {
             type: 'slaterecords'
-        }
+        },
+        sorters: [
+            {
+                property: 'LastName',
+                direction: 'ASC'
+            },
+            {
+                property: 'FirstName',
+                direction: 'ASC'
+            }
+        ]
     }
 });

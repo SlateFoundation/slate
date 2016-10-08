@@ -6,8 +6,20 @@ Ext.define('SlateAdmin.store.progress.narratives.Students', {
     ],
 
     model: 'SlateAdmin.model.person.Person',
-    pageSize: false,
-    proxy: {
-        type: 'slaterecords'
+    config: {
+        pageSize: false,
+        proxy: {
+            type: 'slaterecords'
+        },
+        sorters: [
+            {
+                property: 'LastName',
+                direction: 'ASC'
+            },
+            {
+                property: 'FirstName',
+                direction: 'ASC'
+            }
+        ]
     }
 });
