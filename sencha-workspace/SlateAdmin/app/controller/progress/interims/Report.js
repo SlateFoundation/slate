@@ -1,4 +1,4 @@
-Ext.define('SlateAdmin.controller.progress.Interims', {
+Ext.define('SlateAdmin.controller.progress.interims.Report', {
     extend: 'Ext.app.Controller',
 
 
@@ -33,7 +33,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
     },
 
     routes: {
-        'progress/interims': 'showInterims'
+        'progress/interims/report': 'showInterims'
     },
 
     control: {
@@ -105,7 +105,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('progress/interims');
+        navPanel.setActiveLink('progress/interims/report');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
@@ -113,6 +113,7 @@ Ext.define('SlateAdmin.controller.progress.Interims', {
 
         Ext.resumeLayouts(true);
     },
+
 
     // event handlers
     onManagerActivate: function () {
