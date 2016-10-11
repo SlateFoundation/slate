@@ -22,7 +22,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             autoCreate: true,
 
             xtype: 'progress-interims-email-container'
-        }
+        },
+        optionsForm: 'progress-interims-email-container form#optionsForm',
+        filtersFieldset: 'progress-interims-email-container fieldset#filtersFieldset'
     },
 
     routes: {
@@ -32,6 +34,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     control: {
         container: {
             activate: 'onContainerActivate'
+        },
+        'progress-interims-email-container button[action=reset-options]': {
+            click: 'onResetOptionsClick'
         }
     },
 
@@ -60,6 +65,10 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     // event handlers
     onContainerActivate: function () {
 
+    },
+
+    onResetOptionsClick: function() {
+        this.getOptionsForm().reset();
     }
 
 

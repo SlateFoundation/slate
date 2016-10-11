@@ -26,11 +26,12 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
     items: [
         {
             xtype: 'form',
-            itemId: 'filterForm',
+            itemId: 'optionsForm',
             bodyPadding: 5,
             items: [
                 {
                     xtype: 'fieldset',
+                    itemId: 'filtersFieldset',
                     title: 'Filter reports by&hellip;',
                     layout: 'hbox',
                     padding: 10,
@@ -83,12 +84,14 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 },
                 {
                     xtype: 'fieldset',
+                    itemId: 'recipientsFieldset',
                     title: 'Recipients',
                     layout: 'hbox',
                     padding: 10,
                     defaultType: 'checkbox',
                     defaults: {
-                        name: 'recipients'
+                        name: 'recipients',
+                        value: true
                     },
                     items: [
                         {
@@ -111,8 +114,8 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 },
                 { xtype: 'tbseparator' },
                 {
-                    text: 'Clear Filters',
-                    action: 'clear-filters'
+                    text: 'Reset Options',
+                    action: 'reset-options'
                 },
                 { xtype: 'tbfill' }
             ]
