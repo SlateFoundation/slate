@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Slate.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
@@ -78,8 +77,15 @@ Ext.define('Slate.model.person.Person', {
         {
             name: 'FullName',
             depends: ['FirstName', 'LastName'],
-            convert: function(v,r) {
+            convert: function(v, r) {
                 return r.get('FirstName') + ' ' + r.get('LastName');
+            }
+        },
+        {
+            name: 'SortName',
+            depends: ['FirstName', 'LastName'],
+            convert: function(v, r) {
+                return r.get('LastName') + ', ' + r.get('FirstName');
             }
         }
     ],
@@ -110,13 +116,13 @@ Ext.define('Slate.model.person.Person', {
 
         if (firstName && lastName) {
             return firstName + ' '+ lastName;
-        } else if(firstName) {
+        } else if (firstName) {
             return firstName;
-        } else if(email) {
+        } else if (email) {
             return email;
-        } else {
-            return 'Person #'+id;
         }
+
+        return 'Person #'+id;
     },
 
     getLink: function() {
@@ -134,9 +140,9 @@ Ext.define('Slate.model.person.Person', {
             return null;
         } else if (me.get('Username')) {
             return 'people//'+me.get('Username');
-        } else {
-            return 'people//?id='+me.get('ID');
         }
+
+        return 'people//?id='+me.get('ID');
     }
 });
 
