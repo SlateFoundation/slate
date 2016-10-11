@@ -68,6 +68,11 @@ Ext.define('Slate.model.progress.SectionInterimReport', {
             type: 'string',
             allowNull: true
         },
+        {
+            name: 'NotesFormat',
+            type: 'string',
+            defaultValue: 'markdown'
+        },
 
 
         // virtual fields
