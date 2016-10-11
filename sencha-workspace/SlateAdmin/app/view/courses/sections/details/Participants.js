@@ -34,8 +34,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
             flex: 1,
 
             xtype: 'slate-personfield',
-            itemId: 'personField',
-            forceSelection: true
+            itemId: 'personField'
         },{
             xtype: 'button',
             glyph: 0xf055, // fa-plus-circle
