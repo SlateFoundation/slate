@@ -1,15 +1,15 @@
 Ext.define('SlateAdmin.store.progress.interims.Sections', {
     extend: 'Ext.data.Store',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'Slate.proxy.Records'
     ],
 
 
-    model: 'SlateAdmin.model.course.Section',
+    model: 'Slate.model.CourseSection',
     config: {
         pageSize: false,
         proxy: {
-            type: 'slaterecords',
+            type: 'slate-records',
             url: '/sections'
         }
     }
