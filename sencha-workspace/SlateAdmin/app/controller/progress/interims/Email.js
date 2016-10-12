@@ -10,7 +10,6 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         'Terms',
         'Advisors@Slate.store.people',
         'progress.interims.Authors',
-        'progress.interims.People',
         'progress.interims.Emails'
     ],
 
@@ -34,6 +33,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     control: {
         container: {
             activate: 'onContainerActivate'
+        },
+        'progress-interims-email-container button[action=load-emails]': {
+            click: 'onLoadEmailsClick'
         },
         'progress-interims-email-container button[action=reset-options]': {
             click: 'onResetOptionsClick'
@@ -65,6 +67,21 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     // event handlers
     onContainerActivate: function () {
 
+    },
+
+    onLoadEmailsClick: function() {
+        var me = this,
+            container = me.getContainer(),
+            emailsStore = me.getProgressInterimsEmailsStore();
+
+        container.setLoading(true);
+
+        emailsStore.load({
+            params: me.getOptionsForm().getValues(),
+            callback: function() {
+                container.setLoading(false);
+            }
+        });
     },
 
     onResetOptionsClick: function() {

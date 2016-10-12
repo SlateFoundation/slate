@@ -49,29 +49,39 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                             name: 'term',
                             fieldLabel: 'Term',
                             emptyText: 'Current Term',
+
+                            store: 'Terms',
                             displayField: 'Title',
+                            valueField: 'Handle',
+
                             queryMode: 'local',
-                            forceSelection: false,
-                            valueField: 'ID',
-                            store: 'Terms'
+                            forceSelection: false
                         },
                         {
                             name: 'advisor',
                             fieldLabel: 'Advisor',
                             emptyText: 'Any',
+
+                            store: 'Advisors',
                             displayField: 'SortName',
+                            valueField: 'Username',
+
                             queryMode: 'local',
                             typeAhead: true,
-                            store: 'Advisors'
+                            forceSelection: false
                         },
                         {
                             name: 'author',
                             fieldLabel: 'Author',
                             emptyText: 'Any',
+
+                            store: 'progress.interims.Authors',
                             displayField: 'SortName',
+                            valueField: 'Username',
+
                             queryMode: 'local',
                             typeAhead: true,
-                            store: 'progress.interims.Authors'
+                            forceSelection: false
                         },
                         {
                             xtype: 'slate-personfield',
@@ -90,7 +100,7 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                     padding: 10,
                     defaultType: 'checkbox',
                     defaults: {
-                        name: 'recipients',
+                        name: 'recipients[]',
                         value: true
                     },
                     items: [
@@ -99,8 +109,8 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                             inputValue: 'advisor'
                         },
                         {
-                            boxLabel: 'Parents',
-                            inputValue: 'parents'
+                            boxLabel: 'Guardians',
+                            inputValue: 'guardians'
                         }
                     ]
                 }
@@ -109,8 +119,8 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 { xtype: 'tbfill' },
                 {
                     xtype: 'button',
-                    text: 'Search',
-                    action: 'interim-email-search'
+                    text: 'Load Emails',
+                    action: 'load-emails'
                 },
                 { xtype: 'tbseparator' },
                 {
@@ -122,17 +132,19 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
         },
         {
             xtype: 'container',
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
+            layout: 'border',
             flex: 1,
             items: [
                 {
-                    xtype: 'progress-interims-email-grid',
-                    width: 450
+                    region: 'center',
+
+                    xtype: 'progress-interims-email-grid'
                 },
                 {
+                    region: 'east',
+                    split: true,
+                    width: 400,
+
                     xtype: 'component',
                     itemId: 'previewBox',
                     cls: 'email-preview',

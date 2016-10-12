@@ -9,34 +9,40 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
     store: 'progress.interims.Emails',
     columns: [
         {
-            header: 'First Name',
-            dataIndex: 'FirstName',
+            header: 'Last Name',
+            dataIndex: 'lastName',
             sortable: true,
-            width: 100
+            width: 120
         },
         {
-            header: 'Last Name',
-            dataIndex: 'LastName',
+            header: 'First Name',
+            dataIndex: 'firstName',
             sortable: true,
-            width: 100
+            width: 120
+        },
+        {
+            header: 'Reports',
+            dataIndex: 'reports',
+            sortable: true,
+            width: 75,
+            renderer: function (v) {
+                return v ? v.length : 0;
+            }
         },
         {
             flex: 1,
 
             header: 'Recipients',
-            dataIndex: 'Recipients',
-            scope: this,
+            dataIndex: 'recipients',
             renderer: function (v, m, r) {
                 if (!v) {
-                    return 'No recipients';
+                    return 'None';
                 }
 
                 v = Ext.Array.map(v, function (recipient) {
-                    //return recipient.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                     return recipient.replace(/"/g, '').replace(/<(.*)>/g, '<span class="recipient-contact">$1</span>');
                 });
 
-                //return v.join('<br>');
                 return '<ul class="recipients-list"><li>' + v.join('</li><li>') + '</li></ul>';
             }
         }
