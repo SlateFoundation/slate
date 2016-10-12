@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('Slate.model.TermReport', {
     extend: 'Ext.data.Model',
     requires: [

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext,Slate*/
 Ext.define('Slate.store.Terms', {
     extend: 'Ext.data.Store',
 

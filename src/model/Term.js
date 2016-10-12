@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Slate.model.Term', {
     extend: 'Ext.data.Model',
     requires: [
