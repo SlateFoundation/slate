@@ -17,6 +17,11 @@ class SectionInterimReport extends AbstractSectionTermReport
         'Notes' => [
             'type' => 'clob',
             'default' => null
+        ],
+        'NotesFormat' => [
+            'type' => 'enum',
+            'values' => ['markdown', 'html'],
+            'default' => 'markdown'
         ]
     ];
 
