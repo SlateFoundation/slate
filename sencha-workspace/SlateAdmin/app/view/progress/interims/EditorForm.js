@@ -75,6 +75,11 @@ Ext.define('SlateAdmin.view.progress.interims.EditorForm', {
             xtype: 'tbfill'
         },
         {
+            itemId: 'deleteBtn',
+
+            text: 'Delete'
+        },
+        {
             itemId: 'saveDraftBtn',
 
             text: 'Save as Draft'

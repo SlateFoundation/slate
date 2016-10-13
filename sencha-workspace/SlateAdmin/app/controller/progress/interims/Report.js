@@ -28,6 +28,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         studentsGrid: 'progress-interims-studentsgrid',
         editorForm: 'progress-interims-editorform',
         revertChangesBtn: 'progress-interims-editorform button#revertChangesBtn',
+        deleteBtn: 'progress-interims-editorform button#deleteBtn',
         saveDraftBtn: 'progress-interims-editorform button#saveDraftBtn',
         saveFinishedBtn: 'progress-interims-editorform button#saveFinishedBtn'
     },
@@ -76,6 +77,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         },
         revertChangesBtn: {
             click: 'onRevertChangesClick'
+        },
+        deleteBtn: {
+            click: 'onDeleteClick'
         },
         saveDraftBtn: {
             click: 'onSaveDraftClick'
@@ -348,10 +352,51 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
     onRevertChangesClick: function() {
         var me = this;
 
-        Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes', function (btn) {
+        Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes?', function (btn) {
             if (btn == 'yes') {
                 me.getEditorForm().reset();
             }
+        });
+    },
+
+    onDeleteClick: function() {
+        var me = this,
+            managerCt = me.getManagerCt(),
+            editorForm = me.getEditorForm(),
+            report = editorForm.getRecord();
+
+        Ext.Msg.confirm('Delete Report', 'Are you sure you want to permenantly delete this report?', function(btn) {
+            if (btn != 'yes') {
+                return;
+            }
+
+            managerCt.setLoading('Deleting report&hellip');
+
+            me.fireEvent('beforereportdelete', report);
+
+            report.erase({
+                callback: function(report, operation, success) {
+                    var student = report.get('student'),
+                        studentsSelModel = me.getStudentsGrid().getSelectionModel();
+
+                    managerCt.setLoading(false);
+
+                    if (success) {
+                        student.beginEdit();
+                        student.set('report', null);
+                        me.syncStudent(student);
+                        student.endEdit();
+
+                        me.fireEvent('reportdelete', report);
+
+                        // reselect current student
+                        studentsSelModel.deselectAll();
+                        studentsSelModel.select(student);
+                    } else {
+                        Ext.Msg.alert('Failed to delete report', 'This report failed to delete from the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
+                    }
+                }
+            });
         });
     },
 
@@ -513,6 +558,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         }
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
+        me.getDeleteBtn().setDisabled(report.phantom);
         me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'draft') || !isValid);
         me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'published') || !isValid);
     },
