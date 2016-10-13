@@ -2,13 +2,19 @@
 
 namespace Slate\Progress;
 
+use Slate;
 use Slate\Term;
 use Slate\Courses\Section;
 use Slate\People\Student;
 
 use DB;
+use JSON;
 use Emergence\People\Person;
 use Emergence\People\PeopleRequestHandler;
+use Emergence\Mailer\Mailer;
+#use Emergence\Dwoo\Engine AS DwooEngine;
+#use Emergence\CRM\Message;
+#use Emergence\CRM\MessageRecipient;
 
 
 class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
@@ -99,6 +105,65 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
 
+        // send previewed emails
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // TODO: create Emergence\CRM\Message instances instead of mailing directly
+
+            $emails = JSON::getRequestData();
+
+            if (empty($emails) || !is_array($emails)) {
+                throw new \Exception('POSTed JSON data is not array as expected');
+            }
+
+            // render and send each email
+            $emailsCount = 0;
+            $recipientsCount = 0;
+
+            foreach ($emails AS $email) {
+                $interims = [];
+                $recipients = [];
+
+                foreach ($email['reports'] AS $reportId) {
+                    $Interim = SectionInterimReport::getByID($reportId);
+
+                    if ($Interim->Status == 'published') {
+                        $interims[] = $Interim;
+                    }
+                }
+
+                foreach ($email['recipients'] AS $recipientId) {
+                    $recipients[] = Person::getByID($recipientId)->EmailRecipient;
+                }
+
+                // filter out any unavailable recipients
+                $recipients = array_filter($recipients);
+                $recipientsCount += count($recipients);
+
+                // prepare template data
+                $emailData = static::getEmailTemplateData($interims);
+
+                // add central achive recipient
+                if (Slate::$userEmailDomain) {
+                    if (count($emailData['students']) == 1) {
+                        $recipients[] = 'progress+'.$emailData['students'][0]->Username.'@'.Slate::$userEmailDomain;
+                    } else {
+                        $recipients[] = 'progress@'.Slate::$userEmailDomain;
+                    }
+                }
+
+                // send email
+                $emailsCount += Mailer::sendFromTemplate(implode(', ', $recipients), 'reports', $emailData);
+            }
+
+            return static::respond('emailsSent', [
+                'success' => true,
+                'emailsCount' => $emailsCount,
+                'recipientsCount' => $recipientsCount
+            ]);
+        }
+
+
+        // fetch potential emails for preview
         $conditions = [
             'Status' => 'published'
         ];
@@ -184,13 +249,34 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 
         // collect recipients
         foreach ($students AS &$student) {
-            if (in_array('advisor', $recipients)) {
-                $student['recipients'][] = $student['student']->Advisor->EmailRecipient;
+            $student['recipients'][] = [
+                'id' => $student['student']->ID,
+                'name' => $student['student']->FullName,
+                'email' => $student['student']->Email,
+                'relationship' => 'student'
+            ];
+
+            if (in_array('advisor', $recipients) && $student['student']->Advisor) {
+                $student['recipients'][] = [
+                    'id' => $student['student']->Advisor->ID,
+                    'name' => $student['student']->Advisor->FullName,
+                    'email' => $student['student']->Advisor->Email,
+                    'relationship' => 'advisor'
+                ];
             }
 
             if (in_array('guardians', $recipients)) {
-                foreach ($student['student']->Guardians AS $Guardian) {
-                    $student['recipients'][] = $Guardian->EmailRecipient;
+                foreach ($student['student']->GuardianRelationships AS $GuardianRelationship) {
+                    if (!$GuardianRelationship->RelatedPerson->Email) {
+                        continue;
+                    }
+
+                    $student['recipients'][] = [
+                        'id' => $GuardianRelationship->RelatedPerson->ID,
+                        'name' => $GuardianRelationship->RelatedPerson->FullName,
+                        'email' => $GuardianRelationship->RelatedPerson->Email,
+                        'relationship' => $GuardianRelationship->Label
+                    ];
                 }
             }
 
@@ -206,7 +292,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             'student' => $Student
         ]);
     }
-    
+
     public static function handleEmailPreviewRequest()
     {
         if (empty($_REQUEST['reports'])) {
@@ -228,6 +314,13 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
         $interims = SectionInterimReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
 
 
+        return static::respond('reports.email', static::getEmailTemplateData($interims));
+    }
+
+
+    // internal library
+    protected static function getEmailTemplateData(array $interims)
+    {
         // collect terms and students
         $terms = [];
         $students = [];
@@ -242,11 +335,10 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             }
         }
 
-
-        return static::respond('email', [
+        return [
             'data' => $interims,
             'terms' => $terms,
             'students' => $students
-        ]);
+        ];
     }
 }

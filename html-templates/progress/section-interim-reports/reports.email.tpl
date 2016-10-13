@@ -1,3 +1,5 @@
+{$from = $.User->EmailRecipient}
+
 {capture assign=subject}{strip}
 
     {if count($students) > 1}
@@ -90,6 +92,6 @@
                     </div>
                 {/if}
             </div>
-        {/foreach}    
+        {/foreach}
     </body>
 </html>
