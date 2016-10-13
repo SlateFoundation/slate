@@ -46,13 +46,13 @@ class Student extends User
             ,'linkClass' => GuardianRelationship::class
             ,'linkLocal' => 'PersonID'
             ,'linkForeign' => 'RelatedPersonID'
-            ,'conditions' => ['Link.Class = "Guardian"']
+            ,'conditions' => ['Link.Class = "Emergence\\\\People\\\\GuardianRelationship"']
         ]
         ,'GuardianRelationships' => [
             'type' => 'one-many'
             ,'class' => GuardianRelationship::class
             ,'foreign' => 'PersonID'
-            ,'conditions' => ['Class' => 'Guardian']
+            ,'conditions' => ['Class' => GuardianRelationship::class]
         ]
     ];
 
