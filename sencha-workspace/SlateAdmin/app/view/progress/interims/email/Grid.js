@@ -8,6 +8,10 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
 
 
     store: 'progress.interims.Emails',
+    viewConfig: {
+        emptyText: 'No report emails loaded, adjust filters and click "Load Report Emails" above to preview emails',
+        deferEmptyText: false
+    },
     columns: [
         {
             header: 'Last Name',
@@ -44,19 +48,6 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
                 '   </tpl>',
                 '</ul>'
             ]
-        }
-    ],
-    bbar: [
-        { xtype: 'tbfill' },
-        {
-            xtype: 'tbtext',
-            itemId: 'emailsTotal',
-            text: 'No reports loaded'
-        },
-        {
-            xtype: 'button',
-            text: 'Send All Emails',
-            action: 'send-emails'
         }
     ]
 });

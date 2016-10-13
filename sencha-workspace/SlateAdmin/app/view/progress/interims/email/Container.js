@@ -14,10 +14,6 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
     ],
 
 
-    // config: {
-    //     interim: null
-    // },
-
     componentCls: 'progress-interims-email-container',
     layout: {
         type: 'vbox',
@@ -119,7 +115,7 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 { xtype: 'tbfill' },
                 {
                     xtype: 'button',
-                    text: 'Load Emails',
+                    text: 'Load Report Emails',
                     action: 'load-emails'
                 },
                 { xtype: 'tbseparator' },
@@ -138,7 +134,21 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 {
                     region: 'center',
 
-                    xtype: 'progress-interims-email-grid'
+                    xtype: 'progress-interims-email-grid',
+                    bbar: [
+                        { xtype: 'tbfill' },
+                        {
+                            xtype: 'tbtext',
+                            itemId: 'emailsTotal',
+                            text: 'No report emails loaded'
+                        },
+                        {
+                            xtype: 'button',
+                            text: 'Send All Emails',
+                            action: 'send-emails',
+                            disabled: true
+                        }
+                    ]
                 },
                 {
                     region: 'east',
@@ -148,7 +158,6 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                     xtype: 'component',
                     itemId: 'emailPreview',
                     cls: 'email-preview',
-                    disabled: true,
                     renderTpl: '<iframe width="100%" height="100%"></iframe>',
                     renderSelectors: {
                         iframeEl: 'iframe'
