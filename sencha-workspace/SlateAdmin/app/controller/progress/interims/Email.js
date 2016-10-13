@@ -28,6 +28,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         optionsForm: 'progress-interims-email-container form#optionsForm',
         filtersFieldset: 'progress-interims-email-container fieldset#filtersFieldset',
         emailsGrid: 'progress-interims-email-grid',
+        emailsTotalCmp: 'progress-interims-email-grid #emailsTotal',
         emailPreviewCmp: 'progress-interims-email-container #emailPreview'
     },
 
@@ -51,6 +52,11 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     },
 
     listen: {
+        store: {
+            '#progress.interims.Emails': {
+                load: 'onEmailsStoreLoad'
+            }
+        }
     },
 
 
@@ -94,6 +100,11 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
     onResetOptionsClick: function() {
         this.getOptionsForm().reset();
+    },
+
+    onEmailsStoreLoad: function(emailsStore) {
+        var count = emailsStore.getCount();
+        this.getEmailsTotalCmp().setText(count + ' report' + (count == 1 ? '' : 's') + ' ready');
     },
 
     onEmailsGridSelect: function(emailsGrid, emailRecord) {

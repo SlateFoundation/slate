@@ -51,13 +51,13 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
         { xtype: 'tbfill' },
         {
             xtype: 'tbtext',
-            itemId: 'interimEmailTotalText',
-            text: '0 Reports'
+            itemId: 'emailsTotal',
+            text: 'No reports loaded'
         },
         {
             xtype: 'button',
             text: 'Send All Emails',
-            action: 'interim-email-send'
+            action: 'send-emails'
         }
     ]
 });

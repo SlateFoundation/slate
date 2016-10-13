@@ -143,7 +143,7 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 {
                     region: 'east',
                     split: true,
-                    width: 400,
+                    width: 500,
 
                     xtype: 'component',
                     itemId: 'emailPreview',
