@@ -146,9 +146,8 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                     width: 400,
 
                     xtype: 'component',
-                    itemId: 'previewBox',
+                    itemId: 'emailPreview',
                     cls: 'email-preview',
-                    flex: 1,
                     disabled: true,
                     renderTpl: '<iframe width="100%" height="100%"></iframe>',
                     renderSelectors: {
@@ -156,11 +155,13 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                     },
                     listeners: {
                         afterrender: {
-                            fn: function (previewBox) {
-                                this.mon(previewBox.iframeEl, 'load', function () {
-                                    this.fireEvent('previewload', this, previewBox);
-                                    previewBox.setLoading(false);
-                                }, this);
+                            fn: function (emailPreviewCmp) {
+                                var me = this;
+
+                                me.mon(emailPreviewCmp.iframeEl, 'load', function () {
+                                    me.fireEvent('previewload', me, emailPreviewCmp);
+                                    emailPreviewCmp.setLoading(false);
+                                });
                             },
                             delay: 10
                         }
@@ -168,13 +169,5 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                 }
             ]
         }
-    ],
-
-    loadStudentPreview: function (params) {
-        var previewBox = this.down('#previewBox');
-
-        previewBox.enable();
-        previewBox.setLoading({msg: 'Downloading reports&hellip;'});
-        previewBox.iframeEl.dom.src = SlateAdmin.API.buildUrl('/interims/singleEmailPreview?'+Ext.Object.toQueryString(params));
-    }
+    ]
 });

@@ -1,5 +1,8 @@
 Ext.define('SlateAdmin.controller.progress.interims.Email', {
     extend: 'Ext.app.Controller',
+    requires: [
+        'Slate.API'
+    ],
 
 
     views: [
@@ -23,7 +26,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             xtype: 'progress-interims-email-container'
         },
         optionsForm: 'progress-interims-email-container form#optionsForm',
-        filtersFieldset: 'progress-interims-email-container fieldset#filtersFieldset'
+        filtersFieldset: 'progress-interims-email-container fieldset#filtersFieldset',
+        emailsGrid: 'progress-interims-email-grid',
+        emailPreviewCmp: 'progress-interims-email-container #emailPreview'
     },
 
     routes: {
@@ -39,6 +44,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         },
         'progress-interims-email-container button[action=reset-options]': {
             click: 'onResetOptionsClick'
+        },
+        emailsGrid: {
+            select: 'onEmailsGridSelect'
         }
     },
 
@@ -86,6 +94,22 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
     onResetOptionsClick: function() {
         this.getOptionsForm().reset();
+    },
+
+    onEmailsGridSelect: function(emailsGrid, emailRecord) {
+        var me = this,
+            emailPreviewCmp = me.getEmailPreviewCmp(),
+            reportIds = emailRecord.get('reports');
+
+        if (!reportIds.length) {
+            emailPreviewCmp.iframeEl.dom.src = '';
+            emailPreviewCmp.disable();
+            return;
+        }
+
+        emailPreviewCmp.enable();
+        emailPreviewCmp.setLoading('Downloading reports&hellip;');
+        emailPreviewCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-interim-reports/*email-preview?reports='+reportIds.join(','));
     }
 
 

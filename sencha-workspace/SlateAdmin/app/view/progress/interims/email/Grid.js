@@ -34,9 +34,9 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
 
             header: 'Recipients',
             dataIndex: 'recipients',
-            renderer: function (v, m, r) {
-                if (!v) {
-                    return 'None';
+            renderer: function (v) {
+                if (!v || !v.length) {
+                    return '<em>No recipients</em>';
                 }
 
                 v = Ext.Array.map(v, function (recipient) {
