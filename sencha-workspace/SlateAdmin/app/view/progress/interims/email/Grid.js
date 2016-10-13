@@ -2,6 +2,7 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'progress-interims-email-grid',
     requires: [
+        'Ext.grid.column.Template',
         'Ext.toolbar.Fill'
     ],
 
@@ -32,19 +33,17 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
         {
             flex: 1,
 
+            xtype: 'templatecolumn',
             header: 'Recipients',
             dataIndex: 'recipients',
-            renderer: function (v) {
-                if (!v || !v.length) {
-                    return '<em>No recipients</em>';
-                }
-
-                v = Ext.Array.map(v, function (recipient) {
-                    return recipient.replace(/"/g, '').replace(/<(.*)>/g, '<span class="recipient-contact">$1</span>');
-                });
-
-                return '<ul class="recipients-list"><li>' + v.join('</li><li>') + '</li></ul>';
-            }
+            emptyCellText: 'No recipients',
+            tpl: [
+                '<ul class="recipients-list">',
+                '   <tpl for="recipients">',
+                '       <li>{name} <span class="recipient-contact">{email}</span> ({relationship})</li>',
+                '   </tpl>',
+                '</ul>'
+            ]
         }
     ],
     bbar: [

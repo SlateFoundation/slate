@@ -85,16 +85,14 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
     onLoadEmailsClick: function() {
         var me = this,
-            container = me.getContainer(),
-            emailsStore = me.getProgressInterimsEmailsStore();
+            emailsStore = me.getProgressInterimsEmailsStore(),
+            emailPreviewCmp = me.getEmailPreviewCmp();
 
-        container.setLoading(true);
+        emailPreviewCmp.iframeEl.dom.src = '';
+        emailPreviewCmp.disable();
 
         emailsStore.load({
-            params: me.getOptionsForm().getValues(),
-            callback: function() {
-                container.setLoading(false);
-            }
+            params: me.getOptionsForm().getValues()
         });
     },
 
