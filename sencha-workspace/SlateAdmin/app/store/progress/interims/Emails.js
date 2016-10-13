@@ -1,8 +1,26 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.store.progress.interims.Emails', {
     extend: 'Ext.data.Store',
     requires: [
-        'SlateAdmin.model.progress.interim.Email'
+        'Slate.proxy.Records'
     ],
-    model: 'SlateAdmin.model.progress.interim.Email'
+
+
+    model: 'SlateAdmin.model.progress.Email',
+    config: {
+        pageSize: false,
+        proxy: {
+            type: 'slate-records',
+            url: '/progress/section-interim-reports/*emails'
+        },
+        sorters: [
+            {
+                property: 'lastName',
+                direction: 'ASC'
+            },
+            {
+                property: 'firstName',
+                direction: 'ASC'
+            }
+        ]
+    }
 });

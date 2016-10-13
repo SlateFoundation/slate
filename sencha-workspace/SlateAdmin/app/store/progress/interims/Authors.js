@@ -1,4 +1,4 @@
-Ext.define('SlateAdmin.store.progress.interims.Students', {
+Ext.define('SlateAdmin.store.progress.interims.Authors', {
     extend: 'Ext.data.Store',
     requires: [
         'Slate.proxy.Records'
@@ -9,7 +9,10 @@ Ext.define('SlateAdmin.store.progress.interims.Students', {
 
     config: {
         pageSize: false,
-        proxy: 'slate-records',
+        proxy: {
+            type: 'slate-records',
+            url: '/progress/section-interim-reports/*authors'
+        },
         sorters: [
             {
                 property: 'LastName',

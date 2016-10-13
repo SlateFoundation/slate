@@ -1,47 +1,53 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'progress-interims-email-grid',
+    requires: [
+        'Ext.grid.column.Template',
+        'Ext.toolbar.Fill'
+    ],
+
 
     store: 'progress.interims.Emails',
-    columns: [{
-        header: 'First Name',
-        dataIndex: 'FirstName',
-        sortable: true,
-        width: 100
-    },{
-        header: 'Last Name',
-        dataIndex: 'LastName',
-        sortable: true,
-        width: 100
-    },{
-        header: 'Recipients',
-        dataIndex: 'Recipients',
-        scope: this,
-        renderer: function (v,m,r) {
-            if(!v){
-                return 'No recipients';
-            }
-
-            v = Ext.Array.map(v, function (recipient) {
-                //return recipient.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                return recipient.replace(/"/g, "").replace(/<(.*)>/g, '<span class="recipient-contact">$1</span>');
-            });
-
-            //return v.join('<br>');
-            return '<ul class="recipients-list"><li>' + v.join('</li><li>') + '</li></ul>';
+    viewConfig: {
+        emptyText: 'No report emails loaded, adjust filters and click "Load Report Emails" above to preview emails',
+        deferEmptyText: false
+    },
+    columns: [
+        {
+            header: 'Last Name',
+            dataIndex: 'lastName',
+            sortable: true,
+            width: 120
         },
-        flex: 1
-    }],
-    bbar: [{
-        xtype: 'tbfill'
-    },{
-        xtype: 'tbtext',
-        itemId: 'interimEmailTotalText',
-        text: '0 Reports'
-    },{
-        xtype: 'button',
-        text: 'Send All Emails',
-        action: 'interim-email-send'
-    }]
+        {
+            header: 'First Name',
+            dataIndex: 'firstName',
+            sortable: true,
+            width: 120
+        },
+        {
+            header: 'Reports',
+            dataIndex: 'reports',
+            sortable: true,
+            width: 75,
+            renderer: function (v) {
+                return v ? v.length : 0;
+            }
+        },
+        {
+            flex: 1,
+
+            xtype: 'templatecolumn',
+            header: 'Recipients',
+            dataIndex: 'recipients',
+            emptyCellText: 'No recipients',
+            tpl: [
+                '<ul class="recipients-list">',
+                '   <tpl for="recipients">',
+                '       <li>{name} <span class="recipient-contact">{email}</span> ({relationship})</li>',
+                '   </tpl>',
+                '</ul>'
+            ]
+        }
+    ]
 });
