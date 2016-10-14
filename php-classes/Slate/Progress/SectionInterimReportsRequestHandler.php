@@ -24,6 +24,12 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 	public static $accountLevelRead = 'Staff';
 	public static $accountLevelWrite = 'Staff';
 	public static $accountLevelAPI = 'Staff';
+	public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)';
+    public static $userResponseModes = [
+        'application/json' => 'json',
+        'text/csv' => 'csv',
+        'application/pdf' => 'pdf'
+    ];
 
 
     public static function handleRecordsRequest($action = false)
@@ -42,45 +48,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
-        if (!empty($_REQUEST['term'])) {
-            if ($_REQUEST['term'] == 'current') {
-                if (!$Term = Term::getClosest()) {
-                    return static::throwInvalidRequestError('No current term could be found');
-                }
-            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
-                return static::throwNotFoundError('term not found');
-            }
-
-            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
-            $responseData['term'] = $Term;
-        }
-
-        if (!empty($_REQUEST['course_section'])) {
-            if (!$Section = Section::getByHandle($_REQUEST['course_section'])) {
-                return static::throwNotFoundError('course_section not found');
-            }
-
-            $conditions['SectionID'] = $Section->ID;
-            $responseData['course_section'] = $Section;
-        }
-
-        if (!empty($_REQUEST['students'])) {
-            $studentIds = [];
-
-            foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
-                $studentIds[] = $Student->ID;
-            }
-
-            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
-        }
-
-        if (!empty($_REQUEST['status'])) {
-            if (!in_array($_REQUEST['status'], Report::getFieldOptions('Status', 'values'))) {
-                return static::throwInvalidRequestError('Invalid status');
-            }
-
-            $conditions['Status'] = $_REQUEST['status'];
-        }
+        static::applyRequestFilters($conditions, $responseData);
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
@@ -103,6 +71,8 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
     public static function handleEmailsRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
+
+        $responseData = [];
 
 
         // send previewed emails
@@ -168,63 +138,14 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             'Status' => 'published'
         ];
 
+        static::applyRequestFilters($conditions, $responseData);
+
         if (empty($_REQUEST['recipients'])) {
             $recipients = [];
         } elseif (is_array($_REQUEST['recipients'])) {
             $recipients = $_REQUEST['recipients'];
         } else {
             $recipients = explode(',', $_REQUEST['recipients']);
-        }
-
-
-        // always filter by term
-        if (!empty($_REQUEST['term'])) {
-            if (!$Term = Term::getByHandle($_REQUEST['term'])) {
-                return static::throwNotFoundError('term not found');
-            }
-        } else {
-            $Term = Term::getClosest();
-        }
-
-        $conditions['TermID'] = $Term->ID;
-
-
-        // optionally filter by advisor
-        if (!empty($_REQUEST['advisor'])) {
-            if (!$Advisor = PeopleRequestHandler::getRecordByHandle($_REQUEST['advisor'])) {
-                return static::throwNotFoundError('advisor not found');
-            }
-
-            $advisorStudentIds = DB::allValues(
-                'ID',
-                'SELECT ID FROM `%s` WHERE AdvisorID = %u',
-                [
-                    Person::$tableName,
-                    $Advisor->ID
-                ]
-            );
-
-            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) ? implode(',', $advisorStudentIds) : 'NULL').')';
-        }
-
-
-        // optionally filter by author
-        if (!empty($_REQUEST['author'])) {
-            if (!$Author = PeopleRequestHandler::getRecordByHandle($_REQUEST['author'])) {
-                return static::throwNotFoundError('author not found');
-            }
-
-            $conditions['CreatorID'] = $Author->ID;
-        }
-
-
-        // optionally filter by student
-        if (!empty($_REQUEST['student'])) {
-            if (!$Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student'])) {
-                return static::throwNotFoundError('student not found');
-            }
-
-            $conditions['StudentID'] = $Student->ID;
         }
 
 
@@ -284,13 +205,11 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             $student['recipients'] = array_values(array_filter($student['recipients']));
         }
 
-        return static::respond('emails', [
-            'data' => array_values($students),
-            'term' => $Term,
-            'advisor' => $Advisor,
-            'author' => $Author,
-            'student' => $Student
-        ]);
+
+        // return response
+        $responseData['data'] = array_values($students);
+
+        return static::respond('emails', $responseData);
     }
 
     public static function handleEmailPreviewRequest()
@@ -340,5 +259,95 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             'terms' => $terms,
             'students' => $students
         ];
+    }
+
+    protected static function applyRequestFilters(array &$conditions = [], array &$responseData = [])
+    {
+        // always filter by term
+        if (!empty($_REQUEST['term'])) {
+            if (!$Term = Term::getByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
+        } else {
+            $Term = Term::getClosest();
+        }
+
+        $conditions['TermID'] = $Term->ID;
+        $responseData['term'] = $Term;
+
+
+        // optionally filter by advisor
+        if (!empty($_REQUEST['advisor'])) {
+            if (!$Advisor = PeopleRequestHandler::getRecordByHandle($_REQUEST['advisor'])) {
+                return static::throwNotFoundError('advisor not found');
+            }
+
+            $advisorStudentIds = DB::allValues(
+                'ID',
+                'SELECT ID FROM `%s` WHERE AdvisorID = %u',
+                [
+                    Person::$tableName,
+                    $Advisor->ID
+                ]
+            );
+
+            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) ? implode(',', $advisorStudentIds) : 'NULL').')';
+            $responseData['advisor'] = $Advisor;
+        }
+
+
+        // optionally filter by author
+        if (!empty($_REQUEST['author'])) {
+            if (!$Author = PeopleRequestHandler::getRecordByHandle($_REQUEST['author'])) {
+                return static::throwNotFoundError('author not found');
+            }
+
+            $conditions['CreatorID'] = $Author->ID;
+            $responseData['author'] = $Author;
+        }
+
+
+        // optionally filter by student
+        if (!empty($_REQUEST['student'])) {
+            if (!$Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student'])) {
+                return static::throwNotFoundError('student not found');
+            }
+
+            $conditions['StudentID'] = $Student->ID;
+            $responseData['student'] = $Student;
+        }
+
+
+        // optionally filter by course section
+        if (!empty($_REQUEST['course_section'])) {
+            if (!$Section = Section::getByHandle($_REQUEST['course_section'])) {
+                return static::throwNotFoundError('course_section not found');
+            }
+
+            $conditions['SectionID'] = $Section->ID;
+            $responseData['course_section'] = $Section;
+        }
+
+
+        // optionally filter by list of students
+        if (!empty($_REQUEST['students'])) {
+            $studentIds = [];
+
+            foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
+                $studentIds[] = $Student->ID;
+            }
+
+            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
+        }
+
+
+        // optionally filter by status
+        if (!empty($_REQUEST['status'])) {
+            if (!in_array($_REQUEST['status'], Report::getFieldOptions('Status', 'values'))) {
+                return static::throwInvalidRequestError('Invalid status');
+            }
+
+            $conditions['Status'] = $_REQUEST['status'];
+        }
     }
 }
