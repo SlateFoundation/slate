@@ -343,7 +343,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 
         // optionally filter by status
         if (!empty($_REQUEST['status'])) {
-            if (!in_array($_REQUEST['status'], Report::getFieldOptions('Status', 'values'))) {
+            if (!in_array($_REQUEST['status'], SectionInterimReport::getFieldOptions('Status', 'values'))) {
                 return static::throwInvalidRequestError('Invalid status');
             }
 
