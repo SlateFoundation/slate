@@ -134,7 +134,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         sendEmailsBtn.disable();
 
         for (; i < emailsCount; i++) {
-            email = emailsStore.getAt(0);
+            email = emailsStore.getAt(i);
 
             emails.push({
                 reports: email.get('reports'),
