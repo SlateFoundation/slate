@@ -101,13 +101,16 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
 
     // controller methods
     loadPrintout: function(callback) {
-        var printoutCmp = this.getPrintoutCmp();
+        var printoutCmp = this.getPrintoutCmp(),
+            filters = this.getOptionsForm().getValues();
+
+        filters.status = 'published';
 
         if (callback) {
             printoutCmp.on('previewload', callback, null, { single: true });
         }
 
         printoutCmp.setLoading('Loading printout&hellip;');
-        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-interim-reports?'+Ext.Object.toQueryString(this.getOptionsForm().getValues()));
+        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-interim-reports?'+Ext.Object.toQueryString(filters));
     }
 });
