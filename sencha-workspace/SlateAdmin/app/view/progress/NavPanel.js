@@ -16,10 +16,10 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
                 text: 'Section Interim Reports',
                 href: '#progress/interims/report',
                 children: [
-                    // {
-                    //     text: 'Search & Print',
-                    //     href: '#progress/interims/print'
-                    // },
+                    {
+                        text: 'Print',
+                        href: '#progress/interims/print'
+                    },
                     {
                         text: 'Email',
                         href: '#progress/interims/email'
