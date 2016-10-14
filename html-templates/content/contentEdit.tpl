@@ -12,7 +12,7 @@
         var SiteEnvironment = SiteEnvironment || { };
         SiteEnvironment.user = {JSON::translateObjects($.User)|json_encode};
         SiteEnvironment.cmsContent = {tif $data ? JSON::translateObjects($data, false, 'tags,items,Author,Context.recordURL,Context.recordTitle')|json_encode : 'null'};
-        SiteEnvironment.cmsComposers = ['markdown', 'multimedia', 'embed'];
+        SiteEnvironment.cmsComposers = ['html', 'markdown', 'multimedia', 'embed'];
         SiteEnvironment.mediaSupportedTypes = {Media::getSupportedTypes()|json_encode};
     </script>
 
@@ -27,7 +27,7 @@
     {else}
         <script src="{Site::getVersionedRootUrl('js/pages/ContentEditor.js')}"></script>
     {/if}
-    
+
     {jsmin "markdown.js"}
 
     <script>
