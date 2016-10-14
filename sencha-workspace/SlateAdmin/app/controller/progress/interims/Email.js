@@ -29,7 +29,6 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             xtype: 'progress-interims-email-container'
         },
         optionsForm: 'progress-interims-email-container form#optionsForm',
-        filtersFieldset: 'progress-interims-email-container fieldset#filtersFieldset',
         emailsGrid: 'progress-interims-email-grid',
         emailsTotalCmp: 'progress-interims-email-grid #emailsTotal',
         sendEmailsBtn: 'progress-interims-email-grid button[action=send-emails]',
@@ -41,9 +40,6 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     },
 
     control: {
-        container: {
-            activate: 'onContainerActivate'
-        },
         'progress-interims-email-container button[action=load-emails]': {
             click: 'onLoadEmailsClick'
         },
@@ -86,10 +82,6 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
 
     // event handlers
-    onContainerActivate: function () {
-
-    },
-
     onLoadEmailsClick: function() {
         var me = this,
             emailsStore = me.getProgressInterimsEmailsStore();
@@ -128,7 +120,6 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             return;
         }
 
-        emailPreviewCmp.enable();
         emailPreviewCmp.setLoading('Downloading reports&hellip;');
         emailPreviewCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-interim-reports/*email-preview?reports='+reportIds.join(','));
     },
