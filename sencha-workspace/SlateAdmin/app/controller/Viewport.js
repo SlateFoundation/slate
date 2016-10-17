@@ -12,7 +12,7 @@ Ext.define('SlateAdmin.controller.Viewport', {
         ref: 'viewport',
         selector: 'viewport',
         autoCreate: true,
-        
+
         xclass: 'SlateAdmin.view.Viewport'
     },{
         ref: 'navCt',
@@ -58,9 +58,9 @@ Ext.define('SlateAdmin.controller.Viewport', {
         var ct = this.getCardCt(),
             layout = ct.getLayout();
 
-        if(layout.getActiveItem() !== card) {
+        if (layout.getActiveItem() !== card) {
             layout.setActiveItem(card);
-            ct.remove(layout.getPrev());
+            ct.remove(layout.getPrev(), false);
         }
     }
 });
