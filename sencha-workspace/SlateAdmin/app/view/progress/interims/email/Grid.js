@@ -14,16 +14,17 @@ Ext.define('SlateAdmin.view.progress.interims.email.Grid', {
     },
     columns: [
         {
-            header: 'Last Name',
-            dataIndex: 'lastName',
+            xtype: 'templatecolumn',
+
+            header: 'Student Name',
+            dataIndex: 'sortName',
             sortable: true,
-            width: 120
-        },
-        {
-            header: 'First Name',
-            dataIndex: 'firstName',
-            sortable: true,
-            width: 120
+            width: 200,
+            tpl: [
+                '<a href="#people/lookup/<tpl if="student.Username">{student.Username}<tpl else>?id={student.ID}</tpl>/contacts">',
+                '    {sortName}',
+                '</a>'
+            ]
         },
         {
             header: 'Reports',

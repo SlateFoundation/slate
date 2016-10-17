@@ -7,12 +7,11 @@ Ext.define('SlateAdmin.model.progress.Email', {
             name: 'student'
         },
         {
-            name: 'firstName',
-            mapping: 'student.FirstName'
-        },
-        {
-            name: 'lastName',
-            mapping: 'student.LastName'
+            name: 'sortName',
+            mapping: ['student'],
+            convert: function(v) {
+                return v.LastName + ', ' + v.FirstName;
+            }
         },
         {
             name: 'recipients'

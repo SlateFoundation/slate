@@ -14,11 +14,7 @@ Ext.define('SlateAdmin.store.progress.interims.Emails', {
         },
         sorters: [
             {
-                property: 'lastName',
-                direction: 'ASC'
-            },
-            {
-                property: 'firstName',
+                property: 'sortName',
                 direction: 'ASC'
             }
         ]
