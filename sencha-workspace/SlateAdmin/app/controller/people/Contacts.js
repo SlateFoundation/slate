@@ -471,21 +471,26 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         }
 
         grid.setLoading('Changing primary contact point&hellip;');
-        Ext.suspendLayouts();
+
         loadedPerson.set(primaryFieldName, newValue);
         loadedPerson.save({
             callback: function(records, operation, success) {
+                var contactsStore = grid.getStore();
+
                 if (success) {
-                    originalRecord = grid.getStore().getById(originalValue);
+                    contactsStore.beginUpdate();
+
+                    originalRecord = contactsStore.getById(originalValue);
                     if (originalRecord) {
-                        originalRecord.set('Primary', false);
+                        originalRecord.set('Primary', false, { dirty: false });
                     }
 
-                    record.set('Primary', true);
+                    record.set('Primary', true, { dirty: false });
+
+                    contactsStore.endUpdate();
                 }
 
                 grid.setLoading(false);
-                Ext.resumeLayouts(true);
             }
         });
     },
@@ -500,7 +505,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             pointClasses = templatesStore.collect('class'),
             pointClassesLen = pointClasses.length, i = 0, pointClass, phantomIndex;
 
-        Ext.suspendLayouts();
+        pointsStore.beginUpdate();
 
         for (; i < pointClassesLen; i++) {
             pointClass = pointClasses[i];
@@ -516,7 +521,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             }
         }
 
-        Ext.resumeLayouts(true);
+        pointsStore.endUpdate();
     },
 
     injectBlankRelationshipRecord: function() {
