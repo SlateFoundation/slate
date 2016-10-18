@@ -220,7 +220,20 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             model: 'SlateAdmin.model.person.ContactPoint',
             groupField: 'Class',
             pageSize: false,
-            remoteSort: true
+            sorters: [
+                {
+                    property: 'Class',
+                    direction: 'ASC'
+                },
+                {
+                    property: 'Primary',
+                    direction: 'DESC'
+                },
+                {
+                    property: 'ID',
+                    direction: 'DESC'
+                }
+            ]
         },
         viewConfig: {
             loadMask: false,
