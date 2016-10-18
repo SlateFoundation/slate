@@ -28,7 +28,7 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
             },
             {
                 text: 'Section Term Reports',
-                href: '#progress/narratives',
+                href: '#progress/terms/report',
                 children: [
                     // {
                     //     text: 'Search & Print',

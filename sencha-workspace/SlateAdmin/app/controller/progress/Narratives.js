@@ -40,7 +40,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     },
 
     routes: {
-        'progress/narratives': 'showNarratives'
+        'progress/terms/report': 'showNarratives'
     },
 
     control: {
