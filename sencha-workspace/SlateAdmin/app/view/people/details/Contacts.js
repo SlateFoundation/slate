@@ -226,12 +226,20 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     direction: 'ASC'
                 },
                 {
-                    property: 'Primary',
-                    direction: 'DESC'
+                    sorterFn: function(r1, r2) {
+                        r1 = r1.phantom;
+                        r2 = r2.phantom;
+
+                        if (r1 == r2) {
+                            return 0;
+                        }
+
+                        return r1 ? 1 : -1;
+                    }
                 },
                 {
                     property: 'ID',
-                    direction: 'DESC'
+                    direction: 'ASC'
                 }
             ]
         },
