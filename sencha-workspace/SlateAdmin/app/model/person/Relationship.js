@@ -2,9 +2,12 @@
 Ext.define('SlateAdmin.model.person.Relationship', {
     extend: 'Ext.data.Model',
     requires: [
+        'Ext.data.validator.Presence',
         'SlateAdmin.validator.CallbackValidator', // TODO: move this to a jarvus package eventually
         'SlateAdmin.proxy.Records',
-        'Ext.data.validator.Presence'
+
+        /* globals Slate */
+        'Slate.model.person.Person'
     ],
 
     idProperty: 'ID',
@@ -52,11 +55,23 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         },
         {
             name: 'RelatedPerson',
-            allowNull: true
+            allowNull: true,
+            defaultValue: null,
+            convert: function(v) {
+                if (v && Ext.isObject(v) && !v.isModel) {
+                    v = new Slate.model.person.Person(v);
+                }
+
+                return v;
+            },
+            serialize: function(v) {
+                return v && v.isModel ? v.getChanges() : null;
+            }
         },
         {
             name: 'InverseRelationship',
-            allowNull: true
+            allowNull: true,
+            defaultValue: null
         }
     ],
 
@@ -68,7 +83,7 @@ Ext.define('SlateAdmin.model.person.Relationship', {
             type: 'callback',
             message: 'Select an existing person or provide a first and last name to add a new person',
             callback: function(val) {
-                return val && (val.ID || (val.FirstName && val.LastName));
+                return val && val.isModel && val.isValid();
             }
         },
         InverseRelationship: {

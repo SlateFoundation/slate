@@ -5,6 +5,7 @@
 Ext.define('SlateAdmin.controller.people.Contacts', {
     extend: 'Ext.app.Controller',
     requires: [
+        'Ext.data.Session',
         'Ext.window.MessageBox',
         'Jarvus.view.TableErrors'
     ],
@@ -81,6 +82,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     init: function() {
         // Start listening for events on views
         var me = this;
+
+        me.dataSession = new Ext.data.Session();
 
 //        me.application.on('personselected', me.onPersonSelected, me);
 //        me.application.on('login', me.syncContacts, me);
@@ -186,6 +189,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     onRelationshipsGridEdit: function(editingPlugin, context) {
         var me = this,
+            dataSession = me.dataSession,
             value = context.value,
             originalValue = context.originalValue,
             fieldName = context.field,
@@ -193,31 +197,51 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             gridView = context.view,
             editor = context.column.getEditor(editedRecord),
             columnManager = context.grid.getColumnManager(),
-            templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender, phantomPerson;
+            invalid = false,
+            relatedPeopleStore, relatedPersonModel, relatedPersonRecord,
+            templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender;
 
         gridView.clearInvalid(editedRecord);
 
         if (fieldName == 'RelatedPerson') {
-            if (Ext.isString(value)) {
-                value = value.split(/\s+/);
+            relatedPeopleStore = editor.getStore();
+            relatedPersonModel = relatedPeopleStore.getModel();
+            relatedPersonRecord = editor.getSelection();
+
+            if (relatedPersonRecord) {
+                // ensure selected record remains available
+                dataSession.adopt(relatedPersonRecord);
+            } else if (Ext.isString(value)) {
+                // build a phantom model
+                value = value.trim().split(/\s+/);
+                relatedPersonRecord = dataSession.createRecord(relatedPersonModel);
 
                 if (value.length < 2) {
-                    editedRecord.set('RelatedPerson', {
-                        LastName: value[0]
-                    });
+                    relatedPersonRecord.set('LastName', value[0]);
+                    invalid = true;
                     gridView.markCellInvalid(editedRecord, 'person', 'At least a first and last name must be provided to add a new person');
                 } else {
-                    editedRecord.set('RelatedPerson', {
+                    relatedPersonRecord.set({
                         LastName: value.pop(),
                         MiddleName: value.length == 1 ? null : value.pop(),
                         FirstName: value.join(' ')
                     });
                 }
+
+                relatedPeopleStore.add(relatedPersonRecord);
+                editor.setValue(relatedPersonRecord);
             } else if (Ext.isNumber(value)) {
-                editedRecord.set({
-                    RelatedPersonID: value,
-                    RelatedPerson: editor.findRecordByValue(value).getData()
-                });
+                // look up previously selected model
+                relatedPersonRecord = dataSession.getRecord(relatedPersonModel, value);
+            }
+
+            editedRecord.set({
+                RelatedPersonID: relatedPersonRecord.phantom ? null : relatedPersonRecord.getId(),
+                RelatedPerson: relatedPersonRecord || null
+            });
+
+            if (!invalid) {
+                gridView.clearInvalid(editedRecord, 'person');
             }
 
             if (!editedRecord.get('Label')) {
@@ -241,9 +265,9 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     editedRecord.set(templateRecord.get('Relationship'));
                 }
 
-                phantomPerson = editedRecord.get('RelatedPerson') ;
-                if (phantomPerson && !phantomPerson.ID && templateRecord.get('Person')) {
-                    Ext.applyIf(phantomPerson, templateRecord.get('Person'));
+                relatedPersonRecord = editedRecord.get('RelatedPerson');
+                if (relatedPersonRecord && relatedPersonRecord.phantom && templateRecord.get('Person')) {
+                    relatedPersonRecord.set(templateRecord.get('Person'));
                 }
             }
 
@@ -286,21 +310,12 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             editedRecord.save({
                 callback: function(savedRecord, operation, success) {
 
-                    if (success) {
-                        // UPGRADE: manual call to commit shouldn't be necessary, remove when this bug is fixed: http://www.sencha.com/forum/showthread.php?273093
-                        editedRecord.commit();
-                    } else {
+                    if (!success) {
                         // render any server-side validation errors
                         Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function(result) {
                             gridView.markRowInvalid(editedRecord, result.validationErrors);
                         });
                     }
-
-                    //<debug>
-                    if (!Ext.getVersion().match('4.2.2.1144')) {
-                        console.warn('This hack above has not been tested with this version of ExtJS and may no longer be necessary');
-                    }
-                    //</debug>
 
                     // ensure there is a blank row for creating another record
                     me.injectBlankRelationshipRecord();
@@ -310,6 +325,12 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     },
 
     onRelationshipsGridDeleteClick: function(grid, record) {
+        var me = this,
+            editingPlugin = grid.getPlugin('cellediting'),
+            relatedPerson = record.get('RelatedPerson');
+
+        editingPlugin.cancelEdit();
+
         if (record.phantom) {
             if (record.dirty) {
                 record.reject();
@@ -318,10 +339,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             return;
         }
 
-        var me = this,
-            relatedPerson = record.get('RelatedPerson');
 
-        Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0} {1}?', relatedPerson.FirstName, relatedPerson.LastName), function(btn) {
+        Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0}?', relatedPerson.get('FullName')), function(btn) {
             if (btn != 'yes') {
                 return;
             }
@@ -345,9 +364,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         record.set('Class', record.get('Class') == 'Emergence\\People\\Relationship' ? 'Emergence\\People\\GuardianRelationship' : 'Emergence\\People\\Relationship');
         record.save({
             callback: function(records, operation, success) {
-                // UPGRADE: manual call to commit shouldn't be necessary, remove when this bug is fixed: http://www.sencha.com/forum/showthread.php?273093
-                record.commit();
-
                 grid.setLoading(false);
             }
         });
@@ -429,6 +445,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     },
 
     onContactsGridDeleteClick: function(grid, record) {
+        var editingPlugin = grid.getPlugin('cellediting');
+
+        editingPlugin.cancelEdit();
+
         if (record.phantom) {
             if (record.dirty) {
                 record.reject();

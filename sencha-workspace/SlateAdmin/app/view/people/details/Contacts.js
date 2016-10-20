@@ -70,12 +70,14 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         plugins: [
             {
                 ptype: 'cellediting',
+                pluginId: 'cellediting',
                 clicksToEdit: 1
             }
         ],
         columns: {
             defaults: {
-                menuDisabled: true
+                menuDisabled: true,
+                sortable: false
             },
             items: [
                 {
@@ -86,23 +88,23 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     tdCls: 'relationship-cell-person slate-grid-cell-primary',
                     flex: 1,
                     tpl: [
-                        '<tpl if="RelatedPerson">',
-                            '<tpl if="ID && RelatedPerson.ID"><a href="#{[this.getSearchRoute(values)]}"></tpl>',
-                                '<tpl for="RelatedPerson">{FirstName} {MiddleName} {LastName}</tpl>',
-                            '<tpl if="ID && RelatedPerson.ID"></a></tpl>',
-                        '<tpl else>',
+                        '<tpl if="RelatedPerson && RelatedPerson.isModel">',
+                            '<tpl if="ID && !RelatedPerson.phantom"><a href="#{[this.getSearchRoute(values)]}"></tpl>',
+                                '<tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>',
+                            '<tpl if="ID && !RelatedPerson.phantom"></a></tpl>',
+                        '<tpl elseif="!RelatedPerson">',
                             '<i class="fa fa-plus-circle"></i> Add new&hellip;',
                         '</tpl>',
                         {
                             getSearchRoute: function(relationship) {
                                 var path = ['people', 'search', 'related-to-id:'+relationship.PersonID],
                                     relatedPerson = relationship.RelatedPerson,
-                                    relatedUsername = relatedPerson.Username;
+                                    relatedUsername = relatedPerson.get('Username');
 
                                 if (relatedUsername) {
                                     path.push(relatedUsername);
                                 } else {
-                                    path.push('?id='+relatedPerson.ID);
+                                    path.push('?id='+relatedPerson.getId());
                                 }
 
                                 path.push('contacts');
@@ -113,23 +115,11 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     ],
                     editor: {
                         xtype: 'slate-personfield',
+                        forceSelection: false,
+                        displayField: 'FullName',
                         listeners: {
                             select: function(comboField) {
-                                comboField.collapse();
-                            }
-                        },
-                        xhooks: {
-                            setValue: function(value, doSelect) {
-                                // transform value from object form back into string or number
-                                if (Ext.isObject(value) && !value.isModel) {
-                                    if (value.ID) {
-                                        value = value.ID;
-                                    } else {
-                                        value = Ext.Array.clean([value.FirstName, value.MiddleName, value.LastName]).join(' ');
-                                    }
-                                }
-
-                                this.callParent([value || null, doSelect]);
+                                comboField.up('editor').completeEdit();
                             }
                         }
                     }
@@ -153,7 +143,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                                 comboField.expand();
                             },
                             select: function(comboField) {
-                                comboField.collapse();
+                                comboField.up('editor').completeEdit();
                             }
                         }
                     }
@@ -288,6 +278,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         plugins: [
             {
                 ptype: 'cellediting',
+                pluginId: 'cellediting',
                 clicksToEdit: 1
             }
         ],
