@@ -1,3 +1,4 @@
+// TODO: update and reconsile fields with SlateAdmin.model.person.Person
 Ext.define('Slate.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
