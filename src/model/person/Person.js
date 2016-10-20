@@ -1,12 +1,14 @@
 Ext.define('Slate.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records'
+        'Slate.proxy.Records',
+        'Ext.data.identifier.Negative'
     ],
 
 
     // model config
     idProperty: 'ID',
+    identifier: 'negative',
 
     fields: [
         'Username',
