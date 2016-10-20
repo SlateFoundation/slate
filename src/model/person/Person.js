@@ -79,9 +79,9 @@ Ext.define('Slate.model.person.Person', {
         {
             name: 'FullName',
             persist: false,
-            depends: ['FirstName', 'LastName'],
+            depends: ['FirstName', 'MiddleName', 'LastName'],
             convert: function(v, r) {
-                return r.get('FirstName') + ' ' + r.get('LastName');
+                return Ext.Array.clean([r.get('FirstName'), r.get('MiddleName'), r.get('LastName')]).join(' ');
             }
         },
         {
