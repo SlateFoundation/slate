@@ -78,6 +78,7 @@ Ext.define('Slate.model.person.Person', {
         },
         {
             name: 'FullName',
+            persist: false,
             depends: ['FirstName', 'LastName'],
             convert: function(v, r) {
                 return r.get('FirstName') + ' ' + r.get('LastName');
@@ -85,6 +86,7 @@ Ext.define('Slate.model.person.Person', {
         },
         {
             name: 'SortName',
+            persist: false,
             depends: ['FirstName', 'LastName'],
             convert: function(v, r) {
                 return r.get('LastName') + ', ' + r.get('FirstName');
