@@ -25,7 +25,7 @@ Ext.define('Slate.model.person.Person', {
         },
         {
             name: 'Class',
-            defaultValue: 'Product'
+            defaultValue: 'Emergence\\People\\Person'
         },
         {
             name: 'Created',
