@@ -8,7 +8,8 @@ use Slate\Term;
 class ProgressRequestHandler extends \RequestHandler
 {
     public static $userResponseModes = [
-        'application/json' => 'json'
+        'application/json' => 'json',
+        'application/pdf' => 'pdf'
     ];
 
     public static $searchConditions = [
@@ -76,7 +77,6 @@ class ProgressRequestHandler extends \RequestHandler
         $params = [
             'StudentID' => $_REQUEST['StudentID']
         ];
-        $summarizeRecords = true;
 
         $Person = Person::getByID($_REQUEST['StudentID']);
 
@@ -97,45 +97,45 @@ class ProgressRequestHandler extends \RequestHandler
         $search = !empty($_REQUEST['q']) ? $_REQUEST['q'] : false;
 
 
-        if (static::peekPath() == 'export') {
-            static::shiftPath();
-            $summarizeRecords = false;
-        }
+        // if (static::peekPath() == 'export') {
+        //     static::shiftPath();
+        //     $summarizeRecords = false;
+        // }
 
-        $records = static::getProgressRecords($reportTypes, $params, $summarizeRecords, $search);
+        $records = static::getProgressRecords($reportTypes, $params, static::getResponseMode() == 'json', $search);
 
         usort($records, function($r1, $r2) {
             return (strtotime($r2['Date']) - strtotime($r1['Date']));
         });
 
 
-        if (!$summarizeRecords) {
-            $html = \TemplateResponse::getSource('reports/export', [
-                'data' => $records
-            ]);
+        // if (!$summarizeRecords) {
+        //     $html = \TemplateResponse::getSource('reports/export', [
+        //         'data' => $records
+        //     ]);
 
-            $filename .= $Person->FullName.' ('.date('Y-m-d').')';
-            $filePath = tempnam('/tmp', 'slate_nr_');
+        //     $filename .= $Person->FullName.' ('.date('Y-m-d').')';
+        //     $filePath = tempnam('/tmp', 'slate_nr_');
 
-            file_put_contents($filePath.'.html', $html);
-            $command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" wkhtmltopdf \"$filePath.html\" \"$filePath.pdf\"";
+        //     file_put_contents($filePath.'.html', $html);
+        //     $command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" wkhtmltopdf \"$filePath.html\" \"$filePath.pdf\"";
 
-            exec($command);
+        //     exec($command);
 
-            $tokenName = 'downloadToken';
-            if (!empty($_REQUEST[$tokenName])) {
-                setcookie($tokenName, $_REQUEST[$tokenName], time()+300, '/');
-            }
+        //     $tokenName = 'downloadToken';
+        //     if (!empty($_REQUEST[$tokenName])) {
+        //         setcookie($tokenName, $_REQUEST[$tokenName], time()+300, '/');
+        //     }
 
-            header('Content-Type: application/pdf');
-            header("Content-Disposition: attachment; filename=\"$filename.pdf\"");
-            readfile($filePath.'.pdf');
-            exit();
-        } else {
+        //     header('Content-Type: application/pdf');
+        //     header("Content-Disposition: attachment; filename=\"$filename.pdf\"");
+        //     readfile($filePath.'.pdf');
+        //     exit();
+        // } else {
             return static::respond('progress', [
                 'data' => $records
             ]);
-        }
+        // }
     }
 
     protected static function getProgressRecords($reportTypes, $params, $summarizeRecords = true,  $search = false)
@@ -301,7 +301,9 @@ class ProgressRequestHandler extends \RequestHandler
             ,'Subject'
             ,'Sent AS Date'
             ,'Message'
+            ,'MessageFormat'
             ,'AuthorID'
+            ,'ContextClass'
             ,'ContextID'
         ];
 
@@ -351,18 +353,13 @@ class ProgressRequestHandler extends \RequestHandler
         $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
 
         $notes = array_map(function($note) {
-            return $note->_record;
-        }, ProgressNote::getAllByQuery($sql, $queryParams));
+            return array_merge($note->getData(), [
+                'AuthorFullName' => $note->Author->FullName,
+                'AuthorEmail' => $note->Author->Email,
+                'StudentFullName' => $note->Context->FullName
+            ]);
+        }, Note::getAllByQuery($sql, $queryParams));
 
-
-        foreach ($notes as &$note) {
-            $Author = Person::getByID($note['AuthorID']);
-            $Student = Person::getByID($note['ContextID']);
-
-            $note['AuthFullName'] = $Author->FullName;
-            $note['AuthEmail'] = $Author->Email;
-            $note['StudentFullName'] = $Student->FullName;
-        }
 
         return $notes;
     }

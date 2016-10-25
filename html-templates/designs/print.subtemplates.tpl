@@ -24,8 +24,8 @@
 
             <div class="meta">
                 <span class="item-creator">
-                    {$Record.AuthFullName}
-                    &lt;<a class="url" href="mailto:{$Record.AuthEmail}">{$Record.AuthEmail}</a>&gt;
+                    {$Record.AuthorFullName}
+                    &lt;<a class="url" href="mailto:{$Record.AuthEmail}">{$Record.AuthorEmail}</a>&gt;
                 </span>
             </div>
         </header>
