@@ -104,11 +104,11 @@ Ext.define('SlateAdmin.view.progress.interims.print.Container', {
                 //     text: 'Print to PDF',
                 //     action: 'print-pdf'
                 // },
-                // {
-                //     xtype: 'button',
-                //     text: 'Save to CSV',
-                //     action: 'save-csv'
-                // },
+                {
+                    xtype: 'button',
+                    text: 'Save to CSV',
+                    action: 'save-csv'
+                },
                 { xtype: 'tbseparator' },
                 {
                     text: 'Reset Options',
