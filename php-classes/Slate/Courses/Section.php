@@ -162,6 +162,7 @@ class Section extends \VersionedRecord
         ,'Term'
         ,'Schedule'
         ,'Location'
+        ,'Teachers'
         ,'StudentsCount' => [
             'method' => 'getStudentsCount'
         ]
