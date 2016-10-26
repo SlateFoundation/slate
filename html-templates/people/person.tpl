@@ -13,15 +13,13 @@
             <div class="col-inner">
 
                 <header class="page-header">
-
-
                     <h2 class="header-title">{$Person->FullName|escape} <small class="muted">Public Feed</small></h2>
                     {if $ownProfile}
                         <div class="header-buttons">
-                            <a href="/profile" class="button">Edit Profile</a>
-                                {if $.User->ID == $Person->ID || (ProfileRequestHandler::$accountLevelEditOthers && $.User->hasAccountLevel(ProfileRequestHandler::$accountLevelEditOthers))}
-                                    <a class="button" href="/profile{tif $.User->ID != $Person->ID ? cat('?person=', $Person->ID)}">Edit Profile</a>
-                                {/if}
+                            {if $.User->ID == $Person->ID || (ProfileRequestHandler::$accountLevelEditOthers && $.User->hasAccountLevel(ProfileRequestHandler::$accountLevelEditOthers))}
+                                <a class="button" href="/profile{tif $.User->ID != $Person->ID ? cat('?person=', $Person->ID)}">Edit Profile</a>
+                            {/if}
+                            <a href="/blog/create" class="button primary">Create a Post</a>
                         </div>
                     {/if}
                 </header>
