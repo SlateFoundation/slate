@@ -15,7 +15,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Printer', {
     ],
 
     routes: {
-        'progress/narratives/print': 'showNarrativePrint'
+        'progress/terms/print': 'showNarrativePrint'
     },
 
     refs: {
