@@ -73,18 +73,20 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         store.resumeEvents();
     },
 
-    onGridSelect: function(rowModel, invitation, rowIndex) {
+    onGridSelect: function(rowModel, invitation) {
         var me = this,
             invitationsWindow = me.getInvitationsWindow();
 
-        Ext.Ajax.request({
-            url: '/invitations/json/preview',
+        Slate.API.request({
+            url: '/invitations/preview',
             params: {
                 personId: invitation.get('Person').getId(),
-                customMessage: invitationsWindow.down('textareafield').getValue()
+                message: invitationsWindow.down('textareafield').getValue(),
+                format: 'json'
             },
             success: function(response) {
                 var r = Ext.decode(response.responseText);
+
                 invitationsWindow.down('#emailPreview').update(r);
             }
         });
@@ -98,11 +100,65 @@ Ext.define('SlateAdmin.controller.people.Invite', {
     onSendClick: function() {
         var me = this,
             invitationsWindow = me.getInvitationsWindow(),
-            store = me.getPeopleInvitationsStore();
+            store = me.getPeopleInvitationsStore(),
+            selectedPeople = store.query('selected', true).getRange(),
+            selectedPeopleLength = selectedPeople.length,
+            people = [],
+            i = 0;
+
+
+        for (; i < selectedPeopleLength; i++) {
+            people.push(selectedPeople[0].get('Person').getId());
+        }
+
+        if (!people.length) {
+            Ext.Msg.alert('No people selected', 'To send invitations, check the box to the left of at least one person');
+            return;
+        }
 
         invitationsWindow.setLoading('Sending invitations&hellip;');
-//      debugger;
+
         invitationsWindow.hide();
         invitationsWindow.setLoading(false);
+
+        Slate.API.request({
+            url: '/invitations/send',
+            headers: {
+                Accept: 'application/json'
+            },
+            method: 'POST',
+            params: {
+                'people[]': people,
+                message: invitationsWindow.down('textareafield').getValue()
+            },
+            success: function(response) {
+                var r = Ext.decode(response.responseText),
+                    sentMessages = r.sent;
+
+                if (r.success) {
+                    invitationsWindow.destroy();
+
+                    Ext.Msg.show({
+                        title: 'Invitations sent',
+                        msg: Ext.String.format(
+                            '{0} {1} been mailed successfully',
+                            sentMessages,
+                            sentMessages == 1 ? 'invitation has' : 'invitations have'
+                        ),
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.INFO
+                    });
+                } else {
+                    invitationsWindow.setLoading(false);
+
+                    Ext.Msg.show({
+                        title: 'Failed to send invitations',
+                        msg: '<strong>No</strong> invitations have been sent: ' + (r.message || 'There was a problem with one or more of the recipients, please report this to your systems administrator.'),
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            }
+        });
     }
 });

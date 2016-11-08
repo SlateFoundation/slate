@@ -26,7 +26,7 @@ Ext.define('SlateAdmin.Application', {
         'Login',
 
         'People',
-//        'people.Invite',
+        'people.Invite',
         'people.Profile',
         'people.Courses',
         'people.Contacts',

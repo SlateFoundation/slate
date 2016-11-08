@@ -8,6 +8,6 @@ Ext.define('SlateAdmin.store.people.People', {
         url: '/people',
         startParam: false,
         limitParam: false,
-        include: ['groupIDs', 'Advisor']
+        include: ['groupIDs', 'Advisor', 'PrimaryEmail']
     }
 });

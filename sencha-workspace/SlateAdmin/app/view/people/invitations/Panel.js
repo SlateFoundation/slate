@@ -95,8 +95,14 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
         }
     },{
         xtype: 'textareafield',
-        fieldLabel: 'Extra note (optional)',
-        labelAlign: 'top'
+        fieldLabel: 'Message Template',
+        labelAlign: 'top',
+        value: [
+            '{recipientFirst} {recipientLast},',
+            '\n\n',
+            'You have been invited to setup an account at the {schoolName} website -- **{websiteHostname}**.',
+            'With this account you will be able to log in to your personal dashboard and access all of our connected systems with one click.'
+        ].join(' ')
     },{
         xtype: 'panel',
         itemId: 'emailPreview',

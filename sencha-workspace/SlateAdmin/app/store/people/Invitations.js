@@ -17,7 +17,9 @@ Ext.define('SlateAdmin.store.people.Invitations', {
     },{
         name: 'Email',
         convert: function(v, r) {
-            return r.get('Person').get('Email');
+            var email = r.get('Person').get('PrimaryEmail');
+
+            return email ? email.Data : null;
         }
     },{
         name: 'selected',
