@@ -18,6 +18,8 @@ class Report extends \VersionedRecord
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
 
+    public static $printTemplate = 'print';
+
     public static $fields = [
         'TermID' => [
             'type' => 'integer',
