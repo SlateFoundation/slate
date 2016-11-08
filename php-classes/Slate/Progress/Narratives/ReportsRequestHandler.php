@@ -225,7 +225,7 @@ class ReportsRequestHandler extends \RecordsRequestHandler
             $filename .= ' - '.$Student->Username;
         }
 
-        $html = \TemplateResponse::getSource('print', [
+        $html = \TemplateResponse::getSource(Report::$printTemplate, [
             'Term' => $Term
             ,'data' => Report::getAllByWhere($where, [
                 'order' => '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)'
