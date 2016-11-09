@@ -112,7 +112,7 @@
 .omnibar-search-item {
     @include flex(1);
     margin: 0 1em 0 .5em;
-    cursor: grab;
+    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -140,6 +140,7 @@
     padding-left: 2.25em;
     padding-right: 0;
     text-align: left;
+    cursor: grab;
     @include transition(250ms cubic-bezier(1, 0, 0, 1));
     width: 6em;
 
