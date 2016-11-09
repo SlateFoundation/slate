@@ -112,6 +112,7 @@
 .omnibar-search-item {
     @include flex(1);
     margin: 0 1em 0 .5em;
+    cursor: grab;
 
     &:hover,
     &:focus {
