@@ -26,7 +26,7 @@
         <input type="hidden" name="_LOGIN[return]" value="{refill field=_LOGIN.return default=$.server.REQUEST_URI}">
 
         <fieldset class="shrink">
-            {field inputName=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true autofocus=true}
+            {field spellcheck='false' inputName=_LOGIN[username] label=Username hint='You can also log in with your email address.' required=true autofocus=true}
             {field inputName=_LOGIN[password] label=Password hint='<a href="/register/recover">Forgot?</a>' required=true refill=false type=password}
 
             <div class="submit-area">
