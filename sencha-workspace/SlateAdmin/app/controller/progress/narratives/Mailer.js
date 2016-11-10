@@ -4,7 +4,7 @@ Ext.define('SlateAdmin.controller.progress.narratives.Mailer', {
 
     // entry points
     routes: {
-        'progress/narratives/email': 'showNarrativeMailer'
+        'progress/terms/email': 'showNarrativeMailer'
     },
 
     control: {

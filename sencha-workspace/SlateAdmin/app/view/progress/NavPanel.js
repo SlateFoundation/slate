@@ -30,13 +30,13 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
                 text: 'Section Term Reports',
                 href: '#progress/terms/report',
                 children: [
-                    // {
-                    //     text: 'Search & Print',
-                    //     href: '#progress/narratives/print'
-                    // }
-                    // {
+                    {
+                        text: 'Search & Print',
+                        href: '#progress/terms/print'
+                    }
+                    // ,{
                     //     text: 'Email',
-                    //     href: '#progress/narratives/email'
+                    //     href: '#progress/terms/email'
                     // }
                 ]
             }
