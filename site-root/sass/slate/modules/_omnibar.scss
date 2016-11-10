@@ -112,7 +112,6 @@
 .omnibar-search-item {
     @include flex(1);
     margin: 0 1em 0 .5em;
-    cursor: pointer;
 
     &:hover,
     &:focus {
@@ -137,10 +136,10 @@
     border: 1px solid transparent;
     border-width: 0 0 1px;
     box-shadow: none;
+    cursor: pointer;
     padding-left: 2.25em;
     padding-right: 0;
     text-align: left;
-    cursor: grab;
     @include transition(250ms cubic-bezier(1, 0, 0, 1));
     width: 6em;
 
@@ -149,6 +148,7 @@
     &:focus {
         background-color: rgba(white, 0.1667);
         border-color: $link-color;
+        cursor: text;
         outline: none;
         width: 100%;
 
