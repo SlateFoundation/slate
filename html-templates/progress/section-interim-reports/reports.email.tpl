@@ -1,4 +1,4 @@
-{$from = $.User->EmailRecipient}
+{capture assign=from}no-reply@{Site::getConfig('primary_hostname')}{/capture}
 
 {capture assign=subject}{strip}
 
