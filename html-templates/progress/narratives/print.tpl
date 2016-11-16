@@ -200,12 +200,28 @@ dl {
 
         {if $Report->Assessment}
             <dt class="assessment">Assessment</dt>
-            <dd class="assessment">{$Report->Assessment}</dd>
+            <dd class="assessment">
+                {if $Report->NotesFormat == 'html'}
+                    {$Report->Assessment}
+                {elseif $Report->NotesFormat == 'markdown'}
+                    {$Report->Assessment|escape|markdown}
+                {else}
+                    {$Report->Assessment|escape}
+                {/if}
+            </dd>
         {/if}
 
-        {if $Report->Comments}
+        {if $Report->Notes}
             <dt class="comments">Comments</dt>
-            <dd class="comments">{$Report->Comments}</dd>
+            <dd class="comments">
+                {if $Report->NotesFormat == 'html'}
+                    {$Report->Notes}
+                {elseif $Report->NotesFormat == 'markdown'}
+                    {$Report->Notes|escape|markdown}
+                {else}
+                    {$Report->Notes|escape}
+                {/if}
+            </dd>
         {/if}
         </dl>
     </article>
