@@ -18,6 +18,8 @@ class Report extends \VersionedRecord
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
 
+    public static $printTemplate = 'print';
+
     public static $fields = [
         'TermID' => [
             'type' => 'integer',
@@ -36,9 +38,19 @@ class Report extends \VersionedRecord
             'values' => ['draft', 'published'],
             'default' => 'draft'
         ],
+
         'Notes' => [
             'type' => 'clob',
             'notnull' => false
+        ],
+
+        'NotesFormat' => [
+            'type' => 'enum',
+            'values' => [
+                'html',
+                'markdown'
+            ],
+            'default' => 'markdown'
         ]
     ];
 

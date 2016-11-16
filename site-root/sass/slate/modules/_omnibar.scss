@@ -136,6 +136,7 @@
     border: 1px solid transparent;
     border-width: 0 0 1px;
     box-shadow: none;
+    cursor: pointer;
     padding-left: 2.25em;
     padding-right: 0;
     text-align: left;
@@ -147,6 +148,7 @@
     &:focus {
         background-color: rgba(white, 0.1667);
         border-color: $link-color;
+        cursor: text;
         outline: none;
         width: 100%;
 
