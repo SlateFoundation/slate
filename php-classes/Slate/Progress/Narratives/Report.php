@@ -38,9 +38,19 @@ class Report extends \VersionedRecord
             'values' => ['draft', 'published'],
             'default' => 'draft'
         ],
+
         'Notes' => [
             'type' => 'clob',
             'notnull' => false
+        ],
+
+        'NotesFormat' => [
+            'type' => 'enum',
+            'values' => [
+                'html',
+                'markdown'
+            ],
+            'default' => 'markdown'
         ]
     ];
 
