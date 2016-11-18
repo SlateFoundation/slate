@@ -241,7 +241,7 @@ class ReportsRequestHandler extends \RecordsRequestHandler
         $filePath = tempnam('/tmp', 'slate_nr_');
 
         file_put_contents($filePath.'.html', $html);
-        $command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" wkhtmltopdf \"$filePath.html\" \"$filePath.pdf\"";
+        $command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" wkhtmltopdf -L 0.5in -R 0.5in -T 0.5in -B 0.5in \"$filePath.html\" \"$filePath.pdf\"";
 
 
         if (static::peekPath() == 'stage') {

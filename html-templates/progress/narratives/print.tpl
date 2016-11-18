@@ -155,6 +155,9 @@ article, section {
 dl {
     page-break-before: avoid;
 }
+pre {
+    white-space: pre-wrap;
+}
 </style>
 </head>
 <body>
