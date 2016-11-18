@@ -186,46 +186,46 @@ pre {
         <h2>{$Report->Section->Title|escape}</h2>
 
         <dl>
-        {if $Report->Section->Instructors[0]->FullName}
-            <dt class="instructor">Instructor</dt>
-            <dd class="instructor">
-                {$Report->Section->Instructors[0]->FullName}
-                {if $Report->Section->Instructors[0]->Email}
-                    <a href="mailto:{$Report->Section->Instructors[0]->Email}">&lt;{$Report->Section->Instructors[0]->Email}&gt;</a>
-                {/if}
-            </dd>
-        {/if}
+            {if count($Report->Section->Teachers)}
+                <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
+                {foreach item=Teacher from=$Report->Section->Teachers implode='<br />'}
+                    <dd class="instructor">
+                        {$Teacher->FullName|escape}
+                        &lt;<a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a>&gt;
+                    </dd>
+                {/foreach}
+            {/if}
 
-        {if $Report->Grade}
-            <dt class="grade">Overall - Grade</dt>
-            <dd class="grade">{$Report->Grade}</dd>
-        {/if}
+            {if $Report->Grade}
+                <dt class="grade">Overall - Grade</dt>
+                <dd class="grade">{$Report->Grade}</dd>
+            {/if}
 
-        {if $Report->Assessment}
-            <dt class="assessment">Assessment</dt>
-            <dd class="assessment">
-                {if $Report->NotesFormat == 'html'}
-                    {$Report->Assessment}
-                {elseif $Report->NotesFormat == 'markdown'}
-                    {$Report->Assessment|escape|markdown}
-                {else}
-                    {$Report->Assessment|escape}
-                {/if}
-            </dd>
-        {/if}
+            {if $Report->Assessment}
+                <dt class="assessment">Assessment</dt>
+                <dd class="assessment">
+                    {if $Report->NotesFormat == 'html'}
+                        {$Report->Assessment}
+                    {elseif $Report->NotesFormat == 'markdown'}
+                        {$Report->Assessment|escape|markdown}
+                    {else}
+                        {$Report->Assessment|escape}
+                    {/if}
+                </dd>
+            {/if}
 
-        {if $Report->Notes}
-            <dt class="comments">Comments</dt>
-            <dd class="comments">
-                {if $Report->NotesFormat == 'html'}
-                    {$Report->Notes}
-                {elseif $Report->NotesFormat == 'markdown'}
-                    {$Report->Notes|escape|markdown}
-                {else}
-                    {$Report->Notes|escape}
-                {/if}
-            </dd>
-        {/if}
+            {if $Report->Notes}
+                <dt class="comments">Comments</dt>
+                <dd class="comments">
+                    {if $Report->NotesFormat == 'html'}
+                        {$Report->Notes}
+                    {elseif $Report->NotesFormat == 'markdown'}
+                        {$Report->Notes|escape|markdown}
+                    {else}
+                        {$Report->Notes|escape}
+                    {/if}
+                </dd>
+            {/if}
         </dl>
     </article>
 {/template}
