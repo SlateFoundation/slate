@@ -1,7 +1,7 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.progress.narratives.SectionNotesForm',{
+Ext.define('SlateAdmin.view.progress.terms.SectionNotesForm',{
     extend: 'Ext.form.Panel',
-    xtype: 'progress-narratives-sectionnotesform',
+    xtype: 'progress-terms-sectionnotesform',
     requires: [
         'Ext.form.field.TextArea'
     ],

@@ -1,15 +1,17 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.store.progress.narratives.Students', {
+Ext.define('SlateAdmin.store.progress.terms.Authors', {
     extend: 'Ext.data.Store',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'Slate.proxy.Records'
     ],
 
-    model: 'SlateAdmin.model.person.Person',
+
+    model: 'Slate.model.person.Person',
+
     config: {
         pageSize: false,
         proxy: {
-            type: 'slaterecords'
+            type: 'slate-records',
+            url: '/progress/terms/reports/*authors'
         },
         sorters: [
             {

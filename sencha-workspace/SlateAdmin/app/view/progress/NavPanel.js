@@ -33,11 +33,11 @@ Ext.define('SlateAdmin.view.progress.NavPanel', {
                     {
                         text: 'Search & Print',
                         href: '#progress/terms/print'
+                    },
+                    {
+                        text: 'Email',
+                        href: '#progress/terms/email'
                     }
-                    // ,{
-                    //     text: 'Email',
-                    //     href: '#progress/terms/email'
-                    // }
                 ]
             }
         ];

@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
+Ext.define('SlateAdmin.model.progress.terms.SectionNote', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records',
@@ -20,7 +20,7 @@ Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Progress\\Narratives\\SectionNotes'
+            defaultValue: 'Slate\\Progress\\SectionTermNote'
         },
         {
             name: 'Created',
@@ -34,7 +34,7 @@ Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
             allowNull: true
         },
         {
-            name: 'CourseSectionID',
+            name: 'SectionID',
             type: 'int'
         },
         {
@@ -61,6 +61,6 @@ Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
 
     proxy: {
         type: 'slaterecords',
-        url: '/progress/narratives/section-notes'
+        url: '/progress/terms/section-data'
     }
 });
