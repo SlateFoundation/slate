@@ -106,7 +106,7 @@ Ext.define('Slate.model.progress.SectionInterimReport', {
 
     proxy: {
         type: 'slate-records',
-        url: '/progress/section-interim-reports',
+        url: '/progress/interims/reports',
         limitParam: null,
         startParam: null
     }
