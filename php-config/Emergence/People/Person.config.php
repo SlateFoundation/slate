@@ -29,6 +29,15 @@ Emergence\People\Person::$relationships['Mappings'] = [
     ,'contextClass' => Emergence\People\Person::getStaticRootClass()
 ];
 
+Emergence\People\Person::$relationships['Wards'] = array(
+    'type' => 'many-many',
+    'class' => \Emergence\People\Person::class,
+    'linkClass' => \Emergence\People\GuardianRelationship::class,
+    'linkLocal' => 'RelatedPersonID',
+    'linkForeign' => 'PersonID',
+    'conditions' => array('Link.Class = "'.\DB::escape(\Emergence\People\GuardianRelationship::class).'"')
+);
+
 Emergence\People\Person::$searchConditions['Course'] = [
     'qualifiers' => ['course']
     ,'points' => 1
