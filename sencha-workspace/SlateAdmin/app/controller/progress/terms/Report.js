@@ -330,8 +330,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
     onSectionNotesSaveBtnClick: function() {
         var sectionNotesForm = this.getSectionNotesForm(),
             sectionDataRecord = sectionNotesForm.getRecord(),
-            selectedSection = this.getSectionsGrid().getSelection()[0],
-            section = this.getProgressTermsSectionsStore().getById(selectedSection ? selectedSection.getId() : null);
+            section = this.getProgressTermsSectionsStore().getById(sectionDataRecord.get('SectionID'));
 
         if (!section) {
             return;
@@ -350,7 +349,6 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
 
                 if (success) {
                     sectionNotesForm.loadRecord(sectionData);
-                    debugger;
                     section.set('SectionData', sectionData.getData(), { dirty: false });
                 } else {
                     Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
