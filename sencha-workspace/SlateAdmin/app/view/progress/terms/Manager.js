@@ -5,7 +5,7 @@ Ext.define('SlateAdmin.view.progress.terms.Manager', {
         'SlateAdmin.view.progress.terms.SectionsGrid',
         'SlateAdmin.view.progress.terms.StudentsGrid',
         'SlateAdmin.view.progress.terms.EditorForm',
-        'SlateAdmin.view.progress.terms.SectionNotesForm'
+        'SlateAdmin.view.progress.SectionNotesForm'
     ],
 
 
@@ -38,7 +38,8 @@ Ext.define('SlateAdmin.view.progress.terms.Manager', {
             region: 'south',
             split: true,
 
-            xtype: 'progress-terms-sectionnotesform',
+            xtype: 'progress-sectionnotesform',
+            fieldName: 'TermReportNotes',
             collapsible: true,
             collapsed: true,
             titleCollapse: true,

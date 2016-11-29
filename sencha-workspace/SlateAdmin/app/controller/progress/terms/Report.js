@@ -13,6 +13,10 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         'progress.terms.Reports'
     ],
 
+    models: [
+        'progress.SectionTermData'
+    ],
+
     refs: {
         progressNavPanel: 'progress-navpanel',
 
@@ -30,7 +34,11 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         revertChangesBtn: 'progress-terms-editorform button#revertChangesBtn',
         deleteBtn: 'progress-terms-editorform button#deleteBtn',
         saveDraftBtn: 'progress-terms-editorform button#saveDraftBtn',
-        saveFinishedBtn: 'progress-terms-editorform button#saveFinishedBtn'
+        saveFinishedBtn: 'progress-terms-editorform button#saveFinishedBtn',
+        sectionNotesForm: 'progress-terms-manager progress-sectionnotesform',
+        sectionNotesRevertBtn: 'progress-terms-manager progress-sectionnotesform button#revertBtn',
+        sectionNotesSaveBtn: 'progress-terms-manager progress-sectionnotesform button#saveBtn'
+
     },
 
     routes: {
@@ -205,8 +213,13 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
             reportsStore = me.getProgressTermsReportsStore(),
             reportsProxy = reportsStore.getProxy(),
             editorForm = me.getEditorForm(),
+            sectionNotesForm = me.getSectionNotesForm(),
             termHandle = me.getTermSelector().getValue(),
-            sectionCode = section.get('Code');
+            sectionCode = section.get('Code'),
+            sectionDataRecord = me.getProgressSectionTermDataModel().create(section.get('SectionData') || {
+                SectionID: section.getId(),
+                TermID: section.get('TermID')
+            });
 
         // reset stores
         studentsStore.removeAll();
@@ -226,6 +239,12 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         reportsProxy.setExtraParam('term', termHandle);
         reportsProxy.setExtraParam('course_section', sectionCode);
         reportsStore.load();
+
+        // enable section data form
+        sectionNotesForm.enable();
+        sectionNotesForm.loadRecord(sectionDataRecord);
+        me.syncSectionNotesFormButtons();
+
     },
 
     onStudentsStoreLoad: function() {
@@ -310,21 +329,29 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
 
     onSectionNotesSaveBtnClick: function() {
         var sectionNotesForm = this.getSectionNotesForm(),
-            sectionNotes = sectionNotesForm.getRecord();
+            sectionDataRecord = sectionNotesForm.getRecord(),
+            selectedSection = this.getSectionsGrid().getSelection()[0],
+            section = this.getProgressTermsSectionsStore().getById(selectedSection ? selectedSection.getId() : null);
 
-        sectionNotesForm.updateRecord(sectionNotes);
+        if (!section) {
+            return;
+        }
 
-        if (!sectionNotes.dirty) {
+        sectionNotesForm.updateRecord(sectionDataRecord);
+
+        if (!sectionDataRecord.dirty) {
             return;
         }
 
         sectionNotesForm.setLoading('Saving notes&hellip;');
-        sectionNotes.save({
-            callback: function(sectionNotes, operation, success) {
+        sectionDataRecord.save({
+            callback: function(sectionData, operation, success) {
                 sectionNotesForm.setLoading(false);
 
                 if (success) {
-                    sectionNotesForm.loadRecord(sectionNotes);
+                    sectionNotesForm.loadRecord(sectionData);
+                    debugger;
+                    section.set('SectionData', sectionData.getData(), { dirty: false });
                 } else {
                     Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
                 }
@@ -498,6 +525,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
             return; // setting the term will call this function again via the change event
         }
 
+        sectionsProxy.setExtraParam('include', 'SectionData');
         sectionsProxy.setExtraParam('enrolled_user', myClassesOnlyCheckbox.getValue() ? 'current' : '');
         sectionsProxy.setExtraParam('term', term);
         sectionsStore.loadIfDirty();

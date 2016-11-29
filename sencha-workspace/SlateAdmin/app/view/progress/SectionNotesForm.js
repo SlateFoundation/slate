@@ -1,10 +1,14 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.view.progress.terms.SectionNotesForm',{
+Ext.define('SlateAdmin.view.progress.SectionNotesForm', {
     extend: 'Ext.form.Panel',
-    xtype: 'progress-terms-sectionnotesform',
+    xtype: 'progress-sectionnotesform',
     requires: [
         'Ext.form.field.TextArea'
     ],
+
+    config: {
+        fieldName: null
+    },
 
 
     title: 'Section Notes',
@@ -18,19 +22,27 @@ Ext.define('SlateAdmin.view.progress.terms.SectionNotesForm',{
         anchor: '100%',
         labelAlign: 'top'
     },
-    items: [{
-        xtype: 'textareafield',
-        name: 'Notes',
-        flex: 1,
-        emptyText: 'Optional notes to include in every student\'s report'
-    }],
+
     buttons: [{
         itemId: 'revertBtn',
 
         text: 'Revert'
-    },{
+    }, {
         itemId: 'saveBtn',
 
         text: 'Save'
-    }]
+    }],
+
+    initComponent: function() {
+        var me = this;
+
+        me.items = [{
+            xtype: 'textareafield',
+            name: me.getFieldName(),
+            flex: 1,
+            emptyText: 'Optional notes to include in every student\'s report'
+        }];
+
+        me.callParent(arguments);
+    }
 });
