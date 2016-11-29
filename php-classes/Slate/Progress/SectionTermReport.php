@@ -2,14 +2,14 @@
 
 namespace Slate\Progress;
 
-use Slate\Progress\Narratives\SectionNotes;
+use Slate\Progress\SectionData;
 
 class SectionTermReport extends AbstractSectionTermReport
 {
     public static $tableName = 'section_term_reports';
     public static $singularNoun = 'section term report';
     public static $pluralNoun = 'section term reports';
-    public static $collectionRoute = '/progress/section-term-reports';
+    public static $collectionRoute = '/progress/terms/reports';
 
     public static $printTemplate = 'print';
 
@@ -29,7 +29,7 @@ class SectionTermReport extends AbstractSectionTermReport
     ];
 
     public static $relationships = [
-        'SectionNotes' => [
+        'SectionData' => [
             'type' => 'one-one',
             'class' => SectionTermData::class,
             'link' => ['TermID', 'SectionID']
