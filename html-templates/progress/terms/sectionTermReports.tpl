@@ -201,9 +201,9 @@ pre {
                 <dd class="grade">{$Report->Grade}</dd>
             {/if}
 
-            {if $Report->SectionNotes && trim($Report->SectionNotes->Notes)}
+            {if $Report->SectionData && trim($Report->SectionData->TermReportNotes)}
                 <dt class="comments">Section Notes</dt>
-                <dd class="comments">{$Report->SectionNotes->Notes|escape|markdown}</dd>
+                <dd class="comments">{$Report->SectionData->TermReportNotes|escape|markdown}</dd>
             {/if}
 
             {if $Report->Assessment}
