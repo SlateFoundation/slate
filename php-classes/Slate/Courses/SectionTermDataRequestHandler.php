@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Progress;
+namespace Slate\Courses;
 
 class SectionTermDataRequestHandler extends \RecordsRequestHandler
 {

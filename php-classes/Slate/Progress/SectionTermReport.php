@@ -2,7 +2,7 @@
 
 namespace Slate\Progress;
 
-use Slate\Progress\SectionData;
+use Slate\Courses\SectionTermData;
 
 class SectionTermReport extends AbstractSectionTermReport
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Progress;
+namespace Slate\Courses;
 
 class SectionTermData extends \VersionedRecord
 {
@@ -11,7 +11,7 @@ class SectionTermData extends \VersionedRecord
     public static $tableName = 'section_term_data';
     public static $singularNoun = 'section term datum';
     public static $pluralNoun = 'section term notes';
-    public static $collectionRoute = '/progress/section-data';
+    public static $collectionRoute = '/section-data';
     public static $updateOnDuplicateKey = true;
     public static $trackModified = true;
 
@@ -45,7 +45,7 @@ class SectionTermData extends \VersionedRecord
     public static $relationships = [
         'Section' => [
             'type' => 'one-one',
-            'class' => \Slate\Courses\Section::class,
+            'class' => Section::class,
             'local' => 'SectionID'
         ],
         'Term' => [
