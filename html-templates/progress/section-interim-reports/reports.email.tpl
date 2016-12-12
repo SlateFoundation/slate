@@ -30,9 +30,9 @@
 
         <h2>{$subject|escape}</h2>
 
-        {foreach item=Interim from=$data}
+        {foreach item=Report from=$data}
             <div style="margin: 1em 0; background-color: #ecf5f9; border: 1px solid #789dab; padding: 1em; border-radius: .25em;">
-                {$Section = $Interim->Section}
+                {$Section = $Report->Section}
                 {$Instructor = $Section->Instructors.0}
 
                 <h3 style="margin: 0 0 1em; color: #004b66;">{$Section->Title}</h3>
@@ -42,7 +42,7 @@
                         <span style="color: #5e6366; font-size: smaller; font-style: italic;">Student</span>
                         <br />
                         <span style="display: block; margin-left: 1.5em;">
-                            <strong>{$Interim->Student->FullName|escape}</strong>
+                            <strong>{$Report->Student->FullName|escape}</strong>
                         </span>
                     </div>
                 {/if}
@@ -52,7 +52,7 @@
                         <span style="color: #5e6366; font-size: smaller; font-style: italic;">Term</span>
                         <br />
                         <span style="display: block; margin-left: 1.5em;">
-                            <strong>{$Interim->Term->Title|escape}</strong>
+                            <strong>{$Report->Term->Title|escape}</strong>
                         </span>
                     </div>
                 {/if}
@@ -68,26 +68,26 @@
                     </span>
                 </div>
 
-                {if $Interim->Grade}
+                {if $Report->Grade}
                     <div style="margin: 1em 0;">
                         <span style="color: #5e6366; font-size: smaller; font-style: italic;">Current Grade</span>
                         <br />
                         <span style="display: block; margin-left: 1.5em;">
-                            <strong>{$Interim->Grade}</strong>
+                            <strong>{$Report->Grade}</strong>
                         </span>
                     </div>
                 {/if}
 
-                {if $Interim->Notes}
+                {if $Report->Notes}
                     <span style="color: #5e6366; font-size: smaller; font-style: italic;">Notes</span>
                     <br />
                     <div style="display: block; margin: 0 1.5em;">
-                        {if $Interim->NotesFormat == 'html'}
-                            {$Interim->Notes}
-                        {elseif $Interim->NotesFormat == 'markdown'}
-                            {$Interim->Notes|escape|markdown}
+                        {if $Report->NotesFormat == 'html'}
+                            {$Report->Notes}
+                        {elseif $Report->NotesFormat == 'markdown'}
+                            {$Report->Notes|escape|markdown}
                         {else}
-                            {$Interim->Notes|escape}
+                            {$Report->Notes|escape}
                         {/if}
                     </div>
                 {/if}
