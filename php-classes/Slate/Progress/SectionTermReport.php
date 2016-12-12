@@ -9,7 +9,7 @@ class SectionTermReport extends AbstractSectionTermReport
     public static $tableName = 'section_term_reports';
     public static $singularNoun = 'section term report';
     public static $pluralNoun = 'section term reports';
-    public static $collectionRoute = '/progress/terms/reports';
+    public static $collectionRoute = '/progress/section-term-reports';
 
     public static $printTemplate = 'print';
 
