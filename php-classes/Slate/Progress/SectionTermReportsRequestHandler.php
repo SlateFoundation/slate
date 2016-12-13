@@ -57,6 +57,11 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
+    public static function handlePrintRequest()
+    {
+        return static::handleBrowseRequest([], [], static::$printTemplate, []);
+    }
+
     public static function handleAuthorsRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
@@ -77,7 +82,6 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
         $responseData = [];
-
 
         // send previewed emails
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -152,10 +156,8 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
             $recipients = explode(',', $_REQUEST['recipients']);
         }
 
-
         // fetch all term reports
         $reports = SectionTermReport::getAllByWhere($conditions);
-
 
         // group interims by student
         $students = [];
@@ -232,78 +234,10 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
             die('No reports specified');
         }
 
-
         // fetch all report instances
         $reports = SectionTermReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
 
         return static::respond('reports.email', static::getEmailTemplateData($reports));
-    }
-
-    public static function handlePrintRequest()
-    {
-        $Session = $GLOBALS['Session'];
-
-        $Session->requireAccountLevel('Staff');
-
-        if (empty($_REQUEST['termID']) || !is_numeric($_REQUEST['termID'])) {
-            $Term = Term::getCurrent();
-        } elseif (!$Term = Term::getByID($_REQUEST['termID'])) {
-            return static::throwNotFoundError('Term not found');
-        }
-
-        $filename = 'Narrative Reports';
-        $where = [
-            'TermID' => $Term->ID
-        ];
-
-        if (!empty($_REQUEST['sectionID']) && is_numeric($_REQUEST['sectionID'])) {
-            $where['CourseSectionID'] = $_REQUEST['sectionID'];
-        }
-
-        if (!empty($_REQUEST['advisorID']) && is_numeric($_REQUEST['advisorID']) && ($Advisor = Person::getByID($_REQUEST['advisorID']))) {
-            $where[] = 'StudentID IN (SELECT Student.ID FROM people Student WHERE Student.AdvisorID = '.$_REQUEST['advisorID'].')';
-            $filename .= ' - '.$Advisor->LastName;
-        }
-
-        if (!empty($_REQUEST['authorID']) && is_numeric($_REQUEST['authorID']) && ($Author = Person::getByID($_REQUEST['authorID']))) {
-            $where[] = 'CreatorID = '.$_REQUEST['authorID'];
-            $filename .= ' - by '.$Author->Username;
-        }
-
-        if (!empty($_REQUEST['studentID']) && is_numeric($_REQUEST['studentID']) && ($Student = Person::getByID($_REQUEST['studentID']))) {
-            $where['StudentID'] = $_REQUEST['studentID'];
-            $filename .= ' - '.$Student->Username;
-        }
-
-        $html = \TemplateResponse::getSource(static::$printTemplate, [
-            'Term' => $Term
-            ,'data' => SectionTermReport::getAllByWhere($where, [
-                'order' => '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)'
-                ,'limit' => (!empty($_REQUEST['limit']) && is_numeric($_REQUEST['limit'])) ? $_REQUEST['limit'] : false
-            ])
-        ]);
-
-        if (static::peekPath() == 'preview') {
-            die($html);
-        }
-
-        $filename .= ' ('.date('Y-m-d').')';
-        $filePath = tempnam('/tmp', 'slate_nr_');
-
-        file_put_contents($filePath.'.html', $html);
-        $command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" wkhtmltopdf \"$filePath.html\" \"$filePath.pdf\"";
-
-
-        if (static::peekPath() == 'stage') {
-            die($command);
-        } else {
-            exec($command);
-
-            header('Content-Type: application/pdf');
-            header("Content-Disposition: attachment; filename=\"$filename.pdf\"");
-            readfile($filePath.'.pdf');
-            exit();
-        }
     }
 
 
@@ -333,19 +267,20 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 
     protected static function applyRequestFilters(array &$conditions = [], array &$responseData = [])
     {
+        // always filter by term
         if (!empty($_REQUEST['term'])) {
-            if ($_REQUEST['term'] == 'current') {
-                if (!$Term = Term::getClosest()) {
-                    return static::throwInvalidRequestError('No current term could be found');
-                }
-            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
+            if (!$Term = Term::getByHandle($_REQUEST['term'])) {
                 return static::throwNotFoundError('term not found');
             }
-
-            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
-            $responseData['term'] = $Term;
+        } else {
+            $Term = Term::getClosest();
         }
-            // optionally filter by advisor
+
+        $conditions['TermID'] = ['values' => $Term->getRelatedTermIDs()];
+        $responseData['term'] = $Term;
+
+
+        // optionally filter by advisor
         if (!empty($_REQUEST['advisor'])) {
             if (!$Advisor = PeopleRequestHandler::getRecordByHandle($_REQUEST['advisor'])) {
                 return static::throwNotFoundError('advisor not found');

@@ -43,6 +43,8 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
                 return static::handleEmailsRequest();
             case '*email-preview':
                 return static::handleEmailPreviewRequest();
+            case '*print':
+                return static::handlePrintRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -53,6 +55,11 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
         static::applyRequestFilters($conditions, $responseData);
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+    }
+
+    public static function handlePrintRequest()
+    {
+        return static::handleBrowseRequest([], [], static::$printTemplate, []);
     }
 
     public static function handleAuthorsRequest()
@@ -75,7 +82,6 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
         $responseData = [];
-
 
         // send previewed emails
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -150,10 +156,8 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             $recipients = explode(',', $_REQUEST['recipients']);
         }
 
-
         // fetch all interim reports
         $reports = SectionInterimReport::getAllByWhere($conditions);
-
 
         // group interims by student
         $students = [];
@@ -230,10 +234,8 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             die('No reports specified');
         }
 
-
         // fetch all report instances
         $reports = SectionInterimReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
-
 
         return static::respond('reports.email', static::getEmailTemplateData($reports));
     }
