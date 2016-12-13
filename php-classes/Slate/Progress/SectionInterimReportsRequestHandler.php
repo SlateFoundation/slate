@@ -19,12 +19,14 @@ use Emergence\Mailer\Mailer;
 
 class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 {
+    public static $printTemplate = 'sectionInterimReports';
+
     public static $recordClass = SectionInterimReport::class;
     public static $accountLevelBrowse = 'Staff';
-	public static $accountLevelRead = 'Staff';
-	public static $accountLevelWrite = 'Staff';
-	public static $accountLevelAPI = 'Staff';
-	public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)';
+    public static $accountLevelRead = 'Staff';
+    public static $accountLevelWrite = 'Staff';
+    public static $accountLevelAPI = 'Staff';
+    public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)';
     public static $userResponseModes = [
         'application/json' => 'json',
         'text/csv' => 'csv',
@@ -90,14 +92,14 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             $recipientsCount = 0;
 
             foreach ($emails AS $email) {
-                $interims = [];
+                $reports = [];
                 $recipients = [];
 
                 foreach ($email['reports'] AS $reportId) {
-                    $Interim = SectionInterimReport::getByID($reportId);
+                    $Report = SectionTermReport::getByID($reportId);
 
-                    if ($Interim->Status == 'published') {
-                        $interims[] = $Interim;
+                    if ($Report->Status == 'published') {
+                        $reports[] = $Report;
                     }
                 }
 
@@ -110,7 +112,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
                 $recipientsCount += count($recipients);
 
                 // prepare template data
-                $emailData = static::getEmailTemplateData($interims);
+                $emailData = static::getEmailTemplateData($reports);
 
                 // add central achive recipient
                 if (Slate::$userEmailDomain) {
@@ -149,22 +151,22 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
         }
 
 
-        // fetch all interims
-        $interims = SectionInterimReport::getAllByWhere($conditions);
+        // fetch all interim reports
+        $reports = SectionInterimReport::getAllByWhere($conditions);
 
 
         // group interims by student
         $students = [];
-        foreach ($interims AS $Interim) {
-            if (!isset($students[$Interim->StudentID])) {
-                $students[$Interim->StudentID] = [
-                    'student' => $Interim->Student,
+        foreach ($reports AS $Report) {
+            if (!isset($students[$Report->StudentID])) {
+                $students[$Report->StudentID] = [
+                    'student' => $Report->Student,
                     'recipients' => [],
                     'reports' => []
                 ];
             }
 
-            $students[$Interim->StudentID]['reports'][] = $Interim->ID;
+            $students[$Report->StudentID]['reports'][] = $Report->ID;
         }
 
 
@@ -230,32 +232,32 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 
 
         // fetch all report instances
-        $interims = SectionInterimReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
+        $reports = SectionInterimReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
 
 
-        return static::respond('reports.email', static::getEmailTemplateData($interims));
+        return static::respond('reports.email', static::getEmailTemplateData($reports));
     }
 
 
     // internal library
-    protected static function getEmailTemplateData(array $interims)
+    protected static function getEmailTemplateData(array $reports)
     {
         // collect terms and students
         $terms = [];
         $students = [];
 
-        foreach ($interims AS $Interim) {
-            if (!in_array($Interim->Term, $terms)) {
-                $terms[] = $Interim->Term;
+        foreach ($reports AS $Report) {
+            if (!in_array($Report->Term, $terms)) {
+                $terms[] = $Report->Term;
             }
 
-            if (!in_array($Interim->Student, $students)) {
-                $students[] = $Interim->Student;
+            if (!in_array($Report->Student, $students)) {
+                $students[] = $Report->Student;
             }
         }
 
         return [
-            'data' => $interims,
+            'data' => $reports,
             'terms' => $terms,
             'students' => $students
         ];

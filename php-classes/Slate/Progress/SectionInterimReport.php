@@ -2,7 +2,6 @@
 
 namespace Slate\Progress;
 
-
 class SectionInterimReport extends AbstractSectionTermReport
 {
     public static $tableName = 'section_interim_reports';

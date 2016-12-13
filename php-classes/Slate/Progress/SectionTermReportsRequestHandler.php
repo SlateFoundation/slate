@@ -12,16 +12,21 @@ use JSON;
 use Emergence\People\Person;
 use Emergence\People\PeopleRequestHandler;
 use Emergence\Mailer\Mailer;
+#use Emergence\Dwoo\Engine AS DwooEngine;
+#use Emergence\CRM\Message;
+#use Emergence\CRM\MessageRecipient;
 
 
 class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 {
+    public static $printTemplate = 'sectionTermReports';
+
     public static $recordClass = SectionTermReport::class;
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
-	public static $accountLevelWrite = 'Staff';
-	public static $accountLevelAPI = 'Staff';
-	public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)';
+    public static $accountLevelWrite = 'Staff';
+    public static $accountLevelAPI = 'Staff';
+    public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)';
     public static $userResponseModes = [
         'application/json' => 'json',
         'text/csv' => 'csv',
@@ -89,14 +94,14 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
             $recipientsCount = 0;
 
             foreach ($emails AS $email) {
-                $interims = [];
+                $reports = [];
                 $recipients = [];
 
                 foreach ($email['reports'] AS $reportId) {
-                    $Interim = SectionTermReport::getByID($reportId);
+                    $Report = SectionTermReport::getByID($reportId);
 
-                    if ($Interim->Status == 'published') {
-                        $interims[] = $Interim;
+                    if ($Report->Status == 'published') {
+                        $reports[] = $Report;
                     }
                 }
 
@@ -109,7 +114,7 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
                 $recipientsCount += count($recipients);
 
                 // prepare template data
-                $emailData = static::getEmailTemplateData($interims);
+                $emailData = static::getEmailTemplateData($reports);
 
                 // add central achive recipient
                 if (Slate::$userEmailDomain) {
@@ -148,22 +153,22 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
         }
 
 
-        // fetch all interims
-        $interims = SectionTermReport::getAllByWhere($conditions);
+        // fetch all term reports
+        $reports = SectionTermReport::getAllByWhere($conditions);
 
 
         // group interims by student
         $students = [];
-        foreach ($interims AS $Interim) {
-            if (!isset($students[$Interim->StudentID])) {
-                $students[$Interim->StudentID] = [
-                    'student' => $Interim->Student,
+        foreach ($reports AS $Report) {
+            if (!isset($students[$Report->StudentID])) {
+                $students[$Report->StudentID] = [
+                    'student' => $Report->Student,
                     'recipients' => [],
                     'reports' => []
                 ];
             }
 
-            $students[$Interim->StudentID]['reports'][] = $Interim->ID;
+            $students[$Report->StudentID]['reports'][] = $Report->ID;
         }
 
 
@@ -229,10 +234,9 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 
 
         // fetch all report instances
-        $interims = SectionTermReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
+        $reports = SectionTermReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
 
-
-        return static::respond('reports.email', static::getEmailTemplateData($interims));
+        return static::respond('reports.email', static::getEmailTemplateData($reports));
     }
 
     public static function handlePrintRequest()
@@ -271,7 +275,7 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
             $filename .= ' - '.$Student->Username;
         }
 
-        $html = \TemplateResponse::getSource(SectionTermReport::$printTemplate, [
+        $html = \TemplateResponse::getSource(static::$printTemplate, [
             'Term' => $Term
             ,'data' => SectionTermReport::getAllByWhere($where, [
                 'order' => '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)'
@@ -304,24 +308,24 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 
 
     // internal library
-    protected static function getEmailTemplateData(array $interims)
+    protected static function getEmailTemplateData(array $reports)
     {
         // collect terms and students
         $terms = [];
         $students = [];
 
-        foreach ($interims AS $Interim) {
-            if (!in_array($Interim->Term, $terms)) {
-                $terms[] = $Interim->Term;
+        foreach ($reports AS $Report) {
+            if (!in_array($Report->Term, $terms)) {
+                $terms[] = $Report->Term;
             }
 
-            if (!in_array($Interim->Student, $students)) {
-                $students[] = $Interim->Student;
+            if (!in_array($Report->Student, $students)) {
+                $students[] = $Report->Student;
             }
         }
 
         return [
-            'data' => $interims,
+            'data' => $reports,
             'terms' => $terms,
             'students' => $students
         ];
@@ -340,8 +344,50 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 
             $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
             $responseData['term'] = $Term;
+
+            // optionally filter by advisor
+        if (!empty($_REQUEST['advisor'])) {
+            if (!$Advisor = PeopleRequestHandler::getRecordByHandle($_REQUEST['advisor'])) {
+                return static::throwNotFoundError('advisor not found');
+            }
+
+            $advisorStudentIds = DB::allValues(
+                'ID',
+                'SELECT ID FROM `%s` WHERE AdvisorID = %u',
+                [
+                    Person::$tableName,
+                    $Advisor->ID
+                ]
+            );
+
+            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) ? implode(',', $advisorStudentIds) : 'NULL').')';
+            $responseData['advisor'] = $Advisor;
         }
 
+
+        // optionally filter by author
+        if (!empty($_REQUEST['author'])) {
+            if (!$Author = PeopleRequestHandler::getRecordByHandle($_REQUEST['author'])) {
+                return static::throwNotFoundError('author not found');
+            }
+
+            $conditions['CreatorID'] = $Author->ID;
+            $responseData['author'] = $Author;
+        }
+
+
+        // optionally filter by student
+        if (!empty($_REQUEST['student'])) {
+            if (!$Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student'])) {
+                return static::throwNotFoundError('student not found');
+            }
+
+            $conditions['StudentID'] = $Student->ID;
+            $responseData['student'] = $Student;
+        }
+
+
+        // optionally filter by course section
         if (!empty($_REQUEST['course_section'])) {
             if (!$Section = Section::getByHandle($_REQUEST['course_section'])) {
                 return static::throwNotFoundError('course_section not found');
@@ -351,6 +397,8 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
             $responseData['course_section'] = $Section;
         }
 
+
+        // optionally filter by list of students
         if (!empty($_REQUEST['students'])) {
             $studentIds = [];
 
@@ -361,6 +409,8 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
             $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
         }
 
+
+        // optionally filter by status
         if (!empty($_REQUEST['status'])) {
             if (!in_array($_REQUEST['status'], SectionTermReport::getFieldOptions('Status', 'values'))) {
                 return static::throwInvalidRequestError('Invalid status');

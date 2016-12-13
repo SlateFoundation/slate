@@ -3,6 +3,7 @@
 namespace Slate\Progress;
 
 use Slate\Courses\Section;
+use Slate\Courses\SectionTermData;
 use Slate\Term;
 
 
@@ -31,6 +32,11 @@ abstract class AbstractSectionTermReport extends AbstractReport
         'Term' => [
             'type' => 'one-one',
             'class' => Term::class
+        ],
+        'SectionTermData' => [
+            'type' => 'one-one',
+            'class' => SectionTermData::class,
+            'link' => ['TermID', 'SectionID']
         ]
     ];
 
@@ -49,6 +55,7 @@ abstract class AbstractSectionTermReport extends AbstractReport
 
     public static $dynamicFields = [
         'Section',
-        'Term'
+        'Term',
+        'SectionTermData'
     ];
 }
