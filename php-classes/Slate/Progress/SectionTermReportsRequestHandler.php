@@ -344,7 +344,7 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 
             $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
             $responseData['term'] = $Term;
-
+        }
             // optionally filter by advisor
         if (!empty($_REQUEST['advisor'])) {
             if (!$Advisor = PeopleRequestHandler::getRecordByHandle($_REQUEST['advisor'])) {
