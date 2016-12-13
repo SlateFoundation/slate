@@ -471,6 +471,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
                     me.syncStudent(student);
                     student.endEdit();
 
+                    editorForm.setRecord(null);
                     editorForm.loadRecord(report);
 
                     me.fireEvent('reportsave', report);
