@@ -121,7 +121,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Email', {
         }
 
         emailPreviewCmp.setLoading('Downloading reports&hellip;');
-        emailPreviewCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/terms/reports/*email-preview?reports='+reportIds.join(','));
+        emailPreviewCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports/*email-preview?reports='+reportIds.join(','));
     },
 
     onSendEmailsClick: function(sendEmailsBtn) {
@@ -150,7 +150,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Email', {
 
             Slate.API.request({
                 method: 'POST',
-                url: '/progress/terms/reports/*emails',
+                url: '/progress/section-term-reports/*emails',
                 jsonData: emails,
                 callback: function(options, success, response) {
                     var data = response.data || {};

@@ -105,7 +105,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
 
         Slate.API.request({
             method: 'GET',
-            url: '/progress/terms/reports',
+            url: '/progress/section-term-reports',
             params: Ext.apply({
                 include: 'Student.Advisor,Section.Teachers'
             }, this.buildFilters()),
@@ -173,6 +173,6 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
         }
 
         printoutCmp.setLoading('Loading printout&hellip;');
-        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/terms/reports?'+Ext.Object.toQueryString(this.buildFilters()));
+        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports/*print?'+Ext.Object.toQueryString(this.buildFilters()));
     }
 });

@@ -11,7 +11,7 @@ Ext.define('SlateAdmin.store.progress.terms.Authors', {
         pageSize: false,
         proxy: {
             type: 'slate-records',
-            url: '/progress/terms/reports/*authors'
+            url: '/progress/section-term-reports/*authors'
         },
         sorters: [
             {

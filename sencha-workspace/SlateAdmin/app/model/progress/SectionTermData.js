@@ -20,7 +20,7 @@ Ext.define('SlateAdmin.model.progress.SectionTermData', {
         {
             name: "Class",
             type: "string",
-            defaultValue: "Slate\\Progress\\SectionTermData"
+            defaultValue: "Slate\\Courses\\SectionTermData"
         },
         {
             name: "Created",
@@ -71,6 +71,6 @@ Ext.define('SlateAdmin.model.progress.SectionTermData', {
 
     proxy: {
         type: 'slaterecords',
-        url: '/progress/terms/section-data'
+        url: '/progress/section-data'
     }
 });

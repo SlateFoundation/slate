@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.store.progress.terms.Emails', {
         pageSize: false,
         proxy: {
             type: 'slate-records',
-            url: '/progress/terms/reports/*emails'
+            url: '/progress/section-term-reports/*emails'
         },
         sorters: [
             {

@@ -61,6 +61,6 @@ Ext.define('SlateAdmin.model.progress.terms.SectionNote', {
 
     proxy: {
         type: 'slaterecords',
-        url: '/progress/terms/section-data'
+        url: '/progress/section-data'
     }
 });
