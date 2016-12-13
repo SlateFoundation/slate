@@ -86,7 +86,7 @@ class InvitationsRequestHandler extends \RequestHandler
         }
 
         // pre-flight loop over people to ensure they're all valid
-        $people = array();
+        $people = [];
         foreach($_POST['people'] AS $personID) {
             if (!is_numeric($personID) || !($Person = Person::getByID($personID))) {
                 return static::throwInvalidRequestError('One or more of the requested invitation recipients was not found in the database.');
