@@ -10,7 +10,7 @@ class Invitation extends \ActiveRecord
     public static $singularNoun = 'invitation';
     public static $pluralNoun = 'invitations';
 
-    public static $fields = array(
+    public static $fields = [
         'RecipientID' => [
             'type' => 'uint',
             'index' => true
@@ -31,7 +31,7 @@ class Invitation extends \ActiveRecord
             'type' => 'timestamp',
             'notnull' => false
         ]
-    );
+    ];
 
     public static $relationships = [
         'Recipient' => [
