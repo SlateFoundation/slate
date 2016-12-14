@@ -73,6 +73,7 @@
     -webkit-font-smoothing: antialiased;
 }
 .x-btn-wrap-light-medium.x-btn-arrow-right::after {
+    background-image: none;
     color: $color;
     content: '\f0d7'; // fa-caret-down
     font-family: FontAwesome;
