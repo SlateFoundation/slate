@@ -10,11 +10,12 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         'Terms',
         'progress.terms.Sections',
         'progress.terms.Students',
-        'progress.terms.Reports'
+        'progress.terms.Reports',
+        'courses.SectionTermData'
     ],
 
     models: [
-        'progress.SectionTermData'
+        'course.SectionTermData'
     ],
 
     refs: {
@@ -104,6 +105,9 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
             },
             '#progress.terms.Students': {
                 load: 'onStudentsStoreLoad'
+            },
+            '#courses.SectionTermData': {
+                load: 'onSectionTermDataStoreLoad'
             }
         }
     },
@@ -206,20 +210,49 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         }
     },
 
+    onSectionTermDataStoreLoad: function() {
+        var me = this,
+            store = me.getCoursesSectionTermDataStore(),
+            proxyParams = store.getProxy().getExtraParams(),
+            sectionNotesForm = me.getSectionNotesForm(),
+            sectionDataRecord = store.getAt(0),
+            sectionStore = me.getProgressTermsSectionsStore(),
+            termStore = me.getTermsStore(),
+            section, term;
+
+        // create record from store request params
+        if (!sectionDataRecord) {
+            section = sectionStore.findRecord('Code', proxyParams.course_section);
+            term = termStore.findRecord('Handle', proxyParams.term);
+
+            if (!term || !section) {
+                return;
+            }
+
+            sectionDataRecord = me.getCourseSectionTermDataModel().create({
+                SectionID: section.getId(),
+                TermID: term.getId()
+            });
+        }
+
+        // enable section data form
+        sectionNotesForm.enable();
+        sectionNotesForm.loadRecord(sectionDataRecord);
+
+        me.syncSectionNotesFormButtons();
+    },
+
     onSectionSelect: function (sectionsGrid, section) {
         var me = this,
             studentsGrid = me.getStudentsGrid(),
             studentsStore = studentsGrid.getStore(),
             reportsStore = me.getProgressTermsReportsStore(),
             reportsProxy = reportsStore.getProxy(),
+            sectionTermDataStore = me.getCoursesSectionTermDataStore(),
             editorForm = me.getEditorForm(),
             sectionNotesForm = me.getSectionNotesForm(),
             termHandle = me.getTermSelector().getValue(),
-            sectionCode = section.get('Code'),
-            sectionDataRecord = me.getProgressSectionTermDataModel().create(section.get('SectionData') || {
-                SectionID: section.getId(),
-                TermID: section.get('TermID')
-            });
+            sectionCode = section.get('Code');
 
         // reset stores
         studentsStore.removeAll();
@@ -240,10 +273,11 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         reportsProxy.setExtraParam('course_section', sectionCode);
         reportsStore.load();
 
-        // enable section data form
-        sectionNotesForm.enable();
-        sectionNotesForm.loadRecord(sectionDataRecord);
-        me.syncSectionNotesFormButtons();
+        sectionNotesForm.reset(true);
+        sectionTermDataStore.getProxy().setUrl('/section-data');
+        sectionTermDataStore.getProxy().setExtraParam('term', termHandle);
+        sectionTermDataStore.getProxy().setExtraParam('course_section', sectionCode);
+        sectionTermDataStore.load();
 
     },
 
@@ -524,7 +558,6 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
             return; // setting the term will call this function again via the change event
         }
 
-        sectionsProxy.setExtraParam('include', 'SectionData');
         sectionsProxy.setExtraParam('enrolled_user', myClassesOnlyCheckbox.getValue() ? 'current' : '');
         sectionsProxy.setExtraParam('term', term);
         sectionsStore.loadIfDirty();
