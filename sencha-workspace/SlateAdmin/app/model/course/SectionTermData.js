@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.progress.SectionTermData', {
+Ext.define('SlateAdmin.model.course.SectionTermData', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records',
@@ -71,6 +71,6 @@ Ext.define('SlateAdmin.model.progress.SectionTermData', {
 
     proxy: {
         type: 'slaterecords',
-        url: '/progress/section-data'
+        url: '/section-data'
     }
 });
