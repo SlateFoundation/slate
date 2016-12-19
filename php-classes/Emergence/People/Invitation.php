@@ -25,11 +25,11 @@ class Invitation extends \ActiveRecord
         ],
         'Expires' => [
             'type' => 'timestamp',
-            'notnull' => false
+            'default' => null
         ],
         'Used' => [
             'type' => 'timestamp',
-            'notnull' => false
+            'default' => null
         ]
     ];
 
