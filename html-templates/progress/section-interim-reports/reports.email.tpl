@@ -21,9 +21,9 @@
         <title>{$subject|escape}</title>
 
         <style type="text/css">
-            .interim a:visited { color: #a35500 !important; }
-            .interim a:hover { color: #6a3700 !important; }
-            .interim a:active { color: #6a3700 !important; }
+            a:visited { color: #a35500 !important; }
+            a:hover { color: #6a3700 !important; }
+            a:active { color: #6a3700 !important; }
         </style>
     </head>
     <body style="color: #333; font-family: Georgia, serif; font-size: 16px; line-height: 1.3;">
