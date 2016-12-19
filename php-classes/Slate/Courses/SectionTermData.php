@@ -45,8 +45,7 @@ class SectionTermData extends \VersionedRecord
     public static $relationships = [
         'Section' => [
             'type' => 'one-one',
-            'class' => Section::class,
-            'local' => 'SectionID'
+            'class' => Section::class
         ],
         'Term' => [
             'type' => 'one-one',
