@@ -1,4 +1,8 @@
-{$from = $.User->EmailRecipient}
+{if count($students) == 1 && $students[0]->Advisor}
+    {$from = $students[0]->Advisor->EmailRecipient}
+{else}
+    {$from = $.User->EmailRecipient}
+{/if}
 
 {capture assign=subject}{strip}
 
