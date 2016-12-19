@@ -63,7 +63,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
         // create phantom invitation
         $Invitation = Invitation::create([
-            'Recipient' =>$Recipient
+            'Recipient' => $Recipient
         ]);
 
         $emailData = Mailer::renderTemplate('loginInvitation', [
@@ -87,7 +87,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
         // pre-flight loop over people to ensure they're all valid
         $people = [];
-        foreach($_POST['people'] AS $personID) {
+        foreach ($_POST['people'] AS $personID) {
             if (!is_numeric($personID) || !($Person = Person::getByID($personID))) {
                 return static::throwInvalidRequestError('One or more of the requested invitation recipients was not found in the database.');
             }
@@ -100,7 +100,7 @@ class InvitationsRequestHandler extends \RequestHandler
         }
 
         // create and send invitations
-        foreach($people AS $Person) {
+        foreach ($people AS $Person) {
             // revoke any existing
             try {
                 DB::nonQuery(
