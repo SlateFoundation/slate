@@ -89,7 +89,7 @@ Ext.define('Slate.model.progress.SectionInterimReport', {
             mapping: 'Student.LastName'
         },
 
-        // local-only fileds
+        // local-only fields
         {
             name: 'student',
             persist: false
