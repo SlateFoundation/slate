@@ -13,58 +13,58 @@ Ext.define('SlateAdmin.model.course.SectionTermData', {
 
     fields: [
         {
-            name: "ID",
-            type: "int",
+            name: 'ID',
+            type: 'int',
             allowNull: true
         },
         {
-            name: "Class",
-            type: "string",
-            defaultValue: "Slate\\Courses\\SectionTermData"
+            name: 'Class',
+            type: 'string',
+            defaultValue: 'Slate\\Courses\\SectionTermData'
         },
         {
-            name: "Created",
-            type: "date",
-            dateFormat: "timestamp",
+            name: 'Created',
+            type: 'date',
+            dateFormat: 'timestamp',
             allowNull: true
         },
         {
-            name: "CreatorID",
-            type: "int",
+            name: 'CreatorID',
+            type: 'int',
             allowNull: true
         },
         {
-            name: "RevisionID",
-            type: "int",
+            name: 'RevisionID',
+            type: 'int',
             allowNull: true
         },
         {
-            name: "Modified",
-            type: "date",
-            dateFormat: "timestamp",
+            name: 'Modified',
+            type: 'date',
+            dateFormat: 'timestamp',
             allowNull: true
         },
         {
-            name: "ModifierID",
-            type: "int",
+            name: 'ModifierID',
+            type: 'int',
             allowNull: true
         },
         {
-            name: "SectionID",
-            type: "int"
+            name: 'SectionID',
+            type: 'int'
         },
         {
-            name: "TermID",
-            type: "int"
+            name: 'TermID',
+            type: 'int'
         },
         {
-            name: "TermReportNotes",
-            type: "string",
+            name: 'TermReportNotes',
+            type: 'string',
             allowNull: true
         },
         {
-            name: "InterimReportNotes",
-            type: "string",
+            name: 'InterimReportNotes',
+            type: 'string',
             allowNull: true
         }
     ],
