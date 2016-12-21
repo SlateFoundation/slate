@@ -4,7 +4,8 @@ Ext.define('SlateAdmin.view.progress.interims.Manager', {
     requires: [
         'SlateAdmin.view.progress.interims.SectionsGrid',
         'SlateAdmin.view.progress.interims.StudentsGrid',
-        'SlateAdmin.view.progress.interims.EditorForm'
+        'SlateAdmin.view.progress.interims.EditorForm',
+        'SlateAdmin.view.progress.SectionNotesForm'
     ],
 
 
@@ -31,6 +32,19 @@ Ext.define('SlateAdmin.view.progress.interims.Manager', {
             flex: 1,
 
             xtype: 'progress-interims-editorform',
+            disabled: true
+        },
+        {
+            region: 'south',
+            split: true,
+
+            xtype: 'progress-sectionnotesform',
+            fieldName: 'InterimReportNotes',
+            collapsible: true,
+            collapsed: true,
+            titleCollapse: true,
+            stateful: true,
+            stateId: 'progress-interims-sectionnotesform',
             disabled: true
         }
     ]
