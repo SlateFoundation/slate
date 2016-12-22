@@ -10,5 +10,5 @@
 {/block}
 
 {block body}
-    {include includes/site.user-tools.tpl}
+    {include includes/site.user-tools.tpl fluid=true}
 {/block}
