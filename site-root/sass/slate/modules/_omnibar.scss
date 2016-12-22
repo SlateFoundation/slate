@@ -47,7 +47,10 @@
     top: 0;
     z-index: 99;
 
-    a {
+    a,
+    a:hover,
+    a:active,
+    a:visited {
         color: white;
         text-decoration: none;
     }
