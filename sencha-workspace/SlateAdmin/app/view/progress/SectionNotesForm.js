@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.progress.SectionNotesForm', {
     extend: 'Ext.form.Panel',
     xtype: 'progress-sectionnotesform',
