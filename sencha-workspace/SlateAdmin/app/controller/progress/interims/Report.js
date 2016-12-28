@@ -1,3 +1,13 @@
+/**
+ * The Progress Section Interim Report Controller handles
+ * managing the Section Interim Reports tab within the
+ * Student Progress section of the app
+ *
+ * ## Responsibilities
+ * - Realize /progress/interims/reports route
+ * - Enable creating / editing section interim reports for students
+ * - Enable creating / editing section interim notes
+ */
 Ext.define('SlateAdmin.controller.progress.interims.Report', {
     extend: 'Ext.app.Controller',
 

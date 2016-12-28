@@ -1,3 +1,10 @@
+/**
+ * The Email controller manages the emailing functionality
+ * for Section Interim Reports within the Student Progress section.
+ *
+ * ## Responsibilities
+ * - Enable emailing progress section interim reports.
+ */
 Ext.define('SlateAdmin.controller.progress.interims.Email', {
     extend: 'Ext.app.Controller',
     requires: [

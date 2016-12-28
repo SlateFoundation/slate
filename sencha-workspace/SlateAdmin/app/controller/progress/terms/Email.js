@@ -1,3 +1,10 @@
+/**
+ * The Email controller manages the emailing functionality
+ * for Section Term Reports within the Student Progress section.
+ *
+ * ## Responsibilities
+ * - Enable emailing progress section term reports.
+ */
 Ext.define('SlateAdmin.controller.progress.terms.Email', {
     extend: 'Ext.app.Controller',
     requires: [

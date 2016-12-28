@@ -1,3 +1,11 @@
+/**
+ * The Print controller manages the printing functionality
+ * for Section Term Reports within the Student Progress section.
+ *
+ * ## Responsibilities
+ * - Enable exporting section term reports as CSV
+ * - Enable printing section term reports via browser
+ */
 Ext.define('SlateAdmin.controller.progress.terms.Print', {
     extend: 'Ext.app.Controller',
     requires: [

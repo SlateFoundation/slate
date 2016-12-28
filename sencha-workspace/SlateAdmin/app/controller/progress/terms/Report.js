@@ -1,3 +1,13 @@
+/**
+ * The Progress Section Term Report Controller handles
+ * managing the Section Term Reports tab within the
+ * Student Progress section of the app
+ *
+ * ## Responsibilities
+ * - Realize /progress/terms/reports route
+ * - Enable creating / editing section term reports for students
+ * - Enable creating / editing section term notes
+ */
 Ext.define('SlateAdmin.controller.progress.terms.Report', {
     extend: 'Ext.app.Controller',
 

@@ -1,3 +1,11 @@
+/**
+ * The Print controller manages the printing functionality
+ * for Section Interim Reports within the Student Progress section.
+ *
+ * ## Responsibilities
+ * - Enable exporting section interim reports as CSV
+ * - Enable printing section interim reports via browser
+ */
 Ext.define('SlateAdmin.controller.progress.interims.Print', {
     extend: 'Ext.app.Controller',
     requires: [
