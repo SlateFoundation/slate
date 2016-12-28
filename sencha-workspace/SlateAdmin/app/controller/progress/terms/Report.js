@@ -217,7 +217,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
             term = me.getTermSelector().getSelection(),
             termHandle = me.getTermSelector().getValue(),
             sectionCode = section.get('Code'),
-            SectionNotesModel = me.getCourseSectionTermDataModel();
+            SectionTermDataModel = me.getCourseSectionTermDataModel();
 
         // reset stores
         studentsStore.removeAll();
@@ -241,25 +241,27 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         sectionNotesForm.enable();
         sectionNotesForm.setLoading('Loading notes&hellip;');
 
-        SectionNotesModel.getProxy().createOperation('read', {
+        SectionTermDataModel.getProxy().createOperation('read', {
             params: {
                 term: termHandle,
-                course_section: sectionCode
+                'course_section': sectionCode
             },
-            callback: function(sectionNotes, operation, success) {
+            callback: function(sectionTermDataRecords, operation, success) {
+                var sectionTermDataRecord = sectionTermDataRecords[0];
+
                 if (!success) {
                     return;
                 }
 
-                if (!(sectionNotes = sectionNotes[0])) {
-                    sectionNotes = new SectionNotesModel({
+                if (!sectionTermDataRecord) {
+                    sectionTermDataRecord = new SectionTermDataModel({
                         TermID: term.getId(),
-                        CourseSectionID: section.getId()
+                        SectionID: section.getId()
                     });
                 }
 
                 sectionNotesForm.setLoading(false);
-                sectionNotesForm.loadRecord(sectionNotes);
+                sectionNotesForm.loadRecord(sectionTermDataRecord);
                 me.syncSectionNotesFormButtons();
             }
         }).execute();
@@ -348,26 +350,26 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
 
     onSectionNotesSaveBtnClick: function() {
         var sectionNotesForm = this.getSectionNotesForm(),
-            sectionDataRecord = sectionNotesForm.getRecord(),
-            section = this.getProgressTermsSectionsStore().getById(sectionDataRecord.get('SectionID'));
+            sectionTermDataRecord = sectionNotesForm.getRecord(),
+            section = this.getProgressTermsSectionsStore().getById(sectionTermDataRecord.get('SectionID'));
 
         if (!section) {
             return;
         }
 
-        sectionNotesForm.updateRecord(sectionDataRecord);
+        sectionNotesForm.updateRecord(sectionTermDataRecord);
 
-        if (!sectionDataRecord.dirty) {
+        if (!sectionTermDataRecord.dirty) {
             return;
         }
 
         sectionNotesForm.setLoading('Saving notes&hellip;');
-        sectionDataRecord.save({
-            callback: function(sectionData, operation, success) {
+        sectionTermDataRecord.save({
+            callback: function(savedSectionTermDataRecord, operation, success) {
                 sectionNotesForm.setLoading(false);
 
                 if (success) {
-                    sectionNotesForm.loadRecord(sectionData);
+                    sectionNotesForm.loadRecord(savedSectionTermDataRecord);
                 } else {
                     Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
                 }

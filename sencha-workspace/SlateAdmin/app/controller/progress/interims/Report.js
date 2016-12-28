@@ -216,7 +216,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
             term = me.getTermSelector().getSelection(),
             termHandle = me.getTermSelector().getValue(),
             sectionCode = section.get('Code'),
-            SectionNotesModel = me.getCourseSectionTermDataModel();
+            SectionTermDataModel = me.getCourseSectionTermDataModel();
 
         // reset stores
         studentsStore.removeAll();
@@ -240,25 +240,27 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         sectionNotesForm.enable();
         sectionNotesForm.setLoading('Loading notes&hellip;');
 
-        SectionNotesModel.getProxy().createOperation('read', {
+        SectionTermDataModel.getProxy().createOperation('read', {
             params: {
                 term: termHandle,
-                course_section: sectionCode
+                'course_section': sectionCode
             },
-            callback: function(sectionNotes, operation, success) {
+            callback: function(sectionTermDataRecords, operation, success) {
+                var sectionTermDataRecord = sectionTermDataRecords[0];
+
                 if (!success) {
                     return;
                 }
 
-                if (!(sectionNotes = sectionNotes[0])) {
-                    sectionNotes = new SectionNotesModel({
+                if (!sectionTermDataRecord) {
+                    sectionTermDataRecord = new SectionTermDataModel({
                         TermID: term.getId(),
-                        CourseSectionID: section.getId()
+                        SectionID: section.getId()
                     });
                 }
 
                 sectionNotesForm.setLoading(false);
-                sectionNotesForm.loadRecord(sectionNotes);
+                sectionNotesForm.loadRecord(sectionTermDataRecord);
                 me.syncSectionNotesFormButtons();
             }
         }).execute();
