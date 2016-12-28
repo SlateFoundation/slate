@@ -126,7 +126,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
                         row.Student.FirstName,
                         row.Student.StudentNumber,
                         row.Student.GraduationYear,
-                        row.Student.Advisor.Username,
+                        row.Student.Advisor ? row.Student.Advisor.Username : null,
                         row.Section.Title,
                         row.Section.Code,
                         Ext.Array.pluck(row.Section.Teachers, 'Username').join(', '),
