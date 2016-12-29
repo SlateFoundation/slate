@@ -1,5 +1,5 @@
 <div class="slate-omnibar site">
-    <div class="inner">
+    <div class="inner {if $fluid}fluid-width{/if}">
         <ul class="omnibar-items">
             {if $.User}
             <li class="omnibar-item">
@@ -61,7 +61,7 @@
                         {/if}
                         {$link.shortLabel|default:$link.label|escape}
                     </{tif $link.href ? a : span}>
-                    
+
                     {if $link.children}
                         <div class="omnibar-menu-ct">
                             <ul class="omnibar-menu">

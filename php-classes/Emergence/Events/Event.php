@@ -29,10 +29,11 @@ class Event extends \ActiveRecord
         ]
         ,'StartTime' => [
             'type' => 'timestamp'
+            ,'default' => null
         ]
         ,'EndTime' => [
             'type' => 'timestamp'
-            ,'notnull' => false
+            ,'default' => null
         ]
         ,'Location' => [
             'type' => 'string'

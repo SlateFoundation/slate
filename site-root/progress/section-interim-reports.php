@@ -1,3 +1,3 @@
 <?php
 
-Slate\Progress\SectionInterimReportsRequestHandler::handleRequest();
+\Slate\Progress\SectionInterimReportsRequestHandler::handleRequest();

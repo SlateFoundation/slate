@@ -17,11 +17,11 @@ use Emergence\Mailer\Mailer;
 #use Emergence\CRM\MessageRecipient;
 
 
-class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
+class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 {
-    public static $printTemplate = 'sectionInterimReports';
+    public static $printTemplate = 'sectionTermReports';
 
-    public static $recordClass = SectionInterimReport::class;
+    public static $recordClass = SectionTermReport::class;
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
@@ -70,7 +70,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             'data' => Person::getAllByQuery(
                 'SELECT DISTINCT Person.* FROM `%s` Report JOIN `%s` Person ON Person.ID = Report.CreatorID',
                 [
-                    SectionInterimReport::$tableName,
+                    SectionTermReport::$tableName,
                     Person::$tableName
                 ]
             )
@@ -156,8 +156,8 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             $recipients = explode(',', $_REQUEST['recipients']);
         }
 
-        // fetch all interim reports
-        $reports = SectionInterimReport::getAllByWhere($conditions);
+        // fetch all term reports
+        $reports = SectionTermReport::getAllByWhere($conditions);
 
         // group interims by student
         $students = [];
@@ -235,7 +235,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
         }
 
         // fetch all report instances
-        $reports = SectionInterimReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
+        $reports = SectionTermReport::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
 
         return static::respond('reports.email', static::getEmailTemplateData($reports));
     }
@@ -276,7 +276,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
             $Term = Term::getClosest();
         }
 
-        $conditions['TermID'] = $Term->ID;
+        $conditions['TermID'] = ['values' => $Term->getRelatedTermIDs()];
         $responseData['term'] = $Term;
 
 
@@ -347,7 +347,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
 
         // optionally filter by status
         if (!empty($_REQUEST['status'])) {
-            if (!in_array($_REQUEST['status'], SectionInterimReport::getFieldOptions('Status', 'values'))) {
+            if (!in_array($_REQUEST['status'], SectionTermReport::getFieldOptions('Status', 'values'))) {
                 return static::throwInvalidRequestError('Invalid status');
             }
 

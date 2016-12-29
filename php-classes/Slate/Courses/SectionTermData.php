@@ -1,22 +1,22 @@
 <?php
 
-namespace Slate\Progress\Narratives;
+namespace Slate\Courses;
 
-class SectionNotes extends \VersionedRecord
+class SectionTermData extends \VersionedRecord
 {
     // VersionedRecord configuration
-    public static $historyTable = 'history_narrative_section_notes';
+    public static $historyTable = 'history_section_term_data';
 
     // ActiveRecord configuration
-    public static $tableName = 'narrative_section_notes';
-    public static $singularNoun = 'narrative section note';
-    public static $pluralNoun = 'narrative section notes';
-    public static $collectionRoute = '/progress/narratives/section-notes';
+    public static $tableName = 'section_term_data';
+    public static $singularNoun = 'section term datum';
+    public static $pluralNoun = 'section term notes';
+    public static $collectionRoute = '/section-data';
     public static $updateOnDuplicateKey = true;
     public static $trackModified = true;
 
     public static $fields = [
-        'CourseSectionID' => [
+        'SectionID' => [
             'type' => 'integer',
             'unsigned' => true
         ],
@@ -24,16 +24,20 @@ class SectionNotes extends \VersionedRecord
             'type' => 'integer',
             'unsigned' => true
         ],
-        'Notes' => [
+        'TermReportNotes' => [
             'type' => 'clob',
-            'notnull' => false
+            'default' => null
+        ],
+        'InterimReportNotes' => [
+            'type' => 'clob',
+            'default' => null
         ]
     ];
 
 
     public static $indexes = [
-        'NarrativeSectionNote' => [
-            'fields' => ['TermID', 'CourseSectionID'],
+        'SectionTermData' => [
+            'fields' => ['TermID', 'SectionID'],
             'unique' => true
         ]
     ];
@@ -41,8 +45,7 @@ class SectionNotes extends \VersionedRecord
     public static $relationships = [
         'Section' => [
             'type' => 'one-one',
-            'class' => \Slate\Courses\Section::class,
-            'local' => 'CourseSectionID'
+            'class' => Section::class
         ],
         'Term' => [
             'type' => 'one-one',

@@ -48,19 +48,11 @@ class LinkUtil
             } elseif ($value instanceof Tag) {
                 $children = [];
 
-                foreach ($value->Items AS $TagItem) {
-                    try {
-                        if (!$TagItem->Context) {
-                            continue;
-                        }
-
-                        $children[$TagItem->Context->getHandle()] = [
-                            '_href' => $TagItem->Context->getUrl(),
-                            '_label' => $TagItem->Context->getTitle()
-                        ];
-                    } catch (UserUnauthorizedException $e) {
-                        continue;
-                    }
+                foreach ($value->getReadableItems() AS $TagItem) {
+                    $children[$TagItem->Context->getHandle()] = [
+                        '_href' => $TagItem->Context->getUrl(),
+                        '_label' => $TagItem->Context->getTitle()
+                    ];
                 }
 
                 $value = [

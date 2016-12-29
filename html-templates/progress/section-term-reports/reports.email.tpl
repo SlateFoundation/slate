@@ -7,9 +7,9 @@
 {capture assign=subject}{strip}
 
     {if count($students) > 1}
-        Interim reports for {count($students)} students
+        Term reports for {count($students)} students
     {else}
-        Interim report for {$students[0]->FullName}
+        Term report for {$students[0]->FullName}
     {/if}
 
     {if count($terms) == 1}
