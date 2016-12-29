@@ -1,11 +1,11 @@
 /**
  * The Email controller manages the emailing functionality
- * for Section Interim Reports within the Student Progress section.
+ * for Section Term Reports within the Student Progress section.
  *
  * ## Responsibilities
- * - Enable emailing progress section interim reports.
+ * - Enable emailing progress section term reports.
  */
-Ext.define('SlateAdmin.controller.progress.interims.Email', {
+Ext.define('SlateAdmin.controller.progress.terms.Email', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
@@ -16,41 +16,41 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
 
     views: [
-        'progress.interims.email.Container'
+        'progress.terms.email.Container'
     ],
 
     stores: [
         'Terms',
         'Advisors@Slate.store.people',
-        'progress.interims.Authors',
-        'progress.interims.Emails'
+        'progress.terms.Authors',
+        'progress.terms.Emails'
     ],
 
     refs: {
         progressNavPanel: 'progress-navpanel',
 
         container: {
-            selector: 'progress-interims-email-container',
+            selector: 'progress-terms-email-container',
             autoCreate: true,
 
-            xtype: 'progress-interims-email-container'
+            xtype: 'progress-terms-email-container'
         },
-        optionsForm: 'progress-interims-email-container form#optionsForm',
-        emailsGrid: 'progress-interims-email-grid',
-        emailsTotalCmp: 'progress-interims-email-grid #emailsTotal',
-        sendEmailsBtn: 'progress-interims-email-grid button[action=send-emails]',
-        emailPreviewCmp: 'progress-interims-email-container #emailPreview'
+        optionsForm: 'progress-terms-email-container form#optionsForm',
+        emailsGrid: 'progress-terms-email-grid',
+        emailsTotalCmp: 'progress-terms-email-grid #emailsTotal',
+        sendEmailsBtn: 'progress-terms-email-grid button[action=send-emails]',
+        emailPreviewCmp: 'progress-terms-email-container #emailPreview'
     },
 
     routes: {
-        'progress/interims/email': 'showContainer'
+        'progress/terms/email': 'showContainer'
     },
 
     control: {
-        'progress-interims-email-container button[action=load-emails]': {
+        'progress-terms-email-container button[action=load-emails]': {
             click: 'onLoadEmailsClick'
         },
-        'progress-interims-email-container button[action=reset-options]': {
+        'progress-terms-email-container button[action=reset-options]': {
             click: 'onResetOptionsClick'
         },
         emailsGrid: {
@@ -63,7 +63,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
     listen: {
         store: {
-            '#progress.interims.Emails': {
+            '#progress.terms.Emails': {
                 load: 'onEmailsStoreLoad'
             }
         }
@@ -78,7 +78,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('progress/interims/email');
+        navPanel.setActiveLink('progress/terms/email');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
@@ -91,7 +91,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
     // event handlers
     onLoadEmailsClick: function() {
         var me = this,
-            emailsStore = me.getProgressInterimsEmailsStore();
+            emailsStore = me.getProgressTermsEmailsStore();
 
         me.resetPreview();
 
@@ -128,12 +128,12 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         }
 
         emailPreviewCmp.setLoading('Downloading reports&hellip;');
-        emailPreviewCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-interim-reports/*email-preview?reports='+reportIds.join(','));
+        emailPreviewCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports/*email-preview?reports='+reportIds.join(','));
     },
 
     onSendEmailsClick: function(sendEmailsBtn) {
         var me = this,
-            emailsStore = me.getProgressInterimsEmailsStore(),
+            emailsStore = me.getProgressTermsEmailsStore(),
             emailsCount = emailsStore.getCount(),
             i = 0, email,
             emails = [];
@@ -157,7 +157,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
             Slate.API.request({
                 method: 'POST',
-                url: '/progress/section-interim-reports/*emails',
+                url: '/progress/section-term-reports/*emails',
                 jsonData: emails,
                 callback: function(options, success, response) {
                     var data = response.data || {};
@@ -196,7 +196,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
         emailsTotalCmp.setText(emailsTotalCmp.getInitialConfig('text'));
 
-        me.getProgressInterimsEmailsStore().removeAll();
+        me.getProgressTermsEmailsStore().removeAll();
 
         me.getSendEmailsBtn().disable();
     },

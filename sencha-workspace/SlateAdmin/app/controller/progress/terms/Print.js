@@ -1,12 +1,12 @@
 /**
  * The Print controller manages the printing functionality
- * for Section Interim Reports within the Student Progress section.
+ * for Section Term Reports within the Student Progress section.
  *
  * ## Responsibilities
- * - Enable exporting section interim reports as CSV
- * - Enable printing section interim reports via browser
+ * - Enable exporting section term reports as CSV
+ * - Enable printing section term reports via browser
  */
-Ext.define('SlateAdmin.controller.progress.interims.Print', {
+Ext.define('SlateAdmin.controller.progress.terms.Print', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
@@ -18,46 +18,46 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
 
 
     views: [
-        'progress.interims.print.Container'
+        'progress.terms.print.Container'
     ],
 
     stores: [
         'Terms',
         'Advisors@Slate.store.people',
-        'progress.interims.Authors'
+        'progress.terms.Authors'
     ],
 
     refs: {
         progressNavPanel: 'progress-navpanel',
 
         container: {
-            selector: 'progress-interims-print-container',
+            selector: 'progress-terms-print-container',
             autoCreate: true,
 
-            xtype: 'progress-interims-print-container'
+            xtype: 'progress-terms-print-container'
         },
-        optionsForm: 'progress-interims-print-container form#optionsForm',
-        // emailsGrid: 'progress-interims-email-grid',
-        // emailsTotalCmp: 'progress-interims-email-grid #emailsTotal',
-        // sendEmailsBtn: 'progress-interims-email-grid button[action=send-emails]',
-        printoutCmp: 'progress-interims-print-container #printout'
+        optionsForm: 'progress-terms-print-container form#optionsForm',
+        // emailsGrid: 'progress-terms-email-grid',
+        // emailsTotalCmp: 'progress-terms-email-grid #emailsTotal',
+        // sendEmailsBtn: 'progress-terms-email-grid button[action=send-emails]',
+        printoutCmp: 'progress-terms-print-container #printout'
     },
 
     routes: {
-        'progress/interims/print': 'showContainer'
+        'progress/terms/print': 'showContainer'
     },
 
     control: {
-        'progress-interims-print-container button[action=load-printout]': {
+        'progress-terms-print-container button[action=load-printout]': {
             click: 'onLoadPrintoutClick'
         },
-        'progress-interims-print-container button[action=print-printout]': {
+        'progress-terms-print-container button[action=print-printout]': {
             click: 'onPrintPrintoutClick'
         },
-        'progress-interims-print-container button[action=save-csv]': {
+        'progress-terms-print-container button[action=save-csv]': {
             click: 'onSaveCsvClick'
         },
-        'progress-interims-print-container button[action=reset-options]': {
+        'progress-terms-print-container button[action=reset-options]': {
             click: 'onResetOptionsClick'
         },
         // emailsGrid: {
@@ -70,7 +70,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
 
     listen: {
         // store: {
-        //     '#progress.interims.Emails': {
+        //     '#progress.terms.Emails': {
         //         load: 'onEmailsStoreLoad'
         //     }
         // }
@@ -85,7 +85,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('progress/interims/print');
+        navPanel.setActiveLink('progress/terms/print');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
@@ -113,7 +113,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
 
         Slate.API.request({
             method: 'GET',
-            url: '/progress/section-interim-reports',
+            url: '/progress/section-term-reports',
             params: Ext.apply({
                 include: 'Student.Advisor,Section.Teachers'
             }, this.buildFilters()),
@@ -143,7 +143,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
                 }
 
                 downloadLink.href = url = URL.createObjectURL(new Blob([Ext.util.CSV.encode(csv)], { type: 'text/csv' }));
-                downloadLink.download = 'interim-reports.csv';
+                downloadLink.download = 'term-reports.csv';
                 downloadLink.style.display = 'none';
 
                 document.body.appendChild(downloadLink);
@@ -181,6 +181,6 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
         }
 
         printoutCmp.setLoading('Loading printout&hellip;');
-        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-interim-reports/*print?'+Ext.Object.toQueryString(this.buildFilters()));
+        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports/*print?'+Ext.Object.toQueryString(this.buildFilters()));
     }
 });

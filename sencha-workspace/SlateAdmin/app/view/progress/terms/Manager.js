@@ -1,28 +1,28 @@
-Ext.define('SlateAdmin.view.progress.interims.Manager', {
+Ext.define('SlateAdmin.view.progress.terms.Manager', {
     extend: 'Ext.Container',
-    xtype: 'progress-interims-manager',
+    xtype: 'progress-terms-manager',
     requires: [
-        'SlateAdmin.view.progress.interims.SectionsGrid',
-        'SlateAdmin.view.progress.interims.StudentsGrid',
-        'SlateAdmin.view.progress.interims.EditorForm',
+        'SlateAdmin.view.progress.terms.SectionsGrid',
+        'SlateAdmin.view.progress.terms.StudentsGrid',
+        'SlateAdmin.view.progress.terms.EditorForm',
         'SlateAdmin.view.progress.SectionNotesForm'
     ],
 
 
     layout: 'border',
-    componentCls: 'progress-interims-manager',
+    componentCls: 'progress-terms-manager',
     items: [
         {
             region: 'west',
             weight: 100,
             split: true,
 
-            xtype: 'progress-interims-sectionsgrid'
+            xtype: 'progress-terms-sectionsgrid'
         },
         {
             region: 'center',
 
-            xtype: 'progress-interims-studentsgrid',
+            xtype: 'progress-terms-studentsgrid',
             disabled: true
         },
         {
@@ -31,7 +31,7 @@ Ext.define('SlateAdmin.view.progress.interims.Manager', {
             weight: 100,
             flex: 1,
 
-            xtype: 'progress-interims-editorform',
+            xtype: 'progress-terms-editorform',
             disabled: true
         },
         {
@@ -39,12 +39,12 @@ Ext.define('SlateAdmin.view.progress.interims.Manager', {
             split: true,
 
             xtype: 'progress-sectionnotesform',
-            fieldName: 'InterimReportNotes',
+            fieldName: 'TermReportNotes',
             collapsible: true,
             collapsed: true,
             titleCollapse: true,
             stateful: true,
-            stateId: 'progress-interims-sectionnotesform',
+            stateId: 'progress-terms-sectionnotesform',
             disabled: true
         }
     ]

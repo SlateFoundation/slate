@@ -1,3 +1,13 @@
+/**
+ * The Progress Section Interim Report Controller handles
+ * managing the Section Interim Reports tab within the
+ * Student Progress section of the app
+ *
+ * ## Responsibilities
+ * - Realize /progress/interims/reports route
+ * - Enable creating / editing section interim reports for students
+ * - Enable creating / editing section interim notes
+ */
 Ext.define('SlateAdmin.controller.progress.interims.Report', {
     extend: 'Ext.app.Controller',
 
@@ -11,6 +21,10 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         'progress.interims.Sections',
         'progress.interims.Students',
         'progress.interims.Reports'
+    ],
+
+    models: [
+        'course.SectionTermData'
     ],
 
     refs: {
@@ -30,7 +44,10 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         revertChangesBtn: 'progress-interims-editorform button#revertChangesBtn',
         deleteBtn: 'progress-interims-editorform button#deleteBtn',
         saveDraftBtn: 'progress-interims-editorform button#saveDraftBtn',
-        saveFinishedBtn: 'progress-interims-editorform button#saveFinishedBtn'
+        saveFinishedBtn: 'progress-interims-editorform button#saveFinishedBtn',
+        sectionNotesForm: 'progress-interims-manager progress-sectionnotesform',
+        sectionNotesRevertBtn: 'progress-interims-manager progress-sectionnotesform button#revertBtn',
+        sectionNotesSaveBtn: 'progress-interims-manager progress-sectionnotesform button#saveBtn'
     },
 
     routes: {
@@ -205,8 +222,11 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
             reportsStore = me.getProgressInterimsReportsStore(),
             reportsProxy = reportsStore.getProxy(),
             editorForm = me.getEditorForm(),
+            sectionNotesForm = me.getSectionNotesForm(),
+            term = me.getTermSelector().getSelection(),
             termHandle = me.getTermSelector().getValue(),
-            sectionCode = section.get('Code');
+            sectionCode = section.get('Code'),
+            SectionTermDataModel = me.getCourseSectionTermDataModel();
 
         // reset stores
         studentsStore.removeAll();
@@ -220,12 +240,41 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         studentsGrid.enable();
 
         // configure and load stores
-        studentsStore.getProxy().setUrl('/sections/'+section.get('Code')+'/students');
+        studentsStore.getProxy().setUrl('/sections/'+sectionCode+'/students');
         studentsStore.load();
 
         reportsProxy.setExtraParam('term', termHandle);
         reportsProxy.setExtraParam('course_section', sectionCode);
         reportsStore.load();
+
+        sectionNotesForm.enable();
+        sectionNotesForm.setLoading('Loading notes&hellip;');
+
+        SectionTermDataModel.getProxy().createOperation('read', {
+            params: {
+                term: termHandle,
+                'course_section': sectionCode
+            },
+            callback: function(sectionTermDataRecords, operation, success) {
+                var sectionTermDataRecord = sectionTermDataRecords[0];
+
+                if (!success) {
+                    return;
+                }
+
+                if (!sectionTermDataRecord) {
+                    sectionTermDataRecord = new SectionTermDataModel({
+                        TermID: term.getId(),
+                        SectionID: section.getId()
+                    });
+                }
+
+                sectionNotesForm.setLoading(false);
+                sectionNotesForm.loadRecord(sectionTermDataRecord);
+                me.syncSectionNotesFormButtons();
+            }
+        }).execute();
+
     },
 
     onStudentsStoreLoad: function() {
@@ -310,21 +359,26 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
 
     onSectionNotesSaveBtnClick: function() {
         var sectionNotesForm = this.getSectionNotesForm(),
-            sectionNotes = sectionNotesForm.getRecord();
+            sectionDataRecord = sectionNotesForm.getRecord(),
+            section = this.getProgressInterimsSectionsStore().getById(sectionDataRecord.get('SectionID'));
 
-        sectionNotesForm.updateRecord(sectionNotes);
+        if (!section) {
+            return;
+        }
 
-        if (!sectionNotes.dirty) {
+        sectionNotesForm.updateRecord(sectionDataRecord);
+
+        if (!sectionDataRecord.dirty) {
             return;
         }
 
         sectionNotesForm.setLoading('Saving notes&hellip;');
-        sectionNotes.save({
-            callback: function(sectionNotes, operation, success) {
+        sectionDataRecord.save({
+            callback: function(sectionData, operation, success) {
                 sectionNotesForm.setLoading(false);
 
                 if (success) {
-                    sectionNotesForm.loadRecord(sectionNotes);
+                    sectionNotesForm.loadRecord(sectionData);
                 } else {
                     Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
                 }

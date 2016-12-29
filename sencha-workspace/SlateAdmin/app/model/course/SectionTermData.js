@@ -1,5 +1,5 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
+/*jslint browser: true, undef: true *//*global Ext*/
+Ext.define('SlateAdmin.model.course.SectionTermData', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records',
@@ -20,7 +20,7 @@ Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Progress\\Narratives\\SectionNotes'
+            defaultValue: 'Slate\\Courses\\SectionTermData'
         },
         {
             name: 'Created',
@@ -34,16 +34,8 @@ Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
             allowNull: true
         },
         {
-            name: 'CourseSectionID',
-            type: 'int'
-        },
-        {
-            name: 'TermID',
-            type: 'int'
-        },
-        {
-            name: 'Notes',
-            type: 'string',
+            name: 'RevisionID',
+            type: 'int',
             allowNull: true
         },
         {
@@ -56,11 +48,29 @@ Ext.define('SlateAdmin.model.progress.narratives.SectionNotes', {
             name: 'ModifierID',
             type: 'int',
             allowNull: true
+        },
+        {
+            name: 'SectionID',
+            type: 'int'
+        },
+        {
+            name: 'TermID',
+            type: 'int'
+        },
+        {
+            name: 'TermReportNotes',
+            type: 'string',
+            allowNull: true
+        },
+        {
+            name: 'InterimReportNotes',
+            type: 'string',
+            allowNull: true
         }
     ],
 
     proxy: {
         type: 'slaterecords',
-        url: '/progress/narratives/section-notes'
+        url: '/section-data'
     }
 });

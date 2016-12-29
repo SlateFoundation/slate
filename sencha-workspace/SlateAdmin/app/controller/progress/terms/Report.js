@@ -1,46 +1,58 @@
-/*jslint browser: true, undef: true, white: true, laxbreak: true *//*global Ext,Slate*/
-Ext.define('SlateAdmin.controller.progress.Narratives', {
+/**
+ * The Progress Section Term Report Controller handles
+ * managing the Section Term Reports tab within the
+ * Student Progress section of the app
+ *
+ * ## Responsibilities
+ * - Realize /progress/terms/reports route
+ * - Enable creating / editing section term reports for students
+ * - Enable creating / editing section term notes
+ */
+Ext.define('SlateAdmin.controller.progress.terms.Report', {
     extend: 'Ext.app.Controller',
 
+
     views: [
-        'progress.narratives.Manager'
+        'progress.terms.Manager'
     ],
 
     stores: [
         'Terms',
-        'progress.narratives.Sections',
-        'progress.narratives.Students',
-        'progress.narratives.Reports'
+        'progress.terms.Sections',
+        'progress.terms.Students',
+        'progress.terms.Reports'
     ],
 
     models: [
-        'progress.narratives.SectionNotes'
+        'course.SectionTermData'
     ],
 
     refs: {
         progressNavPanel: 'progress-navpanel',
 
         managerCt: {
-            selector: 'progress-narratives-manager',
+            selector: 'progress-terms-manager',
             autoCreate: true,
 
-            xtype: 'progress-narratives-manager'
+            xtype: 'progress-terms-manager'
         },
-        myClassesToggleBtn: 'progress-narratives-sectionsgrid button[action=myClassesToggle]',
-        termSelector: 'progress-narratives-sectionsgrid #termSelector',
-        sectionsGrid: 'progress-narratives-sectionsgrid',
-        studentsGrid: 'progress-narratives-studentsgrid',
-        sectionNotesForm: 'progress-narratives-sectionnotesform',
-        sectionNotesRevertBtn: 'progress-narratives-sectionnotesform button#revertBtn',
-        sectionNotesSaveBtn: 'progress-narratives-sectionnotesform button#saveBtn',
-        editorForm: 'progress-narratives-editorform',
-        revertChangesBtn: 'progress-narratives-editorform button#revertChangesBtn',
-        saveDraftBtn: 'progress-narratives-editorform button#saveDraftBtn',
-        saveFinishedBtn: 'progress-narratives-editorform button#saveFinishedBtn'
+        myClassesOnlyCheckbox: 'progress-terms-sectionsgrid checkboxfield[name=myClassesOnly]',
+        termSelector: 'progress-terms-sectionsgrid #termSelector',
+        sectionsGrid: 'progress-terms-sectionsgrid',
+        studentsGrid: 'progress-terms-studentsgrid',
+        editorForm: 'progress-terms-editorform',
+        revertChangesBtn: 'progress-terms-editorform button#revertChangesBtn',
+        deleteBtn: 'progress-terms-editorform button#deleteBtn',
+        saveDraftBtn: 'progress-terms-editorform button#saveDraftBtn',
+        saveFinishedBtn: 'progress-terms-editorform button#saveFinishedBtn',
+        sectionNotesForm: 'progress-terms-manager progress-sectionnotesform',
+        sectionNotesRevertBtn: 'progress-terms-manager progress-sectionnotesform button#revertBtn',
+        sectionNotesSaveBtn: 'progress-terms-manager progress-sectionnotesform button#saveBtn'
+
     },
 
     routes: {
-        'progress/terms/report': 'showNarratives'
+        'progress/terms/report': 'showTerms'
     },
 
     control: {
@@ -48,10 +60,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             activate: 'onManagerActivate'
         },
 
-        myClassesToggleBtn: {
-            toggle: 'onMyClassesToggle'
+        myClassesOnlyCheckbox: {
+            change: 'onMyClassesOnlyCheckboxChange'
         },
         termSelector: {
+            beforeselect: 'onBeforeTermSelect',
             change: 'onTermChange'
         },
         sectionsGrid: {
@@ -77,11 +90,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             dirtychange: 'onEditorFormDirtyChange',
             validitychange: 'onEditorFormValidityChange'
         },
-        'progress-narratives-editorform combo': {
+        'progress-terms-editorform combo': {
             select: 'onComboSelect'
         },
         revertChangesBtn: {
             click: 'onRevertChangesClick'
+        },
+        deleteBtn: {
+            click: 'onDeleteClick'
         },
         saveDraftBtn: {
             click: 'onSaveDraftClick'
@@ -93,7 +109,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     listen: {
         store: {
-            '#progress.narratives.Students': {
+            '#progress.terms.Sections': {
+                load: 'onSectionsStoreLoad'
+            },
+            '#progress.terms.Students': {
                 load: 'onStudentsStoreLoad'
             }
         }
@@ -101,14 +120,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
 
     // route handlers
-    showNarratives: function () {
+    showTerms: function () {
         var me = this,
             navPanel = me.getProgressNavPanel();
 
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('progress/narratives');
+        navPanel.setActiveLink('progress/terms/report');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
@@ -117,17 +136,65 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         Ext.resumeLayouts(true);
     },
 
+
     // event handlers
     onManagerActivate: function () {
         this.syncSections();
     },
 
-    onMyClassesToggle: function () {
+    onMyClassesOnlyCheckboxChange: function () {
         this.syncSections();
+    },
+
+    onBeforeTermSelect: function(termSelector, term) {
+        var me = this,
+            editorForm = me.getEditorForm(),
+            loadedReport = editorForm.getRecord();
+
+        if (loadedReport && editorForm.isDirty()) {
+            Ext.Msg.confirm('Unsaved Changes', 'You have unsaved changes to this report.<br/><br/>Do you want to continue without saving them?', function (btn) {
+                if (btn != 'yes') {
+                    return;
+                }
+
+                editorForm.reset();
+                termSelector.select(term);
+            });
+
+            return false;
+        }
     },
 
     onTermChange: function () {
         this.syncSections();
+    },
+
+    onSectionsStoreLoad: function() {
+        var me = this,
+            sectionsGrid = me.getSectionsGrid(),
+            section = sectionsGrid.getSelection()[0],
+            studentsGrid = me.getStudentsGrid(),
+            studentsStore = studentsGrid.getStore(),
+            reportsStore = me.getProgressTermsReportsStore(),
+            editorForm = me.getEditorForm();
+
+        // reselect section if already selected
+        if (section) {
+            sectionsGrid.setSelection(null);
+            sectionsGrid.setSelection(section);
+        } else {
+            // reset stores
+            studentsStore.removeAll();
+            studentsGrid.getView().clearEmptyEl(); // PRIVATE: clearEmptyEl to remove empty text
+            reportsStore.removeAll();
+
+            // reset form
+            editorForm.disable();
+            editorForm.reset(true);
+
+            // reset students list
+            studentsGrid.disable();
+        }
     },
 
     onBeforeSectionSelect: function(sectionsSelModel, section) {
@@ -153,14 +220,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         var me = this,
             studentsGrid = me.getStudentsGrid(),
             studentsStore = studentsGrid.getStore(),
-            reportsStore = Ext.getStore('progress.narratives.Reports'),
+            reportsStore = me.getProgressTermsReportsStore(),
             reportsProxy = reportsStore.getProxy(),
             editorForm = me.getEditorForm(),
+            sectionNotesForm = me.getSectionNotesForm(),
             term = me.getTermSelector().getSelection(),
             termHandle = me.getTermSelector().getValue(),
             sectionCode = section.get('Code'),
-            sectionNotesForm = me.getSectionNotesForm(),
-            SectionNotesModel = me.getProgressNarrativesSectionNotesModel();
+            SectionTermDataModel = me.getCourseSectionTermDataModel();
 
         // reset stores
         studentsStore.removeAll();
@@ -174,44 +241,47 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         studentsGrid.enable();
 
         // configure and load stores
-        studentsStore.getProxy().setUrl('/sections/'+section.get('Code')+'/students');
+        studentsStore.getProxy().setUrl('/sections/'+sectionCode+'/students');
         studentsStore.load();
 
         reportsProxy.setExtraParam('term', termHandle);
         reportsProxy.setExtraParam('course_section', sectionCode);
         reportsStore.load();
 
-        // load section notes model
         sectionNotesForm.enable();
         sectionNotesForm.setLoading('Loading notes&hellip;');
-        SectionNotesModel.getProxy().createOperation('read', {
+
+        SectionTermDataModel.getProxy().createOperation('read', {
             params: {
                 term: termHandle,
-                course_section: sectionCode
+                'course_section': sectionCode
             },
-            callback: function(sectionNotes, operation, success) {
+            callback: function(sectionTermDataRecords, operation, success) {
+                var sectionTermDataRecord = sectionTermDataRecords[0];
+
                 if (!success) {
                     return;
                 }
 
-                if (!(sectionNotes = sectionNotes[0])) {
-                    sectionNotes = new SectionNotesModel({
+                if (!sectionTermDataRecord) {
+                    sectionTermDataRecord = new SectionTermDataModel({
                         TermID: term.getId(),
-                        CourseSectionID: section.getId()
+                        SectionID: section.getId()
                     });
                 }
 
                 sectionNotesForm.setLoading(false);
-                sectionNotesForm.loadRecord(sectionNotes);
+                sectionNotesForm.loadRecord(sectionTermDataRecord);
                 me.syncSectionNotesFormButtons();
             }
         }).execute();
+
     },
 
     onStudentsStoreLoad: function() {
         var me = this,
             studentsView = me.getStudentsGrid().getView(),
-            reportsStore = Ext.getStore('progress.narratives.Reports');
+            reportsStore = me.getProgressTermsReportsStore();
 
         if (reportsStore.isLoading()) {
             studentsView.setLoading('Loading reports&hellip;');
@@ -257,9 +327,9 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             section = me.getSectionsGrid().getSelection()[0];
             term = me.getTermSelector().getSelection();
 
-            report = me.getProgressNarrativesReportsStore().add({
+            report = me.getProgressTermsReportsStore().add({
                 StudentID: student.getId(),
-                CourseSectionID: section.getId(),
+                SectionID: section.getId(),
                 TermID: term.getId(),
 
                 student: student,
@@ -269,6 +339,8 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
             student.set('report', report, { dirty: false });
         }
+
+        me.fireEvent('beforereportload', report);
 
         editorForm.enable();
         editorForm.setScrollY(0, true);
@@ -288,21 +360,26 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
     onSectionNotesSaveBtnClick: function() {
         var sectionNotesForm = this.getSectionNotesForm(),
-            sectionNotes = sectionNotesForm.getRecord();
+            sectionTermDataRecord = sectionNotesForm.getRecord(),
+            section = this.getProgressTermsSectionsStore().getById(sectionTermDataRecord.get('SectionID'));
 
-        sectionNotesForm.updateRecord(sectionNotes);
+        if (!section) {
+            return;
+        }
 
-        if (!sectionNotes.dirty) {
+        sectionNotesForm.updateRecord(sectionTermDataRecord);
+
+        if (!sectionTermDataRecord.dirty) {
             return;
         }
 
         sectionNotesForm.setLoading('Saving notes&hellip;');
-        sectionNotes.save({
-            callback: function(sectionNotes, operation, success) {
+        sectionTermDataRecord.save({
+            callback: function(savedSectionTermDataRecord, operation, success) {
                 sectionNotesForm.setLoading(false);
 
                 if (success) {
-                    sectionNotesForm.loadRecord(sectionNotes);
+                    sectionNotesForm.loadRecord(savedSectionTermDataRecord);
                 } else {
                     Ext.Msg.alert('Failed to save section notes', 'The section notes failed to save to the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
                 }
@@ -330,10 +407,51 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     onRevertChangesClick: function() {
         var me = this;
 
-        Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes', function (btn) {
+        Ext.Msg.confirm('Reverting Changes', 'Are you sure you want to revert your changes?', function (btn) {
             if (btn == 'yes') {
                 me.getEditorForm().reset();
             }
+        });
+    },
+
+    onDeleteClick: function() {
+        var me = this,
+            managerCt = me.getManagerCt(),
+            editorForm = me.getEditorForm(),
+            report = editorForm.getRecord();
+
+        Ext.Msg.confirm('Delete Report', 'Are you sure you want to permenantly delete this report?', function(btn) {
+            if (btn != 'yes') {
+                return;
+            }
+
+            managerCt.setLoading('Deleting report&hellip');
+
+            me.fireEvent('beforereportdelete', report);
+
+            report.erase({
+                callback: function(report, operation, success) {
+                    var student = report.get('student'),
+                        studentsSelModel = me.getStudentsGrid().getSelectionModel();
+
+                    managerCt.setLoading(false);
+
+                    if (success) {
+                        student.beginEdit();
+                        student.set('report', null);
+                        me.syncStudent(student);
+                        student.endEdit();
+
+                        me.fireEvent('reportdelete', report);
+
+                        // reselect current student
+                        studentsSelModel.deselectAll();
+                        studentsSelModel.select(student);
+                    } else {
+                        Ext.Msg.alert('Failed to delete report', 'This report failed to delete from the server:<br><br>' + (operation.getError() || 'Unknown reason, try again or contact support'));
+                    }
+                }
+            });
         });
     },
 
@@ -349,7 +467,7 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         var me = this,
             managerCt = me.getManagerCt(),
             editorForm = me.getEditorForm(),
-            formData  = editorForm.getValues(),
+            formData = editorForm.getValues(),
             report = editorForm.getRecord();
 
         report.beginEdit();
@@ -374,13 +492,14 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
 
         report.save({
             callback: function(report, operation, success) {
+                var student = report.get('student');
+
                 managerCt.setLoading(false);
 
                 if (success) {
-                    report.get('student').set({
-                        report_status: report.get('Status'),
-                        report_modified: report.get('Modified') || report.get('Created')
-                    }, { dirty: false });
+                    student.beginEdit();
+                    me.syncStudent(student);
+                    student.endEdit();
 
                     editorForm.loadRecord(report);
 
@@ -400,10 +519,10 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
     // controller methods
     syncSections: function() {
         var me = this,
-            sectionsStore = Ext.getStore('progress.narratives.Sections'),
+            sectionsStore = me.getProgressTermsSectionsStore(),
             sectionsProxy = sectionsStore.getProxy(),
             managerCt = me.getManagerCt(),
-            myClassesToggleBtn = me.getMyClassesToggleBtn(),
+            myClassesOnlyCheckbox = me.getMyClassesOnlyCheckbox(),
             termSelector = me.getTermSelector(),
             termsStore = termSelector.getStore(),
             term = termSelector.getValue();
@@ -434,16 +553,17 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
             return; // setting the term will call this function again via the change event
         }
 
-        sectionsProxy.setExtraParam('enrolled_user', myClassesToggleBtn.pressed ? 'current' : '');
+        sectionsProxy.setExtraParam('enrolled_user', myClassesOnlyCheckbox.getValue() ? 'current' : '');
         sectionsProxy.setExtraParam('term', term);
         sectionsStore.loadIfDirty();
     },
 
     syncReportsToStudents: function() {
-        var section = this.getSectionsGrid().getSelection()[0],
-            termsStore = Ext.getStore('Terms'),
-            studentsStore = Ext.getStore('progress.narratives.Students'),
-            reportsStore = Ext.getStore('progress.narratives.Reports'),
+        var me = this,
+            section = me.getSectionsGrid().getSelection()[0],
+            termsStore = me.getTermsStore(),
+            studentsStore = me.getProgressTermsStudentsStore(),
+            reportsStore = me.getProgressTermsReportsStore(),
             studentsLength = studentsStore.getCount(), i = 0, student,
             report;
 
@@ -453,11 +573,11 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         for (; i < studentsLength; i++) {
             student = studentsStore.getAt(i);
             report = reportsStore.query('StudentID', student.getId()).first();
-            student.set({
-                report: report || null,
-                report_status: report ? report.get('Status') : null,
-                report_modified: report ? report.get('Modified') || report.get('Created') : null
-            }, { dirty: false });
+
+            student.beginEdit();
+            student.set('report', report || null, { dirty: false });
+            me.syncStudent(student);
+            student.endEdit();
 
             if (report) {
                 report.set({
@@ -493,7 +613,17 @@ Ext.define('SlateAdmin.controller.progress.Narratives', {
         }
 
         me.getRevertChangesBtn().setDisabled(!isDirty);
+        me.getDeleteBtn().setDisabled(report.phantom);
         me.getSaveDraftBtn().setDisabled((!isDirty && reportStatus == 'draft') || !isValid);
         me.getSaveFinishedBtn().setDisabled((!isDirty && reportStatus == 'published') || !isValid);
+    },
+
+    syncStudent: function(student) {
+        var report = student.get('report');
+
+        student.set({
+            report_status: report ? report.get('Status') : null,
+            report_modified: report ? report.get('Modified') || report.get('Created') : null
+        }, { dirty: false });
     }
 });
