@@ -55,8 +55,8 @@ Ext.define('SlateAdmin.widget.grid.ContactPointCellEditor', {
                 return;
             }
         }
-        
-        this.callParent();
+
+        this.callParent(arguments);
     },
     
     onSerializedSelect: function(field, serialized) {
