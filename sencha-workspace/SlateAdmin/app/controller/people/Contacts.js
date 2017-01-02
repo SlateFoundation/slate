@@ -376,8 +376,18 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             fieldName = context.field,
             record = context.record,
             editor = context.column.getEditor(record),
+            activeEditor = editingPlugin.getActiveEditor(),
             labelEditor, valueEditor, labelStore, templateRecord, valueField, placeholder;
 
+        // allow editing multiple contact points
+        if (activeEditor && activeEditor != editor) {
+            Ext.defer(function() {
+                activeEditor.ignoreNoChange = false;
+                activeEditor.editing = true;
+                activeEditor.completeEdit();
+            }, 50);
+            return false;
+        }
         // get both components
         if (fieldName == 'Label') {
             labelEditor = editor;
