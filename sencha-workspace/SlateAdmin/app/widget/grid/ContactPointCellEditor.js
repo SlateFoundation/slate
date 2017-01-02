@@ -1,9 +1,7 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.widget.grid.ContactPointCellEditor', {
     extend: 'Ext.grid.CellEditor',
-    
-    ignoreNoChange: true,
-    
+
     initComponent: function() {
         var me = this;
         
