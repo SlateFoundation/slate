@@ -22,7 +22,7 @@ Ext.define('SlateAdmin.view.progress.interims.StudentsGrid', {
             flex: 1,
 
             text: 'Student',
-            dataIndex: 'FullName'
+            dataIndex: 'SortName'
         },
         {
             width: 80,
