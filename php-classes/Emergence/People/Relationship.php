@@ -377,4 +377,47 @@ class Relationship extends \VersionedRecord
     {
         return ['PersonID' => $Relationship->RelatedPersonID];
     }
+
+    public static function getTemplates()
+    {
+        $templates = [];
+
+        foreach (Relationship::$templates AS $label => $options) {
+            $options['Relationship']['Label'] = $label;
+            $templates[$label] = $options;
+
+            // add inverse relationships
+            if (!empty($options['Inverse']) && is_array($options['Inverse'])) {
+                foreach ($options['Inverse'] AS $sex => $relationship) {
+                    $templates[$relationship] = [
+                        'Relationship' => [
+                            'Label' => $relationship
+                        ],
+                        'Inverse' => static::getInverseRelationships($relationship)
+                    ];
+                    if ($sex == 'Male' || $sex == 'Female') {
+                        $templates[$relationship]['Person'] = ['Gender' => $sex];
+                    }
+                }
+            }
+        }
+
+        return $templates;
+    }
+
+    public static function getInverseRelationships($relationship)
+    {
+        $relationships = [];
+
+        foreach (static::$templates as $relationshipName => $relationshipData) {
+            $inverseRelationship = is_array($relationshipData['Inverse']) ? array_values($relationshipData['Inverse']) : [$relationshipData['Inverse']];
+            $relationshipGender = !empty($relationshipData['Person']['Gender'])? $relationshipData['Person']['Gender'] : 'Neutral';
+
+            if (!empty($relationshipData['Inverse']) && in_array($relationship, $inverseRelationship)) {
+                $relationships[$relationshipGender] = $relationshipName;
+            }
+        }
+
+        return $relationships;
+    }
 }
