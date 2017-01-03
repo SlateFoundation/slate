@@ -26,15 +26,8 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
 
     public static function handleTemplatesRequest()
     {
-        $templates = [];
-
-        foreach (Relationship::$templates AS $label => $options) {
-            $options['Relationship']['Label'] = $label;
-            $templates[] = $options;
-        }
-
         return static::respond('templates', [
-            'data' => $templates
+            'data' => array_values(Relationship::getTemplates())
         ]);
     }
 

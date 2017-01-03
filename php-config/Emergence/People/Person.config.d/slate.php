@@ -96,14 +96,16 @@ Emergence\People\Person::$searchConditions['WardAdvisor'] = [
             'ID IN ('
                 .'SELECT relationships.RelatedPersonID'
                 .' FROM people Student'
-                .' RIGHT JOIN relationships'
-                    .' ON (relationships.PersonID = Student.ID AND relationships.Class = "Guardian")'
+                .' RIGHT JOIN `%s` relationships'
+                    .' ON (relationships.PersonID = Student.ID AND relationships.Class = "%s")'
                 .' WHERE'
                     .' GraduationYear >= %u'
                     .' AND AdvisorID = %u'
-            .')'
-            , date('Y', strtotime($currentTerm->getMaster()->EndDate))
-            , $Advisor->ID
+            .')',
+            Emergence\People\Relationship::$tableName,
+            DB::escape(Emergence\People\GuardianRelationship::class),
+            date('Y', strtotime($currentTerm->getMaster()->EndDate)),
+            $Advisor->ID
         );
     }
 ];
