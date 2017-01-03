@@ -282,8 +282,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             reportsProxy = reportsStore.getProxy(),
             reportsContainer = me.getProgressPanel(),
             apiHost = SlateAdmin.API.getHost(),
-            exportUrl = '/progress/export?' + Ext.Object.toQueryString(reportsProxy.getExtraParams()),
-            exportLoadMask = {msg: 'Preparing PDF, please wait, this may take a minute&hellip;'};
+            exportUrl = '/progress?' + Ext.Object.toQueryString(Ext.apply({ format: 'pdf' }, reportsProxy.getExtraParams())),
+            exportLoadMask = {msg: 'Preparing PDF, please wait, this may take a minute&hellip;' };
 
         Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports', function(btn) {
             if (btn == 'yes') {
