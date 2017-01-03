@@ -11,6 +11,11 @@ Ext.define('SlateAdmin.model.person.RelationshipTemplate', {
             mapping: 'Relationship.Label'
         },
         {
+            name: 'class',
+            type: 'string',
+            mapping: 'Relationship.Class'
+        },
+        {
             name: 'Relationship'
         },
         {
@@ -23,6 +28,6 @@ Ext.define('SlateAdmin.model.person.RelationshipTemplate', {
 
     getInverseLabel: function(gender) {
         var inverse = this.get('Inverse');
-        return (inverse && inverse[gender || 'Unknown']) || null;
+        return (inverse && inverse[gender || 'Neutral']) || null;
     }
 });

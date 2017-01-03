@@ -199,7 +199,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             columnManager = context.grid.getColumnManager(),
             invalid = false,
             relatedPeopleStore, relatedPersonModel, relatedPersonRecord,
-            templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender;
+            templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender, relationshipConfig, inverseRecord;
 
         gridView.clearInvalid(editedRecord);
 
@@ -283,9 +283,14 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                 ) &&
                 (templateInverse = templateRecord.getInverseLabel(loadedPersonGender))
             ) {
-                editedRecord.set('InverseRelationship', {
+                relationshipConfig = {
                     Label: templateInverse
-                });
+                };
+
+                if ((inverseRecord = editor.getStore().findRecord('label', templateInverse)) && inverseRecord.get('class')) {
+                    relationshipConfig.Class = inverseRecord.get('class');
+                }
+                editedRecord.set('InverseRelationship', relationshipConfig);
             } else {
                 // auto advance to inverse column if the editor isn't already active after a short delay
                 // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
