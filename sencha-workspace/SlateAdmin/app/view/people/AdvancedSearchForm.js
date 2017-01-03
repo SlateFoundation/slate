@@ -85,7 +85,8 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                         name: 'FullName',
                         calculate: function(data) {
                             return data.LastName + ', ' + data.FirstName;
-                        }
+                        },
+                        depends: ['FirstName', 'LastName']
                     }
                 ],
                 proxy: {
