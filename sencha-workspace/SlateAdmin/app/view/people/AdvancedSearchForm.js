@@ -32,16 +32,16 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
         items: [{
             name: 'firstname',
             fieldLabel: 'First'
-        },{
+        }, {
             name: 'lastname',
             fieldLabel: 'Last'
-        },{
+        }, {
             name: 'username',
             fieldLabel: 'Username'
-        },{
+        }, {
             name: 'studentnumber',
             fieldLabel: 'ID #'
-        },{
+        }, {
             xtype: 'combo',
             name: 'year',
             fieldLabel: 'Year',
@@ -59,7 +59,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     }
                 }
             }
-        },{
+        }, {
             xtype: 'combo',
             name: 'gender',
             fieldLabel: 'Gender',
@@ -68,7 +68,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             emptyText: 'Any',
             queryMode: 'local',
             store: ['Male', 'Female']
-        },{
+        }, {
             xtype: 'combo',
             name: 'advisor',
             fieldLabel: 'Advisor',
@@ -149,7 +149,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     }
                 }
             }
-        },{
+        }, {
             xtype: 'button',
             anchor: false,
             margin: '0 0 0 70',
