@@ -78,11 +78,13 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             queryMode: 'local',
             store: {
                 fields: [
-                    {name: 'Username'},
+                    { name: 'Username' },
+                    { name: 'FirstName' },
+                    { name: 'LastName' },
                     {
                         name: 'FullName',
-                        convert: function(v, r) {
-                            return r.raw.LastName + ', ' + r.raw.FirstName;
+                        calculate: function(data) {
+                            return data.LastName + ', ' + data.FirstName;
                         }
                     }
                 ],
