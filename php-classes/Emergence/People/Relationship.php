@@ -388,15 +388,15 @@ class Relationship extends \VersionedRecord
 
             // add inverse relationships
             if (!empty($options['Inverse']) && is_array($options['Inverse'])) {
-                foreach ($options['Inverse'] AS $sex => $relationship) {
+                foreach ($options['Inverse'] AS $gender => $relationship) {
                     $templates[$relationship] = [
                         'Relationship' => [
                             'Label' => $relationship
                         ],
                         'Inverse' => static::getInverseRelationships($relationship)
                     ];
-                    if ($sex == 'Male' || $sex == 'Female') {
-                        $templates[$relationship]['Person'] = ['Gender' => $sex];
+                    if ($gender == 'Male' || $gender == 'Female') {
+                        $templates[$relationship]['Person'] = ['Gender' => $gender];
                     }
                 }
             }
