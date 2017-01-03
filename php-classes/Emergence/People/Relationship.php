@@ -411,7 +411,7 @@ class Relationship extends \VersionedRecord
 
         foreach (static::$templates as $relationshipName => $relationshipData) {
             $inverseRelationship = is_array($relationshipData['Inverse']) ? array_values($relationshipData['Inverse']) : [$relationshipData['Inverse']];
-            $relationshipGender = !empty($relationshipData['Person']['Gender'])? $relationshipData['Person']['Gender'] : 'Neutral';
+            $relationshipGender = !empty($relationshipData['Person']['Gender']) ? $relationshipData['Person']['Gender'] : 'Neutral';
 
             if (!empty($relationshipData['Inverse']) && in_array($relationship, $inverseRelationship)) {
                 $relationships[$relationshipGender] = $relationshipName;
