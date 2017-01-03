@@ -98,7 +98,38 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     }
                 }
             }
-        },{
+        }, {
+            xtype: 'combo',
+            name: 'ward-advisor',
+            fieldLabel: 'Ward Advisor',
+            displayField: 'FullName',
+            valueField: 'Username',
+            emptyText: 'Any',
+            queryMode: 'local',
+            store: {
+                fields: [
+                    { name: 'Username' },
+                    { name: 'FirstName' },
+                    { name: 'LastName' },
+                    {
+                        name: 'FullName',
+                        calculate: function(data) {
+                            return data.LastName + ', ' + data.FirstName;
+                        },
+                        depends: ['FirstName', 'LastName']
+                    }
+                ],
+                proxy: {
+                    type: 'slateapi',
+                    url: '/people/*advisors',
+                    summary: true,
+                    reader: {
+                        type: 'json',
+                        rootProperty: 'data'
+                    }
+                }
+            }
+        }, {
             xtype: 'combo',
             name: 'course',
             fieldLabel: 'Course',
