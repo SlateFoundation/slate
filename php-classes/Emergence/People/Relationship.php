@@ -382,7 +382,7 @@ class Relationship extends \VersionedRecord
     {
         $templates = [];
 
-        foreach (Relationship::$templates AS $label => $options) {
+        foreach (static::$templates AS $label => $options) {
             $options['Relationship']['Label'] = $label;
             $templates[$label] = $options;
 
