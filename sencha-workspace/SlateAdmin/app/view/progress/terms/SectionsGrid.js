@@ -47,14 +47,7 @@ Ext.define('SlateAdmin.view.progress.terms.SectionsGrid', {
     columns: [{
         flex: 1,
 
-        xtype: 'templatecolumn',
-
         text: 'Section',
-        dataIndex: 'Code',
-        tpl: [
-            '<a href="{[SlateAdmin.API.buildUrl("/sections/" + values.Code)]}" target="_blank" title="{Title:htmlEncode}">',
-                '{Code}',
-            '</a>'
-        ]
+        dataIndex: 'Code'
     }]
 });
