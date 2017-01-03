@@ -18,5 +18,5 @@
     "output": "${package.dir}/build",
     "local": true,
     "requires": [],
-    "extend": "ext-theme-neptune"
+    "extend": "theme-neptune"
 }
