@@ -208,6 +208,15 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             $conditions[] = sprintf('ID IN (%s)', count($enrolledSectionIds) ? join(',', $enrolledSectionIds) : '0');
         }
 
+        if (!empty($_REQUEST['sort_current'])) {
+            try {
+                $termIds = Term::getCurrent()->getMaster()->getContainedTermIDs();
+                if (!empty($termIds)) {
+                    $options['order'] = sprintf('FIELD(`%s`.TermID, %s) DESC', Section::getTableAlias(), join(", ", $termIds));
+                }
+            } catch (\Exception $e) {}
+        }
+
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
