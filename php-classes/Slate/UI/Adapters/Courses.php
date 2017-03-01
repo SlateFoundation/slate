@@ -68,11 +68,11 @@ class Courses implements \Slate\UI\ILinksSource
 
     public static function getLinks($context = null)
     {
-        if (empty($_SESSION['User'])) {
+        if (!$User = $_SESSION['User']) {
             return [];
         }
 
-        return [
+        $courses = [
             'Courses' => [
                 '_icon' => 'courses',
                 '_href' => Section::$collectionRoute,
@@ -84,8 +84,32 @@ class Courses implements \Slate\UI\ILinksSource
                         '_icon' => static::getIcon($Section),
                         '_href' => $Section->getUrl()
                     ];
-                }, $_SESSION['User']->CurrentCourseSections)
+                }, $User->CurrentCourseSections)
             ]
         ];
+
+        if (!empty($User->Wards)) {
+            foreach ($User->Wards as $Ward) {
+                if (empty($Ward->CurrentCourseSections)) {
+                    continue;
+                }
+
+                $courses[$Ward->FirstNamePossessive.' Courses'] = [
+                    '_icon' => 'courses',
+                    '_href' => Section::$collectionRoute,
+                    '_children' => array_map(function(Section $Section) {
+                        return [
+                            '_id' => $Section->Code,
+                            '_label' => $Section->getTitle(),
+                            '_shortLabel' => $Section->Code,
+                            '_icon' => static::getIcon($Section),
+                            '_href' => $Section->getUrl()
+                        ];
+                    }, $Ward->CurrentCourseSections)
+                ];
+            }
+        }
+
+        return $courses;
     }
 }
