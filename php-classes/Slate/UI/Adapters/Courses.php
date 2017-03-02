@@ -72,7 +72,7 @@ class Courses implements \Slate\UI\ILinksSource
             return [];
         }
 
-        $courses = [
+        $linkGroups = [
             'Courses' => [
                 '_icon' => 'courses',
                 '_href' => Section::$collectionRoute,
@@ -94,7 +94,7 @@ class Courses implements \Slate\UI\ILinksSource
                     continue;
                 }
 
-                $courses[$Ward->FirstNamePossessive.' Courses'] = [
+                $linkGroups[$Ward->Username] = [
                     '_icon' => 'courses',
                     '_href' => Section::$collectionRoute,
                     '_children' => array_map(function(Section $Section) {
@@ -110,6 +110,6 @@ class Courses implements \Slate\UI\ILinksSource
             }
         }
 
-        return $courses;
+        return $linkGroups;
     }
 }
