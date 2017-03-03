@@ -169,13 +169,40 @@ class Section extends \VersionedRecord
     ];
 
     public static $sorters = [
-        'CourseTitle' => [__CLASS__, 'sortCourseTitle']
+        'CourseTitle' => [__CLASS__, 'sortCourseTitle'],
+        'CurrentTerm' => [__CLASS__, 'sortCurrentTerm']
     ];
 
 
     public static function sortCourseTitle($dir, $name)
     {
         return '(SELECT Course.Title FROM courses Course WHERE Course.ID = CourseSection.CourseID) '.$dir;
+    }
+
+    public static function sortCurrentTerm($dir, $name)
+    {
+        $tableAlias = static::getTableAlias();
+        $sortedTermIds = \DB::allValues(
+            'ID',
+
+            'SELECT ID '.
+            '  FROM `%s` Term'.
+            ' ORDER BY ('.
+                        'SELECT IF( '.
+                            ' Term.StartDate <= NOW() AND Term.EndDate > NOW(), 2, '. // current = 2
+                            ' IF ( '.
+                                    'Term.EndDate >= NOW(), 1, 0'.  // upcoming = 1, previous = 0
+                            ' )'.
+                        ' ) '.
+            ') DESC',
+            [
+                \Slate\Term::$tableName
+            ]
+        );
+
+        // ASC = current, future, past
+        // DESC = past, future, current
+        return '(FIELD('.$tableAlias.'.TermID, '.join(', ', $sortedTermIds).')) '.$dir;
     }
 
     public function save($deep = true)

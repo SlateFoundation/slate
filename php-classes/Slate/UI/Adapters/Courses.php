@@ -72,7 +72,7 @@ class Courses implements \Slate\UI\ILinksSource
             return [];
         }
 
-        return [
+        $linkGroups = [
             'Courses' => [
                 '_icon' => 'courses',
                 '_href' => Section::$collectionRoute,
@@ -87,5 +87,30 @@ class Courses implements \Slate\UI\ILinksSource
                 }, $_SESSION['User']->CurrentCourseSections)
             ]
         ];
+
+        if (!empty($_SESSION['User']->Wards)) {
+            foreach ($_SESSION['User']->Wards as $Ward) {
+                if (empty($Ward->CurrentCourseSections) || !$Ward->Username) {
+                    continue;
+                }
+
+                $linkGroups[$Ward->Username] = [
+                    '_icon' => 'courses',
+                    '_href' => Section::$collectionRoute,
+                    '_label' => $Ward->FirstNamePossessive . ' Courses',
+                    '_children' => array_map(function(Section $Section) {
+                        return [
+                            '_id' => $Section->Code,
+                            '_label' => $Section->getTitle(),
+                            '_shortLabel' => $Section->Code,
+                            '_icon' => static::getIcon($Section),
+                            '_href' => $Section->getUrl()
+                        ];
+                    }, $Ward->CurrentCourseSections)
+                ];
+            }
+        }
+
+        return $linkGroups;
     }
 }
