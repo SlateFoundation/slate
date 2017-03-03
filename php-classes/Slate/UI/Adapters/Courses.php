@@ -68,7 +68,7 @@ class Courses implements \Slate\UI\ILinksSource
 
     public static function getLinks($context = null)
     {
-        if (!$_SESSION['User']) {
+        if (empty($_SESSION['User'])) {
             return [];
         }
 
