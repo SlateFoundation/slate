@@ -165,7 +165,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
                     sendEmailsBtn.enable();
 
                     if (!success || !data.success) {
-                        Ext.Msg.confirm('Failed to send emails', 'A problem occurred while sending emails, all or some may not have been sent');
+                        Ext.Msg.alert('Failed to send emails', 'A problem occurred while sending emails, all or some may not have been sent');
                         return;
                     }
 
