@@ -45,7 +45,7 @@
     <section class="sync-log">
     {foreach item=entry from=$Job->logEntries}
         <article class="level-{$entry.level}">
-            <div>{$entry.message|escape}</div>
+            <div>{\Emergence\Logger::interpolate($entry.message, $entry.context)|escape}</div>
 
             {if $entry.changes}
                 <dl>

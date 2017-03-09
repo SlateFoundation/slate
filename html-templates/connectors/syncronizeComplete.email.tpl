@@ -22,7 +22,7 @@
         {foreach item=entry from=$Job->logEntries}
             {if $entry.level != 'debug'}
                 <div class="log-entry">
-                    <div>{$entry.message|escape}</div>
+                    <div>{\Emergence\Logger::interpolate($entry.message, $entry.context)|escape}</div>
 
                     {if $entry.changes}
                         <dl>
