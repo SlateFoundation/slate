@@ -24,9 +24,10 @@
                 <div class="log-entry">
                     <div>{\Emergence\Logger::interpolate($entry.message, $entry.context)|escape}</div>
 
-                    {if $entry.changes}
+                    {$changes = default($entry.changes, $entry.context.changes)}
+                    {if $changes}
                         <dl>
-                            {foreach item=delta key=field from=$entry.changes}
+                            {foreach item=delta key=field from=$changes}
                                 <dt>{$field}</dt>
                                 <dd>{$delta.from|escape} -> {$delta.to|escape}</dd>
                             {/foreach}
