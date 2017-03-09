@@ -43,7 +43,7 @@
     <h2>Log</h2>
     <label><input type="checkbox" onchange="Ext.getBody().down('.sync-log').toggleCls('show-debug', this.checked)">Show debug entries</label>
     <section class="sync-log">
-    {foreach item=entry from=$Job->log}
+    {foreach item=entry from=$Job->logEntries}
         <article class="level-{$entry.level}">
             <div>{$entry.message|escape}</div>
 

@@ -19,7 +19,7 @@
 
         <h2>Log</h2>
         <div class="sync-log">
-        {foreach item=entry from=$Job->log}
+        {foreach item=entry from=$Job->logEntries}
             {if $entry.level != 'debug'}
                 <div class="log-entry">
                     <div>{$entry.message|escape}</div>
