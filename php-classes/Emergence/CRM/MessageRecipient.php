@@ -45,7 +45,7 @@ class MessageRecipient extends \ActiveRecord
         ],
         'EmailContact' => [
             'type' => 'one-one',
-            'class' => \Emergence\People\ContactPoints\Email::class
+            'class' => \Emergence\People\ContactPoint\Email::class
         ]
     ];
 
