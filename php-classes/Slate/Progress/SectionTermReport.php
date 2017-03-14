@@ -30,4 +30,9 @@ class SectionTermReport extends AbstractSectionTermReport
             'unique' => true
         ]
     ];
+    
+    public static function getType()
+    {
+        return 'Term';
+    }
 }

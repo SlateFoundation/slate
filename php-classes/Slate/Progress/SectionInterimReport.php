@@ -30,4 +30,9 @@ class SectionInterimReport extends AbstractSectionTermReport
             'unique' => true
         ]
     ];
+    
+    public static function getType()
+    {
+        return 'Interim';
+    }
 }

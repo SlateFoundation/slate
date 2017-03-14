@@ -5,7 +5,7 @@ namespace Slate\Progress;
 use Slate\People\Student;
 
 
-abstract class AbstractReport extends \VersionedRecord
+abstract class AbstractReport extends \VersionedRecord implements IStudentReport
 {
     // ActiveRecord configuration
     public static $singularNoun = 'report';
@@ -42,4 +42,15 @@ abstract class AbstractReport extends \VersionedRecord
     public static $dynamicFields = [
         'Student'
     ];
+    
+    public function getStudent()
+    {
+        return $this->Student;
+    }
+    
+    public function getAuthor()
+    {
+        return $this->Creator;
+    }
+    
 }

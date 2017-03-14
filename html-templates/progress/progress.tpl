@@ -1,38 +1,52 @@
-{extends 'designs/print.tpl'}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{block title}Report{/block}</title>
+    <style type="text/css">
+        {$includedStylesheets = array()}
+        {foreach from=$recordTypes item=recordType}
 
-{block 'body'}
-	<h1 class="doc-title">{$data[0]['StudentFullName']}</h1>
-	{$lastRecordType = false}
+            {if !in_array($recordType.stylesheet, $includedStylesheets)}
+                <?php $this->scope['includedStylesheets'][] = $this->scope['recordType']['stylesheet']; ?>
+                {file_get_contents($recordType.stylesheet)}
+            {/if}
+        {/foreach}
+    </style>
+</head>
 
-    <?php
+<body class="{$.responseId}">
 
-    $this->scope['recordClasses'] = array(
-		'Standards' => 'Standards',
-		'NarrativeReport' => 'Narrative Report',
-		'InterimReport' => 'Interim Report',
-		'Slate\\Progress\\Note' => 'Progress Note'
-	);
-	?>
+{block 'body'}    
+    {if count($data)}
+    	{*<div class="doc-title">{$data[0]->getReportHeader()}</div>*}
+    	{$lastRecordType = false}
+    
+    	{foreach item=Record from=$data}
+            {*dump $Record*}
+    		{*if $lastRecordType != $Record->getType()*}
 
-	{foreach item=Record from=$data}
-		{if $lastRecordType != $Record.Class}
-
-			{if $lastRecord}</section>{/if}
+			{if $lastRecord}
+            </section>
+            {/if}
 
 			<section class="doc-group">
-				<h2 class="group-title">{$recordClasses[$Record.Class]}</h2>
-		{/if}
+				<div class="group-title">
+                    {if $lastRecord->StudentID != $Record->StudentID || $lastRecord->getType() != $Record->getType()}{$Record->getReportHeader()}{else}<header>{$Record->getRecordHeader()}</header>{/if}</div>
 
-		{if $Record.Class == 'Standards'}{standards $Record}
-		{elseif $Record.Class == 'NarrativeReport'}{narrative $Record}
-		{elseif $Record.Class == 'InterimReport'}{interim $Record}
-		{elseif $Record.Class == 'Slate\\Progress\\Note'}{progressnote $Record}
-		{/if}
+            {$lastRecord = $Record}
 
-		{$lastRecordType = $Record.Class}
+            {$Record->getBody()}
+    
+    	{/foreach}
+    
+    	</section>
 
-		{*<details><summary>Dump</summary>{dump $Record}</details>*}
-	{/foreach}
-
-	{if $lastRecordType}</section>{/if}
+    {else}
+        <span class="empty">There were no records that fit the criteria&hellip;</span>
+    {/if}
 {/block}
+
+</body>
+
+</html>
