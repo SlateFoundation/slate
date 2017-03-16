@@ -301,17 +301,17 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     onProgressRecordClick: function (view, record) {
         var me = this;
 
-        switch(record.get('Class')) {
-            case 'Slate\\Progress\\Note':
+        switch(record.get('Type')) {
+            case 'ProgressNote':
                 return me.onProgressNoteClick(record);
 
-            case 'Slate\\Progress\\Narratives\\Report':
-                return me.onNarrativeClick(record);
+            case 'TermReport':
+                return me.onTermReportClick(record);
 
-            case 'Slate\\Progress\\Interims\\Report':
+            case 'InterimReport':
                 return me.onInterimClick(record);
 
-            case 'Standards':
+            case 'Standard':
                 return me.onStandardsClick(record);
         }
     },
@@ -372,7 +372,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         editor.show();
     },
 
-    onNarrativeClick: function (record) {
+    onTermReportClick: function (record) {
         var reportPreviewer = this.getReportPreviewer();
 
         reportPreviewer.show();

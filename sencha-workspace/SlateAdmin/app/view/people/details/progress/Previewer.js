@@ -38,25 +38,32 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     //helper functions
     updateReport: function (report){
         var me = this,
-            filterForm = me.getComponent('filterForm'),
             previewBox = me.getComponent('previewBox'),
-            reportClass = report.get('Class'),
+            reportType = report.get('Type'),
             apiHost = SlateAdmin.API.getHost(),
             loadingSrc = '',
             params = {},
             loadMask,
             printLoadingInterval;
 
-        switch (reportClass) {
-            case 'Slate\\Progress\\Narratives\\Report':
-                me.setTitle('Narrative Preview');
+        switch (reportType) {
+            case 'TermReport':
+                me.setTitle('Term Report Preview');
 
-                loadingSrc = '/standards/print/preview';
-                loadMask = {msg: 'Loading Narrative&hellip;'};
-                loadingSrc = '/progress/narratives/print/preview';
-                params = {
-                    narrativeID: report.get('ID')
-                }
+                loadMask = {
+                    msg: 'Loading Term Report&hellip;'
+                };
+                loadingSrc = '/progress/section-term-reports/'+report.get('ID');
+
+                break;
+
+            case 'InterimReport':
+                me.setTitle('Interim Preview');
+
+                loadMask = {
+                    msg: 'Loading Interim&hellip;'
+                };
+                loadingSrc = '/progress/section-interim-reports/'+report.get('ID');
 
                 break;
 
@@ -72,12 +79,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
                 }
                 break;
 
-            case 'Slate\\Progress\\Interims\\Report':
-                me.setTitle('Interims Preview');
-
-                loadMask = {msg: 'Loading Interims&hellip;'};
-                loadingSrc = '/interims/pdf/'+report.get('ID');
-                break;
         }
 
         params.downloadToken = Math.random();
