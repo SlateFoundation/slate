@@ -104,7 +104,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             'narratives',
             'interims'
         ]);
-        progressProxy.setExtraParam('termID', selectedTerm || 0);
+        progressProxy.setExtraParam('TermID', selectedTerm || 0);
 
         me.doFilter(true);
     },
@@ -271,7 +271,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         var reportsStore = Ext.getStore('people.ProgressReports'),
             reportsProxy = reportsStore.getProxy();
 
-        reportsProxy.setExtraParam('termID', newValue);
+        reportsProxy.setExtraParam('TermID', newValue);
 
         this.bufferedDoFilter();
     },
