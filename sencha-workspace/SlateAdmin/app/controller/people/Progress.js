@@ -101,7 +101,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         progressProxy.setExtraParam('reportTypes[]', [
             'standards',
             'progressnotes',
-            'narratives',
+            'termreports',
             'interims'
         ]);
         progressProxy.setExtraParam('TermID', selectedTerm || 0);

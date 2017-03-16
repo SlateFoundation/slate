@@ -37,8 +37,8 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                 },{
                     xtype: 'menucheckitem',
                     checked: true,
-                    text: 'Narratives',
-                    value: 'narratives'
+                    text: 'Term Reports',
+                    value: 'termreports'
                 },{
                     xtype: 'menucheckitem',
                     checked: true,
