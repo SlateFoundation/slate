@@ -9,6 +9,10 @@ class SectionInterimReport extends AbstractSectionTermReport
     public static $pluralNoun = 'section interim reports';
     public static $collectionRoute = '/progress/section-interim-reports';
 
+    public static $bodyTpl;
+    public static $headerTpl;
+    public static $cssTpl;
+    
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
 

@@ -3,15 +3,13 @@
 namespace Slate\Progress;
 
 interface IStudentReport
-{
-    
+{   
     public function getAuthor();
     public function getStudent();
     
-    public static function getStylesheet();
-    public static function getType();
+    public function getBodyHTML();
+    public function getHeaderHTML();
 
-    public function getReportHeader();
-    public function getRecordHeader();
-    public function getBody();
+    public static function getType();
+    public static function getCSS();
 }

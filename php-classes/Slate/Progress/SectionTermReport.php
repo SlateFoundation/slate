@@ -11,6 +11,10 @@ class SectionTermReport extends AbstractSectionTermReport
 
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
+    
+    public static $bodyTpl;
+    public static $headerTpl;
+    public static $cssTpl;
 
     public static $fields = [
         'Notes' => [
@@ -35,4 +39,5 @@ class SectionTermReport extends AbstractSectionTermReport
     {
         return 'Term';
     }
+
 }

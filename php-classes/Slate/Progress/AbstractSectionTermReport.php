@@ -64,130 +64,39 @@ abstract class AbstractSectionTermReport extends AbstractReport implements IStud
         'SectionTermData'
     ];
     
-    public static function getStylesheet()
+    public static function __classLoaded()
     {
-        return \Site::resolvePath('site-root/css/reports/progress.css')->RealPath;
-    }
-    
-    public function getHeader()
-    {
-        $html = 
-            "<header>".
-            	($this->Student->Advisor ?
-        				"<div class=\"advisor\">".
-        					"Advisor: {$Report->Student->Advisor->FullName}".
-        					"<a href=\"mailto:{$this->Student->Advisor->Email}\">{$this->Student->Advisor->Email}</a>".
-        				"</div>"
-                    : '').
-    		    "<h1>".
-    				"<span class=\"pretitle\">".$this->getType()." report for</span>".
-    				"{$this->Student->FullName}".
-    			"</h1>".
-    			$this->getRecordHeader();
-    		"</header>";
-        
-        return $html;
-    }
-    
-    public function getTermHeader()
-    {
-        return "<h3 class=\"term\">".
-            htmlspecialchars($this->Term->Title, ENT_QUOTES).
-        "</h3>";
-    }
-    
-    public function getRecordHeader()
-    {
-        return $this->getTermHeader();
-    }
-    
-    public function getReportHeader()
-    {
-        return $this->getHeader();
-    }
-    
-    public function getBody()
-    {
-        $html = 
-            "<article class=\"report\">".
-                "<h2>".
-                    htmlspecialchars($this->Section->Title, ENT_QUOTES).
-                "</h2>";
-    
-        $html .= "<dl>";
-        
-        if (count($this->Section->Teachers)) {
-            $html .= 
-                "<dt class=\"instructor\">".
-                    "Teacher".
-                    (count($this->Section->Teachers) != 1 ? 's' : '').
-                "</dt>";
-                    
-            foreach ($this->Section->Teachers as $Teacher) {
-                $escapedName = htmlspecialchars($Teacher->FullName, ENT_QUOTES);
-                $escapedEmail = htmlspecialchars($Teacher->PrimaryEmail, ENT_QUOTES);
-                
-                $html .= 
-                    "<dd class=\"instructor\">". 
-                        $escapedName.
-                        ($Teacher->Email ? " &lt;<a href=\"mailto:".$escapedEmail."\">".$escapedEmail."</a>&gt;" : '').
-                    "</dd><br />";
+        if (isset(static::$collectionRoute)) {
+            $tplPath =  ltrim(static::$collectionRoute, '/') . '/section'.static::getType().'Report';
+            if (empty(static::$bodyTpl)) {
+                static::$bodyTpl = $tplPath.'.body';
             }
             
-        }
-        
-
-
-        if ($this->Grade) {
-            $html .= 
-                "<dt class=\"grade\">Current Grade</dt>".
-                "<dd class=\"grade\">{$this->Grade}</dd>";
-        }
-        
-        if ($this->SectionTermData && trim($this->SectionTermData->getValue($this->getType().'ReportNotes'))) {
-            $html .=            
-                "<dt class=\"comments\">Section Notes</dt>".
-                "<dd class=\"comments\">".
-                    \Michelf\SmartyPantsTypographer::defaultTransform(
-                        \Michelf\MarkdownExtra::defaultTransform(
-                            htmlspecialchars($this->SectionTermData->getValue($this->getType().'ReportNotes'), ENT_QUOTES)
-                        )
-                    ).
-                "</dd>";
-        }
-                
-        if ($this->Notes) {
-            $html .=
-                "<dt class=\"comments\">Comments</dt>".
-                "<dd class=\"comments\">";
-                
-            switch ($this->NotesFormat) {
-                case 'html':
-                    $html .= $this->Notes;
-                    break;
-                
-                case 'markdown':
-                    $html .= \Michelf\SmartyPantsTypographer::defaultTransform(
-                        \Michelf\MarkdownExtra::defaultTransform(
-                            htmlspecialchars($this->Notes, ENT_QUOTES)
-                        )
-                    );
-                    break;
-                    
-                default:
-                    $html .= htmlspecialchars($this->Notes, ENT_QUOTES);
+            if (empty(static::$headerTpl)) {
+                static::$headerTpl = $tplPath.'.header';
             }
             
-            $html .= "</dd>";
+            if (empty(static::$cssTpl)) {
+                static::$cssTpl = $tplPath.'.css';
+            }
         }
-                
-        $html .= 
-            "</dl>".
-            "</article>";
-            
-        return $html;
     }
-
+    
+    public static function getCSS()
+    {
+        return \Emergence\Dwoo\Engine::getSource(static::$cssTpl);
+    }
+    
+    public function getHeaderHTML()
+    {
+        return \Emergence\Dwoo\Engine::getSource(static::$headerTpl, ['Report' => $this]);
+    }
+    
+    public function getBodyHTML()
+    {
+        return \Emergence\Dwoo\Engine::getSource(static::$bodyTpl, ['Report' => $this]);
+    }
+    
     public static function getAllByTerm(Term $Term = null, array $conditions = [], $summarizeRecords = true)
     {
         if ($Term) {

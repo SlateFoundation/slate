@@ -11,7 +11,9 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
     public static $subjectFormat = '[PROGRESS NOTE] %s: %s';
     public static $archiveMailboxFormat = false;
 
-    public static $pdfTemplate = 'notes/print';
+    public static $bodyTpl = 'notes/note.body';
+    public static $headerTpl = 'notes/note.header';
+    public static $cssTpl = 'notes/note.css';
 
     public function getEmailRecipientsList($recipients = false)
     {
@@ -48,11 +50,6 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
         return 'Progress';
     }
     
-    public static function getStylesheet()
-    {
-        return \Site::resolvePath('site-root/css/reports/print.css')->RealPath;
-    }
-    
     public function getTerm()
     {
         return Term::getByQuery(
@@ -78,68 +75,19 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
         return $this->Context;
     }
     
-    
-    public function getHeader()
+    public static function getCSS()
     {
-        $html = 
-            "<header>".
-                ($this->Student->Advisor ?
-        				"<div class=\"advisor\">".
-        					"Advisor: {$Report->Student->Advisor->FullName}".
-        					"<a href=\"mailto:{$this->Student->Advisor->Email}\">{$this->Student->Advisor->Email}</a>".
-        				"</div>"
-                    : '').
-    		    "<h1>".
-    				"<span class=\"pretitle\">".$this->getType()." notes for</span>".
-    				"{$this->Student->FullName}".
-    			"</h1>".
-    			$this->getRecordHeader();
-    		"</header>";
-        
-        return $html;
+        return \Emergence\Dwoo\Engine::getSource(static::$cssTpl);
     }
     
-    public function getTermHeader()
+    public function getHeaderHTML()
     {
-        return "<h3 class=\"term\">".
-            htmlspecialchars($this->getTerm()->Title, ENT_QUOTES).
-        "</h3>";
+        return \Emergence\Dwoo\Engine::getSource(static::$headerTpl, ['Report' => $this]);
     }
     
-    public function getRecordHeader()
+    public function getBodyHTML()
     {
-        return $this->getTermHeader();
-    }
-    
-    public function getReportHeader()
-    {
-        return $this->getHeader();
-    }
-    
-    public function getBody()
-    {
-        $html = 
-            "<article class=\"doc-item\">".
-    				"<header class=\"doc-header\">".
-						"<h3 class=\"item-title\">{$this->Subject}</h3>".
-						"<div class=\"meta\">".
-							"<span class=\"item-creator\">".
-								"{$this->getAuthor()->FullName}".
-                                ($this->getAuthor()->PrimaryEmail ? "&lt;<a class=\"url\" href=\"mailto:{$this->getAuthor()->PrimaryEmail}\">{$this->getAuthor()->PrimaryEmail}</a>&gt;" : '').
-							"</span>".
-							"<time class=\"item-datetime\">". date('M j, Y', $this->Created). "</time>".
-						"</div>".
-					"</header>";
-                    
-        if ($this->MessageFormat == 'html') {
-            $html .= "<div class=\"item-body\">{$this->Message}</div>"; 
-        } else {
-            $html .= "<div class=\"item-body\">".htmlspecialchars($this->Message, ENT_QUOTES)."</div>";
-        }
-					
-		$html .= "</article>";
-        
-        return $html;
+        return \Emergence\Dwoo\Engine::getSource(static::$bodyTpl, ['Note' => $this]);
     }
     
     public static function getAllByTerm(Term $Term = null, array $parameters = [], $summarizeRecords = true)

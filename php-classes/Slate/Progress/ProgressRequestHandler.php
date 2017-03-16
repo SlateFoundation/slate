@@ -66,13 +66,10 @@ class ProgressRequestHandler extends \RequestHandler
         foreach ($reportTypes as $reportType) {
             if (array_key_exists($reportType, $reportClasses)) {
                 $reports = $reportClasses[$reportType]::getAllByTerm($term, $params, $summarizeRecords);
+                $records = array_merge($records, $reports);
                 
                 if (!empty($reports)) {
-                    $records = array_merge($records, $reports);
-                    $recordTypes[$reportClasses[$reportType]::getType()] = [
-                        'class' => $reportClasses[$reportType],
-                        'stylesheet' => $reportClasses[$reportType]::getStylesheet()
-                    ];
+                    $recordTypes[] = $reportClasses[$reportType];
                 }
             }
         }
@@ -93,8 +90,7 @@ class ProgressRequestHandler extends \RequestHandler
 
             return (strtotime($date1) - strtotime($date2));
         });
-
-
+        
         return static::respond('progress', [
             'data' => $records,
             'recordTypes' => $recordTypes
