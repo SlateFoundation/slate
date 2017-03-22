@@ -33,7 +33,8 @@ class Message extends \VersionedRecord
         'Message' => 'clob',
         'MessageFormat' => [
             'type' => 'enum',
-            'values' => ['plain', 'html']
+            'values' => ['plain', 'html'],
+            'default' => 'html'
         ],
 
        'Status' => [
