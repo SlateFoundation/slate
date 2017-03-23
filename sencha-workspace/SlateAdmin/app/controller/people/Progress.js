@@ -27,7 +27,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         },
         progressList: 'people-details-progress dataview',
         peopleManager: 'people-manager',
-        termSelector: 'people-details-progress #progressReportsTermSelector',
+        classesSelector: 'people-details-progress #classesSelector',
+        termSelector: 'people-details-progress #termSelector',
         reportPreviewer: {
             selector: 'people-details-progress-previewer',
             autoCreate: true,
@@ -53,10 +54,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         'people-details-progress': {
             personloaded: 'onPersonLoaded'
         },
-        'people-details-progress #reportTypes menucheckitem': {
-            checkchange: 'onProgressTypesChange'
+        'people-details-progress #classesSelector menucheckitem': {
+            checkchange: 'onProgressClassesChange'
         },
-        'people-details-progress #progressReportsTermSelector': {
+        termSelector: {
             change: 'onProgressTermChange'
         },
         'people-details-progress #progressReportsList': {
@@ -93,16 +94,13 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
     onPersonLoaded: function (progressPanel, person) {
         var me = this,
-            progressProxy = Ext.getStore('people.ProgressReports').getProxy(),
-            selectedTerm = me.getTermSelector().getValue();
+            progressProxy = Ext.getStore('people.ProgressReports').getProxy();
 
-        progressProxy.setExtraParam('StudentID', person.getId());
-        progressProxy.setExtraParam('reportTypes[]', [
-            'progress-notes',
-            'term-reports',
-            'interim-reports'
-        ]);
-        progressProxy.setExtraParam('TermID', selectedTerm || 0);
+        progressProxy.setExtraParam('student', person.getId());
+        progressProxy.setExtraParam('classes[]', Ext.Array.map(me.getClassesSelector().query('menucheckitem'), function(checkItem) {
+            return checkItem.getValue();
+        }));
+        progressProxy.setExtraParam('term', me.getTermSelector().getValue() || 0);
 
         me.doFilter(true);
     },
@@ -248,20 +246,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         });
     },
 
-    onProgressTypesChange: function (checkItem, checked) {
-        var menu = checkItem.up('menu'),
-            reportTypeCheckboxes = menu.query('menucheckitem[checked=true]'),
-            reportsStore = Ext.getStore('people.ProgressReports'),
-            reportsProxy = reportsStore.getProxy(),
-            reportTypes = [];
+    onProgressClassesChange: function () {
+        Ext.getStore('people.ProgressReports').getProxy().setExtraParam(
+            'classes[]',
+            Ext.Array.map(this.getClassesSelector().query('menucheckitem[checked]'), function(checkItem) {
+                return checkItem.getValue();
+            })
+        );
 
-        for(var key in reportTypeCheckboxes) {
-            if (reportTypeCheckboxes[key].checked) {
-                reportTypes.push(reportTypeCheckboxes[key].value);
-            }
-        }
-
-        reportsProxy.setExtraParam('reportTypes[]', reportTypes);
         this.bufferedDoFilter();
     },
 
@@ -269,7 +261,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         var reportsStore = Ext.getStore('people.ProgressReports'),
             reportsProxy = reportsStore.getProxy();
 
-        reportsProxy.setExtraParam('TermID', newValue);
+        reportsProxy.setExtraParam('term', newValue);
 
         this.bufferedDoFilter();
     },

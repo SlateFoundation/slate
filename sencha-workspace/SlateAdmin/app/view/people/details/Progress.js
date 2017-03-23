@@ -25,7 +25,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
         },{
             xtype: 'button',
             text: 'Types',
-            itemId: 'reportTypes',
+            itemId: 'classesSelector',
             glyph: 0xf0ca, // fa-list-ul
             menu: {
                 floating: true,
@@ -33,17 +33,17 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                     xtype: 'menucheckitem',
                     checked: true,
                     text: 'Progress Notes',
-                    value: 'progress-notes'
+                    value: 'Slate\\Progress\\Note'
                 },{
                     xtype: 'menucheckitem',
                     checked: true,
                     text: 'Term Reports',
-                    value: 'term-reports'
+                    value: 'Slate\\Progress\\SectionTermReport'
                 },{
                     xtype: 'menucheckitem',
                     checked: true,
                     text: 'Interim Reports',
-                    value: 'interim-reports'
+                    value: 'Slate\\Progress\\SectionInterimReport'
                 }]
             }
         },{
@@ -56,8 +56,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
         },{
             flex: 1,
             xtype: 'combobox',
-            itemId: 'progressReportsTermSelector',
-            name: 'progressReportsTermSelector',
+            itemId: 'termSelector',
             emptyText: 'Any',
             store: 'Terms',
             valueField: 'ID',
