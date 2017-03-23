@@ -22,7 +22,6 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
                     case 'Slate\\Progress\\SectionInterimReport':
                         return 'Interim Report';
                     case 'Slate\\Progress\\SectionTermReport':
-                    case 'NarrativeReport':
                         return 'Term Report';
                     case 'Slate\\Progress\\Note':
                         return 'Progress Note';

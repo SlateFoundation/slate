@@ -27,7 +27,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         },
         progressList: 'people-details-progress dataview',
         peopleManager: 'people-manager',
-        reportSearchField: 'people-details-progress #notesSearch',
         termSelector: 'people-details-progress #progressReportsTermSelector',
         reportPreviewer: {
             selector: 'people-details-progress-previewer',
