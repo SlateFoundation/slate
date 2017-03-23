@@ -181,6 +181,6 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
         }
 
         printoutCmp.setLoading('Loading printout&hellip;');
-        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports/*print?'+Ext.Object.toQueryString(this.buildFilters()));
+        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports?'+Ext.Object.toQueryString(this.buildFilters()));
     }
 });
