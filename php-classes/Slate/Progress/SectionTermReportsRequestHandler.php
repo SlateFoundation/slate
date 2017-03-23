@@ -19,8 +19,6 @@ use Emergence\Mailer\Mailer;
 
 class SectionTermReportsRequestHandler extends \RecordsRequestHandler
 {
-    public static $printTemplate = 'sectionTermReports';
-
     public static $recordClass = SectionTermReport::class;
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
@@ -43,8 +41,6 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
                 return static::handleEmailsRequest();
             case '*email-preview':
                 return static::handleEmailPreviewRequest();
-            case '*print':
-                return static::handlePrintRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -55,11 +51,6 @@ class SectionTermReportsRequestHandler extends \RecordsRequestHandler
         static::applyRequestFilters($conditions, $responseData);
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
-    }
-
-    public static function handlePrintRequest()
-    {
-        return static::handleBrowseRequest([], [], static::$printTemplate, []);
     }
 
     public static function handleAuthorsRequest()
