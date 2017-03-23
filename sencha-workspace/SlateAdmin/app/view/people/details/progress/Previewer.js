@@ -65,19 +65,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
                 loadingSrc = '/progress/section-interim-reports/'+report.get('ID');
 
                 break;
-
-            case 'Standards':
-                me.setTitle('Standards Preview');
-
-                loadMask = {msg: 'Loading Standards&hellip;'};
-                loadingSrc = '/standards/print/preview'
-                params = {
-                    studentID: report.get('StudentID'),
-                    sectionID: report.get('CourseSectionID'),
-                    termID: report.get('TermID')
-                }
-                break;
-
         }
 
         params.downloadToken = Math.random();

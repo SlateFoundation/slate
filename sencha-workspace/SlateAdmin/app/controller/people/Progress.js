@@ -99,10 +99,9 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
         progressProxy.setExtraParam('StudentID', person.getId());
         progressProxy.setExtraParam('reportTypes[]', [
-            'standards',
-            'progressnotes',
-            'termreports',
-            'interims'
+            'progress-notes',
+            'term-reports',
+            'interim-reports'
         ]);
         progressProxy.setExtraParam('TermID', selectedTerm || 0);
 
@@ -311,7 +310,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 break;
 
             case 'Slate\\Progress\\SectionInterimReport':
-                me.onInterimClick(record);
+                me.onInterimReportClick(record);
                 break;
         }
     },
@@ -379,15 +378,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         reportPreviewer.setReport(record);
     },
 
-    onInterimClick: function (record) {
-        var reportPreviewer = this.getReportPreviewer();
-
-        reportPreviewer.show();
-        reportPreviewer.setReport(record);
-    },
-
-    onStandardsClick: function (record) {
-
+    onInterimReportClick: function (record) {
         var reportPreviewer = this.getReportPreviewer();
 
         reportPreviewer.show();
