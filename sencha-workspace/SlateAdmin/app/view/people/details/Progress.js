@@ -93,7 +93,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                 '<tpl for=".">',
                     '<li class="person-record rich-list-item clickable">',
                         '<div class="meta">',
-                            '<span class="datum token type">{[values.Type.split(/(?=[A-Z])/).join(" ")]}</span>',
+                            '<span class="datum token type">{ClassLabel}</span>',
                             '<span class="datum author">{AuthorUsername}</span>',
                             '<time class="datum token index date" datetime="{Date:date(\'c\')}" title="{Date:date(\'F j, Y, g:i a\')}">',
                             '{Date:date(\'M j, Y\')}',

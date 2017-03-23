@@ -39,15 +39,14 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     updateReport: function (report){
         var me = this,
             previewBox = me.getComponent('previewBox'),
-            reportType = report.get('Type'),
             apiHost = SlateAdmin.API.getHost(),
             loadingSrc = '',
             params = {},
             loadMask,
             printLoadingInterval;
 
-        switch (reportType) {
-            case 'TermReport':
+        switch (report.get('Class')) {
+            case 'Slate\\Progress\\SectionTermReport':
                 me.setTitle('Term Report Preview');
 
                 loadMask = {
@@ -57,7 +56,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
 
                 break;
 
-            case 'InterimReport':
+            case 'Slate\\Progress\\SectionInterimReport':
                 me.setTitle('Interim Preview');
 
                 loadMask = {

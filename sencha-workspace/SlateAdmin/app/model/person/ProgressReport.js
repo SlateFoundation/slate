@@ -13,23 +13,21 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
             name: 'Class',
             defaultValue: 'Slate\\Progress\\Note'
         }, {
-            name: 'Type',
+            name: 'ClassLabel',
             depends: [
                 'Class'
             ],
             calculate: function (data) {
                 switch (data.Class) {
                     case 'Slate\\Progress\\SectionInterimReport':
-                        return 'InterimReport';
+                        return 'Interim Report';
                     case 'Slate\\Progress\\SectionTermReport':
                     case 'NarrativeReport':
-                        return 'TermReport';
-
+                        return 'Term Report';
                     case 'Slate\\Progress\\Note':
+                        return 'Progress Note';
                     default:
-                        return 'ProgressNote';
-                    // case 'Standards':
-                    //     return 'Standard';
+                        return 'Unknown Report'
                 }
             }
         }, {
