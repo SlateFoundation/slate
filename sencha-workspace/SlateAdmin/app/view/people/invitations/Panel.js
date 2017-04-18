@@ -35,7 +35,10 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
         columnLines: true,
 //      multiSelect: true,
         viewConfig: {
-            markDirty: false
+            markDirty: false,
+            getRowClass: function(person) {
+                return person.get('Email') ? '' : 'x-item-disabled';
+            }
         },
         columns: {
             defaults: {
@@ -58,7 +61,8 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
             },{
                 text: 'Email Address',
                 flex: 2,
-                dataIndex: 'Email'
+                dataIndex: 'Email',
+                emptyCellText: '<em>Add email to invite</em>'
             },{
                 text: 'Account Status',
                 flex: 2,
@@ -79,8 +83,8 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                             cls = 'student-nologin';
                         }
                     } else {
-                        text = Person.get('AccountLevel');
-                        cls = Person.get('AccountLevel').toLowerCase();
+                        text = Person.get('AccountLevel') || 'Contact';
+                        cls = text.toLowerCase();
 
                         if (!Person.get('Username')) {
                             text += ', no login';

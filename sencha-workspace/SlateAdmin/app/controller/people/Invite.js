@@ -30,9 +30,11 @@ Ext.define('SlateAdmin.controller.people.Invite', {
             click: 'onOpenClick'
         },
         'people-invitationspanel grid checkcolumn': {
-            headerclick: 'onGridCheckHeaderClick'
+            headerclick: 'onGridCheckHeaderClick',
+            beforecheckchange: 'onGridBeforeCheckChange'
         },
         'people-invitationspanel grid': {
+            beforeselect: 'onGridBeforeSelect',
             select: 'onGridSelect'
         },
         'people-invitationspanel button[action=cancel]': {
@@ -56,7 +58,7 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         // TODO: add all results if no selection made
         store.removeAll();
         store.add(Ext.Array.map(selectedPeople, function(person) {
-            return { Person: person, selected: true };
+            return { Person: person, selected: Boolean(person.get('PrimaryEmail')) };
         }));
 
         window.show();
@@ -71,6 +73,22 @@ Ext.define('SlateAdmin.controller.people.Invite', {
             invitation.commit();
         });
         store.resumeEvents();
+    },
+
+    onGridBeforeCheckChange: function(column, rowIndex, checked) {
+        if (!this.getPeopleInvitationsStore().getAt(rowIndex).get('Email')) {
+            return false;
+        }
+
+        return true;
+    },
+
+    onGridBeforeSelect: function(rowModel, invitation) {
+        if (!invitation.get('Email')) {
+            return false;
+        }
+
+        return true;
     },
 
     onGridSelect: function(rowModel, invitation) {
