@@ -43,13 +43,14 @@
     <h2>Log</h2>
     <label><input type="checkbox" onchange="Ext.getBody().down('.sync-log').toggleCls('show-debug', this.checked)">Show debug entries</label>
     <section class="sync-log">
-    {foreach item=entry from=$Job->log}
+    {foreach item=entry from=$Job->logEntries}
         <article class="level-{$entry.level}">
-            <div>{$entry.message|escape}</div>
+            <div>{\Emergence\Logger::interpolate($entry.message, $entry.context)|escape}</div>
 
-            {if $entry.changes}
+            {$changes = default($entry.changes, $entry.context.changes)}
+            {if $changes}
                 <dl>
-                    {foreach item=delta key=field from=$entry.changes}
+                    {foreach item=delta key=field from=$changes}
                         <dt>{$field}</dt>
                         <dd>{$delta.from|escape} -> {$delta.to|escape}</dd>
                     {/foreach}

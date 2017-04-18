@@ -102,7 +102,7 @@ class SectionInterimReportsRequestHandler extends \RecordsRequestHandler
                 $recipients = [];
 
                 foreach ($email['reports'] AS $reportId) {
-                    $Report = SectionTermReport::getByID($reportId);
+                    $Report = SectionInterimReport::getByID($reportId);
 
                     if ($Report->Status == 'published') {
                         $reports[] = $Report;

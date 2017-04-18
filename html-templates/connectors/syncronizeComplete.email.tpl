@@ -19,14 +19,15 @@
 
         <h2>Log</h2>
         <div class="sync-log">
-        {foreach item=entry from=$Job->log}
+        {foreach item=entry from=$Job->logEntries}
             {if $entry.level != 'debug'}
                 <div class="log-entry">
-                    <div>{$entry.message|escape}</div>
+                    <div>{\Emergence\Logger::interpolate($entry.message, $entry.context)|escape}</div>
 
-                    {if $entry.changes}
+                    {$changes = default($entry.changes, $entry.context.changes)}
+                    {if $changes}
                         <dl>
-                            {foreach item=delta key=field from=$entry.changes}
+                            {foreach item=delta key=field from=$changes}
                                 <dt>{$field}</dt>
                                 <dd>{$delta.from|escape} -> {$delta.to|escape}</dd>
                             {/foreach}
