@@ -49,7 +49,8 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                 width: 35,
                 dataIndex: 'selected',
                 resizable: false,
-                sortable: false
+                sortable: false,
+                text: '<img class="x-grid-checkcolumn" src="'+Ext.BLANK_IMAGE_URL+'">'
             },{
                 text: 'First Name',
                 dataIndex: 'FirstName',
