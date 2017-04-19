@@ -69,8 +69,7 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
         store.suspendEvents(true);
         store.each(function(invitation) {
-            invitation.set('selected', !invitation.get('selected'));
-            invitation.commit();
+            invitation.set('selected', Boolean(!invitation.get('selected') && invitation.get('Email')), { commit: true });
         });
         store.resumeEvents();
     },
