@@ -126,7 +126,7 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
 
         for (; i < selectedPeopleLength; i++) {
-            people.push(selectedPeople[0].get('Person').getId());
+            people.push(selectedPeople[i].get('Person').getId());
         }
 
         if (!people.length) {
