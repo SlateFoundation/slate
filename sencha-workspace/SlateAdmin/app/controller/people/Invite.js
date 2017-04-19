@@ -55,7 +55,11 @@ Ext.define('SlateAdmin.controller.people.Invite', {
             window = me.getInvitationsWindow(),
             store = me.getPeopleInvitationsStore();
 
-        // TODO: add all results if no selection made
+        // select all people if none selected
+        if (!selectedPeople.length) {
+            selectedPeople = peopleGrid.getStore().getRange();
+        }
+
         store.removeAll();
         store.add(Ext.Array.map(selectedPeople, function(person) {
             return { Person: person, selected: Boolean(person.get('PrimaryEmail')) };
