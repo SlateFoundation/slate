@@ -92,21 +92,24 @@ Emergence\People\Person::$searchConditions['WardAdvisor'] = [
             return false;
         }
 
-        return sprintf(
-            'ID IN ('
-                .'SELECT relationships.RelatedPersonID'
-                .' FROM people Student'
-                .' RIGHT JOIN `%s` relationships'
-                    .' ON (relationships.PersonID = Student.ID AND relationships.Class = "%s")'
-                .' WHERE'
-                    .' GraduationYear >= %u'
-                    .' AND AdvisorID = %u'
-            .')',
-            Emergence\People\Relationship::$tableName,
-            DB::escape(Emergence\People\GuardianRelationship::class),
-            date('Y', strtotime($currentTerm->getMaster()->EndDate)),
-            $Advisor->ID
+        $ids = DB::allValues(
+            'RelatedPersonID',
+            'SELECT RelatedPersonID'
+            .' FROM people Student'
+            .' RIGHT JOIN `%s` relationships'
+                .' ON (relationships.PersonID = Student.ID AND relationships.Class = "%s")'
+            .' WHERE'
+                .' GraduationYear >= %u'
+                .' AND AdvisorID = %u',
+            [
+                Emergence\People\Relationship::$tableName,
+                DB::escape(Emergence\People\GuardianRelationship::class),
+                date('Y', strtotime($currentTerm->getMaster()->EndDate)),
+                $Advisor->ID
+            ]
         );
+
+        return 'Emergence_People_Person.ID IN ('.implode(',', $ids).')';
     }
 ];
 
@@ -117,7 +120,7 @@ Emergence\People\Person::$searchConditions['ID'] = [
     'points' => 3,
     'callback' => function($ids, $matchedCondition) {
 
-        $ids = explode(",", $ids);
+        $ids = explode(',', $ids);
 
         foreach ($ids as $id) {
             if (is_numeric($id) && intval($id) > 0) {
