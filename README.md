@@ -17,14 +17,14 @@ sites, clones, or child sites. The guides for Ubuntu 13.04/13.10 and Gentoo are 
 Emergence follows a design philosophy distinct from existing PHP frameworks that prioritises the ease and stability of customizing, extending, and resharing an application. Schools have diverse needs and levels of expertise available and it is important that any aspect of their system be customizable without needing to entirely fork away from the mainstream releases. Emergence also facilitates the evolution of sub-distributions of Slate that cater to common school environments.
 
 ## Installation via Emergence (linked child) - Recommended
--  Create an emergence site that extends http://o9B11mbIXY1proH7@v1.slate.is
+-  Create an emergence site that extends http://f6XqdJ2YIsm2oeXU@v2.slate.is
 
 This video walks through the complete process of installing emergence and then instantiating a different emergence-powered application called Gatekeeper:
 
 [![Walkthrough Video](http://b.vimeocdn.com/ts/455/313/455313620_640.jpg)](https://vimeo.com/79587819)
 
 ## Installation from Git
--  Create an emergence site that extends http://8U6kydil36bl3vlJ@skeleton.emr.ge
+-  Create an emergence site that extends http://lKhjNhwXoM8rLbXw@skeleton-v2.emr.ge
 -  Upload contents of git repository using WebDAV client (CyberDuck is the best open-source option)
 
 ## Supporters
