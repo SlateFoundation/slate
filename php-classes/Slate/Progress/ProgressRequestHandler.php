@@ -7,12 +7,10 @@ use Slate\Term;
 
 class ProgressRequestHandler extends \RequestHandler
 {
-
     public static $reportClasses = [
-        'termreports' => SectionTermReport::class,
-        'narratives' => SectionTermReport::class,// backwards compat
-        'interims' => SectionInterimReport::class,
-        'progressnotes' => Note::class
+        SectionTermReport::class,
+        SectionInterimReport::class,
+        Note::class
     ];
 
     public static $userResponseModes = [
