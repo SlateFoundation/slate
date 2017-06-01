@@ -17,7 +17,7 @@
 
 <dl class="item-body">
     {block teachers}
-        {if count($Report->Section->Teachers)}
+        {if count($Report->Section->Teachers) && !(count($Report->Section->Teachers) == 1 && $Report->Section->Teachers[0]->ID == $Report->getAuthor()->ID)}
             <div class="dli">
                 <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
                 {foreach item=Teacher from=$Report->Section->Teachers implode='<br />'}
