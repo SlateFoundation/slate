@@ -16,7 +16,6 @@ class Note extends \Emergence\CRM\Message implements IStudentReport
     public static $archiveMailboxFormat = false;
 
     public static $cssTpl = 'notes/_css';
-    public static $headerTpl = 'notes/_header';
     public static $bodyTpl = 'notes/_body';
 
     public static $summaryFields = [

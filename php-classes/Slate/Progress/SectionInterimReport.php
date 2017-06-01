@@ -6,7 +6,6 @@ namespace Slate\Progress;
 class SectionInterimReport extends AbstractSectionTermReport
 {
     public static $cssTpl = 'section-interim-reports/_css';
-    public static $headerTpl = 'section-interim-reports/_header';
     public static $bodyTpl = 'section-interim-reports/_body';
 
 

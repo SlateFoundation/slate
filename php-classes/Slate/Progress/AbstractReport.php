@@ -11,7 +11,6 @@ abstract class AbstractReport extends \VersionedRecord implements IStudentReport
 
 
     public static $cssTpl;
-    public static $headerTpl = '_header';
     public static $bodyTpl = '_body';
 
     // ActiveRecord configuration
