@@ -40,4 +40,9 @@ class SectionTermReport extends AbstractSectionTermReport
     {
         return $count == 1 ? 'term report' : 'term reports';
     }
+
+    public function getTimestamp()
+    {
+        return strtotime($this->getTerm()->EndDate);
+    }
 }
