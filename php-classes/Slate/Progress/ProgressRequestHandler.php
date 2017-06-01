@@ -2,8 +2,9 @@
 namespace Slate\Progress;
 
 use DB;
-use Emergence\People\Person;
-use Slate\Term;
+use Emergence\People\PeopleRequestHandler;
+use Slate\TermsRequestHandler;
+
 
 class ProgressRequestHandler extends \RequestHandler
 {
@@ -27,71 +28,69 @@ class ProgressRequestHandler extends \RequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        if (!$_REQUEST['StudentID'] || !ctype_digit($_REQUEST['StudentID'])) {
-            return static::throwError('Must supply Student ID');
+        // get term filter
+        if (!empty($_REQUEST['term'])) {
+            if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
         }
 
-        $params = [
-            'StudentID' => $_REQUEST['StudentID']
-        ];
-
-        if (!empty($_REQUEST['TermID'])) {
-            if (is_numeric($_REQUEST['TermID'])) {
-                $term = Term::getByID($_REQUEST['TermID']);
-            } else {
-                $term = Term::getCurrent();
+        // get student filter
+        if (!empty($_REQUEST['student'])) {
+            if (!$Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student'])) {
+                return static::throwNotFoundError('student not found');
             }
         } else {
-            $term = null;
-        }
-        
-        if (!empty($_REQUEST['summarize'])) {
-            $summarizeRecords = true;
-        } else {
-            $summarizeRecords = false;
+            return static::throwInvalidRequestError('student required');
         }
 
-        $reportTypes = is_string($_REQUEST['reportTypes']) ? [$_REQUEST['reportTypes']] : $_REQUEST['reportTypes'];
+        // get types filter
+        if (!empty($_REQUEST['types'])) {
+            $recordTypes = is_string($_REQUEST['types']) ? explode(',', $_REQUEST['types']) : $_REQUEST['types'];
 
-        if (empty($reportTypes)) {
-            return static::throwError('Must supply report types');
-        }
-
-        $reportClasses = static::$reportClasses;
-        $records = [];
-        $recordTypes = [];
-        
-        foreach ($reportTypes as $reportType) {
-            if (array_key_exists($reportType, $reportClasses)) {
-                $reports = $reportClasses[$reportType]::getAllByTerm($term, $params, $summarizeRecords);
-                $records = array_merge($records, $reports);
-                
-                if (!empty($reports)) {
-                    $recordTypes[] = $reportClasses[$reportType];
+            foreach ($recordTypes AS $recordType) {
+                if (!in_array($recordType, static::$reportClasses)) {
+                    return static::throwNotFoundError('type not found');
                 }
             }
+        } else {
+            $recordTypes = static::$reportClasses;
         }
 
+        // compile results from each type
+        $records = [];
+        $foundTypes = [];
+
+        foreach ($recordTypes as $recordType) {
+            if ($Term && $Student) {
+                $foundRecords = $recordType::getAllByStudentTerm($Student, $Term);
+            } elseif ($Term) {
+                $foundRecords = $recordType::getAllByTerm($Term);
+            } elseif ($Student) {
+                $foundRecords = $recordType::getAllByStudent($Student);
+            } else {
+                $foundRecords = $recordType::getAll();
+            }
+
+            if (!empty($foundRecords)) {
+                $records = array_merge($records, $foundRecords);
+                $foundTypes[] = $recordType;
+            }
+        }
+foreach ($records AS $record) {
+    $record->getTerm();
+}
+        // apply unified sorting across all types
         usort($records, function($r1, $r2) {
-
-            if (is_object($r1)) {
-                $date1 = $r1->Created;
-            } else {
-                $date1 = $r1['Date'];
-            }
-
-            if (is_object($r2)) {
-                $date2 = $r2->Created;
-            } else {
-                $date2 = $r2['Date'];
-            }
-
-            return (strtotime($date1) - strtotime($date2));
+            return $r2->getTimestamp() - $r1->getTimestamp();
         });
-        
+// \Debug::dumpVar(\Debug::$log);
+        // return results and list of included types
         return static::respond('progress', [
             'data' => $records,
-            'recordTypes' => $recordTypes
+            'recordTypes' => $foundTypes,
+            'term' => $Term,
+            'student' => $Student
         ]);
     }
 }

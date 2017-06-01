@@ -3,10 +3,8 @@
 namespace Slate\Progress;
 
 use Slate\Term;
+use Emergence\People\IPerson;
 
-/*
-* Trait to be implemented in ActiveRecord classes
-*/
 
 trait StudentTermReportTrait
 {
@@ -14,20 +12,17 @@ trait StudentTermReportTrait
     {
         return $this->Term;
     }
-    
-    public static function getAllByTerm(Term $Term = null, array $conditions = [])
+
+    public static function getAllByTerm(Term $Term, array $options = [])
     {
-        if ($Term) {
-            $conditions['TermID'] = $Term->ID;
-        }
-        
-        return static::getAllByWhere($conditions);
+        return static::getAllByWhere('TermID IN ('.implode(',', $Term->getContainedTermIDs()).')', $options);
     }
-    
-    public static function getAllByStudent(IPerson $Student, array $conditions = [])
+
+    public static function getAllByStudentTerm(IPerson $Student, Term $Term)
     {
-        return static::getAllByWhere(array_merge([
-            'StudentID' => $Student->ID    
-        ], $conditions));
+        return static::getAllByWhere([
+            'StudentID' => $Student->ID,
+            'TermID IN ('.implode(',', $Term->getContainedTermIDs()).')'
+        ], ['order' => ['ID' => 'DESC']]);
     }
 }

@@ -3,17 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>{block title}Report{/block}</title>
-    <style>
-        {file_get_contents(Site::resolvePath('site-root/css/reports/print.css')->RealPath)}
-    </style>
+
+    {block css}
+        {cssmin "reports/print.css" embed=true}
+    {/block}
 </head>
 
-{load_templates 'designs/print.subtemplates.tpl'}
-
-<body class="{$.responseId}">
-{block "body"}
-    <details><summary>Dump</summary>{dump $Record}</details>
-    <h1 class="doc-title">{$.responseId}</h1>
-{/block}
+<body class="{block body-class}{str_replace('/', '_', $.responseId)}-tpl{/block}">
+    {block body}
+        <h1 class="doc-title">{$.responseId}</h1>
+        <details><summary>Dump</summary>{dump}</details>
+    {/block}
 </body>
 </html>

@@ -7,20 +7,40 @@ use Slate\People\Student;
 
 abstract class AbstractReport extends \VersionedRecord implements IStudentReport
 {
+    use StudentReportTrait;
+
+
+    public static $cssTpl;
+    public static $headerTpl = '_header';
+    public static $bodyTpl = '_body';
+
     // ActiveRecord configuration
     public static $singularNoun = 'report';
     public static $pluralNoun = 'reports';
     public static $updateOnDuplicateKey = true;
 
+    public static $summaryFields = [
+        'ID' => true,
+        'Class' => true,
+        'Created' => true,
+        'CreatorID' => true,
+        'Creator' => true,
+        'StudentID' => true,
+        'Student' => true,
+        'Status' => true
+    ];
+
     public static $fields = [
         'StudentID' => [
             'type' => 'uint',
-            'index' => true
+            'index' => true,
+            'includeInSummary' => true
         ],
         'Status' => [
             'type' => 'enum',
             'values' => ['draft', 'published'],
-            'default' => 'draft'
+            'default' => 'draft',
+            'includeInSummary' => true
         ],
     ];
 
@@ -40,17 +60,8 @@ abstract class AbstractReport extends \VersionedRecord implements IStudentReport
     ];
 
     public static $dynamicFields = [
-        'Student'
+        'Student' => [
+            'includeInSummary' => true
+        ]
     ];
-    
-    public function getStudent()
-    {
-        return $this->Student;
-    }
-    
-    public function getAuthor()
-    {
-        return $this->Creator;
-    }
-    
 }

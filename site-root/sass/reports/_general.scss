@@ -47,7 +47,7 @@ p, ul, ol {
 a {
 	color: $link-color;
 	text-decoration: none;
-	
+
 	&:hover, &:focus { color: lighten($link-color, 10); }
 	        &:active { color:  darken($link-color, 5); }
 }
@@ -83,7 +83,7 @@ a {
 
 .item-title {
 	font-weight: normal;
-	
+
 	small {
 		line-height: 1;
 		margin-left: .25em;
@@ -107,7 +107,7 @@ a {
 .subsection {
 	clear: both;
 	overflow: hidden;
-	
+
 	& + .subsection {
 		@include leading-border($border-style: dotted);
 		border-color: #ccc;
@@ -122,20 +122,20 @@ a {
 		margin-left: .5em;
 		text-transform: uppercase;
 	}
-	
+
 	&.float-left,
 	&.float-right {
 		float: left;
 		@include trailer;
 		width: 20%;
-		
+
 		small {
 			display: block;
 			line-height: inherit;
 			margin: 0;
-		}		
+		}
 	}
-	
+
 	&.float-right {
 		float: right;
 		padding-left: rhythm(1);
@@ -178,4 +178,36 @@ dt {
 	text-align: right;
 	text-transform: uppercase;
 	width: percentage(1/6);
+}
+
+
+dd.grade {
+    font-weight: 900;
+    page-break-before: avoid;
+    page-break-after: avoid;
+}
+
+dt.comments {
+    display: inline-block;
+    float: none;
+    page-break-after: avoid;
+}
+
+dd.comments {
+    clear: left;
+    line-height: 1.4;
+    margin: 0.5em .25in 1em;
+
+    p {
+        line-height: 1.4 !important;
+    }
+}
+
+.comments {
+    h1 { font-size: 1.25em }
+    h2 { font-size: 1.20em }
+    h3 { font-size: 1.15em }
+    h4 { font-size: 1.10em }
+    h5 { font-size: 1.05em }
+    h6 { font-size: 1.00em }
 }

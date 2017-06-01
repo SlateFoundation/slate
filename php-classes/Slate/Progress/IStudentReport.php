@@ -2,14 +2,19 @@
 
 namespace Slate\Progress;
 
+use Emergence\People\IPerson;
+
+
 interface IStudentReport
-{   
+{
+    public static function getNoun($count = 1);
+
+    public function getTimestamp();
     public function getAuthor();
     public function getStudent();
-    
-    public function getBodyHTML();
-    public function getHeaderHTML();
 
-    public static function getType();
-    public static function getCSS();
+    public static function getCss(array $templateData = []);
+    public function getBodyHtml($headingLevel = 2, array $templateData = []);
+
+    public static function getAllByStudent(IPerson $Student);
 }

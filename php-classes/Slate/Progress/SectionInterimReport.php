@@ -2,17 +2,19 @@
 
 namespace Slate\Progress;
 
+
 class SectionInterimReport extends AbstractSectionTermReport
 {
+    public static $cssTpl = 'section-interim-reports/_css';
+    public static $headerTpl = 'section-interim-reports/_header';
+    public static $bodyTpl = 'section-interim-reports/_body';
+
+
     public static $tableName = 'section_interim_reports';
     public static $singularNoun = 'section interim report';
     public static $pluralNoun = 'section interim reports';
     public static $collectionRoute = '/progress/section-interim-reports';
 
-    public static $bodyTpl;
-    public static $headerTpl;
-    public static $cssTpl;
-    
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
 
@@ -34,9 +36,9 @@ class SectionInterimReport extends AbstractSectionTermReport
             'unique' => true
         ]
     ];
-    
-    public static function getType()
+
+    public static function getNoun($count = 1)
     {
-        return 'Interim';
+        return $count == 1 ? 'interim report' : 'interim reports';
     }
 }
