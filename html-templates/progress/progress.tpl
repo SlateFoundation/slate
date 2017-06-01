@@ -55,7 +55,7 @@
 
                         <span class="item-term">{$termGroup.term->Title|escape}</span>
                         <time class="item-datetime">
-                            {$termGroup.term->EndDate|date_format:'%b %e, %Y'}
+                            {$termGroup.term->StartDate|date_format:'%b %e, %Y'}&ndash;{$termGroup.term->EndDate|date_format:'%b %e, %Y'}
                         </time>
                     </header>
 
