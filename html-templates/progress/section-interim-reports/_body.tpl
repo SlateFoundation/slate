@@ -2,7 +2,16 @@
     {block header}
         <h{$headingLevel} class="item-title">{block title}{$Report->Section->Title|escape}{/block}</h{$headingLevel}>
 
-        {block meta}{/block}
+        <div class="meta">
+            {block meta}
+                {$author = $Report->getAuthor()}
+                <span class="item-creator">
+                    {$author->FullName|escape}
+                    {if $author->Email}&lt;<a class="url" href="mailto:{$author->Email|escape}">{$author->Email|escape}</a>&gt;{/if}
+                </span>
+                <time class="item-datetime">{$Report->getTimestamp()|date_format:'%b %e, %Y'}</time>
+            {/block}
+        </div>
     {/block}
 </header>
 
