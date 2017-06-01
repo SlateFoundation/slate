@@ -21,11 +21,6 @@ class ProgressRequestHandler extends \RequestHandler
 
     public static function handleRequest()
     {
-        return static::handleProgressRequest();
-    }
-
-    public static function handleProgressRequest()
-    {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
         // get term filter
@@ -77,14 +72,12 @@ class ProgressRequestHandler extends \RequestHandler
                 $foundTypes[] = $recordType;
             }
         }
-foreach ($records AS $record) {
-    $record->getTerm();
-}
+
         // apply unified sorting across all types
         usort($records, function($r1, $r2) {
             return $r2->getTimestamp() - $r1->getTimestamp();
         });
-// \Debug::dumpVar(\Debug::$log);
+
         // return results and list of included types
         return static::respond('progress', [
             'data' => $records,
