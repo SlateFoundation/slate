@@ -24,16 +24,18 @@
 {/block}
 
 {block body}
-    {if $student->Advisor}
-        <div class="advisor">
-            Advisor: {$student->Advisor->FullName}
-            <a href="mailto:{$student->Advisor->PrimaryEmail}">{$student->Advisor->PrimaryEmail}</a>
-        </div>
-    {/if}
-    <h1 class="doc-title">
-        {$student->FullNamePossessive|escape} Progress
-        {if $term}<br><small>in {$term->Title|escape}</small>{/if}
-    </h1>
+    <header>
+        {if $student->Advisor}
+            <div class="meta advisor">
+                Advisor: {$student->Advisor->FullName}
+                &lt;<a href="mailto:{$student->Advisor->PrimaryEmail|escape}">{$student->Advisor->PrimaryEmail|escape}</a>&gt;
+            </div>
+        {/if}
+        <h1 class="doc-title">
+            {$student->FullNamePossessive|escape} Progress
+            {if $term}<br><small>in {$term->Title|escape}</small>{/if}
+        </h1>
+    </header>
 
     {template reports reports}
         {foreach item=Report from=$reports}
