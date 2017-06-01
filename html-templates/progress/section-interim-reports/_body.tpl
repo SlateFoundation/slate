@@ -2,20 +2,6 @@
     <h{$headingLevel} class="item-title">
         {$Report->Section->Title|escape}
     </h{$headingLevel}>
-
-    {*
-    {if count($Report->Section->Teachers)}
-        <dl class="meta">
-            <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
-            {foreach item=Teacher from=$Report->Section->Teachers implode='<br />'}
-                <dd class="instructor">
-                    {$Teacher->FullName|escape}
-                    &lt;<a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a>&gt;
-                </dd>
-            {/foreach}
-        </dl>
-    {/if}
-    *}
 </header>
 
 <dl class="item-body">
