@@ -7,26 +7,21 @@
 </header>
 
 <dl class="item-body">
-    {if count($Report->Section->Teachers)}
-        <div class="dli">
-            <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
-            {foreach item=Teacher from=$Report->Section->Teachers implode='<br />'}
-                <dd class="instructor">
-                    {$Teacher->FullName|escape}
-                    &lt;<a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a>&gt;
-                </dd>
-            {/foreach}
-        </div>
-    {/if}
-
-    {block items-top}
-        {if $Report->Grade}
+    {block teachers}
+        {if count($Report->Section->Teachers)}
             <div class="dli">
-                <dt class="grade">Overall Grade</dt>
-                <dd class="grade">{$Report->Grade}</dd>
+                <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
+                {foreach item=Teacher from=$Report->Section->Teachers implode='<br />'}
+                    <dd class="instructor">
+                        {$Teacher->FullName|escape}
+                        &lt;<a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a>&gt;
+                    </dd>
+                {/foreach}
             </div>
         {/if}
     {/block}
+
+    {block fields}{/block}
 
     {block section-notes}
         {if $Report->SectionTermData && trim($Report->SectionTermData->TermReportNotes)}
