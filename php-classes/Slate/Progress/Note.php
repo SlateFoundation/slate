@@ -52,17 +52,7 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
     
     public function getTerm()
     {
-        return Term::getByQuery(
-            'SELECT Term.* '.
-            '  FROM `%s` Term '.
-            ' WHERE DATE("%s") BETWEEN Term.StartDate AND Term.EndDate '.
-            ' ORDER BY Term.Right - Term.Left',
-            [
-                Term::$tableName,
-                $this->Created,
-                
-            ]
-        );
+        return Term::getForDate($this->Created);
     }
     
     public function getAuthor()

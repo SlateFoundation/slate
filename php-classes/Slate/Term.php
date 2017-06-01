@@ -108,6 +108,20 @@ class Term extends \VersionedRecord
         return static::getByWhere('CURRENT_DATE BETWEEN StartDate AND EndDate', ['order' => '`Right` - `Left`']);
     }
 
+    public static function getForDate($date)
+    {
+        if (is_string($date)) {
+            $date = strtotime($date);
+        }
+
+        return static::getByWhere(
+            sprintf('FROM_UNIXTIME(%u) BETWEEN StartDate AND EndDate', $date),
+            [
+                'order' => '`Right` - `Left`'
+            ]
+        );
+    }
+
     public static function getCurrentReporting()
     {
         $Term = static::getCurrent();
