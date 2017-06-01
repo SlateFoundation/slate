@@ -59,6 +59,10 @@ a {
     }
 }
 
+.doc-title {
+    line-height: 1;
+}
+
 .doc-group {
     @include leading-border;
 }
@@ -100,8 +104,6 @@ a {
 }
 
 .item-body {
-    margin: rhythm(1);
-//    font-family: Palatino, Book Antiqua, Georgia, serif;
 }
 
 .subsection {
@@ -143,10 +145,8 @@ a {
 }
 
 .grade {
-    @include h-borders;
     border-color: #ccc;
     margin: rhythm(1) 0;
-    text-align: center;
 }
 
 .freetext {
@@ -173,7 +173,7 @@ dd, dt {
 
 dt {
     color: $muted-color;
-    @include adjust-font-size-to($sm-size, 0);
+    @include adjust-font-size-to($sm-size);
     padding-right: rhythm(1);
     text-align: right;
     text-transform: uppercase;
@@ -184,12 +184,6 @@ dt {
 dd.grade {
     font-weight: 900;
     page-break-before: avoid;
-    page-break-after: avoid;
-}
-
-dt.comments {
-    display: inline-block;
-    float: none;
     page-break-after: avoid;
 }
 

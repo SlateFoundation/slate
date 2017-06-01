@@ -24,15 +24,15 @@
 {/block}
 
 {block body}
+    {if $student->Advisor}
+        <div class="advisor">
+            Advisor: {$student->Advisor->FullName}
+            <a href="mailto:{$student->Advisor->PrimaryEmail}">{$student->Advisor->PrimaryEmail}</a>
+        </div>
+    {/if}
     <h1 class="doc-title">
-        {if $student->Advisor}
-            <div class="advisor">
-                Advisor: {$student->Advisor->FullName}
-                <a href="mailto:{$student->Advisor->PrimaryEmail}">{$student->Advisor->PrimaryEmail}</a>
-            </div>
-        {/if}
         {$student->FullNamePossessive|escape} Progress
-        {if $term}<small>in {$term->Title|escape}</small>{/if}
+        {if $term}<br><small>in {$term->Title|escape}</small>{/if}
     </h1>
 
     {template reports reports}
