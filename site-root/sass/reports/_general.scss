@@ -176,6 +176,7 @@ dt {
     @include adjust-font-size-to($sm-size);
     padding-right: rhythm(1);
     text-align: right;
+    vertical-align: top;
     text-transform: uppercase;
     width: percentage(1/6);
 }
