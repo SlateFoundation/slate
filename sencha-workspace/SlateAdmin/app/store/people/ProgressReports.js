@@ -5,6 +5,5 @@ Ext.define('SlateAdmin.store.people.ProgressReports',{
         'SlateAdmin.model.person.ProgressReport'
     ],
 
-    model: 'SlateAdmin.model.person.ProgressReport',
-    storeId: 'people.ProgressReports'
+    model: 'SlateAdmin.model.person.ProgressReport'
 });
