@@ -15,7 +15,7 @@
     {/block}
 </header>
 
-<div class="item-body">
+<div class="item-body html-content">
     {block message}
         {$Report->Message}
     {/block}

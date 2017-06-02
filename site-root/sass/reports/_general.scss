@@ -198,11 +198,18 @@ dd.comments {
     }
 }
 
-.comments {
+
+dd.comments, .html-content {
     h1 { font-size: 1.25em }
     h2 { font-size: 1.20em }
     h3 { font-size: 1.15em }
     h4 { font-size: 1.10em }
     h5 { font-size: 1.05em }
     h6 { font-size: 1.00em }
+
+    &, p, span, div {
+        color: $color !important;
+        font-family: $font-family !important;
+        font-size: $base-font-size !important;
+    }
 }
