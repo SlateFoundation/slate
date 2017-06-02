@@ -96,11 +96,11 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         var me = this,
             progressProxy = Ext.getStore('people.ProgressReports').getProxy();
 
-        progressProxy.setExtraParam('student', person.getId());
+        progressProxy.setExtraParam('student', person.get('Username') || person.getId());
         progressProxy.setExtraParam('classes[]', Ext.Array.map(me.getClassesSelector().query('menucheckitem'), function(checkItem) {
             return checkItem.getValue();
         }));
-        progressProxy.setExtraParam('term', me.getTermSelector().getValue() || 0);
+        progressProxy.setExtraParam('term', me.getTermSelector().getValue() || '');
 
         me.doFilter(true);
     },

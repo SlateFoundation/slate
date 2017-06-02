@@ -59,7 +59,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             itemId: 'termSelector',
             emptyText: 'Any',
             store: 'Terms',
-            valueField: 'ID',
+            valueField: 'Handle',
             displayField: 'Title',
             queryMode: 'local',
             forceSelection: true
