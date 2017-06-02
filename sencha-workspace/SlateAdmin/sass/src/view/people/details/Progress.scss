@@ -2,13 +2,21 @@
     list-style: none;
     margin: 0;
     padding-left: 0;
-    
+
     .person-record {
         border-bottom: 1px solid $rule-color;
         padding: $font-size ($font-size*0.8);
-        
+
+        .token-extended {
+            display: none;
+        }
+
         &:hover {
             background-color: tint($accent-color, 85%);
+
+            .token-extended {
+                display: inline;
+            }
         }
 
         .meta {
@@ -23,14 +31,10 @@
                 margin-left: .375em;
                 text-transform: uppercase;
             }
-            
+
             .date {
                 float: right;
                 font-size: smaller;
-                
-                .token-extended {
-                    display: none;
-                }
             }
         }
 
