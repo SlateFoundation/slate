@@ -8,6 +8,9 @@ use Slate\TermsRequestHandler;
 
 class ProgressRequestHandler extends \RequestHandler
 {
+    /**
+     * Report classes must implement IStudentReport or IStudentTermReport
+     */
     public static $reportClasses = [
         SectionTermReport::class,
         SectionInterimReport::class,
@@ -57,10 +60,12 @@ class ProgressRequestHandler extends \RequestHandler
         $foundTypes = [];
 
         foreach ($recordTypes as $recordType) {
+            $isTermReport = is_a($recordType, IStudentTermReport::class, true);
+
             if ($Term && $Student) {
-                $foundRecords = $recordType::getAllByStudentTerm($Student, $Term);
+                $foundRecords = $isTermReport ? $recordType::getAllByStudentTerm($Student, $Term) : null;
             } elseif ($Term) {
-                $foundRecords = $recordType::getAllByTerm($Term);
+                $foundRecords = $isTermReport ? $recordType::getAllByTerm($Term) : null;
             } elseif ($Student) {
                 $foundRecords = $recordType::getAllByStudent($Student);
             } else {
