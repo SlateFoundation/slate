@@ -26,14 +26,15 @@
 {block body}
     <header>
         {if $student->Advisor}
-            <div class="meta advisor">
+            <aside class="meta advisor">
                 Advisor: {$student->Advisor->FullName}
-                &lt;<a href="mailto:{$student->Advisor->PrimaryEmail|escape}">{$student->Advisor->PrimaryEmail|escape}</a>&gt;
-            </div>
+                <span class="email">&lt;<a href="mailto:{$student->Advisor->PrimaryEmail|escape}">{$student->Advisor->PrimaryEmail|escape}</a>&gt;</span>
+            </aside>
         {/if}
         <h1 class="doc-title">
-            {$student->FullNamePossessive|escape} Progress
-            {if $term}<br><small>in {$term->Title|escape}</small>{/if}
+            <small class="title-prefix">Progress report for</small>
+            {$student->FullName|escape}
+            {if $term}<small class="title-suffix">in {$term->Title|escape}</small>{/if}
         </h1>
     </header>
 

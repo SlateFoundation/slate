@@ -59,8 +59,25 @@ a {
     }
 }
 
+header {
+    aside {
+        float: right;
+        text-align: center;
+        @include adjust-font-size-to($base-font-size);
+
+        &.meta .email {
+            display: block;
+        }
+    }
+}
+
 .doc-title {
     line-height: 1;
+
+    .title-prefix, .title-suffix {
+        display: block;
+        line-height: 1em;
+    }
 }
 
 .doc-group {
