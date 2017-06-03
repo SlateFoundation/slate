@@ -19,13 +19,6 @@ abstract class AbstractSectionTermReport extends AbstractReport implements IStud
     public static $singularNoun = 'section term report';
     public static $pluralNoun = 'section term reports';
 
-    public static $summaryFields = [
-        'SectionID' => true,
-        'Section' => true,
-        'TermID' => true,
-        'Term' => true
-    ];
-
     public static $fields = [
         'SectionID' => [
             'type' => 'uint',
@@ -68,13 +61,18 @@ abstract class AbstractSectionTermReport extends AbstractReport implements IStud
         ]
     ];
 
+    public static $summaryFields = [
+        'Term' => true
+    ];
+
     public static $dynamicFields = [
-        'Section' => [
-            'includeInSummary' => true
-        ],
-        'Term' => [
-            'includeInSummary' => true
-        ],
+        'Section',
+        'Term',
         'SectionTermData'
     ];
+
+    public function getTitle()
+    {
+        return sprintf('%s, %s', $this->Section->Title, $this->Term->Title);
+    }
 }

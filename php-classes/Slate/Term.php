@@ -28,10 +28,12 @@ class Term extends \VersionedRecord
         'Title' => [
             'fulltext' => true
             ,'notnull' => false
+            ,'includeInSummary' => true
         ]
         ,'Handle' => [
             'unique' => true
             ,'notnull' => false
+            ,'includeInSummary' => true
         ]
 
         ,'Status' => [

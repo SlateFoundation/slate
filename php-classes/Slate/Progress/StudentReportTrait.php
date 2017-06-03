@@ -23,6 +23,11 @@ trait StudentReportTrait
         return $this->Student;
     }
 
+    public function getStatus()
+    {
+        return $this->Status;
+    }
+
     public static function getCss(array $templateData = [])
     {
         return static::$cssTpl ? DwooEngine::getSource(static::$cssTpl) : '';

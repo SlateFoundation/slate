@@ -150,6 +150,11 @@ class Message extends \VersionedRecord
         return $MsgRecipient;
     }
 
+    public function getTitle()
+    {
+        return $this->Subject;
+    }
+
     public function save($deep = true)
     {
         if (!$this->Sent && $this->Status == 'sent') {

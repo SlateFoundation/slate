@@ -18,17 +18,6 @@ abstract class AbstractReport extends \VersionedRecord implements IStudentReport
     public static $pluralNoun = 'reports';
     public static $updateOnDuplicateKey = true;
 
-    public static $summaryFields = [
-        'ID' => true,
-        'Class' => true,
-        'Created' => true,
-        'CreatorID' => true,
-        'Creator' => true,
-        'StudentID' => true,
-        'Student' => true,
-        'Status' => true
-    ];
-
     public static $fields = [
         'StudentID' => [
             'type' => 'uint',
@@ -58,9 +47,40 @@ abstract class AbstractReport extends \VersionedRecord implements IStudentReport
         ]
     ];
 
+    public static $summaryFields = [
+        'ID' => true,
+        'Class' => true,
+        'Noun' => true,
+        'Timestamp' => true,
+        'Author' => true,
+        'Student' => true,
+        'Title' => true,
+        'Status' => true
+    ];
+
     public static $dynamicFields = [
+        'Noun' => [
+            'getter' => 'getNoun'
+        ],
+        'Timestamp' => [
+            'getter' => 'getTimestamp'
+        ],
+        'Author' => [
+            'getter' => 'getAuthor'
+        ],
         'Student' => [
-            'includeInSummary' => true
+            'getter' => 'getStudent'
+        ],
+        'Title' => [
+            'getter' => 'getTitle'
+        ],
+        'Status' => [
+            'getter' => 'getStatus'
         ]
     ];
+
+    public function getTitle()
+    {
+        return sprintf('%s #%u', $this->getNoun(), $this->ID);
+    }
 }

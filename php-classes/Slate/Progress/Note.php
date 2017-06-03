@@ -7,7 +7,7 @@ use Emergence\People\User;
 use Slate\Term;
 
 
-class Note extends \Emergence\CRM\Message implements IStudentReport
+class Note extends \Emergence\CRM\Message implements IStudentTermReport
 {
     use StudentReportTrait;
 
@@ -21,15 +21,39 @@ class Note extends \Emergence\CRM\Message implements IStudentReport
     public static $summaryFields = [
         'ID' => true,
         'Class' => true,
-        'Sent' => true,
-        'ContextClass' => true,
-        'ContextID' => true,
-        'Context' => true,
-        'AuthorID' => true,
+        'Noun' => true,
+        'Timestamp' => true,
         'Author' => true,
-        'Subject' => true,
-        'Status' => true
+        'Student' => true,
+        'Title' => true,
+        'Status' => true,
+        'Term' => true
     ];
+
+    public static $dynamicFields = [
+        'Noun' => [
+            'getter' => 'getNoun'
+        ],
+        'Timestamp' => [
+            'getter' => 'getTimestamp'
+        ],
+        'Author' => [
+            'getter' => 'getAuthor'
+        ],
+        'Student' => [
+            'getter' => 'getStudent'
+        ],
+        'Title' => [
+            'getter' => 'getTitle'
+        ],
+        'Status' => [
+            'getter' => 'getStatus'
+        ],
+        'Term' => [
+            'getter' => 'getTerm'
+        ]
+    ];
+
 
     public function getEmailRecipientsList($recipients = false)
     {
