@@ -1,6 +1,6 @@
 <?php
 
-namespace Slate\Progres;
+namespace Slate\Progress;
 
 use Slate;
 use Slate\Term;
@@ -20,7 +20,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
     public static $accountLevelAPI = 'Staff';
-    public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID)';
+    public static $browseOrder = '(SELECT CONCAT(LastName,FirstName) FROM people WHERE people.ID = StudentID), (SELECT `Left` FROM terms WHERE terms.ID = TermID) DESC';
     public static $userResponseModes = [
         'application/json' => 'json',
         'text/csv' => 'csv',
@@ -42,11 +42,19 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         }
     }
 
-    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseId = null, $responseData = [])
     {
         static::applyRequestFilters($conditions, $responseData);
 
-        return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+        if (!$responseId) {
+            $responseId = 'reports';
+        }
+
+        $recordClass = static::$recordClass;
+        $responseData['recordClass'] = $recordClass;
+        $responseData['reportNoun'] = $recordClass::getNoun();
+
+        return parent::handleBrowseRequest($options, $conditions, $responseId, $responseData);
     }
 
     public static function handleAuthorsRequest()

@@ -52,6 +52,31 @@ class Util
         return $chunks;
     }
 
+    public static function groupReportsByStudent(array $reports)
+    {
+        $groups = [];
+
+        foreach ($reports AS $Report) {
+            $Student = $Report->getStudent();
+
+            if (isset($groups[$Student->ID])) {
+                $groups[$Student->ID]['reports'][] = $Report;
+            } else {
+                $groups[$Student->ID] = [
+                    'student' => $Student,
+                    'reports' => [$Report]
+                ];
+            }
+        }
+
+        // sort by Last, First
+        usort($groups, function($g1, $g2) {
+            return strcasecmp($g1['student']->LastName.$g1['student']->FirstName, $g2['student']->LastName.$g2['student']->FirstName);
+        });
+
+        return $groups;
+    }
+
     public static function groupReportsByTerm(array $reports)
     {
         $groups = [];
