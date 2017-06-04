@@ -67,12 +67,20 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
     },{
         xtype: 'toolbar',
         dock: 'bottom',
-        items: ['->',{
-            xtype: 'button',
-            text: 'Export',
-            action: 'export-reports',
-            glyph: 0xf064 // fa-share
-        }]
+        items: [
+            '->',
+            {
+                xtype: 'button',
+                text: 'Export',
+                action: 'export-reports',
+                glyph: 0xf064 // fa-share
+            },
+            {
+                action: 'launch-browser',
+                text: 'Open',
+                glyph: 0xf08e // fa-external-link
+            }
+        ]
     }],
 
     items: [{

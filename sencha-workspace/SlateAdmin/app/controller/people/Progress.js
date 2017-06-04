@@ -65,11 +65,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         termSelector: {
             change: 'onProgressTermChange'
         },
+        'people-details-progress button[action=launch-browser]': {
+            click: 'onListLaunchBrowserClick'
+        },
         'people-details-progress #progressReportsList': {
             itemclick: 'onProgressRecordClick'
         },
         'people-details-progress-previewer button[action=launch-browser]': {
-            click: 'onLaunchBrowserClick'
+            click: 'onPreviewerLaunchBrowserClick'
         },
         'people-details-progress button[action=export-reports]':{
             click: 'onExportProgressClick'
@@ -276,9 +279,12 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
     onExportProgressClick: function () {
         var reportsPanel = this.getProgressPanel(),
-            reportsStore = this.getPeopleProgressReportsStore(),
-            reportsProxy = reportsStore.getProxy(),
-            params = Ext.apply({ format: 'pdf' }, reportsProxy.getExtraParams());
+            params = Ext.apply(
+                {
+                    format: 'pdf'
+                },
+                this.getPeopleProgressReportsStore().getProxy().getExtraParams()
+            );
 
         Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports', function(btn) {
             if (btn != 'yes') {
@@ -293,6 +299,12 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 reportsPanel.setLoading(false);
             });
         });
+    },
+
+    onListLaunchBrowserClick: function() {
+        var params = this.getPeopleProgressReportsStore().getProxy().getExtraParams();
+
+        window.open(SlateAdmin.API.buildUrl('/progress?' + Ext.Object.toQueryString(params)));
     },
 
     onProgressRecordClick: function (view, record) {
@@ -313,7 +325,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         }
     },
 
-    onLaunchBrowserClick: function() {
+    onPreviewerLaunchBrowserClick: function() {
         window.open(this.getReportPreviewer().getUrl());
     },
 
