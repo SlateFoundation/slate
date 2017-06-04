@@ -1,14 +1,8 @@
 {extends "designs/print.tpl"}
 
-{block title}{strip}
-    Progress
-    {if $student}
-        for {$student->FullName|escape}
-    {/if}
-    {if $term}
-        in {$term->Title|escape}
-    {/if}
-{/strip}{/block}
+{block title}
+    Progress{if $student} for {$student->FullName|escape}{/if}{if $term} in {$term->Title|escape}{/if}
+{/block}
 
 {block css}
     {$dwoo.parent}
