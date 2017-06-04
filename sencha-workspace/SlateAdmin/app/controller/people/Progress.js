@@ -354,24 +354,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             },
             callback: function (records, operation){
                 var selected = [];
-                this.sort({
-                    sorterFn: function (p1, p2){
-                        if (p1.get('RelationshipGroup') != 'Other' && p2.get('RelationshipGroup') != 'Other') {
-                            return 0;
-                        }
-
-                        if (p1.get('RelationshipGroup') != 'Other') {
-                            return 1;
-                        }
-
-                        if (p2.get('RelationshipGroup') != 'Other') {
-                            return -1;
-                        }
-
-                        return -1;
-                    }
-                });
-
 
                 for (var key in records) {
                     if (records[key].get('selected')) {
