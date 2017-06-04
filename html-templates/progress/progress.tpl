@@ -12,7 +12,7 @@
     {foreach from=$recordTypes item=recordType}
         <?php
             $recordClass = $this->scope['recordType'];
-            echo $recordClass::getCSS();
+            echo $recordClass::getCss();
         ?>
     {/foreach}
 {/block}

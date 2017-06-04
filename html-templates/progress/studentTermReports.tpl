@@ -9,7 +9,7 @@
 
     <?php
         $recordClass = $this->scope['recordClass'];
-        echo $recordClass::getCSS();
+        echo $recordClass::getCss();
     ?>
 {/block}
 
