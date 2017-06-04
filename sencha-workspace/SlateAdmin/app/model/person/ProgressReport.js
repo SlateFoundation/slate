@@ -4,8 +4,6 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
 
 
     // model config
-    idProperty: 'ID',
-
     fields: [
         'AuthorUsername',
         'Subject',
@@ -46,11 +44,11 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
     getUrl: function() {
         switch (this.get('Class')) {
             case 'Slate\\Progress\\SectionTermReport':
-                return '/progress/section-term-reports/'+this.getId();
+                return '/progress/section-term-reports/'+this.get('ID');
             case 'Slate\\Progress\\SectionInterimReport':
-                return '/progress/section-interim-reports/'+this.getId();
+                return '/progress/section-interim-reports/'+this.get('ID');
             case 'Slate\\Progress\\Note':
-                return '/notes/' + this.getId();
+                return '/notes/' + this.get('ID');
             default:
                 return null;
         }
