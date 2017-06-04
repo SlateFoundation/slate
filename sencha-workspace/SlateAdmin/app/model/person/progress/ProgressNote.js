@@ -4,7 +4,6 @@ Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
 
     idProperty: 'ID',
     fields: [
-        'Subject',
         {
             name: 'ID',
             type: 'integer',
@@ -30,6 +29,10 @@ Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
             useNull: true,
             defaultValue: null,
             persist: false
+        }, {
+            name: 'Subject',
+            type: 'string',
+            allowBlank: false
         }, {
             name: 'Message',
             type: 'string',
