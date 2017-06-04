@@ -1,14 +1,8 @@
 {extends "designs/print.tpl"}
 
-{block title}{strip}
-    Progress
-    {if $student}
-        for {$student->FullName|escape}
-    {/if}
-    {if $term}
-        in {$term->Title|escape}
-    {/if}
-{/strip}{/block}
+{block title}
+    {$reportPluralNoun|ucfirst}{if $student} for {$student->FullName|escape}{/if}{if $term} in {$term->Title|escape}{/if}
+{/block}
 
 {block css}
     {$dwoo.parent}
@@ -22,7 +16,7 @@
 {block body}
     {foreach item=studentGroup from=Slate\Progress\Util::groupReportsByStudent($data)}
         {foreach item=termGroup from=Slate\Progress\Util::groupReportsByTerm($studentGroup.reports)}
-            <section class="doc-group progress-reports report-type-{$reportNoun|replace:' ':'_'}">
+            <section class="doc-group progress-reports report-type-{$reportSingularNoun|replace:' ':'_'}">
                 <header>
                     {if $studentGroup.student->Advisor}
                         <aside class="meta advisor">
@@ -31,14 +25,14 @@
                         </aside>
                     {/if}
                     <h1 class="doc-title">
-                        <small class="title-prefix">{$reportNoun|ucfirst} for</small>
+                        <small class="title-prefix">{$reportSingularNoun|ucfirst} for</small>
                         {$studentGroup.student->FullName|escape}
                         <small class="title-suffix">in {$termGroup.term->Title|escape}</small>
                     </h1>
                 </header>
 
                 {foreach item=Report from=$termGroup.reports}
-                    <article class="doc-item progress-report report-type-{$reportNoun|replace:' ':'_'}">
+                    <article class="doc-item progress-report report-type-{$reportSingularNoun|replace:' ':'_'}">
                         {$Report->getBodyHtml(2)}
                     </article>
                 {/foreach}

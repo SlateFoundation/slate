@@ -48,7 +48,8 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         $recordClass = static::$recordClass;
         $responseData['recordClass'] = $recordClass;
-        $responseData['reportNoun'] = $recordClass::getNoun();
+        $responseData['reportSingularNoun'] = $recordClass::getNoun(1);
+        $responseData['reportPluralNoun'] = $recordClass::getNoun(2);
 
         return parent::handleBrowseRequest($options, $conditions, $responseId, $responseData);
     }
