@@ -291,6 +291,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     onProgressRecordClick: function (view, record) {
         var me = this;
 
+        // TODO: make this more pluggable? fire an event?
         switch (record.get('Class')) {
             case 'Slate\\Progress\\Note':
                 me.onProgressNoteClick(record);
@@ -317,7 +318,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
         noteEditorCt.getLayout().setActiveItem(viewer);
         SlateAdmin.API.request({
-            url: '/notes/' + record.get('ID'),
+            url: record.getUrl(),
             success: function (res) {
                 var r = Ext.decode(res.responseText);
                 editor.updateProgressNote(r.data);

@@ -2,6 +2,10 @@
 Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     extend: 'Ext.window.Window',
     xtype: 'people-details-progress-previewer',
+    requires: [
+        /* global SlateAdmin */
+        'SlateAdmin.API'
+    ],
 
     config: {
         report: null
@@ -17,7 +21,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
         itemId: 'previewBox',
         cls: 'print-preview',
         flex: 1,
-        disabled: true,
         renderTpl: '<iframe width="100%" height="100%"></iframe>',
         renderSelectors: {
             iframeEl: 'iframe'
@@ -26,7 +29,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             afterrender: {
                 fn: function (previewBox) {
                     this.mon(previewBox.iframeEl, 'load', function () {
-                        previewBox.setDisabled(false);
                         previewBox.setLoading(false);
                     }, this);
                 },
@@ -35,51 +37,18 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
         }
     }],
 
-    //helper functions
-    updateReport: function (report){
+    // helper functions
+    updateReport: function (report) {
         var me = this,
+            noun = report.get('Noun'),
             previewBox = me.getComponent('previewBox'),
-            apiHost = SlateAdmin.API.getHost(),
-            loadingSrc = '',
-            params = {},
-            loadMask,
-            printLoadingInterval;
+            iframeEl = previewBox.iframeEl;
 
-        switch (report.get('Class')) {
-            case 'Slate\\Progress\\SectionTermReport':
-                me.setTitle('Term Report Preview');
+        me.setTitle('Preview '+noun);
+        previewBox.setLoading({
+            msg: 'Loading '+noun+'&hellip;'
+        });
 
-                loadMask = {
-                    msg: 'Loading Term Report&hellip;'
-                };
-                loadingSrc = '/progress/section-term-reports/'+report.get('ID');
-
-                break;
-
-            case 'Slate\\Progress\\SectionInterimReport':
-                me.setTitle('Interim Preview');
-
-                loadMask = {
-                    msg: 'Loading Interim&hellip;'
-                };
-                loadingSrc = '/progress/section-interim-reports/'+report.get('ID');
-
-                break;
-        }
-
-        params.downloadToken = Math.random();
-
-        if (Ext.isEmpty(apiHost)) {
-            printLoadingInterval = setInterval(function () {
-                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
-                    clearInterval(printLoadingInterval);
-                    previewBox.setLoading(false);
-                }
-            }, 500);
-
-            previewBox.setLoading(loadMask);
-        }
-
-        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl(loadingSrc+'?'+Ext.Object.toQueryString(params));
+        iframeEl.dom.src = SlateAdmin.API.buildUrl(report.getUrl());
     }
 });
