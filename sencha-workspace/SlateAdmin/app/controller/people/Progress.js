@@ -1,6 +1,11 @@
 /*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate, Jarvus*/
 Ext.define('SlateAdmin.controller.people.Progress', {
     extend: 'Ext.app.Controller',
+    requires: [
+        /* global SlateAdmin */
+        'SlateAdmin.API'
+    ],
+
 
     views: [
         'people.details.Progress',
@@ -267,31 +272,29 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     onExportProgressClick: function () {
-        var me = this,
-            reportsStore = Ext.getStore('people.ProgressReports'),
+        var reportsPanel = this.getProgressPanel(),
+            reportsStore = this.getPeopleProgressReportsStore(),
             reportsProxy = reportsStore.getProxy(),
-            reportsContainer = me.getProgressPanel(),
-            apiHost = SlateAdmin.API.getHost(),
-            exportUrl = '/progress?' + Ext.Object.toQueryString(Ext.apply({ format: 'pdf' }, reportsProxy.getExtraParams())),
-            exportLoadMask = {msg: 'Preparing PDF, please wait, this may take a minute&hellip;' };
+            params = Ext.apply({ format: 'pdf' }, reportsProxy.getExtraParams());
 
         Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports', function(btn) {
-            if (btn == 'yes') {
-                if (Ext.isEmpty(apiHost)) {
-                    reportsContainer.setLoading(exportLoadMask);
-                }
-
-                SlateAdmin.API.downloadFile(exportUrl, function () {
-                    reportsContainer.setLoading(false);
-                }, me);
+            if (btn != 'yes') {
+                return;
             }
-        }, me);
+
+            reportsPanel.setLoading({
+                msg: 'Preparing PDF, please wait, this may take a minute&hellip;'
+            });
+
+            SlateAdmin.API.downloadFile('/progress?' + Ext.Object.toQueryString(params), function () {
+                reportsPanel.setLoading(false);
+            });
+        });
     },
 
     onProgressRecordClick: function (view, record) {
         var me = this;
 
-        // TODO: make this more pluggable? fire an event?
         switch (record.get('Class')) {
             case 'Slate\\Progress\\Note':
                 me.onProgressNoteClick(record);
@@ -318,7 +321,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
         noteEditorCt.getLayout().setActiveItem(viewer);
         SlateAdmin.API.request({
-            url: record.getUrl(),
+            url: '/notes/' + record.get('ID'),
             success: function (res) {
                 var r = Ext.decode(res.responseText);
                 editor.updateProgressNote(r.data);
