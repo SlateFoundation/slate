@@ -10,6 +10,9 @@ class Term extends \VersionedRecord
     // number of days reporting period lasts after end of a term
     public static $reportingPeriod = 14;
 
+    // NestingBehavior configuration
+    public static $siblingOrder = 'StartDate, EndDate DESC';
+
     // VersionedRecord configuration
     public static $historyTable = 'history_terms';
 
