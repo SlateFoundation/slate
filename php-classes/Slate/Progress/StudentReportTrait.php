@@ -33,12 +33,18 @@ trait StudentReportTrait
         return static::$cssTpl ? DwooEngine::getSource(static::$cssTpl) : '';
     }
 
-    public function getBodyHtml($headingLevel = 2, array $templateData = [])
+    public function getBodyHtml($headingLevel = 2, array $templateData = [], $alternate = null)
     {
         $templateData['Report'] = $this;
         $templateData['headingLevel'] = $headingLevel;
 
-        return static::$bodyTpl ? DwooEngine::getSource(static::$bodyTpl, $templateData) : '';
+        $template = static::$bodyTpl;
+
+        if ($template && $alternate) {
+            $template .= '.'.$alternate;
+        }
+
+        return $template ? DwooEngine::getSource($template, $templateData) : '';
     }
 
     public static function getAllByStudent(IPerson $Student)

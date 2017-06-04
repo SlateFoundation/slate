@@ -46,10 +46,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
     {
         static::applyRequestFilters($conditions, $responseData);
 
-        $recordClass = static::$recordClass;
-        $responseData['recordClass'] = $recordClass;
-        $responseData['reportSingularNoun'] = $recordClass::getNoun(1);
-        $responseData['reportPluralNoun'] = $recordClass::getNoun(2);
+        $responseData = array_merge(static::getExtraResponseData(), $responseData);
 
         return parent::handleBrowseRequest($options, $conditions, $responseId, $responseData);
     }
@@ -151,7 +148,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         }
 
         // fetch all term reports
-        $reports = SectionTermReport::getAllByWhere($conditions);
+        $reports = $recordClass::getAllByWhere($conditions);
 
         // group interims by student
         $students = [];
@@ -234,11 +231,22 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         // fetch all report instances
         $reports = $recordClass::getAllByWhere('ID IN ('.implode(',', $reportIds).')');
 
-        return static::respond('reports.email', static::getEmailTemplateData($reports));
+        return static::respond(static::getTemplateName($recordClass::$pluralNoun).'.email', static::getEmailTemplateData($reports));
     }
 
 
     // internal library
+    protected static function getExtraResponseData()
+    {
+        $recordClass = static::$recordClass;
+
+        return [
+            'recordClass' => $recordClass,
+            'reportSingularNoun' => $recordClass::getNoun(1),
+            'reportPluralNoun' => $recordClass::getNoun(2)
+        ];
+    }
+
     protected static function getEmailTemplateData(array $reports)
     {
         // collect terms and students
@@ -255,11 +263,11 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             }
         }
 
-        return [
+        return array_merge(static::getExtraResponseData(), [
             'data' => $reports,
             'terms' => $terms,
             'students' => $students
-        ];
+        ]);
     }
 
     protected static function applyRequestFilters(array &$conditions = [], array &$responseData = [])

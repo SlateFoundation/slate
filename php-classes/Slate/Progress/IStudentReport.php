@@ -16,7 +16,7 @@ interface IStudentReport
     public function getStatus(); // Should return 'draft' or 'published'
 
     public static function getCss(array $templateData = []);
-    public function getBodyHtml($headingLevel = 2, array $templateData = []);
+    public function getBodyHtml($headingLevel = 2, array $templateData = [], $alternate = null);
 
     public static function getAllByStudent(IPerson $Student);
 }
