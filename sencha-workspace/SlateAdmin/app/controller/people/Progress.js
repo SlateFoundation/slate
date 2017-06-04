@@ -68,6 +68,9 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         'people-details-progress #progressReportsList': {
             itemclick: 'onProgressRecordClick'
         },
+        'people-details-progress-previewer button[action=launch-browser]': {
+            click: 'onLaunchBrowserClick'
+        },
         'people-details-progress button[action=export-reports]':{
             click: 'onExportProgressClick'
         },
@@ -308,6 +311,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 me.onInterimReportClick(record);
                 break;
         }
+    },
+
+    onLaunchBrowserClick: function() {
+        window.open(this.getReportPreviewer().getUrl());
     },
 
     onProgressNoteClick: function (record) {

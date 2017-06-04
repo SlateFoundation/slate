@@ -8,7 +8,8 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     ],
 
     config: {
-        report: null
+        report: null,
+        url: null
     },
 
     layout: 'fit',
@@ -36,19 +37,30 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             }
         }
     }],
+    bbar: [
+        '->',
+        {
+            action: 'launch-browser',
+            text: 'Open in new browser',
+            glyph: 0xf08e // fa-external-link
+        }
+    ],
 
     // helper functions
     updateReport: function (report) {
         var me = this,
             noun = report.get('Noun'),
-            previewBox = me.getComponent('previewBox'),
-            iframeEl = previewBox.iframeEl;
+            previewBox = me.getComponent('previewBox');
 
         me.setTitle('Preview '+noun);
         previewBox.setLoading({
             msg: 'Loading '+noun+'&hellip;'
         });
 
-        iframeEl.dom.src = SlateAdmin.API.buildUrl(report.getUrl());
+        this.setUrl(SlateAdmin.API.buildUrl(report.getUrl()));
+    },
+
+    updateUrl: function(url) {
+        this.getComponent('previewBox').iframeEl.dom.src = url;
     }
 });
