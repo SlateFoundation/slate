@@ -9,9 +9,9 @@
 
     {cssmin "reports/progress.css" embed=true}
 
-    {foreach from=$recordTypes item=recordType}
+    {foreach from=$recordClasses item=recordClass}
         <?php
-            $recordClass = $this->scope['recordType'];
+            $recordClass = $this->scope['recordClass'];
             echo $recordClass::getCss();
         ?>
     {/foreach}

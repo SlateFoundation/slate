@@ -43,38 +43,38 @@ class ProgressRequestHandler extends \RequestHandler
         }
 
         // get types filter
-        if (!empty($_REQUEST['types'])) {
-            $recordTypes = is_string($_REQUEST['types']) ? explode(',', $_REQUEST['types']) : $_REQUEST['types'];
+        if (!empty($_REQUEST['classes'])) {
+            $recordClasses = is_string($_REQUEST['classes']) ? explode(',', $_REQUEST['classes']) : $_REQUEST['classes'];
 
-            foreach ($recordTypes AS $recordType) {
-                if (!in_array($recordType, static::$reportClasses)) {
-                    return static::throwNotFoundError('type not found');
+            foreach ($recordClasses AS $recordClass) {
+                if (!in_array($recordClass, static::$reportClasses)) {
+                    return static::throwNotFoundError('class not found');
                 }
             }
         } else {
-            $recordTypes = static::$reportClasses;
+            $recordClasses = static::$reportClasses;
         }
 
         // compile results from each type
         $records = [];
-        $foundTypes = [];
+        $foundClasses = [];
 
-        foreach ($recordTypes as $recordType) {
-            $isTermReport = is_a($recordType, IStudentTermReport::class, true);
+        foreach ($recordClasses as $recordClass) {
+            $isTermReport = is_a($recordClass, IStudentTermReport::class, true);
 
             if ($Term && $Student) {
-                $foundRecords = $isTermReport ? $recordType::getAllByStudentTerm($Student, $Term) : null;
+                $foundRecords = $isTermReport ? $recordClass::getAllByStudentTerm($Student, $Term) : null;
             } elseif ($Term) {
-                $foundRecords = $isTermReport ? $recordType::getAllByTerm($Term) : null;
+                $foundRecords = $isTermReport ? $recordClass::getAllByTerm($Term) : null;
             } elseif ($Student) {
-                $foundRecords = $recordType::getAllByStudent($Student);
+                $foundRecords = $recordClass::getAllByStudent($Student);
             } else {
-                $foundRecords = $recordType::getAll();
+                $foundRecords = $recordClass::getAll();
             }
 
             if (!empty($foundRecords)) {
                 $records = array_merge($records, $foundRecords);
-                $foundTypes[] = $recordType;
+                $foundClasses[] = $recordClass;
             }
         }
 
@@ -92,7 +92,7 @@ class ProgressRequestHandler extends \RequestHandler
         // return results and list of included types
         return static::respond('progress', [
             'data' => $records,
-            'recordTypes' => $foundTypes,
+            'recordClasses' => $foundClasses,
             'term' => $Term,
             'student' => $Student
         ]);
