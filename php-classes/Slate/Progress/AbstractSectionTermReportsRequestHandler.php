@@ -46,10 +46,6 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
     {
         static::applyRequestFilters($conditions, $responseData);
 
-        if (!$responseId) {
-            $responseId = 'reports';
-        }
-
         $recordClass = static::$recordClass;
         $responseData['recordClass'] = $recordClass;
         $responseData['reportNoun'] = $recordClass::getNoun();
