@@ -96,7 +96,7 @@ class Util
 
         // sort by term position
         usort($groups, function($g1, $g2) {
-            return $g1['term']->Left - $g2['term']->Left;
+            return $g2['term']->Left - $g1['term']->Left;
         });
 
         return $groups;
