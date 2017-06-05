@@ -26,6 +26,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     ],
 
     refs: {
+        peopleManager: 'people-manager',
+
         progressPanel: {
             selector: 'people-details-progress',
             autoCreate: true,
@@ -33,25 +35,26 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             xtype: 'people-details-progress'
         },
         progressList: 'people-details-progress dataview',
-        peopleManager: 'people-manager',
         classesSelector: 'people-details-progress #classesSelector',
         termSelector: 'people-details-progress #termSelector',
+
         reportPreviewer: {
             selector: 'people-details-progress-previewer',
             autoCreate: true,
 
             xtype: 'people-details-progress-previewer'
         },
-        noteEditorCt: 'people-details-progress-note-editwindow #progressNoteCt',
-        progressNoteForm: 'people-details-progress-note-form',
-        progressNoteViewer: 'people-details-progress-note-viewer',
-        progressNoteRecipientGrid: 'people-details-progress-note-recipientgrid',
+
         progressNoteEditorWindow: {
             selector: 'people-details-progress-note-editwindow',
             autoCreate: true,
 
             xtype: 'people-details-progress-note-editwindow'
-        }
+        },
+        noteEditorCt: 'people-details-progress-note-editwindow #progressNoteCt',
+        progressNoteForm: 'people-details-progress-note-editwindow people-details-progress-note-form',
+        progressNoteViewer: 'people-details-progress-note-editwindow people-details-progress-note-viewer',
+        progressNoteRecipientGrid: 'people-details-progress-note-editwindow people-details-progress-note-recipientgrid'
     },
 
     control: {
