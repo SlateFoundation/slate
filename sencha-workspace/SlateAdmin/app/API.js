@@ -27,7 +27,7 @@ Ext.define('SlateAdmin.API', {
             downloadInterval;
 
         if (!apiHost) {
-            Ext.urlAppend(url, 'downloadToken=' + downloadToken);
+            url = Ext.urlAppend(url, 'downloadToken=' + downloadToken);
         }
         url = this.buildUrl(url);
 
