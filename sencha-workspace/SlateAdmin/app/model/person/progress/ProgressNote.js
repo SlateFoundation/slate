@@ -1,10 +1,8 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
     extend: 'Ext.data.Model',
 
     idProperty: 'ID',
     fields: [
-        'Subject',
         {
             name: 'ID',
             type: 'integer',
@@ -30,6 +28,10 @@ Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
             useNull: true,
             defaultValue: null,
             persist: false
+        }, {
+            name: 'Subject',
+            type: 'string',
+            allowBlank: false
         }, {
             name: 'Message',
             type: 'string',

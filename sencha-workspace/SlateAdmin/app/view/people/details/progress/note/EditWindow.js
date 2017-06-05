@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
     extend: 'Ext.window.Window',
     xtype: 'people-details-progress-note-editwindow',
@@ -9,7 +8,9 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
         'SlateAdmin.view.people.details.progress.note.Form'
     ],
 
-    progressNote: null,
+    config: {
+        progressNote: null
+    },
 
     layout: 'border',
     height: 500,
@@ -21,9 +22,9 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
         cls: 'glyph-danger',
         glyph: 0xf057, // fa-times-circle
         action: 'discardProgressNote'
-    },{
+    }, {
         xtype: 'tbfill'
-    },{
+    }, {
         xtype: 'button',
         text: 'Send &amp; Submit to Official Record',
         cls: 'glyph-accent',
@@ -38,49 +39,44 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
         itemId: 'progressNoteCt',
         items: [{
             xtype: 'people-details-progress-note-form'
-        },{
+        }, {
             xtype: 'people-details-progress-note-viewer'
         }]
-    },{
+    }, {
         xtype: 'people-details-progress-note-recipientgrid',
         width: 320,
         region: 'east'
     }],
 
+    initComponent: function() {
+        var me = this;
 
-    //helper functions
-    updateProgressNote: function(progressNote){
-        if(!progressNote)
-            return false;
+        me.callParent(arguments);
 
-        var me = this,
-            activeItem = this.down('#progressNoteCt').getLayout().getActiveItem(),
-            noteForm = this.down('people-details-progress-note-form');
-
-        if(activeItem == noteForm) {
-            noteForm.loadRecord(progressNote);
-        }
-        else {
-            this.down('people-details-progress-note-viewer').update(progressNote);
-        }
-
-        this.progressNote = progressNote;
+        me.noteCt = me.down('#progressNoteCt');
+        me.noteForm = me.down('people-details-progress-note-form');
+        me.noteViewer = me.down('people-details-progress-note-viewer');
     },
 
-    getProgressNote: function() {
-        var me = this,
-            activeItem = this.down('#progressNoteCt').getLayout().getActiveItem(),
-            noteForm = this.down('people-details-progress-note-form');
+    updateProgressNote: function(progressNote) {
+        var me = this;
 
-        if(activeItem == noteForm) {
-            var record = noteForm.getRecord();
+        me.noteCt.getLayout().setActiveItem(progressNote && progressNote.phantom ? me.noteForm : me.noteViewer);
 
-            record.set(noteForm.getValues());
-
-            return record;
+        if (progressNote && progressNote.phantom) {
+            me.noteForm.loadRecord(progressNote);
+        } else {
+            me.noteViewer.update(progressNote || '');
         }
-        else {
-            return this.progressNote;
+    },
+
+    syncProgressNote: function() {
+        var progressNote = this.getProgressNote();
+
+        if (progressNote) {
+            this.noteForm.updateRecord(progressNote);
         }
+
+        return progressNote;
     }
 });

@@ -36,21 +36,25 @@ Ext.define('SlateAdmin.model.person.Person', {
             type: 'integer',
             allowNull: true
         },
+        'PrimaryPhoto',
         {
             name: 'PrimaryEmailID',
             type: 'integer',
             allowNull: true
         },
+        'PrimaryEmail',
         {
             name: 'PrimaryPhoneID',
             type: 'integer',
             allowNull: true
         },
+        'PrimaryPhone',
         {
             name: 'PrimaryPostalID',
             type: 'integer',
             allowNull: true
         },
+        'PrimaryPostal',
         {
             name: 'FirstName'
         },
@@ -70,8 +74,17 @@ Ext.define('SlateAdmin.model.person.Person', {
         {
             name: 'FullName',
             depends: ['FirstName', 'LastName'],
-            convert: function(v,r) {
+            convert: function(v, r) {
                 return r.get('FirstName') + ' ' + r.get('LastName');
+            }
+        },
+        {
+            name: 'Email',
+            depends: ['PrimaryEmail'],
+            convert: function(v, r) {
+                var pointData = r.get('PrimaryEmail');
+
+                return pointData ? pointData.Data : null;
             }
         },
         {
@@ -156,7 +169,9 @@ Ext.define('SlateAdmin.model.person.Person', {
     proxy: {
         type: 'slaterecords',
         url: '/people',
-        include: ['groupIDs', 'Advisor']
+        startParam: false,
+        limitParam: false,
+        include: ['groupIDs', 'Advisor', 'PrimaryEmail']
     },
 
 
@@ -174,9 +189,9 @@ Ext.define('SlateAdmin.model.person.Person', {
 
         if (firstName && lastName) {
             return firstName + ' '+ lastName;
-        } else if(firstName) {
+        } else if (firstName) {
             return firstName;
-        } else if(email) {
+        } else if (email) {
             return email;
         } else {
             return 'Person #'+id;

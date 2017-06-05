@@ -1,6 +1,12 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate, Jarvus*/
 Ext.define('SlateAdmin.controller.people.Progress', {
     extend: 'Ext.app.Controller',
+    requires: [
+        'Ext.window.MessageBox',
+
+        /* global SlateAdmin */
+        'SlateAdmin.API'
+    ],
+
 
     views: [
         'people.details.Progress',
@@ -19,6 +25,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     ],
 
     refs: {
+        peopleManager: 'people-manager',
+
         progressPanel: {
             selector: 'people-details-progress',
             autoCreate: true,
@@ -26,25 +34,26 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             xtype: 'people-details-progress'
         },
         progressList: 'people-details-progress dataview',
-        peopleManager: 'people-manager',
-        reportSearchField: 'people-details-progress #notesSearch',
-        termSelector: 'people-details-progress #progressReportsTermSelector',
+        classesSelector: 'people-details-progress #classesSelector',
+        termSelector: 'people-details-progress #termSelector',
+
         reportPreviewer: {
             selector: 'people-details-progress-previewer',
             autoCreate: true,
 
             xtype: 'people-details-progress-previewer'
         },
-        noteEditorCt: 'people-details-progress-note-editwindow #progressNoteCt',
-        progressNoteForm: 'people-details-progress-note-form',
-        progressNoteViewer: 'people-details-progress-note-viewer',
-        progressNoteRecipientGrid: 'people-details-progress-note-recipientgrid',
+
         progressNoteEditorWindow: {
             selector: 'people-details-progress-note-editwindow',
             autoCreate: true,
 
             xtype: 'people-details-progress-note-editwindow'
-        }
+        },
+        noteEditorCt: 'people-details-progress-note-editwindow #progressNoteCt',
+        progressNoteForm: 'people-details-progress-note-editwindow people-details-progress-note-form',
+        progressNoteViewer: 'people-details-progress-note-editwindow people-details-progress-note-viewer',
+        progressNoteRecipientGrid: 'people-details-progress-note-editwindow people-details-progress-note-recipientgrid'
     },
 
     control: {
@@ -54,19 +63,25 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         'people-details-progress': {
             personloaded: 'onPersonLoaded'
         },
-        'people-details-progress #reportTypes menucheckitem': {
-            checkchange: 'onProgressTypesChange'
+        'people-details-progress #classesSelector menucheckitem': {
+            checkchange: 'onProgressClassesChange'
         },
-        'people-details-progress #progressReportsTermSelector': {
+        termSelector: {
             change: 'onProgressTermChange'
+        },
+        'people-details-progress button[action=launch-browser]': {
+            click: 'onListLaunchBrowserClick'
         },
         'people-details-progress #progressReportsList': {
             itemclick: 'onProgressRecordClick'
         },
-        'people-details-progress button[action=export-reports]':{
+        'people-details-progress-previewer button[action=launch-browser]': {
+            click: 'onPreviewerLaunchBrowserClick'
+        },
+        'people-details-progress button[action=export-reports]': {
             click: 'onExportProgressClick'
         },
-        'people-details-progress button[action=composeNote]':{
+        'people-details-progress button[action=composeNote]': {
             click: 'onComposeProgressNoteClick'
         },
         'people-details-progress-note-recipientgrid #customRecipientPersonCombo': {
@@ -94,17 +109,13 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
     onPersonLoaded: function (progressPanel, person) {
         var me = this,
-            progressProxy = Ext.getStore('people.ProgressReports').getProxy(),
-            selectedTerm = me.getTermSelector().getValue();
+            progressProxy = me.getPeopleProgressReportsStore().getProxy();
 
-        progressProxy.setExtraParam('StudentID', person.getId());
-        progressProxy.setExtraParam('reportTypes[]', [
-            'standards',
-            'progressnotes',
-            'narratives',
-            'interims'
-        ]);
-        progressProxy.setExtraParam('termID', selectedTerm || 0);
+        progressProxy.setExtraParam('student', person.get('Username') || person.getId());
+        progressProxy.setExtraParam('classes[]', Ext.Array.map(me.getClassesSelector().query('menucheckitem'), function(checkItem) {
+            return checkItem.getValue();
+        }));
+        progressProxy.setExtraParam('term', me.getTermSelector().getValue() || '');
 
         me.doFilter(true);
     },
@@ -112,19 +123,15 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     onComposeProgressNoteClick: function () {
         var me = this,
             editor = me.getProgressNoteEditorWindow(),
-            noteEditorCt = me.getNoteEditorCt(),
-            form = me.getProgressNoteForm(),
-            store = Ext.getStore('people.progress.NoteRecipients'),
+            store = me.getPeopleProgressNoteRecipientsStore(),
             person = me.getPeopleManager().getSelectedPerson(),
             personId = person.getId(),
-            phantomRecord = new(me.getModel('person.progress.ProgressNote'))({
+            phantomRecord = new (me.getPersonProgressProgressNoteModel())({
                 ContextClass: 'Emergence\\People\\Person',
                 ContextID: personId
             });
 
-        noteEditorCt.getLayout().setActiveItem(form);
-
-        editor.updateProgressNote(phantomRecord);
+        editor.setProgressNote(phantomRecord);
 
         editor.show();
 
@@ -133,42 +140,34 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 personID: personId
             },
             callback: function () {
+                var advisorRecipient = store.findExact('PersonID', person.get('AdvisorID'));
 
-                var noteRecipientID = store.findBy(function (record) {
-                    if(record.get('PersonID') == person.get('AdvisorID') ) {
-                        return true;
-                    }
-                });
-                if (noteRecipientID !== -1) {
-                    me.getProgressNoteRecipientGrid().selModel.select(noteRecipientID);
+                if (advisorRecipient !== -1) {
+                    me.getProgressNoteRecipientGrid().getSelectionModel().select(advisorRecipient);
                 }
-
             }
         });
     },
 
     onCustomRecipientPersonSelect: function (combo, record) {
-        var emailField = combo.nextSibling('textfield[name="Email"]'),
-            email = record.get('PrimaryEmail');
-        if (email) {
-            emailField.setValue(records[0].get('PrimaryEmail').Data);
-        }
+        combo.nextSibling('textfield[name=Email]').setValue(record.get('Email'));
     },
 
-    onAddProgressNoteRecipient: function (btn, t) {
-        var menu = btn.up('menu'),
+    onAddProgressNoteRecipient: function (btn) {
+        var me = this,
+            menu = btn.up('menu'),
             personField = menu.down('combo[name="Person"]'),
             emailField = menu.down('textfield[name="Email"]'),
             relationshipField = menu.down('textfield[name="Label"]'),
-            person = this.getPeopleManager().getSelectedPerson(),
+            person = me.getPeopleManager().getSelectedPerson(),
             values = {
                 Person: personField.getValue(),
                 Label: relationshipField.getValue(),
                 Email: emailField.getValue(),
                 StudentID: person.getId()
             },
-            recipientGrid = this.getProgressNoteRecipientGrid(),
-            recipientsStore = Ext.getStore('people.progress.NoteRecipients');
+            recipientGrid = me.getProgressNoteRecipientGrid(),
+            recipientsStore = me.getPeopleProgressNoteRecipientsStore();
 
 
         if (personField.isValid() && emailField.isValid()) {
@@ -178,15 +177,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 url: '/notes/addCustomRecipient',
                 params: values,
                 success: function (res) {
-                    var r = Ext.decode(res.responseText);
+                    var r = Ext.decode(res.responseText),
+                        record;
 
-                    if (!r.success) {
-                        Ext.Msg.alert('Failure adding recipient', r.message);
-                    } else {
-                        var record = recipientsStore.add(r.data);
+                    if (r.success) {
+                        record = recipientsStore.add(r.data);
 
                         recipientsStore.sort({
-                            sorterFn: function (p1, p2){
+                            sorterFn: function (p1, p2) {
                                 if (p1.get('RelationshipGroup') != 'Other' && p2.get('RelationshipGroup') != 'Other') {
                                     return 0;
                                 }
@@ -209,7 +207,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                         personField.reset();
                         emailField.reset();
                         relationshipField.reset();
+                    } else {
+                        Ext.Msg.alert('Failure adding recipient', r.message);
                     }
+
                     recipientGrid.setLoading(false);
                 },
                 failure: function () {
@@ -227,167 +228,138 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         }, this);
     },
 
-    onSendProgressNote: function (){
+    onSendProgressNote: function() {
         var me = this,
-            editorWindow = me.getProgressNoteEditorWindow(),
-            recipients = me.getProgressNoteRecipientGrid().getSelectionModel().getSelection(),
-            record = editorWindow.getProgressNote();
+            recipients = me.getProgressNoteRecipientGrid().getSelectionModel().getSelection();
 
-        if (!recipients.length) {
-            return Ext.Msg.alert('Cannot send email', 'Please select recipients before sending.');
+        if (recipients.length) {
+            Ext.Msg.confirm('Sending', 'Are you sure you want to send this message?', function (btn) {
+                if (btn == 'yes') {
+                    me.doSaveProgressNote(me.getProgressNoteEditorWindow().syncProgressNote(), recipients);
+                }
+            });
+        } else {
+            Ext.Msg.alert('Cannot send email', 'Please select recipients before sending.');
         }
 
-        editorWindow.setLoading('Sending&hellip;');
-
-        Ext.Msg.confirm('Sending', 'Are you sure you want to send this message?', function(btn) {
-            if (btn=='no') {
-                editorWindow.setLoading(false);
-                return false;
-            }
-
-
-            me.doSaveProgressNote(record, recipients);
-        });
     },
 
-    onProgressTypesChange: function (checkItem, checked) {
-        var menu = checkItem.up('menu'),
-            reportTypeCheckboxes = menu.query('menucheckitem[checked=true]'),
-            reportsStore = Ext.getStore('people.ProgressReports'),
-            reportsProxy = reportsStore.getProxy(),
-            reportTypes = [];
+    onProgressClassesChange: function () {
+        this.getPeopleProgressReportsStore().getProxy().setExtraParam(
+            'classes[]',
+            Ext.Array.map(this.getClassesSelector().query('menucheckitem[checked]'), function(checkItem) {
+                return checkItem.getValue();
+            })
+        );
 
-        for(var key in reportTypeCheckboxes) {
-            if (reportTypeCheckboxes[key].checked) {
-                reportTypes.push(reportTypeCheckboxes[key].value);
-            }
-        }
-
-        reportsProxy.setExtraParam('reportTypes[]', reportTypes);
         this.bufferedDoFilter();
     },
 
-    onProgressTermChange: function (field, newValue, oldValue) {
-        var reportsStore = Ext.getStore('people.ProgressReports'),
+    onProgressTermChange: function (field, newValue) {
+        var reportsStore = this.getPeopleProgressReportsStore(),
             reportsProxy = reportsStore.getProxy();
 
-        reportsProxy.setExtraParam('termID', newValue);
+        reportsProxy.setExtraParam('term', newValue);
 
         this.bufferedDoFilter();
     },
 
     onExportProgressClick: function () {
-        var me = this,
-            reportsStore = Ext.getStore('people.ProgressReports'),
-            reportsProxy = reportsStore.getProxy(),
-            reportsContainer = me.getProgressPanel(),
-            apiHost = SlateAdmin.API.getHost(),
-            exportUrl = '/progress?' + Ext.Object.toQueryString(Ext.apply({ format: 'pdf' }, reportsProxy.getExtraParams())),
-            exportLoadMask = {msg: 'Preparing PDF, please wait, this may take a minute&hellip;' };
+        var reportsPanel = this.getProgressPanel(),
+            params = Ext.apply(
+                {
+                    format: 'pdf'
+                },
+                this.getPeopleProgressReportsStore().getProxy().getExtraParams()
+            );
 
         Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports', function(btn) {
-            if (btn == 'yes') {
-                if (Ext.isEmpty(apiHost)) {
-                    reportsContainer.setLoading(exportLoadMask);
-                }
-
-                SlateAdmin.API.downloadFile(exportUrl, function () {
-                    reportsContainer.setLoading(false);
-                }, me);
+            if (btn != 'yes') {
+                return;
             }
-        }, me);
+
+            reportsPanel.setLoading({
+                msg: 'Preparing PDF, please wait, this may take a minute&hellip;'
+            });
+
+            SlateAdmin.API.downloadFile('/progress?' + Ext.Object.toQueryString(params), function () {
+                reportsPanel.setLoading(false);
+            });
+        });
+    },
+
+    onListLaunchBrowserClick: function() {
+        var params = this.getPeopleProgressReportsStore().getProxy().getExtraParams();
+
+        window.open(SlateAdmin.API.buildUrl('/progress?' + Ext.Object.toQueryString(params)));
     },
 
     onProgressRecordClick: function (view, record) {
         var me = this;
 
-        switch(record.get('Class')) {
+        switch (record.get('Class')) {
             case 'Slate\\Progress\\Note':
-                return me.onProgressNoteClick(record);
+                me.onProgressNoteClick(record);
+                break;
 
-            case 'Slate\\Progress\\Narratives\\Report':
-                return me.onNarrativeClick(record);
+            case 'Slate\\Progress\\SectionTermReport':
+                me.onTermReportClick(record);
+                break;
 
-            case 'Slate\\Progress\\Interims\\Report':
-                return me.onInterimClick(record);
+            case 'Slate\\Progress\\SectionInterimReport':
+                me.onInterimReportClick(record);
+                break;
 
-            case 'Standards':
-                return me.onStandardsClick(record);
+            default:
+                break;
         }
     },
 
-    onProgressNoteClick: function (record) {
+    onPreviewerLaunchBrowserClick: function() {
+        window.open(this.getReportPreviewer().getUrl());
+    },
+
+    onProgressNoteClick: function (progressRecord) {
         var me = this,
             editor = me.getProgressNoteEditorWindow(),
-            noteEditorCt = me.getNoteEditorCt(),
-            viewer = me.getProgressNoteViewer(),
-            progressContainer = me.getProgressPanel();
+            recipientsStore = me.getPeopleProgressNoteRecipientsStore();
 
-        progressContainer.setLoading({msg: 'Setting up progress note'});
+        me.getNoteEditorCt().getLayout().setActiveItem(me.getProgressNoteViewer());
+        recipientsStore.removeAll();
+        editor.setProgressNote(null);
 
-        noteEditorCt.getLayout().setActiveItem(viewer);
-        SlateAdmin.API.request({
-            url: '/notes/' + record.get('ID'),
-            success: function (res) {
-                var r = Ext.decode(res.responseText);
-                editor.updateProgressNote(r.data);
-                progressContainer.setLoading(false);
-            }
-        });
-
-        Ext.getStore('people.progress.NoteRecipients').load({
-            params: {
-                messageID: record.get('ID')
-            },
-            callback: function (records, operation){
-                var selected = [];
-                this.sort({
-                    sorterFn: function (p1, p2){
-                        if (p1.get('RelationshipGroup') != 'Other' && p2.get('RelationshipGroup') != 'Other') {
-                            return 0;
-                        }
-
-                        if (p1.get('RelationshipGroup') != 'Other') {
-                            return 1;
-                        }
-
-                        if (p2.get('RelationshipGroup') != 'Other') {
-                            return -1;
-                        }
-
-                        return -1;
-                    }
-                });
-
-
-                for (var key in records) {
-                    if (records[key].get('selected')) {
-                        selected.push(records[key]);
-                    }
-                }
-
-                me.getProgressNoteRecipientGrid().getSelectionModel().select(selected);
-            }
-        });
         editor.show();
+        editor.setLoading({
+            msg: 'Loading progress note&hellip;'
+        });
+
+        me.getPersonProgressProgressNoteModel().load(progressRecord.get('ID'), {
+            success: function(noteRecord) {
+                editor.setProgressNote(noteRecord);
+                editor.setLoading(false);
+            }
+        });
+
+        recipientsStore.load({
+            params: {
+                messageID: progressRecord.get('ID')
+            },
+            callback: function (records) {
+                me.getProgressNoteRecipientGrid().getSelectionModel().select(Ext.Array.filter(records, function(record) {
+                    return record.get('selected');
+                }));
+            }
+        });
     },
 
-    onNarrativeClick: function (record) {
+    onTermReportClick: function (record) {
         var reportPreviewer = this.getReportPreviewer();
 
         reportPreviewer.show();
         reportPreviewer.setReport(record);
     },
 
-    onInterimClick: function (record) {
-        var reportPreviewer = this.getReportPreviewer();
-
-        reportPreviewer.show();
-        reportPreviewer.setReport(record);
-    },
-
-    onStandardsClick: function (record) {
-
+    onInterimReportClick: function (record) {
         var reportPreviewer = this.getReportPreviewer();
 
         reportPreviewer.show();
@@ -395,7 +367,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     doFilter: function (forceReload, callback) {
-        var store = Ext.getStore('people.ProgressReports'),
+        var store = this.getPeopleProgressReportsStore(),
             proxy = store.getProxy();
 
         if (forceReload || proxy.isExtraParamsDirty()) {
@@ -406,63 +378,62 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         }
     },
 
-    doSaveProgressNote: function (record, recipients){
-        var me = this;
+    doSaveProgressNote: function (record, recipients) {
+        var me = this,
+            editorWindow = me.getProgressNoteEditorWindow(),
+            reportsProxy = me.getPeopleProgressReportsStore().getProxy(),
+            includeFields = reportsProxy.getInclude();
+
+        editorWindow.setLoading('Sending&hellip;');
 
         if (record.phantom) {
             record.save({
-                success: function (savedRecord) {
-                    Ext.getStore('people.ProgressReports').insert(0, {
-                        ID: savedRecord.get('ID'),
-                        AuthorUsername: savedRecord.get('Author').Username,
-                        Date: Ext.Date.format(new Date(savedRecord.get('Created') * 1000),'Y-m-d H:i:s'),
-                        Subject: savedRecord.get('Subject')
-
-                    });
-                    me.doSaveRecipients(record, recipients, true);
+                params: {
+                    summary: reportsProxy.getSummary(),
+                    include: Ext.isArray(includeFields) ? includeFields.join(',') : includeFields
                 },
-                failure: me.onProgressSaveFailure,
-                scope: me
+                success: function (savedRecord) {
+                    me.getPeopleProgressReportsStore().insert(0, savedRecord);
+                    me.doSaveRecipients(savedRecord, recipients);
+                },
+                failure: function(failedRecord, operation) {
+                    editorWindow.setLoading(false);
+                    Ext.Msg.alert('Failed to save note', operation.getError() || 'An unknown problem occurred, please try again later or contact support');
+                }
             });
         } else {
-            me.doSaveRecipients(record, recipients, false);
+            me.doSaveRecipients(record, recipients);
         }
     },
 
-    doSaveRecipients: function (record, recipients, isPhantomNote) {
+    doSaveRecipients: function (record, recipients) {
         var me = this,
-            editorWindow = me.getProgressNoteEditorWindow(),
-            noteId = '';
-
-        if (record.get) {
-            noteId = record.get('ID');
-        } else {
-            noteId = record.ID;
-        }
+            editorWindow = me.getProgressNoteEditorWindow();
 
         SlateAdmin.API.request({
-            url: '/notes/' + noteId + '/recipients',
+            url: '/notes/' + record.get('ID') + '/recipients',
             method: 'POST',
             jsonData: {
-                data: recipients.map(function (r) {
-                    return  {
+                data: recipients.map(function(r) {
+                    return {
                         PersonID: r.get('PersonID'),
                         Email: r.get('Email')
                     };
-                }),
-                messageID: noteId
+                })
             },
-            success: function (res) {
-                var r = Ext.decode(res.responseText);
+            success: function (response) {
+                editorWindow.setLoading(false);
 
-                if (r.success) {
-                    editorWindow.setLoading(false);
+                if (response.data.success) {
                     editorWindow.hide();
                 } else {
-                    me.onProgressSaveFailure();
+                    Ext.Msg.alert('Failed to add recipients to saved note', response.data.error || 'An unknown problem occurred, please try again later or contact support');
                 }
             },
-            failure: me.onProgressSaveFailure
+            failure: function() {
+                editorWindow.setLoading(false);
+                Ext.Msg.alert('Failed to add recipients to saved note', 'An unknown problem occurred, please try again later or contact support');
+            }
         });
     }
 });

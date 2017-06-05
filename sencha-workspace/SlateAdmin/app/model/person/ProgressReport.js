@@ -1,6 +1,8 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.model.person.ProgressReport', {
     extend: 'Ext.data.Model',
+
+
+    // model config
     fields: [
         'AuthorUsername',
         'Subject',
@@ -11,39 +13,41 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
             defaultValue: null
         }, {
             name: 'Class',
-            defaultValue: 'ProgressNote'
+            defaultValue: 'Slate\\Progress\\Note'
         }, {
-            name: 'Type',
-            convert: function (v, r) {
-                switch (r.get('Class'))
-                {
-                    case 'InterimReport':
-                        return 'Interim';
-                    case 'NarrativeReport':
-                        return 'Narrative';
-                    case 'ProgressNote':
-                        return 'Note';
-                    case 'Standards':
-                        return 'Standards';
-                }
-            }
+            name: 'Noun'
         }, {
-            name: 'Date',
+            name: 'Title'
+        }, {
+            name: 'Status'
+        }, {
+            name: 'Timestamp',
             type: 'date',
-            dateFormat: 'Y-m-d H:i:s'
+            dateFormat: 'timestamp'
         }, {
-            name: 'StudentID',
-            type: 'integer'
+            name: 'Author'
         }, {
-            name: 'CourseSectionID',
-            type: 'integer'
+            name: 'Student'
         }, {
-            name: 'TermID',
-            type: 'integer'
+            name: 'Term'
         }
     ],
+
     proxy: {
         type: 'slaterecords',
         url: '/progress'
+    },
+
+    getUrl: function() {
+        switch (this.get('Class')) {
+            case 'Slate\\Progress\\SectionTermReport':
+                return '/progress/section-term-reports/'+this.get('ID');
+            case 'Slate\\Progress\\SectionInterimReport':
+                return '/progress/section-interim-reports/'+this.get('ID');
+            case 'Slate\\Progress\\Note':
+                return '/notes/' + this.get('ID');
+            default:
+                return null;
+        }
     }
 });

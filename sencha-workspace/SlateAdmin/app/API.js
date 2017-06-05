@@ -3,6 +3,7 @@ Ext.define('SlateAdmin.API', {
     extend: 'Emergence.util.AbstractAPI',
     singleton: true,
 
+
     // example function
     getMySections: function(callback, scope) {
         this.request({
@@ -15,15 +16,20 @@ Ext.define('SlateAdmin.API', {
             scope: scope
         });
     },
+
     downloadFile: function(url, callback, scope, options) {
         options = options || {};
 
-        // create and append downloadToken
-        var apiHost = SlateAdmin.API.getHost(),
+        var apiHost = this.getHost(),
             downloadToken = Math.random(),
+            pollingInterval = options.pollingInterval || 100,
+            callbackArgs = [url, options],
             downloadInterval;
 
-        url = this.buildUrl(Ext.urlAppend(url, 'downloadToken=' + downloadToken));
+        if (!apiHost) {
+            Ext.urlAppend(url, 'downloadToken=' + downloadToken);
+        }
+        url = this.buildUrl(url);
 
         // get or create iframe el
         this.downloadFrame = this.downloadFrame || Ext.getBody().createChild({
@@ -33,25 +39,24 @@ Ext.define('SlateAdmin.API', {
             }
         });
 
-        if(apiHost) {
+        if (apiHost) {
+            // skip token if using remote api host, cookie won't be readable
+            Ext.defer(callback, pollingInterval, scope, callbackArgs);
+        } else {
             // setup token monitor
             downloadInterval = setInterval(function() {
-                if(Ext.util.Cookies.get('downloadToken') == downloadToken)
-                {
+                if (Ext.util.Cookies.get('downloadToken') == downloadToken) {
                     clearInterval(downloadInterval);
                     Ext.util.Cookies.clear('downloadToken');
-                    Ext.callback(callback, scope, [url, options]);
+                    Ext.callback(callback, scope, callbackArgs);
                 }
-            }, options.pollingInterval || 500);
+            }, pollingInterval);
         }
 
         // launch download
-        if(options.openWindow)
-        {
+        if (options.openWindow) {
             window.open(url);
-        }
-        else
-        {
+        } else {
             // use iframe for loading, setting window.location cancels current network ops
             this.downloadFrame.dom.src = url;
         }

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.people.details.Progress', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-progress',
@@ -22,10 +21,10 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             action: 'composeNote',
             cls: 'glyph-success',
             glyph: 0xf055 // fa-plus-circle
-        },{
+        }, {
             xtype: 'button',
             text: 'Types',
-            itemId: 'reportTypes',
+            itemId: 'classesSelector',
             glyph: 0xf0ca, // fa-list-ul
             menu: {
                 floating: true,
@@ -33,52 +32,54 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                     xtype: 'menucheckitem',
                     checked: true,
                     text: 'Progress Notes',
-                    value: 'progressnotes'
-                },{
+                    value: 'Slate\\Progress\\Note'
+                }, {
                     xtype: 'menucheckitem',
                     checked: true,
-                    text: 'Narratives',
-                    value: 'narratives'
-                },{
+                    text: 'Term Reports',
+                    value: 'Slate\\Progress\\SectionTermReport'
+                }, {
                     xtype: 'menucheckitem',
                     checked: true,
-                    text: 'Interims',
-                    value: 'interims'
-                },{
-                    xtype: 'menucheckitem',
-                    checked: true,
-                    text: 'Standards',
-                    value: 'standards'
+                    text: 'Interim Reports',
+                    value: 'Slate\\Progress\\SectionInterimReport'
                 }]
             }
-        },{
+        }, {
             xtype: 'tbspacer'
-        },{
+        }, {
             xtype: 'tbseparator'
-        },{
+        }, {
             xtype: 'tbtext',
             text: 'Term: '
-        },{
+        }, {
             flex: 1,
             xtype: 'combobox',
-            itemId: 'progressReportsTermSelector',
-            name: 'progressReportsTermSelector',
+            itemId: 'termSelector',
             emptyText: 'Any',
             store: 'Terms',
-            valueField: 'ID',
+            valueField: 'Handle',
             displayField: 'Title',
             queryMode: 'local',
             forceSelection: true
         }]
-    },{
+    }, {
         xtype: 'toolbar',
         dock: 'bottom',
-        items: ['->',{
-            xtype: 'button',
-            text: 'Export',
-            action: 'export-reports',
-            glyph: 0xf064 // fa-share
-        }]
+        items: [
+            '->',
+            {
+                xtype: 'button',
+                text: 'Export',
+                action: 'export-reports',
+                glyph: 0xf064 // fa-share
+            },
+            {
+                action: 'launch-browser',
+                text: 'Open',
+                glyph: 0xf08e // fa-external-link
+            }
+        ]
     }],
 
     items: [{
@@ -90,19 +91,20 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
         autoScroll: true,
         tpl: [
             '<ol class="person-records rich-list">',
-                '<tpl for=".">',
-                    '<li class="person-record rich-list-item clickable">',
-                        '<div class="meta">',
-                            '<span class="datum token type">{Type}</span>',
-                            '<span class="datum author">{AuthorUsername}</span>',
-                            '<time class="datum token index date" datetime="{Date:date(\'c\')}" title="{Date:date(\'F j, Y, g:i a\')}">',
-                            '{Date:date(\'M j, Y\')}',
-                            '<span class="token-extended">{Date:date(\', Y, g:i a\')}</span>',
-                            '</time>',
-                        '</div>',
-                        '<div class="description">{Subject}</div>',
-                    '</li>',
-                '</tpl>',
+            '    <tpl for=".">',
+            '        <li class="person-record rich-list-item clickable">',
+            '            <div class="meta">',
+            '                <span class="datum token type">{Noun}</span>',
+            '                <span class="datum author">{Author.Username}</span>',
+            '                <tpl if="Timestamp">',
+            '                   <time class="datum token index date" datetime="{Timestamp:date(\'c\')}" title="{Timestamp:date(\'F j, Y, g:i a\')}">',
+            '                       {Timestamp:date(\'M j, Y\')}<span class="token-extended">{Timestamp:date(\', Y, g:i a\')}</span>',
+            '                   </time>',
+            '                </tpl>',
+            '            </div>',
+            '            <div class="description">{Title:htmlEncode}</div>',
+            '        </li>',
+            '    </tpl>',
             '</ol>'
         ]
     }]

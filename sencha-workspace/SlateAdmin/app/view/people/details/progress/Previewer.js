@@ -2,9 +2,14 @@
 Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     extend: 'Ext.window.Window',
     xtype: 'people-details-progress-previewer',
+    requires: [
+        /* global SlateAdmin */
+        'SlateAdmin.API'
+    ],
 
     config: {
-        report: null
+        report: null,
+        url: null
     },
 
     layout: 'fit',
@@ -17,7 +22,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
         itemId: 'previewBox',
         cls: 'print-preview',
         flex: 1,
-        disabled: true,
         renderTpl: '<iframe width="100%" height="100%"></iframe>',
         renderSelectors: {
             iframeEl: 'iframe'
@@ -26,7 +30,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             afterrender: {
                 fn: function (previewBox) {
                     this.mon(previewBox.iframeEl, 'load', function () {
-                        previewBox.setDisabled(false);
                         previewBox.setLoading(false);
                     }, this);
                 },
@@ -34,65 +37,30 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             }
         }
     }],
+    bbar: [
+        '->',
+        {
+            action: 'launch-browser',
+            text: 'Open in new browser',
+            glyph: 0xf08e // fa-external-link
+        }
+    ],
 
-    //helper functions
-    updateReport: function (report){
+    // helper functions
+    updateReport: function (report) {
         var me = this,
-            filterForm = me.getComponent('filterForm'),
-            previewBox = me.getComponent('previewBox'),
-            reportClass = report.get('Class'),
-            apiHost = SlateAdmin.API.getHost(),
-            loadingSrc = '',
-            params = {},
-            loadMask,
-            printLoadingInterval;
+            noun = report.get('Noun'),
+            previewBox = me.getComponent('previewBox');
 
-        switch (reportClass) {
-            case 'Slate\\Progress\\Narratives\\Report':
-                me.setTitle('Narrative Preview');
+        me.setTitle('Preview '+noun);
+        previewBox.setLoading({
+            msg: 'Loading '+noun+'&hellip;'
+        });
 
-                loadingSrc = '/standards/print/preview';
-                loadMask = {msg: 'Loading Narrative&hellip;'};
-                loadingSrc = '/progress/narratives/print/preview';
-                params = {
-                    narrativeID: report.get('ID')
-                }
+        this.setUrl(SlateAdmin.API.buildUrl(report.getUrl()));
+    },
 
-                break;
-
-            case 'Standards':
-                me.setTitle('Standards Preview');
-
-                loadMask = {msg: 'Loading Standards&hellip;'};
-                loadingSrc = '/standards/print/preview'
-                params = {
-                    studentID: report.get('StudentID'),
-                    sectionID: report.get('CourseSectionID'),
-                    termID: report.get('TermID')
-                }
-                break;
-
-            case 'Slate\\Progress\\Interims\\Report':
-                me.setTitle('Interims Preview');
-
-                loadMask = {msg: 'Loading Interims&hellip;'};
-                loadingSrc = '/interims/pdf/'+report.get('ID');
-                break;
-        }
-
-        params.downloadToken = Math.random();
-
-        if (Ext.isEmpty(apiHost)) {
-            printLoadingInterval = setInterval(function () {
-                if (Ext.util.Cookies.get('downloadToken') == params.downloadToken) {
-                    clearInterval(printLoadingInterval);
-                    previewBox.setLoading(false);
-                }
-            }, 500);
-
-            previewBox.setLoading(loadMask);
-        }
-
-        previewBox.iframeEl.dom.src  = SlateAdmin.API.buildUrl(loadingSrc+'?'+Ext.Object.toQueryString(params));
+    updateUrl: function(url) {
+        this.getComponent('previewBox').iframeEl.dom.src = url;
     }
 });
