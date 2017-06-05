@@ -2,11 +2,10 @@
 
 Git::$repositories['slate'] = [
     'remote' => 'https://github.com/SlateFoundation/slate.git',
-    'originBranch' => 'development',
-    'workingBranch' => 'development',
+    'originBranch' => 'develop',
+    'workingBranch' => 'develop',
     'trees' => [
         'content-blocks',
-        'dwoo-plugins',
         'event-handlers',
         'html-templates' => [
             'exclude' => [
@@ -14,7 +13,6 @@ Git::$repositories['slate'] = [
                 '#^/app/SlateAdmin(/|$)#'
             ]
         ],
-        'mail-handlers',
         'php-classes' => [
             'exclude' => [
                 // from emergence-saml2 layer:
@@ -41,7 +39,7 @@ Git::$repositories['slate'] = [
             ]
         ],
         'php-migrations',
-        'phpunit-tests',
+        'sencha-workspace/EmergenceContentEditor/local.properties',
         'sencha-workspace/pages',
         'site-root' => [
             'exclude' => [
@@ -54,10 +52,6 @@ Git::$repositories['slate'] = [
                 // from emergence-saml2 layer:
                 '#/connectors/saml2\.php$#'
             ]
-        ],
-
-        // added to keep track of skeleton-v2 overrides
-        'sencha-workspace/packages/emergence-cms',
-        'sencha-workspace/ContentEditor'
+        ]
     ]
 ];
