@@ -25,11 +25,20 @@ class Message extends \VersionedRecord
             'type' => 'enum',
             'values' => [
                 \Emergence\People\Person::class
-            ]
+            ],
+            'includeInSummary' => true
         ],
-        'ContextID' => 'uint',
-        'AuthorID' => 'uint',
-        'Subject',
+        'ContextID' => [
+            'type' => 'uint',
+            'includeInSummary' => true
+        ],
+        'AuthorID' => [
+            'type' => 'uint',
+            'includeInSummary' => true
+        ],
+        'Subject' => [
+            'includeInSummary' => true
+        ],
         'Message' => 'clob',
         'MessageFormat' => [
             'type' => 'enum',
@@ -78,8 +87,12 @@ class Message extends \VersionedRecord
     ];
 
     public static $dynamicFields = [
-        'Context',
-        'Author',
+        'Context' => [
+            'includeInSummary' => true
+        ],
+        'Author' => [
+            'includeInSummary' => true
+        ],
         'ParentMessage',
         'Recipients'
     ];
@@ -135,6 +148,11 @@ class Message extends \VersionedRecord
         }
 
         return $MsgRecipient;
+    }
+
+    public function getTitle()
+    {
+        return $this->Subject;
     }
 
     public function save($deep = true)

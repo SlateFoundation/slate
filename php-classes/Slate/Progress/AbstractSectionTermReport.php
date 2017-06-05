@@ -2,13 +2,19 @@
 
 namespace Slate\Progress;
 
+use DB;
+use Emergence\People\Person;
+
 use Slate\Courses\Section;
 use Slate\Courses\SectionTermData;
 use Slate\Term;
 
 
-abstract class AbstractSectionTermReport extends AbstractReport
+abstract class AbstractSectionTermReport extends AbstractReport implements IStudentTermReport
 {
+    use StudentTermReportTrait;
+
+
     // ActiveRecord configuration
     public static $singularNoun = 'section term report';
     public static $pluralNoun = 'section term reports';
@@ -16,11 +22,13 @@ abstract class AbstractSectionTermReport extends AbstractReport
     public static $fields = [
         'SectionID' => [
             'type' => 'uint',
-            'index' => true
+            'index' => true,
+            'includeInSummary' => true
         ],
         'TermID' => [
             'type' => 'uint',
-            'index' => true
+            'index' => true,
+            'includeInSummary' => true
         ]
     ];
 
@@ -53,9 +61,18 @@ abstract class AbstractSectionTermReport extends AbstractReport
         ]
     ];
 
+    public static $summaryFields = [
+        'Term' => true
+    ];
+
     public static $dynamicFields = [
         'Section',
         'Term',
         'SectionTermData'
     ];
+
+    public function getTitle()
+    {
+        return sprintf('%s, %s', $this->Section->Title, $this->Term->Title);
+    }
 }

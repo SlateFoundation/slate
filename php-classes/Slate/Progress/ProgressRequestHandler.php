@@ -2,365 +2,99 @@
 namespace Slate\Progress;
 
 use DB;
-use Emergence\People\Person;
-use Slate\Term;
+use Emergence\People\PeopleRequestHandler;
+use Slate\TermsRequestHandler;
+
 
 class ProgressRequestHandler extends \RequestHandler
 {
+    /**
+     * Report classes must implement IStudentReport or IStudentTermReport
+     */
+    public static $reportClasses = [
+        SectionTermReport::class,
+        SectionInterimReport::class,
+        Note::class
+    ];
+
     public static $userResponseModes = [
         'application/json' => 'json',
         'application/pdf' => 'pdf'
     ];
 
-    public static $searchConditions = [
-        'ProgressNote' => [
-            'Subject' => [
-                'qualifiers' => ['any'],
-                'sql' => 'Subject LIKE "%%%s%%"'
-            ],
-            'Message' => [
-                'qualifiers' => ['any'],
-                'sql' => 'Message Like "%%%s%%"'
-            ],
-            'Author' => [
-                'qualifiers' => ['author'],
-                'sql' => 'AuthorID = (SELECT Author.ID FROM `people` Author WHERE Author.Username = "%s")'
-            ]
-        ],
-        'Narrative' => [
-            'Assessment' => [
-                'qualifiers' => ['any'],
-                'sql' => 'Assessment LIKE "%%%s%%"'
-            ],
-            'Comments' => [
-                'qualifiers' => ['any'],
-                'sql' => 'Comments Like "%%%s%%"'
-            ],
-            'Author' => [
-                'qualifiers' => ['author'],
-                'sql' => 'Narrative.CreatorID = (SELECT Author.ID FROM `people` Author WHERE Author.Username = "%s")'
-            ],
-            'Course' => [
-                'qualifiers' => ['course'],
-                'sql' => 'Narrative.CourseSectionID = (SELECT Course.ID FROM `course_sections` Course WHERE Course.Handle = "%s")'
-            ]
-        ],
-        'Interim' => [
-            'Comments' => [
-                'qualifiers' => ['any'],
-                'sql' => 'Comments Like "%%%s%%"'
-            ],
-            'Author' => [
-                'qualifiers' => ['author'],
-                'sql' => 'Interim.CreatorID = (SELECT Author.ID FROM people Author WHERE Author.Username = "%s")'
-            ],
-            'Course' => [
-                'qualifiers' => ['course'],
-                'sql' => 'Interim.CourseSectionID = (SELECT Course.ID FROM `course_sections` Course WHERE Course.Handle = "%s")'
-            ]
-        ]
-    ];
-
     public static function handleRequest()
-    {
-        return static::handleProgressRequest();
-    }
-
-    public static function handleProgressRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        if (!$_REQUEST['StudentID'] || !ctype_digit($_REQUEST['StudentID'])) {
-            return static::throwError('Must supply Student ID');
+        // get term filter
+        if (!empty($_REQUEST['term'])) {
+            if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST['term'])) {
+                return static::throwNotFoundError('term not found');
+            }
         }
 
-        $params = [
-            'StudentID' => $_REQUEST['StudentID']
-        ];
-
-        $Person = Person::getByID($_REQUEST['StudentID']);
-
-        if ((empty($_REQUEST['termID']) && $_REQUEST['termID'] != 0) || !is_numeric($_REQUEST['termID'])) {
-            $params['Term'] = Term::getCurrent();
-        } elseif ($_REQUEST['termID'] == 0) {
-            $params['Term'] = 'All';
-        } elseif (!$params['Term'] = Term::getByID($_REQUEST['termID'])) {
-            return static::throwNotFoundError('Term not found');
+        // get student filter
+        if (!empty($_REQUEST['student'])) {
+            if (!$Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student'])) {
+                return static::throwNotFoundError('student not found');
+            }
+        } else {
+            return static::throwInvalidRequestError('student required');
         }
 
-        $reportTypes = is_string($_REQUEST['reportTypes']) ? [$_REQUEST['reportTypes']] : $_REQUEST['reportTypes'];
+        // get types filter
+        if (!empty($_REQUEST['classes'])) {
+            $recordClasses = is_string($_REQUEST['classes']) ? explode(',', $_REQUEST['classes']) : $_REQUEST['classes'];
 
-        if (empty($reportTypes)) {
-            return static::throwError('Must supply report types');
+            foreach ($recordClasses AS $recordClass) {
+                if (!in_array($recordClass, static::$reportClasses)) {
+                    return static::throwNotFoundError('class not found');
+                }
+            }
+        } else {
+            $recordClasses = static::$reportClasses;
         }
 
-        $search = !empty($_REQUEST['q']) ? $_REQUEST['q'] : false;
+        // compile results from each type
+        $records = [];
+        $foundClasses = [];
 
+        foreach ($recordClasses as $recordClass) {
+            $isTermReport = is_a($recordClass, IStudentTermReport::class, true);
 
-        // if (static::peekPath() == 'export') {
-        //     static::shiftPath();
-        //     $summarizeRecords = false;
-        // }
+            if ($Term && $Student) {
+                $foundRecords = $isTermReport ? $recordClass::getAllByStudentTerm($Student, $Term) : null;
+            } elseif ($Term) {
+                $foundRecords = $isTermReport ? $recordClass::getAllByTerm($Term) : null;
+            } elseif ($Student) {
+                $foundRecords = $recordClass::getAllByStudent($Student);
+            } else {
+                $foundRecords = $recordClass::getAll();
+            }
 
-        $records = static::getProgressRecords($reportTypes, $params, static::getResponseMode() == 'json', $search);
+            if (!empty($foundRecords)) {
+                $records = array_merge($records, $foundRecords);
+                $foundClasses[] = $recordClass;
+            }
+        }
 
-        usort($records, function($r1, $r2) {
-            return (strtotime($r2['Date']) - strtotime($r1['Date']));
+        // build cache of timestamps for quick sorting with no modification violations
+        $recordTimestamps = [];
+        foreach ($records AS $Record) {
+            $recordTimestamps[$Record->ID] = $Record->getTimestamp();
+        }
+
+        // apply unified sorting across all types
+        usort($records, function ($r1, $r2) use($recordTimestamps) {
+            return $recordTimestamps[$r2->ID] - $recordTimestamps[$r1->ID];
         });
 
-
-        // if (!$summarizeRecords) {
-        //     $html = \TemplateResponse::getSource('reports/export', [
-        //         'data' => $records
-        //     ]);
-
-        //     $filename .= $Person->FullName.' ('.date('Y-m-d').')';
-        //     $filePath = tempnam('/tmp', 'slate_nr_');
-
-        //     file_put_contents($filePath.'.html', $html);
-        //     $command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" wkhtmltopdf \"$filePath.html\" \"$filePath.pdf\"";
-
-        //     exec($command);
-
-        //     $tokenName = 'downloadToken';
-        //     if (!empty($_REQUEST[$tokenName])) {
-        //         setcookie($tokenName, $_REQUEST[$tokenName], time()+300, '/');
-        //     }
-
-        //     header('Content-Type: application/pdf');
-        //     header("Content-Disposition: attachment; filename=\"$filename.pdf\"");
-        //     readfile($filePath.'.pdf');
-        //     exit();
-        // } else {
-            return static::respond('progress', [
-                'data' => $records
-            ]);
-        // }
-    }
-
-    protected static function getProgressRecords($reportTypes, $params, $summarizeRecords = true,  $search = false)
-    {
-        $records = [];
-
-        foreach ($reportTypes as $reportType) {
-            switch ($reportType) {
-                case 'progressnotes':
-                {
-                    $records = $summarizeRecords ? array_merge($records, static::getProgressNotesSummary($params, $search)) : array_merge($records, static::getProgressNotes($params, $search));
-                    break;
-                }
-
-            }
-        }
-
-        return $records;
-    }
-
-    protected static function getProgressSearchConditions($reportType, $search)
-    {
-        $reportSearchTerms = [
-            'qualifierConditions' => []
-            ,'mode' => 'AND'
-        ];
-
-        $terms = preg_split('/\s+/', $search);
-
-        foreach ($terms AS $term) {
-            $n = 0;
-            $qualifier = 'any';
-            $split = explode(':', $term, 2);
-
-            if (empty($term)) {
-                continue;
-            }
-
-            if (count($split) == 2) {
-                $qualifier = strtolower($split[0]);
-                $term = $split[1];
-            }
-
-            if ($qualifier == 'mode' && $term == 'or') {
-                $reportSearchTerms['mode'] = 'OR';
-            }
-
-            if ($reportType == 'Standards' && $qualifier == 'course') {
-                return [
-                    'qualifierConditions' => [
-                        'course' => [
-                            'Sections.Handle="'.$term.'"'
-                        ]
-                    ]
-                    ,'mode' => 'AND'
-                ];
-                //Reports will only have course section functionality for now. This is temporary.
-            } elseif ($reportType == 'Standards' && $qualifier == 'any') {
-                continue;
-            } elseif ($reportType == 'Standards') {
-                return [
-                    'qualifierConditions' => []
-                    ,'mode' => 'AND'
-                ];
-            }
-
-            foreach (static::$progressSearchConditions[$reportType] AS $k => $condition) {
-                if (!in_array($qualifier, $condition['qualifiers'])) {
-                    continue;
-                }
-
-                $sqlCondition = !empty($condition['sql']) ? sprintf($condition['sql'], \DB::escape($term)) : false;
-
-                $matchers[] = [
-                    'condition' => $sqlCondition
-                    ,'points' => $condition['points']
-                    ,'qualifier' => $qualifier
-                ];
-            }
-        }
-
-        if ($matchers) {
-            foreach ($matchers AS $matcher) {
-                if (!is_array($reportSearchTerms['qualifierConditions'][$matcher['qualifier']])) {
-                    $reportSearchTerms['qualifierConditions'][$matcher['qualifier']] = [];
-                }
-
-                $reportSearchTerms['qualifierConditions'][$matcher['qualifier']][] = $matcher['condition'];
-            }
-        }
-
-        return $reportSearchTerms;
-    }
-
-    protected static function getProgressNotesSummary($params, $search = false)
-    {
-        $sql = 'SELECT %s FROM `%s` Note LEFT JOIN `%s` People ON (People.ID = Note.AuthorID)  WHERE (%s) HAVING (%s)';
-
-        $having = [];
-        $select = [
-            'Note.ID'
-            ,'Note.Class'
-            ,'Note.Subject'
-            ,'Sent AS Date'
-            ,'People.Username AS AuthorUsername'
-        ];
-
-        $queryParams = [
-            Note::$tableName
-            ,Person::$tableName
-        ];
-
-        $termCondition = $params['Term'] == 'All' ? false : 'DATE(Note.Created) BETWEEN "'.$params['Term']->StartDate.'" AND "'.$params['Term']->EndDate.'"';
-
-        $conditions = [
-            'ContextID='.$params['StudentID']
-            ,'ContextClass="'.\DB::escape(Person::class).'"'
-        ];
-
-        if ($termCondition) {
-            $conditions[] = $termCondition;
-        }
-
-        if ($search) {
-            $matchedSearchConditions = static::getProgressSearchConditions('ProgressNote', $search);
-            $searchConditions = [];
-
-            if (!empty($matchedSearchConditions['qualifierConditions'])) {
-                foreach ($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
-                    $conditionString = '( ('.implode(') OR (', $qualifierConditions).') )';
-
-                    if ($matchedSearchConditions['mode'] == 'OR') {
-                        $searchConditions = array_merge($searchConditions, $qualifierConditions);
-                    } else {
-                        $conditions[] = $conditionString;
-                    }
-                }
-            }
-
-            if ($matchedSearchConditions['mode'] == 'OR') {
-                $select[] = implode('+', array_map(function($c) {
-                    return sprintf('IF(%s, %u, 0)', $c, 1);
-                }, $searchConditions)).' AS searchScore';
-
-                $having[] = 'searchScore >= 1';
-            }
-        }
-
-        array_unshift($queryParams, implode(',', $select));
-        $queryParams[] = $conditions ? implode(' AND ', $conditions) : '1';
-        $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
-
-        return DB::allRecords($sql, $queryParams);
-    }
-
-    protected static function getProgressNotes($params, $search = false)
-    {
-        $sql = 'SELECT %s FROM `%s` WHERE (%s) HAVING (%s)';
-
-        $having = [];
-        $select = [
-            'Class'
-            ,'Subject'
-            ,'Sent AS Date'
-            ,'Message'
-            ,'MessageFormat'
-            ,'AuthorID'
-            ,'ContextClass'
-            ,'ContextID'
-        ];
-
-        $queryParams = [
-             Note::$tableName
-        ];
-
-        $termCondition = $params['Term'] == 'All' ? false : 'DATE(Created) BETWEEN "'.$params['Term']->StartDate.'" AND "'.$params['Term']->EndDate.'"';
-
-        $conditions = [
-            'ContextID='.$params['StudentID']
-            ,'ContextClass="'.\DB::escape(Person::class).'"'
-        ];
-
-        if ($termCondition) {
-            $conditions[] = $termCondition;
-        }
-
-        if ($search) {
-            $matchedSearchConditions = static::getProgressSearchConditions('ProgressNote', $search);
-
-            $searchConditions = [];
-
-            if (!empty($matchedSearchConditions['qualifierConditions'])) {
-                foreach ($matchedSearchConditions['qualifierConditions'] as $qualifierConditions) {
-                    $conditionString = '( ('.implode(') OR (', $qualifierConditions).') )';
-
-                    if ($matchedSearchConditions['mode'] == 'OR') {
-                        $searchConditions = array_merge($searchConditions, $qualifierConditions);
-                    } else {
-                        $conditions[] = $conditionString;
-                    }
-                }
-            }
-
-            if ($matchedSearchConditions['mode'] == 'OR') {
-                $select[] = implode('+', array_map(function($c) {
-                    return sprintf('IF(%s, %u, 0)', $c, 1);
-                }, $searchConditions)).' AS searchScore';
-
-                $having[] = 'searchScore >= 1';
-            }
-        }
-
-        array_unshift($queryParams, implode(',', $select));
-        $queryParams[] = $conditions ? implode(' AND ', $conditions) : '1';
-        $queryParams[] = empty($having) ? '1' : join(' AND ', $having);
-
-        $notes = array_map(function($note) {
-            return array_merge($note->getData(), [
-                'AuthorFullName' => $note->Author->FullName,
-                'AuthorEmail' => $note->Author->Email,
-                'StudentFullName' => $note->Context->FullName
-            ]);
-        }, Note::getAllByQuery($sql, $queryParams));
-
-
-        return $notes;
+        // return results and list of included types
+        return static::respond('progress', [
+            'data' => $records,
+            'recordClasses' => $foundClasses,
+            'term' => $Term,
+            'student' => $Student
+        ]);
     }
 }

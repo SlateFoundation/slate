@@ -85,17 +85,6 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         // build list of suggested recipients
         $contacts = [];
 
-        // the target person
-        $contacts[] = static::_getRecipientFromPerson($Person, ($Person->isA(Student::class) ? 'Student' : 'User'));
-
-        // related contacts
-        foreach (Relationship::getAllByPerson($Person) AS $Relationship) {
-            if (!$Relationship->RelatedPerson->Email) {
-                continue;
-            }
-            $contacts[] = static::_getRecipientFromPerson($Relationship->RelatedPerson, $Relationship->Label, 'Related Contacts');
-        }
-
         // instructors
         if ($Term = Term::getClosest()) {
             $studentInstructors = \DB::allRecords(
@@ -118,19 +107,34 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                     return Section::getByID($sectionID)->Course->Code;
                 }, explode(',', $si['sectionIDs']));
 
-                $contacts[] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), 'Teacher ('.join(', ',$sectionCodes).')', 'Teachers');
+                $contacts[$si['instructorID']] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), 'Teacher ('.join(', ',$sectionCodes).')', 'Teachers');
             }
         }
 
         // advisor
         if ($Person->AdvisorID) {
-            $contacts[$Person->AdvisorID] = static::_getRecipientFromPerson($Person->Advisor, 'Advisor', 'Teachers');
+            if (isset($contacts[$Person->AdvisorID])) {
+                $contacts[$Person->AdvisorID]['Label'] = 'Advisor, '.$contacts[$Person->AdvisorID]['Label'];
+            } else {
+                $contacts[$Person->AdvisorID] = static::_getRecipientFromPerson($Person->Advisor, 'Advisor', 'Teachers');
+            }
         }
 
         // school-wide staff
         foreach (GlobalRecipient::getAll() AS $globalRecipient) {
-            $contacts[] = static::_getRecipientFromPerson(Person::getByID($globalRecipient->PersonID), $globalRecipient->Title, 'Global Recipients');
+            $contacts[$globalRecipient->PersonID] = static::_getRecipientFromPerson(Person::getByID($globalRecipient->PersonID), $globalRecipient->Title, 'Global Recipients');
         }
+
+        // related contacts
+        foreach (Relationship::getAllByPerson($Person) AS $Relationship) {
+            if (!$Relationship->RelatedPerson->Email) {
+                continue;
+            }
+            $contacts[$Relationship->RelatedPersonID] = static::_getRecipientFromPerson($Relationship->RelatedPerson, $Relationship->Label, 'Related Contacts');
+        }
+
+        // the target person
+        $contacts[$Person->ID] = static::_getRecipientFromPerson($Person, ($Person->isA(Student::class) ? 'Student' : 'User'));
 
         // mark recieved recipients
         if ($Message) {

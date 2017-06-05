@@ -237,6 +237,7 @@ class Person extends VersionedRecord implements IPerson
 
     public function getValue($name)
     {
+        $rsquo = "\xe2\x80\x99";
         switch ($name) {
             case 'FullName':
                 return $this->getFullName();
@@ -246,17 +247,17 @@ class Person extends VersionedRecord implements IPerson
                 return strtoupper(substr($this->LastName, 0, 1));
             case 'FirstNamePossessive':
                 if (substr($this->FirstName, -1) == 's') {
-                    return $this->FirstName.'\'';
+                    return $this->FirstName.$rsquo;
                 } else {
-                    return $this->FirstName.'\'s';
+                    return $this->FirstName.$rsquo.'s';
                 }
             case 'FullNamePossessive':
                 $fullName = $this->FullName;
 
                 if (substr($fullName, -1) == 's') {
-                    return $fullName.'\'';
+                    return $fullName.$rsquo;
                 } else {
-                    return $fullName.'\'s';
+                    return $fullName.$rsquo.'s';
                 }
             case 'Email':
                 \Emergence\Logger::general_warning('Deprecated: Read on Person(#{PersonID})->Email, use ->PrimaryEmail instead', ['PersonID' => $this->ID]);

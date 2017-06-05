@@ -23,3 +23,9 @@ $golden-sm: percentage(1 - (1/$golden-ratio));
 .people {
 	@import 'people';
 }
+
+@media print {
+    @page {
+        margin: 0;
+    }
+}

@@ -10,6 +10,9 @@ class Term extends \VersionedRecord
     // number of days reporting period lasts after end of a term
     public static $reportingPeriod = 14;
 
+    // NestingBehavior configuration
+    public static $siblingOrder = 'StartDate, EndDate DESC';
+
     // VersionedRecord configuration
     public static $historyTable = 'history_terms';
 
@@ -28,10 +31,12 @@ class Term extends \VersionedRecord
         'Title' => [
             'fulltext' => true
             ,'notnull' => false
+            ,'includeInSummary' => true
         ]
         ,'Handle' => [
             'unique' => true
             ,'notnull' => false
+            ,'includeInSummary' => true
         ]
 
         ,'Status' => [
@@ -106,6 +111,20 @@ class Term extends \VersionedRecord
     public static function getCurrent()
     {
         return static::getByWhere('CURRENT_DATE BETWEEN StartDate AND EndDate', ['order' => '`Right` - `Left`']);
+    }
+
+    public static function getForDate($date)
+    {
+        if (is_string($date)) {
+            $date = strtotime($date);
+        }
+
+        return static::getByWhere(
+            sprintf('FROM_UNIXTIME(%u) BETWEEN StartDate AND EndDate', $date),
+            [
+                'order' => '`Right` - `Left`'
+            ]
+        );
     }
 
     public static function getCurrentReporting()

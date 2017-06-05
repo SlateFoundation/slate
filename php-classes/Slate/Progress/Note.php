@@ -2,12 +2,58 @@
 
 namespace Slate\Progress;
 
-class Note extends \Emergence\CRM\Message
+use Emergence\People\IPerson;
+use Emergence\People\User;
+use Slate\Term;
+
+
+class Note extends \Emergence\CRM\Message implements IStudentTermReport
 {
+    use StudentReportTrait;
+
+
     public static $subjectFormat = '[PROGRESS NOTE] %s: %s';
     public static $archiveMailboxFormat = false;
 
-    public static $pdfTemplate = 'notes/print';
+    public static $cssTpl = 'notes/_css';
+    public static $bodyTpl = 'notes/_body';
+
+    public static $summaryFields = [
+        'ID' => true,
+        'Class' => true,
+        'Noun' => true,
+        'Timestamp' => true,
+        'Author' => true,
+        'Student' => true,
+        'Title' => true,
+        'Status' => true,
+        'Term' => true
+    ];
+
+    public static $dynamicFields = [
+        'Noun' => [
+            'getter' => 'getNoun'
+        ],
+        'Timestamp' => [
+            'getter' => 'getTimestamp'
+        ],
+        'Author' => [
+            'getter' => 'getAuthor'
+        ],
+        'Student' => [
+            'getter' => 'getStudent'
+        ],
+        'Title' => [
+            'getter' => 'getTitle'
+        ],
+        'Status' => [
+            'getter' => 'getStatus'
+        ],
+        'Term' => [
+            'getter' => 'getTerm'
+        ]
+    ];
+
 
     public function getEmailRecipientsList($recipients = false)
     {
@@ -31,11 +77,62 @@ class Note extends \Emergence\CRM\Message
         // call parent
         parent::validate($deep);
 
-        if (!$this->Context || !$this->Context->isA(\Emergence\People\User::class)) {
+        if (!$this->Context || !$this->Context->isA(User::class)) {
             $this->_validator->addError('Context', 'Progress note must be in the context of a user');
         }
 
         // save results
         return $this->finishValidation();
+    }
+
+    public static function getNoun($count = 1)
+    {
+        return $count == 1 ? 'progress note' : 'progress notes';
+    }
+
+    public function getTerm()
+    {
+        return Term::getForDate($this->Created);
+    }
+
+
+    public function getTimestamp()
+    {
+        return $this->Sent;
+    }
+
+    public function getAuthor()
+    {
+        return $this->Author;
+    }
+
+    public function getStudent()
+    {
+        return $this->Context;
+    }
+
+
+    public static function getAllByStudent(IPerson $Student)
+    {
+        return static::getAllByWhere([
+            'ContextClass' => $Student->getRootClass(),
+            'ContextID' => $Student->ID
+        ], ['order' => ['ID' => 'DESC']]);
+    }
+
+    public static function getAllByTerm(Term $Term)
+    {
+        return static::getAllByWhere([
+            sprintf('Created BETWEEN "%s" AND "%S"', $Term->StartDate, $Term->EndDate)
+        ], ['order' => ['ID' => 'DESC']]);
+    }
+
+    public static function getAllByStudentTerm(IPerson $Student, Term $Term)
+    {
+        return static::getAllByWhere([
+            'ContextClass' => $Student->getRootClass(),
+            'ContextID' => $Student->ID,
+            sprintf('Created BETWEEN "%s" AND "%s"', $Term->StartDate, $Term->EndDate)
+        ], ['order' => ['ID' => 'DESC']]);
     }
 }
