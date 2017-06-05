@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate, Jarvus*/
 Ext.define('SlateAdmin.controller.people.Progress', {
     extend: 'Ext.app.Controller',
     requires: [
@@ -127,7 +126,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             store = me.getPeopleProgressNoteRecipientsStore(),
             person = me.getPeopleManager().getSelectedPerson(),
             personId = person.getId(),
-            phantomRecord = new(me.getPersonProgressProgressNoteModel())({
+            phantomRecord = new (me.getPersonProgressProgressNoteModel())({
                 ContextClass: 'Emergence\\People\\Person',
                 ContextID: personId
             });

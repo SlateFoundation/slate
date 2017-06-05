@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.model.person.ProgressReport', {
     extend: 'Ext.data.Model',
 

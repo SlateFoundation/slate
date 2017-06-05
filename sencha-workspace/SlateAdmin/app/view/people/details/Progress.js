@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.people.details.Progress', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-progress',
@@ -22,7 +21,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             action: 'composeNote',
             cls: 'glyph-success',
             glyph: 0xf055 // fa-plus-circle
-        },{
+        }, {
             xtype: 'button',
             text: 'Types',
             itemId: 'classesSelector',
@@ -34,26 +33,26 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
                     checked: true,
                     text: 'Progress Notes',
                     value: 'Slate\\Progress\\Note'
-                },{
+                }, {
                     xtype: 'menucheckitem',
                     checked: true,
                     text: 'Term Reports',
                     value: 'Slate\\Progress\\SectionTermReport'
-                },{
+                }, {
                     xtype: 'menucheckitem',
                     checked: true,
                     text: 'Interim Reports',
                     value: 'Slate\\Progress\\SectionInterimReport'
                 }]
             }
-        },{
+        }, {
             xtype: 'tbspacer'
-        },{
+        }, {
             xtype: 'tbseparator'
-        },{
+        }, {
             xtype: 'tbtext',
             text: 'Term: '
-        },{
+        }, {
             flex: 1,
             xtype: 'combobox',
             itemId: 'termSelector',
@@ -64,7 +63,7 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             queryMode: 'local',
             forceSelection: true
         }]
-    },{
+    }, {
         xtype: 'toolbar',
         dock: 'bottom',
         items: [

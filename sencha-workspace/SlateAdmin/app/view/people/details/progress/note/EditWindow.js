@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
     extend: 'Ext.window.Window',
     xtype: 'people-details-progress-note-editwindow',
@@ -23,9 +22,9 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
         cls: 'glyph-danger',
         glyph: 0xf057, // fa-times-circle
         action: 'discardProgressNote'
-    },{
+    }, {
         xtype: 'tbfill'
-    },{
+    }, {
         xtype: 'button',
         text: 'Send &amp; Submit to Official Record',
         cls: 'glyph-accent',
@@ -40,10 +39,10 @@ Ext.define('SlateAdmin.view.people.details.progress.note.EditWindow',{
         itemId: 'progressNoteCt',
         items: [{
             xtype: 'people-details-progress-note-form'
-        },{
+        }, {
             xtype: 'people-details-progress-note-viewer'
         }]
-    },{
+    }, {
         xtype: 'people-details-progress-note-recipientgrid',
         width: 320,
         region: 'east'
