@@ -157,11 +157,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     onCustomRecipientPersonSelect: function (combo, record) {
-        var emailField = combo.nextSibling('textfield[name="Email"]'),
-            email = record.get('PrimaryEmail');
-        if (email) {
-            emailField.setValue(records[0].get('PrimaryEmail').Data);
-        }
+        combo.nextSibling('textfield[name=Email]').setValue(record.get('Email'));
     },
 
     onAddProgressNoteRecipient: function (btn, t) {
