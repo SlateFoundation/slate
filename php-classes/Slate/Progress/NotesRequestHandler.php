@@ -130,6 +130,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             if (!$Relationship->RelatedPerson->Email) {
                 continue;
             }
+
             $contacts[$Relationship->RelatedPersonID] = static::_getRecipientFromPerson($Relationship->RelatedPerson, $Relationship->Label, 'Related Contacts');
         }
 
@@ -138,16 +139,18 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
 
         // mark recieved recipients
         if ($Message) {
+            $contactStatus = [];
+
             foreach ($Message->Recipients AS $Recipient) {
-                $sent[$Recipient->PersonID] = $Recipient->Status;
-            }
-            foreach ($contacts as &$contact) {
-                if (in_array($contact['PersonID'], array_keys($sent))) {
-                    $contact['Status'] = $sent[$contact['PersonID']];
+                if (!isset($contacts[$Recipient->PersonID])) {
+                    $contacts[$Recipient->PersonID] = static::_getRecipientFromPerson($Recipient->Person, 'Message Recipient');
+                    
                 }
+                
+                $contacts[$Recipient->PersonID]['Status'] = $Recipient->Status;
+                $contacts[$Recipient->PersonID]['Email'] = $Recipient->EmailContact->toString();
             }
         }
-
 
         return static::respond('noteRecipients', [
             'success' => true,
@@ -249,7 +252,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         }
     }
 
-    protected static function _getRecipientFromPerson(Person $Person, $relationship = false, $relationshipGroup = false, $email = false)
+    protected static function _getRecipientFromPerson(Person $Person, $relationship = null, $relationshipGroup = null, $email = null)
     {
         return [
             'PersonID' => $Person->ID,
