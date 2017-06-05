@@ -101,9 +101,11 @@ Ext.define('Slate.model.person.Person', {
     },
 
     proxy: {
-        type: 'slate-records',
+        type: 'slaterecords',
         url: '/people',
-        include: 'groupIDs'
+        startParam: false,
+        limitParam: false,
+        include: ['groupIDs', 'Advisor', 'PrimaryEmail']
     },
 
 
