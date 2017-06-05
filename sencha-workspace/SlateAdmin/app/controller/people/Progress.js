@@ -79,10 +79,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         'people-details-progress-previewer button[action=launch-browser]': {
             click: 'onPreviewerLaunchBrowserClick'
         },
-        'people-details-progress button[action=export-reports]':{
+        'people-details-progress button[action=export-reports]': {
             click: 'onExportProgressClick'
         },
-        'people-details-progress button[action=composeNote]':{
+        'people-details-progress button[action=composeNote]': {
             click: 'onComposeProgressNoteClick'
         },
         'people-details-progress-note-recipientgrid #customRecipientPersonCombo': {
@@ -124,7 +124,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     onComposeProgressNoteClick: function () {
         var me = this,
             editor = me.getProgressNoteEditorWindow(),
-            noteEditorCt = me.getNoteEditorCt(),
             store = me.getPeopleProgressNoteRecipientsStore(),
             person = me.getPeopleManager().getSelectedPerson(),
             personId = person.getId(),
@@ -142,16 +141,11 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 personID: personId
             },
             callback: function () {
+                var advisorRecipient = store.findExact('PersonID', person.get('AdvisorID'));
 
-                var noteRecipientID = store.findBy(function (record) {
-                    if(record.get('PersonID') == person.get('AdvisorID') ) {
-                        return true;
-                    }
-                });
-                if (noteRecipientID !== -1) {
-                    me.getProgressNoteRecipientGrid().selModel.select(noteRecipientID);
+                if (advisorRecipient !== -1) {
+                    me.getProgressNoteRecipientGrid().getSelectionModel().select(advisorRecipient);
                 }
-
             }
         });
     },
@@ -160,7 +154,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         combo.nextSibling('textfield[name=Email]').setValue(record.get('Email'));
     },
 
-    onAddProgressNoteRecipient: function (btn, t) {
+    onAddProgressNoteRecipient: function (btn) {
         var me = this,
             menu = btn.up('menu'),
             personField = menu.down('combo[name="Person"]'),
@@ -184,15 +178,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 url: '/notes/addCustomRecipient',
                 params: values,
                 success: function (res) {
-                    var r = Ext.decode(res.responseText);
+                    var r = Ext.decode(res.responseText),
+                        record;
 
-                    if (!r.success) {
-                        Ext.Msg.alert('Failure adding recipient', r.message);
-                    } else {
-                        var record = recipientsStore.add(r.data);
+                    if (r.success) {
+                        record = recipientsStore.add(r.data);
 
                         recipientsStore.sort({
-                            sorterFn: function (p1, p2){
+                            sorterFn: function (p1, p2) {
                                 if (p1.get('RelationshipGroup') != 'Other' && p2.get('RelationshipGroup') != 'Other') {
                                     return 0;
                                 }
@@ -215,7 +208,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                         personField.reset();
                         emailField.reset();
                         relationshipField.reset();
+                    } else {
+                        Ext.Msg.alert('Failure adding recipient', r.message);
                     }
+
                     recipientGrid.setLoading(false);
                 },
                 failure: function () {
@@ -237,15 +233,16 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         var me = this,
             recipients = me.getProgressNoteRecipientGrid().getSelectionModel().getSelection();
 
-        if (!recipients.length) {
-            return Ext.Msg.alert('Cannot send email', 'Please select recipients before sending.');
+        if (recipients.length) {
+            Ext.Msg.confirm('Sending', 'Are you sure you want to send this message?', function (btn) {
+                if (btn == 'yes') {
+                    me.doSaveProgressNote(me.getProgressNoteEditorWindow().syncProgressNote(), recipients);
+                }
+            });
+        } else {
+            Ext.Msg.alert('Cannot send email', 'Please select recipients before sending.');
         }
 
-        Ext.Msg.confirm('Sending', 'Are you sure you want to send this message?', function (btn) {
-            if (btn == 'yes') {
-                me.doSaveProgressNote(me.getProgressNoteEditorWindow().syncProgressNote(), recipients);
-            }
-        });
     },
 
     onProgressClassesChange: function () {
@@ -259,7 +256,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         this.bufferedDoFilter();
     },
 
-    onProgressTermChange: function (field, newValue, oldValue) {
+    onProgressTermChange: function (field, newValue) {
         var reportsStore = this.getPeopleProgressReportsStore(),
             reportsProxy = reportsStore.getProxy();
 
@@ -312,6 +309,9 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
             case 'Slate\\Progress\\SectionInterimReport':
                 me.onInterimReportClick(record);
+                break;
+
+            default:
                 break;
         }
     },
