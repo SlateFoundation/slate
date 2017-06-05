@@ -5,8 +5,14 @@ namespace Slate\Progress;
 use Slate\People\Student;
 
 
-abstract class AbstractReport extends \VersionedRecord
+abstract class AbstractReport extends \VersionedRecord implements IStudentReport
 {
+    use StudentReportTrait;
+
+
+    public static $cssTpl;
+    public static $bodyTpl = '_body';
+
     // ActiveRecord configuration
     public static $singularNoun = 'report';
     public static $pluralNoun = 'reports';
@@ -15,12 +21,14 @@ abstract class AbstractReport extends \VersionedRecord
     public static $fields = [
         'StudentID' => [
             'type' => 'uint',
-            'index' => true
+            'index' => true,
+            'includeInSummary' => true
         ],
         'Status' => [
             'type' => 'enum',
             'values' => ['draft', 'published'],
-            'default' => 'draft'
+            'default' => 'draft',
+            'includeInSummary' => true
         ],
     ];
 
@@ -39,7 +47,40 @@ abstract class AbstractReport extends \VersionedRecord
         ]
     ];
 
-    public static $dynamicFields = [
-        'Student'
+    public static $summaryFields = [
+        'ID' => true,
+        'Class' => true,
+        'Noun' => true,
+        'Timestamp' => true,
+        'Author' => true,
+        'Student' => true,
+        'Title' => true,
+        'Status' => true
     ];
+
+    public static $dynamicFields = [
+        'Noun' => [
+            'getter' => 'getNoun'
+        ],
+        'Timestamp' => [
+            'getter' => 'getTimestamp'
+        ],
+        'Author' => [
+            'getter' => 'getAuthor'
+        ],
+        'Student' => [
+            'getter' => 'getStudent'
+        ],
+        'Title' => [
+            'getter' => 'getTitle'
+        ],
+        'Status' => [
+            'getter' => 'getStatus'
+        ]
+    ];
+
+    public function getTitle()
+    {
+        return sprintf('%s #%u', $this->getNoun(), $this->ID);
+    }
 }

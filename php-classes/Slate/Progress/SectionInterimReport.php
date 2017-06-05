@@ -2,8 +2,13 @@
 
 namespace Slate\Progress;
 
+
 class SectionInterimReport extends AbstractSectionTermReport
 {
+    public static $cssTpl = 'section-interim-reports/_css';
+    public static $bodyTpl = 'section-interim-reports/_body';
+
+
     public static $tableName = 'section_interim_reports';
     public static $singularNoun = 'section interim report';
     public static $pluralNoun = 'section interim reports';
@@ -30,4 +35,9 @@ class SectionInterimReport extends AbstractSectionTermReport
             'unique' => true
         ]
     ];
+
+    public static function getNoun($count = 1)
+    {
+        return $count == 1 ? 'interim report' : 'interim reports';
+    }
 }

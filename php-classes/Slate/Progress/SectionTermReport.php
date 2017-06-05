@@ -2,8 +2,13 @@
 
 namespace Slate\Progress;
 
+
 class SectionTermReport extends AbstractSectionTermReport
 {
+    public static $cssTpl = 'section-term-reports/_css';
+    public static $bodyTpl = 'section-term-reports/_body';
+
+
     public static $tableName = 'section_term_reports';
     public static $singularNoun = 'section term report';
     public static $pluralNoun = 'section term reports';
@@ -30,4 +35,14 @@ class SectionTermReport extends AbstractSectionTermReport
             'unique' => true
         ]
     ];
+
+    public static function getNoun($count = 1)
+    {
+        return $count == 1 ? 'term report' : 'term reports';
+    }
+
+    public function getTimestamp()
+    {
+        return strtotime($this->getTerm()->EndDate);
+    }
 }
