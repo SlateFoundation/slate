@@ -1002,14 +1002,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             if (!empty($row['Username'])) {
                 $User->Username = $row['Username'];
             } else {
-                $domainConstraints = [];
-                if (!$User->isPhantom) {
-                    $domainConstraints[] = 'ID != '.$User->ID;
-                }
-
-                $User->Username = User::getUniqueUsername($User->FirstName, $User->LastName, [
-                    'domainConstraints' => $domainConstraints
-                ]);
+                $User->Username = User::getUniqueUsername();
 
                 if ($User->isPhantom) {
                     $Job->log(sprintf('Assigned username %s', $User->Username), LogLevel::DEBUG);

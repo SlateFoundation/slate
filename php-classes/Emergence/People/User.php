@@ -111,7 +111,7 @@ class User extends Person
     {
         // generate user name if none provided
         if (!$this->Username) {
-            $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
+            $this->Username = $this->getUniqueUsername();
         }
 
         return parent::save($deep);
@@ -202,30 +202,34 @@ class User extends Person
         }
     }
 
-    public static function getUniqueUsername($firstName, $lastName, $options = [])
+    public function getUniqueUsername($options = [])
     {
         // apply default options
         $options = array_merge(
-            ['suffixFormat' => '%s%u'],
+            ['suffixFormat' => '%s%u', 'domainConstraints' => []],
             is_string(static::$usernameGenerator) || is_callable(static::$usernameGenerator) ? ['format' => static::$usernameGenerator] : static::$usernameGenerator,
             $options,
             ['handleField' => 'Username']
         );
 
+        if (!$this->isPhantom) {
+            $options['domainConstraints'][] = 'ID != '.$this->ID;
+        }
+
         // create seed username
         switch ($options['format']) {
             case 'flast':
-                $username = $firstName[0].$lastName;
+                $username = $this->FirstName[0].$this->LastName;
                 break;
             case 'firstl':
-                $username = $firstName.$lastName[0];
+                $username = $this->FirstName.$this->LastName[0];
                 break;
             case 'first.last':
-                $username = $firstName.'.'.$lastName;
+                $username = $this->FirstName.'.'.$this->LastName;
                 break;
             default:
                 if (is_callable($options['format'])) {
-                    $username = call_user_func($options['format'], $firstName, $lastName, $options);
+                    $username = call_user_func($options['format'], $this, $options);
                 } else {
                     throw new Exception('Unknown format format.');
                 }
