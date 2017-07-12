@@ -1003,18 +1003,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // apply account
-        if (!$User->Username || !empty($Job->Config['updateUsernames'])) {
-            if (!empty($row['Username'])) {
-                $User->Username = $row['Username'];
-            } else {
-                $User->Username = $User->getUniqueUsername();
-
-                if ($User->isPhantom) {
-                    $Job->debug('Assigned username {username}', ['username' => $User->Username]);
-                }
-            }
-        }
-
         if (!empty($row['AccountLevel']) && in_array($row['AccountLevel'], User::getFieldOptions('AccountLevel', 'values'))) {
             $User->AccountLevel = $row['AccountLevel'];
             if ($User->isPhantom) {
@@ -1122,6 +1110,20 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
             $User->Advisor = $Advisor;
+        }
+
+
+        // apply or generate username
+        if (!$User->Username || !empty($Job->Config['updateUsernames'])) {
+            if (!empty($row['Username'])) {
+                $User->Username = $row['Username'];
+            } else {
+                $User->Username = $User->getUniqueUsername();
+
+                if ($User->isPhantom) {
+                    $Job->debug('Assigned username {username}', ['username' => $User->Username]);
+                }
+            }
         }
 
 
