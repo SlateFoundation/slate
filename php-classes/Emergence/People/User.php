@@ -219,13 +219,13 @@ class User extends Person
         // create seed username
         switch ($options['format']) {
             case 'flast':
-                $username = $this->FirstName[0].$this->LastName;
+                $username = preg_replace('/\PL/u', '', $this->FirstName[0].$this->LastName);
                 break;
             case 'firstl':
-                $username = $this->FirstName.$this->LastName[0];
+                $username = preg_replace('/\PL/u', '', $this->FirstName.$this->LastName[0]);
                 break;
             case 'first.last':
-                $username = $this->FirstName.'.'.$this->LastName;
+                $username = preg_replace('/\PL/u', '', $this->FirstName.'.'.$this->LastName);
                 break;
             default:
                 if (is_callable($options['format'])) {
