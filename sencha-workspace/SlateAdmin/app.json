@@ -17,6 +17,7 @@
      *      ]
      */
     "requires": [
+        "ux",
         "font-awesome",
         "jarvus-hotfixes",
         "jarvus-ext-searchfield",
