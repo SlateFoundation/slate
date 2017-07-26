@@ -20,9 +20,6 @@ Ext.define('SlateAdmin.view.Main', {
         xtype: 'container',
         itemId: 'cardCt',
         layout: 'card',
-        items: {
-            xtype:'component',
-            cls: 'slate-empty-view'
-        }
+        cls: 'slate-empty-view'
     }]
 });
