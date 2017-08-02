@@ -24,6 +24,7 @@ Ext.define('SlateAdmin.controller.People', {
     routes: {
         'people': 'showPeople',
         'people/all': 'showResults',
+        'people/create': 'createPerson',
         'people/lookup/:person': {
             action: 'showPerson',
             conditions: {
@@ -415,6 +416,10 @@ Ext.define('SlateAdmin.controller.People', {
 
         Ext.suspendLayouts();
         me.syncGridStatus();
+
+        if (personRecord.phantom) {
+            me.getPeoplePeopleStore().remove(personRecord);
+        }
 
         if (selModel.getCount() == 1) {
             firstRecord = selModel.getSelection()[0];
@@ -942,5 +947,17 @@ Ext.define('SlateAdmin.controller.People', {
             personRecord = person;
             _finishSelectPerson();
         }
+    },
+
+    createPerson: function(callback) {
+        var me = this,
+            store = me.getGrid().getStore(),
+            person = store.getModel().create({
+                FirstName: '', // prevent values from being undefined
+                LastName: ''
+            });
+
+        store.add(person);
+        return me.selectPerson(person, callback);
     }
 });
