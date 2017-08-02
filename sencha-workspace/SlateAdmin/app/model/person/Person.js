@@ -3,12 +3,14 @@ Ext.define('SlateAdmin.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records',
+        'Ext.data.identifier.Negative',
         'Ext.data.validator.Presence'
     ],
 
 
     // model config
     idProperty: 'ID',
+    identifier: 'negative',
 
     fields: [
         // person fields
