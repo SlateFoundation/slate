@@ -7,12 +7,17 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
 
     // controller config
+    config: {
+        defaultUserClass: null
+    },
+
     views: [
         'people.invitations.Window'
     ],
 
     stores: [
-        'people.Invitations'
+        'people.Invitations',
+        'people.UserClasses'
     ],
 
     refs: {
@@ -22,7 +27,8 @@ Ext.define('SlateAdmin.controller.people.Invite', {
             autoCreate: true,
 
             xtype: 'people-invitationswindow'
-        }
+        },
+        userClassCombo: 'people-invitationswindow combo#userClass'
     },
 
     control: {
@@ -61,9 +67,11 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         }
 
         store.removeAll();
-        store.add(Ext.Array.map(selectedPeople, function(person) {
-            return { Person: person, selected: Boolean(person.get('PrimaryEmail')) };
-        }));
+        me.getDefaultClass(function(defaultUserClass) {
+            store.add(Ext.Array.map(selectedPeople, function(person) {
+                return { Person: person, selected: Boolean(person.get('PrimaryEmail')), UserClass: defaultUserClass };
+            }));
+        });
 
         window.show();
     },
@@ -129,7 +137,9 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
 
         for (; i < selectedPeopleLength; i++) {
-            people.push(selectedPeople[i].get('Person').getId());
+            people[selectedPeople[i].get('Person').getId()] = {
+                UserClass: selectedPeople[i].get('UserClass')
+            };
         }
 
         if (!people.length) {
@@ -181,5 +191,32 @@ Ext.define('SlateAdmin.controller.people.Invite', {
                 }
             }
         });
+    },
+
+    getDefaultClass: function(callback) {
+        var me = this,
+            store = me.getPeopleInvitationsStore(),
+            classesStore = me.getPeopleUserClassesStore(),
+            cls = store.getModel().getField('UserClass').getDefaultValue();
+
+        if (!cls) {
+            return classesStore.load({
+                callback: function(classes, request, success) {
+                    var response = Ext.decode(request.getResponse().responseText),
+                        defaultCls = response.default || null;
+
+                    if (success) {
+                        store.getModel().getField('UserClass').defaultValue = defaultCls;
+                        me.getInvitationsWindow().on('afterrender', function() {
+                            me.getUserClassCombo().getStore().loadRecords(classes);
+                        }, null, { single: true });
+                    }
+
+                    Ext.callback(callback, null, [defaultCls]);
+                }
+            });
+        }
+
+        return Ext.callback(callback, null, [cls]);
     }
 });
