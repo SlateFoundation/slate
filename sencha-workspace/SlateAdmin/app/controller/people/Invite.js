@@ -136,15 +136,16 @@ Ext.define('SlateAdmin.controller.people.Invite', {
             i = 0;
 
 
-        for (; i < selectedPeopleLength; i++) {
-            people[selectedPeople[i].get('Person').getId()] = {
-                UserClass: selectedPeople[i].get('UserClass')
-            };
-        }
-
-        if (!people.length) {
+        if (!selectedPeopleLength) {
             Ext.Msg.alert('No people selected', 'To send invitations, check the box to the left of at least one person');
             return;
+        }
+
+        for (; i < selectedPeopleLength; i++) {
+            people.push({
+                PersonID: selectedPeople[i].get('Person').getId(),
+                UserClass: selectedPeople[i].get('UserClass')
+            });
         }
 
         invitationsWindow.setLoading('Sending invitations&hellip;');
@@ -158,8 +159,8 @@ Ext.define('SlateAdmin.controller.people.Invite', {
                 Accept: 'application/json'
             },
             method: 'POST',
-            params: {
-                'people[]': people,
+            jsonData: {
+                'people': people,
                 message: invitationsWindow.down('textareafield').getValue()
             },
             success: function(response) {
