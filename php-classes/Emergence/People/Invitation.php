@@ -30,6 +30,9 @@ class Invitation extends \ActiveRecord
         'Used' => [
             'type' => 'timestamp',
             'default' => null
+        ],
+        'UserClass' => [
+            'default' => User::class
         ]
     ];
 
@@ -39,6 +42,21 @@ class Invitation extends \ActiveRecord
             'class' => Person::class
         ]
     ];
+
+    public static $validators = [
+        'UserClass' => [
+            'validator' => 'selection',
+            'choices' => [],
+            'required' => false
+        ]
+    ];
+
+    public static function __classLoaded()
+    {
+        $fieldCls = User::getStackedConfig('fields', 'Class');
+        static::$validators['UserClass']['choices'] = $fieldCls['values'];
+        parent::__classLoaded();
+    }
 
     public function save($deep = true)
     {
