@@ -22,7 +22,7 @@ with your initial user developer account.
 
 ## Configure git link
 To configure a link with a git repository, create a file called <kbd>Git.config.php</kbd> in the top level of the
-`php-config` directory and copy its initial contents from the [latest version of Slate's development Git.config.php](https://github.com/SlateFoundation/slate/blob/development/php-config/Git.config.php)
+`php-config` directory and copy its initial contents from the [latest version of Slate's development Git.config.d/slate.php](https://github.com/SlateFoundation/slate/blob/develop/php-config/Git.config.d/slate.php)
 on Github.
 
 You may change `originBranch` to select a different source and change `workingBranch` to change which branch you'll
