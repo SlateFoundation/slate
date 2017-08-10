@@ -58,6 +58,8 @@
         <h1 class="header-title">{$.User->FirstName}’s Dashboard</h1>
     </header>
 
+    {include includes/dashboard.header.tpl}
+
     <div class="sidebar-layout">
         <div class="main-col">
             <div class="col-inner">
