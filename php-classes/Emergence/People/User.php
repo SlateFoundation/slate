@@ -4,12 +4,15 @@ namespace Emergence\People;
 
 use DB;
 use HandleBehavior;
+use Emergence\Logger;
+
 
 class User extends Person
 {
     public static $minPasswordLength = 5;
     public static $usernameGenerator = 'flast';
     public static $onPasswordSet;
+    public static $fallbackUserFinders = [];
 
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
@@ -148,9 +151,27 @@ class User extends Person
     {
         // try to get by username first
         $User = static::getByField('Username', $username);
+
+        // try to get by email
         if (!$User && !\Validators\EmailAddress::isInvalid($username)) {
             $EmailPoint = \Emergence\People\ContactPoint\Email::getByString($username);
             $User = $EmailPoint->Person;
+        }
+
+        // try configured fallback user finders
+        foreach (static::$fallbackUserFinders AS $index => $fallbackUserFinder) {
+            if (!$fallbackUserFinder) {
+                continue;
+            }
+
+            if (!is_callable($fallbackUserFinder)) {
+                Logger::general_warning('User::$fallbackUserFinders[{index}] is not callable', ['index' => $index]);
+                continue;
+            }
+
+            if ($User = call_user_func($fallbackUserFinder, $username)) {
+                break;
+            }
         }
 
         return $User;
