@@ -130,6 +130,7 @@ class Student extends User
         list($groupType, $groupHandle) = preg_split('/[\s:\-]/', $identifier, 2);
 
         switch ($groupType) {
+            case 'organization':
             case 'group':
                 if (!$Group = Group::getByHandle($groupHandle)) {
                     throw new \Exception('Group not found');

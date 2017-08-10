@@ -228,11 +228,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // skip row if filter function flags it
             if ($filterReason = static::_filterPerson($Job, $row)) {
                 $results['filtered'][$filterReason]++;
-                $Job->log(sprintf(
-                    'Skipping student row #%03u due to filter: %s',
-                    $results['analyzed'],
-                    $filterReason
-                ), LogLevel::NOTICE);
+                $Job->notice('Skipping student row #{rowNumber} due to filter: {reason}', [
+                    'rowNumber' => $results['analyzed'],
+                    'reason' => $filterReason
+                ]);
                 continue;
             }
 
@@ -299,11 +298,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // skip row if filter function flags it
             if ($filterReason = static::_filterPerson($Job, $row)) {
                 $results['filtered'][$filterReason]++;
-                $Job->log(sprintf(
-                    'Skipping student row #%03u due to filter: %s',
-                    $results['analyzed'],
-                    $filterReason
-                ), LogLevel::NOTICE);
+                $Job->notice('Skipping alumni row #{rowNumber} due to filter: {reason}', [
+                    'rowNumber' => $results['analyzed'],
+                    'reason' => $filterReason
+                ]);
                 continue;
             }
 
@@ -370,11 +368,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // skip row if filter function flags it
             if ($filterReason = static::_filterPerson($Job, $row)) {
                 $results['filtered'][$filterReason]++;
-                $Job->log(sprintf(
-                    'Skipping student row #%03u due to filter: %s',
-                    $results['analyzed'],
-                    $filterReason
-                ), LogLevel::NOTICE);
+                $Job->notice('Skipping staff row #{rowNumber} due to filter: {reason}', [
+                    'rowNumber' => $results['analyzed'],
+                    'reason' => $filterReason
+                ]);
                 continue;
             }
 
@@ -456,11 +453,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // skip row if filter function flags it
             if ($filterReason = static::_filterSection($Job, $row)) {
                 $results['filtered'][$filterReason]++;
-                $Job->log(sprintf(
-                    'Skipping section row #%03u due to filter: %s',
-                    $results['analyzed'],
-                    $filterReason
-                ), LogLevel::NOTICE);
+                $Job->notice('Skipping section row #{rowNumber} due to filter: {reason}', [
+                    'rowNumber' => $results['analyzed'],
+                    'reason' => $filterReason
+                ]);
                 continue;
             }
 
@@ -468,13 +464,13 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // check required fields
             if (empty($row['CourseCode'])) {
                 $results['failed']['missing-required-field']['CourseCode']++;
-                $Job->log(sprintf('Missing course code for row %u', $results['analyzed']), LogLevel::ERROR);
+                $Job->error('Missing course code for row #{rowNumber}', ['rowNumber' => $results['analyzed']]);
                 continue;
             }
 
             if (empty($row['SectionExternal']) && empty($row['SectionCode'])) {
                 $results['failed']['missing-required-field']['SectionCode']++;
-                $Job->log(sprintf('Missing section code for row %u', $results['analyzed']), LogLevel::ERROR);
+                $Job->error('Missing section code for row #{rowNumber}', ['rowNumber' => $results['analyzed']]);
                 continue;
             }
 
@@ -514,7 +510,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             if (!empty($row['TeacherUsername'])) {
                 if (!$Teacher = User::getByUsername($row['TeacherUsername'])) {
                     $results['failed']['teacher-not-found-by-username'][$row['TeacherUsername']]++;
-                    $Job->log(sprintf('Teacher not found for username "%s"', $row['TeacherUsername']), LogLevel::ERROR);
+                    $Job->error('Teacher not found for username {username}', ['username' => $row['TeacherUsername']]);
                     continue;
                 }
             } elseif (($teacherNameSplit = !empty($row['TeacherFirstName']) && !empty($row['TeacherLastName'])) || !empty($row['TeacherFullName'])) {
@@ -528,7 +524,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 if (!$Teacher) {
                     $fullName = $teacherNameSplit ? $row['TeacherFirstName'] . ' ' . $row['TeacherLastName'] : $row['TeacherFullName'];
                     $results['failed']['teacher-not-found-by-name'][$fullName]++;
-                    $Job->log(sprintf('Teacher not found for full name "%s"', $fullName), LogLevel::ERROR);
+                    $Job->error('Teacher not found for full name {name}', ['name' => $fullName]);
                     continue;
                 }
             }
@@ -619,7 +615,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     ,'ExternalIdentifier' => $externalIdentifier
                 ], !$pretend);
 
-                $Job->log(sprintf('mapping external identifier %s to section %s', $externalIdentifier, $Record->getTitle()), LogLevel::NOTICE);
+                $Job->notice('Mapping external identifier {externalIdentifier} to section {sectionTitle}', [
+                    'externalIdentifier' => $externalIdentifier,
+                    'sectionTitle' => $Record->getTitle()
+                ]);
             }
 
 
@@ -682,11 +681,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // skip row if filter function flags it
             if ($filterReason = static::_filterEnrollment($Job, $row)) {
                 $results['filtered'][$filterReason]++;
-                $Job->log(sprintf(
-                    'Skipping enrollment row #%03u due to filter: %s',
-                    $results['analyzed'],
-                    $filterReason
-                ), LogLevel::NOTICE);
+                $Job->notice('Skipping enrollment row #{rowNumber} due to filter: {reason}', [
+                    'rowNumber' => $results['analyzed'],
+                    'reason' => $filterReason
+                ]);
                 continue;
             }
 
@@ -694,7 +692,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // check required fields
             if (empty($row['StudentNumber'])) {
                 $results['failed']['missing-student-number']++;
-                $Job->log(sprintf('Missing enrollment student number for row %u', $results['analyzed']), LogLevel::ERROR);
+                $Job->error('Missing enrollment student number for row #{rowNumber}', ['rowNumber' => $results['analyzed']]);
                 continue;
             }
 
@@ -702,7 +700,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // get student
             if (!$Student = Student::getByStudentNumber($row['StudentNumber'])) {
                 $results['failed']['student-not-found'][$row['StudentNumber']]++;
-                $Job->log(sprintf('Failed to lookup student by number for %s', $row['StudentNumber']), LogLevel::ERROR);
+                $Job->error('Failed to lookup student by number for {studentNumber}', ['studentNumber' => $row['StudentNumber']]);
                 continue;
             }
 
@@ -739,7 +737,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                             $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
 
                             if (!$Section) {
-                                $Job->log(sprintf('Section #%u not found for mapping #%u from %s', $Mapping->ContextID, $Mapping->ID, $Mapping->ExternalIdentifier), LogLevel::ERROR);
+                                $Job->error('Section #{sectionId} not found for mapping #{mappingId} from {externalIdentifier}', [
+                                    'sectionId' => $Mapping->ContextID,
+                                    'mappingID' => $Mapping->ID,
+                                    'externalIdentifier' => $Mapping->ExternalIdentifier
+                                ]);
                                 $results['failed']['orphan-mapping'][$sectionIdentifier]++;
                                 continue;
                             }
@@ -795,7 +797,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $results['enrollments-removed'] += count($removeStudentIds);
 
                 foreach ($removeStudentIds AS $studentId) {
-                    $Job->log(sprintf('Removed user %s from section %s with role Student', User::getByID($studentId)->getTitle(), Section::getByID($sectionId)->getTitle()));
+                    $Job->info('Removed user {user} from section {section} with role Student', [
+                        'user' => User::getByID($studentId)->getTitle(),
+                        'section' => Section::getByID($sectionId)->getTitle()
+                    ]);
                 }
             }
         }
@@ -998,29 +1003,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // apply account
-        if (!$User->Username || !empty($Job->Config['updateUsernames'])) {
-            if (!empty($row['Username'])) {
-                $User->Username = $row['Username'];
-            } else {
-                $domainConstraints = [];
-                if (!$User->isPhantom) {
-                    $domainConstraints[] = 'ID != '.$User->ID;
-                }
-
-                $User->Username = User::getUniqueUsername($User->FirstName, $User->LastName, [
-                    'domainConstraints' => $domainConstraints
-                ]);
-
-                if ($User->isPhantom) {
-                    $Job->log(sprintf('Assigned username %s', $User->Username), LogLevel::DEBUG);
-                }
-            }
-        }
-
         if (!empty($row['AccountLevel']) && in_array($row['AccountLevel'], User::getFieldOptions('AccountLevel', 'values'))) {
             $User->AccountLevel = $row['AccountLevel'];
             if ($User->isPhantom) {
-                $Job->log(sprintf('Initializing AccountLevel to %s', $row['AccountLevel']), LogLevel::DEBUG);
+                $Job->debug('Initializing AccountLevel to {accountLevel}', ['accountLevel' => $row['AccountLevel']]);
             }
         }
 
@@ -1127,6 +1113,20 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         }
 
 
+        // apply or generate username
+        if (!$User->Username || !empty($Job->Config['updateUsernames'])) {
+            if (!empty($row['Username'])) {
+                $User->Username = $row['Username'];
+            } else {
+                $User->Username = $User->getUniqueUsername();
+
+                if ($User->isPhantom) {
+                    $Job->debug('Assigned username {username}', ['username' => $User->Username]);
+                }
+            }
+        }
+
+
         // apply email address
         if (!empty($row['Email'])) {
             if (!$User->PrimaryEmail = Email::getByString($row['Email'])) {
@@ -1149,7 +1149,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $User->PrimaryEmail->Label = 'School Email';
 
                 $User->ContactPoints = array_merge($User->ContactPoints, [$User->PrimaryEmail]);
-                $Job->log(sprintf('Assigned auto-generated email address %o', $User->PrimaryEmail) , LogLevel::DEBUG);
+                $Job->debug('Assigned auto-generated email address {email}', ['email' => $User->PrimaryEmail]);
             }
         }
 
@@ -1255,7 +1255,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                         'Parent' => $ParentGroup
                     ]);
 
-                    $Job->log(sprintf('create graduation group %s under %s', $Group->Name, $ParentGroup->Name), LogLevel::NOTICE);
+                    $Job->notice('Create graduation group {groupName} under {parentGroupName}', [
+                        'groupName' => $Group->Name,
+                        'parentGroupName' => $ParentGroup->Name
+                    ]);
                 }
             }
 
@@ -1275,7 +1278,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                         'Parent' => $ParentGroup
                     ]);
 
-                    $Job->log(sprintf('create group %s under group %s', $Group->Name, $ParentGroup->Name), LogLevel::NOTICE);
+                    $Job->notice('Create group {groupName} under group {parentGroupName}', [
+                        'groupName' => $Group->Name,
+                        'parentGroupName' => $ParentGroup->Name
+                    ]);
                 }
             }
 
@@ -1305,7 +1311,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // assign to determined group if needed
             if (!$foundGroup) {
-                $Job->log(sprintf('add %s to group %s', $User->getTitle(), $Group->isPhantom ? $Group->Name : $Group->getFullPath()), LogLevel::NOTICE);
+                $Job->notice('Add {user} to group {group}', [
+                    'user' => $User->getTitle(),
+                    'group' => $Group->isPhantom ? $Group->Name : $Group->getFullPath()
+                ]);
                 $membership = GroupMember::create([
                     'Group' => $Group
                 ]);

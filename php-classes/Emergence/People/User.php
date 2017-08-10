@@ -4,12 +4,15 @@ namespace Emergence\People;
 
 use DB;
 use HandleBehavior;
+use Emergence\Logger;
+
 
 class User extends Person
 {
     public static $minPasswordLength = 5;
     public static $usernameGenerator = 'flast';
     public static $onPasswordSet;
+    public static $fallbackUserFinders = [];
 
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
@@ -111,7 +114,7 @@ class User extends Person
     {
         // generate user name if none provided
         if (!$this->Username) {
-            $this->Username = static::getUniqueUsername($this->FirstName, $this->LastName);
+            $this->Username = $this->getUniqueUsername();
         }
 
         return parent::save($deep);
@@ -148,9 +151,27 @@ class User extends Person
     {
         // try to get by username first
         $User = static::getByField('Username', $username);
+
+        // try to get by email
         if (!$User && !\Validators\EmailAddress::isInvalid($username)) {
             $EmailPoint = \Emergence\People\ContactPoint\Email::getByString($username);
             $User = $EmailPoint->Person;
+        }
+
+        // try configured fallback user finders
+        foreach (static::$fallbackUserFinders AS $index => $fallbackUserFinder) {
+            if (!$fallbackUserFinder) {
+                continue;
+            }
+
+            if (!is_callable($fallbackUserFinder)) {
+                Logger::general_warning('User::$fallbackUserFinders[{index}] is not callable', ['index' => $index]);
+                continue;
+            }
+
+            if ($User = call_user_func($fallbackUserFinder, $username)) {
+                break;
+            }
         }
 
         return $User;
@@ -202,30 +223,34 @@ class User extends Person
         }
     }
 
-    public static function getUniqueUsername($firstName, $lastName, $options = [])
+    public function getUniqueUsername($options = [])
     {
         // apply default options
         $options = array_merge(
-            ['suffixFormat' => '%s%u'],
+            ['suffixFormat' => '%s%u', 'domainConstraints' => []],
             is_string(static::$usernameGenerator) || is_callable(static::$usernameGenerator) ? ['format' => static::$usernameGenerator] : static::$usernameGenerator,
             $options,
             ['handleField' => 'Username']
         );
 
+        if (!$this->isPhantom) {
+            $options['domainConstraints'][] = 'ID != '.$this->ID;
+        }
+
         // create seed username
         switch ($options['format']) {
             case 'flast':
-                $username = $firstName[0].$lastName;
+                $username = preg_replace('/\PL/u', '', $this->FirstName[0].$this->LastName);
                 break;
             case 'firstl':
-                $username = $firstName.$lastName[0];
+                $username = preg_replace('/\PL/u', '', $this->FirstName.$this->LastName[0]);
                 break;
             case 'first.last':
-                $username = $firstName.'.'.$lastName;
+                $username = preg_replace('/\PL/u', '', $this->FirstName.'.'.$this->LastName);
                 break;
             default:
                 if (is_callable($options['format'])) {
-                    $username = call_user_func($options['format'], $firstName, $lastName, $options);
+                    $username = call_user_func($options['format'], $this, $options);
                 } else {
                     throw new Exception('Unknown format format.');
                 }
