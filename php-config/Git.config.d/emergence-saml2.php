@@ -5,10 +5,9 @@ Git::$repositories['emergence-saml2'] = [
     'originBranch' => 'master',
     'workingBranch' => 'master',
     'trees' => [
-        'php-classes/Emergence/Connectors/SAML2.php',
-        'php-classes/Emergence/SAML2/Container.php',
+        'php-classes/Emergence/SAML2',
 
-        'php-config/Emergence/Connectors/SAML2.config.php',
+        'php-config/Emergence/SAML2',
         'php-config/Git.config.d/emergence-saml2.php',
         'php-config/Git.config.d/simplesamlphp-saml2.php',
         'php-config/Git.config.d/xmlseclibs.php',
