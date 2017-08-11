@@ -98,7 +98,9 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
             $googleIds[$googleUser['id']] = $googleUsername;
         }
 
-        $Job->log(sprintf('Loaded %u users from Google Apps for analysis', count($googleUsers)));
+        $Job->notice('Loaded {totalUsers} users from Google Apps for analysis', [
+            'totalUsers' => count($googleUsers)
+        ]);
         $results['analyzed']['remote'] = count($googleUsers);
 
 
@@ -144,7 +146,9 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
             // update existing remote user
             if ($googleUser) {
                 if (!$DomainEmailPoint) {
-                    $Job->log("Cannot update existing remote user $User->Username because they don't have an email contact point matching the domain", LogLevel::ERROR);
+                    $Job->error('Cannot update existing remote user {username} because they don\'t have an email contact point matching the domain', [
+                        'username' => $User->Username
+                    ]);
                     $results['outcome']['failed']['no-domain-email-contact-point']++;
                     continue;
                 }
@@ -178,7 +182,10 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
                 // save matched mapping if an existing one wasn't used to find the local user
                 if (!$Mapping) {
-                    $Job->log(sprintf('mapping external identifier %s to user %s', $googleUser['id'], $User->Username), LogLevel::NOTICE);
+                    $Job->notice('Mapping external identifier {googleId} to user {username}', [
+                        'googleId' => $googleUser['id'],
+                        'username' => $User->Username
+                    ]);
                     $results['mapping']['saved-from-match']++;
 
                     $Mapping = Mapping::create([
@@ -202,21 +209,26 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                                 )
                             );
                         } catch (\Exception $e) {
-                            $Job->log("Failed to patch Google user $googleUser[id]: {$e->getMessage()}", LogLevel::ERROR);
+                            $Job->error('Failed to patch Google user {googleId}: {errorMessage}', [
+                                'googleId' => $googleUser['id'],
+                                'errorMessage' => $e->getMessage()
+                            ]);
                             $results['outcome']['request-failed'][$e->getCode()]++;
                             continue;
                         }
                     }
 
-                    $Job->log([
+                    $Job->notice('Updating user {username}', [
                         'action' => 'update',
                         'changes' => $changes,
-                        'message' => "Updated user $User->Username"
-                    ], LogLevel::NOTICE);
+                        'username' => $User->Username
+                    ]);
 
                     $results['outcome']['updated']++;
                 } else {
-                    $Job->log("Remote user $User->Username matches local user", LogLevel::DEBUG);
+                    $Job->debug('Remote user {username} matches local user', [
+                        'username' => $User->Username
+                    ]);
                     $results['outcome']['untouched']++;
                 }
 
@@ -231,7 +243,9 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
             $results['matched']['only-local']++;
 
             if (!$DomainEmailPoint) {
-                $Job->log("Skipping user $User->Username because they don't have an email contact point matching the domain", LogLevel::DEBUG);
+                $Job->debug('Skipping user {username} because they don\'t have an email contact point matching the domain', [
+                    'username' => $User->Username
+                ]);
                 $results['outcome']['skipped']['no-domain-email-contact-point']++;
                 continue;
             }
@@ -239,7 +253,9 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
             // proceed with creating a new remote user
             if ($pretend) {
-                $Job->log("Creating user $User->Username", LogLevel::NOTICE);
+                $Job->notice('Creating user {username}', [
+                    'username' => $User->Username
+                ]);
                 $results['outcome']['created']++;
             } else {
                 try {
@@ -252,13 +268,19 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                         'primaryEmail' => $DomainEmailPoint->address
                     ]);
                 } catch (\Exception $e) {
-                    $Job->log("Failed to create Google user for $User->Username: {$e->getMessage()}", LogLevel::ERROR);
+                    $Job->error('Failed to create Google user for {username}: {errorMessage}', [
+                        'username' => $User->Username,
+                        'errorMessage' => $e->getMessage()
+                    ]);
                     $results['outcome']['request-failed'][$e->getCode()]++;
                     continue;
                 }
 
                 if (empty($googleResponse['error'])) {
-                    $Job->log("Created user $User->Username, saving mapping to Google id '$googleResponse[id]'", LogLevel::NOTICE);
+                    $Job->notice('Created user {username}, saving mapping to Google id "{googleId}"', [
+                        'username' => $User->Username,
+                        'googleId' => $googleResponse['id']
+                    ]);
                     $results['outcome']['created']++;
                     $results['mapping']['saved-from-create']++;
 
@@ -270,7 +292,10 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
                         'ExternalIdentifier' => $googleResponse['id']
                     ], true);
                 } else {
-                    $Job->log("Failed to create user $User->Username, received error from Google: $googleResponse[error]", LogLevel::ERROR);
+                    $Job->error('Failed to create user {username}, received error from Google: {errorMessage}', [
+                        'username' => $User->Username,
+                        'errorMessage' => $googleResponse['error']
+                    ]);
                     $results['outcome']['failed']['api-error'][$googleResponse['error']]++;
                 }
             }
@@ -282,7 +307,9 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
         $results['matched']['only-remote'] = count($googleOnlyUsers);
 
         foreach ($googleOnlyUsers AS $googleUsername) {
-            $Job->log("Ignoring unmatched remote user $googleUsername", LogLevel::DEBUG);
+            $Job->debug('Ignoring unmatched remote user {googleUsername}', [
+                'googleUsername' => $googleUsername
+            ]);
         }
 
 
