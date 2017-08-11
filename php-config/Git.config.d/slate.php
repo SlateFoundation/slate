@@ -16,8 +16,7 @@ Git::$repositories['slate'] = [
         'php-classes' => [
             'exclude' => [
                 // from emergence-saml2 layer:
-                '#^/Emergence/Connectors/SAML2\.php$#',
-                '#^/Emergence/SAML2/Container\.php$#',
+                '#^/Emergence/SAML2(/|$)#',
 
                 // from simplesamlphp-saml2 layer:
                 '#^/SAML2(/|$)#',
@@ -31,7 +30,7 @@ Git::$repositories['slate'] = [
                 '#^/Site.config.d(/|$)#', // don't sync local site config
 
                 // from emergence-saml2 layer:
-                '#^/Emergence/Connectors/SAML2\.config\.php$#',
+                '#^/Emergence/SAML2(/|$)#',
                 '#^/SAML2/Compat/ContainerSingleton\.config\.php$#',
                 '#^/TableManagerRequestHandler\.config\.d/emergence-saml2\.php$#',
                 '#^/Git\.config\.d/simplesamlphp-saml2\.php$#',
