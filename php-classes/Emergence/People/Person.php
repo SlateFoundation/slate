@@ -7,6 +7,7 @@ use VersionedRecord;
 use PhotoMedia;
 use Emergence\Comments\Comment;
 use Emergence\CRM\Message;
+use Emergence\Connectors\Mapping;
 
 class Person extends VersionedRecord implements IPerson
 {
@@ -133,6 +134,11 @@ class Person extends VersionedRecord implements IPerson
             ,'class' => Relationship::class
             ,'foreign' => 'PersonID'
         ]
+        ,'Mapping' => [
+            'type' => 'context-children'
+            ,'class' => Mapping::class
+            ,'contextClass' => __CLASS__
+        ]
     ];
 
     public static $dynamicFields = [
@@ -167,11 +173,6 @@ class Person extends VersionedRecord implements IPerson
             'qualifiers' => ['gender','sex']
             ,'points' => 2
             ,'sql' => 'Gender LIKE "%s"'
-        ]
-        ,'Class' => [
-            'qualifiers' => ['class']
-            ,'points' => 2
-            ,'sql' => 'Class LIKE "%%%s%%"'
         ]
         ,'Group' => [
             'qualifiers' => ['group']
