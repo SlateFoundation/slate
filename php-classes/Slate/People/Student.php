@@ -73,10 +73,9 @@ class Student extends User
             ,'points' => 2
             ,'sql' => 'GraduationYear=%u'
         ]
-        ,'AdvisorID' => [
-            'qualifiers' => ['advisorid']
-            ,'points' => 1
-            ,'sql' => 'AdvisorID=%u'
+        ,'Advisor' => [
+            'qualifiers' => ['advisorid', 'advisor']
+            ,'callback' => [__CLASS__, 'getAdvisorSearchConditions']
         ]
     ];
 
@@ -146,5 +145,18 @@ class Student extends User
             default:
                 throw new \Exception('Group type not recognized');
         }
+    }
+
+    protected static function getAdvisorSearchConditions($advisor)
+    {
+        if (!ctype_digit($advisor)) {
+            if ($advisor = User::getByUsername($advisor)) {
+                $advisor = $advisor->ID;
+            } else {
+                return false;
+            }
+        }
+
+        return sprintf('AdvisorID = %u', $advisor);
     }
 }
