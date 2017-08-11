@@ -150,12 +150,17 @@ class User extends Person
     public static function getByUsername($username)
     {
         // try to get by username first
-        $User = static::getByField('Username', $username);
+        if ($User = static::getByField('Username', $username)) {
+            return $User;
+        }
 
         // try to get by email
-        if (!$User && !\Validators\EmailAddress::isInvalid($username)) {
+        if (!\Validators\EmailAddress::isInvalid($username)) {
             $EmailPoint = \Emergence\People\ContactPoint\Email::getByString($username);
-            $User = $EmailPoint->Person;
+
+            if ($User = $EmailPoint->Person) {
+                return $User;
+            }
         }
 
         // try configured fallback user finders
@@ -170,11 +175,11 @@ class User extends Person
             }
 
             if ($User = call_user_func($fallbackUserFinder, $username)) {
-                break;
+                return $User;
             }
         }
 
-        return $User;
+        return null;
     }
 
     public function verifyPassword($password)
