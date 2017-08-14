@@ -949,15 +949,24 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
-    createPerson: function(callback) {
+    createPerson: function() {
         var me = this,
-            store = me.getGrid().getStore(),
-            person = store.getModel().create({
-                FirstName: '', // prevent values from being undefined
-                LastName: ''
-            });
+            manager = me.getManager(),
+            grid, store, person;
 
-        store.add(person);
-        return me.selectPerson(person, callback);
+        Ext.suspendLayouts();
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(manager);
+        Ext.resumeLayouts(true);
+
+        grid = me.getGrid();
+        store = grid.getStore();
+        person = store.add({
+            FirstName: '',
+            Lastname: ''
+        })[0];
+
+
+        return me.selectPerson(person);
     }
 });
