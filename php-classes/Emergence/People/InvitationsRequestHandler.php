@@ -81,7 +81,7 @@ class InvitationsRequestHandler extends \RequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        $requestData = \JSON::getRequestData();
+        $requestData = \JSON::getRequestData() ?: $_POST;
 
         if (empty($requestData['people']) || !is_array($requestData['people'])) {
             return static::throwInvalidRequestError('people required');
@@ -90,6 +90,13 @@ class InvitationsRequestHandler extends \RequestHandler
         // pre-flight loop over people to ensure they're all valid
         $people = [];
         foreach (array_unique($requestData['people']) AS $invitation) {
+            if (is_numeric($invitation)) {
+                $invitation = [
+                    'PersonID' => $invitation,
+                    'UserClass' => static::getFieldOptions('UserClass', 'default')
+                ];
+            }
+
             if (!is_numeric($invitation['PersonID']) || !($Person = Person::getByID($invitation['PersonID']))) {
                 return static::throwInvalidRequestError('One or more of the requested invitation recipients was not found in the database.');
             }
@@ -166,7 +173,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
                 // promote person to user and set password
                 if ($Recipient->Class == Person::class) {
-                    $Recipient = $Recipient->changeClass($Invitation->UserClass);
+                    $Recipient = $Recipient->changeClass($Invitation->UserClass ?: User::getDefaultClass());
                 }
 
                 if ($Recipient->AccountLevel == 'Contact') {
