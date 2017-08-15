@@ -5,7 +5,7 @@ namespace Emergence\People;
 use DB;
 use HandleBehavior;
 
-class User extends Person
+class User extends Person implements IUser
 {
     public static $minPasswordLength = 5;
     public static $usernameGenerator = 'flast';
