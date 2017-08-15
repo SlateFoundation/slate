@@ -32,7 +32,7 @@ class Invitation extends \ActiveRecord
             'default' => null
         ],
         'UserClass' => [
-            'default' => User::class
+            'default' => null
         ]
     ];
 
@@ -53,9 +53,8 @@ class Invitation extends \ActiveRecord
 
     public static function __classLoaded()
     {
-        $fieldCls = User::getStackedConfig('fields', 'Class');
-        static::$validators['UserClass']['choices'] = $fieldCls['values'];
-        parent::__classLoaded();
+        static::$fields['UserClass']['default'] = User::getDefaultClass();
+        static::$validators['UserClass']['choices'] = User::getSubClasses();
     }
 
     public function save($deep = true)
