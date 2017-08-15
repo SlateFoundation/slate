@@ -78,6 +78,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         'Graduation Year' => 'GraduationYear',
             'Graduation' => 'GraduationYear',
         'Grade' => 'Grade',
+        'School' => 'School',
         'Cohort' => 'Group', 'Group' => 'Group',
         'Advisor' => 'AdvisorUsername',
 #        'Assigned Password',
@@ -122,6 +123,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             'Account Type' => 'AccountLevel',
         'Role / Job Title' => 'About',
         'Email' => 'Email',
+        'School' => 'School',
 #        'Phone',
 #        'Postal Address'
     ];
@@ -1233,6 +1235,26 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 )
             )
         ) {
+            // resolve schoo-specific group
+            if (is_array($rootGroupHandle)) {
+                if (empty($row['School'])) {
+                    throw new RemoteRecordInvalid(
+                        'student-school-not-set',
+                        'Student does not have school set',
+                        $row
+                    );
+                } elseif (empty($rootGroupHandle[$row['School']])) {
+                    throw new RemoteRecordInvalid(
+                        'student-school-not-found',
+                        sprintf('Student school "%s" does not exist', $row['School']),
+                        $row,
+                        $row['School']
+                    );
+                }
+
+                $rootGroupHandle = $rootGroupHandle[$row['School']];
+            }
+
             // get root group initially for either student or alumni
             if (!$Group = Group::getByHandle($rootGroupHandle)) {
                 throw new RemoteRecordInvalid(
@@ -1287,6 +1309,26 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         } elseif ($User->hasAccountLevel('Staff') && static::$staffRootGroup) {
             $groupHandle = $User->AccountLevel == 'Teacher' ? static::$teachersRootGroup : static::$staffRootGroup;
+
+            // resolve schoo-specific group
+            if (is_array($groupHandle)) {
+                if (empty($row['School'])) {
+                    throw new RemoteRecordInvalid(
+                        'staff-school-not-set',
+                        'Student does not have school set',
+                        $row
+                    );
+                } elseif (empty($groupHandle[$row['School']])) {
+                    throw new RemoteRecordInvalid(
+                        'staff-school-not-found',
+                        sprintf('Student school "%s" does not exist', $row['School']),
+                        $row,
+                        $row['School']
+                    );
+                }
+
+                $groupHandle = $groupHandle[$row['School']];
+            }
 
             if ($groupHandle && !($Group = Group::getByHandle($groupHandle))) {
                 throw new RemoteRecordInvalid(
