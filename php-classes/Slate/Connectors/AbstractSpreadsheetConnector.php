@@ -46,6 +46,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $parentsRootGroup = 'parents';
 
 
+    // section referencing
+    public static $sectionCodeReferences = false;
+    public static $sectionMappingReferences = true;
+
     // workflow callable overrides
     public static $sectionTitleFormatter;
     public static $onUserNotFound;
@@ -727,13 +731,20 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
                     // get cached section or look up mapping
                     if (!$Section = $sectionsByIdentifier[$sectionIdentifier]) {
-                        $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
-                        $Mapping = Mapping::getByWhere([
-                            'ContextClass' => Section::getStaticRootClass(),
-                            'Connector' => static::getConnectorId(),
-                            'ExternalKey' => static::$sectionForeignKeyName,
-                            'ExternalIdentifier' => $externalIdentifier
-                        ]);
+                        if (static::$sectionCodeReferences) {
+                            $Section = Section::getByCode($sectionIdentifier);
+                        }
+
+
+                        if (!$Section && static::$sectionMappingReferences) {
+                            $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $sectionIdentifier);
+                            $Mapping = Mapping::getByWhere([
+                                'ContextClass' => Section::getStaticRootClass(),
+                                'Connector' => static::getConnectorId(),
+                                'ExternalKey' => static::$sectionForeignKeyName,
+                                'ExternalIdentifier' => $externalIdentifier
+                            ]);
+                        }
 
                         if ($Mapping) {
                             $Section = $sectionsByIdentifier[$sectionIdentifier] = $Mapping->Context;
@@ -747,7 +758,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                                 $results['failed']['orphan-mapping'][$sectionIdentifier]++;
                                 continue;
                             }
-                        } else {
+                        } elseif (!$Section) {
                             $results['enrollments-failed']['section-not-found'][$sectionIdentifier]++;
                             continue;
                         }
