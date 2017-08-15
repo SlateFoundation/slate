@@ -13,15 +13,22 @@ Ext.define('SlateAdmin.store.people.UserClasses', {
 
     proxy: {
         type: 'slateapi',
-        url: '/invitations/*userclasses',
+        url: '/people/*classes',
+        extraParams: {
+            interface: 'user'
+        },
         reader: {
             type: 'json',
-            transform: function(data) {
-                return Ext.Array.map(data.data, function(value) {
-                    return {
+            transform: function(response) {
+                var records = [];
+
+                Ext.iterate(response.data, function(key, value) {
+                    records.push({
                         value: value
-                    }
+                    });
                 });
+
+                return records;
             }
         }
     }
