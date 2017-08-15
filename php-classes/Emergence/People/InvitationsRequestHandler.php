@@ -173,7 +173,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
                 // promote person to user and set password
                 if ($Recipient->Class == Person::class) {
-                    $Recipient = $Recipient->changeClass($Invitation->UserClass ?: User::getDefaultClass());
+                    $Recipient = $Recipient->changeClass($Invitation->UserClass);
                 }
 
                 if ($Recipient->AccountLevel == 'Contact') {
