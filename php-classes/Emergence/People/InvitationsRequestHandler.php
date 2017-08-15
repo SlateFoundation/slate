@@ -81,14 +81,23 @@ class InvitationsRequestHandler extends \RequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        if (empty($_POST['people']) || !is_array($_POST['people'])) {
+        $requestData = \JSON::getRequestData() ?: $_POST;
+
+        if (empty($requestData['people']) || !is_array($requestData['people'])) {
             return static::throwInvalidRequestError('people required');
         }
 
         // pre-flight loop over people to ensure they're all valid
         $people = [];
-        foreach (array_unique($_POST['people']) AS $personID) {
-            if (!is_numeric($personID) || !($Person = Person::getByID($personID))) {
+        foreach (array_unique($requestData['people']) AS $invitation) {
+            if (is_numeric($invitation)) {
+                $invitation = [
+                    'PersonID' => $invitation,
+                    'UserClass' => static::getFieldOptions('UserClass', 'default')
+                ];
+            }
+
+            if (!is_numeric($invitation['PersonID']) || !($Person = Person::getByID($invitation['PersonID']))) {
                 return static::throwInvalidRequestError('One or more of the requested invitation recipients was not found in the database.');
             }
 
@@ -96,26 +105,27 @@ class InvitationsRequestHandler extends \RequestHandler
                 return static::throwInvalidRequestError('One or more of the requested invitation recipients does not have an email address on record.');
             }
 
-            $people[] = $Person;
+            $people[] = [
+                'Recipient' => $Person,
+                'UserClass' => $invitation['UserClass']
+            ];
         }
 
         // create and send invitations
-        foreach ($people AS $Person) {
+        foreach ($people AS $invitationData) {
             // revoke any existing
             try {
                 DB::nonQuery(
                     'UPDATE `%s` SET Status = "Revoked" WHERE RecipientID = %u AND Status = "Pending"',
                     [
                         Invitation::$tableName,
-                        $Person->ID
+                        $invitationData['Person']->ID
                     ]
                 );
             } catch (\TableNotFoundException $e) {}
 
             // create new invitation
-            $Invitation = Invitation::create([
-                'Recipient' => $Person
-            ], true);
+            $Invitation = Invitation::create($invitationData, true);
 
             // send email
             Mailer::sendFromTemplate($Person->EmailRecipient, 'loginInvitation', [
@@ -163,7 +173,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
                 // promote person to user and set password
                 if ($Recipient->Class == Person::class) {
-                    $Recipient = $Recipient->changeClass(User::class);
+                    $Recipient = $Recipient->changeClass($Invitation->UserClass);
                 }
 
                 if ($Recipient->AccountLevel == 'Contact') {

@@ -30,6 +30,9 @@ class Invitation extends \ActiveRecord
         'Used' => [
             'type' => 'timestamp',
             'default' => null
+        ],
+        'UserClass' => [
+            'default' => null
         ]
     ];
 
@@ -39,6 +42,20 @@ class Invitation extends \ActiveRecord
             'class' => Person::class
         ]
     ];
+
+    public static $validators = [
+        'UserClass' => [
+            'validator' => 'selection',
+            'choices' => [],
+            'required' => false
+        ]
+    ];
+
+    public static function __classLoaded()
+    {
+        static::$fields['UserClass']['default'] = User::getDefaultClass();
+        static::$validators['UserClass']['choices'] = User::getSubClasses();
+    }
 
     public function save($deep = true)
     {
