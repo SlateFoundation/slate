@@ -29,13 +29,6 @@ class InvitationsRequestHandler extends \RequestHandler
                 return static::handleSendRequest();
             case 'accept':
                 return static::handleAcceptRequest();
-            case '*userclasses':
-                return static::respond('userClasses', [
-                    'data' => array_values(array_filter(User::getStaticSubClasses(), function($cls) {
-                        return $cls === User::class || is_subclass_of($cls, User::class);
-                    })),
-                    'default' => User::getStaticDefaultClass()
-                ]);
             default:
                 return static::throwInvalidRequestError();
         }
