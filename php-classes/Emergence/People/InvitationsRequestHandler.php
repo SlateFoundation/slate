@@ -14,6 +14,8 @@ class InvitationsRequestHandler extends \RequestHandler
     public static $messageVariables = [];
     public static $getMessageVariables;
 
+    public static $invitationClass = Invitation::class;
+
     public static $userResponseModes = [
         'application/json' => 'json'
     ];
@@ -37,13 +39,14 @@ class InvitationsRequestHandler extends \RequestHandler
     public static function handleVariablesRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
+        $invitationClass = static::$invitationClass;
 
         if (empty($_REQUEST['personId']) || !($Recipient = Person::getByID($_REQUEST['personId']))) {
             return static::throwInvalidRequestError('personId required');
         }
 
         // create phantom invitation
-        $Invitation = Invitation::create([
+        $Invitation = $invitationClass::create([
             'Recipient' => $Recipient
         ]);
 
@@ -56,13 +59,14 @@ class InvitationsRequestHandler extends \RequestHandler
     public static function handlePreviewRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
+        $invitationClass = static::$invitationClass;
 
         if (empty($_REQUEST['personId']) || !($Recipient = Person::getByID($_REQUEST['personId']))) {
             return static::throwInvalidRequestError('personId required');
         }
 
         // create phantom invitation
-        $Invitation = Invitation::create([
+        $Invitation = $invitationClass::create([
             'Recipient' => $Recipient
         ]);
 
@@ -80,6 +84,7 @@ class InvitationsRequestHandler extends \RequestHandler
     public static function handleSendRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
+        $invitationClass = static::$invitationClass;
 
         $requestData = \JSON::getRequestData() ?: $_POST;
 
@@ -93,7 +98,7 @@ class InvitationsRequestHandler extends \RequestHandler
             if (is_numeric($invitation)) {
                 $invitation = [
                     'PersonID' => $invitation,
-                    'UserClass' => static::getFieldOptions('UserClass', 'default')
+                    'UserClass' => $invitationClass::getFieldOptions('UserClass', 'default')
                 ];
             }
 
@@ -125,7 +130,7 @@ class InvitationsRequestHandler extends \RequestHandler
             } catch (\TableNotFoundException $e) {}
 
             // create new invitation
-            $Invitation = Invitation::create($invitationData, true);
+            $Invitation = $invitationClass::create($invitationData, true);
 
             // send email
             Mailer::sendFromTemplate($Person->EmailRecipient, 'loginInvitation', [
@@ -143,6 +148,8 @@ class InvitationsRequestHandler extends \RequestHandler
 
     public static function handleAcceptRequest()
     {
+        $invitationClass = static::$invitationClass;
+
         if (!$invitationCode = static::shiftPath()) {
             return static::throwInvalidRequestError();
         }
@@ -150,7 +157,7 @@ class InvitationsRequestHandler extends \RequestHandler
         if ($invitationCode == 'preview') {
             $GLOBALS['Session']->requireAccountLevel('Staff');
             $Recipient = $GLOBALS['Session']->Person;
-        } elseif ($Invitation = Invitation::getByHandle($invitationCode)) {
+        } elseif ($Invitation = $invitationClass::getByHandle($invitationCode)) {
             if ($Invitation->Status != 'Pending') {
                 return static::throwError('This invitation has already been used or was revoked, it is most likely that you have already used it or a newer one has been sent.');
             }
