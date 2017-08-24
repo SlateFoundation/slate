@@ -38,16 +38,50 @@
                     <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
 
-                {$limit = 10}
-                {$blogPosts = Emergence\CMS\BlogPost::getAllPublishedByContextObject($Section, array(limit=$limit, offset=$.get.offset, calcFoundRows=yes))}
-                {$total = DB::foundRows()}
+                <?php
+                    $this->scope['limit'] = 10;
+                    $options = [
+                        'limit' => $this->scope['limit'],
+                        'offset' => $_GET['offset'] ?: 0,
+                        'calcFoundRows' => 'yes',
+                        'conditions' => []
+                    ];
 
+                    $sectionTeacherIds = array_map(function($Teacher) {
+                        return $Teacher->ID;
+                    }, $this->scope['Section']->Teachers);
+
+                    $this->scope['latestTeacherPost'] = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], array_merge_recursive($options, [
+                        'conditions' => [
+                            'AuthorID' => [
+                                'operator' => 'IN',
+                                'values' => $sectionTeacherIds
+                            ]
+                        ],
+                        'limit' => 1
+                    ]));
+
+                    if (count($this->scope['latestTeacherPost'])) {
+                        $this->scope['latestTeacherPost'] = $this->scope['latestTeacherPost'][0];
+                        $options['conditions'][] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
+                    }
+
+                    $this->scope['blogPosts'] = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], $options);
+                    $this->scope['total'] = DB::foundRows();
+
+                ?>
+
+                {if $latestTeacherPost}
+                    <h3>Teacher's Latest Post</h3>
+                    {blogPost $latestTeacherPost headingLevel="h3"}
+                {/if}
+
+                <h3>Class Feed</h3>
                 {foreach item=BlogPost from=$blogPosts}
                     {blogPost $BlogPost headingLevel="h3"}
                 {foreachelse}
                     <p class="empty-text">This class has no posts in its public feed yet.</p>
                 {/foreach}
-
 
                 <footer class="page-footer">
                     {if $total > $limit}
