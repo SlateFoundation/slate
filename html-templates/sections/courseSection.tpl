@@ -113,6 +113,12 @@
                 {/if}
             *}
 
+                <h3 class="well-title">Other Websites</h3>
+                {foreach from=$Section->Mappings item=SectionMapping}
+                    {if $SectionMapping->ExternalKey == "course[id]" && $SectionMapping->Connector == "canvas"}
+                        <a class="button" href="http://{\RemoteSystems\Canvas::$canvasHost}/courses/{$SectionMapping->ExternalIdentifier}" target="_blank">Launch Canvas</a>
+                    {/if}
+                {/foreach}
                 {if $.User->hasAccountLevel(Staff)}
                     <h3 class="well-title">Course Tools</h3>
                     <ul class="course-section-tools plain">
