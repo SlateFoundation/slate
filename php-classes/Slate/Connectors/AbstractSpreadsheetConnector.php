@@ -681,14 +681,14 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // start logging analysis
             $results['rows-analyzed']++;
-            static::_logRow($Job, 'enrollments', $results['analyzed'], $row);
+            static::_logRow($Job, 'enrollments', $results['rows-analyzed'], $row);
 
 
             // skip row if filter function flags it
             if ($filterReason = static::_filterEnrollment($Job, $row)) {
                 $results['filtered'][$filterReason]++;
                 $Job->notice('Skipping enrollment row #{rowNumber} due to filter: {reason}', [
-                    'rowNumber' => $results['analyzed'],
+                    'rowNumber' => $results['rows-analyzed'],
                     'reason' => $filterReason
                 ]);
                 continue;
@@ -698,7 +698,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             // check required fields
             if (empty($row['StudentNumber'])) {
                 $results['failed']['missing-student-number']++;
-                $Job->error('Missing enrollment student number for row #{rowNumber}', ['rowNumber' => $results['analyzed']]);
+                $Job->error('Missing enrollment student number for row #{rowNumber}', ['rowNumber' => $results['rows-analyzed']]);
                 continue;
             }
 

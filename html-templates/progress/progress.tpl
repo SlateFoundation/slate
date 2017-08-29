@@ -18,7 +18,7 @@
 {/block}
 
 {block body}
-    <header>
+    <header class="top-header">
         {if $student->Advisor}
             <aside class="meta advisor">
                 Advisor: {$student->Advisor->FullName}

@@ -1,13 +1,16 @@
-// vertical rhythm
-@include establish-baseline;
+@import 'variables';
+@import 'mixins';
 
-// improve baseliner bookmarklet
-#baseline-overlay { opacity: .4 !important; pointer-events: none; }
+html, body {
+    font-size: $base-font-size;
+}
 
 body {
     box-sizing: border-box;
     color: $color;
     font-family: $font-family;
+    font-size: 1rem;
+    line-height: $base-line-height;
     margin: auto;
     orphans: 3;
     padding: .25in .5in;
@@ -15,33 +18,34 @@ body {
     widows: 3;
 }
 
+h1, h2, h3, h4 {
+    margin: 0;
+}
+
 h1 {
-    @include adjust-font-size-to($h1-size);
-    margin: rhythm(1, $h1-size) 0;
+    font-size: $h1-size;
+    margin-bottom: $base-spacing;
 }
 
 h2 {
-    @include adjust-font-size-to($h2-size);
-    margin: 0;
+    font-size: $h2-size;
 }
 
 h3 {
-    @include adjust-font-size-to($h3-size, 1);
-    margin: 0;
+    font-size: $h3-size;
 }
 
 h4 {
-    @include adjust-font-size-to($base-font-size);
-    margin: 0;
+    font-size: 1rem;
 }
 
 small, aside {
-    @include adjust-font-size-to($sm-size, 0);
+    font-size: $sm-size;
     color: $muted-color;
 }
 
 p, ul, ol {
-    margin: 0 0 rhythm(1);
+    margin: 0 0 $base-spacing;
 }
 
 a {
@@ -52,6 +56,10 @@ a {
             &:active { color:  darken($link-color, 5); }
 }
 
+.muted {
+    color: #888;
+}
+
 .print-url {
     &::after {
         content: ' <' attr(href) '>';
@@ -60,10 +68,11 @@ a {
 }
 
 header {
+    page-break-inside: avoid;
+
     aside {
-        float: right;
-        text-align: center;
-        @include adjust-font-size-to($base-font-size);
+        font-size: 1rem;
+        order: 99;
 
         &.meta .email {
             display: block;
@@ -72,20 +81,36 @@ header {
 }
 
 .doc-title {
+    flex: 1;
     line-height: 1;
+    margin: 0;
 
     .title-prefix, .title-suffix {
         display: block;
-        line-height: 1em;
+        font-size: 1rem;
+    }
+
+    .title-suffix {
+        margin-top: $base-spacing;
     }
 }
 
 .doc-group {
-    @include leading-border;
+    @include trailing-border;
+    margin: (4 * $base-spacing) 0;
+    padding-bottom: 0;
+    page-break-after: always;
+}
+
+header.top-header {
+    align-items: flex-end;
+    display: flex;
+    padding-bottom: $base-spacing;
+    page-break-after: avoid;
 }
 
 .group-title {
-    margin: 0 0 rhythm(1, $h2-size);
+    margin: 0 0 ($h2-size * $base-line-height);
     page-break-after: avoid;
 }
 
@@ -96,6 +121,7 @@ header {
     clear: both;
 }
 
+.doc-header,
 .item-header {
     @include trailer;
     page-break-after: avoid;
@@ -157,13 +183,13 @@ header {
 
     &.float-right {
         float: right;
-        padding-left: rhythm(1);
+        padding-left: $base-spacing;
     }
 }
 
 .grade {
     border-color: #ccc;
-    margin: rhythm(1) 0;
+    margin: $base-spacing 0;
 }
 
 .freetext {
@@ -176,7 +202,8 @@ header {
 
 dl {
     display: table;
-    margin: rhythm(1) 0;
+    margin: $base-spacing 0;
+    table-layout: fixed;
     width: 100%;
 }
 
@@ -190,19 +217,23 @@ dd, dt {
 
 dt {
     color: $muted-color;
-    @include adjust-font-size-to($sm-size);
-    padding-right: rhythm(1);
+    font-size: $sm-size;
+    padding-right: $base-spacing;
+    padding-top: .8rem;
+    page-break-after: avoid;
     text-align: right;
-    vertical-align: top;
     text-transform: uppercase;
-    width: percentage(1/6);
+    width: 20%;
 }
 
 
 dd.grade {
-    font-weight: 900;
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-bottom: 1rem;
     page-break-before: avoid;
     page-break-after: avoid;
+
 }
 
 dd.comments {
@@ -211,22 +242,88 @@ dd.comments {
     margin: 0.5em .25in 1em;
 
     p {
-        line-height: 1.4 !important;
+        line-height: $base-line-height !important;
     }
 }
 
 
 dd.comments, .html-content {
-    h1 { font-size: 1.25em }
-    h2 { font-size: 1.20em }
-    h3 { font-size: 1.15em }
-    h4 { font-size: 1.10em }
-    h5 { font-size: 1.05em }
-    h6 { font-size: 1.00em }
+    h1 { font-size: 1.296em }
+    h2 { font-size: 1.215em }
+    h3 { font-size: 1.138em }
+    h4 { font-size: 1.067em }
+    h5 { font-size: 1em }
+    h6 { font-size: 0.937em }
 
     &, p, span, div {
         color: $color !important;
         font-family: $font-family !important;
-        font-size: $base-font-size !important;
+        font-size: 1rem !important;
+    }
+}
+
+dd.instructor {
+    ul {
+        display: table;
+        margin: 0 0 1em;
+        padding: 0;
+    }
+
+    li {
+        display: table-row;
+        margin: 0;
+        list-style: none;
+
+        &:last-child > * {
+            border-width: 0;
+        }
+    }
+
+    .instructor-name,
+    .instructor-email {
+        border-bottom: 1px solid #ddd;
+        display: table-cell;
+        padding: .5em 0;
+    }
+
+    .instructor-email {
+        padding-left: 1em;
+    }
+}
+
+@media print {
+    html, body {
+        font-size: 11pt;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .doc-group:first-child {
+        margin-top: .5in;
+    }
+
+    dl.item-body {
+        &,
+        > .dli,
+        > .dli > dt,
+        > .dli > dd {
+            display: block;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        > .dli {
+            margin-bottom: 1em;
+
+            > dd {
+                margin: 0 0 0 .25in;
+            }
+        }
+    }
+
+    @page {
+        margin: .5in 1in;
     }
 }
