@@ -19,12 +19,16 @@
         {if count($Report->Section->Teachers) && !(count($Report->Section->Teachers) == 1 && $Report->Section->Teachers[0]->ID == $Report->getAuthor()->ID)}
             <div class="dli">
                 <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
-                {foreach item=Teacher from=$Report->Section->Teachers implode='<br />'}
-                    <dd class="instructor">
-                        {$Teacher->FullName|escape}
-                        &lt;<a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a>&gt;
-                    </dd>
-                {/foreach}
+                <dd class="instructor">
+                    <ul>
+                        {foreach item=Teacher from=$Report->Section->Teachers}
+                                <li>
+                                    <span class="instructor-name">{$Teacher->FullName|escape}</span>
+                                    <span class="instructor-email"><a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a></span>
+                                </li>
+                        {/foreach}
+                    </ul>
+                </dd>
             </div>
         {/if}
     {/block}
@@ -43,7 +47,7 @@
     {block comments}
         {if $Report->Notes}
             <div class="dli">
-                <dt class="comments">Comments</dt>
+                <dt class="comments">Notes</dt>
                 <dd class="comments">
                     {if $Report->NotesFormat == 'html'}
                         {$Report->Notes}

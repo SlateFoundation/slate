@@ -1,0 +1,12 @@
+@mixin leading-border($border-width: 1px, $border-style: solid, $border-color: #ccc) {
+    border-top: $border-width $border-style $border-color;
+    padding-top: $base-spacing;
+}
+
+@mixin trailing-border($border-width: 1px, $border-style: solid, $border-color: #ccc) {
+    border-bottom: $border-width $border-style $border-color;
+    padding-bottom: $base-spacing;
+}
+@mixin trailer {
+    margin-bottom: $base-spacing;
+}

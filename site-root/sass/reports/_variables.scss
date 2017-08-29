@@ -1,0 +1,18 @@
+$base-font-size: 14px;
+$base-line-height: 1.45;
+$base-spacing: ($base-font-size * $base-line-height);
+
+$font-family: Lato, sans-serif;
+
+$color: #111;
+$link-color: #07b;
+$muted-color: #777;
+
+$h1-size: 2.827rem;
+$h2-size: 1.999rem;
+$h3-size: 1.414rem;
+$sm-size: 0.707rem;
+
+$golden-ratio: 1.61803398875;
+$golden-lg: percentage(1/$golden-ratio);
+$golden-sm: percentage(1 - (1/$golden-ratio));

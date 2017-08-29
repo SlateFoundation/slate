@@ -14,21 +14,23 @@
     {$Report = $data}
     {$Student = $Report->getStudent()}
 
-    <header>
-        {if $Student->Advisor}
-            <aside class="meta advisor">
-                Advisor: {$Student->Advisor->FullName}
-                <span class="email">&lt;<a href="mailto:{$Student->Advisor->PrimaryEmail|escape}">{$Student->Advisor->PrimaryEmail|escape}</a>&gt;</span>
-            </aside>
-        {/if}
-        <h1 class="doc-title">
-            <small class="title-prefix">{$Report->getNoun()|ucfirst} for</small>
-            {$Student->FullName|escape}
-            <small class="title-suffix">in {$Report->getTerm()->Title|escape}</small>
-        </h1>
-    </header>
+    <section class="doc-group progress-reports report-type-{$reportSingularNoun|replace:' ':'_'}">
+        <header class="top-header">
+            {if $Student->Advisor}
+                <aside class="meta advisor">
+                    Advisor: {$Student->Advisor->FullName}
+                    <span class="email">&lt;<a href="mailto:{$Student->Advisor->PrimaryEmail|escape}">{$Student->Advisor->PrimaryEmail|escape}</a>&gt;</span>
+                </aside>
+            {/if}
+            <h1 class="doc-title">
+                <small class="title-prefix">{$Report->getNoun()|ucfirst} for</small>
+                {$Student->FullName|escape}
+                <small class="title-suffix">{$Report->getTerm()->Title|escape}</small>
+            </h1>
+        </header>
 
-    <article class="doc-item progress-report report-type-{$Report->getNoun()|replace:' ':'_'}">
-        {$Report->getBodyHtml(2)}
-    </article>
+        <article class="doc-item progress-report report-type-{$Report->getNoun()|replace:' ':'_'}">
+            {$Report->getBodyHtml(2)}
+        </article>
+    </section>
 {/block}

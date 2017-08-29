@@ -17,7 +17,7 @@
     {foreach item=studentGroup from=Slate\Progress\Util::groupReportsByStudent($data)}
         {foreach item=termGroup from=Slate\Progress\Util::groupReportsByTerm($studentGroup.reports)}
             <section class="doc-group progress-reports report-type-{$reportSingularNoun|replace:' ':'_'}">
-                <header>
+                <header class="top-header">
                     {if $studentGroup.student->Advisor}
                         <aside class="meta advisor">
                             Advisor: {$studentGroup.student->Advisor->FullName}

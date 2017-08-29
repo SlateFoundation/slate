@@ -1,31 +1,6 @@
-@import 'compass/typography/vertical_rhythm';
-
-$base-font-size: 16px;
-$base-line-height: 24px;
-
-$font-family: Lato, Arial, Helvetica, sans-serif;
-
-$color: #111;
-$link-color: #07b;
-$muted-color: #777;
-
-$h1-size: 51px;
-$h2-size: 28px;
-$h3-size: 21px;
-$sm-size: 12px;
-
-$golden-ratio: 1.61803398875;
-$golden-lg: percentage(1/$golden-ratio);
-$golden-sm: percentage(1 - (1/$golden-ratio));
-
+@import '/css/fonts/lato.css';
 @import 'general';
 
 .people {
 	@import 'people';
-}
-
-@media print {
-    @page {
-        margin: 0;
-    }
 }
