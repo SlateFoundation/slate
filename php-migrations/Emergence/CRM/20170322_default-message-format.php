@@ -10,7 +10,7 @@ if (!static::tableExists(Message::$tableName)) {
 }
 
 if (!static::getColumnDefault(Message::$tableName, 'MessageFormat')) {
-    DB::nonQuery('ALTER TABLE `%s` ALTER COLUMN `MessageFormat` SET DEFAULT "html"');
+    DB::nonQuery('ALTER TABLE `%s` ALTER COLUMN `MessageFormat` SET DEFAULT "html"', Message::$tableName);
 }
 
 return static::STATUS_EXECUTED;
