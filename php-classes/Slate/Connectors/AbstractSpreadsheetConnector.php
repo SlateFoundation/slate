@@ -203,7 +203,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // task handlers
-    public static function pullStudents(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
+    public static function pullStudents(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
         try {
@@ -278,10 +278,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullAlumni(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
+    public static function pullAlumni(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
-        static::_requireColumns('alumni', $spreadsheet, static::getStackedConfig('alumniRequiredColumns'), static::getStackedConfig('alumniColumns'));
+        try {
+            static::_requireColumns('alumni', $spreadsheet, static::getStackedConfig('alumniRequiredColumns'), static::getStackedConfig('alumniColumns'));
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
 
         // initialize results
         $results = [
@@ -348,10 +353,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullStaff(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
+    public static function pullStaff(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
-        static::_requireColumns('staff', $spreadsheet, static::getStackedConfig('staffRequiredColumns'), static::getStackedConfig('staffColumns'));
+        try {
+            static::_requireColumns('staff', $spreadsheet, static::getStackedConfig('staffRequiredColumns'), static::getStackedConfig('staffColumns'));
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
 
         // initialize results
         $results = [
@@ -420,10 +430,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullSections(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
+    public static function pullSections(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
-        static::_requireColumns('Sections', $spreadsheet, static::getStackedConfig('sectionRequiredColumns'), static::getStackedConfig('sectionColumns'));
+        try {
+            static::_requireColumns('Sections', $spreadsheet, static::getStackedConfig('sectionRequiredColumns'), static::getStackedConfig('sectionColumns'));
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
 
         if (empty($Job->Config['masterTerm'])) {
             $Job->logException(new Exception('masterTerm required to import sections'));
@@ -444,8 +459,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         // loop through rows
         while ($row = $spreadsheet->getNextRow()) {
-            $Record = null;
-            $Mapping = null;
 
             // process input row through column mapping
             $row = static::_readSection($Job, $row);
@@ -467,21 +480,11 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
 
-            // check required fields
-            if (empty($row['CourseCode'])) {
-                $results['failed']['missing-required-field']['CourseCode']++;
-                $Job->error('Missing course code for row #{rowNumber}', ['rowNumber' => $results['analyzed']]);
-                continue;
-            }
-
-            if (empty($row['SectionExternal']) && empty($row['SectionCode'])) {
-                $results['failed']['missing-required-field']['SectionCode']++;
-                $Job->error('Missing section code for row #{rowNumber}', ['rowNumber' => $results['analyzed']]);
-                continue;
-            }
-
-
             // try to get existing section by mapping
+            $Record = null;
+            $Mapping = null;
+            $externalIdentifier = null;
+
             if (!empty($row['SectionExternal'])) {
                 $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $row['SectionExternal']);
 
@@ -497,12 +500,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             }
 
-            // try to get existing section by code
-            if (!$Record && !empty($row['SectionCode'])) {
-                $Record = Section::getByCode($row['SectionCode']);
+
+            // get or create new section
+            if (!$Record) {
+                $Record = static::getSection($Job, $MasterTerm, $row);
             }
 
-            // create new section
             if (!$Record) {
                 $Record = Section::create();
 
@@ -511,39 +514,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             }
 
+
             // get teacher, but add later
-            $Teacher = null;
-            if (!empty($row['TeacherUsername'])) {
-                if (!$Teacher = User::getByUsername($row['TeacherUsername'])) {
-                    $results['failed']['teacher-not-found-by-username'][$row['TeacherUsername']]++;
-                    $Job->error('Teacher not found for username {username}', ['username' => $row['TeacherUsername']]);
-                    continue;
-                }
-            } elseif (($teacherNameSplit = !empty($row['TeacherFirstName']) && !empty($row['TeacherLastName'])) || !empty($row['TeacherFullName'])) {
-                if ($teacherNameSplit) {
-                    $Teacher = User::getByFullName($row['TeacherFirstName'], $row['TeacherLastName']);
-                } else {
-                    $teacherName = User::parseFullName($row['TeacherFullName']);
-                    $Teacher = User::getByFullName($teacherName['FirstName'], $teacherName['LastName']);
-                }
-
-                if (!$Teacher) {
-                    $fullName = $teacherNameSplit ? $row['TeacherFirstName'] . ' ' . $row['TeacherLastName'] : $row['TeacherFullName'];
-                    $results['failed']['teacher-not-found-by-name'][$fullName]++;
-                    $Job->error('Teacher not found for full name {name}', ['name' => $fullName]);
-                    continue;
-                }
-            }
-
-
-            // get or create course
-            if (!$Record->Course = Course::getByCode($row['CourseCode'])) {
-                $Record->Course = Course::create([
-                    'Code' => $row['CourseCode'],
-                    'Title' => $row['CourseTitle'] ?: $row['CourseCode'],
-                    'Department' => !empty($row['DepartmentTitle']) ? Department::getOrCreateByTitle($row['DepartmentTitle']) : null
-                ]);
-            }
+            $teachers = static::getSectionTeachers($Job, $Record, $row);
 
 
             // apply values from spreadsheet
@@ -592,7 +565,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Job->logRecordDelta($Record->Course->Department);
             }
 
-             if ($Record->Term) {
+            if ($Record->Term) {
                 $Job->logRecordDelta($Record->Term);
             }
 
@@ -629,7 +602,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             // add teacher
-            if ($Teacher) {
+            foreach ($teachers AS $Teacher) {
                 $Participant = static::_getOrCreateParticipant($Record, $Teacher, 'Teacher', $pretend);
                 $logEntry = static::_logParticipant($Job, $Participant);
 
@@ -645,10 +618,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullEnrollments(Job $Job, $pretend = true, SpreadsheetReader $spreadsheet)
+    public static function pullEnrollments(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
-        static::_requireColumns('Enrollments', $spreadsheet, static::getStackedConfig('enrollmentRequiredColumns'), static::getStackedConfig('enrollmentColumns'));
+        try {
+            static::_requireColumns('Enrollments', $spreadsheet, static::getStackedConfig('enrollmentRequiredColumns'), static::getStackedConfig('enrollmentColumns'));
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
 
         if (empty($Job->Config['masterTerm'])) {
             $Job->logException(new Exception('masterTerm required to import enrollments'));
@@ -851,7 +829,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _readStudent($Job, array $row)
     {
-        $row = static::_readRow($row, static::$studentColumns);
+        $row = static::_readRow($row, static::getStackedConfig('studentColumns'));
 
         static::_fireEvent('readStudent', [
             'Job' => $Job,
@@ -863,7 +841,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _readAlumni($Job, array $row)
     {
-        $row = static::_readRow($row, static::$alumniColumns);
+        $row = static::_readRow($row, static::getStackedConfig('alumniColumns'));
 
         static::_fireEvent('readAlumni', [
             'Job' => $Job,
@@ -875,7 +853,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _readStaff($Job, array $row)
     {
-        $row = static::_readRow($row, static::$staffColumns);
+        $row = static::_readRow($row, static::getStackedConfig('staffColumns'));
 
         static::_fireEvent('readStaff', [
             'Job' => $Job,
@@ -887,7 +865,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _readSection($Job, array $row)
     {
-        $row = static::_readRow($row, static::$sectionColumns);
+        $row = static::_readRow($row, static::getStackedConfig('sectionColumns'));
 
         static::_fireEvent('readSection', [
             'Job' => $Job,
@@ -899,7 +877,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _readEnrollment($Job, array $row)
     {
-        $row = static::_readRow($row, static::$enrollmentColumns);
+        $row = static::_readRow($row, static::getStackedConfig('enrollmentColumns'));
 
         static::_fireEvent('readEnrollment', [
             'Job' => $Job,
@@ -1423,17 +1401,94 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         ];
     }
 
-    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row, array &$results)
+    protected static function getSection(Job $Job, Term $MasterTerm, array $row)
     {
-        if (!empty($row['Term'])) {
-            if (!$Section->Term = Term::getByHandle($row['Term'])) {
+        // try to get existing section by code
+        if (!empty($row['SectionCode'])) {
+            return Section::getByCode($row['SectionCode']);
+        }
+
+        return null;
+    }
+
+    protected static function getSectionTeachers(Job $Job, Section $Section, array $row)
+    {
+        $Teacher = null;
+
+        if (!empty($row['TeacherUsername'])) {
+            if (!$Teacher = User::getByUsername($row['TeacherUsername'])) {
                 throw new RemoteRecordInvalid(
-                    'term-not-found',
-                    sprintf('Term not found for handle "%s"', $row['Term']),
+                    'teacher-not-found-by-username',
+                    'Teacher not found for username: '.$row['TeacherUsername'],
                     $row,
-                    $row['Term']
+                    $row['TeacherUsername']
                 );
             }
+        } elseif (($teacherNameSplit = !empty($row['TeacherFirstName']) && !empty($row['TeacherLastName'])) || !empty($row['TeacherFullName'])) {
+            if ($teacherNameSplit) {
+                $Teacher = User::getByFullName($row['TeacherFirstName'], $row['TeacherLastName']);
+            } else {
+                $teacherName = User::parseFullName($row['TeacherFullName']);
+                $Teacher = User::getByFullName($teacherName['FirstName'], $teacherName['LastName']);
+            }
+
+            if (!$Teacher) {
+                $fullName = $teacherNameSplit ? $row['TeacherFirstName'] . ' ' . $row['TeacherLastName'] : $row['TeacherFullName'];
+                throw new RemoteRecordInvalid(
+                    'teacher-not-found-by-name',
+                    'Teacher not found for full name: '.$fullName,
+                    $row,
+                    $fullName
+                );
+            }
+        }
+
+        return $Teacher ? [$Teacher] : [];
+    }
+
+    protected static function getSectionTerm(Job $Job, Term $MasterTerm, Section $Section, array $row)
+    {
+        if (empty($row['Term'])) {
+            return null;
+        }
+
+        if (!$Term = Term::getByHandle($row['Term'])) {
+            throw new RemoteRecordInvalid(
+                'term-not-found',
+                sprintf('Term not found for handle "%s"', $row['Term']),
+                $row,
+                $row['Term']
+            );
+        }
+
+        return $Term;
+    }
+
+    protected static function getSectionCourse(Job $Job, Section $Section, array $row)
+    {
+        if (empty($row['CourseCode'])) {
+            return null;
+        }
+
+        if (!$Course = Course::getByCode($row['CourseCode'])) {
+            $Course = Course::create([
+                'Code' => $row['CourseCode'],
+                'Title' => $row['CourseTitle'] ?: $row['CourseCode'],
+                'Department' => !empty($row['DepartmentTitle']) ? Department::getOrCreateByTitle($row['DepartmentTitle']) : null
+            ]);
+        }
+
+        return $Course;
+    }
+
+    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row)
+    {
+        if ($Course = static::getSectionCourse($Job, $Section, $row)) {
+            $Section->Course = $Course;
+        }
+
+        if ($Term = static::getSectionTerm($Job, $MasterTerm, $Section, $row)) {
+            $Section->Term = $Term;
         }
 
         if (!empty($row['Schedule'])) {
