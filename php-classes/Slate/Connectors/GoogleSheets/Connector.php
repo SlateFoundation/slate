@@ -49,40 +49,40 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         if (!empty($Job->Config['studentsCsv'])) {
             $results['pull-students'] = static::pullStudents(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['studentsCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['studentsCsv'], 'r')),
+                $pretend
             );
         }
 
         if (!empty($Job->Config['alumniCsv'])) {
             $results['pull-alumni'] = static::pullAlumni(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['alumniCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['alumniCsv'], 'r')),
+                $pretend
             );
         }
 
         if (!empty($Job->Config['staffCsv'])) {
             $results['pull-staff'] = static::pullStaff(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['staffCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['staffCsv'], 'r')),
+                $pretend
             );
         }
 
         if (!empty($Job->Config['sectionsCsv'])) {
             $results['pull-sections'] = static::pullSections(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['sectionsCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['sectionsCsv'], 'r')),
+                $pretend
             );
         }
 
         if (!empty($Job->Config['enrollmentsCsv'])) {
             $results['pull-enrollments'] = static::pullEnrollments(
                 $Job,
-                $pretend,
-                SpreadsheetReader::createFromStream(fopen($Job->Config['enrollmentsCsv'], 'r'))
+                SpreadsheetReader::createFromStream(fopen($Job->Config['enrollmentsCsv'], 'r')),
+                $pretend
             );
         }
 
