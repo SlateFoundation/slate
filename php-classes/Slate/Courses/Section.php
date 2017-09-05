@@ -2,9 +2,11 @@
 
 namespace Slate\Courses;
 
+use DB;
 use HandleBehavior;
 use DuplicateKeyException;
 use TableNotFoundException;
+use Slate\Term;
 use Slate\Courses\SectionParticipant;
 
 class Section extends \VersionedRecord
@@ -182,27 +184,30 @@ class Section extends \VersionedRecord
     public static function sortCurrentTerm($dir, $name)
     {
         $tableAlias = static::getTableAlias();
-        $sortedTermIds = \DB::allValues(
+        $sortedTermIds = DB::allValues(
             'ID',
 
             'SELECT ID '.
             '  FROM `%s` Term'.
-            ' ORDER BY ('.
-                        'SELECT IF( '.
-                            ' Term.StartDate <= NOW() AND Term.EndDate > NOW(), 2, '. // current = 2
-                            ' IF ( '.
-                                    'Term.EndDate >= NOW(), 1, 0'.  // upcoming = 1, previous = 0
-                            ' )'.
-                        ' ) '.
-            ') DESC',
+            ' ORDER BY IF('.
+            '                Term.StartDate <= CURRENT_DATE AND Term.EndDate > CURRENT_DATE,'.
+            '                2, '. // current = 2
+            '                IF ('.
+            '                       Term.EndDate >= CURRENT_DATE,'.
+            '                       1,'. // upcoming = 1
+            '                       0'.  // previous = 0
+            '                   )'.
+            '            ) DESC,'.
+            '            ABS(DATEDIFF(Term.StartDate, CURRENT_DATE)) ASC,'.
+            '            Term.Left DESC',
             [
-                \Slate\Term::$tableName
+                Term::$tableName
             ]
         );
 
         // ASC = current, future, past
         // DESC = past, future, current
-        return '(FIELD('.$tableAlias.'.TermID, '.join(', ', $sortedTermIds).')) '.$dir;
+        return 'FIELD('.$tableAlias.'.TermID, '.join(', ', $sortedTermIds).') '.$dir;
     }
 
     public function save($deep = true)
