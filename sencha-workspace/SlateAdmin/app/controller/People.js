@@ -24,7 +24,7 @@ Ext.define('SlateAdmin.controller.People', {
     routes: {
         'people': 'showPeople',
         'people/all': 'showResults',
-        'people/create': 'createPerson',
+        'people/create': 'showCreatePerson',
         'people/lookup/:person': {
             action: 'showPerson',
             conditions: {
@@ -296,6 +296,26 @@ Ext.define('SlateAdmin.controller.People', {
         }, 10);
     },
 
+    showCreatePerson: function() {
+        var me = this,
+            manager = me.getManager(),
+            grid, store, person;
+
+        Ext.suspendLayouts();
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(manager);
+        Ext.resumeLayouts(true);
+
+        grid = me.getGrid();
+        store = grid.getStore();
+        person = store.add({
+            FirstName: '',
+            Lastname: ''
+        })[0];
+
+
+        return me.selectPerson(person);
+    }
 
     // event handlers
 
@@ -947,26 +967,5 @@ Ext.define('SlateAdmin.controller.People', {
             personRecord = person;
             _finishSelectPerson();
         }
-    },
-
-    createPerson: function() {
-        var me = this,
-            manager = me.getManager(),
-            grid, store, person;
-
-        Ext.suspendLayouts();
-        me.getNavPanel().expand();
-        me.application.getController('Viewport').loadCard(manager);
-        Ext.resumeLayouts(true);
-
-        grid = me.getGrid();
-        store = grid.getStore();
-        person = store.add({
-            FirstName: '',
-            Lastname: ''
-        })[0];
-
-
-        return me.selectPerson(person);
     }
 });
