@@ -315,7 +315,7 @@ Ext.define('SlateAdmin.controller.People', {
 
 
         return me.selectPerson(person);
-    }
+    },
 
     // event handlers
 
