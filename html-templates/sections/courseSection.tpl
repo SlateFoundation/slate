@@ -152,14 +152,14 @@
                     </ul>
                 {/if}
 
-                    <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
-                    <ul class="roster teachers">
-                    {foreach item=Teacher from=$Section->Teachers}
-                        <li>{personLink $Teacher photo=true}</li>
-                    {foreachelse}
-                        <p class="empty-text">No instructors currently listed.</p>
-                    {/foreach}
-                    </ul>
+                <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
+                <ul class="roster teachers">
+                {foreach item=Teacher from=$Section->Teachers}
+                    <li>{personLink $Teacher photo=true}</li>
+                {foreachelse}
+                    <p class="empty-text">No instructors currently listed.</p>
+                {/foreach}
+                </ul>
 
                 {if $.User}
                     <h3>Students</h3>
