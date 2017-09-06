@@ -144,20 +144,6 @@
                 {/if}
             *}
 
-                <?php
-                    if (class_exists("Slate\\Connectors\\Canvas\\Connector") && class_exists("RemoteSystems\\Canvas", false)) {
-                        $this->scope['canvasConnectorId'] = \Slate\Connectors\Canvas\Connector::$connectorId;
-                    }
-                ?>
-                {if $canvasConnectorId}
-                    <h3 class="well-title">Other Websites</h3>
-                    {foreach from=$Section->Mappings item=SectionMapping}
-                        {if $SectionMapping->ExternalKey == "course_section[id]" && $SectionMapping->Connector == $canvasConnectorId}
-                            <a href="http://{\RemoteSystems\Canvas::$canvasHost}/courses/{$SectionMapping->ExternalIdentifier}" target="_blank">Launch Canvas</a>
-                        {/if}
-                    {/foreach}
-                {/if}
-
                 {if $.User->hasAccountLevel(Staff)}
                     <h3 class="well-title">Course Tools</h3>
                     <ul class="course-section-tools plain">
