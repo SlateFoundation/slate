@@ -66,25 +66,16 @@
         <div class="main-col">
             <div class="col-inner">
                 <header class="page-header">
-                    <h2 class="header-title">{$Section->Title|escape}</h2>
-                </header>
-
-                {if $latestTeacherPost}
-                    <div class="well">
-                        <header class="page-header">
-                            <h3 class="header-title">Teacher's Latest Post</h3>
-                        </header>
-                        {blogPost $latestTeacherPost headingLevel="h4"}
-                    </div>
-                {/if}
-
-                <header class="page-header">
-                    <h3 class="header-title">Class Blog</h3>
+                    <h2 class="header-title">{$Section->Title|escape} <small class="muted">Public Feed</small></h2>
                     <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
 
+                {if $latestTeacherPost}
+                    {blogPost $latestTeacherPost headingLevel="h3" articleClass="well" titlePrefix='<i class="fa fa-thumb-tack"></i>&ensp;'}
+                {/if}
+
                 {foreach item=BlogPost from=$blogPosts}
-                    {blogPost $BlogPost headingLevel="h4"}
+                    {blogPost $BlogPost headingLevel="h3"}
                 {foreachelse}
                     <p class="empty-text">This class has no posts in its public feed yet.</p>
                 {/foreach}
