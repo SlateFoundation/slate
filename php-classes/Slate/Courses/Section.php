@@ -2,10 +2,21 @@
 
 namespace Slate\Courses;
 
+use DB;
 use HandleBehavior;
 use DuplicateKeyException;
 use TableNotFoundException;
+
+use Emergence\People\IPerson;
+use Emergence\People\Person;
+use Emergence\People\User;
+use Emergence\Locations\Location;
+use Emergence\Connectors\Mapping;
+
+use Slate\Term;
 use Slate\Courses\SectionParticipant;
+
+
 
 class Section extends \VersionedRecord
 {
@@ -107,45 +118,45 @@ class Section extends \VersionedRecord
     public static $relationships = [
         'Course' => [
             'type' => 'one-one'
-            ,'class' => 'Slate\\Courses\\Course'
+            ,'class' => Course::class
         ]
         ,'Term' => [
             'type' => 'one-one'
-            ,'class' => 'Slate\\Term'
+            ,'class' => Term::class
         ]
         ,'Schedule' => [
             'type' => 'one-one'
-            ,'class' => 'Slate\\Courses\\Schedule'
+            ,'class' => Schedule::class
         ]
         ,'Location' => [
             'type' => 'one-one'
-            ,'class' => 'Emergence\\Locations\\Location'
+            ,'class' => Location::class
         ]
         ,'Participants' => [
             'type' => 'one-many'
-            ,'class' => 'Slate\\Courses\\SectionParticipant'
+            ,'class' => SectionParticipant::class
             ,'foreign' => 'CourseSectionID'
             ,'order' => 'Role DESC, (SELECT CONCAT(LastName,FirstName) FROM people WHERE people.id = PersonID)'
         ]
         ,'Teachers' => [
             'type' => 'many-many'
-            ,'class' => 'Person'
-            ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
+            ,'class' => Person::class
+            ,'linkClass' => SectionParticipant::class
             ,'linkLocal' => 'CourseSectionID'
             ,'linkForeign' => 'PersonID'
             ,'conditions' => ['Link.Role = "Teacher"']
         ]
         ,'Students' => [
             'type' => 'many-many'
-            ,'class' => 'Person'
-            ,'linkClass' => 'Slate\\Courses\\SectionParticipant'
+            ,'class' => Person::class
+            ,'linkClass' => SectionParticipant::class
             ,'linkLocal' => 'CourseSectionID'
             ,'linkForeign' => 'PersonID'
             ,'conditions' => ['Link.Role = "Student"']
         ]
         ,'Mappings' => [
             'type' => 'context-children'
-            ,'class' => 'Emergence\Connectors\Mapping'
+            ,'class' => Mapping::class
             ,'contextClass' => __CLASS__
         ]
     ];
@@ -182,27 +193,30 @@ class Section extends \VersionedRecord
     public static function sortCurrentTerm($dir, $name)
     {
         $tableAlias = static::getTableAlias();
-        $sortedTermIds = \DB::allValues(
+        $sortedTermIds = DB::allValues(
             'ID',
 
             'SELECT ID '.
             '  FROM `%s` Term'.
-            ' ORDER BY ('.
-                        'SELECT IF( '.
-                            ' Term.StartDate <= NOW() AND Term.EndDate > NOW(), 2, '. // current = 2
-                            ' IF ( '.
-                                    'Term.EndDate >= NOW(), 1, 0'.  // upcoming = 1, previous = 0
-                            ' )'.
-                        ' ) '.
-            ') DESC',
+            ' ORDER BY IF('.
+            '                Term.StartDate <= CURRENT_DATE AND Term.EndDate > CURRENT_DATE,'.
+            '                2, '. // current = 2
+            '                IF ('.
+            '                       Term.EndDate >= CURRENT_DATE,'.
+            '                       1,'. // upcoming = 1
+            '                       0'.  // previous = 0
+            '                   )'.
+            '            ) DESC,'.
+            '            ABS(DATEDIFF(Term.StartDate, CURRENT_DATE)) ASC,'.
+            '            Term.Left DESC',
             [
-                \Slate\Term::$tableName
+                Term::$tableName
             ]
         );
 
         // ASC = current, future, past
         // DESC = past, future, current
-        return '(FIELD('.$tableAlias.'.TermID, '.join(', ', $sortedTermIds).')) '.$dir;
+        return 'FIELD('.$tableAlias.'.TermID, '.join(', ', $sortedTermIds).') '.$dir;
     }
 
     public function save($deep = true)
@@ -214,7 +228,7 @@ class Section extends \VersionedRecord
 
         // generate short code
         if (!$this->Code) {
-            $this->Code = HandleBehavior::getUniqueHandle("\\Slate\\Courses\\Section", $this->Course->Code, [
+            $this->Code = HandleBehavior::getUniqueHandle(static::class, $this->Course->Code, [
                 'handleField' => 'Code'
                 ,'suffixFormat' => '%s-%03u'
                 ,'alwaysSuffix' => true
@@ -277,7 +291,7 @@ class Section extends \VersionedRecord
     public function getStudentsCount()
     {
         try {
-            return (int)\DB::oneValue(
+            return (int)DB::oneValue(
                 'SELECT COUNT(*) FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"'
                 ,[
                     SectionParticipant::$tableName
@@ -290,7 +304,7 @@ class Section extends \VersionedRecord
 
     public function getParticipant($person)
     {
-        if ($person instanceof \Emergence\People\IPerson) {
+        if ($person instanceof IPerson) {
             $person = $person->ID;
         }
 
@@ -303,14 +317,14 @@ class Section extends \VersionedRecord
     // search SQL generators
     protected static function getTeacherSearchSql($term, $condition)
     {
-        $Teacher = \Emergence\People\User::getByUsername($term);
+        $Teacher = User::getByUsername($term);
 
         if (!$Teacher) {
             return 'FALSE';
         }
 
         try {
-            $sectionIds = \DB::allValues(
+            $sectionIds = DB::allValues(
                 'CourseSectionID'
                 ,'SELECT CourseSectionID FROM `%s` Participant WHERE Participant.PersonID = %u AND Role = "Teacher"'
                 ,[
@@ -344,7 +358,7 @@ class Section extends \VersionedRecord
             return 'FALSE';
         }
 
-        $courseIds = \DB::allValues(
+        $courseIds = DB::allValues(
             'ID'
             ,'SELECT ID FROM `%s` Course WHERE Course.DepartmentID = %u'
             ,[
@@ -362,7 +376,7 @@ class Section extends \VersionedRecord
 
     protected static function getTermSearchSql($term, $condition)
     {
-        $Term = \Slate\Term::getByHandle($term);
+        $Term = Term::getByHandle($term);
 
         if ($Term) {
             return 'TermID IN ('.implode(',', $Term->getRelatedTermIds()).')';
@@ -380,7 +394,7 @@ class Section extends \VersionedRecord
 
     protected static function getLocationSearchSql($term, $condition)
     {
-        $Location = \Emergence\Locations\Location::getByHandle($term);
+        $Location = Location::getByHandle($term);
 
         return $Location ? "LocationID = $Location->ID" : 'FALSE';
     }
