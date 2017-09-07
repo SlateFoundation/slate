@@ -675,11 +675,11 @@ Ext.define('SlateAdmin.controller.People', {
         if (extraParams && extraParams.q) {
             path.push('search', extraParams.q);
             title = '&ldquo;' + extraParams.q + '&rdquo;';
-        } else if(personRecord) {
-            path.push('lookup');
+        } else if (personRecord) {
+            path.push(personRecord.phantom ? 'create' : 'lookup');
         }
 
-        if (personRecord) {
+        if (personRecord && !personRecord.phantom) {
             if (personRecord.get('Username')) {
                 path.push(personRecord.get('Username'));
             } else {
