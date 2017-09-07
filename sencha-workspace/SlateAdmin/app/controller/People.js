@@ -299,8 +299,9 @@ Ext.define('SlateAdmin.controller.People', {
     showCreatePerson: function() {
         var me = this,
             ExtHistory = Ext.util.History,
+            store = me.getPeoplePeopleStore(),
             manager = me.getManager(),
-            grid, store, person;
+            person;
 
         ExtHistory.suspendState();
         Ext.suspendLayouts();
@@ -309,8 +310,6 @@ Ext.define('SlateAdmin.controller.People', {
         me.application.getController('Viewport').loadCard(manager);
         manager.detailTabs.setActiveTab(0);
 
-        grid = me.getGrid();
-        store = grid.getStore();
         person = store.add({})[0];
 
         me.selectPerson(person, function() {
