@@ -298,20 +298,25 @@ Ext.define('SlateAdmin.controller.People', {
 
     showCreatePerson: function() {
         var me = this,
+            ExtHistory = Ext.util.History,
             manager = me.getManager(),
             grid, store, person;
 
+        ExtHistory.suspendState();
         Ext.suspendLayouts();
+
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(manager);
         manager.detailTabs.setActiveTab(0);
-        Ext.resumeLayouts(true);
 
         grid = me.getGrid();
         store = grid.getStore();
         person = store.add({})[0];
 
-        return me.selectPerson(person);
+        me.selectPerson(person, function() {
+            ExtHistory.resumeState();
+            Ext.resumeLayouts(true);
+        });
     },
 
     // event handlers
