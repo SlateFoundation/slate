@@ -308,7 +308,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(manager);
-        manager.detailTabs.setActiveTab(0);
+        manager.detailTabs.setActiveTab('profile');
 
         person = store.add({})[0];
 

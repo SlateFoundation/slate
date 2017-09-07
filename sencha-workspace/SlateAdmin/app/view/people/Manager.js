@@ -107,6 +107,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
         var me = this,
             detailCt = me.detailCt,
             detailTabs = me.detailTabs,
+            tabBar = detailTabs.getTabBar(),
             activeTab = detailTabs.getActiveTab(),
             loadedPerson;
 
@@ -120,14 +121,16 @@ Ext.define('SlateAdmin.view.people.Manager', {
                 activeTab.setLoadedPerson(person);
             }
 
-            if (activeTab && detailCt.isDisabled()) {
-                detailCt.enable();
+            detailCt.setDisabled(!activeTab);
 
-                // ensure active tab is set, since it would be supressed while disabled
-                detailTabs.tabBar.setActiveTab(activeTab.tab);
+            Ext.Array.each(tabBar.query(':not([active])'), function (tab) {
+                tab.setDisabled(person.phantom);
+            });
+
+            // ensure active tab is set, since it would be supressed while disabled
+            if (activeTab) {
+                tabBar.setActiveTab(activeTab.tab);
             }
-
-            detailTabs.getTabBar().setDisabled(person.phantom);
         } else {
             detailCt.disable();
         }
