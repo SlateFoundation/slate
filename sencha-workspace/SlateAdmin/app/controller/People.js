@@ -665,7 +665,6 @@ Ext.define('SlateAdmin.controller.People', {
     syncState: function() {
         var me = this,
             manager = me.getManager(),
-            selModel = me.getGrid().getSelectionModel(), // TODO: unused remove?
             detailTabs = manager.detailTabs,
             personRecord = manager.getSelectedPerson(),
             extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
