@@ -414,13 +414,12 @@ Ext.define('SlateAdmin.controller.People', {
      * @return {void}
      */
     onPersonSelect: function(selModel, personRecord, index) {
-        var me = this,
-            selectionCount = selModel.getCount();
+        var me = this;
 
         Ext.suspendLayouts();
         me.syncGridStatus();
 
-        if (selectionCount == 1) {
+        if (selModel.getCount() == 1) {
             me.getManager().setSelectedPerson(personRecord);
         }
 
@@ -437,18 +436,17 @@ Ext.define('SlateAdmin.controller.People', {
      */
     onPersonDeselect: function(selModel, personRecord, index) {
         var me = this,
+            selectionCount = selModel.getCount(),
             firstRecord;
 
         Ext.suspendLayouts();
         me.syncGridStatus();
 
-        if (personRecord.phantom) {
-            me.getPeoplePeopleStore().remove(personRecord);
-        }
-
-        if (selModel.getCount() == 1) {
+        if (selectionCount == 1) {
             firstRecord = selModel.getSelection()[0];
             selModel.select(firstRecord);
+        } else if (selectionCount == 0) {
+            me.getManager().setSelectedPerson(null);
         }
 
         Ext.resumeLayouts(true);
