@@ -111,7 +111,15 @@ Ext.define('SlateAdmin.controller.people.Profile', {
      * @return {void}
      */
     onCancelButtonClick: function() {
-        this.getProfileForm().getForm().reset();
+        var me = this,
+            manager = me.getManager(),
+            person = manager.getSelectedPerson();
+
+        if (person.phantom) {
+            manager.setSelectedPerson(null);
+        } else {
+            me.getProfileForm().getForm().reset();
+        }
     },
 
     /**
