@@ -304,6 +304,7 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.suspendLayouts();
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(manager);
+        manager.detailTabs.setActiveTab(0);
         Ext.resumeLayouts(true);
 
         grid = me.getGrid();

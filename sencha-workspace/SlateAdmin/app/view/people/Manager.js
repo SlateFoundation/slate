@@ -126,6 +126,8 @@ Ext.define('SlateAdmin.view.people.Manager', {
                 // ensure active tab is set, since it would be supressed while disabled
                 detailTabs.tabBar.setActiveTab(activeTab.tab);
             }
+
+            detailTabs.getTabBar().setDisabled(person.phantom);
         } else {
             detailCt.disable();
         }
