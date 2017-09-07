@@ -139,7 +139,7 @@
 
 
                 {if $.User->hasAccountLevel(Staff)}
-                    <h3 class="well-title">Course Tools</h3>
+                    <h3>Course Tools</h3>
                     <ul class="course-section-tools plain">
                         <li class="copy-email"><a class="button" href="#copy-section-emails">Copy Email List</a></li>
                         <li class="download-roster"><a class="button" href="{$Section->getURL()}/students?format=csv&columns=LastName,FirstName,Gender,Username,PrimaryEmail,PrimaryPhone,StudentNumber,Advisor,GraduationYear">Download Roster</a></li>
