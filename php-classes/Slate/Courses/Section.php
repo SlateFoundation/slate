@@ -20,6 +20,9 @@ use Slate\Courses\SectionParticipant;
 
 class Section extends \VersionedRecord
 {
+    use \Emergence\Connectors\LaunchableTrait;
+
+
     // VersionedRecord configuration
     public static $historyTable = 'history_course_sections';
 

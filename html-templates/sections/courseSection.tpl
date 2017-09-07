@@ -128,21 +128,15 @@
                     </dl>
                 </section>
 
-            {*
-                {$MoodleMapping = SynchronizationMapping::getByWhere(array(
-                    ContextClass = 'CourseSection'
-                    ,ContextID = $Section->ID
-                    ,ExternalSource = 'MoodleIntegrator'
-                    ,ExternalKey = 'id'
-                ))}
 
-                {if $MoodleMapping}
-                    <h2>Links</h2>
-                    <ul>
-                        <li><a href="/cas/login?service={urlencode('http://moodle.scienceleadership.org/course/view.php?id=')}{$MoodleMapping->ExternalIdentifier}" title="Visit {$Section->Code} on Moodle">Moodle / {$Section->Code|escape}</a></li>
-                    </ul>
+                {$launchers = $Section->getLaunchers()}
+                {if count($launchers)}
+                    <h3>Other Websites</h3>
+                    {foreach from=$launchers item=launcher}
+                        <a class="button" href="{$launcher.url|escape}" target="_blank">{$launcher.title|escape}</a>
+                    {/foreach}
                 {/if}
-            *}
+
 
                 {if $.User->hasAccountLevel(Staff)}
                     <h3 class="well-title">Course Tools</h3>
