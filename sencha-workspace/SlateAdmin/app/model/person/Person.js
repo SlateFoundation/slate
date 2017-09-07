@@ -58,10 +58,12 @@ Ext.define('SlateAdmin.model.person.Person', {
         },
         'PrimaryPostal',
         {
-            name: 'FirstName'
+            name: 'FirstName',
+            defaultValue: null
         },
         {
-            name: 'LastName'
+            name: 'LastName',
+            defaultValue: null
         },
         {
             name: 'MiddleName',

@@ -308,11 +308,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         grid = me.getGrid();
         store = grid.getStore();
-        person = store.add({
-            FirstName: '',
-            Lastname: ''
-        })[0];
-
+        person = store.add({})[0];
 
         return me.selectPerson(person);
     },
