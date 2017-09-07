@@ -111,6 +111,9 @@ Ext.define('SlateAdmin.controller.People', {
             select: { fn: 'onPersonSelect', buffer: 10 },
             deselect: { fn: 'onPersonDeselect', buffer: 10 }
         },
+        manager: {
+            selectedpersonchange: 'onManagerSelectedPersonChange'
+        },
         'people-manager #detailTabs': {
             tabchange: 'onDetailTabChange'
         },
@@ -417,7 +420,6 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (selectionCount == 1) {
             me.getManager().setSelectedPerson(personRecord);
-            me.syncState();
         }
 
         Ext.resumeLayouts(true);
@@ -448,6 +450,13 @@ Ext.define('SlateAdmin.controller.People', {
         }
 
         Ext.resumeLayouts(true);
+    },
+
+    /**
+     * Event handler. Calls syncState when person loaded into manager changes so that it is reflected in the url
+     */
+    onManagerSelectedPersonChange: function() {
+        this.syncState();
     },
 
     /**
