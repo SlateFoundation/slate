@@ -95,12 +95,14 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
         if (groupsStore.isLoaded()) {
             profileForm.loadRecord(person);
+            me.syncButtons();
         } else {
             profilePanel.setLoading('Loading groups&hellip;');
             groupsStore.load({
                 callback: function() {
                     profileForm.loadRecord(person);
                     profilePanel.setLoading(false);
+                    me.syncButtons();
                 }
             });
         }
@@ -217,10 +219,11 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     syncButtons: function() {
         var me = this,
             profileForm = me.getProfileForm(),
+            person = profileForm.getRecord(),
             valid = profileForm.isValid(),
             dirty = profileForm.isDirty();
 
-        me.getCancelBtn().setDisabled(!dirty);
+        me.getCancelBtn().setDisabled(!dirty && (!person || !person.phantom));
         me.getSaveBtn().setDisabled(!dirty || !valid);
     }
 });
