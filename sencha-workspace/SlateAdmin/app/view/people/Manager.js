@@ -103,7 +103,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
     },
 
     // @private
-    updateSelectedPerson: function(person) {
+    updateSelectedPerson: function(person, oldPerson) {
         var me = this,
             detailCt = me.detailCt,
             detailTabs = me.detailTabs,
@@ -134,6 +134,8 @@ Ext.define('SlateAdmin.view.people.Manager', {
         } else {
             detailCt.disable();
         }
+
+        me.fireEvent('selectedpersonchange', me, person, oldPerson);
 
         Ext.resumeLayouts(true);
     },
