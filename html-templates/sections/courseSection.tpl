@@ -30,6 +30,38 @@
 
     {$Section = $data}
 
+    <?php
+        $this->scope['limit'] = 10;
+        $options = [
+            'limit' => $this->scope['limit'],
+            'offset' => $_GET['offset'] ?: 0,
+            'calcFoundRows' => 'yes',
+            'conditions' => []
+        ];
+
+        $sectionTeacherIds = array_map(function($Teacher) {
+            return $Teacher->ID;
+        }, $this->scope['Section']->Teachers);
+
+        $latestTeacherPost = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], array_merge_recursive($options, [
+            'conditions' => [
+                'AuthorID' => [
+                    'operator' => 'IN',
+                    'values' => $sectionTeacherIds
+                ]
+            ],
+            'limit' => 1
+        ]));
+
+        if (count($latestTeacherPost)) {
+            $this->scope['latestTeacherPost'] = $latestTeacherPost[0];
+            $options['conditions'][] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
+        }
+
+        $this->scope['blogPosts'] = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], $options);
+        $this->scope['total'] = DB::foundRows();
+    ?>
+
     <div class="sidebar-layout">
         <div class="main-col">
             <div class="col-inner">
@@ -38,16 +70,15 @@
                     <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
 
-                {$limit = 10}
-                {$blogPosts = Emergence\CMS\BlogPost::getAllPublishedByContextObject($Section, array(limit=$limit, offset=$.get.offset, calcFoundRows=yes))}
-                {$total = DB::foundRows()}
+                {if $latestTeacherPost}
+                    {blogPost $latestTeacherPost headingLevel="h3" articleClass="well" titlePrefix='<i class="fa fa-thumb-tack"></i>&ensp;'}
+                {/if}
 
                 {foreach item=BlogPost from=$blogPosts}
                     {blogPost $BlogPost headingLevel="h3"}
                 {foreachelse}
                     <p class="empty-text">This class has no posts in its public feed yet.</p>
                 {/foreach}
-
 
                 <footer class="page-footer">
                     {if $total > $limit}
@@ -97,38 +128,32 @@
                     </dl>
                 </section>
 
-            {*
-                {$MoodleMapping = SynchronizationMapping::getByWhere(array(
-                    ContextClass = 'CourseSection'
-                    ,ContextID = $Section->ID
-                    ,ExternalSource = 'MoodleIntegrator'
-                    ,ExternalKey = 'id'
-                ))}
 
-                {if $MoodleMapping}
-                    <h2>Links</h2>
-                    <ul>
-                        <li><a href="/cas/login?service={urlencode('http://moodle.scienceleadership.org/course/view.php?id=')}{$MoodleMapping->ExternalIdentifier}" title="Visit {$Section->Code} on Moodle">Moodle / {$Section->Code|escape}</a></li>
-                    </ul>
+                {$launchers = $Section->getLaunchers()}
+                {if count($launchers)}
+                    <h3>Other Websites</h3>
+                    {foreach from=$launchers item=launcher}
+                        <a class="button" href="{$launcher.url|escape}" target="_blank">{$launcher.title|escape}</a>
+                    {/foreach}
                 {/if}
-            *}
+
 
                 {if $.User->hasAccountLevel(Staff)}
-                    <h3 class="well-title">Course Tools</h3>
+                    <h3>Course Tools</h3>
                     <ul class="course-section-tools plain">
                         <li class="copy-email"><a class="button" href="#copy-section-emails">Copy Email List</a></li>
                         <li class="download-roster"><a class="button" href="{$Section->getURL()}/students?format=csv&columns=LastName,FirstName,Gender,Username,PrimaryEmail,PrimaryPhone,StudentNumber,Advisor,GraduationYear">Download Roster</a></li>
                     </ul>
                 {/if}
 
-                    <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
-                    <ul class="roster teachers">
-                    {foreach item=Teacher from=$Section->Teachers}
-                        <li>{personLink $Teacher photo=true}</li>
-                    {foreachelse}
-                        <p class="empty-text">No instructors currently listed.</p>
-                    {/foreach}
-                    </ul>
+                <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
+                <ul class="roster teachers">
+                {foreach item=Teacher from=$Section->Teachers}
+                    <li>{personLink $Teacher photo=true}</li>
+                {foreachelse}
+                    <p class="empty-text">No instructors currently listed.</p>
+                {/foreach}
+                </ul>
 
                 {if $.User}
                     <h3>Students</h3>

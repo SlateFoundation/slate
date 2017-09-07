@@ -242,6 +242,8 @@ class Person extends VersionedRecord implements IPerson
         switch ($name) {
             case 'FullName':
                 return $this->getFullName();
+            case 'PreferredFullName':
+                return $this->getPreferredFullName();
             case 'FirstInitial':
                 return strtoupper(substr($this->FirstName, 0, 1));
             case 'LastInitial':
@@ -279,6 +281,11 @@ class Person extends VersionedRecord implements IPerson
     public function getFullName()
     {
         return $this->FirstName.' '.$this->LastName;
+    }
+
+    public function getPreferredFullName()
+    {
+        return ($this->PreferredName ?: $this->FirstName).' '.$this->LastName;
     }
 
     public function setValue($name, $value)
