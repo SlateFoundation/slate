@@ -74,7 +74,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
      * Event Handler. Handles personloaded event defined by SlateAdmin.view.people.details.AbstractDetails which fires when
      * the tab is activated or a new person is selected.  This initializes the form for the selected user.
      * @param {SlateAdmin.controller.people.Profile} profilePanel The profile panel.
-     * @param {SlateAdmin.model.person.Person} person The person record.
+     * @param {Slate.model.person.Person} person The person record.
      * @return {void}
      */
     onPersonLoaded: function(profilePanel, person) {

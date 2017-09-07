@@ -399,7 +399,7 @@ Ext.define('SlateAdmin.controller.People', {
      * Event Handler. Handles the select event of the People grid. Sets the selectedPerson of the
      * SlateAdmin.view.people.Manager to the selected record and calls syncGridStatus to update the bottom toolbar.
      * @param {Ext.selection.RowModel} selModel The selection model
-     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Slate.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
      * @return {void}
      */
@@ -422,7 +422,7 @@ Ext.define('SlateAdmin.controller.People', {
      * Event Handler. Handles the deselect event of the People grid. Calls onPersonSelect if deselect event
      * leaves one record selected.
      * @param {Ext.selection.RowModel} selModel The selection model
-     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Slate.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
      * @return {void}
      */
