@@ -15,6 +15,10 @@ Ext.define('SlateAdmin.controller.People', {
         'people.Manager'
     ],
 
+    models: [
+        'Person@Slate.model.person'
+    ],
+
     stores: [
         'people.People',
         'people.Groups',
@@ -313,9 +317,7 @@ Ext.define('SlateAdmin.controller.People', {
         me.application.getController('Viewport').loadCard(manager);
         manager.detailTabs.setActiveTab('profile');
 
-        person = store.add({})[0];
-
-        me.selectPerson(person, function() {
+        me.selectPerson(me.getPersonModel().create(), function() {
             ExtHistory.resumeState();
             Ext.resumeLayouts(true);
         });
