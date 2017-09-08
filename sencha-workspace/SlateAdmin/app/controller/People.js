@@ -319,7 +319,7 @@ Ext.define('SlateAdmin.controller.People', {
         manager.detailTabs.setActiveTab('profile');
 
         me.selectPerson(me.getPersonModel().create(), function() {
-            ExtHistory.resumeState();
+            ExtHistory.resumeState(false);
             Ext.resumeLayouts(true);
         });
     },
