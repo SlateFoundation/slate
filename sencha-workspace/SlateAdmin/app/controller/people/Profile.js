@@ -141,10 +141,6 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
         person.save({
             success: function(record) {
-                // manually commit entire saved record until EXTJSIV-11442 is fixed
-                // see: http://www.sencha.com/forum/showthread.php?273093-Dirty-red-mark-of-grid-cell-not-removed-after-record.save
-                record.commit();
-
                 manager.syncDetailHeader();
 
                 profileForm.loadRecord(record);
