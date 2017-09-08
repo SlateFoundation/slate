@@ -145,16 +145,28 @@ Ext.define('Slate.model.person.Person', {
         // user fields
         {
             name: 'Username',
+            classes: [
+                'Emergence\\People\\User',
+                'Slate\\People\\Student'
+            ],
             allowNull: true,
             defaultValue: null
         },
         {
             name: 'AccountLevel',
+            classes: [
+                'Emergence\\People\\User',
+                'Slate\\People\\Student'
+            ],
             allowNull: true,
             defaultValue: null
         },
         {
             name: 'TemporaryPassword',
+            classes: [
+                'Emergence\\People\\User',
+                'Slate\\People\\Student'
+            ],
             allowNull: true,
             defaultValue: null
         },
@@ -163,11 +175,17 @@ Ext.define('Slate.model.person.Person', {
         // student fields
         {
             name: 'StudentNumber',
+            classes: [
+                'Slate\\People\\Student'
+            ],
             allowNull: true,
             defaultValue: null
         },
         {
             name: 'Advisor',
+            classes: [
+                'Slate\\People\\Student'
+            ],
             allowNull: true,
             defaultValue: null,
             sortType: function(v) {
@@ -176,11 +194,17 @@ Ext.define('Slate.model.person.Person', {
         },
         {
             name: 'AdvisorID',
+            classes: [
+                'Slate\\People\\Student'
+            ],
             allowNull: true,
             defaultValue: null
         },
         {
             name: 'GraduationYear',
+            classes: [
+                'Slate\\People\\Student'
+            ],
             type: 'integer',
             allowNull: true,
             defaultValue: null
@@ -238,10 +262,10 @@ Ext.define('Slate.model.person.Person', {
         if (me.phantom) {
             return null;
         } else if (me.get('Username')) {
-            return 'people//'+me.get('Username');
+            return 'people/lookup/'+me.get('Username');
         }
 
-        return 'people//?id='+me.get('ID');
+        return 'people/lookup/?id='+me.get('ID');
     }
 });
 
