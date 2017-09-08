@@ -53,13 +53,19 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             defaultType: 'textfield'
         },
         items: [{
-            xtype: 'displayfield',
+            xtype: 'combo',
             name: 'Class',
-            fieldLabel: 'Record Class'
+            store: [
+                ['Emergence\\People\\Person', 'Person / Contact'],
+                ['Emergence\\People\\User', 'User'],
+                ['Slate\\People\\Student', 'Student']
+            ],
+            fieldLabel: 'Record Type',
+            triggerAction: 'all',
+            editable: false
         },{
             xtype: 'fieldset',
             itemId: 'loginFields',
-            hidden: true,
 
             title: 'Login',
             items: [{
