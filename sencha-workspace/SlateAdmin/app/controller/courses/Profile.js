@@ -102,7 +102,6 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
             },
             failure: function(record, operation) {
                 var rawData = record.getProxy().getReader().rawData,
-                    errorMessage = 'There was a problem saving your changes, please double-check your changes and try again',
                     failed,
                     validationErrors;
 
