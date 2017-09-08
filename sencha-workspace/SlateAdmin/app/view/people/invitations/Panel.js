@@ -60,16 +60,6 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                 sortable: false,
                 text: '<img class="x-grid-checkcolumn" src="'+Ext.BLANK_IMAGE_URL+'">'
             }, {
-                text: 'User Class',
-                dataIndex: 'UserClass',
-                flex: 1,
-                editor: {
-                    xtype: 'combo',
-                    displayField: 'value',
-                    itemId: 'userClass',
-                    store: 'people.UserClasses'
-                }
-            }, {
                 text: 'First Name',
                 dataIndex: 'FirstName',
                 flex: 1
@@ -113,6 +103,18 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
 
                     metaData.tdCls = cls;
                     return text;
+                }
+            }, {
+                text: 'User Class',
+                dataIndex: 'UserClass',
+                flex: 2,
+                editor: {
+                    xtype: 'combo',
+                    displayField: 'value',
+                    store: 'people.UserClasses',
+                    matchFieldWidth: false,
+                    queryMode: 'local',
+                    editable: false
                 }
             }]
         }
