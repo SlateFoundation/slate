@@ -20,15 +20,11 @@ Ext.define('SlateAdmin.store.people.UserClasses', {
         reader: {
             type: 'json',
             transform: function(response) {
-                var records = [];
-
-                Ext.iterate(response.data, function(key, value) {
-                    records.push({
-                        value: value
-                    });
+                return Ext.Array.map(response.data, function (cls) {
+                    return {
+                        value: cls
+                    }
                 });
-
-                return records;
             }
         }
     }
