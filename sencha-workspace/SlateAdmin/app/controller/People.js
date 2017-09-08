@@ -307,9 +307,7 @@ Ext.define('SlateAdmin.controller.People', {
     showCreatePerson: function() {
         var me = this,
             ExtHistory = Ext.util.History,
-            store = me.getPeoplePeopleStore(),
-            manager = me.getManager(),
-            person;
+            manager = me.getManager();
 
         ExtHistory.suspendState();
         Ext.suspendLayouts();
