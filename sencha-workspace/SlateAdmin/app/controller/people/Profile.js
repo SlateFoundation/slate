@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * people.Profile controller handles events for the people.details.Profile
  */
@@ -6,6 +5,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
+
+        /* global Slate */
         'Slate.API'
     ],
 

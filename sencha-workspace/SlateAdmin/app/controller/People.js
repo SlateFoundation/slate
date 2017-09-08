@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, eqeq: true *//*global Ext,SlateAdmin*/
 /**
  * People controller
  */
@@ -6,6 +5,8 @@ Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
+
+        /* globals SlateAdmin */
         'SlateAdmin.API'
     ],
 
