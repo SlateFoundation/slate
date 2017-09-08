@@ -133,7 +133,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             profileForm = me.getProfileForm(),
             form = profileForm.getForm(),
             person = form.getRecord(),
-            manager = me.getManager();
+            manager = me.getManager(),
+            wasPhantom = person.phantom;
 
         profileForm.setLoading('Saving&hellip;');
 
@@ -142,14 +143,15 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         person.save({
             success: function(record) {
                 manager.syncDetailHeader();
-
                 profileForm.loadRecord(record);
-
                 profileForm.setLoading(false);
+
+                if (wasPhantom) {
+                    me.redirectTo(person.toUrl()+'/profile');
+                }
             },
             failure: function(record, operation) {
                 var rawData = record.getProxy().getReader().rawData,
-                    errorMessage = 'There was a problem saving your changes, please double-check your changes and try again',
                     failed,
                     validationErrors;
 
