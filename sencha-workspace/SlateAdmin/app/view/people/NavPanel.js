@@ -31,6 +31,19 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             anchor: '100%',
             emptyText: 'Search all people…'
         }]
+    }, {
+        dock: 'bottom',
+        xtype: 'container',
+        layout: 'fit',
+        padding: 10,
+        items: [{
+            xtype: 'button',
+            action: 'create-person',
+            text: 'Create Person',
+            glyph: 0xf055, // fa-plus-circle
+            href: '#people/create',
+            hrefTarget: '_self'
+        }]
     }],
 
     layout: {
@@ -45,7 +58,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
      */
     items: [{
         xtype: 'people-advancedsearchform'
-    },{
+    }, {
         xtype: 'treepanel',
         itemId: 'groups',
 

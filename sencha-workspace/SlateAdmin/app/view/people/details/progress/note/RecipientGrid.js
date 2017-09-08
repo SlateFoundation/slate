@@ -4,7 +4,8 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
     xtype: 'people-details-progress-note-recipientgrid',
     requires: [
         'Ext.ux.CheckColumn',
-        'Ext.selection.CheckboxModel'
+        'Ext.selection.CheckboxModel',
+        'Slate.model.person.Person'
     ],
 
     split: true,
@@ -46,7 +47,7 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 allowBlank: false,
                 valueField: 'ID',
                 store: {
-                    model: 'SlateAdmin.model.person.Person'
+                    model: 'Slate.model.person.Person'
                 },
                 listConfig: {
                     getInnerTpl: function () {

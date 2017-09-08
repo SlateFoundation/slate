@@ -3,8 +3,12 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
     extend: 'Ext.Panel',
     xtype: 'people-invitationspanel',
     requires: [
+        'Ext.form.field.ComboBox',
         'Ext.grid.Panel',
-        'Ext.selection.CheckboxModel'
+        'Ext.grid.plugin.CellEditing',
+        'Ext.selection.CheckboxModel',
+
+        'SlateAdmin.store.people.UserClasses'
     ],
 
     layout: {
@@ -40,6 +44,10 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                 return person.get('Email') ? '' : 'x-item-disabled';
             }
         },
+        plugins: {
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        },
         columns: {
             defaults: {
                 menuDisabled: true
@@ -51,20 +59,30 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                 resizable: false,
                 sortable: false,
                 text: '<img class="x-grid-checkcolumn" src="'+Ext.BLANK_IMAGE_URL+'">'
-            },{
+            }, {
+                text: 'User Class',
+                dataIndex: 'UserClass',
+                flex: 1,
+                editor: {
+                    xtype: 'combo',
+                    displayField: 'value',
+                    itemId: 'userClass',
+                    store: 'people.UserClasses'
+                }
+            }, {
                 text: 'First Name',
                 dataIndex: 'FirstName',
                 flex: 1
-            },{
+            }, {
                 text: 'Last Name',
                 flex: 1,
                 dataIndex: 'LastName'
-            },{
+            }, {
                 text: 'Email Address',
                 flex: 2,
                 dataIndex: 'Email',
                 emptyCellText: '<em>Add email to invite</em>'
-            },{
+            }, {
                 text: 'Account Status',
                 flex: 2,
                 dataIndex: 'Person',
@@ -98,7 +116,7 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                 }
             }]
         }
-    },{
+    }, {
         xtype: 'textareafield',
         fieldLabel: 'Message Template',
         labelAlign: 'top',
@@ -108,7 +126,7 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
             'You have been invited to setup an account at the {schoolName} website -- **{websiteHostname}**.',
             'With this account you will be able to log in to your personal dashboard and access all of our connected systems with one click.'
         ].join(' ')
-    },{
+    }, {
         xtype: 'panel',
         itemId: 'emailPreview',
         height: 200,

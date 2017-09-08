@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * people.Profile controller handles events for the people.details.Profile
  */
@@ -6,6 +5,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
+
+        /* global Slate */
         'Slate.API'
     ],
 
@@ -26,9 +27,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         profileForm: 'people-details-profile form',
         cancelBtn: 'people-details-profile button[action=cancel]',
         saveBtn: 'people-details-profile button[action=save]',
-        loginFieldSet: 'people-details-profile fieldset#loginFields',
+        classField: 'people-details-profile field[name=Class]',
         usernameField: 'people-details-profile field[name=Username]',
-        studentNumberField: 'people-details-profile field[name=StudentNumber]',
         temporaryPasswordFieldCt: 'people-details-profile fieldcontainer#temporaryPasswordFieldCt',
         temporaryPasswordField: 'people-details-profile field[name=TemporaryPassword]',
         resetTemporaryPasswordBtn: 'people-details-profile button[action=reset-temporary-password]',
@@ -46,6 +46,9 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         'people-details-profile form': {
             dirtychange: 'syncButtons',
             validitychange: 'syncButtons'
+        },
+        'people-details-profile field[name=Class]': {
+            change: 'onClassChange'
         },
         cancelBtn: {
             click: 'onCancelButtonClick'
@@ -74,12 +77,11 @@ Ext.define('SlateAdmin.controller.people.Profile', {
      * Event Handler. Handles personloaded event defined by SlateAdmin.view.people.details.AbstractDetails which fires when
      * the tab is activated or a new person is selected.  This initializes the form for the selected user.
      * @param {SlateAdmin.controller.people.Profile} profilePanel The profile panel.
-     * @param {SlateAdmin.model.person.Person} person The person record.
+     * @param {Slate.model.person.Person} person The person record.
      * @return {void}
      */
     onPersonLoaded: function(profilePanel, person) {
         var me = this,
-            personClass = person.get('Class'),
             profileForm = me.getProfileForm(),
             groupsField = me.getGroupsField(),
             groupsStore = groupsField.getStore(),
@@ -87,22 +89,62 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             siteUserAccountLevel = siteEnv.user && siteEnv.user.AccountLevel,
             siteUserIsAdmin = siteUserAccountLevel == 'Administrator' || siteUserAccountLevel == 'Developer';
 
-        me.getStudentNumberField().setVisible(personClass == 'Slate\\People\\Student');
-        me.getLoginFieldSet().setVisible(personClass != 'Emergence\\People\\Person');
         me.getTemporaryPasswordFieldCt().setVisible(siteUserIsAdmin);
         me.getUsernameField().setReadOnly(!siteUserIsAdmin);
 
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
         if (groupsStore.isLoaded()) {
             profileForm.loadRecord(person);
+            me.syncButtons();
         } else {
             profilePanel.setLoading('Loading groups&hellip;');
             groupsStore.load({
                 callback: function() {
                     profileForm.loadRecord(person);
                     profilePanel.setLoading(false);
+                    me.syncButtons();
                 }
             });
+        }
+    },
+
+    onClassChange: function(combo, personClass) {
+        var profileFormCmp = this.getProfileForm(),
+            profileForm = profileFormCmp.getForm(),
+
+            fields = profileForm.getRecord().getFields(),
+            fieldsLength = fields.length,
+            fieldIndex = 0,
+            field, fieldClasses, formField, formFieldContainer,
+
+            fieldsets = profileFormCmp.query('fieldset'),
+            fieldsetsLength = fieldsets.length,
+            fieldsetIndex = 0,
+            fieldset;
+
+        for (; fieldIndex < fieldsLength; fieldIndex++) {
+            field = fields[fieldIndex];
+            fieldClasses = field.classes;
+
+            if (!fieldClasses) {
+                continue;
+            }
+
+            formField = profileForm.findField(field.name);
+
+            if (formField) {
+                formField.setVisible(Ext.Array.contains(fieldClasses, personClass));
+                formFieldContainer = formField.up('fieldcontainer');
+
+                if (formFieldContainer) {
+                    formFieldContainer.setVisible(formFieldContainer.query('field{isVisible()}').length);
+                }
+            }
+        }
+
+        for (; fieldsetIndex < fieldsetsLength; fieldsetIndex++) {
+            fieldset = fieldsets[fieldsetIndex];
+            fieldset.setVisible(fieldset.query('> field{isVisible()}, > fieldcontainer{isVisible()}').length);
         }
     },
 
@@ -111,7 +153,15 @@ Ext.define('SlateAdmin.controller.people.Profile', {
      * @return {void}
      */
     onCancelButtonClick: function() {
-        this.getProfileForm().getForm().reset();
+        var me = this,
+            manager = me.getManager(),
+            person = manager.getSelectedPerson();
+
+        if (person.phantom) {
+            manager.setSelectedPerson(null);
+        } else {
+            me.getProfileForm().getForm().reset();
+        }
     },
 
     /**
@@ -123,7 +173,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             profileForm = me.getProfileForm(),
             form = profileForm.getForm(),
             person = form.getRecord(),
-            manager = me.getManager();
+            manager = me.getManager(),
+            wasPhantom = person.phantom;
 
         profileForm.setLoading('Saving&hellip;');
 
@@ -131,19 +182,16 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
         person.save({
             success: function(record) {
-                // manually commit entire saved record until EXTJSIV-11442 is fixed
-                // see: http://www.sencha.com/forum/showthread.php?273093-Dirty-red-mark-of-grid-cell-not-removed-after-record.save
-                record.commit();
-
                 manager.syncDetailHeader();
-
                 profileForm.loadRecord(record);
-
                 profileForm.setLoading(false);
+
+                if (wasPhantom) {
+                    me.redirectTo(person.toUrl()+'/profile');
+                }
             },
             failure: function(record, operation) {
                 var rawData = record.getProxy().getReader().rawData,
-                    errorMessage = 'There was a problem saving your changes, please double-check your changes and try again',
                     failed,
                     validationErrors;
 
@@ -209,10 +257,11 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     syncButtons: function() {
         var me = this,
             profileForm = me.getProfileForm(),
+            person = profileForm.getRecord(),
             valid = profileForm.isValid(),
             dirty = profileForm.isDirty();
 
-        me.getCancelBtn().setDisabled(!dirty);
+        me.getCancelBtn().setDisabled(!dirty && (!person || !person.phantom));
         me.getSaveBtn().setDisabled(!dirty || !valid);
     }
 });

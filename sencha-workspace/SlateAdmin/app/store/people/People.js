@@ -2,5 +2,5 @@
 Ext.define('SlateAdmin.store.people.People', {
     extend: 'Ext.data.Store',
 
-    model: 'SlateAdmin.model.person.Person'
+    model: 'Slate.model.person.Person'
 });

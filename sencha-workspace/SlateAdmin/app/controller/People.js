@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, eqeq: true *//*global Ext,SlateAdmin*/
 /**
  * People controller
  */
@@ -6,6 +5,8 @@ Ext.define('SlateAdmin.controller.People', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
+
+        /* globals SlateAdmin */
         'SlateAdmin.API'
     ],
 
@@ -13,6 +14,10 @@ Ext.define('SlateAdmin.controller.People', {
     views: [
         'people.NavPanel',
         'people.Manager'
+    ],
+
+    models: [
+        'Person@Slate.model.person'
     ],
 
     stores: [
@@ -24,6 +29,7 @@ Ext.define('SlateAdmin.controller.People', {
     routes: {
         'people': 'showPeople',
         'people/all': 'showResults',
+        'people/create': 'showCreatePerson',
         'people/lookup/:person': {
             action: 'showPerson',
             conditions: {
@@ -109,6 +115,9 @@ Ext.define('SlateAdmin.controller.People', {
         'people-grid': {
             select: { fn: 'onPersonSelect', buffer: 10 },
             deselect: { fn: 'onPersonDeselect', buffer: 10 }
+        },
+        manager: {
+            selectedpersonchange: 'onManagerSelectedPersonChange'
         },
         'people-manager #detailTabs': {
             tabchange: 'onDetailTabChange'
@@ -295,6 +304,23 @@ Ext.define('SlateAdmin.controller.People', {
         }, 10);
     },
 
+    showCreatePerson: function() {
+        var me = this,
+            ExtHistory = Ext.util.History,
+            manager = me.getManager();
+
+        ExtHistory.suspendState();
+        Ext.suspendLayouts();
+
+        me.getNavPanel().expand();
+        me.application.getController('Viewport').loadCard(manager);
+        manager.detailTabs.setActiveTab('profile');
+
+        me.selectPerson(me.getPersonModel().create(), function() {
+            ExtHistory.resumeState(false);
+            Ext.resumeLayouts(true);
+        });
+    },
 
     // event handlers
 
@@ -382,20 +408,18 @@ Ext.define('SlateAdmin.controller.People', {
      * Event Handler. Handles the select event of the People grid. Sets the selectedPerson of the
      * SlateAdmin.view.people.Manager to the selected record and calls syncGridStatus to update the bottom toolbar.
      * @param {Ext.selection.RowModel} selModel The selection model
-     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Slate.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
      * @return {void}
      */
     onPersonSelect: function(selModel, personRecord, index) {
-        var me = this,
-            selectionCount = selModel.getCount();
+        var me = this;
 
         Ext.suspendLayouts();
         me.syncGridStatus();
 
-        if (selectionCount == 1) {
+        if (selModel.getCount() == 1) {
             me.getManager().setSelectedPerson(personRecord);
-            me.syncState();
         }
 
         Ext.resumeLayouts(true);
@@ -405,23 +429,33 @@ Ext.define('SlateAdmin.controller.People', {
      * Event Handler. Handles the deselect event of the People grid. Calls onPersonSelect if deselect event
      * leaves one record selected.
      * @param {Ext.selection.RowModel} selModel The selection model
-     * @param {SlateAdmin.model.person.Person} personRecord The selected record
+     * @param {Slate.model.person.Person} personRecord The selected record
      * @param {Number} index The row index selected
      * @return {void}
      */
     onPersonDeselect: function(selModel, personRecord, index) {
         var me = this,
+            selectionCount = selModel.getCount(),
             firstRecord;
 
         Ext.suspendLayouts();
         me.syncGridStatus();
 
-        if (selModel.getCount() == 1) {
+        if (selectionCount == 1) {
             firstRecord = selModel.getSelection()[0];
             selModel.select(firstRecord);
+        } else if (selectionCount == 0) {
+            me.getManager().setSelectedPerson(null);
         }
 
         Ext.resumeLayouts(true);
+    },
+
+    /**
+     * Event handler. Calls syncState when person loaded into manager changes so that it is reflected in the url
+     */
+    onManagerSelectedPersonChange: function() {
+        this.syncState();
     },
 
     /**
@@ -644,7 +678,6 @@ Ext.define('SlateAdmin.controller.People', {
     syncState: function() {
         var me = this,
             manager = me.getManager(),
-            selModel = me.getGrid().getSelectionModel(), // TODO: unused remove?
             detailTabs = manager.detailTabs,
             personRecord = manager.getSelectedPerson(),
             extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
@@ -655,11 +688,11 @@ Ext.define('SlateAdmin.controller.People', {
         if (extraParams && extraParams.q) {
             path.push('search', extraParams.q);
             title = '&ldquo;' + extraParams.q + '&rdquo;';
-        } else if(personRecord) {
-            path.push('lookup');
+        } else if (personRecord) {
+            path.push(personRecord.phantom ? 'create' : 'lookup');
         }
 
-        if (personRecord) {
+        if (personRecord && !personRecord.phantom) {
             if (personRecord.get('Username')) {
                 path.push(personRecord.get('Username'));
             } else {
