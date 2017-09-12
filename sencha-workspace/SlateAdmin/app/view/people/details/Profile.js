@@ -7,6 +7,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         'Ext.form.FieldSet',
         'Ext.form.FieldContainer',
         'Ext.form.field.Tag',
+        'Ext.form.field.Number',
         'SlateAdmin.proxy.Records',
         'SlateAdmin.model.person.Group'
     ],
@@ -141,6 +142,12 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             items: [{
                 name: 'StudentNumber',
                 fieldLabel: 'Student #',
+                hidden: true
+            },{
+                xtype: 'numberfield',
+                name: 'GraduationYear',
+                fieldLabel: 'Graduation Year',
+                minValue: 1990,
                 hidden: true
             },{
                 xtype: 'tagfield',
