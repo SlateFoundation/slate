@@ -501,26 +501,25 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
 
-            // get or create new section
-            if (!$Record) {
-                $Record = static::getSection($Job, $MasterTerm, $row);
-            }
-
-            if (!$Record) {
-                $Record = Section::create();
-
-                if (!empty($row['SectionCode'])) {
-                    $Record->Code = $row['SectionCode'];
-                }
-            }
-
-
-            // get teacher, but add later
-            $teachers = static::getSectionTeachers($Job, $Record, $row);
-
-
-            // apply values from spreadsheet
             try {
+                // try to get existing record
+                if (!$Record) {
+                    $Record = static::getSection($Job, $MasterTerm, $row);
+                }
+
+                // create a new record if necessary
+                if (!$Record) {
+                    $Record = Section::create();
+
+                    if (!empty($row['SectionCode'])) {
+                        $Record->Code = $row['SectionCode'];
+                    }
+                }
+
+                // get teacher, but add later
+                $teachers = static::getSectionTeachers($Job, $Record, $row);
+
+                // apply values from spreadsheet
                 static::_applySectionChanges($Job, $MasterTerm, $Record, $row, $results);
             } catch (RemoteRecordInvalid $e) {
                 if ($e->getValueKey()) {
