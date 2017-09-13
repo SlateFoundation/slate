@@ -24,7 +24,8 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
     public static $userResponseModes = [
         'application/json' => 'json',
         'text/csv' => 'csv',
-        'application/pdf' => 'pdf'
+        'application/pdf' => 'pdf',
+        'text/html; display=print' => 'print'
     ];
 
 

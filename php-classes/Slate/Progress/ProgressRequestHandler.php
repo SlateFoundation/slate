@@ -19,7 +19,8 @@ class ProgressRequestHandler extends \RequestHandler
 
     public static $userResponseModes = [
         'application/json' => 'json',
-        'application/pdf' => 'pdf'
+        'application/pdf' => 'pdf',
+        'text/html; display=print' => 'print'
     ];
 
     public static function handleRequest()
