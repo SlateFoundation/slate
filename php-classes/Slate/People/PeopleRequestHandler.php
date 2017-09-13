@@ -14,6 +14,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
         'application/json' => 'json'
         ,'text/csv' => 'csv'
         ,'application/pdf' => 'pdf'
+        ,'text/html; display=print' => 'print'
     ];
 
     public static function handleRecordsRequest($action = false)
