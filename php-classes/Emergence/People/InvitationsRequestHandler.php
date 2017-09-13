@@ -118,19 +118,19 @@ class InvitationsRequestHandler extends \RequestHandler
 
         // create and send invitations
         foreach ($people AS $invitationData) {
-            // revoke any existing
-            try {
-                DB::nonQuery(
-                    'UPDATE `%s` SET Status = "Revoked" WHERE RecipientID = %u AND Status = "Pending"',
-                    [
-                        Invitation::$tableName,
-                        $invitationData['Person']->ID
-                    ]
-                );
-            } catch (\TableNotFoundException $e) {}
+            // try to find an existing pending invitation first
+            $Invitation = $invitationClass::getByWhere([
+                'RecipientID' => $invitationData['Recipient']->ID,
+                'Status' => 'Pending'
+            ]);
 
-            // create new invitation
-            $Invitation = $invitationClass::create($invitationData, true);
+            if ($Invitation) {
+                $Invitation->UserClass = $invitationData['UserClass'];
+                $Invitation->save();
+            } else {
+                // create new invitation
+                $Invitation = $invitationClass::create($invitationData, true);
+            }
 
             // send email
             Mailer::sendFromTemplate($Person->EmailRecipient, 'loginInvitation', [
