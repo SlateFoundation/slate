@@ -104,6 +104,17 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
                     text: 'Reissue',
                     glyph: 0xf084 // fa-key
                 }]
+            },{
+                xtype: 'fieldcontainer',
+                itemId: 'masqueradeBtnCt',
+                fieldLabel: 'Masquerading',
+                hidden: true,
+                items: [{
+                    xtype: 'button',
+                    action: 'masquerade',
+                    text: 'Log in as this user',
+                    glyph: 0xf090 // fa-sign-in
+                }]
             }]
         },{
             xtype: 'fieldset',

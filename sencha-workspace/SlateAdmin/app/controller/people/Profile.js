@@ -4,6 +4,7 @@
 Ext.define('SlateAdmin.controller.people.Profile', {
     extend: 'Ext.app.Controller',
     requires: [
+        'Ext.DomHelper',
         'Ext.window.MessageBox',
 
         /* global Slate */
@@ -32,6 +33,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         temporaryPasswordFieldCt: 'people-details-profile fieldcontainer#temporaryPasswordFieldCt',
         temporaryPasswordField: 'people-details-profile field[name=TemporaryPassword]',
         resetTemporaryPasswordBtn: 'people-details-profile button[action=reset-temporary-password]',
+        masqueradeBtnCt: 'people-details-profile fieldcontainer#masqueradeBtnCt',
+        masqueradeBtn: 'people-details-profile button[action=masquerade]',
         groupsField: 'people-details-profile field[name=groupIDs]',
         manager: 'people-manager'
     },
@@ -58,6 +61,9 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         },
         resetTemporaryPasswordBtn: {
             click: 'onResetTemporaryPasswordClick'
+        },
+        masqueradeBtn: {
+            click: 'onMasqueradeClick'
         }
     },
 
@@ -91,6 +97,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
         me.getTemporaryPasswordFieldCt().setVisible(siteUserIsAdmin);
         me.getUsernameField().setReadOnly(!siteUserIsAdmin);
+        me.getMasqueradeBtnCt().setVisible(siteUserIsAdmin && person.get('Username'));
 
         // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
         if (groupsStore.isLoaded()) {
@@ -244,6 +251,37 @@ Ext.define('SlateAdmin.controller.people.Profile', {
                         temporaryPasswordField.resetOriginalValue();
                     }
                 });
+            }
+        );
+    },
+
+    onMasqueradeClick: function(masqueradeBtn) {
+        var person = this.getProfileForm().getRecord();
+
+        Ext.Msg.confirm(
+            'Log in as user '+person.get('Username'),
+            '<p>Masquerading will switch you into this user&rsquo;s account, as if you had logged in as them. You will be logged out of your administrator session, and will need to manually log out of the user account and back into your administrator account to return. Consider doing this from an incognito browser window if you would like to maintain an administrative session in your normal browser window while masquerading as other users.</p><p>Clicking continue will immediately leave this screen and take you to the user&rsquo;s dashboard.</p>',
+            function(btnId) {
+                if (btnId != 'yes') {
+                    return;
+                }
+
+                masqueradeBtn.disable();
+
+                Ext.DomHelper.append(Ext.getBody(), {
+                    tag: 'form',
+                    action: Slate.API.buildUrl('/masquerade'),
+                    method: 'POST',
+                    style: {
+                        display: 'none'
+                    },
+                    cn: [{
+                        tag: 'input',
+                        type: 'hidden',
+                        name: 'username',
+                        value: person.get('Username')
+                    }]
+                }).submit();
             }
         );
     },
