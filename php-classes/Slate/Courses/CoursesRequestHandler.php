@@ -2,9 +2,10 @@
 
 namespace Slate\Courses;
 
+
 class CoursesRequestHandler extends \RecordsRequestHandler
 {
-    // RecordsRequestHandler config
-    public static $recordClass = 'Slate\\Courses\\Course';
+    public static $recordClass = Course::class;
+    public static $accountLevelBrowse = false;
     public static $browseOrder = ['Code' => 'ASC'];
 }
