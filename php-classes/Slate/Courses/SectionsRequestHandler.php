@@ -76,6 +76,15 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             $responseData['Location'] = $Location;
         }
 
+        if (!empty($_REQUEST['schedule'])) {
+            if (!$Schedule = SchedulesRequestHandler::getRecordByHandle($_REQUEST['schedule'])) {
+                return static::throwNotFoundError('schedule not found');
+            }
+
+            $conditions['ScheduleID'] = $Schedule->ID;
+            $responseData['Schedule'] = $Schedule;
+        }
+
         if (!empty($_REQUEST['enrolled_user'])) {
             if ($_REQUEST['enrolled_user'] == 'current') {
                 $GLOBALS['Session']->requireAuthentication();

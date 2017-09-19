@@ -15,6 +15,7 @@
             {termField blankOption='Any' blankValue='*' default=$Term}
             {courseField blankOption='Any' default=$Course}
             {locationField blankOption='Any' default=$Location}
+            {scheduleField blankOption='Any' default=$Schedule}
             {checkbox inputName=enrolled_user value=current label='Only My Sections' default=$Course}
 
             <div class="submit-area">
@@ -53,12 +54,19 @@
                 <th scope="col">Teachers</th>
                 <th scope="col">Students</th>
                 <th scope="col">Location</th>
+                <th scope="col">Schedule</th>
             </tr>
         </thead>
         <tbody>
         {foreach item=group from=$sectionsByCourse}
             <tr>
-                <th colspan="4">{$group.Course->Department->Title|escape} &raquo; {$group.Course->Title|escape}</th>
+                <th colspan="4">
+                    {if $group.Course->Department}
+                        {$group.Course->Department->Title|escape}
+                        &raquo;
+                    {/if}
+
+                    {$group.Course->Title|escape}</th>
             </tr>
             {foreach item=Section from=$group.sections}
                 <tr>
@@ -66,6 +74,7 @@
                     <td>{foreach item=Teacher from=$Section->Teachers implode=', '}{personLink $Teacher}{/foreach}</td>
                     <td>{$Section->Students|count}</td>
                     <td>{$Section->Location->Title|escape}</td>
+                    <td>{$Section->Schedule->Title|escape}</td>
                 </tr>
             {/foreach}
         {/foreach}

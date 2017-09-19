@@ -59,7 +59,29 @@
         label=$label
         blankOption=$blankOption
         blankValue=$blankValue
-        default=$default->Code
+        default=$default->Handle
+        error=$error
+        hint=$hint
+        required=$required
+    }
+{/template}
+
+{template scheduleField inputName=schedule label='Schedule' blankOption='Select' blankValue='' default=null error='' hint='' required=false}
+    <?php
+        $this->scope['options'] = [];
+
+        foreach (Slate\Courses\Schedule::getAll(['order' => ['Title' => 'ASC']]) AS $Schedule) {
+            $this->scope['options'][$Schedule->Handle] = $Schedule->Title;
+        }
+    ?>
+
+    {selectField
+        options=$options
+        inputName=$inputName
+        label=$label
+        blankOption=$blankOption
+        blankValue=$blankValue
+        default=$default->Handle
         error=$error
         hint=$hint
         required=$required
