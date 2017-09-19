@@ -10,8 +10,10 @@ use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\CMS\BlogPost;
 use Emergence\CMS\BlogRequestHandler;
+use Emergence\Locations\LocationsRequestHandler;
 
 use Slate\Term;
+use Slate\TermsRequestHandler;
 
 
 class SectionsRequestHandler extends \RecordsRequestHandler
@@ -41,16 +43,37 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
-        if (!empty($_REQUEST['term'])) {
-            if ($_REQUEST['term'] == 'current') {
-                if (!$Term = Term::getClosest()) {
-                    return static::throwInvalidRequestError('No current term could be found');
-                }
-            } elseif (!$Term = Term::getByHandle($_REQUEST['term'])) {
+        if (empty($_REQUEST['term']) || $_REQUEST['term'] == 'current') {
+            if (!$Term = Term::getClosest()) {
+                return static::throwInvalidRequestError('No current term could be found');
+            }
+        } elseif ($_REQUEST['term'] != '*') {
+            if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST['term'])) {
                 return static::throwNotFoundError('term not found');
             }
+        }
 
+        if ($Term) {
             $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
+            $responseData['Term'] = $Term;
+        }
+
+        if (!empty($_REQUEST['course'])) {
+            if (!$Course = CoursesRequestHandler::getRecordByHandle($_REQUEST['course'])) {
+                return static::throwNotFoundError('course not found');
+            }
+
+            $conditions['CourseID'] = $Course->ID;
+            $responseData['Course'] = $Course;
+        }
+
+        if (!empty($_REQUEST['location'])) {
+            if (!$Location = LocationsRequestHandler::getRecordByHandle($_REQUEST['location'])) {
+                return static::throwNotFoundError('location not found');
+            }
+
+            $conditions['LocationID'] = $Location->ID;
+            $responseData['Location'] = $Location;
         }
 
         if (!empty($_REQUEST['enrolled_user'])) {
