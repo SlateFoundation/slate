@@ -15,6 +15,8 @@ use Slate\Progress\Note;
 
 class Student extends User
 {
+    public static $classLabel = 'Student';
+
     public static $fields = [
         'StudentNumber' => [
             'type' => 'string'
