@@ -14,6 +14,8 @@ class User extends Person implements IUser
     public static $onPasswordSet;
     public static $fallbackUserFinders = [];
 
+    public static $classLabel = 'User';
+
     public static $defaultClass = __CLASS__;
     public static $subClasses = [__CLASS__];
     public static $singularNoun = 'user';
