@@ -32,8 +32,42 @@ class InvitationsRequestHandler extends \RequestHandler
             case 'accept':
                 return static::handleAcceptRequest();
             default:
-                return static::throwInvalidRequestError();
+                return static::handleBrowseRequest();
         }
+    }
+
+    public static function handleBrowseRequest()
+    {
+        $GLOBALS['Session']->requireAccountLevel('Staff');
+        $invitationClass = static::$invitationClass;
+        $conditions = [];
+
+        if (empty($_GET['status']) || $_GET['status'] == 'pending') {
+            $conditions['Status'] = 'Pending';
+        } elseif ($_GET['status'] == 'used') {
+            $conditions['Status'] = 'Used';
+        } elseif ($_GET['status'] == 'revoked') {
+            $conditions['Status'] = 'Revoked';
+        }
+
+        if (!empty($_GET['recipient'])) {
+            $recipients = is_array($_GET['recipient']) ? $_GET['recipient'] : explode(',', $_GET['recipient']);
+            $recipientIds = [];
+
+            foreach ($recipients as $recipient) {
+                if (!$Person = PeopleRequestHandler::getRecordByHandle($recipient)) {
+                    return static::throwNotFoundError("Person $recipient not found");
+                }
+
+                $recipientIds[] = $Person->ID;
+            }
+
+            $conditions[] = 'RecipientID IN ('.implode(',', $recipientIds).')';
+        }
+
+        return static::respond('invitations', [
+            'data' => $invitationClass::getAllByWhere($conditions)
+        ]);
     }
 
     public static function handleVariablesRequest()
