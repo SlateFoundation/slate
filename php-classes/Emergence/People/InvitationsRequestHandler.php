@@ -94,7 +94,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
         // pre-flight loop over people to ensure they're all valid
         $people = [];
-        foreach (array_unique($requestData['people']) AS $invitation) {
+        foreach ($requestData['people'] AS $invitation) {
             if (is_numeric($invitation)) {
                 $invitation = [
                     'PersonID' => $invitation,
@@ -110,7 +110,7 @@ class InvitationsRequestHandler extends \RequestHandler
                 return static::throwInvalidRequestError('One or more of the requested invitation recipients does not have an email address on record.');
             }
 
-            $people[] = [
+            $people[$Person->ID] = [
                 'Recipient' => $Person,
                 'UserClass' => $invitation['UserClass']
             ];
