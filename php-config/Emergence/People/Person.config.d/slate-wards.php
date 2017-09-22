@@ -48,6 +48,6 @@ Person::$searchConditions['WardAdvisor'] = [
             ]
         );
 
-        return 'Emergence_People_Person.ID IN ('.implode(',', $ids).')';
+        return count($ids) ? 'Emergence_People_Person.ID IN ('.implode(',', $ids).')' : '0';
     }
 ];
