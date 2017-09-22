@@ -60,7 +60,7 @@
         <tbody>
         {foreach item=group from=$sectionsByCourse}
             <tr>
-                <th colspan="4">
+                <th colspan="5">
                     {if $group.Course->Department}
                         {$group.Course->Department->Title|escape}
                         &raquo;
