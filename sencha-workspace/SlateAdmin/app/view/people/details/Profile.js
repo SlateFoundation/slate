@@ -56,11 +56,10 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         items: [{
             xtype: 'combo',
             name: 'Class',
-            store: [
-                ['Emergence\\People\\Person', 'Person / Contact'],
-                ['Emergence\\People\\User', 'User'],
-                ['Slate\\People\\Student', 'Student']
-            ],
+            store: 'people.Classes',
+            queryMode: 'local',
+            valueField: 'name',
+            displayField: 'label',
             fieldLabel: 'Record Type',
             triggerAction: 'all',
             editable: false

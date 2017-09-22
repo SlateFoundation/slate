@@ -6,6 +6,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     requires: [
         'Ext.DomHelper',
         'Ext.window.MessageBox',
+        'Ext.data.StoreManager',
 
         /* global Slate */
         'Slate.API'
@@ -16,6 +17,11 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     views: [
         'people.Manager',
         'people.details.Profile'
+    ],
+
+    stores: [
+        'people.Classes',
+        'people.Groups'
     ],
 
     refs: {
@@ -89,8 +95,6 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     onPersonLoaded: function(profilePanel, person) {
         var me = this,
             profileForm = me.getProfileForm(),
-            groupsField = me.getGroupsField(),
-            groupsStore = groupsField.getStore(),
             siteEnv = window.SiteEnvironment || {},
             siteUserAccountLevel = siteEnv.user && siteEnv.user.AccountLevel,
             siteUserIsAdmin = siteUserAccountLevel == 'Administrator' || siteUserAccountLevel == 'Developer';
@@ -99,20 +103,12 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         me.getUsernameField().setReadOnly(!siteUserIsAdmin);
         me.getMasqueradeBtnCt().setVisible(siteUserIsAdmin && person.get('Username'));
 
-        // ensure groups store is loaded before loading record because boxselect doesn't hande re-setting unknown values after local store load
-        if (groupsStore.isLoaded()) {
+        profilePanel.setLoading('Loading&hellip;');
+        Ext.StoreMgr.requireLoaded(['people.Classes', 'people.Groups'], function() {
             profileForm.loadRecord(person);
+            profilePanel.setLoading(false);
             me.syncButtons();
-        } else {
-            profilePanel.setLoading('Loading groups&hellip;');
-            groupsStore.load({
-                callback: function() {
-                    profileForm.loadRecord(person);
-                    profilePanel.setLoading(false);
-                    me.syncButtons();
-                }
-            });
-        }
+        });
     },
 
     onClassChange: function(combo, personClass) {
