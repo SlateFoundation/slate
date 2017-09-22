@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.people.Invitations', {
     extend: 'Ext.data.Store',
 
@@ -27,5 +26,7 @@ Ext.define('SlateAdmin.store.people.Invitations', {
         defaultValue: false
     }, {
         name: 'UserClass'
+    }, {
+        name: 'Invitation'
     }]
 });

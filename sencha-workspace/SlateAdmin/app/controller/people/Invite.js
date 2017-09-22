@@ -5,6 +5,7 @@ Ext.define('SlateAdmin.controller.people.Invite', {
     extend: 'Ext.app.Controller',
     requires: [
         'Ext.window.MessageBox',
+        'Ext.data.StoreManager',
 
         /* global Slate */
         'Slate.API'
@@ -53,13 +54,15 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
 
     // event handlers
-    onOpenClick: function() {
+    onOpenClick: function(sendBtn) {
         var me = this,
             peopleGrid = me.getPeopleGrid(),
             peopleSelModel = peopleGrid.getSelectionModel(),
             selectedPeople = peopleSelModel.getSelection(),
             window = me.getInvitationsWindow(),
             store = me.getPeopleInvitationsStore();
+
+        sendBtn.disable();
 
         // select all people if none selected
         if (!selectedPeople.length) {
@@ -68,25 +71,48 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
         store.removeAll();
 
-        me.withClassesLoaded(function(classesStore) {
-            var defaultUserClass = classesStore.getAt(classesStore.findExact('userDefault', true));
+        Slate.API.request({
+            method: 'GET',
+            url: '/invitations',
+            headers: {
+                Accept: 'application/json'
+            },
+            params: {
+                status: 'pending',
+                recipient: Ext.Array.map(selectedPeople, function(person) {
+                    return person.getId();
+                }).join(',')
+            },
+            success: function(response) {
+                var invitationsData = (Ext.decode(response.responseText)||{}).data || [],
+                    invitationsByRecipient = Ext.Array.toValueMap(invitationsData, 'RecipientID');
 
-            store.add(Ext.Array.map(selectedPeople, function(person) {
-                var personClass = classesStore.getById(person.get('Class'));
+                me.withClassesLoaded(function(classesStore) {
+                    var defaultUserClass = classesStore.getAt(classesStore.findExact('userDefault', true));
 
-                if (!Ext.Array.contains(personClass.get('interfaces'), 'Emergence\\People\\IUser')) {
-                    personClass = defaultUserClass;
-                }
+                    store.add(Ext.Array.map(selectedPeople, function(person) {
+                        var personClass = classesStore.getById(person.get('Class')),
+                            invitation = invitationsByRecipient[person.getId()];
 
-                return {
-                    Person: person,
-                    selected: Boolean(person.get('PrimaryEmail')),
-                    UserClass: personClass.getId()
-                };
-            }));
+                        if (!Ext.Array.contains(personClass.get('interfaces'), 'Emergence\\People\\IUser')) {
+                            personClass = defaultUserClass;
+                        }
+
+                        return {
+                            Person: person,
+                            selected: Boolean(person.get('PrimaryEmail')),
+                            UserClass: personClass.getId(),
+                            Invited: invitation ? Ext.Date.parse(invitation.Created, 'timestamp') : null
+                        };
+                    }));
+
+                    sendBtn.enable();
+                    window.show();
+                });
+            }
         });
 
-        window.show();
+
     },
 
     onGridCheckHeaderClick: function(headerCt) {
@@ -121,10 +147,12 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
         Slate.API.request({
             url: '/invitations/preview',
+            headers: {
+                Accept: 'application/json'
+            },
             params: {
                 personId: invitation.get('Person').getId(),
-                message: invitationsWindow.down('textareafield').getValue(),
-                format: 'json'
+                message: invitationsWindow.down('textareafield').getValue()
             },
             success: function(response) {
                 var r = Ext.decode(response.responseText);

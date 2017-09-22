@@ -5,6 +5,8 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
         'Ext.form.field.ComboBox',
         'Ext.grid.Panel',
         'Ext.grid.plugin.CellEditing',
+        'Ext.grid.column.Check',
+        'Ext.grid.column.Date',
         'Ext.selection.CheckboxModel',
         'Ext.data.ChainedStore'
     ],
@@ -127,7 +129,9 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                     return metaData.column.getEditor().getStore().getById(userClass).get('label');
                 }
             }, {
+                xtype: 'datecolumn',
                 text: 'Invite Sent',
+                dataIndex: 'Invited',
                 emptyCellText: 'Never'
             }]
         }
