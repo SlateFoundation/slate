@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.people.invitations.Panel', {
     extend: 'Ext.Panel',
     xtype: 'people-invitationspanel',
@@ -7,8 +6,7 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
         'Ext.grid.Panel',
         'Ext.grid.plugin.CellEditing',
         'Ext.selection.CheckboxModel',
-
-        'SlateAdmin.store.people.UserClasses'
+        'Ext.data.ChainedStore'
     ],
 
     layout: {
@@ -62,11 +60,11 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
             }, {
                 text: 'First Name',
                 dataIndex: 'FirstName',
-                flex: 1
+                width: 100
             }, {
                 text: 'Last Name',
-                flex: 1,
-                dataIndex: 'LastName'
+                dataIndex: 'LastName',
+                width: 100
             }, {
                 text: 'Email Address',
                 flex: 2,
@@ -74,16 +72,16 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                 emptyCellText: '<em>Add email to invite</em>'
             }, {
                 text: 'Account Status',
-                flex: 2,
+                width: 150,
                 dataIndex: 'Person',
                 sortable: false,
                 renderer: function(Person, metaData) {
                     var cls, text;
 
-                    if (Person.get('Class') == 'Person' || Person.get('AccountLevel') == 'Contact') {
+                    if (Person.get('Class') == 'Emergence\\People\\Person' || Person.get('AccountLevel') == 'Contact') {
                         text = 'Name only, no login';
                         cls = 'person-nologin';
-                    } else if(Person.get('Class') == 'Student') {
+                    } else if (Person.get('Class') == 'Slate\\People\\Student') {
                         if (Person.get('Username')) {
                             text = 'Student';
                             cls = 'student';
@@ -105,17 +103,32 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
                     return text;
                 }
             }, {
-                text: 'User Class',
+                text: 'Invite As',
                 dataIndex: 'UserClass',
-                flex: 2,
+                width: 100,
                 editor: {
                     xtype: 'combo',
-                    displayField: 'value',
-                    store: 'people.UserClasses',
+                    valueField: 'name',
+                    displayField: 'label',
+                    store: {
+                        type: 'chained',
+                        source: 'people.Classes',
+                        filters: [{
+                            filterFn: function(item) {
+                                return Ext.Array.contains(item.get('interfaces'), 'Emergence\\People\\IUser');
+                            }
+                        }]
+                    },
                     matchFieldWidth: false,
                     queryMode: 'local',
                     editable: false
+                },
+                renderer: function(userClass, metaData) {
+                    return metaData.column.getEditor().getStore().getById(userClass).get('label');
                 }
+            }, {
+                text: 'Invite Sent',
+                emptyCellText: 'Never'
             }]
         }
     }, {

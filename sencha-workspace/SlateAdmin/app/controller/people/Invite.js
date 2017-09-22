@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
     stores: [
         'people.Invitations',
-        'people.UserClasses'
+        'people.Classes'
     ],
 
     refs: {
@@ -51,14 +51,6 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         }
     },
 
-    listen: {
-        store: {
-            '#people.UserClasses': {
-                load: 'onUserClassesLoad'
-            }
-        }
-    },
-
 
     // event handlers
     onOpenClick: function() {
@@ -76,21 +68,20 @@ Ext.define('SlateAdmin.controller.people.Invite', {
 
         store.removeAll();
 
-        me.withUserClassesLoaded(function(userClassesStore) {
-            var userClasses = userClassesStore.collect('value'),
-                defaultUserClass = me.getPeopleInvitationsStore().getModel().getField('UserClass').getDefaultValue();
+        me.withClassesLoaded(function(classesStore) {
+            var defaultUserClass = classesStore.getAt(classesStore.findExact('userDefault', true));
 
             store.add(Ext.Array.map(selectedPeople, function(person) {
-                var personClass = person.get('Class');
+                var personClass = classesStore.getById(person.get('Class'));
 
-                if (!Ext.Array.contains(userClasses, personClass)) {
+                if (!Ext.Array.contains(personClass.get('interfaces'), 'Emergence\\People\\IUser')) {
                     personClass = defaultUserClass;
                 }
 
                 return {
                     Person: person,
                     selected: Boolean(person.get('PrimaryEmail')),
-                    UserClass: personClass
+                    UserClass: personClass.getId()
                 };
             }));
         });
@@ -216,8 +207,8 @@ Ext.define('SlateAdmin.controller.people.Invite', {
         });
     },
 
-    withUserClassesLoaded: function (callback, scope) {
-        var classesStore = this.getPeopleUserClassesStore();
+    withClassesLoaded: function (callback, scope) {
+        var classesStore = this.getPeopleClassesStore();
 
         if (classesStore.isLoaded()) {
             Ext.callback(callback, scope, [classesStore]);
@@ -229,14 +220,5 @@ Ext.define('SlateAdmin.controller.people.Invite', {
                 Ext.callback(callback, scope, [classesStore]);
             }
         });
-    },
-
-    onUserClassesLoad: function(store, records, successful, operation) {
-        var response = successful && Ext.decode(operation.getResponse().responseText),
-            defaultCls = response && response.default;
-
-        if (defaultCls) {
-            this.getPeopleInvitationsStore().getModel().getField('UserClass').defaultValue = defaultCls;
-        }
     }
 });
