@@ -170,7 +170,7 @@ class InvitationsRequestHandler extends \RequestHandler
             Mailer::sendFromTemplate($Person->EmailRecipient, 'loginInvitation', [
                 'Sender' => $GLOBALS['Session']->Person,
                 'Invitation' => $Invitation,
-                'message' => static::_getMessageFromTemplate($_REQUEST['message'], $Invitation)
+                'message' => static::_getMessageFromTemplate($requestData['message'], $Invitation)
             ]);
         }
 
