@@ -24,7 +24,7 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         }]
     },{
         dock: 'bottom',
-        
+
         xtype: 'container',
         layout: 'fit',
         padding: 10,
@@ -45,7 +45,10 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         labelSeparator: '',
         labelAlign: 'right',
         labelPad: 10,
-        autoSelect: false // only for combo boxes
+
+        // only for combo boxes:
+        autoSelect: false,
+        matchFieldWidth: false
     },
     items: [{
         xtype: 'combo',

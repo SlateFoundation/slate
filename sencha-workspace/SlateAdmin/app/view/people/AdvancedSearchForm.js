@@ -74,6 +74,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             fieldLabel: 'Advisor',
             displayField: 'FullName',
             valueField: 'Username',
+            matchFieldWidth: false,
             emptyText: 'Any',
             queryMode: 'local',
             store: {
@@ -105,6 +106,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             fieldLabel: 'Ward Advisor',
             displayField: 'FullName',
             valueField: 'Username',
+            matchFieldWidth: false,
             emptyText: 'Any',
             queryMode: 'local',
             store: {
