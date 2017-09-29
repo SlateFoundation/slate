@@ -8,6 +8,15 @@ use UserUnauthorizedException;
 
 class LinkUtil
 {
+    protected static function sortLinks($a, $b)
+    {
+        if ($a['weight'] == $b['weight']) {
+            return strnatcmp($a['label'], $b['label']);
+        }
+
+        return $a['weight'] < $b['weight'] ? -1 : 1;
+    }
+
     public static function mergeSources($sources, $context = null)
     {
         $links = [];
@@ -27,6 +36,8 @@ class LinkUtil
 
             $links = LinkUtil::mergeTree($links, LinkUtil::normalizeTree($newLinks, $context));
         }
+
+        uasort($links, [static::class, 'sortLinks']);
 
         return $links;
     }
@@ -105,6 +116,13 @@ class LinkUtil
             // copy normalized children to link
             if (count($children)) {
                 $link['children'] = static::normalizeTree($children, $context);
+            }
+
+            // apply weight
+            if (empty($link['weight'])) {
+                $link['weight'] = 0;
+            } else {
+                $link['weight'] = (int)$link['weight'];
             }
 
             // choose output key for link
