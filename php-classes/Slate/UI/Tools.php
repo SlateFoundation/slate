@@ -6,6 +6,7 @@ use Slate;
 
 class Tools implements ILinksSource
 {
+    public static $weight = -500;
     public static $tools = [];
 
     public static function __classLoaded()
@@ -40,6 +41,7 @@ class Tools implements ILinksSource
         return [
             'Tools' => empty($_SESSION['User']) ? null : [
                 '_icon' => 'tools',
+                '_weight' => -500,
                 '_children' => static::$tools
             ]
         ];

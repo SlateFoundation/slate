@@ -4,43 +4,69 @@ namespace Slate\UI\Adapters;
 
 class ManageSlate implements \Slate\UI\ILinksSource
 {
+    public static $enabled = true;
+    public static $weight = 900;
     public static $parentTree = 'Tools';
+    public static $icon = 'tools';
+
+    public static $people = true;
+    public static $courseSections = true;
+    public static $schoolSettings = true;
+    public static $pages = true;
 
     public static function getLinks($context = null)
     {
         $manageLinks = static::getManageLinks();
+        
+        if (empty($manageLinks)) {
+            return null;
+        }
 
-        return !empty($manageLinks) && static::$parentTree ? [static::$parentTree => $manageLinks] : $manageLinks;
+        return static::$parentTree ? [static::$parentTree => $manageLinks] : $manageLinks;
     }
 
     public static function getManageLinks()
     {
-        if (empty($_SESSION['User']) || !$_SESSION['User']->hasAccountLevel('Staff')) {
+        if (!static::$enabled || empty($_SESSION['User']) || !$_SESSION['User']->hasAccountLevel('Staff')) {
             return [];
         }
 
-        return [
-            'Manage Slate' => [
-                '_href' => '/manage',
-                '_icon' => 'tools',
+        $menu = [
+            '_href' => '/manage',
+            '_icon' => static::$icon,
+            '_weight' => static::$weight
+        ];
 
-                'People' => [
-                    '_href' => '/manage#people',
-                    '_icon' => 'users'
-                ],
-                'Course Sections' => [
-                    '_href' => '/manage#course-sections',
-                    '_icon' => 'books'
-                ],
-                'School Settings' => [
-                    '_href' => '/manage#settings',
-                    '_icon' => 'gears'
-                ],
-                'Pages' => [
-                    '_href' => '/pages',
-                    '_icon' => 'records'
-                ]
-            ]
+        if (static::$people) {
+            $menu['People'] = [
+                '_href' => '/manage#people',
+                '_icon' => 'users'
+            ];
+        }
+
+        if (static::$courseSections) {
+            $menu['Course Sections'] = [
+                '_href' => '/manage#course-sections',
+                '_icon' => 'books'
+            ];
+        }
+
+        if (static::$schoolSettings) {
+            $menu['School Settings'] = [
+                '_href' => '/manage#settings',
+                '_icon' => 'gears'
+            ];
+        }
+
+        if (static::$pages) {
+            $menu['Pages'] = [
+                '_href' => '/pages',
+                '_icon' => 'records'
+            ];
+        }
+
+        return [
+            'Manage Slate' => $menu
         ];
     }
 }

@@ -4,10 +4,16 @@ namespace Slate\UI\Adapters;
 
 class GoogleApps implements \Slate\UI\ILinksSource
 {
+    public static $enabled = true;
+    public static $weight = -400;
     public static $parentTree = 'Tools';
 
     public static function getLinks($context = null)
     {
+        if (!static::$enabled) {
+            return [];
+        }
+
         $appsLinks = static::getGoogleAppsLinks();
 
         return static::$parentTree ? [static::$parentTree => $appsLinks] : $appsLinks;
@@ -21,6 +27,7 @@ class GoogleApps implements \Slate\UI\ILinksSource
             return [
                 'Google Apps' => [
                     '_icon' => 'gapps',
+                    '_weight' => static::$weight,
                     '_href' => $_SESSION['User']->hasAccountLevel('Administrator') ? 'https://admin.google.com/a/'.$domain : null,
                     'Email' => [
                         '_icon' => 'gmail',
