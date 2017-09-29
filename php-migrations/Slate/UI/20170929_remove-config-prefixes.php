@@ -21,4 +21,4 @@ foreach ($trees AS $tree) {
 }
 
 
-return $renamed ? static::STATUS_SKIPPED : static::STATUS_EXECUTED;
+return $renamed ? static::STATUS_EXECUTED : static::STATUS_SKIPPED;
