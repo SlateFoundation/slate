@@ -8,6 +8,9 @@ use Slate\Courses\Section;
 
 class Courses implements \Slate\UI\ILinksSource
 {
+    public static $enabled = true;
+    public static $weight = -1000;
+
     public static $courseIcons = [
         'arithmetic' => [
             'courseCodes' => ['ALG']
@@ -68,14 +71,17 @@ class Courses implements \Slate\UI\ILinksSource
 
     public static function getLinks($context = null)
     {
-        if (empty($_SESSION['User'])) {
+        if (!static::$enabled || empty($_SESSION['User'])) {
             return [];
         }
+
+        $weight = static::$weight;
 
         $linkGroups = [
             'Courses' => [
                 '_icon' => 'courses',
                 '_href' => Section::$collectionRoute,
+                '_weight' => $weight++,
                 '_children' => array_map(function(Section $Section) {
                     return [
                         '_id' => $Section->Code,
@@ -98,6 +104,7 @@ class Courses implements \Slate\UI\ILinksSource
                     '_icon' => 'courses',
                     '_href' => Section::$collectionRoute,
                     '_label' => $Ward->FirstNamePossessive . ' Courses',
+                    '_weight' => $weight++,
                     '_children' => array_map(function(Section $Section) {
                         return [
                             '_id' => $Section->Code,
