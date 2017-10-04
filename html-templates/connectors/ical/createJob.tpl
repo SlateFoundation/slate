@@ -25,21 +25,21 @@
                 Pretend
                 <input type="checkbox" name="pretend" value="true" {refill field=pretend checked="true" default="true"}>
             </label>
-            (Check to prevent saving any changes to the database)
+            <span class="hint">Check to prevent saving any changes to the database</span>
         </p>
         <p>
             <label>
                 Create Template
                 <input type="checkbox" name="createTemplate" value="true" {refill field=createTemplate checked="true"}>
             </label>
-            (Check to create a template job that can be repeated automatically instead of running it now)
+            <span class="hint">Check to create a template job that can be repeated automatically instead of running it now</span>
         </p>
         <p>
             <label>
                 Email report
-                <input type="text" name="reportTo" {refill field=reportTo} length="100">
+                <input type="text" name="reportTo" value="{refill field=reportTo}" length="100">
             </label>
-            Email recipient or list of recipients to send post-sync report to
+            <span class="hint">Email recipient or list of recipients to send post-sync report to</span>
         </p>
 
         <p>
@@ -54,6 +54,7 @@
                 </ul>
             </label>
         </p>
+
         <input type="submit" value="Synchronize">
     </form>
 {/block}
