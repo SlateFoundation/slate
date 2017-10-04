@@ -29,28 +29,28 @@
     				Pretend
     				<input type="checkbox" name="pretend" value="true" {refill field=pretend checked="true" default="true"}>
     			</label>
-    			(Check to prevent saving any changes to the database)
+    			<span class="hint">Check to prevent saving any changes to the database</span>
     		</p>
     		<p>
     			<label>
     				Create Template
     				<input type="checkbox" name="createTemplate" value="true" {refill field=createTemplate checked="true"}>
     			</label>
-    			(Check to create a template job that can be repeated automatically instead of running it now)
+    			<span class="hint">Check to create a template job that can be repeated automatically instead of running it now</span>
     		</p>
         	<p>
     			<label>
     				Email report
-    				<input type="text" name="reportTo" {refill field=reportTo} length="100">
+    				<input type="text" name="reportTo" value="{refill field=reportTo}" length="100">
     			</label>
-    			Email recipient or list of recipients to send post-sync report to
+    			<span class="hint">Email recipient or list of recipients to send post-sync report to</span>
     		</p>
             <p>
     			<label>
     				Auto Capitalize
     				<input type="checkbox" name="autoCapitalize" value="true" {refill field=autoCapitalize checked="true"}>
     			</label>
-    			(Check to make best-case at correct capitalization for proper nouns if input case is mangled)
+    			<span class="hint">Check to make best-case at correct capitalization for proper nouns if input case is mangled</span>
     		</p>
         </fieldset>
         <fieldset>
@@ -60,56 +60,56 @@
     				Update usernames
     				<input type="checkbox" name="updateUsernames" value="true" {refill field=updateUsernames checked="true"}>
     			</label>
-    			(Check to change a user's username if the site's configured generator comes up with a new one)
+    			<span class="hint">Check to change a user's username if the site's configured generator comes up with a new one</span>
     		</p>
             <p>
         		<label>
     				Update passwords
     				<input type="checkbox" name="updatePasswords" value="true" {refill field=updatePasswords checked="true"}>
     			</label>
-    			(Check to change a existing users' passwords if one is specified in the sheet)
+    			<span class="hint">Check to change a existing users' passwords if one is specified in the sheet</span>
     		</p>
             <p>
                 <label>
     				Update about text
     				<input type="checkbox" name="updateAbout" value="true" {refill field=updateAbout checked="true"}>
     			</label>
-    			(Check to change set a user's About text from the spreadsheet even if they already have an entry)
+    			<span class="hint">Check to change set a user's About text from the spreadsheet even if they already have an entry</span>
     		</p>
             <p>
                 <label>
     				Match existing users with full names
     				<input type="checkbox" name="matchFullNames" value="true" {refill field=matchFullNames checked="true"}>
     			</label>
-    			(Check to try to match existing users by their first/last name if no unique ID match succeeds)
+    			<span class="hint">Check to try to match existing users by their first/last name if no unique ID match succeeds</span>
     		</p>
             <p>
             	<label>
     				Auto-assign email address
     				<input type="checkbox" name="autoAssignEmail" value="true" {refill field=autoAssignEmail checked="true" default="true"}>
     			</label>
-    			(Check to automatically assign an email address if the spreadsheet provides none and `Slate::$userEmailDomain` is set)
+    			<span class="hint">Check to automatically assign an email address if the spreadsheet provides none and <code>Slate::$userEmailDomain</code> is set</span>
     		</p>
             <p>
         		<label>
     				Students CSV
-    				<input type="text" name="studentsCsv" {refill field=studentsCsv} length="255">
+    				<input type="text" name="studentsCsv" value="{refill field=studentsCsv}" length="255">
     			</label>
-    			URL captured by downloading a <strong>Students</strong> worksheet as CSV from a public link
+    			<span class="hint">URL captured by downloading a <strong>Students</strong> worksheet as CSV from a public link</span>
     		</p>
             <p>
         		<label>
     				Alumni CSV
-    				<input type="text" name="alumniCsv" {refill field=alumniCsv} length="255">
+    				<input type="text" name="alumniCsv" value="{refill field=alumniCsv}" length="255">
     			</label>
-    			URL captured by downloading a <strong>Alumni</strong> worksheet as CSV from a public link
+    			<span class="hint">URL captured by downloading a <strong>Alumni</strong> worksheet as CSV from a public link</span>
     		</p>
             <p>
         		<label>
     				Staff CSV
-    				<input type="text" name="staffCsv" {refill field=staffCsv} length="255">
+    				<input type="text" name="staffCsv" value="{refill field=staffCsv}" length="255">
     			</label>
-    			URL captured by downloading a <strong>Staff</strong> worksheet as CSV from a public link
+    			<span class="hint">URL captured by downloading a <strong>Staff</strong> worksheet as CSV from a public link</span>
     		</p>
         </fieldset>
         <fieldset>
@@ -122,29 +122,29 @@
     						<option value="{$Term->Handle}" {refill field=masterTerm selected=$Term->Handle}>{$Term->Title|escape}</option>
     					{/foreach}
     				</select>
-                    For sections and schedules, the school year to import in to
     			</label>
+                <span class="hint">For sections and schedules, the school year to import in to</span>
     		</p>
             <p>
             	<label>
     				Sections CSV
-    				<input type="text" name="sectionsCsv" {refill field=sectionsCsv} length="255">
+    				<input type="text" name="sectionsCsv" value="{refill field=sectionsCsv}" length="255">
     			</label>
-    			URL captured by downloading a <strong>Course Sections</strong> worksheet as CSV from a public link
+    			<span class="hint">URL captured by downloading a <strong>Course Sections</strong> worksheet as CSV from a public link</span>
     		</p>
             <p>
             	<label>
     				Enrollments CSV
-    				<input type="text" name="enrollmentsCsv" {refill field=enrollmentsCsv} length="255">
+    				<input type="text" name="enrollmentsCsv" value="{refill field=enrollmentsCsv}" length="255">
     			</label>
-    			URL captured by downloading a <strong>Enrollments</strong> worksheet as CSV from a public link
+    			<span class="hint">URL captured by downloading a <strong>Enrollments</strong> worksheet as CSV from a public link</span>
     		</p>
             <p>
                 <label>
                     Course Code Seperator
-                    <input type="text" name="enrollmentDivider" {refill field=enrollmentDivider} length="5">
+                    <input type="text" name="enrollmentDivider" value="{refill field=enrollmentDivider}" length="5">
                 </label>
-                If more then one course code is present in each cell, specify the character that divides each course here.
+                <span class="hint">If more then one course code is present in each cell, specify the character that divides each course here</span>
             </p>
         </fieldset>
 
