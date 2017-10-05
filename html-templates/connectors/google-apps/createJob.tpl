@@ -22,35 +22,35 @@
     				Pretend
     				<input type="checkbox" name="pretend" value="true" {refill field=pretend checked="true" default="true"}>
     			</label>
-    			(Check to prevent saving any changes to the database)
+    			<span class="hint">Check to prevent saving any changes to the database</span>
     		</p>
     		<p>
     			<label>
     				Create Template
     				<input type="checkbox" name="createTemplate" value="true" {refill field=createTemplate checked="true"}>
     			</label>
-    			(Check to create a template job that can be repeated automatically instead of running it now)
+    			<span class="hint">Check to create a template job that can be repeated automatically instead of running it now</span>
     		</p>
             <p>
     			<label>
     				Email report
-    				<input type="text" name="reportTo" {refill field=reportTo} length="100">
+    				<input type="text" name="reportTo" value="{refill field=reportTo}" length="100">
     			</label>
-    			Email recipient or list of recipients to send post-sync report to
+    			<span class="hint">Email recipient or list of recipients to send post-sync report to</span>
     		</p>
             <p>
     			<label>
     				OAuth Token
-    				<input type="text" name="apiToken" {refill field=apiToken} length="100">
+    				<input type="text" name="apiToken" value="{refill field=apiToken}" length="100">
     			</label>
-    			(<a href="https://developers.google.com/apis-explorer/#p/admin/directory_v1/directory.users.list?domain={Slate::$userEmailDomain|escape:url}&_h=2&">steal one here</a>)
+    			<span class="hint">Steal one <a href="https://developers.google.com/apis-explorer/#p/admin/directory_v1/directory.users.list?domain={Slate::$userEmailDomain|escape:url}&_h=2&">here</a></span>
     		</p>
         	<p>
     			<label>
     				Push Users
     				<input type="checkbox" name="pushUsers" value="true" {refill field=pushUsers checked="true" default="true"}>
     			</label>
-    			Check to push users to Google Apps
+    			<span class="hint">Check to push users to Google Apps</span>
     		</p>
         </fieldset>
 
