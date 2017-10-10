@@ -2,16 +2,15 @@
 
 namespace Slate\People;
 
+use Exception;
+
 use DB;
 use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\People\Groups\Group;
-use Emergence\People\GuardianRelationship;
-use ProgressNote, NarrativeReport, InterimReport, StandardsPromptGrade;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
-use Slate\Progress\Note;
 
 class Student extends User
 {
@@ -41,20 +40,6 @@ class Student extends User
             'type' => 'one-one'
             ,'class' => Person::class
             ,'local' => 'AdvisorID'
-        ]
-        ,'Guardians' => [
-            'type' => 'many-many'
-            ,'class' => Person::class
-            ,'linkClass' => GuardianRelationship::class
-            ,'linkLocal' => 'PersonID'
-            ,'linkForeign' => 'RelatedPersonID'
-            ,'conditions' => ['Link.Class = "Emergence\\\\People\\\\GuardianRelationship"']
-        ]
-        ,'GuardianRelationships' => [
-            'type' => 'one-many'
-            ,'class' => GuardianRelationship::class
-            ,'foreign' => 'PersonID'
-            ,'conditions' => ['Class' => GuardianRelationship::class]
         ]
     ];
 
@@ -134,18 +119,18 @@ class Student extends User
             case 'organization':
             case 'group':
                 if (!$Group = Group::getByHandle($groupHandle)) {
-                    throw new \Exception('Group not found');
+                    throw new Exception('Group not found');
                 }
 
                 return $filterResult($Group->getAllPeople());
             case 'section':
                 if (!$Section = Section::getByHandle($groupHandle)) {
-                    throw new \Exception('Section not found');
+                    throw new Exception('Section not found');
                 }
 
                 return $filterResult($Section->Students);
             default:
-                throw new \Exception('Group type not recognized');
+                throw new Exception('Group type not recognized');
         }
     }
 
