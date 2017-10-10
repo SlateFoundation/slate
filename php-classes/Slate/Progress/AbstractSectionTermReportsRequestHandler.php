@@ -113,6 +113,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 $emailData = static::getEmailTemplateData($reports);
 
                 // add central achive recipient
+                // TODO: make this configurable
                 if (Slate::$userEmailDomain) {
                     if (count($emailData['students']) == 1) {
                         $recipients[] = 'progress+'.$emailData['students'][0]->Username.'@'.Slate::$userEmailDomain;
@@ -122,7 +123,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 }
 
                 // send email
-                $emailsCount += Mailer::sendFromTemplate(implode(', ', $recipients), 'reports', $emailData);
+                $emailsCount += Mailer::sendFromTemplate(implode(', ', $recipients), static::getTemplateName($recordClass::$pluralNoun), $emailData);
             }
 
             return static::respond('emailsSent', [
