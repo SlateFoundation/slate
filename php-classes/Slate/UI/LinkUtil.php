@@ -57,32 +57,56 @@ class LinkUtil
                     '_href' => $value
                 ];
             } elseif ($value instanceof Tag) {
+                $value = [
+                    '_tag' => $value
+                ];
+            } elseif ($value instanceof ActiveRecord) {
+                $value = [
+                    '_record' => $value
+                ];
+            } elseif (!is_array($value)) {
+                throw new \UnexpectedValueException('Link tree value must be array, string, or ActiveRecord instance');
+            }
+
+            
+            // apply dynamically-derived attributes
+            if (!empty($value['_tag'])) {
                 $children = [];
 
-                foreach ($value->getReadableItems() AS $TagItem) {
+                foreach ($value['_tag']->getReadableItems() AS $TagItem) {
                     $children[$TagItem->Context->getHandle()] = [
                         '_href' => $TagItem->Context->getUrl(),
                         '_label' => $TagItem->Context->getTitle()
                     ];
                 }
 
-                $value = [
-                    '_label' => is_string($key) ? $key : $value->getTitle(),
-                    '_href' => $value->getUrl()
-                ];
+                if (empty($value['_label'])) {
+                    $value['_label'] = is_string($key) ? $key : $value['_tag']->getTitle();
+                }
+
+                if (empty($value['_href'])) {
+                    $value['_href'] = $value['_tag']->getUrl();
+                }
 
                 if (count($children)) {
-                    $value['_children'] = $children;
+                    $value['_children'] = !empty($value['_children']) ? array_merge($value['_children'], $children) : $children;
                 }
-            } elseif ($value instanceof ActiveRecord) {
-                $value = [
-                    '_label' => is_string($key) ? $key : $value->getTitle(),
-                    '_href' => $value->getUrl(),
-                    '_iconSrc' => $context && property_exists($context, 'preferredIconSize') && $context::$preferredIconSize ? $value->getThumbnailURL($context::$preferredIconSize) : null
-                ];
-            } elseif (!is_array($value)) {
-                throw new \UnexpectedValueException('Link tree value must be array, string, or ActiveRecord instance');
             }
+
+            if (!empty($value['_record'])) {
+                if (empty($value['_label'])) {
+                    $value['_label'] = is_string($key) ? $key : $value['_record']->getTitle();
+                }
+
+                if (empty($value['_href'])) {
+                    $value['_href'] = $value['_record']->getUrl();
+                }
+
+                if (empty($value['_iconSrc'])) {
+                    $value['_iconSrc'] = $context && property_exists($context, 'preferredIconSize') && $context::$preferredIconSize ? $value['_record']->getThumbnailURL($context::$preferredIconSize) : null;
+                }
+            }
+
 
             // each item in array is either an attribute for this link or a sublink
             $link = [];
@@ -132,7 +156,11 @@ class LinkUtil
                 $key = $link['label'];
             }
 
-            $outputTree[$key] = $link;
+
+            // add to output if there is any content
+            if (!empty($link['href']) || !empty($link['children'])) {
+                $outputTree[$key] = $link;
+            }
         }
 
         return $outputTree;
