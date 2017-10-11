@@ -572,7 +572,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
 
         for (; i < studentsLength; i++) {
             student = studentsStore.getAt(i);
-            report = reportsStore.query('StudentID', student.getId()).first();
+            report = reportsStore.getAt(reportsStore.findExact('StudentID', student.getId()));
 
             student.beginEdit();
             student.set('report', report || null, { dirty: false });
