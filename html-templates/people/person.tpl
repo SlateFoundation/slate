@@ -35,18 +35,15 @@
                 </footer>
             </div>
         </div>
-        
+
         <div class="sidebar-col">
             <div class="col-inner">
-
-                {$Person = $data}
-            
                 {if $Person->PrimaryPhoto}
                 <div class="sidebar-item">
                     <a href="{$Person->PrimaryPhoto->WebPath}" class="display-photo-link"><img class="display-photo" src="{$Person->PrimaryPhoto->getThumbnailRequest(646,646)}" alt="Profile Photo: {$Person->FullName|escape}" style="max-width:100%;height:auto" width=323 height=323 /></a>
                 </div>
                 {/if}
-            
+
                 <div class="sidebar-item">
                 {if $Person->Biography}
                     <div class="well about-bio">
@@ -60,36 +57,66 @@
                     </div>
                 {/if}
                 </div>
-            
+
                 {if $.Session->hasAccountLevel('Staff')}
-                <div class="sidebar-item">
-                    <div class="well profile-contact-info">
-                        <h4 class="well-title">Contact Info <small class="muted">(Staff-Only)</small></h4>
-                        <dl class="kv-list">
-                            {if $Person->Email}
-                                <div class="dli">
-                                    <dt>Email</dt>
-                                    <dd><a href="mailto:{$Person->Email}" title="Email {$Person->FullName|escape}">{$Person->Email}</a></dd>
-                                </div>
-                            {/if}
-                
-                            {if $Person->Phone}
-                                <div class="dli">
-                                    <dt>Phone</dt>
-                                    <!-- tel: URL scheme fails in desktop browsers -->
-                                    <dd><!-- <a href="tel:{$Person->Phone}"> -->{$Person->Phone|phone}<!-- </a> --></dd>
-                                </div>
-                            {/if}
- 
-                             {foreach $Person->Relationships Relationship}
-                                <div class="dli">
-                                    <dt>{$Relationship->Label}</dt>
-                                    <dd>{personLink $Relationship->RelatedPerson photo=no}</dd>
-                                </div>
-                            {/foreach}
-                        </dl>
+                    <div class="sidebar-item">
+                        <div class="well profile-contact-info">
+                            <h4 class="well-title">Contact Info <small class="muted">(Staff-Only)</small></h4>
+                            <dl class="kv-list">
+                                {if $Person->Email}
+                                    <div class="dli">
+                                        <dt>Email</dt>
+                                        <dd><a href="mailto:{$Person->Email}" title="Email {$Person->FullName|escape}">{$Person->Email}</a></dd>
+                                    </div>
+                                {/if}
+
+                                {if $Person->Phone}
+                                    <div class="dli">
+                                        <dt>Phone</dt>
+                                        <!-- tel: URL scheme fails in desktop browsers -->
+                                        <dd><!-- <a href="tel:{$Person->Phone}"> -->{$Person->Phone|phone}<!-- </a> --></dd>
+                                    </div>
+                                {/if}
+
+                                {foreach $Person->Relationships Relationship}
+                                    <div class="dli">
+                                        <dt>{$Relationship->Label}</dt>
+                                        <dd>{personLink $Relationship->RelatedPerson photo=no}</dd>
+                                    </div>
+                                {/foreach}
+                            </dl>
+                        </div>
                     </div>
-                </div>
+                {/if}
+
+                {template linksEntry entry}
+                    {if $entry.href}<a href="{$entry.href|escape}">{/if}
+                        {$entry.label|escape}
+                    {if $entry.href}</a>{/if}
+                {/template}
+
+                {foreach item=linkGroup from=Slate\UI\UserProfile::getLinks($Person)}
+                    <div class="sidebar-item">
+                        <div class="well profile-contact-info">
+                            <h4 class="well-title">{linksEntry $linkGroup}</h4>
+
+                            <dl class="kv-list">
+                                {foreach item=link from=$linkGroup.children}
+                                    {if $link.children}
+                                        <div class="dli">
+                                            <dt>{linksEntry $link}</dt>
+                                            {foreach item=subLink from=$link.children}
+                                                <dd>{linksEntry $subLink}</dd>
+                                            {/foreach}
+                                        </div>
+                                    {else}
+                                        <dd>{linksEntry $link}</dd>
+                                    {/if}
+                                {/foreach}
+                            </dl>
+                        </div>
+                    </div>
+                {/foreach}
             </div>
         </div>
     </div>
