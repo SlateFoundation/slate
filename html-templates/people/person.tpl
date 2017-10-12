@@ -87,6 +87,16 @@
                                     <dd>{personLink $Relationship->RelatedPerson photo=no}</dd>
                                 </div>
                             {/foreach}
+
+                            <div class="dli">
+                                <dt>Student Dashboards</dt>
+                                <dd>
+                                    <ul class="plain">
+                                        <li><a href="/cbl/dashboards/demonstrations/student?student={$Person->Username}">Competency Dashboard</a></li>
+                                        <li><a href="/cbl/dashboards/tasks/student?student={$Person->Username}#section/all">Task Dashboard</a></li>
+                                    </ul>
+                                </dd>
+                            </div>
                         </dl>
                     </div>
                 </div>
