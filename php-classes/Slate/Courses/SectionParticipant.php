@@ -36,6 +36,9 @@ class SectionParticipant extends \ActiveRecord
             'type' => 'timestamp'
             ,'notnull' => false
         ]
+        ,'Cohort' => [
+            'notnull' => false
+        ]
     ];
 
     public static $indexes = [
