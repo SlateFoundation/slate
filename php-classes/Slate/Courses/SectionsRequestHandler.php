@@ -111,6 +111,8 @@ class SectionsRequestHandler extends \RecordsRequestHandler
     public static function handleRecordRequest(ActiveRecord $Section, $action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
+            case 'cohorts':
+                return static::handleCohortsRequest($Section);
             case 'participants':
                 return static::handleParticipantsRequest($Section);
             case 'post':
@@ -124,6 +126,29 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             default:
                 return parent::handleRecordRequest($Section, $action);
         }
+    }
+
+    public static function handleCohortsRequest(Section $Section)
+    {
+        try {
+            $cohorts = \DB::allValues('Cohort', '
+                SELECT Cohort FROM `%s`
+                WHERE CourseSectionID = %d
+                AND Cohort IS NOT NULL
+                GROUP BY Cohort
+                ORDER BY Cohort ASC
+            ', [
+                SectionParticipant::$tableName,
+                $Section->ID
+            ]);
+        } catch (\TableNotFoundException $e) {
+            $cohorts = [];
+        }
+
+        return static::respond('sectionCohorts', [
+            'success' => true,
+            'data' => $cohorts
+        ]);
     }
 
     public static function handleParticipantsRequest(Section $Section)
