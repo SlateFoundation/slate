@@ -101,6 +101,34 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 dataIndex: 'PersonUsername',
                 tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
             },{
+                header: 'Start Date',
+                dataIndex: 'StartDate',
+                editable: true,
+                flex: 1,
+                renderer: function(value) {
+                    if (value instanceof Date) {
+                        return (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
+                    }
+                    return value;
+                },
+                editor: {
+                    xtype: 'datefield'
+                }
+            },{
+                header: 'End Date',
+                dataIndex: 'EndDate',
+                editable: true,
+                flex: 1,
+                renderer: function(value) {
+                    if (value instanceof Date) {
+                        return (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
+                    }
+                    return value;
+                },
+                editor: {
+                    xtype: 'datefield'
+                }
+            },{
                 header: 'Cohort',
                 dataIndex: 'Cohort',
                 itemId: 'cohortField',

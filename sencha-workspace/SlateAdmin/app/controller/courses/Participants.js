@@ -42,8 +42,8 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         'courses-sections-details-participants grid': {
             deleteclick: 'onDeleteParticipantClick'
         },
-        'courses-sections-details-participants #cohortEditor': {
-            focusleave: 'onCohortChange'
+        'courses-sections-details-participants field': {
+            focusleave: 'onFieldChange'
         }
     },
 
@@ -121,11 +121,13 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
     },
 
     // update api on cohort change
-    onCohortChange: function(combo, event, eOpts) {
+    onFieldChange: function(inputField, event, eOpts) {
         var me = this,
+            params = {},
             participantsPanel, section, participantsGrid, participantRow;
 
-        if (combo.isDirty()) {
+        if (inputField.isDirty()) {
+            params[inputField.dataIndex] = inputField.getValue();
             participantsPanel = me.getParticipantsPanel();
             section = participantsPanel.getLoadedSection();
             participantsGrid = me.getParticipantsGrid();
@@ -135,9 +137,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             SlateAdmin.API.request({
                 method: 'POST',
                 url: '/sections/' + section.get('Code') + '/participants/' + participantRow.data.PersonID,
-                params: {
-                    Cohort: combo.getValue()
-                },
+                params: params,
                 success: function(response) {
                     var responseData = response.data,
                         participant = responseData.data,
