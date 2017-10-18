@@ -49,7 +49,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         stateful: true,
         stateId: 'sectionDetails',
         disabled: true,
-        width: 450,
+        width: 635,
         layout: {
             type: 'vbox',
             align: 'stretch'
