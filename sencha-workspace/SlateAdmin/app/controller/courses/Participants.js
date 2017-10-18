@@ -146,7 +146,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
                     if (responseData.success && participant) {
                         participantsStore.findRecord('ID', participant.ID).commit();
                     } else {
-                        Ext.Msg.alert('Not added', responseData.message || 'There was an error updating the participant\'s cohort.');
+                        Ext.Msg.alert('Not updated', 'There was an error updating the participant\'s information.');
                     }
 
                     participantsPanel.setLoading(false);
