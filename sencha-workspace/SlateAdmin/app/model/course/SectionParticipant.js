@@ -56,6 +56,10 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             allowNull: true
         },
         {
+            name: "Cohort",
+            type: "string"
+        },
+        {
             name: "Person"
         },
         {
