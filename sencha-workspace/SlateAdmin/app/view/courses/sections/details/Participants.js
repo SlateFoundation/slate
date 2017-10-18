@@ -66,7 +66,6 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
         store: {
             model: 'SlateAdmin.model.course.SectionParticipant',
             groupField: 'Role',
-            remoteSort: true,
             proxy: {
                 type: 'slateapi',
                 startParam: false,
