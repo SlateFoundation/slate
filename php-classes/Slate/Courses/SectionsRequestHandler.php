@@ -214,6 +214,25 @@ class SectionsRequestHandler extends \RecordsRequestHandler
                 'success' => true,
                 'data' => $Participant
             ]);
+
+        // handle edit request
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $GLOBALS['Session']->requireAccountLevel('Staff');
+
+            $Participant->setFields($_POST);
+
+            if ($Participant->validate()) {
+                $Participant->save();
+                return static::respond('participantEdit', [
+                    'success' => true,
+                    'data' => $Participant
+                ]);
+            }
+
+            return static::respond('participantEdit', [
+                'success' => false,
+                'data' => $Participant
+            ]);
         }
 
         if (!$GLOBALS['Session']->hasAccountLevel('Staff') && $GLOBALS['Session']->PersonID != $Participant->PersonID) {
