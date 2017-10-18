@@ -41,6 +41,9 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         },
         'courses-sections-details-participants grid': {
             deleteclick: 'onDeleteParticipantClick'
+        },
+        'courses-sections-details-participants #cohortEditor': {
+            focusleave: 'onCohortChange'
         }
     },
 
@@ -117,6 +120,40 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         );
     },
 
+    // update api on cohort change
+    onCohortChange: function(combo, event, eOpts) {
+        var me = this,
+            participantsPanel, section, participantsGrid, participantRow;
+
+        if (combo.isDirty()) {
+            participantsPanel = me.getParticipantsPanel();
+            section = participantsPanel.getLoadedSection();
+            participantsGrid = me.getParticipantsGrid();
+            participantRow = participantsGrid.getSelection()[0];
+
+            participantsPanel.setLoading('Updating participant&hellip;');
+            SlateAdmin.API.request({
+                method: 'POST',
+                url: '/sections/' + section.get('Code') + '/participants/' + participantRow.data.PersonID,
+                params: {
+                    Cohort: combo.getValue()
+                },
+                success: function(response) {
+                    var responseData = response.data,
+                        participant = responseData.data,
+                        participantsStore = participantsGrid.getStore();
+
+                    if (responseData.success && participant) {
+                        participantsStore.findRecord('ID', participant.ID).commit();
+                    } else {
+                        Ext.Msg.alert('Not added', responseData.message || 'There was an error updating the participant\'s cohort.');
+                    }
+
+                    participantsPanel.setLoading(false);
+                }
+            });
+        }
+    },
 
     // internal methods
     doAddParticipant: function() {

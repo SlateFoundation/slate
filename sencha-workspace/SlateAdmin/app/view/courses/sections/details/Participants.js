@@ -107,6 +107,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 editable: true,
                 editor: {
                     xtype: 'combo',
+                    itemId: 'cohortEditor',
                     displayField : 'Cohort',
                     valueField: 'Cohort',
                     forceSelection: false,
