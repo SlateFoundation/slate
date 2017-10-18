@@ -145,12 +145,12 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             },
             success: function(response) {
                 var responseData = response.data,
-                    particpant = responseData.data;
+                    participant = responseData.data;
 
-                if (responseData.success && particpant) {
-                    particpant.Person = personField.findRecordByValue(personId).getData();
-                    particpant = participantsStore.getProxy().getReader().readRecords([particpant]);
-                    participantsStore.add(particpant.records[0]);
+                if (responseData.success && participant) {
+                    participant.Person = personField.findRecordByValue(personId).getData();
+                    participant = participantsStore.getProxy().getReader().readRecords([participant]);
+                    participantsStore.add(participant.records[0]);
                     personField.reset();
                     personField.focus();
 
