@@ -78,7 +78,14 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                     type: 'json',
                     rootProperty: 'data'
                 }
-            }
+            },
+            sorters: [{
+                property: 'PersonLastName',
+                direction: 'ASC'
+            },{
+                property: 'PersonFirstName',
+                direction: 'ASC'
+            }]
         },
         columns: {
             defaults: {
