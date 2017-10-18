@@ -52,6 +52,10 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
         viewConfig: {
             emptyText: 'No participants enrolled'
         },
+        plugins: {
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        },
         features: [{
             ftype: 'grouping',
             collapsible: false,
@@ -96,6 +100,35 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 header: 'Username',
                 dataIndex: 'PersonUsername',
                 tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
+            },{
+                header: 'Cohort',
+                dataIndex: 'Cohort',
+                itemId: 'cohortField',
+                editable: true,
+                editor: {
+                    xtype: 'combo',
+                    displayField : 'Cohort',
+                    valueField: 'Cohort',
+                    forceSelection: false,
+                    store: {
+                        fields: [
+                            'Cohort'
+                        ],
+                        proxy: {
+                            type: 'slateapi',
+                            reader: {
+                                type: 'json',
+                                transform: function(response) {
+                                    return Ext.Array.map(response.data, function(cohort) {
+                                        return {
+                                            'Cohort': cohort
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             },{
                 xtype: 'actioncolumn',
                 width: 40,

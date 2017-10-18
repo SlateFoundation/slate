@@ -21,7 +21,8 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         },
         participantsGrid: 'courses-sections-details-participants grid',
         roleField: 'courses-sections-details-participants #roleField',
-        personField: 'courses-sections-details-participants #personField'
+        personField: 'courses-sections-details-participants #personField',
+        cohortField: 'courses-sections-details-participants #cohortField'
     },
 
 
@@ -56,6 +57,9 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         // configure proxy and load store
         participantsStore.getProxy().url = '/sections/' + section.get('Code') + '/participants';
         participantsStore.load();
+
+        // configure proxy url for cohort field
+        me.getCohortField().editor.store.proxy.url = '/sections/' + section.get('Code') + '/cohorts';
     },
 
     onFieldSpecialKey: function(field, ev) {
