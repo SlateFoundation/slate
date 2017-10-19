@@ -317,6 +317,26 @@ class Section extends \VersionedRecord
         ]);
     }
 
+    public function getCohorts()
+    {
+        try {
+            $cohorts = \DB::allValues('Cohort', '
+                SELECT Cohort FROM `%s`
+                WHERE CourseSectionID = %d
+                AND Cohort IS NOT NULL
+                GROUP BY Cohort
+                ORDER BY Cohort ASC
+            ', [
+                SectionParticipant::$tableName,
+                $this->ID
+            ]);
+        } catch (\TableNotFoundException $e) {
+            $cohorts = [];
+        }
+
+        return $cohorts;
+    }
+
     // search SQL generators
     protected static function getTeacherSearchSql($term, $condition)
     {

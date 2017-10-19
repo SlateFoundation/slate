@@ -130,24 +130,9 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleCohortsRequest(Section $Section)
     {
-        try {
-            $cohorts = \DB::allValues('Cohort', '
-                SELECT Cohort FROM `%s`
-                WHERE CourseSectionID = %d
-                AND Cohort IS NOT NULL
-                GROUP BY Cohort
-                ORDER BY Cohort ASC
-            ', [
-                SectionParticipant::$tableName,
-                $Section->ID
-            ]);
-        } catch (\TableNotFoundException $e) {
-            $cohorts = [];
-        }
-
         return static::respond('sectionCohorts', [
             'success' => true,
-            'data' => $cohorts
+            'data' => $Section->getCohorts()
         ]);
     }
 
