@@ -124,8 +124,22 @@ class Student extends User
 
                 return $filterResult($Group->getAllPeople());
             case 'section':
+
+                // parse cohort
+                if (preg_match('/\scohort\s/', $groupHandle)) {
+                    list($groupHandle, $cohort) = preg_split('/\scohort\s/', $groupHandle, 2);
+                }
+
                 if (!$Section = Section::getByHandle($groupHandle)) {
                     throw new Exception('Section not found');
+                }
+
+                if ($cohort) {
+                    $cohortStudents = array_values(array_filter($Section->Students, function($Person) use ($Section, $cohort) {
+                        return SectionParticipant::getByWhere(['PersonID' => $Person->ID, 'Cohort' => $cohort]);
+                    }));
+
+                    return $filterResult($cohortStudents);
                 }
 
                 return $filterResult($Section->Students);
