@@ -47,12 +47,12 @@
                 <div class="sidebar-item">
                 {if $Person->Biography}
                     <div class="well about-bio">
-                        <h4 class="well-title">Bio</h4>
+                        <h3 class="well-title">Bio</h3>
                         {$Person->Biography|escape|markdown}
                     </div>
                 {elseif $Person->About}
                     <div class="well about-bio">
-                        <h4 class="well-title">About Me</h4>
+                        <h3 class="well-title">About Me</h3>
                         {$Person->About|escape|markdown}
                     </div>
                 {/if}
@@ -61,7 +61,7 @@
                 {if $.Session->hasAccountLevel('Staff')}
                     <div class="sidebar-item">
                         <div class="well profile-contact-info">
-                            <h4 class="well-title">Contact Info <small class="muted">(Staff-Only)</small></h4>
+                            <h3 class="well-title">Contact Info <small class="muted">(Staff-Only)</small></h3>
                             <dl class="kv-list">
                                 {if $Person->Email}
                                     <div class="dli">
@@ -98,7 +98,7 @@
                 {foreach item=linkGroup from=Slate\UI\UserProfile::getLinks($Person)}
                     <div class="sidebar-item">
                         <div class="well profile-contact-info">
-                            <h4 class="well-title">{linksEntry $linkGroup}</h4>
+                            <h3 class="well-title">{linksEntry $linkGroup}</h3>
 
                             <dl class="kv-list">
                                 {foreach item=link from=$linkGroup.children}
