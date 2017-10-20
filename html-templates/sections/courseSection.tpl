@@ -128,23 +128,34 @@
                     </dl>
                 </section>
 
+                {template linksEntry entry}
+                    {if $entry.href}<a href="{$entry.href|escape}">{/if}
+                        {$entry.label|escape}
+                    {if $entry.href}</a>{/if}
+                {/template}
 
-                {$launchers = $Section->getLaunchers()}
-                {if count($launchers)}
-                    <h3>Other Websites</h3>
-                    {foreach from=$launchers item=launcher}
-                        <a class="button" href="{$launcher.url|escape}" target="_blank">{$launcher.title|escape}</a>
-                    {/foreach}
-                {/if}
+                {foreach item=linkGroup from=Slate\UI\SectionProfile::getLinks($Section)}
+                    <div class="sidebar-item">
+                        <div class="well profile-contact-info">
+                            <h3 class="well-title">{linksEntry $linkGroup}</h3>
 
-
-                {if $.User->hasAccountLevel(Staff)}
-                    <h3>Course Tools</h3>
-                    <ul class="course-section-tools plain">
-                        <li class="copy-email"><a class="button" href="#copy-section-emails">Copy Email List</a></li>
-                        <li class="download-roster"><a class="button" href="{$Section->getURL()}/students?format=csv&columns=LastName,FirstName,Gender,Username,PrimaryEmail,PrimaryPhone,StudentNumber,Advisor,GraduationYear">Download Roster</a></li>
-                    </ul>
-                {/if}
+                            <dl class="kv-list">
+                                {foreach item=link from=$linkGroup.children}
+                                    {if $link.children}
+                                        <div class="dli">
+                                            <dt>{linksEntry $link}</dt>
+                                            {foreach item=subLink from=$link.children}
+                                                <dd>{linksEntry $subLink}</dd>
+                                            {/foreach}
+                                        </div>
+                                    {else}
+                                        <dd>{linksEntry $link}</dd>
+                                    {/if}
+                                {/foreach}
+                            </dl>
+                        </div>
+                    </div>
+                {/foreach}
 
                 <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
                 <ul class="roster teachers">

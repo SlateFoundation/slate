@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"> {* responsive viewport *}
     {/block}
 
-    <title>{block "title"}{Site::getConfig(label)}{/block}</title>
+    <title>{block "title"}{$.Site.title|escape}{/block}</title>
 
     {block "css"}
         {include includes/site.css.tpl}
