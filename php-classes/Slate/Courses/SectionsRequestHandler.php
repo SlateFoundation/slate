@@ -14,6 +14,7 @@ use Emergence\Locations\LocationsRequestHandler;
 
 use Slate\Term;
 use Slate\TermsRequestHandler;
+use Slate\People\Student;
 
 
 class SectionsRequestHandler extends \RecordsRequestHandler
@@ -246,8 +247,29 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             }
         }
 
+        // conditionally filter students by cohort
+        if (!empty($_REQUEST['cohort'])) {
+            try {
+                $students = Student::getAllByQuery('
+                    SELECT `%1$s`.* FROM `%1$s`
+                    JOIN `%2$s` ON `%1$s`.ID = `%2$s`.PersonID
+                    WHERE `%2$s`.CourseSectionID = %3$d
+                    AND `%2$s`.Cohort = "%4$s"
+                ', [
+                    Student::$tableName,
+                    SectionParticipant::$tableName,
+                    $Section->ID,
+                    $_REQUEST['cohort']
+                ]);
+            } catch (\TableNotFoundException $e) {
+                $students = [];
+            }
+        } else {
+            $students = $Section->Students;
+        }
+
         return static::respond('students', [
-            'data' => $Section->Students
+            'data' => $students
         ]);
     }
 }
