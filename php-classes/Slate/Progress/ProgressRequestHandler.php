@@ -82,12 +82,12 @@ class ProgressRequestHandler extends \RequestHandler
         // build cache of timestamps for quick sorting with no modification violations
         $recordTimestamps = [];
         foreach ($records AS $Record) {
-            $recordTimestamps[$Record->ID] = $Record->getTimestamp();
+            $recordTimestamps[$Record->getRootClass()][$Record->ID] = $Record->getTimestamp();
         }
 
         // apply unified sorting across all types
         usort($records, function ($r1, $r2) use($recordTimestamps) {
-            return $recordTimestamps[$r2->ID] - $recordTimestamps[$r1->ID];
+            return $recordTimestamps[$r2->getRootClass()][$r2->ID] - $recordTimestamps[$r1->getRootClass()][$r1->ID];
         });
 
         // return results and list of included types
