@@ -408,15 +408,11 @@ class Person extends VersionedRecord implements IPerson
             return false;
         }
 
-        $containedGroups = DB::allRecords('SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
-            Groups\Group::$tableName
-            ,$group->Left
-            ,$group->Right
+        $containedGroups = DB::allValues('ID', 'SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
+            Groups\Group::$tableName,
+            $group->Left,
+            $group->Right
         ]);
-
-        $containedGroups = array_map(function($group) {
-            return $group['ID'];
-        },$containedGroups);
 
         $condition = $matchedCondition['join']['aliasName'].'.GroupID'.' IN ('.implode(',',$containedGroups).')';
 
