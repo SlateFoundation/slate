@@ -98,7 +98,7 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
 
     public function getTimestamp()
     {
-        return $this->Sent;
+        return $this->Sent ?: $this->Modified ?: $this->Created;
     }
 
     public function getAuthor()

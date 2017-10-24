@@ -199,8 +199,7 @@ class Message extends \VersionedRecord
 
             return count($newEmailRecipients);
         } else {
-            print_r(error_get_last());
-            throw new \Exception('Failed to inject message into email system');
+            throw new \Exception('Failed to inject message into email system:'.PHP_EOL.PHP_EOL.error_get_last());
         }
     }
 
