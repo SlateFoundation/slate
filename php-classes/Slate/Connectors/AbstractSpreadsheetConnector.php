@@ -154,7 +154,8 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $enrollmentColumns = [
         'School ID Number' => 'StudentNumber',
             'School ID' => 'StudentNumber',
-            'Student Number' => 'StudentNumber'
+            'Student Number' => 'StudentNumber',
+        'Username' => 'Username'
     ];
 
 
@@ -179,9 +180,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         'CourseCode'
     ];
 
-    public static $enrollmentRequiredColumns = [
-        'StudentNumber'
-    ];
+    public static $enrollmentRequiredColumns = [];
 
 
     // workflow implementations
@@ -672,18 +671,22 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
 
 
-            // check required fields
-            if (empty($row['StudentNumber'])) {
-                $results['failed']['missing-student-number']++;
-                $Job->error('Missing enrollment student number for row #{rowNumber}', ['rowNumber' => $results['rows-analyzed']]);
-                continue;
-            }
-
-
             // get student
-            if (!$Student = Student::getByStudentNumber($row['StudentNumber'])) {
-                $results['failed']['student-not-found'][$row['StudentNumber']]++;
-                $Job->error('Failed to lookup student by number for {studentNumber}', ['studentNumber' => $row['StudentNumber']]);
+            if (!empty($row['StudentNumber'])) {
+                if (!$Student = Student::getByStudentNumber($row['StudentNumber'])) {
+                    $results['failed']['student-number-not-found'][$row['StudentNumber']]++;
+                    $Job->error('Failed to lookup student by number for {studentNumber}', ['studentNumber' => $row['StudentNumber']]);
+                    continue;
+                }
+            } elseif (!empty($row['Username'])) {
+                if (!$Student = Student::getByUsername($row['Username'])) {
+                    $results['failed']['student-username-not-found'][$row['Username']]++;
+                    $Job->error('Failed to lookup student by username for {username}', ['username' => $row['Username']]);
+                    continue;
+                }
+            } else {
+                $results['failed']['missing-student-identifier']++;
+                $Job->error('Missing enrollment student identifier for row #{rowNumber}', ['rowNumber' => $results['rows-analyzed']]);
                 continue;
             }
 
