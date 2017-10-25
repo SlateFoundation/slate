@@ -405,7 +405,7 @@ class Person extends VersionedRecord implements IPerson
         $group = Groups\Group::getByHandle($handle);
 
         if (!$group) {
-            return false;
+            return 'FALSE';
         }
 
         $containedGroups = DB::allValues('ID', 'SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
