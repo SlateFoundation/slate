@@ -5,6 +5,8 @@ namespace Emergence\People;
 use DB;
 use VersionedRecord;
 use PhotoMedia;
+use Exception;
+
 use Emergence\Comments\Comment;
 use Emergence\CRM\Message;
 use Emergence\Connectors\Mapping;
@@ -190,12 +192,14 @@ class Person extends VersionedRecord implements IPerson
         ,'RelatedTo' => [
             'qualifiers' => ['related-to']
             ,'points' => 1
-            ,'sql' => 'ID IN (SELECT IF(RelatedPerson.ID = relationships.RelatedPersonID, relationships.PersonID, relationships.RelatedPersonID) FROM people RelatedPerson RIGHT JOIN relationships ON (RelatedPerson.ID IN (relationships.PersonID, relationships.RelatedPersonID)) WHERE RelatedPerson.Username = "%s")'
+            ,'callback' => 'getRelatedToConditions'
+            ,'valueType' => 'username'
         ]
         ,'RelatedToID' => [
             'qualifiers' => ['related-to-id']
             ,'points' => 1
-            ,'sql' => 'ID IN (SELECT IF(RelatedPerson.ID = relationships.RelatedPersonID, relationships.PersonID, relationships.RelatedPersonID) FROM people RelatedPerson RIGHT JOIN relationships ON (RelatedPerson.ID IN (relationships.PersonID, relationships.RelatedPersonID)) WHERE RelatedPerson.ID = %u)'
+            ,'callback' => 'getRelatedToConditions'
+            ,'valueType' => 'id'
         ]
     ];
 
@@ -338,7 +342,7 @@ class Person extends VersionedRecord implements IPerson
         $parts = preg_split('/\s+/', trim($fullName), 2);
 
         if (count($parts) != 2) {
-            throw new \Exception('Full name must contain a first and last name separated by a space.');
+            throw new Exception('Full name must contain a first and last name separated by a space.');
         }
 
         return [
@@ -408,15 +412,51 @@ class Person extends VersionedRecord implements IPerson
             return 'FALSE';
         }
 
-        $containedGroups = DB::allValues('ID', 'SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
-            Groups\Group::$tableName,
-            $group->Left,
-            $group->Right
+        $containedGroups = DB::allRecords('SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
+            Groups\Group::$tableName
+            ,$group->Left
+            ,$group->Right
         ]);
+
+        $containedGroups = array_map(function($group) {
+            return $group['ID'];
+        },$containedGroups);
 
         $condition = $matchedCondition['join']['aliasName'].'.GroupID'.' IN ('.implode(',',$containedGroups).')';
 
         return $condition;
+    }
+
+    public static function getRelatedToConditions($identifier, $matchedCondition)
+    {
+        if ($matchedCondition['valueType'] == 'id') {
+            $Person = static::getById($identifier);
+        } elseif ($matchedCondition['valueType'] == 'username') {
+            $Person = User::getByUsername($identifier);
+        } else {
+            throw new Exception('Invalid valueType');
+        }
+
+        if (!$Person) {
+            return 'FALSE';
+        }
+
+        $relatedIds = DB::allValues('ID',
+            '
+                SELECT DISTINCT IF(RelatedPersonID = %2$u, PersonID, RelatedPersonID) AS ID
+                  FROM `%1$s`
+                 WHERE %2$u IN (PersonID, RelatedPersonID)
+            ',[
+                Relationship::$tableName, // 1
+                $Person->ID // 2
+            ]
+        );
+
+        if (!count($relatedIds)) {
+            return 'FALSE';
+        }
+
+        return static::getTableAlias() . '.ID IN (' . implode(',', $relatedIds) . ')';
     }
 
     public function getGroupIDs()
