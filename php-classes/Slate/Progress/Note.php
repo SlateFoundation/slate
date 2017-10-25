@@ -114,25 +114,37 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
 
     public static function getAllByStudent(IPerson $Student)
     {
+        $User = static::getUserFromEnvironment();
+
         return static::getAllByWhere([
             'ContextClass' => $Student->getRootClass(),
-            'ContextID' => $Student->ID
+            'ContextID' => $Student->ID,
+            'Status != "deleted"',
+            'Status != "draft-private" OR AuthorID = '.($User ? $User->ID : 0)
         ], ['order' => ['ID' => 'DESC']]);
     }
 
     public static function getAllByTerm(Term $Term)
     {
+        $User = static::getUserFromEnvironment();
+
         return static::getAllByWhere([
-            sprintf('Created BETWEEN "%s" AND "%S"', $Term->StartDate, $Term->EndDate)
+            sprintf('Created BETWEEN "%s" AND "%S"', $Term->StartDate, $Term->EndDate),
+            'Status != "deleted"',
+            'Status != "draft-private" OR AuthorID = '.($User ? $User->ID : 0)
         ], ['order' => ['ID' => 'DESC']]);
     }
 
     public static function getAllByStudentTerm(IPerson $Student, Term $Term)
     {
+        $User = static::getUserFromEnvironment();
+
         return static::getAllByWhere([
             'ContextClass' => $Student->getRootClass(),
             'ContextID' => $Student->ID,
-            sprintf('Created BETWEEN "%s" AND "%s"', $Term->StartDate, $Term->EndDate)
+            sprintf('Created BETWEEN "%s" AND "%s"', $Term->StartDate, $Term->EndDate),
+            'Status != "deleted"',
+            'Status != "draft-private" OR AuthorID = '.($User ? $User->ID : 0)
         ], ['order' => ['ID' => 'DESC']]);
     }
 }
