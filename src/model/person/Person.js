@@ -259,13 +259,14 @@ Ext.define('Slate.model.person.Person', {
     toUrl: function() {
         var me = this;
 
+        // TODO: append /profile via route rewriter in controller
         if (me.phantom) {
             return null;
         } else if (me.get('Username')) {
-            return 'people/lookup/'+me.get('Username');
+            return 'people/lookup/'+me.get('Username')+'/profile';
         }
 
-        return 'people/lookup/?id='+me.get('ID');
+        return 'people/lookup/?id='+me.get('ID')+'/profile';
     }
 });
 
