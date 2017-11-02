@@ -9,6 +9,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
             'Ext.grid.feature.Grouping',
             'Ext.grid.column.Action',
             'Ext.grid.column.Template',
+            'Ext.grid.column.Date',
             'Ext.form.field.ComboBox',
             'SlateAdmin.proxy.API',
             'SlateAdmin.widget.field.Person',
@@ -105,6 +106,8 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                     header: 'First Name',
                     dataIndex: 'PersonFirstName'
                 },{
+                    flex: 1,
+
                     header: 'Last Name',
                     dataIndex: 'PersonLastName'
                 },{
@@ -115,38 +118,27 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                     dataIndex: 'PersonUsername',
                     tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
                 },{
+                    width: 100,
+
+                    xtype: 'datecolumn',
                     header: 'Start',
                     dataIndex: 'StartDate',
-                    editable: true,
-                    flex: 1,
-                    renderer: function(value) {
-                        if (value instanceof Date) {
-                            return (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
-                        }
-                        return value;
-                    },
-                    editor: {
-                        xtype: 'datefield'
-                    }
+                    format:'Y-m-d',
+                    editor: 'datefield'
                 },{
+                    width: 100,
+
+                    xtype: 'datecolumn',
                     header: 'End',
                     dataIndex: 'EndDate',
-                    editable: true,
-                    flex: 1,
-                    renderer: function(value) {
-                        if (value instanceof Date) {
-                            return (value.getMonth() + 1) + '/' + value.getDate() + '/' + value.getFullYear();
-                        }
-                        return value;
-                    },
-                    editor: {
-                        xtype: 'datefield'
-                    }
+                    format:'Y-m-d',
+                    editor: 'datefield'
                 },{
+                    width: 100,
+
                     header: 'Cohort',
                     dataIndex: 'Cohort',
                     itemId: 'cohortField',
-                    editable: true,
                     editor: {
                         xtype: 'combo',
                         itemId: 'cohortField',
