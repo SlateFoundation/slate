@@ -1,8 +1,7 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
-        'Emergence.proxy.Records'
+        'SlateAdmin.proxy.API'
     ],
 
 
@@ -41,7 +40,8 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
         },
         {
             name: "Role",
-            type: "string"
+            type: "string",
+            values: ['Teacher', 'Assistant', 'Student', 'Observer']
         },
         {
             name: "StartDate",
@@ -78,5 +78,19 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             name: 'PersonID',
             mapping: 'Person.ID'
         }
-    ]
+    ],
+
+    proxy: {
+        type: 'slateapi',
+        startParam: false,
+        limitParam: false,
+        pageParam: false,
+        extraParams: {
+            include: 'Person'
+        },
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
 });

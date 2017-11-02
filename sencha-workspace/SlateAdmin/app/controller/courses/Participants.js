@@ -17,6 +17,8 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
     ],
 
     stores: [
+        'courses.SectionParticipants',
+        'courses.SectionParticipantRoles',
         'courses.SectionCohorts'
     ],
 
