@@ -115,7 +115,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                     dataIndex: 'PersonUsername',
                     tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
                 },{
-                    header: 'Start Date',
+                    header: 'Start',
                     dataIndex: 'StartDate',
                     editable: true,
                     flex: 1,
@@ -129,7 +129,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                         xtype: 'datefield'
                     }
                 },{
-                    header: 'End Date',
+                    header: 'End',
                     dataIndex: 'EndDate',
                     editable: true,
                     flex: 1,
