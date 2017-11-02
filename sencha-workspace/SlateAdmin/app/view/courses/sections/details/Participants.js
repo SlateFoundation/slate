@@ -149,28 +149,12 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                     editable: true,
                     editor: {
                         xtype: 'combo',
-                        itemId: 'cohortEditor',
-                        displayField : 'Cohort',
+                        itemId: 'cohortField',
+                        displayField: 'Cohort',
                         valueField: 'Cohort',
                         forceSelection: false,
-                        store: {
-                            fields: [
-                                'Cohort'
-                            ],
-                            proxy: {
-                                type: 'slateapi',
-                                reader: {
-                                    type: 'json',
-                                    transform: function(response) {
-                                        return Ext.Array.map(response.data, function(cohort) {
-                                            return {
-                                                'Cohort': cohort
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
+                        queryMode: 'local',
+                        store: 'courses.SectionCohorts'
                     }
                 },{
                     xtype: 'actioncolumn',

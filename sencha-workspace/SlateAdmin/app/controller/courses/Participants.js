@@ -12,6 +12,10 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         'courses.sections.details.Participants'
     ],
 
+    stores: [
+        'courses.SectionCohorts'
+    ],
+
     refs: {
         participantsPanel: {
             selector: 'courses-sections-details-participants',
@@ -60,7 +64,9 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         participantsStore.load();
 
         // configure proxy url for cohort field
-        me.getCohortField().editor.store.proxy.url = '/sections/' + section.get('Code') + '/cohorts';
+        me.getCoursesSectionCohortsStore().load({
+            url: '/sections/' + section.get('Code') + '/cohorts'
+        });
     },
 
     onFieldSpecialKey: function(field, ev) {
