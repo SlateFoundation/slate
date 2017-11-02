@@ -37,7 +37,7 @@ class SectionParticipant extends \ActiveRecord
             ,'notnull' => false
         ]
         ,'Cohort' => [
-            'notnull' => false
+            'default' => null
         ]
     ];
 

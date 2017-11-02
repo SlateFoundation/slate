@@ -320,7 +320,7 @@ class Section extends \VersionedRecord
     public function getCohorts()
     {
         try {
-            $cohorts = \DB::allValues('Cohort', '
+            return \DB::allValues('Cohort', '
                 SELECT DISTINCT Cohort FROM `%s`
                 WHERE CourseSectionID = %d
                 AND Cohort IS NOT NULL
@@ -330,10 +330,8 @@ class Section extends \VersionedRecord
                 $this->ID
             ]);
         } catch (\TableNotFoundException $e) {
-            $cohorts = [];
+            return [];
         }
-
-        return $cohorts;
     }
 
     // search SQL generators
