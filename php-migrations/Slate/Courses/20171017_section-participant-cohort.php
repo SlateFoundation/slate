@@ -10,7 +10,7 @@ if (!static::tableExists('course_section_participants')) {
 // migration
 if (!static::columnExists('course_section_participants', 'Cohort')) {
     print("Adding field `Cohort` to table `course_section_participants`'\n");
-    DB::nonQuery("ALTER TABLE `course_section_participants` ADD COLUMN `Cohort` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `EndDate`;");
+    DB::nonQuery("ALTER TABLE `course_section_participants` ADD COLUMN `Cohort` varchar(255) NULL default NULL");
     $skipped = false;
 }
 

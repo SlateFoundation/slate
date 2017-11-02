@@ -250,16 +250,16 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         // conditionally filter students by cohort
         if (!empty($_REQUEST['cohort'])) {
             try {
-                $students = Student::getAllByQuery('
-                    SELECT `%1$s`.* FROM `%1$s`
-                    JOIN `%2$s` ON `%1$s`.ID = `%2$s`.PersonID
-                    WHERE `%2$s`.CourseSectionID = %3$d
-                    AND `%2$s`.Cohort = "%4$s"
+                $students = Person::getAllByQuery('
+                    SELECT Person.* FROM `%1$s` Person
+                    JOIN `%2$s` SectionParticipant ON Person.ID = SectionParticipant.PersonID
+                    WHERE SectionParticipant.CourseSectionID = %3$u
+                    AND SectionParticipant.Cohort = "%4$s"
                 ', [
-                    Student::$tableName,
-                    SectionParticipant::$tableName,
-                    $Section->ID,
-                    $_REQUEST['cohort']
+                    Person::$tableName, // 1
+                    SectionParticipant::$tableName, // 2
+                    $Section->ID, // 3
+                    DB::escape($_REQUEST['cohort']) // 4
                 ]);
             } catch (\TableNotFoundException $e) {
                 $students = [];

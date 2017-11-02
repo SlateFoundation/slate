@@ -321,11 +321,10 @@ class Section extends \VersionedRecord
     {
         try {
             $cohorts = \DB::allValues('Cohort', '
-                SELECT Cohort FROM `%s`
+                SELECT DISTINCT Cohort FROM `%s`
                 WHERE CourseSectionID = %d
                 AND Cohort IS NOT NULL
-                GROUP BY Cohort
-                ORDER BY Cohort ASC
+                ORDER BY Cohort
             ', [
                 SectionParticipant::$tableName,
                 $this->ID
