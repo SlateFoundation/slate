@@ -34,16 +34,14 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             sectionloaded: 'onSectionLoaded'
         },
         'courses-sections-details-participants field': {
-            specialkey: 'onFieldSpecialKey'
+            specialkey: 'onFieldSpecialKey',
+            focusleave: 'onFieldChange'
         },
         'courses-sections-details-participants button[action=add-participant]': {
             click: 'onAddParticipantClick'
         },
         'courses-sections-details-participants grid': {
             deleteclick: 'onDeleteParticipantClick'
-        },
-        'courses-sections-details-participants field': {
-            focusleave: 'onFieldChange'
         }
     },
 
