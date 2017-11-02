@@ -12,6 +12,10 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         'courses.sections.details.Participants'
     ],
 
+    models: [
+        'Person@Slate.model.person'
+    ],
+
     stores: [
         'courses.SectionCohorts'
     ],
@@ -45,6 +49,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             click: 'onAddParticipantClick'
         },
         'courses-sections-details-participants grid': {
+            openclick: 'onOpenParticipantClick',
             deleteclick: 'onDeleteParticipantClick'
         }
     },
@@ -77,6 +82,10 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
     onAddParticipantClick: function() {
         this.doAddParticipant();
+    },
+
+    onOpenParticipantClick: function(grid, participant) {
+        this.redirectTo(this.getPersonModel().create(participant.get('Person')));
     },
 
     onDeleteParticipantClick: function(grid, participant) {

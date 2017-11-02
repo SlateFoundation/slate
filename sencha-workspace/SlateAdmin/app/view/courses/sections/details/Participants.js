@@ -8,7 +8,6 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
             'Ext.grid.Panel',
             'Ext.grid.feature.Grouping',
             'Ext.grid.column.Action',
-            'Ext.grid.column.Template',
             'Ext.grid.column.Date',
             'Ext.form.field.ComboBox',
             'SlateAdmin.proxy.API',
@@ -111,13 +110,6 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                     header: 'Last Name',
                     dataIndex: 'PersonLastName'
                 },{
-                    flex: 1,
-
-                    xtype: 'templatecolumn',
-                    header: 'Username',
-                    dataIndex: 'PersonUsername',
-                    tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
-                },{
                     width: 100,
 
                     xtype: 'datecolumn',
@@ -152,6 +144,11 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', function() {
                     xtype: 'actioncolumn',
                     width: 40,
                     items: [{
+                        action: 'open',
+                        iconCls: 'participant-open glyph-primary',
+                        glyph: 0xf007, // fa-user
+                        tooltip: 'Open profile'
+                    },{
                         action: 'delete',
                         iconCls: 'participant-delete glyph-danger',
                         glyph: 0xf056, // fa-minus-circle
