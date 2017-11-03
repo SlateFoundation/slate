@@ -8,6 +8,7 @@ class SectionParticipant extends \ActiveRecord
     public static $tableName = 'course_section_participants';
     public static $singularNoun = 'course participant';
     public static $pluralNoun = 'course participants';
+    public static $collectionRoute = '/section-participants';
 
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;

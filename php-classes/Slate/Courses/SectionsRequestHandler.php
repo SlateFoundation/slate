@@ -114,8 +114,6 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         switch ($action ? $action : $action = static::shiftPath()) {
             case 'cohorts':
                 return static::handleCohortsRequest($Section);
-            case 'participants':
-                return static::handleParticipantsRequest($Section);
             case 'post':
                 $GLOBALS['Session']->requireAuthentication();
                 return BlogRequestHandler::handleCreateRequest(BlogPost::create([
@@ -134,99 +132,6 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         return static::respond('sectionCohorts', [
             'success' => true,
             'data' => $Section->getCohorts()
-        ]);
-    }
-
-    public static function handleParticipantsRequest(Section $Section)
-    {
-        if ($personId = static::shiftPath()) {
-            if (!ctype_digit($personId) || !$Participant = SectionParticipant::getByWhere(['CourseSectionID' => $Section->ID, 'PersonID' => $personId])) {
-                return static::throwNotFoundError();
-            }
-
-            return static::handleParticipantRequest($Section, $Participant);
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $GLOBALS['Session']->requireAccountLevel('Staff');
-
-            $Participant = SectionParticipant::create($_POST);
-
-            if (!$Participant->validate()) {
-                return static::throwError(reset($Participant->validationErrors));
-            }
-
-            try {
-                $Participant->save();
-            } catch (DuplicateKeyException $e) {
-                return static::throwError('Person is already a participant in this section.');
-            }
-
-            return static::respond('participantAdded', [
-                'success' => true,
-                'data' => $Participant
-            ]);
-        }
-
-        if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
-            $userIsParticipant = false;
-
-            foreach ($Section->Participants AS $Participant) {
-                if ($Participant->PersonID == $GLOBALS['Session']->PersonID) {
-                    $userIsParticipant = true;
-                    break;
-                }
-            }
-
-            if (!$userIsParticipant) {
-                return static::throwUnauthorizedError();
-            }
-        }
-
-        return static::respond('sectionParticipants', [
-            'success' => true
-            ,'data' => $Section->Participants
-        ]);
-    }
-
-    public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-            $GLOBALS['Session']->requireAccountLevel('Staff');
-
-            $Participant->destroy();
-
-            return static::respond('participantDeleted', [
-                'success' => true,
-                'data' => $Participant
-            ]);
-
-        // handle edit request
-        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $GLOBALS['Session']->requireAccountLevel('Staff');
-
-            $Participant->setFields($_POST);
-
-            if ($Participant->validate()) {
-                $Participant->save();
-                return static::respond('participantEdit', [
-                    'success' => true,
-                    'data' => $Participant
-                ]);
-            }
-
-            return static::respond('participantEdit', [
-                'success' => false,
-                'data' => $Participant
-            ]);
-        }
-
-        if (!$GLOBALS['Session']->hasAccountLevel('Staff') && $GLOBALS['Session']->PersonID != $Participant->PersonID) {
-            return static::throwUnauthorizedError();
-        }
-
-        return static::respond('participant', [
-            'data' => $Participant
         ]);
     }
 
