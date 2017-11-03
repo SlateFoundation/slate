@@ -1,7 +1,7 @@
 Ext.define('SlateAdmin.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.API'
+        'SlateAdmin.proxy.Records'
     ],
 
 
@@ -12,7 +12,8 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
         {
             name: "ID",
             type: "int",
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: "Class",
@@ -23,12 +24,14 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             name: "Created",
             type: "date",
             dateFormat: "timestamp",
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: "CreatorID",
             type: "int",
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: "CourseSectionID",
@@ -57,40 +60,38 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
         },
         {
             name: "Cohort",
-            type: "string"
+            type: "string",
+            allowNull: true
         },
         {
-            name: "Person"
+            name: "Person",
+            persist: false
         },
         {
             name: 'PersonFirstName',
-            mapping: 'Person.FirstName'
+            mapping: 'Person.FirstName',
+            persist: false
         },
         {
             name: 'PersonLastName',
-            mapping: 'Person.LastName'
+            mapping: 'Person.LastName',
+            persist: false
         },
         {
             name: 'PersonUsername',
-            mapping: 'Person.Username'
-        },
-        {
-            name: 'PersonID',
-            mapping: 'Person.ID'
+            mapping: 'Person.Username',
+            persist: false
         }
     ],
 
     proxy: {
-        type: 'slateapi',
+        type: 'slaterecords',
+        url: '/section-participants',
         startParam: false,
         limitParam: false,
         pageParam: false,
         extraParams: {
             include: 'Person'
-        },
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
         }
     },
 });
