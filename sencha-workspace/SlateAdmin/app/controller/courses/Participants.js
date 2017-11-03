@@ -31,8 +31,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         },
         participantsGrid: 'courses-sections-details-participants grid',
         roleField: 'courses-sections-details-participants #roleField',
-        personField: 'courses-sections-details-participants #personField',
-        cohortField: 'courses-sections-details-participants #cohortField'
+        personField: 'courses-sections-details-participants #personField'
     },
 
 
