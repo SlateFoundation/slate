@@ -1,8 +1,7 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
-        'Emergence.proxy.Records'
+        'SlateAdmin.proxy.Records'
     ],
 
 
@@ -13,7 +12,8 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
         {
             name: "ID",
             type: "int",
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: "Class",
@@ -24,12 +24,14 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             name: "Created",
             type: "date",
             dateFormat: "timestamp",
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: "CreatorID",
             type: "int",
-            allowNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: "CourseSectionID",
@@ -41,7 +43,8 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
         },
         {
             name: "Role",
-            type: "string"
+            type: "string",
+            values: ['Teacher', 'Assistant', 'Student', 'Observer']
         },
         {
             name: "StartDate",
@@ -56,23 +59,39 @@ Ext.define('SlateAdmin.model.course.SectionParticipant', {
             allowNull: true
         },
         {
-            name: "Person"
+            name: "Cohort",
+            type: "string",
+            allowNull: true
+        },
+        {
+            name: "Person",
+            persist: false
         },
         {
             name: 'PersonFirstName',
-            mapping: 'Person.FirstName'
+            mapping: 'Person.FirstName',
+            persist: false
         },
         {
             name: 'PersonLastName',
-            mapping: 'Person.LastName'
+            mapping: 'Person.LastName',
+            persist: false
         },
         {
             name: 'PersonUsername',
-            mapping: 'Person.Username'
-        },
-        {
-            name: 'PersonID',
-            mapping: 'Person.ID'
+            mapping: 'Person.Username',
+            persist: false
         }
-    ]
+    ],
+
+    proxy: {
+        type: 'slaterecords',
+        url: '/section-participants',
+        startParam: false,
+        limitParam: false,
+        pageParam: false,
+        extraParams: {
+            include: 'Person'
+        }
+    },
 });

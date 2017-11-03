@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
     extend: 'SlateAdmin.view.courses.sections.details.AbstractDetails',
     xtype: 'courses-sections-details-participants',
@@ -6,7 +5,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
         'Ext.grid.Panel',
         'Ext.grid.feature.Grouping',
         'Ext.grid.column.Action',
-        'Ext.grid.column.Template',
+        'Ext.grid.column.Date',
         'Ext.form.field.ComboBox',
         'SlateAdmin.proxy.API',
         'SlateAdmin.widget.field.Person',
@@ -24,8 +23,11 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
             itemId: 'roleField',
             emptyText: 'Role',
             value: 'Student',
-            store: ['Observer','Student','Assistant','Teacher'],
+            store: 'courses.SectionParticipantRoles',
+            displayField: 'Role',
+            valueField: 'Role',
             triggerAction: 'all',
+            queryMode: 'local',
             editable: false,
             autoSelect: true,
             width: 100
@@ -52,6 +54,10 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
         viewConfig: {
             emptyText: 'No participants enrolled'
         },
+        plugins: {
+            ptype: 'cellediting',
+            clicksToEdit: 1
+        },
         features: [{
             ftype: 'grouping',
             collapsible: false,
@@ -59,24 +65,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 '{groupValue} <tpl if="children.length &gt; 1"><small class="muted">({children.length})</small></tpl>'
             ]
         }],
-        store: {
-            model: 'SlateAdmin.model.course.SectionParticipant',
-            groupField: 'Role',
-            remoteSort: true,
-            proxy: {
-                type: 'slateapi',
-                startParam: false,
-                limitParam: false,
-                pageParam: false,
-                extraParams: {
-                    include: 'Person'
-                },
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            }
-        },
+        store: 'courses.SectionParticipants',
         columns: {
             defaults: {
                 menuDisabled: true
@@ -87,19 +76,50 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 header: 'First Name',
                 dataIndex: 'PersonFirstName'
             },{
+                flex: 1,
+
                 header: 'Last Name',
                 dataIndex: 'PersonLastName'
             },{
-                flex: 1,
+                width: 100,
 
-                xtype: 'templatecolumn',
-                header: 'Username',
-                dataIndex: 'PersonUsername',
-                tpl: '<a href="#people/lookup/<tpl if="PersonUsername">{PersonUsername}<tpl else>?id={PersonID}</tpl>"><tpl if="PersonUsername">{PersonUsername}<tpl else>#{PersonID}</tpl></a>'
+                xtype: 'datecolumn',
+                header: 'Start',
+                dataIndex: 'StartDate',
+                format:'Y-m-d',
+                editor: 'datefield'
+            },{
+                width: 100,
+
+                xtype: 'datecolumn',
+                header: 'End',
+                dataIndex: 'EndDate',
+                format:'Y-m-d',
+                editor: 'datefield'
+            },{
+                width: 100,
+
+                header: 'Cohort',
+                dataIndex: 'Cohort',
+                itemId: 'cohortField',
+                editor: {
+                    xtype: 'combo',
+                    itemId: 'cohortField',
+                    displayField: 'Cohort',
+                    valueField: 'Cohort',
+                    forceSelection: false,
+                    queryMode: 'local',
+                    store: 'courses.SectionCohorts'
+                }
             },{
                 xtype: 'actioncolumn',
                 width: 40,
                 items: [{
+                    action: 'open',
+                    iconCls: 'participant-open glyph-primary',
+                    glyph: 0xf007, // fa-user
+                    tooltip: 'Open profile'
+                },{
                     action: 'delete',
                     iconCls: 'participant-delete glyph-danger',
                     glyph: 0xf056, // fa-minus-circle

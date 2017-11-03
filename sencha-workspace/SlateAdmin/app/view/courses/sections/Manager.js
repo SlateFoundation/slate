@@ -2,7 +2,7 @@
 
 /**
  * Container for course sections' grid and details view.
- * 
+ *
  * Handles propagating changes to {@link #cfg-selectedSection} to active {@link SlateAdmin.view.courses.details.AbstractDetails details tab}
  */
 Ext.define('SlateAdmin.view.courses.sections.Manager', {
@@ -17,12 +17,12 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
     config: {
         selectedSection: null
     },
-    
+
     /**
      * Reference to the detailCt {@link Ext.container.Container} subomponent
      */
     detailCt: null,
-    
+
     /**
      * Reference to the detailHeader {@link Ext.panel.Panel} subomponent
      */
@@ -49,7 +49,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         stateful: true,
         stateId: 'sectionDetails',
         disabled: true,
-        width: 450,
+        width: 635,
         layout: {
             type: 'vbox',
             align: 'stretch'
@@ -88,9 +88,9 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         var me = this,
             detailCt,
             detailTabs;
-        
+
         me.callParent(arguments);
-        
+
         me.detailCt = detailCt = me.down('#detailCt');
         me.detailHeader = detailCt.down('#detailHeader');
         me.detailTabs = detailTabs = detailCt.down('#detailTabs');
@@ -116,10 +116,10 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
 
         Ext.suspendLayouts();
         me.syncDetailHeader();
-            
+
         if (section) {
 //            section.on('afterCommit', 'onSectionCommit', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
-    
+
             if (!activeTab) {
                 activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedSection
             } else {
@@ -128,14 +128,14 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
 
             if (activeTab && detailCt.isDisabled()) {
                 detailCt.enable();
-                
+
                 // ensure active tab is set, since it would be supressed while disabled
                 detailTabs.tabBar.setActiveTab(activeTab.tab);
             }
         } else {
             detailCt.disable();
         }
-        
+
         me.fireEvent('selectedsectionchange', me, section, oldSection);
 
         Ext.resumeLayouts(true);
@@ -155,7 +155,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
             activeTab.setLoadedSection(selectedSection);
         }
     },
-    
+
     // @private
     onDetailTabsEnable: function(detailTabs) {
         var me = this,
@@ -171,7 +171,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
             activeTab.setLoadedSection(selectedSection);
         }
     },
-    
+
     // @private
     onSectionCommit: function() {
         var me = this;
@@ -179,7 +179,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         me.syncDetailHeader();
         me.fireEvent('sectioncommit', me, me.getSelectedSection());
     },
-    
+
     /**
      * Update detail header based on {@link #cfg-selectedSection}
      */

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext,SlateAdmin*/
 Ext.define('SlateAdmin.controller.courses.Participants', {
     extend: 'Ext.app.Controller',
     requires: [
@@ -10,6 +9,17 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
     // controller config
     views: [
         'courses.sections.details.Participants'
+    ],
+
+    models: [
+        'Person@Slate.model.person',
+        'course.SectionParticipant'
+    ],
+
+    stores: [
+        'courses.SectionParticipants',
+        'courses.SectionParticipantRoles',
+        'courses.SectionCohorts'
     ],
 
     refs: {
@@ -39,6 +49,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             click: 'onAddParticipantClick'
         },
         'courses-sections-details-participants grid': {
+            openclick: 'onOpenParticipantClick',
             deleteclick: 'onDeleteParticipantClick'
         }
     },
@@ -51,11 +62,16 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
     onSectionLoaded: function(participantsPanel, section) {
         var me = this,
-            participantsStore = me.getParticipantsGrid().getStore();
+            participantsStore = me.getParticipantsGrid().getStore(),
+            cohortsStore = me.getCoursesSectionCohortsStore();
 
         // configure proxy and load store
-        participantsStore.getProxy().url = '/sections/' + section.get('Code') + '/participants';
+        participantsStore.getProxy().setExtraParam('course_section', section.get('Code'))
         participantsStore.load();
+
+        // configure proxy url for cohort field
+        cohortsStore.getProxy().setUrl('/sections/' + section.get('Code') + '/cohorts');
+        cohortsStore.load();
     },
 
     onFieldSpecialKey: function(field, ev) {
@@ -68,9 +84,12 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         this.doAddParticipant();
     },
 
+    onOpenParticipantClick: function(grid, participant) {
+        this.redirectTo(this.getPersonModel().create(participant.get('Person')));
+    },
+
     onDeleteParticipantClick: function(grid, participant) {
         var me = this,
-            participantsStore = grid.getStore(),
             participantsPanel = me.getParticipantsPanel(),
             section = participantsPanel.getLoadedSection();
 
@@ -89,76 +108,52 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
                 }
 
                 participantsPanel.setLoading('Removing participant&hellip;');
-                SlateAdmin.API.request({
-                    method: 'DELETE',
-                    url: '/sections/' + section.get('Code') + '/participants/' + participant.get('PersonID'),
-                    success: function(response) {
-                        var responseData = response.data;
-
-                        if (responseData.success) {
-                            participantsStore.remove(participant);
-
-                            if (participant.get('Role') == 'Student') {
-                                section.set('StudentsCount', section.get('StudentsCount') - 1);
-                                section.commit(false, ['StudentsCount']);
-                            }
-                        } else {
-                            Ext.Msg.alert('Not removed', responseData.message || 'This person could not be removed as a participant.');
-                        }
-
+                participant.erase({
+                    success: function() {
                         participantsPanel.setLoading(false);
+                    },
+                    failure: function(record, operation) {
+                        participantsPanel.setLoading(false);
+                        Ext.Msg.alert('Participant not removed', operation.getError() || 'This person could not be removed as a participant.');
                     }
                 });
             }
         );
     },
 
-
     // internal methods
     doAddParticipant: function() {
         var me = this,
-            participantsStore = me.getParticipantsGrid().getStore(),
             participantsPanel = me.getParticipantsPanel(),
             section = participantsPanel.getLoadedSection(),
-            roleField = me.getRoleField(),
             personField = me.getPersonField(),
-            role = roleField.getValue(),
-            personId = personField.getValue();
+            participant = this.getCourseSectionParticipantModel().create({
+                CourseSectionID: section.getId(),
+                PersonID: personField.getValue(),
+                Role: me.getRoleField().getValue()
+            });
 
-        if (!personId) {
+        if (!participant.get('PersonID')) {
             personField.focus();
             return;
         }
 
         participantsPanel.setLoading('Adding participant&hellip;');
-        SlateAdmin.API.request({
-            method: 'POST',
-            url: '/sections/' + section.get('Code') + '/participants',
-            params: {
-                CourseSectionID: section.getId(),
-                PersonID: personId,
-                Role: role
+
+        participant.save({
+            success: function() {
+                me.getCoursesSectionParticipantsStore().addSorted(participant);
+                participantsPanel.setLoading(false);
             },
-            success: function(response) {
-                var responseData = response.data,
-                    particpant = responseData.data;
+            failure: function(record, operation) {
+                var message = operation.getError();
 
-                if (responseData.success && particpant) {
-                    particpant.Person = personField.findRecordByValue(personId).getData();
-                    particpant = participantsStore.getProxy().getReader().readRecords([particpant]);
-                    participantsStore.add(particpant.records[0]);
-                    personField.reset();
-                    personField.focus();
-
-                    if (role == 'Student') {
-                        section.set('StudentsCount', section.get('StudentsCount') + 1);
-                        section.commit(false, ['StudentsCount']);
-                    }
-                } else {
-                    Ext.Msg.alert('Not added', responseData.message || 'This person could not be added as a participant.');
+                if (message.indexOf('Duplicate value') === 0) {
+                    message = 'This person is already a participant in this section, remove them first to add with a new role';
                 }
 
                 participantsPanel.setLoading(false);
+                Ext.Msg.alert('Participant not added', message || 'This person could not be added as a participant.');
             }
         });
     }
