@@ -322,7 +322,7 @@ class Section extends \VersionedRecord
         try {
             return \DB::allValues('Cohort', '
                 SELECT DISTINCT Cohort FROM `%s`
-                WHERE CourseSectionID = %d
+                WHERE CourseSectionID = %u
                 AND Cohort IS NOT NULL
                 ORDER BY Cohort
             ', [
