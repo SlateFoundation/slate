@@ -4,20 +4,28 @@ Ext.define('SlateAdmin.store.courses.SectionCohorts', {
         'SlateAdmin.proxy.API'
     ],
 
-    fields: [
-        'Cohort'
-    ],
 
-    proxy: {
-        type: 'slateapi',
-        reader: {
-            type: 'json',
-            transform: function(response) {
-                return Ext.Array.map(response.data, function(cohort) {
-                    return {
-                        'Cohort': cohort
-                    }
-                });
+    config: {
+        fields: [
+            'Cohort'
+        ],
+
+        sorters: [{
+            property: 'Cohort',
+            direction: 'ASC'
+        }],
+
+        proxy: {
+            type: 'slateapi',
+            reader: {
+                type: 'json',
+                transform: function(response) {
+                    return Ext.Array.map(response.data, function(cohort) {
+                        return {
+                            'Cohort': cohort
+                        }
+                    });
+                }
             }
         }
     }
