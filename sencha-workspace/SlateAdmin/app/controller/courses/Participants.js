@@ -141,7 +141,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             cohort = participant.get('Cohort');
 
             if (participant.get('CourseSectionID') == cohortsSectionId && cohortsStore.findExact('Cohort', cohort) == -1) {
-                cohortsStore.addSorted({
+                cohortsStore.add({
                     Cohort: cohort
                 });
             }
@@ -170,7 +170,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
         participant.save({
             success: function() {
-                me.getCoursesSectionParticipantsStore().addSorted(participant);
+                me.getCoursesSectionParticipantsStore().add(participant);
                 participantsPanel.setLoading(false);
             },
             failure: function(record, operation) {
