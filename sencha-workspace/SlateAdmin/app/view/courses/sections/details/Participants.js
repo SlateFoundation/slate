@@ -108,6 +108,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                     displayField: 'Cohort',
                     valueField: 'Cohort',
                     forceSelection: false,
+                    autoSelect: false,
                     queryMode: 'local',
                     store: 'courses.SectionCohorts'
                 }
