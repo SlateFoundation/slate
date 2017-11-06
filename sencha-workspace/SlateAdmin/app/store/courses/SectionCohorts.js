@@ -6,6 +6,8 @@ Ext.define('SlateAdmin.store.courses.SectionCohorts', {
 
 
     config: {
+        section: null,
+
         fields: [
             'Cohort'
         ],
@@ -28,5 +30,10 @@ Ext.define('SlateAdmin.store.courses.SectionCohorts', {
                 }
             }
         }
+    },
+
+    updateSection: function(section) {
+        this.getProxy().setUrl('/sections/' + section.get('Code') + '/cohorts');
+        this.load();
     }
 });

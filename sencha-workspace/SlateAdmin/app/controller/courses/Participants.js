@@ -54,6 +54,14 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         }
     },
 
+    listen: {
+        store: {
+            '#courses.SectionParticipants': {
+                write: 'onParticipantsStoreWrite'
+            }
+        }
+    },
+
 
     // event handlers
     onBeforeTabsRender: function(detailTabs) {
@@ -70,8 +78,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
         participantsStore.load();
 
         // configure proxy url for cohort field
-        cohortsStore.getProxy().setUrl('/sections/' + section.get('Code') + '/cohorts');
-        cohortsStore.load();
+        cohortsStore.setSection(section);
     },
 
     onFieldSpecialKey: function(field, ev) {
@@ -120,6 +127,27 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             }
         );
     },
+
+    onParticipantsStoreWrite: function(participantsStore, operation) {
+        var cohortsStore = this.getCoursesSectionCohortsStore(),
+            cohortsSectionId = cohortsStore.getSection().getId(),
+            participants = operation.getRecords(),
+            participantsLength = participants.length,
+            participantIndex = 0,
+            participant, cohort;
+
+        for (; participantIndex < participantsLength; participantIndex++) {
+            participant = participants[participantIndex];
+            cohort = participant.get('Cohort');
+
+            if (participant.get('CourseSectionID') == cohortsSectionId && cohortsStore.findExact('Cohort', cohort) == -1) {
+                cohortsStore.addSorted({
+                    Cohort: cohort
+                });
+            }
+        }
+    },
+
 
     // internal methods
     doAddParticipant: function() {
