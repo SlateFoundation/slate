@@ -227,7 +227,7 @@ Ext.define('Slate.model.person.Person', {
 
     // model methods
     getFullName: function() {
-        return this.get('FirstName') + ' ' + this.get('LastName');
+        return this.get('FullName');
     },
 
     getDisplayName: function() {
