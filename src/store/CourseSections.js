@@ -5,6 +5,14 @@ Ext.define('Slate.store.CourseSections', {
     model: 'Slate.model.CourseSection',
 
     config: {
-        pageSize: 0
+        pageSize: 0,
+        remoteSort: true,
+        sorters: [{
+            property: 'CurrentTerm',
+            direction: 'ASC'
+        },{
+            property: 'Code',
+            direction: 'ASC'
+        }]
     }
 });

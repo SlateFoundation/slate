@@ -78,6 +78,7 @@ Ext.define('Slate.model.CourseSection', {
 
     proxy: {
         type: 'slate-records',
-        url: '/sections'
+        url: '/sections',
+        include: ['Term']
     }
 });
