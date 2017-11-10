@@ -113,7 +113,7 @@ class Student extends User
             return $filterResult(static::getAllByWhere('ID IN ('.$identifier.')'));
         }
 
-        list($groupType, $groupHandle) = preg_split('/[\s:\-]/', $identifier, 2);
+        list($groupType, $groupHandle) = array_pad(preg_split('/[\s:>]/', $identifier, 2), 2, null);
 
         switch ($groupType) {
             case 'organization':
@@ -124,11 +124,30 @@ class Student extends User
 
                 return $filterResult($Group->getAllPeople());
             case 'section':
+
+                // parse cohort
+                list($groupHandle, $cohort) = array_pad(preg_split('/[\s:>]/', $groupHandle, 2), 2, null);
+
                 if (!$Section = Section::getByHandle($groupHandle)) {
                     throw new Exception('Section not found');
                 }
 
-                return $filterResult($Section->Students);
+                return $filterResult(Person::getAllByQuery(
+                    '
+                        SELECT Person.*
+                          FROM `%s` Participant
+                          JOIN `%s` Person ON Person.ID = Participant.PersonID
+                         WHERE Participant.CourseSectionID = %u
+                           AND Participant.Role = "Student"
+                           AND %s
+                    ',
+                    [
+                        SectionParticipant::$tableName,
+                        Person::$tableName,
+                        $Section->ID,
+                        $cohort ? sprintf('Cohort = "%s"', DB::escape($cohort)) : 'TRUE'
+                    ]
+                ));
             default:
                 throw new Exception('Group type not recognized');
         }

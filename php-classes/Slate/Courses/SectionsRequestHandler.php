@@ -14,6 +14,7 @@ use Emergence\Locations\LocationsRequestHandler;
 
 use Slate\Term;
 use Slate\TermsRequestHandler;
+use Slate\People\Student;
 
 
 class SectionsRequestHandler extends \RecordsRequestHandler
@@ -111,8 +112,8 @@ class SectionsRequestHandler extends \RecordsRequestHandler
     public static function handleRecordRequest(ActiveRecord $Section, $action = false)
     {
         switch ($action ? $action : $action = static::shiftPath()) {
-            case 'participants':
-                return static::handleParticipantsRequest($Section);
+            case 'cohorts':
+                return static::handleCohortsRequest($Section);
             case 'post':
                 $GLOBALS['Session']->requireAuthentication();
                 return BlogRequestHandler::handleCreateRequest(BlogPost::create([
@@ -126,77 +127,11 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-    public static function handleParticipantsRequest(Section $Section)
+    public static function handleCohortsRequest(Section $Section)
     {
-        if ($personId = static::shiftPath()) {
-            if (!ctype_digit($personId) || !$Participant = SectionParticipant::getByWhere(['CourseSectionID' => $Section->ID, 'PersonID' => $personId])) {
-                return static::throwNotFoundError();
-            }
-
-            return static::handleParticipantRequest($Section, $Participant);
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $GLOBALS['Session']->requireAccountLevel('Staff');
-
-            $Participant = SectionParticipant::create($_POST);
-
-            if (!$Participant->validate()) {
-                return static::throwError(reset($Participant->validationErrors));
-            }
-
-            try {
-                $Participant->save();
-            } catch (DuplicateKeyException $e) {
-                return static::throwError('Person is already a participant in this section.');
-            }
-
-            return static::respond('participantAdded', [
-                'success' => true,
-                'data' => $Participant
-            ]);
-        }
-
-        if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
-            $userIsParticipant = false;
-
-            foreach ($Section->Participants AS $Participant) {
-                if ($Participant->PersonID == $GLOBALS['Session']->PersonID) {
-                    $userIsParticipant = true;
-                    break;
-                }
-            }
-
-            if (!$userIsParticipant) {
-                return static::throwUnauthorizedError();
-            }
-        }
-
-        return static::respond('sectionParticipants', [
-            'success' => true
-            ,'data' => $Section->Participants
-        ]);
-    }
-
-    public static function handleParticipantRequest(Section $Section, SectionParticipant $Participant)
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
-            $GLOBALS['Session']->requireAccountLevel('Staff');
-
-            $Participant->destroy();
-
-            return static::respond('participantDeleted', [
-                'success' => true,
-                'data' => $Participant
-            ]);
-        }
-
-        if (!$GLOBALS['Session']->hasAccountLevel('Staff') && $GLOBALS['Session']->PersonID != $Participant->PersonID) {
-            return static::throwUnauthorizedError();
-        }
-
-        return static::respond('participant', [
-            'data' => $Participant
+        return static::respond('sectionCohorts', [
+            'success' => true,
+            'data' => $Section->getCohorts()
         ]);
     }
 
@@ -217,8 +152,29 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             }
         }
 
+        // conditionally filter students by cohort
+        if (!empty($_REQUEST['cohort'])) {
+            try {
+                $students = Person::getAllByQuery('
+                    SELECT Person.* FROM `%1$s` Person
+                    JOIN `%2$s` SectionParticipant ON Person.ID = SectionParticipant.PersonID
+                    WHERE SectionParticipant.CourseSectionID = %3$u
+                    AND SectionParticipant.Cohort = "%4$s"
+                ', [
+                    Person::$tableName, // 1
+                    SectionParticipant::$tableName, // 2
+                    $Section->ID, // 3
+                    DB::escape($_REQUEST['cohort']) // 4
+                ]);
+            } catch (\TableNotFoundException $e) {
+                $students = [];
+            }
+        } else {
+            $students = $Section->Students;
+        }
+
         return static::respond('students', [
-            'data' => $Section->Students
+            'data' => $students
         ]);
     }
 }
