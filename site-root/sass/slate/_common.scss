@@ -34,7 +34,7 @@ body {
 
 @if $hero-header-image {
     .site.header {
-        background-image: image-url('header.jpg');
+        background-image: $hero-header-image;
         background-size: cover;
         background-position: top;
         position: relative;
