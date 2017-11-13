@@ -54,7 +54,11 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
                 _finishExpand();
             } else {
                 node.set('loading', true);
-                groupsStore.load(function(records) {
+                groupsStore.load(function(records, operation, success) {
+                    if (!success) {
+                        return;
+                    }
+
                     me.loadFromArray(records);
                     node.set('loading', false);
                     _finishExpand();

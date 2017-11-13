@@ -29,7 +29,11 @@ Ext.define('SlateAdmin.store.TermsTree', {
                 _finishExpand();
             } else {
                 node.set('loading', true);
-                termsStore.load(function(records) {
+                termsStore.load(function(records, operation, success) {
+                    if (!success) {
+                        return;
+                    }
+
                     me.loadFromArray(records);
                     node.set('loading', false);
                     _finishExpand();
