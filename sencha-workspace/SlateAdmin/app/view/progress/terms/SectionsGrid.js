@@ -2,7 +2,6 @@ Ext.define('SlateAdmin.view.progress.terms.SectionsGrid', {
     extend: 'Ext.grid.Panel',
     xtype: 'progress-terms-sectionsgrid',
     requires: [
-        'Ext.grid.column.Template',
         'Ext.form.field.ComboBox',
         'Ext.form.field.Checkbox'
     ],
