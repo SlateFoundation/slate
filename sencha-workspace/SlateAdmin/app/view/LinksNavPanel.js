@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.LinksNavPanel', {
     extend: 'Ext.Panel',
     xtype: 'links-navpanel',
@@ -9,12 +8,19 @@ Ext.define('SlateAdmin.view.LinksNavPanel', {
 
     tpl: [
         '<ul class="slate-nav-list">',
-            '<tpl for=".">',
-                '<li class="slate-nav-list-item"><a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">{text}</a></li>',
-                '<tpl for="children">',
-                    '<li class="slate-nav-list-item"><a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">↳ {text}</a></li>',
-                '</tpl>',
-            '</tpl>',
+        '    <tpl for=".">',
+
+        '        <li class="slate-nav-list-item">',
+        '            <a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">{text}</a>',
+        '        </li>',
+
+        '        <tpl for="children">',
+        '            <li class="slate-nav-list-item">',
+        '                <a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">↳ {text}</a>',
+        '            </li>',
+        '        </tpl>',
+
+        '    </tpl>',
         '</ul>'
     ],
 
