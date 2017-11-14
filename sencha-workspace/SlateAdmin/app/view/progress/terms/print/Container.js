@@ -99,6 +99,11 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
                     text: 'Print via Browser',
                     action: 'print-printout'
                 },
+                {
+                    xtype: 'button',
+                    text: 'Open to Browser Tab',
+                    action: 'open-tab'
+                },
                 // {
                 //     xtype: 'button',
                 //     text: 'Print to PDF',

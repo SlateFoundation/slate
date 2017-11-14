@@ -54,6 +54,9 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
         'progress-terms-print-container button[action=print-printout]': {
             click: 'onPrintPrintoutClick'
         },
+        'progress-terms-print-container button[action=open-tab]': {
+            click: 'onOpenTabClick'
+        },
         'progress-terms-print-container button[action=save-csv]': {
             click: 'onSaveCsvClick'
         },
@@ -104,6 +107,10 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
         this.loadPrintout(function(previewCmp) {
             previewCmp.iframeEl.dom.contentWindow.print();
         });
+    },
+
+    onOpenTabClick: function() {
+        window.open(this.buildHtmlUrl());
     },
 
     onSaveCsvClick: function() {
@@ -173,6 +180,10 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
         return filters;
     },
 
+    buildHtmlUrl: function() {
+        return Slate.API.buildUrl('/progress/section-term-reports?'+Ext.Object.toQueryString(this.buildFilters()));
+    },
+
     loadPrintout: function(callback) {
         var printoutCmp = this.getPrintoutCmp();
 
@@ -181,6 +192,6 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
         }
 
         printoutCmp.setLoading('Loading printout&hellip;');
-        printoutCmp.iframeEl.dom.src = Slate.API.buildUrl('/progress/section-term-reports?'+Ext.Object.toQueryString(this.buildFilters()));
+        printoutCmp.iframeEl.dom.src = this.buildHtmlUrl();
     }
 });
