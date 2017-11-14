@@ -185,13 +185,20 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
     },
 
     loadPrintout: function(callback) {
-        var printoutCmp = this.getPrintoutCmp();
+        var printoutCmp = this.getPrintoutCmp(),
+            url = this.buildHtmlUrl();
+
+        // skip load if URL is the same
+        if (printoutCmp.iframeEl.dom.src === url) {
+            Ext.callback(callback, null, [printoutCmp]);
+            return;
+        }
 
         if (callback) {
             printoutCmp.on('previewload', callback, null, { single: true });
         }
 
         printoutCmp.setLoading('Loading printout&hellip;');
-        printoutCmp.iframeEl.dom.src = this.buildHtmlUrl();
+        printoutCmp.iframeEl.dom.src = url;
     }
 });
