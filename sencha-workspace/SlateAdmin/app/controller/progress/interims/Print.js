@@ -105,7 +105,17 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
 
     onPrintPrintoutClick: function() {
         this.loadPrintout(function(previewCmp) {
-            previewCmp.iframeEl.dom.contentWindow.print();
+            try {
+                previewCmp.iframeEl.dom.contentWindow.print();
+            } catch (err) {
+                Ext.Msg.alert(
+                    'Printing unavailable',
+                    [
+                        '<p>Your browser\'s print function could not be triggered automatically.</p>',
+                        '<p>Try using the <strong>Open in Browser Tab</strong> button instead and printing manually</p>'
+                    ].join('')
+                );
+            }
         });
     },
 
