@@ -7,6 +7,7 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
         'Ext.form.Panel',
         'Ext.form.FieldSet',
         'Ext.form.field.ComboBox',
+        'Ext.form.field.Checkbox',
         'Ext.toolbar.Fill',
         'Ext.toolbar.Separator'
     ],
@@ -22,13 +23,15 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
             xtype: 'form',
             itemId: 'optionsForm',
             bodyPadding: 5,
+            defaults: {
+                xtype: 'fieldset',
+                layout: 'hbox',
+                padding: 10
+            },
             items: [
                 {
-                    xtype: 'fieldset',
                     itemId: 'filtersFieldset',
-                    title: 'Filter reports by&hellip;',
-                    layout: 'hbox',
-                    padding: 10,
+                    title: 'Filter reports by:',
                     defaultType: 'combo',
                     defaults: {
                         flex: 1,
@@ -83,6 +86,39 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
                             fieldLabel: 'Student',
                             emptyText: 'All',
                             appendQuery: 'class:student'
+                        }
+                    ]
+                },
+                {
+                    itemId: 'includeFieldset',
+                    title: 'Include in print:',
+                    defaultType: 'checkboxfield',
+                    defaults: {
+                        xtype: 'checkboxfield',
+                        padding: '0 5 0 5',
+                        inputValue: 'yes',
+                        uncheckedValue: 'no'
+                    },
+                    items: [
+                        {
+                            boxLabel: 'Author',
+                            name: 'print[author]',
+                            checked: true
+                        },
+                        {
+                            boxLabel: 'Teachers List',
+                            name: 'print[teachers]',
+                            checked: true
+                        },
+                        {
+                            boxLabel: 'Section Notes',
+                            name: 'print[section_notes]',
+                            checked: true
+                        },
+                        {
+                            boxLabel: 'Notes/Comments',
+                            name: 'print[notes]',
+                            checked: true
                         }
                     ]
                 }

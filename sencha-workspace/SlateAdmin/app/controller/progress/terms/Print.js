@@ -182,7 +182,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
 
 
     // controller methods
-    buildFilters: function() {
+    buildReportParams: function() {
         var filters = this.getOptionsForm().getValues();
 
         filters.status = 'published';
@@ -191,7 +191,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
     },
 
     buildHtmlUrl: function() {
-        return Slate.API.buildUrl('/progress/section-term-reports?'+Ext.Object.toQueryString(this.buildFilters()));
+        return Slate.API.buildUrl('/progress/section-term-reports?'+Ext.Object.toQueryString(this.buildReportParams()));
     },
 
     loadPrintout: function(callback) {
