@@ -1,8 +1,11 @@
-Ext.define('Slate.store.CourseSections', {
+Ext.define('Slate.store.courses.Sections', {
     extend: 'Ext.data.Store',
+    alternateClassName: [
+        'Slate.store.CourseSections'
+    ],
 
 
-    model: 'Slate.model.CourseSection',
+    model: 'Slate.model.course.Section',
 
     config: {
         pageSize: 0,

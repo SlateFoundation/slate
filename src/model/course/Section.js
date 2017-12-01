@@ -1,5 +1,8 @@
-Ext.define('Slate.model.CourseSection', {
+Ext.define('Slate.model.course.Section', {
     extend: 'Ext.data.Model',
+    alternateClassName: [
+        'Slate.model.CourseSection'
+    ],
     requires: [
         'Slate.proxy.Records',
         'Ext.data.identifier.Negative'
