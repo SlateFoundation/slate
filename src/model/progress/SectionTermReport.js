@@ -1,5 +1,4 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
-Ext.define('Slate.model.TermReport', {
+Ext.define('Slate.model.progress.SectionTermReport', {
     extend: 'Ext.data.Model',
     requires: [
         'Slate.proxy.Records',
@@ -19,7 +18,7 @@ Ext.define('Slate.model.TermReport', {
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Progress\\Narratives\\Report'
+            defaultValue: 'Slate\\Progress\\SectionTermReport'
         },
         {
             name: 'Created',
@@ -42,11 +41,17 @@ Ext.define('Slate.model.TermReport', {
             persist: false
         },
         {
+            name: 'ModifierID',
+            type: 'int',
+            allowNull: true,
+            persist: false
+        },
+        {
             name: 'StudentID',
             type: 'int'
         },
         {
-            name: 'CourseSectionID',
+            name: 'SectionID',
             type: 'int'
         },
         {
@@ -64,6 +69,14 @@ Ext.define('Slate.model.TermReport', {
             allowNull: true
         },
         {
+            name: 'NotesFormat',
+            type: 'string',
+            defaultValue: 'markdown'
+        },
+
+
+        // virtual fields
+        {
             name: 'StudentFirstName',
             type: 'string',
             allowNull: true,
@@ -76,7 +89,7 @@ Ext.define('Slate.model.TermReport', {
             mapping: 'Student.LastName'
         },
 
-        // local-only fileds
+        // local-only fields
         {
             name: 'student',
             persist: false
@@ -93,7 +106,7 @@ Ext.define('Slate.model.TermReport', {
 
     proxy: {
         type: 'slate-records',
-        url: '/progress/narratives/reports',
+        url: '/progress/section-term-reports',
         limitParam: null,
         startParam: null
     }

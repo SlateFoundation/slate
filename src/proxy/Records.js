@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * Slate records proxy
  */
@@ -8,6 +7,7 @@ Ext.define('Slate.proxy.Records', {
     requires: [
         'Slate.API'
     ],
+
 
     connection: 'Slate.API'
 });

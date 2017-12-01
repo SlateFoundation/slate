@@ -1,4 +1,4 @@
-Ext.define('Slate.model.Term', {
+Ext.define('Slate.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
         'Slate.proxy.Records',
@@ -14,70 +14,71 @@ Ext.define('Slate.model.Term', {
         {
             name: 'ID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Term'
+            defaultValue: 'Slate\\Courses\\SectionParticipant'
         },
         {
             name: 'Created',
             type: 'date',
             dateFormat: 'timestamp',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'CreatorID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
-            name: 'Title',
-            type: 'string',
-            useNull: true
+            name: 'CourseSectionID',
+            type: 'int'
         },
         {
-            name: 'Handle',
-            type: 'string',
-            useNull: true
+            name: 'PersonID',
+            type: 'int'
         },
         {
-            name: 'Status',
-            type: 'string',
-            defaultValue: 'Live'
+            name: 'Person'
+        },
+        {
+            name: 'Role',
+            type: 'string'
         },
         {
             name: 'StartDate',
             type: 'date',
-            dateFormat: 'Y-m-d',
-            useNull: true
+            dateFormat: 'timestamp',
+            allowNull: true
         },
         {
             name: 'EndDate',
             type: 'date',
-            dateFormat: 'Y-m-d',
-            useNull: true
+            dateFormat: 'timestamp',
+            allowNull: true
         },
         {
-            name: 'ParentID',
-            type: 'int',
-            useNull: true
+            name: 'Cohort',
+            type: 'string',
+            allowNull: true
+        },
+
+        // virtual fields
+        {
+            name: 'PersonFirstName',
+            mapping: 'Person.FirstName'
         },
         {
-            name: 'Left',
-            type: 'int',
-            useNull: true
-        },
-        {
-            name: 'Right',
-            type: 'int',
-            useNull: true
+            name: 'PersonLastName',
+            mapping: 'Person.LastName'
         }
     ],
 
     proxy: {
         type: 'slate-records',
-        url: '/terms'
+        url: '/section-participants',
+        include: ['Person']
     }
 });

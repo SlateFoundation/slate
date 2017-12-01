@@ -1,6 +1,8 @@
-/*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('Slate.model.CourseSection', {
+Ext.define('Slate.model.course.Section', {
     extend: 'Ext.data.Model',
+    alternateClassName: [
+        'Slate.model.CourseSection'
+    ],
     requires: [
         'Slate.proxy.Records',
         'Ext.data.identifier.Negative'
@@ -79,6 +81,7 @@ Ext.define('Slate.model.CourseSection', {
 
     proxy: {
         type: 'slate-records',
-        url: '/sections'
+        url: '/sections',
+        include: ['Term']
     }
 });
