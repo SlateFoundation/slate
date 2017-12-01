@@ -10,12 +10,15 @@ Ext.define('Slate.store.courses.Sections', {
     config: {
         pageSize: 0,
         remoteSort: true,
-        sorters: [{
-            property: 'CurrentTerm',
-            direction: 'ASC'
-        },{
-            property: 'Code',
-            direction: 'ASC'
-        }]
+        sorters: [
+            {
+                property: 'CurrentTerm',
+                direction: 'ASC'
+            },
+            {
+                property: 'Code',
+                direction: 'ASC'
+            }
+        ]
     }
 });
