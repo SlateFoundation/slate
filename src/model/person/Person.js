@@ -1,7 +1,7 @@
 Ext.define('Slate.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.people.People',
         'Ext.data.identifier.Negative',
         'Ext.data.validator.Presence'
     ],
@@ -217,11 +217,7 @@ Ext.define('Slate.model.person.Person', {
     },
 
     proxy: {
-        type: 'slaterecords',
-        url: '/people',
-        startParam: false,
-        limitParam: false,
-        include: ['groupIDs', 'Advisor', 'PrimaryEmail']
+        type: 'slate-people'
     },
 
 

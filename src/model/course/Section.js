@@ -4,7 +4,7 @@ Ext.define('Slate.model.course.Section', {
         'Slate.model.CourseSection'
     ],
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.courses.Sections',
         'Ext.data.identifier.Negative'
     ],
 
@@ -80,8 +80,6 @@ Ext.define('Slate.model.course.Section', {
     ],
 
     proxy: {
-        type: 'slate-records',
-        url: '/sections',
-        include: ['Term']
+        type: 'slate-courses-sections'
     }
 });

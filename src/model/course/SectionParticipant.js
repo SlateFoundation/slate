@@ -1,7 +1,7 @@
 Ext.define('Slate.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.courses.SectionParticipants',
         'Ext.data.identifier.Negative'
     ],
 
@@ -77,8 +77,6 @@ Ext.define('Slate.model.course.SectionParticipant', {
     ],
 
     proxy: {
-        type: 'slate-records',
-        url: '/section-participants',
-        include: ['Person']
+        type: 'slate-courses-participants'
     }
 });
