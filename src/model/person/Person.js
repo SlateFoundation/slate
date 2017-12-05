@@ -252,6 +252,7 @@ Ext.define('Slate.model.person.Person', {
         return url ? '<a href="#'+url+'">'+displayName+'</a>' : displayName;
     },
 
+    // TODO: move this to a SlateAdmin override
     toUrl: function() {
         var me = this;
 
