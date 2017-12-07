@@ -22,6 +22,10 @@ class SectionParticipantsRequestHandler extends \RecordsRequestHandler
             $conditions['CourseSectionID'] = $CourseSection->ID;
         }
 
+        if (!empty($_GET['cohort'])) {
+            $conditions['Cohort'] = $_GET['cohort'];
+        }
+
         if (!empty($_GET['role'])) {
             $conditions['Role'] = [
                 'values' => is_string($_GET['role']) ? explode(',', $_GET['role']) : $_GET['role']
