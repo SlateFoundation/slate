@@ -183,11 +183,25 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
 
     // controller methods
     buildReportParams: function() {
-        var filters = this.getOptionsForm().getValues();
+        var formValues = this.getOptionsForm().getValues(),
+            params = {},
+            paramKey, paramValue;
 
-        filters.status = 'published';
+        for (paramKey in formValues) {
+            if (
+                formValues.hasOwnProperty(paramKey)
+                && (paramValue = formValues[paramKey])
+                && (paramKey != 'status' || paramValue != 'any')
+            ) {
+                if (paramKey == 'group') {
+                    paramKey = 'students';
+                    paramValue = 'group>'+paramValue;
+                }
+                params[paramKey] = paramValue;
+            }
+        }
 
-        return filters;
+        return params;
     },
 
     buildHtmlUrl: function() {

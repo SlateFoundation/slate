@@ -39,7 +39,11 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
                         labelWidth: 60,
                         forceSelection: true,
                         allowBlank: true,
-                        valueField: 'ID'
+                        typeAhead: false,
+                        queryMode: 'local',
+                        emptyText: 'Any',
+                        matchFieldWidth: false,
+                        anyMatch: true
                     },
                     items: [
                         {
@@ -49,43 +53,47 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
 
                             store: 'Terms',
                             displayField: 'Title',
-                            valueField: 'Handle',
-
-                            queryMode: 'local',
-                            forceSelection: false
+                            valueField: 'Handle'
                         },
                         {
                             name: 'advisor',
                             fieldLabel: 'Advisor',
-                            emptyText: 'Any',
 
                             store: 'Advisors',
                             displayField: 'SortName',
-                            valueField: 'Username',
-
-                            queryMode: 'local',
-                            typeAhead: true,
-                            forceSelection: false
+                            valueField: 'Username'
                         },
                         {
                             name: 'author',
                             fieldLabel: 'Author',
-                            emptyText: 'Any',
 
                             store: 'progress.terms.Authors',
                             displayField: 'SortName',
-                            valueField: 'Username',
-
-                            queryMode: 'local',
-                            typeAhead: true,
-                            forceSelection: false
+                            valueField: 'Username'
                         },
                         {
                             xtype: 'slate-personfield',
                             name: 'student',
                             fieldLabel: 'Student',
-                            emptyText: 'All',
-                            appendQuery: 'class:student'
+                            appendQuery: 'class:student',
+                            queryMode: 'remote'
+                        },
+                        {
+                            name: 'group',
+                            fieldLabel: 'Group',
+
+                            store: 'people.Groups',
+                            displayField: 'namesPath',
+                            valueField: 'Handle'
+                        },
+                        {
+                            name: 'status',
+                            fieldLabel: 'Status',
+
+                            store: ['published', 'draft', 'any'],
+                            value: 'published',
+
+                            editable: false
                         }
                     ]
                 },
