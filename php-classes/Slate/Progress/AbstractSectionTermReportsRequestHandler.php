@@ -346,8 +346,12 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         if (!empty($_REQUEST['students'])) {
             $studentIds = [];
 
-            foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
-                $studentIds[] = $Student->ID;
+            try {
+                foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
+                    $studentIds[] = $Student->ID;
+                }
+            } catch (\Exception $e) {
+                return static::throwNotFoundError('Unable to load students list: ' . $e->getMessage());
             }
 
             $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
