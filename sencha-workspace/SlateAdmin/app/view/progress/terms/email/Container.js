@@ -76,6 +76,14 @@ Ext.define('SlateAdmin.view.progress.terms.email.Container', {
                             fieldLabel: 'Student',
                             appendQuery: 'class:student',
                             queryMode: 'remote'
+                        },
+                        {
+                            name: 'group',
+                            fieldLabel: 'Group',
+
+                            store: 'people.Groups',
+                            displayField: 'namesPath',
+                            valueField: 'Handle'
                         }
                     ]
                 },

@@ -96,7 +96,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
         me.resetPreview();
 
         emailsStore.load({
-            params: me.getOptionsForm().getValues()
+            params: me.buildEmailsParams()
         });
     },
 
@@ -190,6 +190,28 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
 
     // controller methods
+    buildEmailsParams: function() {
+        var formValues = this.getOptionsForm().getValues(),
+            params = {},
+            paramKey, paramValue;
+
+        for (paramKey in formValues) {
+            if (
+                formValues.hasOwnProperty(paramKey)
+                && (paramValue = formValues[paramKey])
+                && (paramKey != 'status' || paramValue != 'any')
+            ) {
+                if (paramKey == 'group') {
+                    paramKey = 'students';
+                    paramValue = 'group>'+paramValue;
+                }
+                params[paramKey] = paramValue;
+            }
+        }
+
+        return params;
+    },
+
     resetEmails: function() {
         var me = this,
             emailsTotalCmp = me.getEmailsTotalCmp();
