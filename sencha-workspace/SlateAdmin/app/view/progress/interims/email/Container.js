@@ -38,7 +38,11 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                         labelWidth: 60,
                         forceSelection: true,
                         allowBlank: true,
-                        valueField: 'ID'
+                        typeAhead: false,
+                        queryMode: 'local',
+                        emptyText: 'Any',
+                        matchFieldWidth: false,
+                        anyMatch: true
                     },
                     items: [
                         {
@@ -48,43 +52,30 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
 
                             store: 'Terms',
                             displayField: 'Title',
-                            valueField: 'Handle',
-
-                            queryMode: 'local',
-                            forceSelection: false
+                            valueField: 'Handle'
                         },
                         {
                             name: 'advisor',
                             fieldLabel: 'Advisor',
-                            emptyText: 'Any',
 
                             store: 'Advisors',
                             displayField: 'SortName',
-                            valueField: 'Username',
-
-                            queryMode: 'local',
-                            typeAhead: true,
-                            forceSelection: false
+                            valueField: 'Username'
                         },
                         {
                             name: 'author',
                             fieldLabel: 'Author',
-                            emptyText: 'Any',
 
                             store: 'progress.interims.Authors',
                             displayField: 'SortName',
-                            valueField: 'Username',
-
-                            queryMode: 'local',
-                            typeAhead: true,
-                            forceSelection: false
+                            valueField: 'Username'
                         },
                         {
                             xtype: 'slate-personfield',
                             name: 'student',
                             fieldLabel: 'Student',
-                            emptyText: 'All',
-                            appendQuery: 'class:student'
+                            appendQuery: 'class:student',
+                            queryMode: 'remote'
                         }
                     ]
                 },
