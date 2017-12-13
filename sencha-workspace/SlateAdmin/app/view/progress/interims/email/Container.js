@@ -101,6 +101,10 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                     },
                     items: [
                         {
+                            boxLabel: 'Student',
+                            inputValue: 'student'
+                        },
+                        {
                             boxLabel: 'Advisor',
                             inputValue: 'advisor'
                         },
