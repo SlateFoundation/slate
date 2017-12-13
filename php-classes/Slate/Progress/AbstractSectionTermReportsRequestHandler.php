@@ -169,12 +169,14 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         // collect recipients
         foreach ($students AS &$student) {
-            $student['recipients'][] = [
-                'id' => $student['student']->ID,
-                'name' => $student['student']->FullName,
-                'email' => $student['student']->Email,
-                'relationship' => 'student'
-            ];
+            if (in_array('student', $recipients)) {
+                $student['recipients'][] = [
+                    'id' => $student['student']->ID,
+                    'name' => $student['student']->FullName,
+                    'email' => $student['student']->Email,
+                    'relationship' => 'student'
+                ];
+            }
 
             if (in_array('advisor', $recipients) && $student['student']->Advisor) {
                 $student['recipients'][] = [
