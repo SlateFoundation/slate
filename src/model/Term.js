@@ -1,7 +1,7 @@
 Ext.define('Slate.model.Term', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.Terms',
         'Ext.data.identifier.Negative'
     ],
 
@@ -76,8 +76,5 @@ Ext.define('Slate.model.Term', {
         }
     ],
 
-    proxy: {
-        type: 'slate-records',
-        url: '/terms'
-    }
+    proxy: 'slate-terms'
 });
