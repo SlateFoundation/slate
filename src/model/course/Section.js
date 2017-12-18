@@ -79,7 +79,5 @@ Ext.define('Slate.model.course.Section', {
         }
     ],
 
-    proxy: {
-        type: 'slate-courses-sections'
-    }
+    proxy: 'slate-courses-sections'
 });

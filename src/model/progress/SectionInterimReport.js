@@ -104,7 +104,5 @@ Ext.define('Slate.model.progress.SectionInterimReport', {
         }
     ],
 
-    proxy: {
-        type: 'slate-progress-reports-section-interim',
-    }
+    proxy: 'slate-progress-reports-section-interim'
 });

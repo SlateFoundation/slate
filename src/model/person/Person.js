@@ -216,9 +216,7 @@ Ext.define('Slate.model.person.Person', {
         LastName: 'presence'
     },
 
-    proxy: {
-        type: 'slate-people'
-    },
+    proxy: 'slate-people',
 
 
     // model methods

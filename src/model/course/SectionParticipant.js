@@ -76,7 +76,5 @@ Ext.define('Slate.model.course.SectionParticipant', {
         }
     ],
 
-    proxy: {
-        type: 'slate-courses-participants'
-    }
+    proxy: 'slate-courses-participants'
 });
