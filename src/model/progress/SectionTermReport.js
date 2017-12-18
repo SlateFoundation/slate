@@ -1,7 +1,7 @@
 Ext.define('Slate.model.progress.SectionTermReport', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.progress.SectionTermReports',
         'Ext.data.identifier.Negative'
     ],
 
