@@ -26,16 +26,18 @@ Ext.define('Slate.store.courses.SectionParticipants', {
 
     // model lifecycle
     constructor: function() {
-        this.callParent(arguments);
-        this.dirty = true;
+        var me = this;
+
+        me.callParent(arguments);
+        me.dirty = true;
+
+        me.on('datachanged', 'onDataChanged', me);
     },
 
-    loadRecords: function() {
+    onDataChanged: function() {
         var me = this,
             personIdMap = {},
             count, index = 0, participant;
-
-        me.callParent(arguments);
 
         if (!me.getSection()) {
             me.peopleMap = null;
