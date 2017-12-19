@@ -13,11 +13,11 @@ Ext.define('Slate.store.courses.SectionParticipants', {
         remoteSort: false,
         sorters: [
             {
-                property: 'LastName',
+                property: 'PersonLastName',
                 direction: 'ASC'
             },
             {
-                property: 'FirstName',
+                property: 'PersonFirstName',
                 direction: 'ASC'
             }
         ]
