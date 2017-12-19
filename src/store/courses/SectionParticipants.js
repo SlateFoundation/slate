@@ -71,13 +71,20 @@ Ext.define('Slate.store.courses.SectionParticipants', {
 
 
     // member methods
-    loadIfDirty: function() {
-        if (!this.dirty) {
+    loadIfDirty: function(clearBeforeLoad) {
+        var me = this;
+
+        if (!me.dirty) {
             return;
         }
 
-        this.dirty = false;
-        this.load();
+        me.dirty = false;
+
+        if (clearBeforeLoad) {
+            me.unload();
+        }
+
+        me.load();
     },
 
     getByPersonId: function(personId) {
