@@ -40,7 +40,7 @@ Ext.define('Slate.store.courses.SectionParticipants', {
             count, index = 0, participant;
 
         if (!me.getSection()) {
-            me.peopleMap = null;
+            me.personIdMap = null;
             return;
         }
 
