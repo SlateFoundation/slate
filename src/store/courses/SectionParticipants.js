@@ -24,9 +24,30 @@ Ext.define('Slate.store.courses.SectionParticipants', {
     },
 
 
+    // model lifecycle
     constructor: function() {
         this.callParent(arguments);
         this.dirty = true;
+    },
+
+    loadRecords: function() {
+        var me = this,
+            personIdMap = {},
+            count, index = 0, participant;
+
+        me.callParent(arguments);
+
+        if (!me.getSection()) {
+            me.peopleMap = null;
+            return;
+        }
+
+        for (count = me.getCount(); index < count; index++) {
+            participant = me.getAt(index);
+            personIdMap[participant.get('PersonID')] = participant;
+        }
+
+        me.personIdMap = personIdMap;
     },
 
 
@@ -55,5 +76,16 @@ Ext.define('Slate.store.courses.SectionParticipants', {
 
         this.dirty = false;
         this.load();
+    },
+
+    getByPersonId: function(personId) {
+        var personIdMap = this.personIdMap;
+
+        if (!personIdMap) {
+            Ext.Logger.warn('getByPersonId is only available when filtering by section');
+            return null;
+        }
+
+        return personIdMap[personId] || null;
     }
 });
