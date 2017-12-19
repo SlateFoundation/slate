@@ -89,5 +89,11 @@ Ext.define('Slate.store.courses.SectionParticipants', {
         }
 
         return personIdMap[personId] || null;
+    },
+
+    unload: function() {
+        this.loadCount = 0;
+        this.personIdMap = null;
+        this.removeAll();
     }
 });

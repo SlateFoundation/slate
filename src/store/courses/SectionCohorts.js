@@ -53,5 +53,10 @@ Ext.define('Slate.store.courses.SectionCohorts', {
 
         this.dirty = false;
         this.load();
+    },
+
+    unload: function() {
+        this.loadCount = 0;
+        this.removeAll();
     }
 });
