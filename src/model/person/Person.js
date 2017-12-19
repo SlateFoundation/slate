@@ -1,7 +1,7 @@
 Ext.define('Slate.model.person.Person', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.people.People',
         'Ext.data.identifier.Negative',
         'Ext.data.validator.Presence'
     ],
@@ -216,13 +216,7 @@ Ext.define('Slate.model.person.Person', {
         LastName: 'presence'
     },
 
-    proxy: {
-        type: 'slaterecords',
-        url: '/people',
-        startParam: false,
-        limitParam: false,
-        include: ['groupIDs', 'Advisor', 'PrimaryEmail']
-    },
+    proxy: 'slate-people',
 
 
     // model methods
@@ -256,6 +250,7 @@ Ext.define('Slate.model.person.Person', {
         return url ? '<a href="#'+url+'">'+displayName+'</a>' : displayName;
     },
 
+    // TODO: move this to a SlateAdmin override
     toUrl: function() {
         var me = this;
 

@@ -1,7 +1,7 @@
 Ext.define('Slate.model.progress.SectionTermReport', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.progress.SectionTermReports',
         'Ext.data.identifier.Negative'
     ],
 
@@ -104,10 +104,5 @@ Ext.define('Slate.model.progress.SectionTermReport', {
         }
     ],
 
-    proxy: {
-        type: 'slate-records',
-        url: '/progress/section-term-reports',
-        limitParam: null,
-        startParam: null
-    }
+    proxy: 'slate-progress-reports-section-term'
 });

@@ -1,7 +1,7 @@
-Ext.define('Slate.model.CourseSection', {
+Ext.define('Slate.model.course.SectionParticipant', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Records',
+        'Slate.proxy.courses.SectionParticipants',
         'Ext.data.identifier.Negative'
     ],
 
@@ -19,7 +19,7 @@ Ext.define('Slate.model.CourseSection', {
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Courses\\Section'
+            defaultValue: 'Slate\\Courses\\SectionParticipant'
         },
         {
             name: 'Created',
@@ -33,52 +33,48 @@ Ext.define('Slate.model.CourseSection', {
             allowNull: true
         },
         {
-            name: 'CourseID',
+            name: 'CourseSectionID',
             type: 'int'
         },
         {
-            name: 'Title',
+            name: 'PersonID',
+            type: 'int'
+        },
+        {
+            name: 'Person'
+        },
+        {
+            name: 'Role',
             type: 'string'
         },
         {
-            name: 'Code',
-            type: 'string'
+            name: 'StartDate',
+            type: 'date',
+            dateFormat: 'timestamp',
+            allowNull: true
         },
         {
-            name: 'Status',
+            name: 'EndDate',
+            type: 'date',
+            dateFormat: 'timestamp',
+            allowNull: true
+        },
+        {
+            name: 'Cohort',
             type: 'string',
-            defaultValue: 'Live'
-        },
-        {
-            name: 'Notes',
-            type: 'string',
             allowNull: true
         },
+
+        // virtual fields
         {
-            name: 'StudentsCapacity',
-            type: 'int',
-            allowNull: true
+            name: 'PersonFirstName',
+            mapping: 'Person.FirstName'
         },
         {
-            name: 'TermID',
-            type: 'int',
-            allowNull: true
-        },
-        {
-            name: 'ScheduleID',
-            type: 'int',
-            allowNull: true
-        },
-        {
-            name: 'LocationID',
-            type: 'int',
-            allowNull: true
+            name: 'PersonLastName',
+            mapping: 'Person.LastName'
         }
     ],
 
-    proxy: {
-        type: 'slate-records',
-        url: '/sections',
-        include: ['Term']
-    }
+    proxy: 'slate-courses-participants'
 });

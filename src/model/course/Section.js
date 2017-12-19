@@ -1,7 +1,10 @@
-Ext.define('Slate.model.Term', {
+Ext.define('Slate.model.course.Section', {
     extend: 'Ext.data.Model',
+    alternateClassName: [
+        'Slate.model.CourseSection'
+    ],
     requires: [
-        'Slate.proxy.Terms',
+        'Slate.proxy.courses.Sections',
         'Ext.data.identifier.Negative'
     ],
 
@@ -14,33 +17,35 @@ Ext.define('Slate.model.Term', {
         {
             name: 'ID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Term'
+            defaultValue: 'Slate\\Courses\\Section'
         },
         {
             name: 'Created',
             type: 'date',
             dateFormat: 'timestamp',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'CreatorID',
             type: 'int',
-            useNull: true
+            allowNull: true
+        },
+        {
+            name: 'CourseID',
+            type: 'int'
         },
         {
             name: 'Title',
-            type: 'string',
-            useNull: true
+            type: 'string'
         },
         {
-            name: 'Handle',
-            type: 'string',
-            useNull: true
+            name: 'Code',
+            type: 'string'
         },
         {
             name: 'Status',
@@ -48,33 +53,31 @@ Ext.define('Slate.model.Term', {
             defaultValue: 'Live'
         },
         {
-            name: 'StartDate',
-            type: 'date',
-            dateFormat: 'Y-m-d',
-            useNull: true
+            name: 'Notes',
+            type: 'string',
+            allowNull: true
         },
         {
-            name: 'EndDate',
-            type: 'date',
-            dateFormat: 'Y-m-d',
-            useNull: true
-        },
-        {
-            name: 'ParentID',
+            name: 'StudentsCapacity',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
-            name: 'Left',
+            name: 'TermID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
-            name: 'Right',
+            name: 'ScheduleID',
             type: 'int',
-            useNull: true
+            allowNull: true
+        },
+        {
+            name: 'LocationID',
+            type: 'int',
+            allowNull: true
         }
     ],
 
-    proxy: 'slate-terms'
+    proxy: 'slate-courses-sections'
 });
