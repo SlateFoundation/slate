@@ -128,6 +128,20 @@ Ext.define('Slate.ui.app.Container', {
         }
     },
 
+    getRefItems: function(deep) {
+        var header = this.getHeader(),
+            items = this.callParent(arguments);
+
+        if (header) {
+            if (deep) {
+                items.unshift(...header.getRefItems(deep));
+            }
+            items.unshift(header);
+        }
+
+        return items;
+    },
+
     privates: {
         finishRender: function () {
             this.callParent(arguments);
