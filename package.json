@@ -82,14 +82,7 @@
         /**
          * Additional resources used during theme slicing operations
          */
-        "slicer": {
-            "js": [
-                {
-                    "path": "${package.dir}/sass/example/custom.js",
-                    "isWidgetManifest": true
-                }
-            ]
-        },
+        "slicer": null,
 
         /**
          * Controls the output directory.
