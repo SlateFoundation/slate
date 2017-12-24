@@ -142,6 +142,11 @@ Ext.define('Slate.ui.app.Container', {
         return items;
     },
 
+    afterComponentLayout: function() {
+        this.callParent(arguments);
+        this.getHeader().updateLayout();
+    },
+
     privates: {
         finishRender: function () {
             this.callParent(arguments);
