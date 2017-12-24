@@ -13,7 +13,7 @@ Ext.define('Slate.ui.app.Container', {
          * @cfg {boolean}
          * Whether app should be full-width or padded
          */
-        fullWidth: true,
+        fullWidth: false,
 
         /**
          * @cfg {Slate.ui.app.Header|Object|string|boolean}
