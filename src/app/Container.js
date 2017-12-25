@@ -102,15 +102,16 @@ Ext.define('Slate.ui.app.Container', {
     },
 
     updatePlaceholder: function(placeholder, oldPlaceholder) {
-        var items = this.items;
+        var me = this,
+            items = me.items;
 
         if (items && items.isMixedCollection) {
             if (oldPlaceholder) {
-                this.remove(oldPlaceholder);
+                me.remove(oldPlaceholder);
             }
 
             if (placeholder) {
-                this.insert(0, placeholder);
+                me.insert(0, placeholder);
             }
         }
     },
