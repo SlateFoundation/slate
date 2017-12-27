@@ -16,7 +16,7 @@
             {courseField blankOption='Any' default=$Course}
             {locationField blankOption='Any' default=$Location}
             {scheduleField blankOption='Any' default=$Schedule}
-            {checkbox inputName=enrolled_user value=current label='Only My Sections' default=$Course}
+            {checkbox inputName=enrolled_user value='*current' label='Only My Sections' default=$Course}
 
             <div class="submit-area">
                 <input type="submit" value="Apply Filters">

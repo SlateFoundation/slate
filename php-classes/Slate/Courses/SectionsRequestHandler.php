@@ -44,7 +44,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
 
     public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
     {
-        if (empty($_REQUEST['term']) || $_REQUEST['term'] == 'current') {
+        if (empty($_REQUEST['term']) || $_REQUEST['term'] == '*current') {
             if (!$Term = Term::getClosest()) {
                 return static::throwInvalidRequestError('No current term could be found');
             }
@@ -87,7 +87,7 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
 
         if (!empty($_REQUEST['enrolled_user'])) {
-            if ($_REQUEST['enrolled_user'] == 'current') {
+            if ($_REQUEST['enrolled_user'] == '*current') {
                 $GLOBALS['Session']->requireAuthentication();
                 $EnrolledUser = $GLOBALS['Session']->Person;
             } elseif (!$EnrolledUser = User::getByHandle($_REQUEST['enrolled_user'])) {
