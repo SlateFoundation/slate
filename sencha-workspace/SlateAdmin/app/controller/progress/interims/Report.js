@@ -552,7 +552,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
             return; // setting the term will call this function again via the change event
         }
 
-        sectionsProxy.setExtraParam('enrolled_user', myClassesOnlyCheckbox.getValue() ? 'current' : '');
+        sectionsProxy.setExtraParam('enrolled_user', myClassesOnlyCheckbox.getValue() ? '*current' : '');
         sectionsProxy.setExtraParam('term', term);
         sectionsStore.loadIfDirty();
     },
