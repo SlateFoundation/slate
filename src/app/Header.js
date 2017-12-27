@@ -12,7 +12,7 @@ Ext.define('Slate.ui.app.Header', {
     config: {
 
         /**
-         * @cfg {Ext.Compontent|String|boolean}
+         * @cfg {Ext.Component|String|boolean}
          *
          * String title for application or false to hide
          */
@@ -51,15 +51,16 @@ Ext.define('Slate.ui.app.Header', {
     },
 
     updateTitle: function(title, oldTitle) {
-        var items = this.items;
+        var me = this,
+            items = me.items;
 
         if (items && items.isMixedCollection) {
             if (oldTitle) {
-                this.remove(oldTitle);
+                me.remove(oldTitle);
             }
 
             if (title) {
-                this.insert(0, title);
+                me.insert(0, title);
             }
         }
     },
