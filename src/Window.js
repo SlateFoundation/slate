@@ -23,7 +23,11 @@ Ext.define('Slate.ui.Window', {
          *
          * A component, config, or xtype for a main view to add to the window
          */
-        mainView: null
+        mainView: null,
+
+
+        minWidth: 400,
+        minHeight: 200
     },
 
 
