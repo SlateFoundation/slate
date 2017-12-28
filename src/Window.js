@@ -65,13 +65,19 @@ Ext.define('Slate.ui.Window', {
             oldMainView.un('titlechange', 'onMainViewTitleChange', me);
         }
 
-        if (mainView && mainView.isPanel && me.removeMainViewHeader) {
-            if (mainView.rendered) {
-                if (mainView.header) {
-                    mainView.header.hide();
+        if (mainView && mainView.isPanel) {
+            if (me.removeMainViewHeader) {
+                if (mainView.rendered) {
+                    if (mainView.header) {
+                        mainView.header.hide();
+                    }
+                } else {
+                    mainView.header = false;
                 }
-            } else {
-                mainView.header = false;
+            }
+
+            if (mainView.border) {
+                mainView.setBorder(false);
             }
 
             if (mainView.title) {
