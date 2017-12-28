@@ -36,10 +36,6 @@ Ext.define('Slate.ui.Window', {
     constrainHeader: true,
 
 
-    // container configuration
-    layout: 'fit',
-
-
     // component configuration
     componentClS: 'slate-window',
 
