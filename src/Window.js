@@ -76,15 +76,15 @@ Ext.define('Slate.ui.Window', {
                 }
             }
 
-            if (mainView.border) {
-                mainView.setBorder(false);
-            }
-
-            if (mainView.title) {
-                me.setTitle(mainView.title);
-            }
-
             mainView.on('titlechange', 'onMainViewTitleChange', me);
+        }
+
+        if (mainView.border) {
+            mainView.setBorder(false);
+        }
+
+        if (mainView.title) {
+            me.setTitle(mainView.title);
         }
 
         if (items && items.isMixedCollection) {
