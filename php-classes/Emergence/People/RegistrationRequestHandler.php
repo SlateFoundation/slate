@@ -55,15 +55,15 @@ class RegistrationRequestHandler extends \RequestHandler
 
             // attach contact points
             if (!empty($_REQUEST['Email'])) {
-                $User->PrimaryEmail = \Emergence\People\ContactPoint\Email::fromString($_REQUEST['Email']);
+                $User->PrimaryEmail = ContactPoint\Email::fromString($_REQUEST['Email'], $User);
             }
 
             if (!empty($_REQUEST['Phone'])) {
-                $User->PrimaryPhone = \Emergence\People\ContactPoint\Phone::fromString($_REQUEST['Phone']);
+                $User->PrimaryPhone = ContactPoint\Phone::fromString($_REQUEST['Phone'], $User);
             }
 
             if (!empty($_REQUEST['Postal'])) {
-                $User->PrimaryPostal = \Emergence\People\ContactPoint\Postal::fromString($_REQUEST['Postal']);
+                $User->PrimaryPostal = ContactPoint\Postal::fromString($_REQUEST['Postal'], $User);
             }
 
             // save person fields

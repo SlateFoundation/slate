@@ -294,20 +294,29 @@ class Person extends VersionedRecord implements IPerson
         return ($this->PreferredName ?: $this->FirstName).' '.$this->LastName;
     }
 
-    public function setValue($name, $value)
+    protected static function _relationshipExists($relationship)
     {
-        switch ($name) {
+        if ($relationship == 'Email') {
+            return true;
+        }
+
+        return parent::_relationshipExists($relationship);
+    }
+
+    protected function _setRelationshipValue($relationship, $value)
+    {
+        switch ($relationship) {
             case 'Email':
                 \Emergence\Logger::general_warning('Deprecated: Write on Person(#{PersonID})->Email, use ->PrimaryEmail = Email::fromString(...) instead', ['PersonID' => $this->ID]);
 
                 if (!$this->isPhantom) {
-                    $Existing = \Emergence\People\ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]);
+                    $Existing = ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]);
                 }
 
-                $this->PrimaryEmail = $Existing ? $Existing : \Emergence\People\ContactPoint\Email::fromString($value, $this, true);
+                $this->PrimaryEmail = $Existing ? $Existing : ContactPoint\Email::fromString($value, $this);
                 break;
             default:
-                return parent::setValue($name, $value);
+                return parent::_setRelationshipValue($relationship, $value);
         }
     }
 
