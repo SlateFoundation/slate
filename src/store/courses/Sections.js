@@ -20,5 +20,11 @@ Ext.define('Slate.store.courses.Sections', {
                 direction: 'ASC'
             }
         ]
+    },
+
+    getByCode: function(code) {
+        var index = code ? this.findExact('Code', code) : -1;
+
+        return index == -1 ? null : this.getAt(index);
     }
 });
