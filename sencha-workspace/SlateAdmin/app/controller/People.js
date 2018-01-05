@@ -923,7 +923,7 @@ Ext.define('SlateAdmin.controller.People', {
         if (!person) {
            _finishSelectPerson();
         } else if (Ext.isString(person) && person.charAt(0) != '?') {
-            personRecord = store.findRecord('Username', person);
+            personRecord = store.getAt(store.findExact('Username', person));
 
             if (personRecord) {
                 _finishSelectPerson();

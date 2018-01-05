@@ -468,7 +468,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             if (oldSelectedRecord && oldSelectedRecord.get('Code') == sectionId) {
                 section = oldSelectedRecord;
             } else {
-                section = sectionsResultStore.findRecord('Code', sectionId);
+                section = sectionsResultStore.getAt(sectionsResultStore.findExact('Code', sectionId));
             }
         }
 
