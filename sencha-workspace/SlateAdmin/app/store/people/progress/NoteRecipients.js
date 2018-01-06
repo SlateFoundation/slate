@@ -10,6 +10,7 @@ Ext.define('SlateAdmin.store.people.progress.NoteRecipients', {
              * Higher indexes are higher priority
              */
             groupsPriority: [
+                'Related Contacts',
                 'Teachers',
                 'School Contacts'
             ],
