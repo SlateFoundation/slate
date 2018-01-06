@@ -85,6 +85,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             click: 'onComposeProgressNoteClick'
         },
         'people-details-progress-note-recipientgrid': {
+            beforeselect: 'onRecipientsGridBeforeSelect',
             select: 'onRecipientsGridSelect',
             deselect: 'onRecipientsGridDeselect'
         },
@@ -151,6 +152,25 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 }
             }
         });
+    },
+
+    onRecipientsGridBeforeSelect: function(selModel, selectedRecord) {
+        var personId = selectedRecord.get('PersonID'),
+            fullName = selectedRecord.get('FullName');
+
+        if (selectedRecord.get('Email')) {
+            return true;
+        }
+
+        if (this.lastRecipientWarning != personId) {
+            this.lastRecipientWarning = personId;
+            Ext.Msg.alert(
+                'Cannot select '+fullName,
+                fullName+' cannot be selected as a recipient because they do not have any email address on file. Update their contact details before adding them as a recipient.'
+            );
+        }
+
+        return false;
     },
 
     onRecipientsGridSelect: function(selModel, selectedRecord) {
