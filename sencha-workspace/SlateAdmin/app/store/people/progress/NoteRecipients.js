@@ -1,28 +1,56 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.store.people.progress.NoteRecipients', {
     extend: 'Ext.data.Store',
-    requires: [
-        'SlateAdmin.model.person.progress.NoteRecipient'
-    ],
 
 
     model: 'SlateAdmin.model.person.progress.NoteRecipient',
-    groupField: 'RelationshipGroup',
-    sorters: [{
-        sorterFn: function (p1, p2) {
-            if (p1.get('RelationshipGroup') != 'Other' && p2.get('RelationshipGroup') != 'Other') {
-                return 0;
-            }
+    config: {
+        grouper: {
 
-            if (p1.get('RelationshipGroup') != 'Other') {
-                return 1;
-            }
+            /**
+             * Higher indexes are higher priority
+             */
+            groupsPriority: [
+                'Teachers',
+                'School Contacts'
+            ],
 
-            if (p2.get('RelationshipGroup') != 'Other') {
-                return -1;
+            property: 'RelationshipGroup',
+            sorterFn: function (record1, record2) {
+                return (
+                    this.groupsPriority.indexOf(record1.get('RelationshipGroup'))
+                    > this.groupsPriority.indexOf(record2.get('RelationshipGroup'))
+                        ? -1
+                        : 1
+                );
             }
+        },
 
-            return -1;
-        }
-    }]
+        sorters: [{
+
+            /**
+             * Higher indexes are higher priority
+             */
+            labelsPriority: [
+                'Student',
+                'Advisor'
+            ],
+
+            sorterFn: function (record1, record2) {
+                var label1 = record1.get('Label'),
+                    label2 = record2.get('Label'),
+                    labelPriority1 = this.labelsPriority.indexOf(label1),
+                    labelPriority2 = this.labelsPriority.indexOf(label2);
+
+                if (labelPriority1 == labelPriority2) {
+                    if (label1 == label2) {
+                        return 0;
+                    }
+
+                    return label1 < label2 ? -1 : 1;
+                }
+
+                return labelPriority1 > labelPriority2 ? -1 : 1;
+            }
+        }]
+    }
 });
