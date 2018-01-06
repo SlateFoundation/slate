@@ -434,16 +434,24 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         var me = this,
             editorWindow = me.getProgressNoteEditorWindow();
 
+        // index by PersonID to eliminate duplicates
+        recipients = Ext.Array.toValueMap(recipients, function(recipient) {
+            return recipient.get('PersonID');
+        });
+
+        // map to recipient records
+        recipients = Ext.Object.getValues(recipients).map(function(r) {
+            return {
+                PersonID: r.get('PersonID'),
+                Email: r.get('Email')
+            };
+        });
+
         SlateAdmin.API.request({
             url: '/notes/' + record.get('ID') + '/recipients',
             method: 'POST',
             jsonData: {
-                data: recipients.map(function(r) {
-                    return {
-                        PersonID: r.get('PersonID'),
-                        Email: r.get('Email')
-                    };
-                })
+                data: recipients
             },
             success: function (response) {
                 editorWindow.setLoading(false);
