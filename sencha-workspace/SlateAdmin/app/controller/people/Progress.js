@@ -164,12 +164,12 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         );
     },
 
-    onRecipientsGridDeselect: function(selModel, selectedRecord) {
-        var personId = selectedRecord.get('PersonID');
+    onRecipientsGridDeselect: function(selModel, deselectedRecord) {
+        var personId = deselectedRecord.get('PersonID');
 
         selModel.deselect(
             this.getPeopleProgressNoteRecipientsStore().queryBy(function(record) {
-                return record !== selectedRecord && record.get('PersonID') === personId;
+                return record !== deselectedRecord && record.get('PersonID') === personId;
             }).getRange()
         );
     },
