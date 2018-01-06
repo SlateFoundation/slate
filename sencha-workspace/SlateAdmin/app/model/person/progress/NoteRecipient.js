@@ -15,11 +15,13 @@ Ext.define('SlateAdmin.model.person.progress.NoteRecipient', {
         },
         {
             name: 'Email',
-            type: 'string'
+            type: 'string',
+            allowNull: true
         },
         {
             name: 'Label',
-            type: 'string'
+            type: 'string',
+            allowNull: true
         },
         {
             name: 'RelationshipGroup',
