@@ -202,31 +202,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 url: '/notes/addCustomRecipient',
                 params: values,
                 success: function (res) {
-                    var r = Ext.decode(res.responseText),
-                        record;
+                    var r = Ext.decode(res.responseText);
 
                     if (r.success) {
-                        record = recipientsStore.add(r.data);
-
-                        recipientsStore.sort({
-                            sorterFn: function (p1, p2) {
-                                if (p1.get('RelationshipGroup') != 'Other' && p2.get('RelationshipGroup') != 'Other') {
-                                    return 0;
-                                }
-
-                                if (p1.get('RelationshipGroup') != 'Other') {
-                                    return 1;
-                                }
-
-                                if (p2.get('RelationshipGroup') != 'Other') {
-                                    return -1;
-                                }
-
-                                return -1;
-                            }
-                        });
-
-                        recipientGrid.getSelectionModel().select(record, true);
+                        recipientGrid.getSelectionModel().select(recipientsStore.add(r.data), true);
 
                         menu.hide();
                         personField.reset();
