@@ -5,6 +5,9 @@ module.exports = {
     "globals": {
         "Ext": true
     },
+    "parserOptions": {
+        "ecmaVersion": 6,
+    },
     "extends": "eslint:recommended",
     "rules": {
         "accessor-pairs": "error",
@@ -14,7 +17,6 @@ module.exports = {
         ],
         "array-callback-return": "error",
         "arrow-body-style": "error",
-        "arrow-parens": "error",
         "arrow-spacing": "error",
         "block-scoped-var": "error",
         "block-spacing": "error",
@@ -44,10 +46,10 @@ module.exports = {
         "consistent-this": "off",
         "curly": "error",
         "default-case": "error",
-        "dot-location": "error",
+        "dot-location": ["error", "property"],
         "dot-notation": "error",
         "eol-last": "off",
-        "eqeqeq": "warn",
+        "eqeqeq": "off",
         "func-names": "off",
         "func-style": "error",
         "generator-star-spacing": "error",
@@ -57,7 +59,17 @@ module.exports = {
         "id-blacklist": "error",
         "id-length": "off",
         "id-match": "error",
-        "indent": ["error", 4, {"SwitchCase": 1}],
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1,
+                "ignoredNodes": [
+                    // ignore indent of subsequent literals in tpl/renderTpl/itemTpl properties
+                    "Property[value.type=ArrayExpression]:matches([key.name=tpl], [key.name=renderTpl], [key.name=itemTpl], [key.name=displayTpl]) > ArrayExpression > Literal + Literal"
+                ]
+            }
+        ],
         "init-declarations": "off",
         "jsx-quotes": "error",
         "key-spacing": "error",
@@ -207,7 +219,7 @@ module.exports = {
         "radix": "error",
         "require-jsdoc": "error",
         "require-yield": "error",
-        "semi": "off",
+        "semi": "error",
         "semi-spacing": [
             "error",
             {
