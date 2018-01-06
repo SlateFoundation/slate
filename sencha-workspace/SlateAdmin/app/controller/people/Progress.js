@@ -84,6 +84,10 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         'people-details-progress button[action=composeNote]': {
             click: 'onComposeProgressNoteClick'
         },
+        'people-details-progress-note-recipientgrid': {
+            select: 'onRecipientsGridSelect',
+            deselect: 'onRecipientsGridDeselect'
+        },
         'people-details-progress-note-recipientgrid #customRecipientPersonCombo': {
             select: 'onCustomRecipientPersonSelect'
         },
@@ -147,6 +151,27 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 }
             }
         });
+    },
+
+    onRecipientsGridSelect: function(selModel, selectedRecord) {
+        var personId = selectedRecord.get('PersonID');
+
+        selModel.select(
+            this.getPeopleProgressNoteRecipientsStore().queryBy(function(record) {
+                return record !== selectedRecord && record.get('PersonID') === personId;
+            }).getRange(),
+            true // true to keep existing selection
+        );
+    },
+
+    onRecipientsGridDeselect: function(selModel, selectedRecord) {
+        var personId = selectedRecord.get('PersonID');
+
+        selModel.deselect(
+            this.getPeopleProgressNoteRecipientsStore().queryBy(function(record) {
+                return record !== selectedRecord && record.get('PersonID') === personId;
+            }).getRange()
+        );
     },
 
     onCustomRecipientPersonSelect: function (combo, record) {
