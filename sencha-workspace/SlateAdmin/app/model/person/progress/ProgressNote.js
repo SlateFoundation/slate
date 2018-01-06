@@ -1,61 +1,61 @@
 Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
     extend: 'Ext.data.Model',
+    requires: [
+        'Ext.data.identifier.Negative'
+    ],
+
 
     idProperty: 'ID',
+    identifier: 'negative',
     fields: [
+
+        // writable fields
         {
             name: 'ID',
-            type: 'integer',
-            useNull: true,
-            defaultValue: null
-        }, {
+            type: 'integer'
+        },
+        {
             name: 'Class',
             defaultValue: 'Slate\\Progress\\Note'
-        }, {
+        },
+        {
             name: 'ContextClass',
             defaultValue: 'Emergence\\People\\Person'
-        }, {
+        },
+        {
             name: 'ContextID',
             type: 'integer'
-        }, {
-            name: 'AuthorID',
-            type: 'integer',
-            useNull: true,
-            defaultValue: null,
-            persist: false
-        }, {
-            name: 'Author',
-            useNull: true,
-            defaultValue: null,
-            persist: false
-        }, {
+        },
+        {
             name: 'Subject',
             type: 'string',
             allowBlank: false
-        }, {
+        },
+        {
             name: 'Message',
             type: 'string',
-            allowBlank: false
-        }, {
+            allow: false
+        },
+        {
             name: 'MessageFormat',
             defaultValue: 'html'
-        }, {
-            name: 'Status',
-            useNull: true,
-            defaultValue: null
-        }, {
-            name: 'Source',
-            useNull: true,
-            defaultValue: null
-        }, {
+        },
+        {
             name: 'ParentMessageID',
             type: 'integer',
-            useNull: true,
-            defaultValue: null
-        }, {
-            name: 'Sent',
+            allowNull: true
+        },
+        {
+            name: 'Status',
+            allowNull: true
+        },
+
+        // dynamic fields
+        {
+            name: 'Timestamp',
             type: 'date',
-            dateFormat: 'timestamp'
+            dateFormat: 'timestamp',
+            persist: false
         }
     ],
     proxy: {
