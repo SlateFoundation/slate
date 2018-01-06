@@ -1,14 +1,34 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.model.person.progress.NoteRecipient', {
     extend: 'Ext.data.Model',
 
-    idProperty: 'ID',
+
     groupField: 'RelationshipGroup',
+
     fields: [
-        'FullName',
-        'Email',
-        'Label',
-        'Status',
+        {
+            name: 'PersonID',
+            type: 'integer'
+        },
+        {
+            name: 'FullName',
+            type: 'string'
+        },
+        {
+            name: 'Email',
+            type: 'string'
+        },
+        {
+            name: 'Label',
+            type: 'string'
+        },
+        {
+            name: 'RelationshipGroup',
+            convert: function (v) {
+                return v || 'Other';
+            }
+        },
+
+        // virtual fields
         {
             name: 'selected',
             type: 'boolean',
@@ -17,19 +37,9 @@ Ext.define('SlateAdmin.model.person.progress.NoteRecipient', {
 
                 return selected;
             }
-        }, {
-            name: 'PersonID',
-            type: 'integer'
-        }, {
-            name: 'RelationshipGroup',
-            convert: function (v) {
-                return v ? v : 'Other';
-            }
-        }, {
-            name: 'ID',
-            type: 'integer'
         }
     ],
+
     proxy: {
         type: 'slaterecords',
         startParam: null,
