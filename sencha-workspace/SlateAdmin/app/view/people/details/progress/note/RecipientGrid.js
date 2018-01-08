@@ -44,22 +44,21 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 fieldLabel: 'Full name',
                 queryMode: 'remote',
                 queryParam: 'q',
+                triggerAction: 'query',
                 allowBlank: false,
                 valueField: 'ID',
+                displayField: 'FullName',
                 store: {
-                    model: 'Slate.model.person.Person'
-                },
-                listConfig: {
-                    getInnerTpl: function () {
-                        return '{FirstName} {LastName}';
-                    }
-                },
-                displayTpl: '<tpl for=".">{FirstName} {LastName}</tpl>',
-                validator: function (v) {
-                    if(v.match(/^\S+\s+\S+$/)) {
-                        return true;
-                    } else {
-                        return 'This field should be a first and last name in the format "John Doe"';
+                    model: 'Slate.model.person.Person',
+                    pageSize: 0,
+                    remoteSort: false,
+                    sorters: [{
+                        property: 'SortName',
+                        direction: 'ASC'
+                    }],
+                    proxy: {
+                        type: 'slate-people',
+                        summary: true
                     }
                 }
             },{
