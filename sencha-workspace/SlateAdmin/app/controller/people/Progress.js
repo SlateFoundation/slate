@@ -203,17 +203,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             menu = btn.up('menu'),
             personField = menu.down('combo[name="Person"]'),
             emailField = menu.down('textfield[name="Email"]'),
-            relationshipField = menu.down('textfield[name="Label"]'),
             person = me.getPeopleManager().getSelectedPerson(),
             values = {
                 Person: personField.getValue(),
-                Label: relationshipField.getValue(),
                 Email: emailField.getValue(),
                 StudentID: person.getId()
             },
             recipientGrid = me.getProgressNoteRecipientGrid(),
             recipientsStore = me.getPeopleProgressNoteRecipientsStore();
-
 
         if (personField.isValid() && emailField.isValid()) {
             recipientGrid.setLoading('Attempting to add custom recipient &hellip;');
@@ -221,18 +218,17 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             SlateAdmin.API.request({
                 url: '/notes/addCustomRecipient',
                 params: values,
-                success: function (res) {
-                    var r = Ext.decode(res.responseText);
+                success: function (response) {
+                    var responseData = response.data;
 
-                    if (r.success) {
-                        recipientGrid.getSelectionModel().select(recipientsStore.add(r.data), true);
+                    if (responseData.success) {
+                        recipientGrid.getSelectionModel().select(recipientsStore.add(responseData.data), true);
 
                         menu.hide();
                         personField.reset();
                         emailField.reset();
-                        relationshipField.reset();
                     } else {
-                        Ext.Msg.alert('Failure adding recipient', r.message);
+                        Ext.Msg.alert('Failure adding recipient', responseData.message);
                     }
 
                     recipientGrid.setLoading(false);
