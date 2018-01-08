@@ -46,6 +46,7 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 fieldLabel: 'Full name',
                 queryMode: 'remote',
                 queryParam: 'q',
+                minChars: 3,
                 triggerAction: 'query',
                 allowBlank: false,
                 valueField: 'ID',
