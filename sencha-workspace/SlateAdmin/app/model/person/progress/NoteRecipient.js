@@ -21,7 +21,9 @@ Ext.define('SlateAdmin.model.person.progress.NoteRecipient', {
         {
             name: 'Label',
             type: 'string',
-            allowNull: true
+            convert: function (v) {
+                return v || 'Custom';
+            }
         },
         {
             name: 'RelationshipGroup',
