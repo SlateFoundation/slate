@@ -68,10 +68,6 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 vtype: 'email',
                 allowBlank: false
             },{
-                xtype: 'textfield',
-                name: 'Label',
-                fieldLabel: 'Relationship (optional)'
-            },{
                 margin: '10 0',
                 xtype: 'button',
                 glyph: 0xf055, // fa-plus-circle
