@@ -25,6 +25,20 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
         dataIndex: 'Label'
     }],
 
+    selModel: {
+        type: 'checkboxmodel',
+        checkOnly: true
+    },
+
+    features: [
+        {
+            ftype:'grouping',
+            collapse: Ext.emptyFn,
+            groupHeaderTpl: '{name}',
+            collapsible: false
+        }
+    ],
+
     tbar: [{
         text: 'Add Custom Recipient&hellip;',
         action: 'addCustomRecipientBtn',
@@ -53,16 +67,7 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 displayField: 'FullName',
                 store: {
                     model: 'Slate.model.person.Person',
-                    pageSize: 0,
-                    remoteSort: false,
-                    sorters: [{
-                        property: 'SortName',
-                        direction: 'ASC'
-                    }],
-                    proxy: {
-                        type: 'slate-people',
-                        summary: true
-                    }
+                    pageSize: 0
                 }
             },{
                 xtype: 'textfield',
@@ -78,21 +83,5 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 action: 'addRecepient'
             }]
         }
-    }],
-
-
-    initComponent: function () {
-        var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
-            collapse: Ext.emptyFn,
-            groupHeaderTpl: '{name}',
-            collapsible: false
-        });
-
-        this.selModel = Ext.create('Ext.selection.CheckboxModel',{
-            checkOnly: true
-        });
-
-        this.features = [groupingFeature];
-        this.callParent(arguments);
-    }
+    }]
 });
