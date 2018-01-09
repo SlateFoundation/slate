@@ -7,6 +7,7 @@ use Emergence\People\User;
 use Emergence\People\Relationship;
 
 use Emergence\CRM\Message;
+use Emergence\CRM\MessageRecipient;
 use Emergence\CRM\GlobalRecipient;
 
 use Slate\People\Student;
@@ -35,8 +36,6 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                 return static::handleProgressNotesRequest();
             case 'recipients':
                 return static::handleRecipientsRequest();
-            case 'addCustomRecipient':
-                return static::handleCustomRecipientRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -45,7 +44,10 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
     public static function handleProgressNotesRequest()
     {
         if (!empty($_REQUEST['messageID'])) {
-            $Message = Message::getByID($_REQUEST['messageID']);
+            if (!$Message = Message::getByID($_REQUEST['messageID'])) {
+                return static::throwNotFoundError('Message not found');
+            }
+
             $Person = Person::getByID($Message->ContextID);
         }
 
@@ -75,17 +77,37 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
     public static function handleRecipientsRequest($Person = false, $Message = false)
     {
         if (!$Person && !($Person = Person::getByID($_REQUEST['personID']))) {
-            return static::throwError('Person not found');
+            return static::throwNotFoundError('Person not found');
         }
 
         if (!$Message && !empty($_REQUEST['messageID'])) {
-            $Message = Message::getByID($_REQUEST['messageID']);
+            if (!$Message = Message::getByID($_REQUEST['messageID'])) {
+                return static::throwNotFoundError('Message not found');
+            }
         }
 
-        // build list of suggested recipients
-        $contacts = [];
 
-        // instructors
+        // collect existing recipients by Person ID
+        $recipients = [];
+        if ($Message) {
+            foreach ($Message->Recipients as $Recipient) {
+                $recipients[$Recipient->PersonID] = [
+                    'Recipient' => $Recipient,
+                    'matched' => false
+                ];
+            }
+        }
+
+
+        // build list of suggested recipients, starting with the target person
+        $contacts = [
+            static::_getRecipientFromPerson($Person, [
+                'label' => $Person->isA(Student::class) ? 'Student' : 'User',
+                'recipients' => &$recipients
+            ])
+        ];
+
+        // teachers
         if ($Term = Term::getClosest()) {
             $studentInstructors = \DB::allRecords(
                 'SELECT TeacherPart.PersonID AS instructorID, GROUP_CONCAT(TeacherPart.CourseSectionID SEPARATOR ",") AS sectionIDs'
@@ -107,57 +129,61 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                     return Section::getByID($sectionID)->Course->Code;
                 }, explode(',', $si['sectionIDs']));
 
-                $contacts[$si['instructorID']] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), 'Teacher ('.join(', ',$sectionCodes).')', 'Teachers');
+                $contacts[] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), [
+                    'group' => 'Teachers',
+                    'label' => 'Teacher ('.join(', ',$sectionCodes).')',
+                    'recipients' => &$recipients
+                ]);
             }
         }
 
         // advisor
         if ($Person->AdvisorID) {
-            if (isset($contacts[$Person->AdvisorID])) {
-                $contacts[$Person->AdvisorID]['Label'] = 'Advisor, '.$contacts[$Person->AdvisorID]['Label'];
-            } else {
-                $contacts[$Person->AdvisorID] = static::_getRecipientFromPerson($Person->Advisor, 'Advisor', 'Teachers');
-            }
+            $contacts[] = static::_getRecipientFromPerson($Person->Advisor, [
+                'group' => 'School Contacts',
+                'label' => 'Advisor',
+                'recipients' => &$recipients
+            ]);
         }
 
         // school-wide staff
-        foreach (GlobalRecipient::getAll() AS $globalRecipient) {
-            $contacts[$globalRecipient->PersonID] = static::_getRecipientFromPerson(Person::getByID($globalRecipient->PersonID), $globalRecipient->Title, 'Global Recipients');
+        foreach (GlobalRecipient::getAll() as $globalRecipient) {
+            $contacts[] = static::_getRecipientFromPerson(Person::getByID($globalRecipient->PersonID), [
+                'group' => 'School Contacts',
+                'label' => $globalRecipient->Title,
+                'recipients' => &$recipients
+            ]);
         }
 
         // related contacts
-        foreach (Relationship::getAllByPerson($Person) AS $Relationship) {
-            if (!$Relationship->RelatedPerson->Email) {
+        foreach ($Person->Relationships as $Relationship) {
+            $contacts[] = static::_getRecipientFromPerson($Relationship->RelatedPerson, [
+                'group' => 'Related Contacts',
+                'label' => $Relationship->Label,
+                'recipients' => &$recipients
+            ]);
+        }
+
+
+        // add any additional recipients
+        foreach ($recipients as $recipient) {
+            if ($recipient['matched']) {
                 continue;
             }
 
-            $contacts[$Relationship->RelatedPersonID] = static::_getRecipientFromPerson($Relationship->RelatedPerson, $Relationship->Label, 'Related Contacts');
+            $contacts[] = static::_getRecipientFromPerson($recipient['Recipient']->Person, [
+                'recipients' => &$recipients
+            ]);
         }
 
-        // the target person
-        $contacts[$Person->ID] = static::_getRecipientFromPerson($Person, ($Person->isA(Student::class) ? 'Student' : 'User'));
-
-        // mark recieved recipients
-        if ($Message) {
-            $contactStatus = [];
-
-            foreach ($Message->Recipients AS $Recipient) {
-                if (!isset($contacts[$Recipient->PersonID])) {
-                    $contacts[$Recipient->PersonID] = static::_getRecipientFromPerson($Recipient->Person, 'Message Recipient');
-                    
-                }
-                
-                $contacts[$Recipient->PersonID]['Status'] = $Recipient->Status;
-                $contacts[$Recipient->PersonID]['Email'] = $Recipient->EmailContact->toString();
-            }
-        }
 
         return static::respond('noteRecipients', [
             'success' => true,
-            'data' => array_values($contacts)
+            'data' => $contacts
         ]);
     }
 
+    // TODO: delete this?
     public static function respond($responseID, $responseData = [], $responseMode = false)
     {
         $className = static::$recordClass;
@@ -212,54 +238,26 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         return parent::respond($responseID, $responseData);
     }
 
-    public static function handleCustomRecipientRequest()
+    protected static function _getRecipientFromPerson(Person $Person, array $options = [])
     {
-        if (!empty($_REQUEST['Person']) && !empty($_REQUEST['Email']) && !empty($_REQUEST['StudentID'])) {
-            if (!is_numeric($_REQUEST['Person'])) {
-                $nameData = Person::parseFullName($_REQUEST['Person']);
-
-                $recipientData = ['Email' => $_REQUEST['Email']];
-
-                if ($RecipientPerson = Person::getByFullName($nameData['FirstName'], $nameData['LastName'])) {
-                    if (!$EmailContactPoint = \Emergence\People\ContactPoint\Email::getByWhere(['PersonID'=>$RecipientPerson->ID, 'Data'=>serialize($_REQUEST['Email'])])) {
-                        return static::throwError($RecipientPerson->FullName.' exists in the database already. Please select user from combo or use a different name');
-                    }
-                } else {
-                    $RecipientPerson = Person::create(array_merge($recipientData, $nameData), true);
-                }
-            } else {
-                $RecipientPerson = Person::getByID($_REQUEST['Person']);
-            }
-
-            $email = ($RecipientPerson->Email == $_REQUEST['Email']) ? false : $_REQUEST['Email'];
-
-            if ($_REQUEST['Relationship']) {
-                if (!$Relationship = Relationship::getByWhere(['PersonID'=>$_REQUEST['StudentID'], 'RelatedPersonID' => $RecipientPerson->ID])) {
-                    $Relationship = Relationship::create([
-                        'PersonID' => $_REQUEST['StudentID'],
-                        'RelatedPersonID' => $RecipientPerson->ID,
-                        'Label' => $_REQUEST['Label']
-                    ], true);
-                }
-            }
-
-            $recipient = static::_getRecipientFromPerson($RecipientPerson, $Relationship->Label, 'Other', $email);
-
-            return static::respond('notes', [
-                'success' => true,
-                'data' => $recipient
-            ]);
-        }
-    }
-
-    protected static function _getRecipientFromPerson(Person $Person, $relationship = null, $relationshipGroup = null, $email = null)
-    {
-        return [
+        $data = [
             'PersonID' => $Person->ID,
             'FullName' => $Person->FullName,
-            'Email' => !$email ? $Person->Email : $email,
-            'Label' => $relationship,
-            'RelationshipGroup' => $relationshipGroup
+            'Email' => !empty($options['email']) ? $options['email'] : ($Person->PrimaryEmail ? $Person->PrimaryEmail->toString() : null),
+            'Label' => !empty($options['label']) ? $options['label'] : null,
+            'RelationshipGroup' => !empty($options['group']) ? $options['group'] : null,
+            'Status' => null
         ];
+
+        if (!empty($options['recipients']) && !empty($options['recipients'][$Person->ID])) {
+            $Recipient = $options['recipients'][$Person->ID]['Recipient'];
+
+            $data['Email'] = $Recipient->EmailContact->toString();
+            $data['Status'] = $Recipient->Status;
+
+            $options['recipients'][$Person->ID]['matched'] = true;
+        }
+
+        return $data;
     }
 }

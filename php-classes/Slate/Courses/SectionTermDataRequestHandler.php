@@ -25,7 +25,7 @@ class SectionTermDataRequestHandler extends \RecordsRequestHandler
         }
 
         if (!empty($_GET['term'])) {
-            if ($_GET['term'] == 'current') {
+            if ($_GET['term'] == '*current') {
                 if (!$Term = Term::getClosest()) {
                     return static::throwInvalidRequestError('No current term could be found');
                 }
