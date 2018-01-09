@@ -259,22 +259,9 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                 $RecipientPerson = Person::getByID($_REQUEST['Person']);
             }
 
-            $email = ($RecipientPerson->Email == $_REQUEST['Email']) ? false : $_REQUEST['Email'];
-            $label = !empty($_REQUEST['Label']) ? $_REQUEST['Label'] : null;
-
-            if ($_REQUEST['Relationship']) {
-                if (!$Relationship = Relationship::getByWhere(['PersonID'=>$_REQUEST['StudentID'], 'RelatedPersonID' => $RecipientPerson->ID])) {
-                    $Relationship = Relationship::create([
-                        'PersonID' => $_REQUEST['StudentID'],
-                        'RelatedPersonID' => $RecipientPerson->ID,
-                        'Label' => $label
-                    ], true);
-                }
-            }
-
             $recipient = static::_getRecipientFromPerson($RecipientPerson, [
-                'label' => $label,
-                'email' => $email
+                'label' => !empty($_REQUEST['Label']) ? $_REQUEST['Label'] : null,
+                'email' => $_REQUEST['Email'] != $RecipientPerson->Email ? $_REQUEST['Email'] : null
             ]);
 
             return static::respond('notes', [
