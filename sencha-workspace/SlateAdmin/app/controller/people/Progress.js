@@ -90,7 +90,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             deselect: 'onRecipientsGridDeselect'
         },
         'people-details-progress-note-recipientgrid #customRecipientPersonCombo': {
-            select: 'onCustomRecipientPersonSelect'
+            change: 'onCustomRecipientPersonChange'
         },
         'people-details-progress-note-recipientgrid button[action=addRecepient]': {
             click: 'onAddProgressNoteRecipient'
@@ -194,8 +194,14 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         );
     },
 
-    onCustomRecipientPersonSelect: function (combo, record) {
-        combo.nextSibling('textfield[name=Email]').setValue(record.get('Email'));
+    onCustomRecipientPersonChange: function (combo, value, oldValue) {
+        var record = combo.getSelectedRecord();
+
+        if (!oldValue || record || typeof oldValue == 'number') {
+            combo.nextSibling('textfield[name=Email]').setValue(record ? record.get('Email') : null);
+        }
+
+        combo.nextSibling('button').setText(record ? 'Add known person' : 'Create new person and add');
     },
 
     onAddProgressNoteRecipient: function (btn) {
