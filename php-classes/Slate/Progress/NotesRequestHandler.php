@@ -36,8 +36,6 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                 return static::handleProgressNotesRequest();
             case 'recipients':
                 return static::handleRecipientsRequest();
-            case 'addCustomRecipient':
-                return static::handleCustomRecipientRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
@@ -238,37 +236,6 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         }
 
         return parent::respond($responseID, $responseData);
-    }
-
-    public static function handleCustomRecipientRequest()
-    {
-        if (!empty($_REQUEST['Person']) && !empty($_REQUEST['Email']) && !empty($_REQUEST['StudentID'])) {
-            if (!is_numeric($_REQUEST['Person'])) {
-                $nameData = Person::parseFullName($_REQUEST['Person']);
-
-                $recipientData = ['Email' => $_REQUEST['Email']];
-
-                if ($RecipientPerson = Person::getByFullName($nameData['FirstName'], $nameData['LastName'])) {
-                    if (!$EmailContactPoint = \Emergence\People\ContactPoint\Email::getByWhere(['PersonID'=>$RecipientPerson->ID, 'Data'=>serialize($_REQUEST['Email'])])) {
-                        return static::throwError($RecipientPerson->FullName.' exists in the database already. Please select user from combo or use a different name');
-                    }
-                } else {
-                    $RecipientPerson = Person::create(array_merge($recipientData, $nameData), true);
-                }
-            } else {
-                $RecipientPerson = Person::getByID($_REQUEST['Person']);
-            }
-
-            $recipient = static::_getRecipientFromPerson($RecipientPerson, [
-                'label' => !empty($_REQUEST['Label']) ? $_REQUEST['Label'] : null,
-                'email' => $_REQUEST['Email'] != $RecipientPerson->Email ? $_REQUEST['Email'] : null
-            ]);
-
-            return static::respond('notes', [
-                'success' => true,
-                'data' => $recipient
-            ]);
-        }
     }
 
     protected static function _getRecipientFromPerson(Person $Person, array $options = [])
