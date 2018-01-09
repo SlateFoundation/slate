@@ -235,7 +235,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             recipientGrid = me.getProgressNoteRecipientGrid(),
             recipientsStore = me.getPeopleProgressNoteRecipientsStore(),
             recipientData = {
-                FullName: personField.getValue(),
                 Email: emailField.getValue(),
                 StudentID: student.getId()
             };
@@ -243,6 +242,9 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         if (personField.isValid() && emailField.isValid()) {
             if (person) {
                 recipientData.PersonID = person.getId();
+                recipientData.FullName = person.get('FullName');
+            } else {
+                recipientData.FullName = personField.getValue();
             }
 
             recipientGrid.getSelectionModel().select(recipientsStore.add(recipientData), true);
