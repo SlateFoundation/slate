@@ -195,13 +195,29 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     onCustomRecipientPersonChange: function (combo, value, oldValue) {
-        var record = combo.getSelectedRecord();
+        var record = combo.getSelectedRecord(),
+            btn = combo.nextSibling('button'),
+            picker = combo.getPicker(),
+            navModel = picker.getNavigationModel(),
+            matchPosition;
 
         if (!oldValue || record || typeof oldValue == 'number') {
             combo.nextSibling('textfield[name=Email]').setValue(record ? record.get('Email') : null);
         }
 
-        combo.nextSibling('button').setText(record ? 'Add known person' : 'Create new person and add');
+        if (typeof value == 'string') {
+            matchPosition = combo.getStore().findExact('FullName', value);
+
+            if (matchPosition == -1) {
+                navModel.setPosition(null);
+                picker.clearHighlight();
+            } else {
+                navModel.setPosition(matchPosition);
+            }
+        }
+
+        btn.setText(record ? 'Add known person' : 'Create new person and add');
+        btn.enable();
     },
 
     onAddProgressNoteRecipient: function (btn) {
