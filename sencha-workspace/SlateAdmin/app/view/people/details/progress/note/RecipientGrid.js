@@ -41,7 +41,6 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
 
     tbar: [{
         text: 'Add Custom Recipient&hellip;',
-        action: 'addCustomRecipientBtn',
         cls: 'glyph-success',
         glyph: 0xf055, // fa-plus-circle
         menu: {
@@ -81,7 +80,8 @@ Ext.define('SlateAdmin.view.people.details.progress.note.RecipientGrid', {
                 xtype: 'button',
                 glyph: 0xf055, // fa-plus-circle
                 text: 'Add',
-                action: 'addRecepient'
+                action: 'addRecepient',
+                disabled: true
             }]
         }
     }]

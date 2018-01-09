@@ -7,7 +7,8 @@ Ext.define('SlateAdmin.model.person.progress.NoteRecipient', {
     fields: [
         {
             name: 'PersonID',
-            type: 'integer'
+            type: 'integer',
+            allowNull: true
         },
         {
             name: 'FullName',

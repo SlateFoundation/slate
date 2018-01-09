@@ -90,7 +90,8 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             deselect: 'onRecipientsGridDeselect'
         },
         'people-details-progress-note-recipientgrid #customRecipientPersonCombo': {
-            change: 'onCustomRecipientPersonChange'
+            change: 'onCustomRecipientPersonChange',
+            blur: 'onCustomRecipientPersonBlur'
         },
         'people-details-progress-note-recipientgrid button[action=addRecepient]': {
             click: 'onAddProgressNoteRecipient'
@@ -220,45 +221,35 @@ Ext.define('SlateAdmin.controller.people.Progress', {
         btn.enable();
     },
 
+    onCustomRecipientPersonBlur: function (combo) {
+        combo.checkChange();
+    },
+
     onAddProgressNoteRecipient: function (btn) {
         var me = this,
             menu = btn.up('menu'),
             personField = menu.down('combo[name="Person"]'),
             emailField = menu.down('textfield[name="Email"]'),
-            person = me.getPeopleManager().getSelectedPerson(),
-            values = {
-                Person: personField.getValue(),
-                Email: emailField.getValue(),
-                StudentID: person.getId()
-            },
+            person = personField.getSelectedRecord(),
+            student = me.getPeopleManager().getSelectedPerson(),
             recipientGrid = me.getProgressNoteRecipientGrid(),
-            recipientsStore = me.getPeopleProgressNoteRecipientsStore();
+            recipientsStore = me.getPeopleProgressNoteRecipientsStore(),
+            recipientData = {
+                FullName: personField.getValue(),
+                Email: emailField.getValue(),
+                StudentID: student.getId()
+            };
 
         if (personField.isValid() && emailField.isValid()) {
-            recipientGrid.setLoading('Attempting to add custom recipient &hellip;');
+            if (person) {
+                recipientData.PersonID = person.getId();
+            }
 
-            SlateAdmin.API.request({
-                url: '/notes/addCustomRecipient',
-                params: values,
-                success: function (response) {
-                    var responseData = response.data;
+            recipientGrid.getSelectionModel().select(recipientsStore.add(recipientData), true);
 
-                    if (responseData.success) {
-                        recipientGrid.getSelectionModel().select(recipientsStore.add(responseData.data), true);
-
-                        menu.hide();
-                        personField.reset();
-                        emailField.reset();
-                    } else {
-                        Ext.Msg.alert('Failure adding recipient', responseData.message);
-                    }
-
-                    recipientGrid.setLoading(false);
-                },
-                failure: function () {
-                    recipientGrid.setLoading(false);
-                }
-            });
+            menu.hide();
+            personField.reset();
+            emailField.reset();
         }
     },
 
@@ -454,15 +445,23 @@ Ext.define('SlateAdmin.controller.people.Progress', {
 
         // index by PersonID to eliminate duplicates
         recipients = Ext.Array.toValueMap(recipients, function(recipient) {
-            return recipient.get('PersonID');
+            return recipient.get('PersonID') || recipient.get('Email');
         });
 
         // map to recipient records
         recipients = Ext.Object.getValues(recipients).map(function(r) {
-            return {
-                PersonID: r.get('PersonID'),
-                Email: r.get('Email')
-            };
+            var personId = r.get('PersonID'),
+                recipientData = {
+                    Email: r.get('Email')
+                };
+
+            if (personId) {
+                recipientData.PersonID = personId;
+            } else {
+                recipientData.FullName = r.get('FullName');
+            }
+
+            return recipientData;
         });
 
         SlateAdmin.API.request({
