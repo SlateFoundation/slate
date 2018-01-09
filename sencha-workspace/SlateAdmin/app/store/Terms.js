@@ -1,21 +1,25 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.Terms', {
     extend: 'Ext.data.Store',
 
+
     model: 'SlateAdmin.model.Term',
-    proxy: {
-        type: 'slaterecords',
-        url: '/terms',
-        startParam: false,
-        limitParam: false,
-        extraParams: {
-            includeCurrent: true
-        }
+    config: {
+        pageSize: 0,
+
+        proxy: {
+            type: 'slaterecords',
+            url: '/terms',
+            extraParams: {
+                includeCurrent: true
+            }
+        },
+
+        sorters: [{
+            property: 'Right',
+            direction: 'DESC'
+        }]
     },
-    sorters: [{
-        property: 'Right',
-        direction: 'DESC'
-    }],
+
 
     getCurrentTerm: function() {
         var me = this,

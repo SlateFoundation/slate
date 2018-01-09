@@ -1,19 +1,21 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.people.Groups', {
     extend: 'Ext.data.Store',
 
+
     model: 'SlateAdmin.model.person.Group',
-    sorters: 'Left',
-    proxy: {
-        type: 'slaterecords',
-        url: '/groups',
-        startParam: false,
-        limitParam: false,
-        include: 'Population',
-        extraParams: {
-            parentGroup: 'any'
-        }
+    config: {
+        sorters: 'Left',
+        pageSize: 0,
+        proxy: {
+            type: 'slaterecords',
+            url: '/groups',
+            include: 'Population',
+            extraParams: {
+                parentGroup: 'any'
+            }
+        },
     },
+
 
     onProxyLoad: function(operation) {
         var me = this,
