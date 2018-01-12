@@ -29,10 +29,10 @@ build-app() {
     pushd "/src/sencha-workspace/${app_name}" > /dev/null
 
     echo "    Running: sencha app refresh"
-    sencha app refresh
+    hab pkg exec jarvus/sencha-cmd sencha app refresh
 
     echo "    Running: sencha app build development"
-    sencha app build development
+    hab pkg exec jarvus/sencha-cmd sencha app build development
 
     popd > /dev/null
 
