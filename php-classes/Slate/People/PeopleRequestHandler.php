@@ -4,9 +4,13 @@ namespace Slate\People;
 
 use ActiveRecord;
 use Emergence\People\Person;
+use Emergence\People\Groups\Group;
+
 use Slate\Term;
+use Slate\TermsRequestHandler;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
+
 
 class PeopleRequestHandler extends \PeopleRequestHandler
 {
@@ -28,9 +32,120 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                 return static::respond('graduation-years', [
                     'data' => Student::getDistinctGraduationYears()
                 ]);
+            case '*student-lists':
+                return static::handleStudentListsRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
+    }
+
+    public static function handleStudentListsRequest()
+    {
+        $lists = [];
+
+
+        // compile sections for current user, current term, or selected term
+        if (
+            $GLOBALS['Session']->Person
+            && count($GLOBALS['Session']->Person->CurrentCourseSections)
+            && (
+                empty($_GET['sections']) ||
+                $_GET['sections'] != 'all'
+            )
+        ) {
+            foreach ($GLOBALS['Session']->Person->CurrentCourseSections as $Section) {
+                $lists[] = [
+                    'groupId' => 'sections',
+                    'groupLabel' => 'My Sections',
+                    'label' => $Section->Code,
+                    'value' => "section:{$Section->Code}"
+                ];
+
+                foreach ($Section->getCohorts() as $cohort) {
+                    $lists[] = [
+                        'groupId' => 'sections',
+                        'groupLabel' => 'My Sections',
+                        'label' => "{$Section->Code} ▸ {$cohort}",
+                        'value' => "section:{$Section->Code}:{$cohort}"
+                    ];
+                }
+            }
+        } else {
+            if (empty($_GET['term'])) {
+                if (!$Term = Term::getClosest()) {
+                    return static::throwInvalidRequestError('no current term found');
+                }
+            } else {
+                if (!$Term = TermsRequestHandler::getRecordByHandle($_GET['term'])) {
+                    return static::throwNotFoundError('requested term not found');
+                }
+            }
+
+            $sections = Section::getAllByWhere([
+                'TermID' => [
+                    'values' => $Term->getRelatedTermIDs()
+                ]
+            ]);
+
+            foreach ($sections as $Section) {
+                $lists[] = [
+                    'groupId' => 'sections',
+                    'groupLabel' => "All sections in {$Term->Title}",
+                    'label' => $Section->Code,
+                    'value' => "section:{$Section->Code}"
+                ];
+
+                foreach ($Section->getCohorts() as $cohort) {
+                    $lists[] = [
+                        'groupId' => 'sections',
+                        'groupLabel' => "All sections in {$Term->Title}",
+                        'label' => "{$Section->Code} ▸ {$cohort}",
+                        'value' => "section:{$Section->Code}:{$cohort}"
+                    ];
+                }
+            }
+        }
+
+
+        // compile user groups
+        foreach (Group::getAll(['order' => ['Left' => 'ASC']]) as $Group) {
+            $lists[] = [
+                'groupId' => 'groups',
+                'groupLabel' => 'User Groups',
+                'label' => $Group->getFullPath(' ▸ '),
+                'value' => "group:{$Group->Handle}"
+            ];
+        }
+
+
+        // build options
+        $groupOptions = [];
+
+        if (!isset($Term)) {
+            $groupOptions['sections'] = [
+                [
+                    'label' => 'Show all sections',
+                    'query' => [
+                        'sections' => 'all'
+                    ]
+                ]
+            ];
+        } else {
+            $groupOptions['sections'] = [
+                [
+                    'label' => 'Show only my sections',
+                    'query' => [
+                        'sections' => 'enrolled'
+                    ]
+                ]
+            ];
+        }
+
+
+        return static::respond('studentLists', [
+            'data' => $lists,
+            'groupOptions' => $groupOptions
+        ]);
     }
 
     public static function handleRecordRequest(ActiveRecord $Person, $action = false)
