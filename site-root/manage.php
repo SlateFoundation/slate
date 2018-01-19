@@ -2,7 +2,6 @@
 
 $GLOBALS['Session']->requireAccountLevel('Staff');
 
-Sencha_RequestHandler::respond('app/SlateAdmin/ext', array(
-    'App' => Sencha_App::getByName('SlateAdmin')
-    ,'mode' => 'production'
-));
+$app = Emergence\WebApps\App::get('SlateAdmin');
+
+Emergence\Site\RequestHandler::sendResponse($app->render(), 'webapps/SlateAdmin');
