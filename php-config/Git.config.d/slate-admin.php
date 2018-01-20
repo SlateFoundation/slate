@@ -6,7 +6,7 @@ Git::$repositories['slate-admin'] = [
     'workingBranch' => 'develop',
     'trees' => [
         'docs/slate-admin',
-        'html-templates/app/SlateAdmin',
+        'html-templates/webapps/SlateAdmin',
         'php-classes/SlateAdmin.php',
         'sencha-workspace/SlateAdmin' => [
             'exclude' => [

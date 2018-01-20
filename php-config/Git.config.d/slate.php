@@ -10,7 +10,7 @@ Git::$repositories['slate'] = [
         'html-templates' => [
             'exclude' => [
                 // from slate-admin layer:
-                '#^/app/SlateAdmin(/|$)#'
+                '#^/webapps/SlateAdmin(/|$)#'
             ]
         ],
         'php-classes' => [
