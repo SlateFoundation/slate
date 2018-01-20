@@ -1,4 +1,4 @@
-{extends app/slate-ext.tpl}
+{extends "webapps/slate-sencha.tpl"}
 
 {block meta}
     {$title = "Manage Slate"}
@@ -6,11 +6,12 @@
 {/block}
 
 {block css-app}
-    {cssmin fonts/font-awesome.css}
+    {cssmin "fonts/font-awesome.css"}
+
     {$dwoo.parent}
 {/block}
 
-{block js-app-local}
+{block js-app}
     {$dwoo.parent}
 
     {foreach item=package from=SlateAdmin::getPlugins()}
