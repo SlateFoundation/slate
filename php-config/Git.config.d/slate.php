@@ -16,7 +16,7 @@ Git::$repositories['slate'] = [
         'php-classes' => [
             'exclude' => [
                 // from slate-admin layer:
-                '#^/SlateAdmin\.php$#',
+                '#^/SlateAdmin(/|$)#',
 
                 // from emergence-saml2 layer:
                 '#^/Emergence/SAML2(/|$)#',

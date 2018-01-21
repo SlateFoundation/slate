@@ -7,7 +7,7 @@ Git::$repositories['slate-admin'] = [
     'trees' => [
         'docs/slate-admin',
         'html-templates/webapps/SlateAdmin',
-        'php-classes/SlateAdmin.php',
+        'php-classes/SlateAdmin',
         'sencha-workspace/SlateAdmin' => [
             'exclude' => [
                 '#^/bootstrap\\.#' // don't sync generated bootstrap files
