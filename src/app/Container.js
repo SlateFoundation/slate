@@ -43,7 +43,7 @@ Ext.define('Slate.ui.app.Container', {
     renderTpl: [
         '{% Ext.DomHelper.generateMarkup(values.$comp.getHeader().getRenderTree(), out); %}',
         '<div id="{id}-bodyWrap" data-ref="bodyWrap" class="slate-appcontainer-bodyWrap">',
-        '    {% this.renderContainer(out, values); %}',
+            '{% this.renderContainer(out, values); %}',
         '</div>',
     ],
 
