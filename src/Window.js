@@ -5,6 +5,9 @@
 Ext.define('Slate.ui.Window', {
     extend: 'Ext.window.Window',
     xtype: 'slate-window',
+    requires: [
+        'Slate.ui.PanelFooter'
+    ],
 
 
     /**
@@ -15,6 +18,12 @@ Ext.define('Slate.ui.Window', {
      */
     removeMainViewHeader: true,
 
+    /**
+     * @cfg {Boolean}
+     * True to adopt any footer within mainView to the window itself.
+     */
+    adoptMainViewFooter: true,
+
 
     config: {
 
@@ -24,6 +33,13 @@ Ext.define('Slate.ui.Window', {
          * A component, config, or xtype for a main view to add to the window
          */
         mainView: null,
+
+        /**
+         * @cfg {Ext.Component|Object|String|null}
+         *
+         * A component, config, or xtype for a footer component
+         */
+        footer: null,
 
 
         minWidth: 400,
@@ -43,7 +59,7 @@ Ext.define('Slate.ui.Window', {
 
 
     // component configuration
-    componentClS: 'slate-window',
+    componentCls: 'slate-window',
 
 
     // config handlers
@@ -65,7 +81,8 @@ Ext.define('Slate.ui.Window', {
 
     updateMainView: function(mainView, oldMainView) {
         var me = this,
-            items = me.items;
+            items = me.items,
+            footer = mainView && mainView.down('slate-panelfooter');
 
         if (oldMainView) {
             oldMainView.un('titlechange', 'onMainViewTitleChange', me);
@@ -93,6 +110,11 @@ Ext.define('Slate.ui.Window', {
             me.setTitle(mainView.title);
         }
 
+        if (footer && me.adoptMainViewFooter) {
+            mainView.remove(footer, false);
+            me.setFooter(footer);
+        }
+
         if (items && items.isMixedCollection) {
             if (oldMainView) {
                 me.remove(oldMainView);
@@ -104,16 +126,46 @@ Ext.define('Slate.ui.Window', {
         }
     },
 
+    applyFooter: function(footer, oldFooter) {
+        if (typeof footer === 'boolean') {
+            footer = {
+                hidden: !footer
+            };
+        }
+
+        return Ext.factory(footer, 'Slate.ui.PanelFooter', oldFooter);
+    },
+
+    updateFooter: function(footer, oldFooter) {
+        var me = this,
+            items = me.items;
+
+        if (items && items.isMixedCollection) {
+            if (oldFooter) {
+                me.remove(oldFooter);
+            }
+
+            if (footer) {
+                me.addDocked(footer);
+            }
+        }
+    },
+
 
     // container lifecycle
     initItems: function() {
         var me = this,
-            mainView = me.getMainView();
+            mainView = me.getMainView(),
+            footer = me.getFooter();
 
         me.callParent(arguments);
 
         if (mainView) {
             me.insert(0, mainView);
+        }
+
+        if (footer) {
+            me.addDocked(footer);
         }
     },
 
