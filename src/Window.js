@@ -27,13 +27,19 @@ Ext.define('Slate.ui.Window', {
 
 
         minWidth: 400,
-        minHeight: 200
+        width: 560,
+        minHeight: 200,
+        scrollable: true,
+        bodyStyle: {
+            backgroundColor: '#f5f5f5'
+        }
     },
 
 
     // window configuration
     shadow: 'frame',
-    constrainHeader: true,
+    bodyPadding: 16,
+    constrain: true,
 
 
     // component configuration
