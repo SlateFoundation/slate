@@ -35,7 +35,7 @@ Ext.define('Slate.ui.Window', {
         mainView: null,
 
         /**
-         * @cfg {Ext.Component|Object|String|null}
+         * @cfg {Slate.ui.PanelFooter|Ext.Component|Object|String|null}
          *
          * A component, config, or xtype for a footer component
          */
