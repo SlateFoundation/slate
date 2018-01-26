@@ -29,13 +29,16 @@
     font-size: 1.375em;
     font-weight: normal;
     line-height: 1;
-    padding-top: .125em;
+    padding-top: .25em;
+    text-shadow: 0 1px 1px rgba(black, .3);
     -webkit-font-smoothing: antialiased;
 
     small {
         color: mix($base-color, $panel-header-color, 30%);
         font-size: .675em;
-        margin-left: .25em;
+        font-weight: bold;
+        letter-spacing: .01em;
+        margin-left: .75em;
         text-transform: uppercase;
     }
 }
