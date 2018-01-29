@@ -1,4 +1,4 @@
-Ext.define('Slate.ui.FormPanel', {
+Ext.define('Slate.ui.form.Panel', {
     extend: 'Ext.form.Panel',
     xtype: 'slate-formpanel',
 
