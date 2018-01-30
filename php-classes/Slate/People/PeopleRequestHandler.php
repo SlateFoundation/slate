@@ -25,10 +25,14 @@ class PeopleRequestHandler extends \PeopleRequestHandler
     {
         switch ($action ? $action : $action = static::shiftPath()) {
             case '*advisors':
+                $GLOBALS['Session']->requireAuthentication();
+
                 return static::respond('advisors', [
                     'data' => Student::getDistinctAdvisors()
                 ]);
             case '*graduation-years':
+                $GLOBALS['Session']->requireAuthentication();
+
                 return static::respond('graduation-years', [
                     'data' => Student::getDistinctGraduationYears()
                 ]);
@@ -41,6 +45,8 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
     public static function handleStudentListsRequest()
     {
+        $GLOBALS['Session']->requireAuthentication();
+
         $lists = [];
 
 
