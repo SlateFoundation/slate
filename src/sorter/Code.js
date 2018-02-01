@@ -6,11 +6,17 @@ Ext.define('Slate.sorter.Code', {
         numberRe: /^\d+$/,
         numberDelim: '.',
 
+        codeFn: function(item) {
+            return item.get('Code');
+        },
+
         sorterFn: function(a, b) {
-            var codeA = a.get('Code').toLowerCase(),
-                codeB = b.get('Code').toLowerCase(),
-                numberRe = this._numberRe, // eslint-disable-line no-underscore-dangle
-                numberDelim = this._numberDelim, // eslint-disable-line no-underscore-dangle
+            var me = this,
+                codeFn = me._codeFn, // eslint-disable-line no-underscore-dangle
+                numberRe = me._numberRe, // eslint-disable-line no-underscore-dangle
+                numberDelim = me._numberDelim, // eslint-disable-line no-underscore-dangle
+                codeA = codeFn(a).toLowerCase(),
+                codeB = codeFn(b).toLowerCase(),
                 dotIndexA, dotIndexB,
                 numberA, numberB;
 
@@ -37,4 +43,8 @@ Ext.define('Slate.sorter.Code', {
         }
     },
 
+
+    constructor: function(config) {
+        this.initConfig(config);
+    }
 });
