@@ -309,6 +309,11 @@ class Person extends VersionedRecord implements IPerson
             case 'Email':
                 \Emergence\Logger::general_warning('Deprecated: Write on Person(#{PersonID})->Email, use ->PrimaryEmail = Email::fromString(...) instead', ['PersonID' => $this->ID]);
 
+                if (!$value) {
+                    $this->PrimaryEmail = null;
+                    break;
+                }
+
                 $Existing = $this->isPhantom ? ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]) : null;
 
                 $this->PrimaryEmail = $Existing ? $Existing : ContactPoint\Email::fromString($value, $this);
