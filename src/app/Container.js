@@ -1,9 +1,11 @@
 Ext.define('Slate.ui.app.Container', {
     extend: 'Ext.Container',
     xtype: 'slate-appcontainer',
+    mixins: [
+        'Slate.ui.mixin.PlaceholderItem'
+    ],
     requires: [
-        'Slate.ui.app.Header',
-        'Slate.ui.Placeholder'
+        'Slate.ui.app.Header'
     ],
 
 
@@ -21,15 +23,7 @@ Ext.define('Slate.ui.app.Container', {
          *
          * Setting boolean values change visibility.
          */
-        header: null,
-
-        /**
-         * @cfg {Slate.ui.Placeholder|Object|string|boolean}
-         * Instance or configuration for placeholder component.
-         *
-         * Setting boolean values change visibility.
-         */
-        placeholder: null,
+        header: null
     },
 
 
@@ -85,50 +79,8 @@ Ext.define('Slate.ui.app.Container', {
         }
     },
 
-    applyPlaceholder: function(placeholder, oldPlaceholder) {
-        var type = typeof placeholder;
-
-        if (type == 'boolean') {
-            placeholder = {
-                hidden: !placeholder
-            };
-        } else if (type == 'string') {
-            placeholder = {
-                html: placeholder
-            };
-        }
-
-        return Ext.factory(placeholder, 'Slate.ui.Placeholder', oldPlaceholder);
-    },
-
-    updatePlaceholder: function(placeholder, oldPlaceholder) {
-        var me = this,
-            items = me.items;
-
-        if (items && items.isMixedCollection) {
-            if (oldPlaceholder) {
-                me.remove(oldPlaceholder);
-            }
-
-            if (placeholder) {
-                me.insert(0, placeholder);
-            }
-        }
-    },
-
 
     // container lifecycle
-    initItems: function() {
-        var me = this,
-            placeholder = me.getPlaceholder();
-
-        me.callParent(arguments);
-
-        if (placeholder) {
-            me.insert(0, placeholder);
-        }
-    },
-
     getRefItems: function(deep) {
         var header = this.getHeader(),
             items = this.callParent(arguments);
@@ -153,5 +105,5 @@ Ext.define('Slate.ui.app.Container', {
             this.callParent(arguments);
             this.getHeader().finishRender();
         }
-    },
+    }
 });
