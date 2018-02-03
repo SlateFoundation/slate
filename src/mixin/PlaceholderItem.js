@@ -38,7 +38,7 @@ Ext.define('Slate.ui.mixin.PlaceholderItem', {
             };
         }
 
-        return Ext.factory(placeholderItem, 'Slate.ui.Placeholder', oldPlaceholderItem);
+        return Ext.factory(placeholderItem, 'Slate.ui.Placeholder', oldPlaceholderItem && !oldPlaceholderItem.destroyed ? oldPlaceholderItem : null);
     },
 
     updatePlaceholderItem: function(placeholderItem, oldPlaceholderItem) {
