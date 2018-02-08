@@ -137,6 +137,10 @@ Ext.define('Slate.ui.Window', {
             footer = {
                 xtype: footer
             };
+        } else if (Ext.isArray(footer)) {
+            footer = {
+                items: footer
+            };
         }
 
         return Ext.factory(footer, 'Slate.ui.PanelFooter', oldFooter);
