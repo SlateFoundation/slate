@@ -133,6 +133,26 @@ Ext.define('Slate.ui.form.ContainerField', {
         return data;
     },
 
+    isValid: function() {
+        return this.disabled ? true : this.validateValue(this.getValue());
+    },
+
+    validateValue: function(value) {
+        var me = this,
+            errors = me.getErrors(value),
+            isValid = Ext.isEmpty(errors);
+
+        if (!me.preventMark) {
+            if (isValid) {
+                me.unsetActiveError();
+            } else {
+                me.setActiveErrors(errors);
+            }
+        }
+
+        return isValid;
+    },
+
     privates: {
         applyTargetCls: function(targetCls) {
             var containerElCls = this.containerElCls;
