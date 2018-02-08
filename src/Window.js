@@ -127,9 +127,15 @@ Ext.define('Slate.ui.Window', {
     },
 
     applyFooter: function(footer, oldFooter) {
-        if (typeof footer === 'boolean') {
+        var configType = typeof footer;
+
+        if (configType == 'boolean') {
             footer = {
                 hidden: !footer
+            };
+        } else if (configType == 'string') {
+            footer = {
+                xtype: footer
             };
         }
 
