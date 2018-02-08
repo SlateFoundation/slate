@@ -133,6 +133,14 @@ Ext.define('Slate.ui.form.ContainerField', {
         return data;
     },
 
+    markInvalid: function(errors) {
+        this.setActiveErrors(errors);
+    },
+
+    clearInvalid: function() {
+        this.unsetActiveError();
+    },
+
     isValid: function() {
         return this.disabled ? true : this.validateValue(this.getValue());
     },
@@ -144,9 +152,9 @@ Ext.define('Slate.ui.form.ContainerField', {
 
         if (!me.preventMark) {
             if (isValid) {
-                me.unsetActiveError();
+                me.clearInvalid();
             } else {
-                me.setActiveErrors(errors);
+                me.markInvalid(errors);
             }
         }
 
