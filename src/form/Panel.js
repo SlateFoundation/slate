@@ -29,7 +29,7 @@ Ext.define('Slate.ui.form.Panel', {
 
     defaults: {
         allowBlank: false,
-        msgTarget: 'side',
+        msgTarget: 'under',
         selectOnFocus: true,
         labelAlign: 'right',
         labelWidth: 150
