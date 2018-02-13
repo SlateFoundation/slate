@@ -73,6 +73,12 @@ Ext.define('Slate.model.course.SectionParticipant', {
         {
             name: 'PersonLastName',
             mapping: 'Person.LastName'
+        },
+        {
+            name: 'PersonFullName',
+            calculate: function(data) {
+                return data.PersonFirstName + ' ' + data.PersonLastName;
+            }
         }
     ],
 
