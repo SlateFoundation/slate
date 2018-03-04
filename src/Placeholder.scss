@@ -3,4 +3,8 @@
     font-style: italic;
     padding: 1.5em;
     text-align: center;
+
+    &:empty {
+        display: none;
+    }
 }
