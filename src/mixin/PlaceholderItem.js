@@ -34,7 +34,8 @@ Ext.define('Slate.ui.mixin.PlaceholderItem', {
             };
         } else if (type == 'string') {
             placeholderItem = {
-                html: placeholderItem
+                html: placeholderItem,
+                hidden: false
             };
         }
 
