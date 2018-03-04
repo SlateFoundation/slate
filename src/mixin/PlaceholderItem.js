@@ -51,7 +51,7 @@ Ext.define('Slate.ui.mixin.PlaceholderItem', {
             }
 
             if (placeholderItem) {
-                me.insert(0, placeholderItem);
+                me[placeholderItem.dock ? 'insertDocked' : 'insert'](0, placeholderItem);
             }
         }
     },
@@ -63,7 +63,7 @@ Ext.define('Slate.ui.mixin.PlaceholderItem', {
             placeholderItem = me.getPlaceholderItem();
 
         if (placeholderItem) {
-            me.insert(0, placeholderItem);
+            me[placeholderItem.dock ? 'insertDocked' : 'insert'](0, placeholderItem);
         }
     }
 });
