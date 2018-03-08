@@ -15,11 +15,18 @@ Ext.define('Slate.ui.form.ContainerField', {
     ],
 
 
+    config: {
+        readOnly: false
+    },
+
+
     /**
      * @cfg {Boolean} encodeSubmitValue
      * True to JSON-encode values when submitting as form
      */
     encodeSubmitValue: true,
+
+    readOnlyCls: Ext.baseCSSPrefix + 'form-readonly',
 
 
     // component rendering configuration
@@ -63,6 +70,14 @@ Ext.define('Slate.ui.form.ContainerField', {
         me.initField();
     },
 
+
+    // config handlers
+    updateReadOnly: function(readOnly) {
+        this.toggleCls(this.readOnlyCls, readOnly);
+    },
+
+
+    // field lifecycle
     /**
      * @private
      * Copied from Ext.form.FieldContainer
