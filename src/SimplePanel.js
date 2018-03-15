@@ -1,5 +1,5 @@
 Ext.define('Slate.ui.SimplePanel', {
-    extend: 'Ext.Container',
+    extend: 'Ext.container.Container',
     xtype: 'slate-simplepanel',
     requires: [
         'Ext.button.Button'

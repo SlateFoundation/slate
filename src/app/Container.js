@@ -1,5 +1,5 @@
 Ext.define('Slate.ui.app.Container', {
-    extend: 'Ext.Container',
+    extend: 'Ext.container.Container',
     xtype: 'slate-appcontainer',
     mixins: [
         'Slate.ui.mixin.PlaceholderItem'
