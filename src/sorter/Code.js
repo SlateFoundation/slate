@@ -12,9 +12,9 @@ Ext.define('Slate.sorter.Code', {
 
         sorterFn: function(a, b) {
             var me = this,
-                codeFn = me._codeFn, // eslint-disable-line no-underscore-dangle
-                numberRe = me._numberRe, // eslint-disable-line no-underscore-dangle
-                numberDelim = me._numberDelim, // eslint-disable-line no-underscore-dangle
+                codeFn = me._codeFn || me.codeFn, // eslint-disable-line no-underscore-dangle
+                numberRe = me._numberRe || me.numberFn, // eslint-disable-line no-underscore-dangle
+                numberDelim = me._numberDelim || me.numberDelim, // eslint-disable-line no-underscore-dangle
                 codeA = codeFn(a).toLowerCase(),
                 codeB = codeFn(b).toLowerCase(),
                 dotIndexA, dotIndexB,
