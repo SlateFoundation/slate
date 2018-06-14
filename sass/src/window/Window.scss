@@ -4,6 +4,11 @@
         border-top: 1px solid $border-color;
         padding: 8px 16px;
     }
+
+    .x-window-header-title-default {
+        text-shadow: 0 1px 1px rgba(black, .3);
+        -webkit-font-smoothing: antialiased;
+    }
 }
 
 .x-tool {
