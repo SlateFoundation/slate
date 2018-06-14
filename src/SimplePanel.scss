@@ -1,3 +1,5 @@
+$simplepanel-header-background-color: dynamic(#888);
+
 .slate-simplepanel {
     border-radius: 0 0 .25em .25em;
     box-shadow: 0 .125em .25em rgba(black, (1/6));
@@ -14,7 +16,7 @@
 }
 
 .slate-simplepanel-header {
-    background-color: #999;
+    background-color: $simplepanel-header-background-color;
     border-radius: .25em .25em 0 0;
     color: $panel-header-color;
     padding: .75em 1em;
@@ -27,19 +29,17 @@
 .slate-simplepanel-title {
     font-family: $heading-font;
     font-size: 1.375em;
-    font-weight: normal;
+    font-weight: bold;
     line-height: 1;
     padding-top: .25em;
     text-shadow: 0 1px 1px rgba(black, .3);
     -webkit-font-smoothing: antialiased;
 
     small {
-        color: mix($base-color, $panel-header-color, 30%);
-        font-size: .675em;
+        color: mix($simplepanel-header-background-color, $panel-header-color, 35%);
         font-weight: bold;
-        letter-spacing: .01em;
+        letter-spacing: .02em;
         margin-left: .75em;
-        text-transform: uppercase;
     }
 }
 
