@@ -10,13 +10,13 @@ Git::$repositories['slate'] = [
         'html-templates' => [
             'exclude' => [
                 // from slate-admin layer:
-                '#^/app/SlateAdmin(/|$)#'
+                '#^/webapps/SlateAdmin(/|$)#'
             ]
         ],
         'php-classes' => [
             'exclude' => [
                 // from slate-admin layer:
-                '#^/SlateAdmin\.php$#',
+                '#^/SlateAdmin(/|$)#',
 
                 // from emergence-saml2 layer:
                 '#^/Emergence/SAML2(/|$)#',
