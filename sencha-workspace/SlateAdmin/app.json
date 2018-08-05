@@ -4,6 +4,7 @@
     "version": "1.0.0.0",
     "framework": "ext",
     "framework.version": "5.1.1.451",
+    "cmd.version": "6.5.2.15",
     "theme": "slate-theme",
 
     /**
