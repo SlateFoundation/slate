@@ -3,6 +3,8 @@
 namespace Slate;
 
 
+use OutOfBoundsException;
+
 use Emergence\People\GuardianRelationship;
 
 use Slate\Courses\SectionsRequestHandler;
@@ -36,9 +38,13 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // get the requested student
         $Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student']);
-        $userIsStaff = $Session->hasAccountLevel('Staff');
+
+        if (!$Student) {
+            throw new OutOfBoundsException('student not found');
+        }
 
         // staff and the requested student definitely have access
+        $userIsStaff = $Session->hasAccountLevel('Staff');
         if ($userIsStaff || $Student->ID == $Session->PersonID) {
             return $Student;
         }
