@@ -3,6 +3,7 @@
 namespace Slate\People;
 
 use Exception;
+use RangeException;
 
 use DB;
 use Emergence\People\Person;
@@ -119,7 +120,7 @@ class Student extends User
             case 'organization':
             case 'group':
                 if (!$Group = Group::getByHandle($groupHandle)) {
-                    throw new Exception('Group not found');
+                    throw new RangeException('Group not found');
                 }
 
                 return $filterResult($Group->getAllPeople());
@@ -129,7 +130,7 @@ class Student extends User
                 list($groupHandle, $cohort) = array_pad(preg_split('/[\s:>]/', $groupHandle, 2), 2, null);
 
                 if (!$Section = Section::getByHandle($groupHandle)) {
-                    throw new Exception('Section not found');
+                    throw new RangeException('Section not found');
                 }
 
                 return $filterResult(Person::getAllByQuery(
@@ -149,7 +150,17 @@ class Student extends User
                     ]
                 ));
             default:
-                throw new Exception('Group type not recognized');
+                $students = [];
+
+                foreach (preg_split('/\s*[\n,]\s*/', $identifier) as $studentIdentifier) {
+                    if (!$User = static::getByUsername($studentIdentifier)) {
+                        throw new RangeException('user not found: '.$studentIdentifier);
+                    }
+
+                    $students[] = $User;
+                }
+
+                return $filterResult($students);
         }
     }
 

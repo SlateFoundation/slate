@@ -28,6 +28,14 @@
                         default=$value
                         placeholder='any'
                     }
+                {elseif $key == 'date' || substr($key, 0, 5) == 'date_'}
+                    {field
+                        type='date'
+                        inputName=$key
+                        label=$label
+                        default=$value
+                        blankOption='any'
+                    }
                 {else}
                     {field
                         inputName=$key
