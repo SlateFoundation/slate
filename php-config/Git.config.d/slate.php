@@ -6,6 +6,7 @@ Git::$repositories['slate'] = [
     'workingBranch' => 'develop',
     'trees' => [
         'content-blocks',
+        'data-exporters/slate',
         'event-handlers',
         'html-templates' => [
             'exclude' => [
