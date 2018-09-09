@@ -28,6 +28,14 @@
                         default=$value
                         placeholder='any'
                     }
+                {elseif is_int($value)}
+                    {field
+                        type='number'
+                        inputName=$key
+                        label=$label
+                        default=$value
+                        placeholder='any'
+                    }
                 {elseif $key == 'date' || substr($key, 0, 5) == 'date_'}
                     {field
                         type='date'
