@@ -15,6 +15,7 @@ use Psr\Log\LogLevel;
 
 use Slate\People\Student;
 use Emergence\People\User;
+use Emergence\People\IPerson;
 use Emergence\People\Groups\Group;
 use Emergence\People\Groups\GroupMember;
 use Emergence\People\ContactPoint\Email;
@@ -1544,7 +1545,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         }
     }
 
-    protected static function _getOrCreateParticipant(Section $Section, User $User, $role, $pretend = true)
+    protected static function _getOrCreateParticipant(Section $Section, IPerson $User, $role, $pretend = true)
     {
         if ($pretend) {
             $Participant = SectionParticipant::getByWhere([
