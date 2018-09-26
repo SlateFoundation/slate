@@ -16,7 +16,7 @@ Ext.define('SlateAdmin.view.LinksNavPanel', {
 
         '        <tpl for="children">',
         '            <li class="slate-nav-list-item">',
-        '                <a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">↳ {text}</a>',
+        '                <a class="slate-nav-list-link <tpl if="selected">selected</tpl>" href="{href}">&#x2937; {text}</a>',
         '            </li>',
         '        </tpl>',
 
