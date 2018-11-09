@@ -4,7 +4,7 @@
 
 {block content}
     <h1>Pull from Google Sheet</h1>
-	<h2>Instructions</h2>
+    <h2>Instructions</h2>
 	<ul>
 		<li>Set the Google Sheet sharing options so that <strong>anyone with a link</strong> can <strong>view</strong></li>
 		<li>Open the sharing link in an incognito Chrome window and open the Network inspector</li>
@@ -84,12 +84,19 @@
     			<span class="hint">Check to try to match existing users by their first/last name if no unique ID match succeeds</span>
     		</p>
             <p>
-            	<label>
+                <label>
     				Auto-assign email address
     				<input type="checkbox" name="autoAssignEmail" value="true" {refill field=autoAssignEmail checked="true" default="true"}>
     			</label>
     			<span class="hint">Check to automatically assign an email address if the spreadsheet provides none and <code>Slate::$userEmailDomain</code> is set</span>
     		</p>
+            <p>
+                <label>
+                    Clear existing groups
+                    <input type="checkbox" name="clearGroups" value="true" {refill field=clearGroups checked="true"}>
+                </label>
+                <span class="hint">Check to remove any existing group assignments that are not present in the incoming data</span>
+            </p>
             <p>
         		<label>
     				Students CSV

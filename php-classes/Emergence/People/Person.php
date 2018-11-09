@@ -86,6 +86,7 @@ class Person extends VersionedRecord implements IPerson
             ,'class' => Groups\GroupMember::class
             ,'indexField' => 'GroupID'
             ,'foreign' => 'PersonID'
+            ,'prune' => 'delete'
         ]
         ,'Notes' => [
             'type' => 'context-children'

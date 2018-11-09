@@ -195,6 +195,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $config['updateAbout'] = !empty($requestData['updateAbout']);
         $config['matchFullNames'] = !empty($requestData['matchFullNames']);
         $config['autoAssignEmail'] = !empty($requestData['autoAssignEmail']);
+        $config['clearGroups'] = !empty($requestData['clearGroups']);
         $config['masterTerm'] = !empty($requestData['masterTerm']) ? $requestData['masterTerm'] : null;
         $config['enrollmentDivider'] = !empty($requestData['enrollmentDivider']) ? $requestData['enrollmentDivider'] : null;
 
@@ -1382,7 +1383,23 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             }
         }
 
+        if ($Job->Config['clearGroups']) {
+            $memberships = [];
 
+            foreach ($User->GroupMemberships as $Membership) {
+                if ($Group && ($Group === $Membership->Group || $Group->ID == $Membership->Group->ID)) {
+                    $memberships[] = $Membership;
+                } else {
+                    $Job->notice('Remove {user} from group {group}', [
+                        'user' => $User->getTitle(),
+                        'group' => $Membership->Group->isPhantom ? $Membership->Group->Name : $Membership->Group->getFullPath()
+                    ]);
+                    $results['removed-from-group'][$Membership->Group->Name]++;
+                }
+            }
+
+            $User->GroupMemberships = $memberships;
+        }
 
         // call configurable hook
         if (is_callable(static::$onApplyUserChanges)) {
