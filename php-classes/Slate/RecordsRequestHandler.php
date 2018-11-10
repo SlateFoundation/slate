@@ -2,7 +2,6 @@
 
 namespace Slate;
 
-use DB;
 use OutOfBoundsException;
 
 use Emergence\People\GuardianRelationship;
