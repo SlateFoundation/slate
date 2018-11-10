@@ -3,7 +3,7 @@
 namespace Slate\Courses;
 
 
-class SectionParticipantsRequestHandler extends \RecordsRequestHandler
+class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
 {
     public static $recordClass = SectionParticipant::class;
 
@@ -12,26 +12,26 @@ class SectionParticipantsRequestHandler extends \RecordsRequestHandler
     public static $accountLevelRead = 'Staff';
     public static $accountLevelAPI = 'Staff';
 
-    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
+
+    protected static function buildBrowseConditions(array $conditions = [], array &$filterObjects = [])
     {
-        if (!empty($_GET['course_section'])) {
-            if (!$CourseSection = SectionsRequestHandler::getRecordByHandle($_GET['course_section'])) {
-                return static::throwNotFoundError('Course Section not found');
-            }
+        $conditions = parent::buildBrowseConditions($conditions, $filterObjects);
 
-            $conditions['CourseSectionID'] = $CourseSection->ID;
+        if ($Section = static::getRequestedSection()) {
+            $conditions['CourseSectionID'] = $Section->ID;
+            $filterObjects['Section'] = $Section;
         }
 
-        if (!empty($_GET['cohort'])) {
-            $conditions['Cohort'] = $_GET['cohort'];
+        if (!empty($_REQUEST['cohort'])) {
+            $conditions['Cohort'] = $_REQUEST['cohort'];
         }
 
-        if (!empty($_GET['role'])) {
+        if (!empty($_REQUEST['role'])) {
             $conditions['Role'] = [
-                'values' => is_string($_GET['role']) ? explode(',', $_GET['role']) : $_GET['role']
+                'values' => is_string($_REQUEST['role']) ? explode(',', $_REQUEST['role']) : $_REQUEST['role']
             ];
         }
 
-        return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+        return $conditions;
     }
 }

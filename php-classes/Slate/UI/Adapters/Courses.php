@@ -80,7 +80,7 @@ class Courses implements \Slate\UI\ILinksSource
         $linkGroups = [
             'Courses' => [
                 '_icon' => 'courses',
-                '_href' => Section::$collectionRoute,
+                '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current' ]),
                 '_weight' => $weight++,
                 '_children' => array_map(function(Section $Section) {
                     return [
@@ -102,7 +102,7 @@ class Courses implements \Slate\UI\ILinksSource
 
                 $linkGroups[$Ward->Username] = [
                     '_icon' => 'courses',
-                    '_href' => Section::$collectionRoute,
+                    '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current', 'enrolled_user' => $Ward->Username ]),
                     '_label' => $Ward->FirstNamePossessive . ' Courses',
                     '_weight' => $weight++,
                     '_children' => array_map(function(Section $Section) {

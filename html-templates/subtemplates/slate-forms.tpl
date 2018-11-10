@@ -1,8 +1,12 @@
 {load_templates "subtemplates/forms.tpl"}
 
-{template termField inputName=term label='Term' blankOption='Select' blankValue='' default=null error='' hint='' required=false}
+{template termField inputName=term label='Term' blankOption='Select' blankValue='' currentOption='Current' default=null error='' hint='' required=false}
     <?php
         $this->scope['options'] = [];
+
+        if ($this->scope['currentOption']) {
+            $this->scope['options']['*current'] = $this->scope['currentOption'];
+        }
 
         foreach (Slate\Term::getAll(['order' => ['Left' => 'DESC']]) AS $Term) {
             $this->scope['options'][$Term->Handle] = $Term->Title;

@@ -6,8 +6,11 @@ namespace Slate;
 use OutOfBoundsException;
 
 use Emergence\People\GuardianRelationship;
+use Emergence\Locations\LocationsRequestHandler;
 
+use Slate\Courses\CoursesRequestHandler;
 use Slate\Courses\SectionsRequestHandler;
+use Slate\Courses\SchedulesRequestHandler;
 use Slate\People\PeopleRequestHandler;
 
 abstract class RecordsRequestHandler extends \RecordsRequestHandler
@@ -18,13 +21,13 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
      * if the current user is not authorized to load data for the
      * student
      */
-    protected static function getRequestedStudent()
+    public static function getRequestedStudent($fieldName = 'student')
     {
         global $Session;
 
-        // return null if no student was explicitely requested, let caller
+        // return null if no student was explicitly requested, let caller
         // decide what to do with that
-        if (empty($_REQUEST['student'])) {
+        if (empty($_REQUEST[$fieldName])) {
             return null;
         }
 
@@ -32,37 +35,86 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
         $Session->requireAuthentication();
 
         // handle the magic value `*current`
-        if ($_REQUEST['student'] == '*current') {
+        if ($_REQUEST[$fieldName] == '*current') {
             return $Session->Person;
         }
 
         // get the requested student
-        $Student = PeopleRequestHandler::getRecordByHandle($_REQUEST['student']);
+        $Student = PeopleRequestHandler::getRecordByHandle($_REQUEST[$fieldName]);
 
         if (!$Student) {
-            throw new OutOfBoundsException('student not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         // staff and the requested student definitely have access
         $userIsStaff = $Session->hasAccountLevel('Staff');
+
         if ($userIsStaff || $Student->ID == $Session->PersonID) {
             return $Student;
         }
 
-        // look up if they are a guardian
-        if ($Student) {
-            $GuardianRelationship = GuardianRelationship::getByWhere([
-                'PersonID' => $Student->ID,
-                'RelatedPersonID' => $Session
-            ]);
-        }
+        // look up if user is a guardian for the student
+        $GuardianRelationship = GuardianRelationship::getByWhere([
+            'Class' => GuardianRelationship::class,
+            'PersonID' => $Student->ID,
+            'RelatedPersonID' => $Session->PersonID,
+        ]);
 
         // don't differentiate between nonexistant and unauthorized
-        if (!$Student || !$GuardianRelationship) {
-            return static::throwNotFoundError('Student not found');
+        if (!$GuardianRelationship) {
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Student;
+    }
+
+    /**
+     * Examine the current request, determine if an individual
+     * term has been explicitly requested
+     */
+    public static function getRequestedTerm($fieldName = 'term')
+    {
+        // return null if no term was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // handle the magic value `*current`
+        if ($_REQUEST[$fieldName] == '*current') {
+            if (!$Term = Term::getClosest()) {
+                throw new OutOfBoundsException('no current term found');
+            }
+
+            return $Term;
+        }
+
+        // try to load
+        if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
+            return static::throwNotFoundError($fieldName.' not found');
+        }
+
+        return $Term;
+    }
+
+    /**
+     * Examine the current request, determine if an individual
+     * course has been explicitly requested
+     */
+    public static function getRequestedCourse($fieldName = 'course')
+    {
+        // return null if no course was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // try to load
+        if (!$Course = CoursesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
+            return static::throwNotFoundError($fieldName.' not found');
+        }
+
+        return $Course;
     }
 
     /**
@@ -71,19 +123,59 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
      * if the current user is not authorized to load data for the
      * section
      */
-    protected static function getRequestedSection()
+    public static function getRequestedSection($fieldName = 'course_section')
     {
-        // return null if no section was explicitely requested, let caller
+        // return null if no section was explicitly requested, let caller
         // decide what to do with that
-        if (empty($_REQUEST['course_section'])) {
+        if (empty($_REQUEST[$fieldName])) {
             return null;
         }
 
         // try to load
-        if (!$Section = SectionsRequestHandler::getRecordByHandle($_REQUEST['course_section'])) {
-            return static::throwNotFoundError('Course section not found');
+        if (!$Section = SectionsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Section;
+    }
+
+    /**
+     * Examine the current request, determine if an individual
+     * location has been explicitly requested
+     */
+    public static function getRequestedLocation($fieldName = 'location')
+    {
+        // return null if no location was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // try to load
+        if (!$Location = LocationsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
+            return static::throwNotFoundError($fieldName.' not found');
+        }
+
+        return $Location;
+    }
+
+    /**
+     * Examine the current request, determine if an individual
+     * schedule has been explicitly requested
+     */
+    public static function getRequestedSchedule($fieldName = 'schedule')
+    {
+        // return null if no schedule was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // try to load
+        if (!$Schedule = SchedulesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
+            return static::throwNotFoundError($fieldName.' not found');
+        }
+
+        return $Schedule;
     }
 }

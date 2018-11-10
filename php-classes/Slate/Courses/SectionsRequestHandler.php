@@ -17,7 +17,7 @@ use Slate\TermsRequestHandler;
 use Slate\People\Student;
 
 
-class SectionsRequestHandler extends \RecordsRequestHandler
+class SectionsRequestHandler extends \Slate\RecordsRequestHandler
 {
     public static $recordClass = Section::class;
     public static $accountLevelBrowse = false;
@@ -42,58 +42,31 @@ class SectionsRequestHandler extends \RecordsRequestHandler
         }
     }
 
-    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
+    protected static function buildBrowseConditions(array $conditions = [], array &$filterObjects = [])
     {
-        if (empty($_REQUEST['term']) || $_REQUEST['term'] == '*current') {
-            if (!$Term = Term::getClosest()) {
-                return static::throwInvalidRequestError('No current term could be found');
-            }
-        } elseif ($_REQUEST['term'] != '*') {
-            if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST['term'])) {
-                return static::throwNotFoundError('term not found');
-            }
+        $conditions = parent::buildBrowseConditions($conditions, $filterObjects);
+
+        if ($Term = static::getRequestedTerm()) {
+            $conditions['TermID'] = [ 'values' => $Term->getRelatedTermIDs() ];
+            $filterObjects['Term'] = $Term;
         }
 
-        if ($Term) {
-            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
-            $responseData['Term'] = $Term;
-        }
-
-        if (!empty($_REQUEST['course'])) {
-            if (!$Course = CoursesRequestHandler::getRecordByHandle($_REQUEST['course'])) {
-                return static::throwNotFoundError('course not found');
-            }
-
+        if ($Course = static::getRequestedCourse()) {
             $conditions['CourseID'] = $Course->ID;
-            $responseData['Course'] = $Course;
+            $filterObjects['Course'] = $Course;
         }
 
-        if (!empty($_REQUEST['location'])) {
-            if (!$Location = LocationsRequestHandler::getRecordByHandle($_REQUEST['location'])) {
-                return static::throwNotFoundError('location not found');
-            }
-
+        if ($Location = static::getRequestedLocation()) {
             $conditions['LocationID'] = $Location->ID;
-            $responseData['Location'] = $Location;
+            $filterObjects['Location'] = $Location;
         }
 
-        if (!empty($_REQUEST['schedule'])) {
-            if (!$Schedule = SchedulesRequestHandler::getRecordByHandle($_REQUEST['schedule'])) {
-                return static::throwNotFoundError('schedule not found');
-            }
-
+        if ($Schedule = static::getRequestedSchedule()) {
             $conditions['ScheduleID'] = $Schedule->ID;
-            $responseData['Schedule'] = $Schedule;
+            $filterObjects['Schedule'] = $Schedule;
         }
 
-        if (!empty($_REQUEST['enrolled_user'])) {
-            if ($_REQUEST['enrolled_user'] == '*current') {
-                $GLOBALS['Session']->requireAuthentication();
-                $EnrolledUser = $GLOBALS['Session']->Person;
-            } elseif (!$EnrolledUser = User::getByHandle($_REQUEST['enrolled_user'])) {
-                return static::throwNotFoundError('enrolled_user not found');
-            }
-
+        if ($EnrolledUser = static::getRequestedStudent('enrolled_user')) {
             $enrolledSectionIds = DB::allValues(
                 'CourseSectionID',
                 'SELECT CourseSectionID FROM `%s` WHERE PersonID = %u',
@@ -104,9 +77,10 @@ class SectionsRequestHandler extends \RecordsRequestHandler
             );
 
             $conditions[] = sprintf('ID IN (%s)', count($enrolledSectionIds) ? join(',', $enrolledSectionIds) : '0');
+            $filterObjects['EnrolledUser'] = $EnrolledUser;
         }
 
-        return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+        return $conditions;
     }
 
     public static function handleRecordRequest(ActiveRecord $Section, $action = false)
