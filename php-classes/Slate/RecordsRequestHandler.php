@@ -2,7 +2,7 @@
 
 namespace Slate;
 
-
+use DB;
 use OutOfBoundsException;
 
 use Emergence\People\GuardianRelationship;
@@ -11,6 +11,7 @@ use Emergence\Locations\LocationsRequestHandler;
 use Slate\Courses\CoursesRequestHandler;
 use Slate\Courses\SectionsRequestHandler;
 use Slate\Courses\SchedulesRequestHandler;
+use Slate\People\Student;
 use Slate\People\PeopleRequestHandler;
 
 abstract class RecordsRequestHandler extends \RecordsRequestHandler
@@ -66,6 +67,50 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
         }
 
         return $Student;
+    }
+
+    /**
+     * Examine the current request, determine if a list
+     * of students has been explicitly requested
+     */
+    public static function getRequestedStudents($fieldName = 'students')
+    {
+        global $Session;
+
+        // return null if no students list was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // try to load
+        if (!$students = Student::getAllByListIdentifier($_REQUEST[$fieldName])) {
+            throw new OutOfBoundsException($fieldName.' list not found');
+        }
+
+        // filter list to self/wards if not staff
+        if (!$Session->hasAccountLevel('Staff')) {
+            $wardIds = DB::allValues(
+                'PersonID',
+                'SELECT PersonID FROM `%s` WHERE %s',
+                [
+                    GuardianRelationship::$tableName,
+                    implode(
+                        ' AND ',
+                        GuardianRelationship::mapConditions([
+                            'Class' => GuardianRelationship::class,
+                            'RelatedPersonID' => $Session->PersonID,
+                        ])
+                    )
+                ]
+            );
+
+            $students = array_filter($students, function ($Student) use ($Session, $wardIds) {
+                return $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds);
+            });
+        }
+
+        return $students;
     }
 
     /**
