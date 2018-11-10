@@ -12,7 +12,7 @@
         <fieldset class="inline-fields">
             <h4 class="section-title">Filters</h4>
 
-            {termField blankOption='Any' blankValue='*' default=$Term}
+            {termField blankOption='Any' default=$Term}
             {courseField blankOption='Any' default=$Course}
             {locationField blankOption='Any' default=$Location}
             {scheduleField blankOption='Any' default=$Schedule}
@@ -20,7 +20,7 @@
 
             <div class="submit-area">
                 <input type="submit" value="Apply Filters">
-                <a href="/sections" class="button">Reset Filters</a>
+                <a href="/sections?term=*current" class="button">Reset Filters</a>
             </div>
         </fieldset>
     </form>
