@@ -44,8 +44,6 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
 
     protected static function buildBrowseConditions(array $conditions = [], array &$filterObjects = [])
     {
-        global $Session;
-
         $conditions = parent::buildBrowseConditions($conditions, $filterObjects);
 
         if ($Term = static::getRequestedTerm()) {

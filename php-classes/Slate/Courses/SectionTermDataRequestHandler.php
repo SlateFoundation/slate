@@ -4,7 +4,7 @@ namespace Slate\Courses;
 
 use Slate\TermsRequestHandler;
 
-class SectionTermDataRequestHandler extends \RecordsRequestHandler
+class SectionTermDataRequestHandler extends \Slate\RecordsRequestHandler
 {
     public static $recordClass = SectionTermData::class;
 
@@ -14,28 +14,20 @@ class SectionTermDataRequestHandler extends \RecordsRequestHandler
     public static $accountLevelAPI = 'Staff';
 
 
-    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
+    protected static function buildBrowseConditions(array $conditions = [], array &$filterObjects = [])
     {
-        if (!empty($_GET['course_section'])) {
-            if (!$Section = SectionsRequestHandler::getRecordByHandle($_GET['course_section'])) {
-                return static::throwNotFoundError('course_section not found');
-            }
+        $conditions = parent::buildBrowseConditions($conditions, $filterObjects);
 
+        if ($Section = static::getRequestedSection()) {
             $conditions['SectionID'] = $Section->ID;
+            $filterObjects['Section'] = $Section;
         }
 
-        if (!empty($_GET['term'])) {
-            if ($_GET['term'] == '*current') {
-                if (!$Term = Term::getClosest()) {
-                    return static::throwInvalidRequestError('No current term could be found');
-                }
-            } elseif (!$Term = TermsRequestHandler::getRecordByHandle($_GET['term'])) {
-                return static::throwNotFoundError('term not found');
-            }
-
-            $conditions[] = sprintf('TermID IN (%s)', join(',', $Term->getRelatedTermIDs()));
+        if ($Term = static::getRequestedTerm()) {
+            $conditions['TermID'] = [ 'values' => $Term->getRelatedTermIDs() ];
+            $filterObjects['Term'] = $Term;
         }
 
-        return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+        return $conditions;
     }
 }
