@@ -91,7 +91,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Term;
@@ -111,7 +111,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Course = CoursesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Course;
@@ -153,7 +153,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Location = LocationsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Location;
@@ -173,7 +173,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Schedule = SchedulesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Schedule;
