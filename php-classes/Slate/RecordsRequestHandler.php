@@ -90,20 +90,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // filter list to self/wards if not staff
         if (!$Session->hasAccountLevel('Staff')) {
-            $wardIds = DB::allValues(
-                'PersonID',
-                'SELECT PersonID FROM `%s` WHERE %s',
-                [
-                    GuardianRelationship::$tableName,
-                    implode(
-                        ' AND ',
-                        GuardianRelationship::mapConditions([
-                            'Class' => GuardianRelationship::class,
-                            'RelatedPersonID' => $Session->PersonID,
-                        ])
-                    )
-                ]
-            );
+            $wardIds = GuardianRelationship::getWardIds($Session->Person);
 
             $students = array_filter($students, function ($Student) use ($Session, $wardIds) {
                 return $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds);
