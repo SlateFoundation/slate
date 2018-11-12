@@ -4,13 +4,13 @@ namespace Slate\People;
 
 use ActiveRecord;
 use Emergence\People\Person;
+use Emergence\People\GuardianRelationship;
 use Emergence\People\Groups\Group;
 
 use Slate\Term;
 use Slate\TermsRequestHandler;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
-
 
 class PeopleRequestHandler extends \PeopleRequestHandler
 {
@@ -20,6 +20,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
         ,'application/pdf' => 'pdf'
         ,'text/html; display=print' => 'print'
     ];
+    public static $accountLevelBrowse = 'User';
 
     public static function handleRecordsRequest($action = false)
     {
@@ -41,6 +42,24 @@ class PeopleRequestHandler extends \PeopleRequestHandler
             default:
                 return parent::handleRecordsRequest($action);
         }
+    }
+
+    public static function handleBrowseRequest($options = [], $conditions = [], $responseID = null, $responseData = [])
+    {
+        global $Session;
+
+        $Session->requireAuthentication();
+
+        if (!$Session->hasAccountLevel('Staff')) {
+            $accessibleIds = array_merge(
+                GuardianRelationship::getWardIds($Session->Person),
+                [ $Session->PersonID ]
+            );
+
+            $conditions[] = 'ID IN ('.implode(',', $accessibleIds).')';
+        }
+
+        return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
     }
 
     public static function handleStudentListsRequest()
