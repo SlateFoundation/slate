@@ -37,6 +37,8 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                 return static::respond('graduation-years', [
                     'data' => Student::getDistinctGraduationYears()
                 ]);
+            case '*students':
+                return static::handleStudentsRequest();
             case '*student-lists':
                 return static::handleStudentListsRequest();
             default:
@@ -60,6 +62,15 @@ class PeopleRequestHandler extends \PeopleRequestHandler
         }
 
         return parent::handleBrowseRequest($options, $conditions, $responseID, $responseData);
+    }
+
+    public static function handleStudentsRequest()
+    {
+        $conditions = Student::mapConditions([
+            'Class' => Student::class
+        ]);
+
+        return static::handleBrowseRequest([], array_values($conditions));
     }
 
     public static function handleStudentListsRequest()
