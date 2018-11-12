@@ -2,7 +2,6 @@
 
 namespace Slate;
 
-
 use OutOfBoundsException;
 
 use Emergence\People\GuardianRelationship;
@@ -11,6 +10,7 @@ use Emergence\Locations\LocationsRequestHandler;
 use Slate\Courses\CoursesRequestHandler;
 use Slate\Courses\SectionsRequestHandler;
 use Slate\Courses\SchedulesRequestHandler;
+use Slate\People\Student;
 use Slate\People\PeopleRequestHandler;
 
 abstract class RecordsRequestHandler extends \RecordsRequestHandler
@@ -69,6 +69,37 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
     }
 
     /**
+     * Examine the current request, determine if a list
+     * of students has been explicitly requested
+     */
+    public static function getRequestedStudents($fieldName = 'students')
+    {
+        global $Session;
+
+        // return null if no students list was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // try to load
+        if (!$students = Student::getAllByListIdentifier($_REQUEST[$fieldName])) {
+            throw new OutOfBoundsException($fieldName.' list not found');
+        }
+
+        // filter list to self/wards if not staff
+        if (!$Session->hasAccountLevel('Staff')) {
+            $wardIds = GuardianRelationship::getWardIds($Session->Person);
+
+            $students = array_filter($students, function ($Student) use ($Session, $wardIds) {
+                return $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds);
+            });
+        }
+
+        return $students;
+    }
+
+    /**
      * Examine the current request, determine if an individual
      * term has been explicitly requested
      */
@@ -91,7 +122,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Term;
@@ -111,7 +142,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Course = CoursesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Course;
@@ -153,7 +184,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Location = LocationsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Location;
@@ -173,7 +204,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Schedule = SchedulesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
-            return static::throwNotFoundError($fieldName.' not found');
+            throw new OutOfBoundsException($fieldName.' not found');
         }
 
         return $Schedule;
