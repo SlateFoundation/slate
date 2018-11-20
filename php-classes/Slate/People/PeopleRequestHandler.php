@@ -9,6 +9,7 @@ use Emergence\People\Groups\Group;
 
 use Slate\Term;
 use Slate\TermsRequestHandler;
+use Slate\RecordsRequestHandler as SlateRecordsRequestHandler;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 
@@ -66,11 +67,19 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
     public static function handleStudentsRequest()
     {
-        $conditions = Student::mapConditions([
+        $conditions = [
             'Class' => Student::class
-        ]);
+        ];
 
-        return static::handleBrowseRequest([], array_values($conditions));
+        if ($students = SlateRecordsRequestHandler::getRequestedStudents('list')) {
+            $conditions['ID'] = [
+                'values' => array_map(function ($Student) {
+                    return $Student->ID;
+                }, $students)
+            ];
+        }
+
+        return static::handleBrowseRequest([], array_values(Student::mapConditions($conditions)));
     }
 
     public static function handleStudentListsRequest()
