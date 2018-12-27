@@ -1,2 +1,2 @@
 [holomapping]
-files = "**"
+files = "*/**"
