@@ -44,6 +44,10 @@ class GoogleApps implements \Slate\UI\ILinksSource
                     'Sites' => [
                         '_icon' => 'gsites',
                         '_href' => 'https://sites.google.com/a/'.$domain
+                    ],
+                    'Classroom' => [
+                        '_icon' => 'gclassroom',
+                        '_href' => 'https://classroom.google.com/a/'.$domain
                     ]
                 ]
             ];
