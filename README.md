@@ -13,6 +13,7 @@ A free online foundation for schools.
 - Clone and `cd` into slate repository
 - `$env:HAB_DOCKER_OPTS="-p 7080:7080"`
 - `hab studio -D enter`
+- Open [http://localhost:7080](http://localhost:7080)
 
 #### Enabling watch mode on Windows
 
