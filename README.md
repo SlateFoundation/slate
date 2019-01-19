@@ -1,31 +1,18 @@
 # slate
-An open-source foundation for schools.
 
-View complete getting started guides and documentation at http://slate.is/docs
+A free online foundation for schools.
 
-## Maturity
-Slate is stable and has been used in production at pilot schools for over 5 years. This current open-source release however is only recommended for trial use by developers as breaking changes may need to be made over the next few minor versions as we work towards a 1.0 release.
+## Developing
 
-## Requirements
-Slate is built on the Emergence PHP framework and deployment engine, and requires an Emergence server to host it.
+### On Windows
 
-Emergence takes just a few minutes to setup on a Linux VM, and is designed to have a fresh system to itself. Once launched
-it will configure services on the machine as-needed to host an instance of the application along with any other
-sites, clones, or child sites. The guides for Ubuntu 13.04/13.10 and Gentoo are most up-to-date: http://emr.ge/docs/setup
-
-### Why Emergence?
-Emergence follows a design philosophy distinct from existing PHP frameworks that prioritises the ease and stability of customizing, extending, and resharing an application. Schools have diverse needs and levels of expertise available and it is important that any aspect of their system be customizable without needing to entirely fork away from the mainstream releases. Emergence also facilitates the evolution of sub-distributions of Slate that cater to common school environments.
-
-## Installation via Emergence (linked child) - Recommended
--  Create an emergence site that extends http://f6XqdJ2YIsm2oeXU@v2.slate.is
-
-This video walks through the complete process of installing emergence and then instantiating a different emergence-powered application called Gatekeeper:
-
-[![Walkthrough Video](http://b.vimeocdn.com/ts/455/313/455313620_640.jpg)](https://vimeo.com/79587819)
-
-## Installation from Git
--  Create an emergence site that extends http://lKhjNhwXoM8rLbXw@skeleton-v2.emr.ge
--  Upload contents of git repository using WebDAV client (CyberDuck is the best open-source option)
+- Install choco, have windows 10 pro
+- `choco install docker`
+- `choco install habitat`
+- `choco install git`
+- Clone and `cd` into slate repository
+- `$env:HAB_DOCKER_OPTS="-p 7080:7080"`
+- `hab studio -D enter`
 
 ## Supporters
 These organizations have contributed the resources to make Slate possible:
