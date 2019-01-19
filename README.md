@@ -14,6 +14,24 @@ A free online foundation for schools.
 - `$env:HAB_DOCKER_OPTS="-p 7080:7080"`
 - `hab studio -D enter`
 
+#### Enabling watch mode on Windows
+
+A [workaround](http://blog.subjectify.us/miscellaneous/2017/04/24/docker-for-windows-watch-bindings.html) is needed to make file change notification work under Docker for Windows:
+
+- `choco install python`
+- `pip install docker-windows-volume-watcher`
+- To enable watch mode for all Docker containers on your system, run in a secondary terminal: `docker-volume-watcher`
+- Within each studio, binlink two commands to `/bin` for `docker-volume-watcher`:
+
+    ```console
+    $hab pkg binlink core/coreutils -d /bin stat
+    » Binlinking stat from core/coreutils into /bin
+    ★ Binlinked stat from core/coreutils/8.29/20180608092141 to /bin/stat
+    $ hab pkg binlink core/coreutils -d /bin chmod
+    » Binlinking chmod from core/coreutils into /bin
+    ★ Binlinked chmod from core/coreutils/8.29/20180608092141 to /bin/chmod
+    ```
+
 ## Supporters
 These organizations have contributed the resources to make Slate possible:
 
