@@ -1,9 +1,0 @@
-.emergence
-/.emergence-*
-/site-root/debug.php
-
-
-# exclude built files from source control
-/sencha-build/
-/site-root/js/pages/
-/site-root/css/
