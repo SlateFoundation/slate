@@ -75,7 +75,7 @@ git clone https://github.com/SlateFoundation/slate
 cd slate
 ```
 
-#### OR: Extending Slate
+#### Extending Slate
 
 To start building your own environment that sits on top of Slate:
 
