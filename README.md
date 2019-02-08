@@ -2,7 +2,7 @@
 
 Slate is a free and open online foundation for schools. It is designed to empower students, teachers, and administrators to craft the digital commons of their learning environment from the ground up.
 
-Inspired by Science Leadership Academy founding principal Chris Lehmann's belief that [technology needs to be like oxygen \[in schools\]: ubiquitous, necessary, and invisible](https://www.youtube.com/watch?v=RUWzQYLqLLg), the first version of Slate was launched there in 2010. Since then, dozens of schools and networks of schools have contributed to and built on top of Slate.
+Inspired by Science Leadership Academy founding principal Chris Lehmann's belief that [technology \[in schools\] needs to be like oxygen: ubiquitous, necessary, and invisible](https://www.youtube.com/watch?v=RUWzQYLqLLg), the first version of Slate was launched there in 2010. Since then, dozens of schools and networks of schools have contributed to and built on top of Slate.
 
 Slate isn't a hot new startup or the next tool that does everything. It's an online home base that anchors the shared experience and evolves in place while your learners and educators explore new tools and practices. It's the glue that frees you plug in and unplug new things others have built, and even build things yourself when you are ready. It's the operating system for your school that belongs to your school and serves no interest but your community's.
 
