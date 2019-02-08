@@ -145,7 +145,7 @@ These organizations have contributed the resources to make Slate possible:
 
 ### Building21
 
-[<img alt="Building21" src="http://www.b-21.org/wp-content/uploads/2014/08/logo.png" width="250">](http://b-21.org)
+[<img alt="Building21" src="http://building21.org/wp-content/uploads/2017/04/logo_retina.png" width="250">](http://b-21.org)
 
 ### Matchbook Learning
 
