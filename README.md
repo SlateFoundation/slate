@@ -129,6 +129,7 @@ At that point you should be able to see an instance at http://localhost:7080 and
 
 - [Slate forum/wiki](http://forum.slate.is/)
 - [Slate issues on GitHub](https://github.com/SlateFoundation/slate/issues)
+- [Emergence forum/wiki](http://forum.emr.ge)
 
 ## Features
 
