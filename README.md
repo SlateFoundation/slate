@@ -94,7 +94,8 @@ The developer studio is a disposable command-line environment for working on the
 #### Linux / Mac
 
 ```bash
-# expose port 7080 from any Docker container started by Habitat--this must be run once in each terminal session
+# expose port 7080 from any Docker container started by Habitat
+# - this must be run once in each terminal session
 export HAB_DOCKER_OPTS="-p 7080:7080"
 
 # launch and enter a Habitat studio
@@ -104,7 +105,8 @@ hab studio enter
 #### Windows
 
 ```powershell
-# expose port 7080 from any Docker container started by Habitat--this must be run once in each terminal session
+# expose port 7080 from any Docker container started by Habitat
+# - this must be run once in each terminal session
 $env:HAB_DOCKER_OPTS="-p 7080:7080"
 
 # launch and enter a Habitat studio, forcing it to be a Docker studio instead a Windows native studio
