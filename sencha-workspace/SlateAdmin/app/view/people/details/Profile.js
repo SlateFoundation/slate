@@ -160,6 +160,21 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
                 minValue: 1990,
                 hidden: true
             },{
+                xtype: 'combo',
+                name: 'AdvisorID',
+                fieldLabel: 'Advisor',
+                hidden: true,
+
+                store: 'people.Advisors',
+                displayField: 'SortName',
+                valueField: 'ID',
+                forceSelection: true,
+                typeAhead: false,
+                queryMode: 'local',
+                emptyText: 'Select',
+                matchFieldWidth: false,
+                anyMatch: true
+            },{
                 xtype: 'tagfield',
                 name: 'groupIDs',
                 fieldLabel: 'Groups',

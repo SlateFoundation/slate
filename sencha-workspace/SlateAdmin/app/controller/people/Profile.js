@@ -21,7 +21,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
     stores: [
         'people.Classes',
-        'people.Groups'
+        'people.Groups',
+        'people.Advisors@Slate.store',
     ],
 
     refs: {
@@ -107,7 +108,8 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         Ext.StoreMgr.requireLoaded([
             'people.Classes',
             'people.Groups',
-            'people.AccountLevels'
+            'people.AccountLevels',
+            'people.Advisors'
         ], function() {
             profileForm.loadRecord(person);
             profilePanel.setLoading(false);
