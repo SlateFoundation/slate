@@ -104,7 +104,11 @@ Ext.define('SlateAdmin.controller.people.Profile', {
         me.getMasqueradeBtnCt().setVisible(siteUserIsAdmin && person.get('Username'));
 
         profilePanel.setLoading('Loading&hellip;');
-        Ext.StoreMgr.requireLoaded(['people.Classes', 'people.Groups'], function() {
+        Ext.StoreMgr.requireLoaded([
+            'people.Classes',
+            'people.Groups',
+            'people.AccountLevels'
+        ], function() {
             profileForm.loadRecord(person);
             profilePanel.setLoading(false);
             me.syncButtons();
