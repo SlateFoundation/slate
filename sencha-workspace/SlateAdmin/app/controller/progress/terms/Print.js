@@ -23,7 +23,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
 
     stores: [
         'Terms',
-        'Advisors@Slate.store.people',
+        'people.Advisors@Slate.store',
         'progress.terms.Authors'
     ],
 

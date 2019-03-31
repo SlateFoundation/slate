@@ -59,7 +59,7 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
                             name: 'advisor',
                             fieldLabel: 'Advisor',
 
-                            store: 'Advisors',
+                            store: 'people.Advisors',
                             displayField: 'SortName',
                             valueField: 'Username'
                         },

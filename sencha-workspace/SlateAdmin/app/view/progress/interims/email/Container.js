@@ -58,7 +58,7 @@ Ext.define('SlateAdmin.view.progress.interims.email.Container', {
                             name: 'advisor',
                             fieldLabel: 'Advisor',
 
-                            store: 'Advisors',
+                            store: 'people.Advisors',
                             displayField: 'SortName',
                             valueField: 'Username'
                         },
