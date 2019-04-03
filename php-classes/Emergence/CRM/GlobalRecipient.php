@@ -7,6 +7,7 @@ class GlobalRecipient extends \ActiveRecord
     public static $tableName = 'global_message_recipients';
     public static $singularNoun = 'global message recipient';
     public static $pluralNoun = 'global message recipients';
+    public static $collectionRoute = '/global-recipients';
 
     public static $fields = [
         'PersonID' => 'uint',

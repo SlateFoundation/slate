@@ -1,0 +1,7 @@
+#!/bin/bash
+hab pkg install emergence/studio core/coreutils
+# set up windows workaround for watch
+hab pkg binlink core/coreutils -d /bin chmod
+hab pkg binlink core/coreutils -d /bin stat
+# load emergence studio
+source "$(hab pkg path emergence/studio)/studio.sh"
