@@ -1,7 +1,7 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Site.page.CourseSection', {
     singleton: true,
     requires: [
+        'Ext.dom.Element',
         'Site.Common'
     ],
 
@@ -12,7 +12,7 @@ Ext.define('Site.page.CourseSection', {
     onDocReady: function() {
         var siteEnv = window.SiteEnvironment,
             courseSection = siteEnv && siteEnv.courseSection;
-        
+
         if (!courseSection) {
             return;
         }

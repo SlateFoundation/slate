@@ -4,7 +4,7 @@ Ext.define('Site.widget.Login', {
     requires: [
         'Ext.DomHelper'
     ],
-    
+
     config: {
         loginLinkSelector: 'a[href^="/login"]',
         loginModalId: 'login-modal'
@@ -12,13 +12,13 @@ Ext.define('Site.widget.Login', {
 
     constructor: function(config) {
         var me = this;
-        
+
         me.callParent(arguments);
         me.initConfig(config);
-        
+
         Ext.onReady(me.onDocReady, me);
     },
-    
+
     onDocReady: function() {
         var me = this,
             body = Ext.getBody(),
@@ -29,8 +29,6 @@ Ext.define('Site.widget.Login', {
             return;
         }
 
-        loginModal.enableDisplayMode();
-
         body.on('keyup', 'onBodyKeyup', me);
         body.on('click', 'onLoginLinkClick', me, { delegate: me.getLoginLinkSelector() });
         loginModal.on('click', 'hide', me, { delegate: '[data-action="close"]' });
@@ -38,13 +36,13 @@ Ext.define('Site.widget.Login', {
     },
 
     hide: function() {
-        this.loginModal.hide();
+        this.loginModal.setStyle('display', 'none');
         Ext.getBody().removeCls('blurred');
     },
-    
+
     show: function() {
         Ext.getBody().addCls('blurred');
-        this.loginModal.show();
+        this.loginModal.setStyle('display', '');
     },
 
     onBodyKeyup: function(ev, t) {
@@ -55,7 +53,7 @@ Ext.define('Site.widget.Login', {
 
     onLoginLinkClick: function(ev, t) {
         var me = this;
-        
+
         ev.preventDefault();
         me.show();
         me.loginForm.down('input[autofocus]').focus();

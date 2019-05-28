@@ -1,9 +1,10 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Site.Common', {
     singleton: true,
     requires: [
+        'Ext.dom.Element',
         'Ext.DomHelper',
         'Ext.XTemplate',
+
         'Site.widget.Login',
         'Site.widget.Search',
         'Site.widget.model.Person',
@@ -91,7 +92,7 @@ Ext.define('Site.Common', {
                     destructive: !!confirmLink.getAttribute('data-confirm-destructive')
                 },
                 modal = modalTemplate.append(body, confirmData, true);
-                
+
             body.addCls('blurred');
 
             modal.on('click', function(ev, t) {
@@ -115,7 +116,7 @@ Ext.define('Site.Common', {
                             if (r.success) {
                                 modal.destroy();
                                 body.removeCls('blurred');
-                                
+
                                 if (successTargetEl) {
                                     if (successMessage) {
                                         successTargetEl.replaceWith({ tag: 'p', cls: 'status', html: successMessage});
