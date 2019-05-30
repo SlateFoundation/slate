@@ -27,33 +27,6 @@ Ext.define('Site.Common', {
             body = Ext.getBody(),
             modalTemplate;
 
-        // menu enhancements
-        Ext.select('.header-ct, .main-ct').on('click', function(ev, t){
-            // clear selected nav if click outside nav
-            if (!ev.getTarget('nav')) {
-                Ext.select('nav .selected').removeCls('selected');
-            }
-        });
-
-        Ext.select('.header-ct nav').on('click', function(ev, t){
-            var menuItem = ev.getTarget('.menu-item', null, true),
-                submenu  = ev.getTarget('.submenu');
-
-            // clear selected class for repeat clicks, otherwise radio it here
-            if (menuItem.hasCls('selected')) {
-                menuItem.removeCls('selected');
-            } else {
-                menuItem.radioCls('selected');
-            }
-
-            // clear submenus if other menus are accessed
-            if (!submenu) {
-                Ext.select('.has-submenu').removeCls('selected');
-            }
-        },{
-            delegate: '.menu-item'
-        });
-
         // site search
         me.siteSearch = Ext.create('Site.widget.Search', {
             searchForm: body.down('.search-form.site-search')
