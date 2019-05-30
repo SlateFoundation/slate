@@ -1,6 +1,7 @@
 Ext.define('Site.Common', {
     singleton: true,
     requires: [
+        'Ext.Ajax',
         'Ext.dom.Element',
         'Ext.DomHelper',
         'Ext.XTemplate',

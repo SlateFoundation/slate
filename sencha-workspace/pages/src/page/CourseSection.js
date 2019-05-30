@@ -1,7 +1,9 @@
 Ext.define('Site.page.CourseSection', {
     singleton: true,
     requires: [
+        'Ext.Ajax',
         'Ext.dom.Element',
+
         'Site.Common'
     ],
 

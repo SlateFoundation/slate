@@ -1,7 +1,7 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Site.widget.Login', {
     singleton: true,
     requires: [
+        'Ext.Ajax',
         'Ext.DomHelper'
     ],
 
