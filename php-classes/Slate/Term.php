@@ -187,7 +187,7 @@ class Term extends \VersionedRecord
             return null;
         }
 
-        return (int)substr($Term->getMaster()->EndDate, 0, 4);
+        return $Term->getGraduationYear();
     }
 
     public function validate($deep = true)
@@ -297,5 +297,10 @@ class Term extends \VersionedRecord
                 return $fuzzyTitle;
             }
         }
+    }
+
+    public function getGraduationYear()
+    {
+        return (int)substr($this->getMaster()->EndDate, 0, 4);
     }
 }
