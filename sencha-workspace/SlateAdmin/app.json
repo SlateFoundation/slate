@@ -19,7 +19,7 @@
     "requires": [
         "jarvus-hotfixes",
         "jarvus-ext-searchfield",
-        "jarvus-ext-routing",
+        "jarvus-routing",
         "jarvus-lazydata",
         "jarvus-ext-actionevents",
         "jarvus-ext-glyphs",
