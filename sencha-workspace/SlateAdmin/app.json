@@ -17,6 +17,7 @@
      *      ]
      */
     "requires": [
+        "font-awesome",
         "jarvus-hotfixes",
         "jarvus-ext-searchfield",
         "jarvus-routing",
@@ -147,7 +148,8 @@
          */
         "var": [
             "sass/var/all.scss",
-            "sass/var"
+            "sass/var",
+            "resources/slate-frame/sass/_variables-all.scss"
         ],
 
         /**
