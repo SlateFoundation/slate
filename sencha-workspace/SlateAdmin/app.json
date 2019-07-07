@@ -3,8 +3,8 @@
     "namespace": "SlateAdmin",
     "version": "1.0.0.0",
     "framework": "ext",
-    "framework.version": "5.1.1.451",
-    "cmd.version": "6.5.2.15",
+    "framework.version": "6.2.0.981",
+    "toolkit": "classic",
     "theme": "slate-theme",
 
     /**
@@ -59,7 +59,7 @@
      * Fashion build configuration properties.
      */
     "fashion": {
-        "missingParameters": "error",
+
         "inliner": {
             /**
              * Disable resource inliner. Production builds enable this by default.
@@ -97,7 +97,7 @@
          *
          */
 
-         "generated": {
+        "generated": {
             "var": "sass/save.scss",
             "src": "sass/save"
         },
@@ -309,7 +309,7 @@
     /**
      * Settings specific to development builds.
      */
-     "development": {
+    "development": {
         "watch": {
             "delay": 250
         }
@@ -468,7 +468,7 @@
     /**
      * Additional resources used during theme slicing operations
      */
-     "slicer": null,
+    "slicer": null,
 
     /**
      * Build Profiles. This object's properties are each a "build profile". You can
@@ -479,7 +479,7 @@
      *
      */
 
-         /**
+    /**
      * File / directory name patttern to ignore when copying to the builds. Must be a
      * valid regular expression.
      */
