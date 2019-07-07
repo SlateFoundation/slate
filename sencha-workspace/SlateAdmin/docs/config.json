@@ -1,0 +1,9 @@
+{
+    "--": "../app",
+    "--title": "Slate-Admin API Documentation",
+    "--ignore-global": true,
+    "--tags": ["tags/fields_tag.rb","tags/routes_tag.rb"],
+    "--head-html": [
+        "<link rel=\"stylesheet\" href=\"resources/css/style.css\" type=\"text/css\" />"
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch SlateAdmin",
+            "type": "chrome",
+            "request": "launch",
+            "webRoot": "${workspaceFolder}/sencha-workspace",
+            "url": "http://localhost:3901/SlateAdmin/?cache=1&apiHost=slate-develop.dev01.slatepowered.net"
+        },
+        {
+            "name": "Attach to Chrome",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/sencha-workspace",
+            "url": "http://localhost:3901"
+        }
+    ]
+}
