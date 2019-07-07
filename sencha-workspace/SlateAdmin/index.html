@@ -1,513 +1,100 @@
 <!DOCTYPE html>
 <html manifest="">
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <title>Manage Slate</title>
-        <link rel='stylesheet' type='text/css' href='resources/slate-frame/main.css'>
-        <style>
-            #ext-viewport {
-                padding-top: 2.75em;
-            }
-        </style>
-        <link rel='stylesheet' type='text/css' href='resources/slate-frame/fonts/lato.css'>
-        <link rel='stylesheet' type='text/css' href='resources/slate-frame/fonts/sanchez.css'>
-        <link rel='stylesheet' type='text/css' href='resources/slate-frame/fonts/font-awesome.css'>
-
+        <title>Loading&hellip;</title>
     </head>
     <body>
-        <div class="slate-omnibar site">
-            <div class="inner">
-                <ul class="omnibar-items">
-                    <li class="omnibar-item">
-                        <a class="omnibar-link root-link" href="/"> <img class="slate-logo" src="resources/slate-frame/img/slate-logo-white.svg" width="41" height="32" alt="Slate"> </a>
-                    </li>
-                    <li class="omnibar-item omnibar-search-item">
-                        <form class="omnibar-search-form" action="/search">
-                            <input class="omnibar-search-field" name="q" type="search" placeholder="Search" required="">
-                        </form>
-                    </li>
-                    <li class="omnibar-item icon-courses" data-icon="courses" data-href="/courses" data-label="Courses">
-                        <a href="/courses" class="omnibar-link" title="Courses">
-                        Courses
-                        </a>
-                        <div class="omnibar-menu-ct">
-                            <ul class="omnibar-menu">
-                                <li class="omnibar-menu-item" data-id="BIO-1" data-label="Biology" data-shortlabel="BIO-1" data-icon="chemistry" data-href="/sections/BIO-1">
-                                    <a class="omnibar-menu-link" href="/sections/BIO-1" title="Biology">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-chemistry"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label">
-                                                BIO-1
-                                            </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-id="ENG-1" data-label="English" data-shortlabel="ENG-1" data-icon="writing" data-href="/sections/ENG-1">
-                                    <a class="omnibar-menu-link" href="/sections/ENG-1" title="English">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-writing"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label">
-                                                ENG-1
-                                            </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-id="BIO-2" data-label="Biology" data-shortlabel="BIO-2" data-icon="chemistry" data-href="/sections/BIO-2">
-                                    <a class="omnibar-menu-link" href="/sections/BIO-2" title="Biology">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-chemistry"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label">
-                                                BIO-2
-                                            </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="omnibar-item icon-tools" data-label="Tools" data-icon="tools">
-                        <span class="omnibar-link" title="Tools">
-                        Tools
-                        </span>
-                        <div class="omnibar-menu-ct">
-                            <ul class="omnibar-menu">
-                                <li class="omnibar-menu-item" data-href="/manage" data-icon="tools" data-label="Manage Slate">
-                                    <a class="omnibar-menu-link" href="/manage" title="Manage Slate">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> Manage Slate </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#people" data-label="People" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#people" title="People">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> People </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#course-sections" data-label="Course Sections" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#course-sections" title="Course Sections">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> Course Sections </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#settings" data-label="Settings" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#settings" title="Settings">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> Settings </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/pages" data-label="Pages" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/pages" title="Pages">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Manage Slate</small> Pages </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="gapps" data-href="https://admin.google.com/a/slatedemo.com" data-label="Google Apps">
-                                    <a class="omnibar-menu-link" href="https://admin.google.com/a/slatedemo.com" title="Google Apps">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gapps"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> Google Apps </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="gmail" data-href="https://mail.google.com/a/slatedemo.com" data-label="Email">
-                                    <a class="omnibar-menu-link" href="https://mail.google.com/a/slatedemo.com" title="Email">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gmail"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Email </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="gdrive" data-href="https://drive.google.com/a/slatedemo.com" data-label="Drive">
-                                    <a class="omnibar-menu-link" href="https://drive.google.com/a/slatedemo.com" title="Drive">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gdrive"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Drive </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="gcal" data-href="https://www.google.com/calendar/hosted/slatedemo.com" data-label="Calendar">
-                                    <a class="omnibar-menu-link" href="https://www.google.com/calendar/hosted/slatedemo.com" title="Calendar">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gcal"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Calendar </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="gsites" data-href="https://sites.google.com/a/slatedemo.com" data-label="Sites">
-                                    <a class="omnibar-menu-link" href="https://sites.google.com/a/slatedemo.com" title="Sites">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gsites"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Google Apps</small> Sites </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="network" data-href="https://slatedemo.instructure.com" data-label="Canvas">
-                                    <a class="omnibar-menu-link" href="https://slatedemo.instructure.com" title="Canvas">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-network"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> Canvas </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="http://example.com/" data-label="Example Tool" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="http://example.com/" title="Example Tool">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> Example Tool </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#progress/narratives" data-label="Narratives" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#progress/narratives" title="Narratives">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Narratives </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#progress/standards" data-label="Standards" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#progress/standards" title="Standards">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Standards </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#progress/interims" data-label="Interims" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#progress/interims" title="Interims">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Interims </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/sbg/dashboard" data-label="Growth Dashboard" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/sbg/dashboard" title="Growth Dashboard">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Standards-Based Grading</small> Growth Dashboard </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/cbl/teacher-dashboard" data-label="Teacher Dashboard" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/cbl/teacher-dashboard" title="Teacher Dashboard">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Competency-Based Learning</small> Teacher Dashboard </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/cbl/exports/demonstrations.csv" data-label="Demonstrations" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/cbl/exports/demonstrations.csv" title="Demonstrations">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Competency-Based Learning » Exports</small> Demonstrations </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/cbl/exports/progress.csv" data-label="Progress" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/cbl/exports/progress.csv" title="Progress">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Competency-Based Learning » Exports</small> Progress </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/manage#assets" data-label="Manager" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/manage#assets" title="Manager">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Assets</small> Manager </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/assets?set=mine" data-label="My Assets" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/assets?set=mine" title="My Assets">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Assets</small> My Assets </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-href="/assets?set=classroom" data-label="Classroom Assets" data-icon="tools">
-                                    <a class="omnibar-menu-link" href="/assets?set=classroom" title="Classroom Assets">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-tools"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> <small class="muted">Assets</small> Classroom Assets </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="omnibar-item " data-shortlabel="Bill" data-href="/people/bill" data-iconsrc="http://www.fillmurray.com/48/48" data-label="Bill Murray">
-                        <a href="/people/bill" class="omnibar-link" title="Bill Murray"> <img class="omnibar-link-image" src="http://www.fillmurray.com/48/48" alt="Bill Murray" width="24" height="24"> Bill </a>
-                        <div class="omnibar-menu-ct">
-                            <ul class="omnibar-menu">
-                                <li class="omnibar-menu-item" data-icon="user" data-href="/people/bill" data-label="My Profile">
-                                    <a class="omnibar-menu-link" href="/people/bill" title="My Profile">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-user"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> My Profile </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="gearhead" data-href="/profile" data-label="Edit Profile">
-                                    <a class="omnibar-menu-link" href="/profile" title="Edit Profile">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-gearhead"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> Edit Profile </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="writing" data-href="/drafts" data-label="My Drafts">
-                                    <a class="omnibar-menu-link" href="/drafts" title="My Drafts">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-writing"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> My Drafts </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                                <li class="omnibar-menu-item" data-icon="logout" data-href="/logout?return=%2Fprofile%3Fstatus%3DphotoUploaded" data-label="Log Out">
-                                    <a class="omnibar-menu-link" href="/logout?return=%2Fprofile%3Fstatus%3DphotoUploaded" title="Log Out">
-                                        <figure class="omnibar-menu-icon">
-                                            <div class="omnibar-menu-image-ct">
-                                                <svg class="omnibar-menu-image-bg">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-squircle"></use>
-                                                </svg>
-                                                <svg class="omnibar-menu-image">
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="resources/slate-frame/img/slate-icons.svg#icon-logout"></use>
-                                                </svg>
-                                            </div>
-                                            <figcaption class="omnibar-menu-label"> Log Out </figcaption>
-                                        </figure>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="slateadmin-viewport"></div>
+        <script>
+        (() => {
+            const [,apiHost] = location.search.match(/[?&]apiHost=([^&]+)/) || [];
 
-        <script type="text/javascript">
-            var SiteEnvironment = SiteEnvironment || { };
-            SiteEnvironment.user = {"ID":1,"Class":"Emergence\\People\\User","Created":1434581774,"CreatorID":2,"RevisionID":null,"FirstName":"Bill","LastName":"Murray","MiddleName":null,"Gender":"Male","BirthDate":"1950-09-21","Location":null,"About":null,"PrimaryPhotoID":null,"PrimaryEmailID":1,"PrimaryPhoneID":null,"PrimaryPostalID":null,"Username":"ryon","AccountLevel":"Administrator"};
-            SiteEnvironment.appName = "SlateAdmin";
-            SiteEnvironment.appMode = "development";
-            SiteEnvironment.appBaseUrl = '/app/SlateAdmin/';
+            if (!apiHost) {
+                document.body.innerHTML = 'Page must be loaded with <code>?apiHost=slate.example.org</code> set'
+                return;
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'document';
+            xhr.withCredentials = true;
+            xhr.open('GET', `http://${apiHost}/manage`);
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    // graft head elements
+                    xhr.response
+                        .querySelectorAll('head > *:not([href^="/webapps/"])')
+                        .forEach(node => {
+                            // capture full hrefs from source document
+                            if (node.href) {
+                                node.href = node.href;
+                            }
+                            document.head.appendChild(node);
+                        });
+
+                    // graft body elements
+                    xhr.response
+                        .querySelectorAll('body > *:not([src^="/webapps/"])')
+                        .forEach(node => {
+                            // skip manifest-patching script
+                            if (node.nodeName == 'SCRIPT') {
+                                if (node.text.match(/^\s*Ext\.manifest\.resources\.path\s*=/)) {
+                                    return;
+                                }
+                            } else {
+                                // capture full hrefs/srcs from source document
+                                node.querySelectorAll('[src]').forEach(srcNode => {
+                                    srcNode.src = srcNode.src;
+                                });
+                                node.querySelectorAll('[href]').forEach(hrefNode => {
+                                    hrefNode.href = hrefNode.href;
+
+                                    if (hrefNode.nodeName == 'A') {
+                                        hrefNode.target = '_blank';
+                                    }
+                                });
+
+                                const externalSvgQueue = new Set();
+                                node.querySelectorAll('svg').forEach(svgNode => {
+                                    svgNode.querySelectorAll('use').forEach(svgUseNode => {
+                                        const [svgPath, svgHash] = svgUseNode.href.baseVal.split('#', 2);
+
+                                        externalSvgQueue.add(`http://${apiHost}${svgPath}`);
+
+                                        const newUseNode = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                                        newUseNode.setAttribute('href', `#${svgHash}`);
+                                        svgNode.replaceChild(newUseNode, svgUseNode);
+                                    });
+                                });
+
+                                // load all external SVGs
+                                for (const svgUrl of externalSvgQueue) {
+                                    const svgXhr = new XMLHttpRequest();
+                                    svgXhr.responseType = 'document';
+                                    svgXhr.withCredentials = true;
+                                    svgXhr.open('GET', svgUrl);
+                                    svgXhr.onload = () => {
+                                        if (svgXhr.status === 200) {
+                                            document.body.appendChild(svgXhr.response.firstChild);
+                                        }
+                                    };
+                                    svgXhr.send();
+                                }
+                            }
+                            document.body.appendChild(node);
+                        });
+
+                    // finally: load app
+                    const appScript = document.createElement('script');
+                    appScript.setAttribute('id', 'microloader');
+                    appScript.setAttribute('data-app', 'e21d2a04-1fe0-4793-a299-186188656a28');
+                    appScript.setAttribute('type', 'text/javascript');
+                    appScript.setAttribute('src', 'bootstrap.js');
+                    document.body.appendChild(appScript);
+                } else {
+                    console.error('could not load page frame from apiHost, got status=%o', xhr.status);
+                }
+            };
+            xhr.send();
+        })();
         </script>
-
-        <!-- The line below must be kept intact for Sencha Cmd to build your application -->
-        <script id="microloader" data-app="e21d2a04-1fe0-4793-a299-186188656a28" type="text/javascript" src="bootstrap.js"></script>
     </body>
 </html>
