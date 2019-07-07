@@ -2,38 +2,30 @@
     /**
      * An object containing key value pair framework descriptors.
      *
-     * The value can be a string or an object containing at least one of "dir" or "pkg",
-     * where "dir" can be a filesystem path to the framework sources and "pkg" can be a
-     * package name. For example:
+     * The value should be an object containing "path" the path inside the workspace where the framework
+     * files can be found and "version" the version of the framework. For example:
      *
      *      "frameworks": {
-     *          "ext": "ext",
-     *          "ext-x": "/absolute/path/to/ext",
-     *          "ext-y": {
-     *              "source": "../relative/path/to/ext",
-     *              "path": "ext"
+     *          "ext": {
+     *              "path": "ext",
+     *              "version": "n.n.n.n"
      *          },
-     *          "ext-z": {
-     *              "package": "ext@n.n.n",
-     *              "path": "ext-n.n.n"
-     *          },
-     *          "touch": "touch"
+     *          "extnew": {
+     *              "path": "extnew",
+     *              "version": "n.n.n.n"
+     *          }
      *      }
+     *
+     * You can exclude the directories that contain the framework from source control and later restore them
+     * with "sencha workspace install". See "sencha help workspace install" for more information.
      *
      */
     "frameworks": {
         "ext": {
-            "path":"ext-5.1.1.451",
-            "version":"5.1.1.451"
+            "path":"ext",
+            "version":"6.2.0.981"
         }
     },
-
-    /**
-     *  An array of the paths to all the applications present in this workspace
-     */
-    "apps": [
-        "SlateAdmin"
-    ],
 
     /**
      * This is the folder for build outputs in the workspace.
@@ -56,5 +48,9 @@
          * This folder contains all extracted (remote) packages.
          */
         "extract": "${workspace.dir}/packages.remote"
+    },
+
+    "cmd": {
+        "version": "6.5.2.15"
     }
 }
