@@ -269,8 +269,8 @@ Ext.define('SlateAdmin.controller.People', {
         Ext.suspendLayouts();
 
         // decode query string for processing
-        query = ExtHistory.decodeRouteComponent(query);
-        person = ExtHistory.decodeRouteComponent(person);
+        query = me.decodeRouteComponent(query);
+        person = me.decodeRouteComponent(person);
 
         // queue store to load
         proxy.abortLastRequest(true);

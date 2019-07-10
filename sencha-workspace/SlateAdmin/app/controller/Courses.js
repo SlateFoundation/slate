@@ -167,7 +167,7 @@ Ext.define('SlateAdmin.controller.Courses', {
         Ext.suspendLayouts();
 
         // decode query string for processing
-        section = ExtHistory.decodeRouteComponent(section);
+        section = me.decodeRouteComponent(section);
 
         // activate manager
         me.getNavPanel().expand();
@@ -223,8 +223,8 @@ Ext.define('SlateAdmin.controller.Courses', {
         Ext.suspendLayouts();
 
         // decode query string for processing
-        query = ExtHistory.decodeRouteComponent(query);
-        section = ExtHistory.decodeRouteComponent(section);
+        query = me.decodeRouteComponent(query);
+        section = me.decodeRouteComponent(section);
 
         // queue store to load
         sectionsResultProxy.abortLastRequest(true);
@@ -588,7 +588,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 //            trimmedQuery, searchValues;
 //
 //
-//        query = Ext.util.History.decodeRouteComponent(query);
+//        query = me.decodeRouteComponent(query);
 //
 //        // queue store to load
 //        proxy.abortLastRequest(true);
