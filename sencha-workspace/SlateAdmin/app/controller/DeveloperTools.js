@@ -27,7 +27,7 @@ Ext.define('SlateAdmin.controller.DeveloperTools', {
         if (traceOnLayout || breakOnLayout || location.search.match(/loglayouts/)) {
             Ext.Function.interceptAfter(Ext.layout.Context.prototype, 'runComplete', function() {
                 runCompleteCount++;
-                
+
                 console.groupCollapsed('layout run #%s complete (%s items)', runCompleteCount, Ext.Object.getSize(this.items));
 
                 if (breakOnLayout) {
@@ -41,16 +41,16 @@ Ext.define('SlateAdmin.controller.DeveloperTools', {
                 console.groupEnd();
             });
         }
-        
+
         // log route handling
-        app.on({
-            beforeroute: function(app, route, result, token) {
-                console.groupCollapsed('%s.%s(%o) handling route: %s', route.controller.id, route.action, result, token);
-            },
-            route: function() {
-                console.groupEnd();
-            }
-        });
+        // app.on({
+        //     beforeroute: function(app, route, result, token) {
+        //         console.groupCollapsed('%s.%s(%o) handling route: %s', route.controller.id, route.action, result, token);
+        //     },
+        //     route: function() {
+        //         console.groupEnd();
+        //     }
+        // });
 
         // log navigation events
         me.control({
