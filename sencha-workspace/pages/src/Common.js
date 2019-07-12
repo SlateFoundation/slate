@@ -1,9 +1,11 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Site.Common', {
     singleton: true,
     requires: [
+        'Ext.Ajax',
+        'Ext.dom.Element',
         'Ext.DomHelper',
         'Ext.XTemplate',
+
         'Site.widget.Login',
         'Site.widget.Search',
         'Site.widget.model.Person',
@@ -25,33 +27,6 @@ Ext.define('Site.Common', {
         var me = this,
             body = Ext.getBody(),
             modalTemplate;
-
-        // menu enhancements
-        Ext.select('.header-ct, .main-ct').on('click', function(ev, t){
-            // clear selected nav if click outside nav
-            if (!ev.getTarget('nav')) {
-                Ext.select('nav .selected').removeCls('selected');
-            }
-        });
-
-        Ext.select('.header-ct nav').on('click', function(ev, t){
-            var menuItem = ev.getTarget('.menu-item', null, true),
-                submenu  = ev.getTarget('.submenu');
-
-            // clear selected class for repeat clicks, otherwise radio it here
-            if (menuItem.hasCls('selected')) {
-                menuItem.removeCls('selected');
-            } else {
-                menuItem.radioCls('selected');
-            }
-
-            // clear submenus if other menus are accessed
-            if (!submenu) {
-                Ext.select('.has-submenu').removeCls('selected');
-            }
-        },{
-            delegate: '.menu-item'
-        });
 
         // site search
         me.siteSearch = Ext.create('Site.widget.Search', {
@@ -91,7 +66,7 @@ Ext.define('Site.Common', {
                     destructive: !!confirmLink.getAttribute('data-confirm-destructive')
                 },
                 modal = modalTemplate.append(body, confirmData, true);
-                
+
             body.addCls('blurred');
 
             modal.on('click', function(ev, t) {
@@ -115,7 +90,7 @@ Ext.define('Site.Common', {
                             if (r.success) {
                                 modal.destroy();
                                 body.removeCls('blurred');
-                                
+
                                 if (successTargetEl) {
                                     if (successMessage) {
                                         successTargetEl.replaceWith({ tag: 'p', cls: 'status', html: successMessage});

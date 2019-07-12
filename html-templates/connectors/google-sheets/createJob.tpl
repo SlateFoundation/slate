@@ -52,6 +52,17 @@
     			</label>
     			<span class="hint">Check to make best-case at correct capitalization for proper nouns if input case is mangled</span>
     		</p>
+        	<p>
+    			<label>
+    				Master Term
+    				<select name="masterTerm">
+                        {foreach item=Term from=Slate\Term::getAllMaster()}
+    						<option value="{$Term->Handle}" {refill field=masterTerm selected=$Term->Handle}>{$Term->Title|escape}</option>
+    					{/foreach}
+    				</select>
+    			</label>
+                <span class="hint">For sections and schedules, the school year to import in to. Also used when converting grade levels to graduation years.</span>
+    		</p>
         </fieldset>
         <fieldset>
             <legend>User Accounts</legend>
@@ -121,17 +132,6 @@
         </fieldset>
         <fieldset>
             <legend>Courses Sections & Enrollments</legend>
-    		<p>
-    			<label>
-    				Master Term
-    				<select name="masterTerm">
-                        {foreach item=Term from=Slate\Term::getAllMaster()}
-    						<option value="{$Term->Handle}" {refill field=masterTerm selected=$Term->Handle}>{$Term->Title|escape}</option>
-    					{/foreach}
-    				</select>
-    			</label>
-                <span class="hint">For sections and schedules, the school year to import in to</span>
-    		</p>
             <p>
             	<label>
     				Sections CSV

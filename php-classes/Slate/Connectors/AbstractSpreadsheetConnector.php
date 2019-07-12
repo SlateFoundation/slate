@@ -5,7 +5,6 @@ namespace Slate\Connectors;
 use DB;
 use Slate;
 use SpreadsheetReader;
-use Emergence\Connectors\Job;
 use Emergence\Connectors\Mapping;
 use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 use Emergence\Util\Capitalizer;
@@ -200,6 +199,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $config['enrollmentDivider'] = !empty($requestData['enrollmentDivider']) ? $requestData['enrollmentDivider'] : null;
 
         return $config;
+    }
+
+    protected static function _createJob(array $config = [])
+    {
+        // create extended Slate Job
+        return Job::create([
+            'Connector' => get_called_class(),
+            'Config' => $config
+        ]);
     }
 
 
@@ -441,15 +449,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
             return false;
         }
 
-        if (empty($Job->Config['masterTerm'])) {
-            $Job->logException(new Exception('masterTerm required to import sections'));
-            return false;
-        }
-
-        if (!$MasterTerm = Term::getByHandle($Job->Config['masterTerm'])) {
-            $Job->logException(new Exception('masterTerm not found'));
-            return false;
-        }
+        $MasterTerm = $Job->getMasterTerm();
 
 
         // initialize results
@@ -997,7 +997,8 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function _applyUserChanges(Job $Job, User $User, array $row, array &$results)
     {
-        $currentGraduationYear = Term::getClosestGraduationYear();
+        $currentGraduationYear = $Job->getGraduationYear();
+
         $autoCapitalize = $Job->Config['autoCapitalize'];
         $_formatPronoun = function($string, $familyName = false) use ($autoCapitalize) {
             return $autoCapitalize ? Capitalizer::capitalizePronoun($string, $familyName) : $string;
@@ -1603,19 +1604,5 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
             }
         ]);
-    }
-
-    protected static $_currentMasterTerm;
-    protected static function _getCurrentMasterTerm(Job $Job)
-    {
-        if (!static::$_currentMasterTerm) {
-            if (!($CurrentTerm = Term::getCurrent()) && !($CurrentTerm = Term::getNext())) {
-                throw new \Exception('Could not find a current or next term');
-            }
-
-            static::$_currentMasterTerm = $CurrentTerm->getMaster();
-        }
-
-        return static::$_currentMasterTerm;
     }
 }

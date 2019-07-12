@@ -1,0 +1,6 @@
+[holomapping]
+files = [
+    "*/**",
+    "!.vscode/"
+]
+after = "slate"

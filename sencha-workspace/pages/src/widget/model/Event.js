@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Site.widget.model.Event', {
     extend: 'Site.widget.model.AbstractModel',
     singleton: true,
