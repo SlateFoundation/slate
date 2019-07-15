@@ -1,3 +1,5 @@
 [holosource]
 url = "https://github.com/JarvusInnovations/emergence-skeleton-v2"
-ref = "refs/heads/emergence/skeleton"
+
+# TODO: drop the -develop after next merge
+ref = "refs/heads/emergence-develop/skeleton"
