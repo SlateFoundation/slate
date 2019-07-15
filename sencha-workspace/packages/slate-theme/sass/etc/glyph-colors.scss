@@ -1,0 +1,41 @@
+// use this mixin in src/button/Button.scss to fit properly in the cascade
+@mixin glyph-color($name, $color) {
+    .glyph-#{$name},
+    .glyph-#{$name} .x-btn-glyph {
+        color: $color;
+    }
+}
+
+$base-color: dynamic(#1f83b1);
+$accent-color: dynamic(saturate($base-color, 100%));
+
+/**
+  * Color for "inactive" or muted glyphs
+  */
+$glyph-inactive-color: dynamic(#c9c9c9); // gray
+
+/**
+  * Color for star glyph (e.g., primary contact point)
+  */
+$glyph-star-color: dynamic(#daa520); // goldenrod
+
+/**
+  * Color for shield glyph (e.g., guardian)
+  */
+$glyph-shield-color: dynamic(#158); // cobalt
+
+/**
+  * Color for ambulance glyph (e.g., emergency contact)
+  */
+$glyph-emergency-color: dynamic(red);
+
+/**
+  * Color for success messages or positive actions (such as Save)
+  */
+$success-color: dynamic(#5fb31d);
+
+/**
+  * Color for error messages (stronger than warnings)
+  * or negative/destructive actions (such as Delete)
+  */
+$danger-color: dynamic(#b3241d);

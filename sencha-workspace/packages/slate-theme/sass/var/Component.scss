@@ -1,0 +1,16 @@
+// overrides
+$base-color:            dynamic(#1f83b1);
+$body-background-color: dynamic(transparent);
+$border-color:          dynamic(#ccc);
+$color:                 dynamic(#333);
+$font-family:           dynamic(Lato);
+$font-size:             dynamic(14px);
+
+// custom
+$dark-ui-color: dynamic(#153b4c);
+$muted-color:   dynamic(#777);
+
+/**
+  * General line color
+  */
+$rule-color: tint($dark-ui-color, 75%);

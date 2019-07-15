@@ -1,0 +1,29 @@
+.x-tree-elbow-img {
+    &:first-child.x-tree-elbow-empty {
+        width: 8px;
+    }
+}
+
+.x-tree-icon-parent {
+    background-image: theme-background-image('tree/folder-closed', 'svg');
+
+    .x-grid-tree-node-expanded & {
+        background-image: theme-background-image('tree/folder-open', 'svg');
+    }
+}
+
+.x-tree-icon-leaf {
+    background-image: theme-background-image('tree/file', 'svg');
+}
+
+.x-tree-no-lines {
+    .x-tree-expander {
+        background-image: theme-background-image('tree/plus', 'svg');
+        background-position: center;
+        background-size: 11px;
+    }
+
+    .x-grid-tree-node-expanded .x-tree-expander {
+        background-image: theme-background-image('tree/minus', 'svg');
+    }
+}

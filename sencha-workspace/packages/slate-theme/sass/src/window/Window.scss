@@ -1,0 +1,35 @@
+.x-window {
+    .x-toolbar-footer {
+        background-color: transparent;
+        border-top: 1px solid $border-color;
+        padding: 8px 16px;
+    }
+
+    .x-window-header-title-default {
+        text-shadow: 0 1px 1px rgba(black, .3);
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+.x-tool {
+    $close-btn-size: 20px;
+
+    font-size: $close-btn-size;
+    line-height: 1;
+
+    .x-tool-close {
+        background-image: none;
+        height: $close-btn-size;
+        width: $close-btn-size;
+
+        &::before {
+            color: white;
+            content: '\f057'; // fa-times-circle
+            font-family: FontAwesome;
+            font-weight: normal;
+
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+        }
+    }
+}
