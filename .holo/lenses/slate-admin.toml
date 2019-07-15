@@ -1,0 +1,18 @@
+[hololens]
+package = "holo/lens-sencha-app"
+
+[hololens.sencha]
+app = "SlateAdmin"
+
+[hololens.input]
+root = "sencha-workspace"
+files = [
+    "workspace.json",
+    "ext/**",
+    "packages/**",
+    "SlateAdmin/**",
+]
+
+[hololens.output]
+root = "webapp-builds/SlateAdmin"
+merge = "replace"
