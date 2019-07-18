@@ -48,3 +48,4 @@ printf("Upgrading %s table\n", $tableName);
     ]
 );
 
+return static::STATUS_EXECUTED;
