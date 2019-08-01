@@ -1,0 +1,52 @@
+[submodule "slate-theme"]
+	path = sencha-workspace/packages.remote/slate-theme
+	url = https://github.com/SlateFoundation/slate-theme.git
+	branch = ext/6
+[submodule "jarvus-hotfixes"]
+	path = sencha-workspace/packages.remote/jarvus-hotfixes
+	url = https://github.com/JarvusInnovations/sencha-hotfixes.git
+	branch = ext/6/2/0/981
+[submodule "emergence-apikit"]
+	path = sencha-workspace/packages.remote/emergence-apikit
+	url = https://github.com/JarvusInnovations/emergence-apikit.git
+	branch = master
+[submodule "jarvus-apikit"]
+	path = sencha-workspace/packages.remote/jarvus-apikit
+	url = https://github.com/JarvusInnovations/jarvus-apikit.git
+	branch = master
+[submodule "jarvus-ext-searchfield"]
+	path = sencha-workspace/packages.remote/jarvus-ext-searchfield
+	url = https://github.com/JarvusInnovations/jarvus-ext-searchfield.git
+	branch = master
+[submodule "jarvus-ext-glyphs"]
+	path = sencha-workspace/packages.remote/jarvus-ext-glyphs
+	url = https://github.com/JarvusInnovations/jarvus-ext-glyphs.git
+	branch = master
+[submodule "jarvus-ext-actionevents"]
+	path = sencha-workspace/packages.remote/jarvus-ext-actionevents
+	url = https://github.com/JarvusInnovations/jarvus-ext-actionevents.git
+	branch = master
+[submodule "jarvus-routing"]
+	path = sencha-workspace/packages.remote/jarvus-routing
+	url = https://github.com/JarvusInnovations/jarvus-routing.git
+	branch = ext/6/2/0/981
+[submodule "jarvus-lazydata"]
+	path = sencha-workspace/packages.remote/jarvus-lazydata
+	url = https://github.com/JarvusInnovations/jarvus-lazydata.git
+	branch = ext/6/2/0/981
+[submodule "jarvus-ext-treerecords"]
+	path = sencha-workspace/packages.remote/jarvus-ext-treerecords
+	url = https://github.com/JarvusInnovations/jarvus-ext-treerecords.git
+	branch = master
+[submodule "jarvus-griderrors"]
+	path = sencha-workspace/packages.remote/jarvus-griderrors
+	url = https://github.com/JarvusInnovations/jarvus-griderrors.git
+	branch = master
+[submodule "ext"]
+	path = sencha-workspace/ext
+	url = https://github.com/JarvusInnovations/extjs.git
+	branch = workspace/6.2
+[submodule "slate-core-data"]
+	path = sencha-workspace/packages.remote/slate-core-data
+	url = https://github.com/SlateFoundation/slate-core-data.git
+	branch = master

@@ -1,7 +1,18 @@
 #!/bin/bash
-hab pkg install emergence/studio core/coreutils
-# set up windows workaround for watch
-hab pkg binlink core/coreutils -d /bin chmod
-hab pkg binlink core/coreutils -d /bin stat
-# load emergence studio
+hab pkg install emergence/studio chakijs/studio
 source "$(hab pkg path emergence/studio)/studio.sh"
+source "$(hab pkg path chakijs/studio)/studio.sh"
+
+echo "    * Use 'build-admin' to build SlateAdmin for testing"
+build-admin() {
+    build-app SlateAdmin
+}
+
+echo
+echo "    WARNING: The Sencha CMD builds available under habitat studio currently cannot build the SlateAdmin app due to failures in their compass module. This should be made irrelevant when the app is upgraded to Ext JS 6.2"
+echo
+
+
+
+# final blank line
+echo

@@ -1,0 +1,30 @@
+$base-color:        dynamic(#e0c7a3);
+$accent-color:      dynamic(#356fb7);
+$info-color:        dynamic(#5bc0de);
+$success-color:     dynamic(#23ad23);
+$alert-color:       dynamic(#f09b24);
+$danger-color:      dynamic(#d43734);
+$text-color:        dynamic(#333);
+$heading-color:     dynamic($text-color);
+
+$page-bg-color:     dynamic(white);
+$link-color:        dynamic(change-color($accent-color, $saturation: 40));
+
+$muted-color:       dynamic(mix($text-color, $page-bg-color));
+$shaded-color:      dynamic(mix($text-color, $base-color));
+$border-color:      dynamic(mix($text-color, $page-bg-color, 17%));
+                    
+$body-font:         dynamic(system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif);
+$heading-font:      dynamic($body-font);
+$mono-font:         dynamic(Consolas, monospace);
+                    
+$font-weight:       dynamic(400);
+$font-size:         dynamic(16px);
+$line-height:       dynamic(1.5);
+$em-spacer:         dynamic($line-height * 1em);
+
+$reading-width:     dynamic(38em);
+                    
+$mq-phone:          dynamic('screen and (max-width: 568px)');
+$mq-tablet:         dynamic('screen and (min-width: 569px)');
+$mq-wide:           dynamic('screen and (min-width: 769px)');
