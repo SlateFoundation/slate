@@ -135,11 +135,8 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
             courseId = courseField.getValue(),
             course = courseId && courseField.findRecordByValue(courseId);
 
-        codeField.emptyText = course ? (course.get('Code') + '-000') : 'ABCD-000';
-        codeField.applyEmptyText();
-
-        titleField.emptyText = course ? course.get('Title') : 'Algebra 1';
-        titleField.applyEmptyText();
+        codeField.setEmptyText(course ? (course.get('Code') + '-000') : 'ABCD-000');
+        titleField.setEmptyText(course ? course.get('Title') : 'Algebra 1');
     },
 
     syncButtons: function() {

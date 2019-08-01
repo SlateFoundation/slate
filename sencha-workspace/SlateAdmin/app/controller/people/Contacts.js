@@ -411,8 +411,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
         templateRecord = labelEditor.findRecordByValue(record.get('Label')) || labelStore.getAt(0);
         placeholder = (templateRecord && templateRecord.get('placeholder')) || '';
-        valueField.emptyText = placeholder;
-        valueField.applyEmptyText();
+        valueField.setEmptyText(placeholder);
     },
 
     onContactsGridEdit: function(editingPlugin, context) {
