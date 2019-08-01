@@ -1,0 +1,6 @@
+[holosource]
+url = "https://github.com/JarvusInnovations/emergence-skeleton-v2"
+ref = "refs/heads/releases/v2"
+
+[holosource.project]
+holobranch = "emergence-vfs-skeleton"
