@@ -1,0 +1,13 @@
+.slate-menu-header {
+    background-color: $menu-border-color;
+    font-size: .75em;
+    font-weight: bold;
+    letter-spacing: .01em;
+    margin: 0; // 2px 0;
+    padding: 5px;
+    text-transform: uppercase;
+
+    &:first-child {
+        margin-top: 0;
+    }
+}

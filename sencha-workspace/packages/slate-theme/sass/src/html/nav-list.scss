@@ -1,0 +1,40 @@
+.slate-nav-list {
+    margin: 0;
+    padding: 0;
+}
+
+.slate-nav-list-item {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.slate-nav-list-link {
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    color: $color;
+    display: block;
+    padding: 7px 10px 7px (10px + $glyph-size);
+    text-decoration: none;
+    text-indent: -($glyph-size);
+
+    &::before {
+        content: '\f101'; // fa-angle-double-right;
+        float: left;
+        font-family: FontAwesome;
+        font-size: $glyph-size;
+        width: 1em;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    &:hover,
+    &:focus {
+        background-color: tint($base-color, 95%);
+        color: $color;
+        text-decoration: none;
+    }
+
+    &:visited {
+        color: $color;
+    }
+}

@@ -1,0 +1,6 @@
+sencha-error-*.log
+/build
+bootstrap.*
+classic.json*
+modern.json*
+.sencha
