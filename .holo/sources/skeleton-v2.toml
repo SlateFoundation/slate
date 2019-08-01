@@ -1,5 +1,6 @@
 [holosource]
 url = "https://github.com/JarvusInnovations/emergence-skeleton-v2"
+ref = "refs/heads/releases/v2"
 
-# TODO: drop the -develop after next merge
-ref = "refs/heads/emergence-develop/skeleton"
+[holosource.project]
+holobranch = "emergence-skeleton"
