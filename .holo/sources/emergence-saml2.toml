@@ -1,0 +1,6 @@
+[holosource]
+url = "https://github.com/JarvusInnovations/emergence-saml2.git"
+ref = "refs/heads/master"
+
+[holosource.project]
+holobranch = "emergence-layer"
