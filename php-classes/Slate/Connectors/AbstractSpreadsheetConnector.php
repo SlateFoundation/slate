@@ -5,6 +5,7 @@ namespace Slate\Connectors;
 use DB;
 use Slate;
 use SpreadsheetReader;
+use Emergence\Connectors\IJob;
 use Emergence\Connectors\Mapping;
 use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 use Emergence\Util\Capitalizer;
@@ -212,7 +213,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
     // task handlers
-    public static function pullStudents(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
+    public static function pullStudents(IJob $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
         try {
@@ -287,7 +288,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullAlumni(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
+    public static function pullAlumni(IJob $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
         try {
@@ -362,7 +363,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullStaff(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
+    public static function pullStaff(IJob $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
         try {
@@ -439,7 +440,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullSections(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
+    public static function pullSections(IJob $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
         try {
@@ -603,8 +604,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // add teacher
             foreach ($teachers AS $Teacher) {
-                $Participant = static::_getOrCreateParticipant($Record, $Teacher, 'Teacher', $pretend);
+                $Participant = static::_getOrCreateParticipant($Record, $Teacher, ['Role' => 'Teacher'], $pretend);
                 $logEntry = static::_logParticipant($Job, $Participant);
+
+                if (!$pretend) {
+                    $Participant->save();
+                }
 
                 if ($logEntry['action'] == 'create') {
                     $results['teacher-enrollments-created']++;
@@ -618,7 +623,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $results;
     }
 
-    public static function pullEnrollments(Job $Job, SpreadsheetReader $spreadsheet, $pretend = true)
+    public static function pullEnrollments(IJob $Job, SpreadsheetReader $spreadsheet, $pretend = true)
     {
         // check input
         try {
@@ -702,6 +707,39 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 $Participant = null;
                 $results['enrollments-analyzed']++;
 
+
+                // build participant data
+                $participantData = [
+                    'Role' => 'Student'
+                ];
+
+                if (isset($row['StartDate'])) {
+                    if (!$row['StartDate']) {
+                        $participantData['StartDate'] = null;
+                    } elseif (!$participantData['StartDate'] = strtotime($row['StartDate'])) {
+                        $results['failed']['invalid-start-date']++;
+                        $Job->error('Invalid start date "{date}" for row #{rowNumber}', [
+                            'rowNumber' => $results['rows-analyzed'],
+                            'date' => $row['StartDate']
+                        ]);
+                        continue;
+                    }
+                }
+
+                if (isset($row['EndDate'])) {
+                   if (!$row['EndDate']) {
+                        $participantData['EndDate'] = null;
+                    } elseif (!$participantData['EndDate'] = strtotime($row['EndDate'])) {
+                        $results['failed']['invalid-end-date']++;
+                        $Job->error('Invalid end date "{date}" for row #{rowNumber}', [
+                            'rowNumber' => $results['rows-analyzed'],
+                            'date' => $row['EndDate']
+                        ]);
+                        continue;
+                    }
+                }
+
+
                 // Optionally split code based user value
                 if (!$Job->Config['enrollmentDivider']) {
                     $sectionIdentifiers = [$sectionIdentifier];
@@ -748,8 +786,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
                     // save and log participant
-                    $Participant = static::_getOrCreateParticipant($Section, $Student, 'Student', $pretend);
+                    $Participant = static::_getOrCreateParticipant($Section, $Student, $participantData, $pretend);
                     $logEntry = static::_logParticipant($Job, $Participant);
+
+                    if (!$pretend) {
+                        $Participant->save();
+                    }
 
                     if ($logEntry['action'] == 'create') {
                         $results['enrollments-created']++;
@@ -831,7 +873,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return static::initRequiredColumns($config);
     }
 
-    protected static function _readStudent($Job, array $row)
+    protected static function _readStudent(IJob $Job, array $row)
     {
         $row = static::_readRow($row, static::getStackedConfig('studentColumns'));
 
@@ -843,7 +885,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $row;
     }
 
-    protected static function _readAlumni($Job, array $row)
+    protected static function _readAlumni(IJob $Job, array $row)
     {
         $row = static::_readRow($row, static::getStackedConfig('alumniColumns'));
 
@@ -867,7 +909,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $row;
     }
 
-    protected static function _readSection($Job, array $row)
+    protected static function _readSection(IJob $Job, array $row)
     {
         $row = static::_readRow($row, static::getStackedConfig('sectionColumns'));
 
@@ -879,7 +921,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $row;
     }
 
-    protected static function _readEnrollment($Job, array $row)
+    protected static function _readEnrollment(IJob $Job, array $row)
     {
         $row = static::_readRow($row, static::getStackedConfig('enrollmentColumns'));
 
@@ -906,7 +948,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $filterResult;
     }
 
-    protected static function _filterSection(Job $Job, array $row)
+    protected static function _filterSection(IJob $Job, array $row)
     {
         $filterResult = false;
 
@@ -921,7 +963,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $filterResult;
     }
 
-    protected static function _filterEnrollment(Job $Job, array $row)
+    protected static function _filterEnrollment(IJob $Job, array $row)
     {
         $filterResult = false;
 
@@ -936,7 +978,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $filterResult;
     }
 
-    protected static function _getPerson(Job $Job, array $row)
+    protected static function _getPerson(IJob $Job, array $row)
     {
         // try to get existing account by foreign key column
         if (!empty($row['ForeignKey'])) {
@@ -995,7 +1037,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return null;
     }
 
-    protected static function _applyUserChanges(Job $Job, User $User, array $row, array &$results)
+    protected static function _applyUserChanges(IJob $Job, User $User, array $row, array &$results)
     {
         $currentGraduationYear = $Job->getGraduationYear();
 
@@ -1422,7 +1464,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         ];
     }
 
-    protected static function getSection(Job $Job, Term $MasterTerm, array $row)
+    protected static function getSection(IJob $Job, Term $MasterTerm, array $row)
     {
         // try to get existing section by code
         if (!empty($row['SectionCode'])) {
@@ -1432,7 +1474,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return null;
     }
 
-    protected static function getSectionTeachers(Job $Job, Section $Section, array $row)
+    protected static function getSectionTeachers(IJob $Job, Section $Section, array $row)
     {
         $Teacher = null;
 
@@ -1467,7 +1509,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $Teacher ? [$Teacher] : [];
     }
 
-    protected static function getSectionTerm(Job $Job, Term $MasterTerm, Section $Section, array $row)
+    protected static function getSectionTerm(IJob $Job, Term $MasterTerm, Section $Section, array $row)
     {
         if (empty($row['Term'])) {
             return null;
@@ -1485,7 +1527,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $Term;
     }
 
-    protected static function getSectionCourse(Job $Job, Section $Section, array $row)
+    protected static function getSectionCourse(IJob $Job, Section $Section, array $row)
     {
         if (empty($row['CourseCode'])) {
             return null;
@@ -1502,7 +1544,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $Course;
     }
 
-    protected static function _applySectionChanges(Job $Job, Term $MasterTerm, Section $Section, array $row)
+    protected static function _applySectionChanges(IJob $Job, Term $MasterTerm, Section $Section, array $row)
     {
         if ($Course = static::getSectionCourse($Job, $Section, $row)) {
             $Section->Course = $Course;
@@ -1563,33 +1605,26 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         }
     }
 
-    protected static function _getOrCreateParticipant(Section $Section, IPerson $User, $role, $pretend = true)
+    protected static function _getOrCreateParticipant(Section $Section, IPerson $User, array $data)
     {
-        if ($pretend) {
-            $Participant = SectionParticipant::getByWhere([
-                'CourseSectionID' => $Section->ID,
-                'PersonID' => $User->ID
-            ]);
-
-            if ($Participant) {
-                $Participant->Role = $role;
-            }
-        } else {
-            $Participant = null;
-        }
+        $Participant = SectionParticipant::getByWhere([
+            'CourseSectionID' => $Section->ID,
+            'PersonID' => $User->ID
+        ]);
 
         if (!$Participant) {
             $Participant = SectionParticipant::create([
                 'Section' => $Section,
-                'Person' => $User,
-                'Role' => $role
-            ], !$pretend);
+                'Person' => $User
+            ]);
         }
+
+        $Participant->setFields($data);
 
         return $Participant;
     }
 
-    protected static function _logParticipant(Job $Job, SectionParticipant $Participant)
+    protected static function _logParticipant(IJob $Job, SectionParticipant $Participant)
     {
         return $Job->logRecordDelta($Participant, [
             'messageRenderer' => function($logEntry) {
@@ -1600,7 +1635,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 if ($logEntry['action'] == 'create') {
                     return sprintf('Adding user %s to section %s with role %s', $User->getTitle(), $Section->getTitle(), $Role);
                 } else {
-                    return sprintf('Updated user %s in section %s to role %s', $User->getTitle(), $Section->getTitle(), $Role);
+                    return sprintf('Updated user %s in section %s with role %s', $User->getTitle(), $Section->getTitle(), $Role);
                 }
             }
         ]);

@@ -4,7 +4,7 @@ namespace Emergence\Connectors\iCal;
 
 use Emergence\Events\Feed;
 use Emergence\Events\FeedEvent;
-use Emergence\Connectors\Job;
+use Emergence\Connectors\IJob;
 use intouch\ical\iCal;
 
 class Connector extends \Emergence\Connectors\AbstractConnector implements \Emergence\Connectors\ISynchronize
@@ -12,7 +12,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
     public static $title = 'iCal Feeds';
     public static $connectorId = 'ical';
 
-    public static function synchronize(Job $Job, $pretend = true)
+    public static function synchronize(IJob $Job, $pretend = true)
     {
         if ($Job->Status != 'Pending' && $Job->Status != 'Completed') {
             return static::throwError('Cannot execute job, status is not Pending or Complete');

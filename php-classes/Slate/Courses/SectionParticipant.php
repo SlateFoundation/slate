@@ -9,6 +9,7 @@ class SectionParticipant extends \ActiveRecord
     public static $singularNoun = 'course participant';
     public static $pluralNoun = 'course participants';
     public static $collectionRoute = '/section-participants';
+    public static $updateOnDuplicateKey = true;
 
     // required for shared-table subclassing support
     public static $rootClass = __CLASS__;
@@ -76,26 +77,4 @@ class SectionParticipant extends \ActiveRecord
             'min' => 1
         ]
     ];
-
-    public static function create($values = [], $save = false)
-    {
-        try {
-            $Participant = parent::create($values, $save);
-        } catch (\DuplicateKeyException $e) {
-            $Participant = static::getByWhere([
-                'CourseSectionID' => $values['Section'] ? $values['Section']->ID : $values['SectionID']
-                ,'PersonID' => $values['Person'] ? $values['Person']->ID : $values['PersonID']
-            ]);
-
-            if (!empty($values['Role'])) {
-                $Participant->Role = $values['Role'];
-            }
-
-            if ($save) {
-                $Participant->save();
-            }
-        }
-
-        return $Participant;
-    }
 }

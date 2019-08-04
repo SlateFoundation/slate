@@ -3,7 +3,7 @@
 namespace Slate\Connectors\GoogleApps;
 
 use Slate;
-use Emergence\Connectors\Job;
+use Emergence\Connectors\IJob;
 use Emergence\Connectors\Mapping;
 use Emergence\People\User;
 use Emergence\People\ContactPoint\Email AS EmailContactPoint;
@@ -29,7 +29,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
         return $config;
     }
 
-    public static function synchronize(Job $Job, $pretend = true)
+    public static function synchronize(IJob $Job, $pretend = true)
     {
         if ($Job->Status != 'Pending' && $Job->Status != 'Completed') {
             return static::throwError('Cannot execute job, status is not Pending or Complete');
@@ -82,7 +82,7 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
     // task handlers
-    public static function pushUsers(Job $Job, $pretend = true)
+    public static function pushUsers(IJob $Job, $pretend = true)
     {
         // initialize results
         $results = [];

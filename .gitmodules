@@ -1,7 +1,3 @@
-[submodule "slate-theme"]
-	path = sencha-workspace/packages.remote/slate-theme
-	url = https://github.com/SlateFoundation/slate-theme.git
-	branch = ext/6
 [submodule "jarvus-hotfixes"]
 	path = sencha-workspace/packages.remote/jarvus-hotfixes
 	url = https://github.com/JarvusInnovations/sencha-hotfixes.git
@@ -46,7 +42,3 @@
 	path = sencha-workspace/ext
 	url = https://github.com/JarvusInnovations/extjs.git
 	branch = workspace/6.2
-[submodule "slate-core-data"]
-	path = sencha-workspace/packages.remote/slate-core-data
-	url = https://github.com/SlateFoundation/slate-core-data.git
-	branch = master
