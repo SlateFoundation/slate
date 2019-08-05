@@ -9,8 +9,8 @@ Ext.define('SlateAdmin.view.settings.NavPanel', {
         { href: '#settings/terms', text: 'Terms' },
         { href: '#settings/departments', text: 'Departments' },
         { href: '#settings/courses', text: 'Courses' },
-        { href: '#settings/global-recipients', text: 'Global Recipients' }
-//        { href: '#settings/locations', text: 'Locations' },
+        { href: '#settings/global-recipients', text: 'Global Recipients' },
+        { href: '#settings/locations', text: 'Locations' }
 //        { href: '#settings/asset-statuses', text: 'Asset Statuses' }
     ]
 });
