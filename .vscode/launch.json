@@ -9,7 +9,7 @@
             "type": "chrome",
             "request": "launch",
             "webRoot": "${workspaceFolder}/sencha-workspace",
-            "url": "http://localhost:3901/SlateAdmin/?cache=1&apiHost=slate-develop.dev01.slatepowered.net"
+            "url": "http://localhost:7081/SlateAdmin/?cache=1&apiHost=localhost:7080"
         },
         {
             "name": "Attach to Chrome",
@@ -17,7 +17,7 @@
             "request": "attach",
             "port": 9222,
             "webRoot": "${workspaceFolder}/sencha-workspace",
-            "url": "http://localhost:3901"
+            "url": "http://localhost:7081"
         }
     ]
 }
