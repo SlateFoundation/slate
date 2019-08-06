@@ -22,7 +22,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     stores: [
         'people.People',
-        'people.Groups',
+        'people.Groups@Slate.store',
         'people.AccountLevels'
     ],
 

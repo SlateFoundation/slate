@@ -1,8 +1,8 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.person.Group', {
+Ext.define('Slate.model.person.Group', {
     extend: 'Ext.data.TreeModel',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'Slate.proxy.Records'
     ],
 
     idProperty: 'ID',

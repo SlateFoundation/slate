@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         'Ext.form.Panel',
         'Jarvus.ext.form.field.Search',
         'SlateAdmin.view.people.AdvancedSearchForm',
-        'SlateAdmin.store.people.GroupsTree'
+        'Slate.store.people.GroupsTree'
     ],
 
     /** @cfg title="People" */
@@ -64,7 +64,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
 
         // treepanel config
         store: {
-            xclass: 'SlateAdmin.store.people.GroupsTree',
+            xclass: 'Slate.store.people.GroupsTree',
             root: {
                 text: 'All People',
                 Handle: 'slate-internal-people-root-node',

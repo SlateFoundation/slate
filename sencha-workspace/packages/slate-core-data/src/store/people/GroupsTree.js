@@ -1,5 +1,5 @@
 /*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.store.people.GroupsTree', {
+Ext.define('Slate.store.people.GroupsTree', {
     extend: 'Ext.data.TreeStore',
     alias: 'store.groupstree',
 
@@ -79,7 +79,7 @@ Ext.define('SlateAdmin.store.people.GroupsTree', {
             parent = parentId ? rootNode.findChild('ID', parentId, true) : rootNode;
 
             if (parent) {
-                parent.appendChild(Ext.create('SlateAdmin.model.person.Group', Ext.apply({}, record.getData())), true, true);
+                parent.appendChild(Ext.create('Slate.model.person.Group', Ext.apply({}, record.getData())), true, true);
             } else {
                 Ext.Logger.warn('Could not find parent for group in GroupsTree.loadFromArray');
             }

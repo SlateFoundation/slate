@@ -1,8 +1,9 @@
-Ext.define('SlateAdmin.store.people.Groups', {
+Ext.define('Slate.store.people.Groups', {
     extend: 'Ext.data.Store',
 
 
-    model: 'SlateAdmin.model.person.Group',
+    model: 'Slate.model.person.Group',
+
     config: {
         sorters: 'Left',
         pageSize: 0,

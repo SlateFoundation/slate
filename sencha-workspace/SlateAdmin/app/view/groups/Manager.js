@@ -6,12 +6,12 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     requires: [
         'Ext.grid.plugin.CellEditing',
         'Jarvus.ext.actionevents.override.grid.column.ActionEvents',
-        'SlateAdmin.store.people.GroupsTree'
+        'Slate.store.people.GroupsTree'
     ],
 
     rootVisible: false,
     store: {
-        xclass: 'SlateAdmin.store.people.GroupsTree'
+        xclass: 'Slate.store.people.GroupsTree'
     },
     viewConfig: {
         toggleOnDblClick: false
