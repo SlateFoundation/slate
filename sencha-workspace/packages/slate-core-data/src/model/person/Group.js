@@ -2,7 +2,7 @@
 Ext.define('Slate.model.person.Group', {
     extend: 'Ext.data.TreeModel',
     requires: [
-        'Slate.proxy.Records'
+        'Slate.proxy.Groups'
     ],
 
 
@@ -156,10 +156,7 @@ Ext.define('Slate.model.person.Group', {
         }
     ],
 
-    proxy: {
-        type: 'slate-records',
-        url: '/groups'
-    },
+    proxy: 'slate-groups',
 
     validators: [
         {

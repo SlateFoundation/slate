@@ -128,7 +128,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
     onSaveTermClick: function() {
         var me = this,
-            treeStore = me.getTermsTreeStore(),
+            treeStore = me.getManager().getStore(),
             formWindow = me.getTermsFormWindow(),
             parentTerm = formWindow.getParentTerm(),
             form = formWindow.down('form'),
@@ -157,15 +157,17 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         }
     },
 
-    onDeleteTermClick: function(grid, term) {
-        var parentNode = term.parentNode;
+    onDeleteTermClick: function(grid, record) {
+        var parentNode = record.parentNode;
+
+        grid.setSelection(record);
 
         Ext.Msg.confirm('Deleting Term', 'Are you sure you want to delete this term?', function(btn) {
             if (btn != 'yes') {
                 return;
             }
 
-            term.erase({
+            record.erase({
                 success: function() {
                     parentNode.set('leaf', 0 == parentNode.childNodes.length);
                 }

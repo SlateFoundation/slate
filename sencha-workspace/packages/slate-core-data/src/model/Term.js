@@ -118,5 +118,13 @@ Ext.define('Slate.model.Term', {
         }
     ],
 
-    proxy: 'slate-terms'
+    proxy: 'slate-terms',
+
+    validators: [
+        {
+            field: 'Title',
+            type: 'presence',
+            message: 'Title is required'
+        }
+    ]
 });

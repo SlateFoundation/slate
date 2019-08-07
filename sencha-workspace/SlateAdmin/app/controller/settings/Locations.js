@@ -34,12 +34,13 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
         managerPanel: {
             activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
-            // viewclick: 'onViewClick',
-            // deleteclick: 'onDeleteClick'
+            createchildclick: 'onCreateChildClick',
+            viewclick: 'onViewClick',
+            deleteclick: 'onDeleteClick'
+        },
+        'locations-manager button[action=create]': {
+            click: 'onCreateClick'
         }
-        // 'locations-manager button[action=create]': {
-            // click: 'onCreateClick'
-        // }
     },
 
     listen: {
@@ -77,12 +78,26 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
         Ext.util.History.pushState('settings/locations', 'Locations &mdash; Settings');
     },
 
-    // onCreateClick: function() {
-    //     var me = this,
-    //     location = me.getLocationsStore().insert(0, {})[0];
+    onCreateClick: function() {
+        var me = this,
+            managerPanel = me.getManagerPanel(),
+            record = managerPanel.getRootNode().insertChild(0, { leaf: true });
 
-    //     this.getManager().getPlugin('cellediting').startEdit(location, 0);
-    // },
+        managerPanel.getPlugin('cellediting').startEdit(record, 0);
+    },
+
+    onCreateChildClick: function(managerPanel, parentLocation) {
+        var managerPanel = this.getManagerPanel(),
+            cellEditing = managerPanel.getPlugin('cellediting'),
+            location = parentLocation.insertChild(0, {
+                ParentID: parentLocation.getId(),
+                leaf: true
+            });
+
+        managerPanel.expandRecord(parentLocation, function() {
+            Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
+        });
+    },
 
     onCellEditorEdit: function(editor, e) {
         var record = e.record;
@@ -92,28 +107,35 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
         }
     },
 
-    // onViewClick: function(grid, record) {
-    //     var personData = record.get('Person'),
-    //         personId = record.get('PersonID'),
-    //         username;
+    onViewClick: function(grid, record) {
+        debugger;
+        var personData = record.get('Person'),
+            personId = record.get('PersonID'),
+            username;
 
-    //     if (!personData && !personId) {
-    //         Ext.Msg.alert('Cannot view profile', 'No person is currently selected');
-    //         return;
-    //     }
+        if (!personData && !personId) {
+            Ext.Msg.alert('Cannot view profile', 'No person is currently selected');
+            return;
+        }
 
-    //     Ext.util.History.pushState(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
-    // },
+        Ext.util.History.pushState(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
+    },
 
-    // onDeleteClick: function(grid, record) {
-    //     grid.setSelection(record);
+    onDeleteClick: function(grid, record) {
+        var parentRecord = record.parentNode;
 
-    //     Ext.Msg.confirm('Deleting location', 'Are you sure you want to delete this location?', function(btn) {
-    //         if (btn == 'yes') {
-    //             record.erase();
-    //         }
-    //     });
-    // }
+        grid.setSelection(record);
+
+        Ext.Msg.confirm('Deleting location', 'Are you sure you want to delete this location?', function(btn) {
+            if (btn == 'yes') {
+                record.erase({
+                    success: function() {
+                        parentRecord.set('leaf', 0 == parentRecord.childNodes.length);
+                    }
+                });
+            }
+        });
+    },
 
     onBeforeLocationsLoad: function() {
         this.getManagerPanel().setLoading('Loading locations&hellip;');

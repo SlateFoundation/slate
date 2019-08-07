@@ -103,5 +103,13 @@ Ext.define('Slate.model.Location', {
         }
     ],
 
-    proxy: 'slate-locations'
+    proxy: 'slate-locations',
+
+    validators: [
+        {
+            field: 'Title',
+            type: 'presence',
+            message: 'Title is required'
+        }
+    ]
 });

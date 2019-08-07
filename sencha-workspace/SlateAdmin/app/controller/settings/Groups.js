@@ -31,7 +31,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
             activate: 'onManagerPanelActivate',
             browsemembersclick: 'onBrowseMembersClick',
             createsubgroupclick: 'onCreateSubgroupClick',
-            deletegroupclick: 'onDeleteGroupClick'
+            deletegroupclick: 'onDeleteClick'
         },
         'groups-manager button[action=create-organization]': {
             click: 'onCreateOrganizationClick'
@@ -65,7 +65,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     onCreateOrganizationClick: function() {
         var me = this,
-            treeStore = me.getPeopleGroupsTreeStore();
+            treeStore = me.getManager().getStore();
 
         Ext.Msg.prompt('Create Organization', 'Enter a name for the new organization:', function(btn, text) {
             var newGroup;
@@ -91,7 +91,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     onCreateSubgroupClick: function(grid, parentGroup) {
         var me = this,
-            treeStore = me.getPeopleGroupsTreeStore();
+            treeStore = me.getManager().getStore();
 
         Ext.Msg.prompt('Create Subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
             var newGroup;
@@ -119,16 +119,16 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         });
     },
 
-    onDeleteGroupClick: function(grid,rec) {
-        var parentNode = rec.parentNode;
+    onDeleteClick: function(grid, record) {
+        var parentNode = record.parentNode;
+
+        grid.setSelection(record);
 
         Ext.Msg.confirm('Deleting Group', 'Are you sure you want to delete this group?', function(btn) {
             if (btn == 'yes') {
-                rec.erase({
+                record.erase({
                     success: function() {
-                        if (!parentNode.childNodes.length) {
-                            parentNode.set('leaf', true);
-                        }
+                        parentNode.set('leaf', 0 == parentNode.childNodes.length);
                     }
                 });
             }

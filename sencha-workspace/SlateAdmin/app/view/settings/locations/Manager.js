@@ -45,8 +45,39 @@ Ext.define('SlateAdmin.view.settings.locations.Manager', {
                 ]
             }
         }
+    },{
+        xtype: 'actioncolumn',
+        dataIndex: 'Class',
+        width: 80,
+        items: [
+            // {
+            //     action: 'browse-courses',
+            //     glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
+            //     tooltip: 'Browse Courses'
+            // },
+            {
+                action: 'createchild',
+                iconCls: 'glyph-success',
+                glyph: 0xf055, // fa-plus-circle
+                tooltip: 'Create Sub-location'
+            },
+            {
+                action: 'delete',
+                iconCls: 'glyph-danger',
+                glyph: 0xf056, // fa-minus-circle
+                tooltip: 'Delete Location'
+            }
+        ]
+    }],
+    bbar: [{
+        xtype: 'button',
+        glyph: 0xf055, // fa-plus-circle,
+        cls: 'glyph-success',
+        text: 'Create Location',
+        action: 'create'
     }],
     plugins: [{
+        pluginId: 'cellediting',
         ptype: 'cellediting'
     }]
 });

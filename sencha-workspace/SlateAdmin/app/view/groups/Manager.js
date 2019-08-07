@@ -88,6 +88,7 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         action: 'create-organization'
     }],
     plugins: [{
+        pluginId: 'cellediting',
         ptype: 'cellediting'
     }]
 });
