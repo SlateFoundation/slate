@@ -47,8 +47,8 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
     listen: {
         store: {
             '#Locations': {
-                beforeload: 'onBeforeLocationsLoad',
-                load: 'onLocationsLoad'
+                beforeload: 'onBeforeStoreLoad',
+                load: 'onStoreLoad'
             }
         }
     },
@@ -142,11 +142,11 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
         Ext.util.History.pushState(['course-sections', 'search', 'location:' + record.get('Handle')]);
     },
 
-    onBeforeLocationsLoad: function() {
+    onBeforeStoreLoad: function() {
         this.getManagerPanel().setLoading('Loading locations&hellip;');
     },
 
-    onLocationsLoad: function() {
+    onStoreLoad: function() {
         this.getManagerPanel().setLoading(false);
     }
 });

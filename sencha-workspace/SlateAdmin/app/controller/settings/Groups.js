@@ -39,6 +39,15 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         }
     },
 
+    listen: {
+        store: {
+            '#people.Groups': {
+                beforeload: 'onBeforeStoreLoad',
+                load: 'onStoreLoad'
+            }
+        }
+    },
+
 
     // route handlers
     showManager: function() {
@@ -116,5 +125,13 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     onBrowseMembersClick: function(grid,rec) {
         Ext.util.History.pushState(['people', 'search', 'group:' + rec.get('Handle')]);
+    },
+
+    onBeforeStoreLoad: function() {
+        this.getManagerPanel().setLoading('Loading groups&hellip;');
+    },
+
+    onStoreLoad: function() {
+        this.getManagerPanel().setLoading(false);
     }
 });

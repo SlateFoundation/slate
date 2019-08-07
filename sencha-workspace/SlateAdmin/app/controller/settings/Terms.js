@@ -39,6 +39,15 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         }
     },
 
+    listen: {
+        store: {
+            '#Terms': {
+                beforeload: 'onBeforeStoreLoad',
+                load: 'onStoreLoad'
+            }
+        }
+    },
+
 
     // route handlers
     showManager: function() {
@@ -114,7 +123,15 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         });
     },
 
-    onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.pushState(['course-sections', 'search', 'term:' + rec.get('Handle')]);
+    onBrowseCoursesClick: function(grid, record) {
+        Ext.util.History.pushState(['course-sections', 'search', 'term:' + record.get('Handle')]);
+    },
+
+    onBeforeStoreLoad: function() {
+        this.getManagerPanel().setLoading('Loading terms&hellip;');
+    },
+
+    onStoreLoad: function() {
+        this.getManagerPanel().setLoading(false);
     }
 });
