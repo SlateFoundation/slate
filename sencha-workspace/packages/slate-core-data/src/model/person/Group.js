@@ -1,6 +1,6 @@
 /*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('Slate.model.person.Group', {
-    extend: 'Ext.data.TreeModel',
+    extend: 'Ext.data.Model',
     requires: [
         'Slate.proxy.Groups'
     ],
@@ -95,21 +95,11 @@ Ext.define('Slate.model.person.Group', {
         {
             name: 'namesPath',
             type: 'string',
-            persist: false
-        },
-        {
-            name: 'text',
-            type: 'string',
             persist: false,
-            depends: 'Name',
-            convert: function(v, r) {
-                return v || r.get('Name');
+            depends: ['Name'],
+            convert: function (v, r) {
+                return v ? v.replace(/[^\/]+$/, r.get('Name')) : null;
             }
-        },
-        {
-            name: 'parentId',
-            persist: false,
-            mapping: 'ParentID'
         },
         {
             name: 'leaf',
@@ -119,9 +109,9 @@ Ext.define('Slate.model.person.Group', {
             convert: function(v, r) {
                 if (typeof v == 'boolean') {
                     return v;
-                } else {
-                    return r.get('Left') == r.get('Right') - 1;
                 }
+
+                return r.get('Left') == r.get('Right') - 1;
             }
         },
         {

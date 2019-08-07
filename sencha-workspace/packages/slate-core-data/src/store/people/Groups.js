@@ -26,12 +26,16 @@ Ext.define('Slate.store.people.Groups', {
 
         me.callParent(arguments);
 
-        if (operation.wasSuccessful()) {
-            for (count = me.getCount(); i < count; i++) {
-                group = me.getAt(i);
-                parentGroup = me.getById(group.get('ParentID'));
-                group.set('namesPath', (parentGroup ? parentGroup.get('namesPath') : '') + '/' + group.get('Name'));
-            }
+        if (!operation.wasSuccessful()) {
+            return;
         }
+
+        me.beginUpdate();
+        for (count = me.getCount(); i < count; i++) {
+            group = me.getAt(i);
+            parentGroup = me.getById(group.get('ParentID'));
+            group.set('namesPath', (parentGroup ? parentGroup.get('namesPath') : '') + '/' + group.get('Name'));
+        }
+        me.endUpdate();
     }
 });

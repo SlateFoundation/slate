@@ -86,7 +86,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         columns: [{
             xtype: 'treecolumn',
             flex: 1,
-            dataIndex: 'text'
+            dataIndex: 'Name'
 //        },{
 //            width: 20,
 //            dataIndex: 'Population'

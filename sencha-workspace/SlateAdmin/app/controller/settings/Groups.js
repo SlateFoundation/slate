@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
-        manager: {
+        managerPanel: {
             selector: 'groups-manager',
             autoCreate: true,
 
@@ -27,14 +27,15 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     },
 
     control: {
-        'groups-manager': {
+        managerPanel: {
             activate: 'onManagerPanelActivate',
+            edit: 'onCellEditorEdit',
             browsemembersclick: 'onBrowseMembersClick',
             createsubgroupclick: 'onCreateSubgroupClick',
             deletegroupclick: 'onDeleteClick'
         },
         'groups-manager button[action=create-organization]': {
-            click: 'onCreateOrganizationClick'
+            click: 'onCreateClick'
         }
     },
 
@@ -51,7 +52,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
-        me.application.getController('Viewport').loadCard(me.getManager());
+        me.application.getController('Viewport').loadCard(me.getManagerPanel());
 
         Ext.resumeLayouts(true);
     },
@@ -63,61 +64,39 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         Ext.util.History.pushState('settings/groups', 'Groups &mdash; Settings');
     },
 
-    onCreateOrganizationClick: function() {
+    onCreateClick: function() {
         var me = this,
-            treeStore = me.getManager().getStore();
+            managerPanel = me.getManagerPanel(),
+            record = managerPanel.getRootNode().insertChild(0, {
+                Class: 'Emergence\\People\\Groups\\Organization',
+                leaf: true
+            });
 
-        Ext.Msg.prompt('Create Organization', 'Enter a name for the new organization:', function(btn, text) {
-            var newGroup;
+        managerPanel.getPlugin('cellediting').startEdit(record, 0);
+    },
 
-            text = Ext.String.trim(text);
+    onCreateSubgroupClick: function(managerPanel, parentLocation) {
+        var managerPanel = this.getManagerPanel(),
+            cellEditing = managerPanel.getPlugin('cellediting'),
+            location = parentLocation.insertChild(0, {
+                Class: 'Emergence\\People\\Groups\\Group',
+                ParentID: parentLocation.getId(),
+                leaf: true
+            });
 
-            if (btn == 'ok' && text) {
-                newGroup = treeStore.getModel().create({
-                    Name: text,
-                    Class: 'Emergence\\People\\Groups\\Organization',
-                    leaf: true,
-                    namesPath: '/' + text
-                });
-
-                newGroup.save({
-                    success: function() {
-                        treeStore.getRootNode().appendChild(newGroup);
-                    }
-                });
-            }
+        managerPanel.expandRecord(parentLocation, function() {
+            Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
         });
     },
 
-    onCreateSubgroupClick: function(grid, parentGroup) {
-        var me = this,
-            treeStore = me.getManager().getStore();
+    onCellEditorEdit: function(editor, e) {
+        var record = e.record;
 
-        Ext.Msg.prompt('Create Subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
-            var newGroup;
-
-            text = Ext.String.trim(text);
-
-            if (btn == 'ok' && text) {
-                newGroup = treeStore.getModel().create({
-                    Name: text,
-                    ParentID: parentGroup.get('ID'),
-                    Class: 'Emergence\\People\\Groups\\Group',
-                    leaf: true,
-                    namesPath: parentGroup.get('namesPath') + '/' + text
-                });
-
-                newGroup.save({
-                    success: function() {
-                        parentGroup.set('leaf', false);
-                        parentGroup.appendChild(newGroup);
-                        parentGroup.expand();
-                        // me.getPeopleGroupsStore().add(newGroup);
-                    }
-                });
-            }
-        });
+        if (record.isValid()) {
+            record.save();
+        }
     },
+
 
     onDeleteClick: function(grid, record) {
         var parentNode = record.parentNode;
