@@ -69,11 +69,11 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             type: 'emergence-chainedtree',
             source: 'people.Groups',
             root: {
-                text: 'All People',
+                Name: 'All People',
                 Handle: 'slate-internal-people-root-node',
                 ID: null,
                 leaf: false,
-                expanded: true
+                expanded: false
             }
         },
         scroll: true,
