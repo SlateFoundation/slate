@@ -34,6 +34,7 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
         managerPanel: {
             activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
+            browsecoursesclick: 'onBrowseCoursesClick',
             createchildclick: 'onCreateChildClick',
             viewclick: 'onViewClick',
             deleteclick: 'onDeleteClick'
@@ -135,6 +136,10 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
                 });
             }
         });
+    },
+
+    onBrowseCoursesClick: function(grid, record) {
+        Ext.util.History.pushState(['course-sections', 'search', 'location:' + record.get('Handle')]);
     },
 
     onBeforeLocationsLoad: function() {

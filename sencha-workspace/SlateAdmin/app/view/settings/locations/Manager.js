@@ -50,11 +50,11 @@ Ext.define('SlateAdmin.view.settings.locations.Manager', {
         dataIndex: 'Class',
         width: 80,
         items: [
-            // {
-            //     action: 'browse-courses',
-            //     glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
-            //     tooltip: 'Browse Courses'
-            // },
+            {
+                action: 'browsecourses',
+                glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
+                tooltip: 'Browse Courses'
+            },
             {
                 action: 'createchild',
                 iconCls: 'glyph-success',
