@@ -11,6 +11,10 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         'people.details.Courses'
     ],
 
+    stores: [
+        'Terms@Slate.store'
+    ],
+
     refs: {
         coursesPanel: {
             selector: 'people-details-courses',
@@ -44,7 +48,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         var me = this,
             personSectionsStore = me.getCoursesGrid().getStore(),
             personSectionsProxy = personSectionsStore.getProxy(),
-            termsStore = Ext.getStore('Terms'),
+            termsStore = me.getTermsStore(),
             termSelector = me.getPersonCoursesTermSelector(),
             selectedTerm = termSelector.getValue();
 
@@ -62,16 +66,13 @@ Ext.define('SlateAdmin.controller.people.Courses', {
 
         if (!selectedTerm) {
             selectedTerm = termsStore.getCurrentTerm();
-            if (selectedTerm) {
-                selectedTerm = selectedTerm.getId();
-            }
         }
 
         coursesPanel.setLoading(false);
 
         // configure proxy and load store
         personSectionsProxy.url = '/people/' + person.get('ID') + '/courses';
-        personSectionsProxy.setExtraParam('termID', selectedTerm);
+        personSectionsProxy.setExtraParam('termID', selectedTerm ? selectedTerm.getId() : null);
         personSectionsStore.load();
 
         // push selected term to combo

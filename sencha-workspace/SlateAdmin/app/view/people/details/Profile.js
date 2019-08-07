@@ -7,9 +7,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
         'Ext.form.FieldSet',
         'Ext.form.FieldContainer',
         'Ext.form.field.Tag',
-        'Ext.form.field.Number',
-        'SlateAdmin.proxy.Records',
-        'SlateAdmin.model.person.Group'
+        'Ext.form.field.Number'
     ],
 
     title: 'Profile',

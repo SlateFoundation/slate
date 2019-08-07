@@ -22,7 +22,7 @@ Ext.define('SlateAdmin.controller.People', {
 
     stores: [
         'people.People',
-        'people.Groups',
+        'people.Groups@Slate.store',
         'people.AccountLevels'
     ],
 
@@ -95,7 +95,7 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     control: {
-        'people-navpanel': {
+        navPanel: {
             beforeexpand: 'onNavPanelBeforeExpand'
         },
         'people-navpanel jarvus-searchfield': {
@@ -117,6 +117,7 @@ Ext.define('SlateAdmin.controller.People', {
             deselect: { fn: 'onPersonDeselect', buffer: 10 }
         },
         manager: {
+            activate: 'onManagerActivate',
             selectedpersonchange: 'onManagerSelectedPersonChange'
         },
         'people-manager #detailTabs': {
@@ -173,22 +174,12 @@ Ext.define('SlateAdmin.controller.People', {
      * @return {void}
      */
     showPeople: function() {
-        var me = this,
-            groupsTreePanel = me.getGroupsTree(),
-            _selectRootNode = function() {
-                groupsTreePanel.getSelectionModel().select(0, false, true);
-            };
+        var me = this;
 
         Ext.suspendLayouts();
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(me.getManager());
         Ext.resumeLayouts(true);
-
-        if (groupsTreePanel.rendered) {
-            _selectRootNode();
-        } else {
-            groupsTreePanel.on('render', _selectRootNode);
-        }
     },
 
     /**
@@ -449,6 +440,10 @@ Ext.define('SlateAdmin.controller.People', {
         }
 
         Ext.resumeLayouts(true);
+    },
+
+    onManagerActivate: function() {
+        this.getPeopleGroupsStore().loadIfDirty();
     },
 
     /**

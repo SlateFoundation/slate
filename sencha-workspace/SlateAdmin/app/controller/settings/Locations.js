@@ -1,47 +1,52 @@
-/*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.controller.settings.Terms', {
+Ext.define('SlateAdmin.controller.settings.Locations', {
     extend: 'Ext.app.Controller',
 
     // controller config
     views: [
-        'settings.terms.Manager'
+        'settings.locations.Manager'
     ],
 
     stores: [
-        'Terms@Slate.store'
+        'Locations@Slate.store'
+    ],
+
+    models: [
+        'Location@Slate.model'
     ],
 
     routes: {
-        'settings/terms': 'showManager'
+        'settings/locations': 'showManager'
     },
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
+
         managerPanel: {
-            selector: 'terms-manager',
+            selector: 'locations-manager',
             autoCreate: true,
 
-            xtype: 'terms-manager'
+            xtype: 'locations-manager'
         }
     },
 
 
-	control: {
+    control: {
         managerPanel: {
             activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
-            createtermclick: 'onCreateChildClick',
-            deletetermclick: 'onDeleteTermClick'
+            createchildclick: 'onCreateChildClick',
+            viewclick: 'onViewClick',
+            deleteclick: 'onDeleteClick'
         },
-        'terms-manager button[action=create-term]': {
+        'locations-manager button[action=create]': {
             click: 'onCreateClick'
         }
     },
 
     listen: {
         store: {
-            '#Terms': {
+            '#Locations': {
                 beforeload: 'onBeforeStoreLoad',
                 load: 'onStoreLoad'
             }
@@ -57,7 +62,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         Ext.suspendLayouts();
 
         Ext.util.History.suspendState();
-        navPanel.setActiveLink('settings/terms');
+        navPanel.setActiveLink('settings/locations');
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
@@ -68,10 +73,10 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
 
     // event handlers
-    onManagerPanelActivate: function(managerPanel) {
-        this.getTermsStore().loadIfDirty();
+    onManagerPanelActivate: function() {
+        this.getLocationsStore().loadIfDirty();
 
-        Ext.util.History.pushState('settings/terms', 'Terms &mdash; Settings');
+        Ext.util.History.pushState('settings/locations', 'Locations &mdash; Settings');
     },
 
     onCreateClick: function() {
@@ -86,8 +91,6 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         var managerPanel = this.getManagerPanel(),
             cellEditing = managerPanel.getPlugin('cellediting'),
             location = parentRecord.insertChild(0, {
-                StartDate: parentRecord.get('StartDate'),
-                EndDate: parentRecord.get('EndDate'),
                 ParentID: parentRecord.getId(),
                 leaf: true
             });
@@ -105,30 +108,42 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         }
     },
 
-    onDeleteTermClick: function(grid, record) {
-        var parentNode = record.parentNode;
+    onViewClick: function(grid, record) {
+        debugger;
+        var personData = record.get('Person'),
+            personId = record.get('PersonID'),
+            username;
+
+        if (!personData && !personId) {
+            Ext.Msg.alert('Cannot view profile', 'No person is currently selected');
+            return;
+        }
+
+        Ext.util.History.pushState(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
+    },
+
+    onDeleteClick: function(grid, record) {
+        var parentRecord = record.parentNode;
 
         grid.setSelection(record);
 
-        Ext.Msg.confirm('Deleting Term', 'Are you sure you want to delete this term?', function(btn) {
-            if (btn != 'yes') {
-                return;
+        Ext.Msg.confirm('Deleting location', 'Are you sure you want to delete this location?', function(btn) {
+            if (btn == 'yes') {
+                record.erase({
+                    success: function() {
+                        parentRecord.set('leaf', 0 == parentRecord.childNodes.length);
+                    }
+                });
             }
-
-            record.erase({
-                success: function() {
-                    parentNode.set('leaf', 0 == parentNode.childNodes.length);
-                }
-            });
         });
     },
 
     onBrowseCoursesClick: function(grid, record) {
-        Ext.util.History.pushState(['course-sections', 'search', 'term:' + record.get('Handle')]);
+        Ext.util.History.pushState(['course-sections', 'search', 'location:' + record.get('Handle')]);
     },
 
     onBeforeStoreLoad: function() {
-        this.getManagerPanel().setLoading('Loading terms&hellip;');
+        this.getManagerPanel().setLoading('Loading locations&hellip;');
     },
 
     onStoreLoad: function() {

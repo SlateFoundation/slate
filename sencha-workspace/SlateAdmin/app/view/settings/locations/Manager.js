@@ -1,25 +1,22 @@
-/*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.view.settings.terms.Manager', {
+Ext.define('SlateAdmin.view.settings.locations.Manager', {
     extend: 'Ext.tree.Panel',
-    xtype: 'terms-manager',
+    xtype: 'locations-manager',
     requires: [
         'Ext.grid.plugin.CellEditing',
-        'Ext.form.field.Date',
-        'Ext.grid.column.Date',
         'Emergence.store.ChainedTree'
     ],
 
     rootVisible: false,
     store: {
         type: 'emergence-chainedtree',
-        source: 'Terms'
+        source: 'Locations'
     },
     viewConfig: {
         toggleOnDblClick: false
     },
     columns: [{
         xtype: 'treecolumn',
-        text: 'Term',
+        text: 'Location',
         flex: 2,
         dataIndex: 'Title',
         editor: {
@@ -31,26 +28,6 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         dataIndex: 'Handle',
         editor: {
             xtype: 'textfield'
-        }
-    },{
-        text: 'Start Date',
-        xtype: 'datecolumn',
-        format :'Y-m-d',
-        width: 160,
-        dataIndex: 'StartDate',
-        editor: {
-            xtype: 'datefield',
-            format :'Y-m-d'
-        }
-    },{
-        text: 'End Date',
-        xtype: 'datecolumn',
-        format :'Y-m-d',
-        width: 160,
-        dataIndex: 'EndDate',
-        editor: {
-            xtype: 'datefield',
-            format :'Y-m-d'
         }
     },{
         text: 'Status',
@@ -79,16 +56,16 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
                 tooltip: 'Browse Courses'
             },
             {
-                action: 'createterm',
+                action: 'createchild',
                 iconCls: 'glyph-success',
                 glyph: 0xf055, // fa-plus-circle
-                tooltip: 'Create Term'
+                tooltip: 'Create Sub-location'
             },
             {
-                action: 'deleteterm',
+                action: 'delete',
                 iconCls: 'glyph-danger',
                 glyph: 0xf056, // fa-minus-circle
-                tooltip: 'Delete Term'
+                tooltip: 'Delete Location'
             }
         ]
     }],
@@ -96,8 +73,8 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         xtype: 'button',
         glyph: 0xf055, // fa-plus-circle,
         cls: 'glyph-success',
-        text: 'Create Term',
-        action: 'create-term'
+        text: 'Create Location',
+        action: 'create'
     }],
     plugins: [{
         pluginId: 'cellediting',

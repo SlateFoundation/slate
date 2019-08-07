@@ -5,6 +5,6 @@ Ext.define('SlateAdmin.controller.Locations', {
 
     // controller config
     stores: [
-        'Locations'
+        'Locations@Slate.store'
     ]
 });

@@ -6,12 +6,13 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     requires: [
         'Ext.grid.plugin.CellEditing',
         'Jarvus.ext.actionevents.override.grid.column.ActionEvents',
-        'SlateAdmin.store.people.GroupsTree'
+        'Emergence.store.ChainedTree'
     ],
 
     rootVisible: false,
     store: {
-        xclass: 'SlateAdmin.store.people.GroupsTree'
+        type: 'emergence-chainedtree',
+        source: 'people.Groups'
     },
     viewConfig: {
         toggleOnDblClick: false
@@ -87,6 +88,7 @@ Ext.define('SlateAdmin.view.groups.Manager', {
         action: 'create-organization'
     }],
     plugins: [{
+        pluginId: 'cellediting',
         ptype: 'cellediting'
     }]
 });

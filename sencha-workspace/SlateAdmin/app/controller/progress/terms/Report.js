@@ -17,7 +17,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
     ],
 
     stores: [
-        'Terms',
+        'Terms@Slate.store',
         'progress.terms.Sections',
         'progress.terms.Students',
         'progress.terms.Reports'

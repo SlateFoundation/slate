@@ -17,7 +17,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
     ],
 
     stores: [
-        'Terms',
+        'Terms@Slate.store',
         'progress.interims.Sections',
         'progress.interims.Students',
         'progress.interims.Reports'

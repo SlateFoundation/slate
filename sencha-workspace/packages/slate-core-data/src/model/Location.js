@@ -1,7 +1,7 @@
-Ext.define('Slate.model.Term', {
+Ext.define('Slate.model.Location', {
     extend: 'Ext.data.Model',
     requires: [
-        'Slate.proxy.Terms',
+        'Slate.proxy.Locations',
         'Ext.data.identifier.Negative'
     ],
 
@@ -21,7 +21,7 @@ Ext.define('Slate.model.Term', {
         {
             name: 'Class',
             type: 'string',
-            defaultValue: 'Slate\\Term'
+            defaultValue: 'Emergence\\Locations\\Location'
         },
         {
             name: 'Created',
@@ -52,16 +52,14 @@ Ext.define('Slate.model.Term', {
             persist: false
         },
 
-        // Term fields
+        // Location fields
         {
             name: 'Title',
-            type: 'string',
-            allowNull: true
+            type: 'string'
         },
         {
             name: 'Handle',
-            type: 'string',
-            allowNull: true
+            type: 'string'
         },
         {
             name: 'Status',
@@ -69,15 +67,8 @@ Ext.define('Slate.model.Term', {
             defaultValue: 'Live'
         },
         {
-            name: 'StartDate',
-            type: 'date',
-            dateFormat: 'Y-m-d',
-            allowNull: true
-        },
-        {
-            name: 'EndDate',
-            type: 'date',
-            dateFormat: 'Y-m-d',
+            name: 'Description',
+            type: 'string',
             allowNull: true
         },
         {
@@ -96,13 +87,7 @@ Ext.define('Slate.model.Term', {
             allowNull: true
         },
 
-        // virtual fields
-        // TOOD: test if still needed
-        {
-            name: 'titlesPath',
-            type: 'string',
-            persist: false
-        },
+        // virtual fileds
         {
             name: 'leaf',
             type: 'boolean',
@@ -112,29 +97,19 @@ Ext.define('Slate.model.Term', {
                 if (typeof v == 'boolean') {
                     return v;
                 } else {
-                    return r.get('Left') == r.get('Right') - 1;
+                    return r.get('Left') + 1 == r.get('Right');
                 }
             }
         }
     ],
 
-    proxy: 'slate-terms',
+    proxy: 'slate-locations',
 
     validators: [
         {
             field: 'Title',
             type: 'presence',
             message: 'Title is required'
-        },
-        {
-            field: 'StartDate',
-            type: 'presence',
-            message: 'Start date is required'
-        },
-        {
-            field: 'EndDate',
-            type: 'presence',
-            message: 'End date is required'
         }
     ]
 });

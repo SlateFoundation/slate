@@ -7,6 +7,12 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
         'courses.sections.details.Profile'
     ],
 
+    stores: [
+        'Terms@Slate.store',
+        'Locations@Slate.store',
+        'courses.Schedules'
+    ],
+
     refs: {
         profilePanel: {
             selector: 'courses-sections-details-profile',

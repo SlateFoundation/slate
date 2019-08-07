@@ -8,8 +8,8 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         'groups.Manager'
     ],
 
-    models: [
-        'person.Group'
+    stores: [
+        'people.Groups@Slate.store'
     ],
 
     routes: {
@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
-        manager: {
+        managerPanel: {
             selector: 'groups-manager',
             autoCreate: true,
 
@@ -27,14 +27,24 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     },
 
     control: {
-        'groups-manager': {
-            show: 'onManagerShow',
+        managerPanel: {
+            activate: 'onManagerPanelActivate',
+            edit: 'onCellEditorEdit',
             browsemembersclick: 'onBrowseMembersClick',
             createsubgroupclick: 'onCreateSubgroupClick',
-            deletegroupclick: 'onDeleteGroupClick'
+            deletegroupclick: 'onDeleteClick'
         },
         'groups-manager button[action=create-organization]': {
-            click: 'onCreateOrganizationClick'
+            click: 'onCreateClick'
+        }
+    },
+
+    listen: {
+        store: {
+            '#people.Groups': {
+                beforeload: 'onBeforeStoreLoad',
+                load: 'onStoreLoad'
+            }
         }
     },
 
@@ -51,94 +61,62 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
-        me.application.getController('Viewport').loadCard(me.getManager());
+        me.application.getController('Viewport').loadCard(me.getManagerPanel());
 
         Ext.resumeLayouts(true);
     },
 
 
     // event handlers
-    onManagerShow: function(managerPanel) {
-        var rootNode = managerPanel.getRootNode();
-
-        if (!rootNode.isLoaded()) {
-            managerPanel.setLoading('Loading groups&hellip;');
-            rootNode.expand(false, function() {
-                managerPanel.setLoading(false);
-            });
-        }
-
+    onManagerPanelActivate: function(managerPanel) {
+        this.getPeopleGroupsStore().loadIfDirty();
         Ext.util.History.pushState('settings/groups', 'Groups &mdash; Settings');
     },
 
-    onCreateOrganizationClick: function() {
+    onCreateClick: function() {
         var me = this,
-            manager = me.getManager(),
-            treeStore = manager.getStore();
+            managerPanel = me.getManagerPanel(),
+            record = managerPanel.getRootNode().insertChild(0, {
+                Class: 'Emergence\\People\\Groups\\Organization',
+                leaf: true
+            });
 
-        Ext.Msg.prompt('Create Organization', 'Enter a name for the new organization:', function(btn, text) {
-            var newGroup;
+        managerPanel.getPlugin('cellediting').startEdit(record, 0);
+    },
 
-            text = Ext.String.trim(text);
+    onCreateSubgroupClick: function(managerPanel, parentRecord) {
+        var managerPanel = this.getManagerPanel(),
+            cellEditing = managerPanel.getPlugin('cellediting'),
+            location = parentRecord.insertChild(0, {
+                Class: 'Emergence\\People\\Groups\\Group',
+                ParentID: parentRecord.getId(),
+                leaf: true
+            });
 
-            if (btn == 'ok' && text) {
-                newGroup = me.getPersonGroupModel().create({
-                    Name: text,
-                    Class: 'Emergence\\People\\Groups\\Organization',
-                    leaf: true,
-                    namesPath: '/' + text
-                });
-
-                newGroup.save({
-                    success: function() {
-                        treeStore.getRootNode().appendChild(newGroup);
-                        me.getPeopleGroupsStore().add(newGroup);
-                    }
-                });
-            }
+        managerPanel.expandRecord(parentRecord, function() {
+            Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
         });
     },
 
-    onCreateSubgroupClick: function(grid,rec) {
-        var me = this,
-            parentGroup = rec;
+    onCellEditorEdit: function(editor, e) {
+        var record = e.record;
 
-        Ext.Msg.prompt('Create Subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
-            var newGroup;
-
-            text = Ext.String.trim(text);
-
-            if (btn == 'ok' && text) {
-                newGroup = me.getPersonGroupModel().create({
-                    Name: text,
-                    ParentID: parentGroup.get('ID'),
-                    Class: 'Emergence\\People\\Groups\\Group',
-                    leaf: true,
-                    namesPath: parentGroup.get('namesPath') + '/' + text
-                });
-
-                newGroup.save({
-                    success: function() {
-                        parentGroup.set('leaf', false);
-                        parentGroup.appendChild(newGroup);
-                        parentGroup.expand();
-                        me.getPeopleGroupsStore().add(newGroup);
-                    }
-                });
-            }
-        });
+        if (record.isValid()) {
+            record.save();
+        }
     },
 
-    onDeleteGroupClick: function(grid,rec) {
-        var parentNode = rec.parentNode;
+
+    onDeleteClick: function(grid, record) {
+        var parentNode = record.parentNode;
+
+        grid.setSelection(record);
 
         Ext.Msg.confirm('Deleting Group', 'Are you sure you want to delete this group?', function(btn) {
             if (btn == 'yes') {
-                rec.erase({
+                record.erase({
                     success: function() {
-                        if (!parentNode.childNodes.length) {
-                            parentNode.set('leaf', true);
-                        }
+                        parentNode.set('leaf', 0 == parentNode.childNodes.length);
                     }
                 });
             }
@@ -147,5 +125,13 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     onBrowseMembersClick: function(grid,rec) {
         Ext.util.History.pushState(['people', 'search', 'group:' + rec.get('Handle')]);
+    },
+
+    onBeforeStoreLoad: function() {
+        this.getManagerPanel().setLoading('Loading groups&hellip;');
+    },
+
+    onStoreLoad: function() {
+        this.getManagerPanel().setLoading(false);
     }
 });

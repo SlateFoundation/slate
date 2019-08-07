@@ -21,7 +21,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
     stores: [
         'people.Classes',
-        'people.Groups',
+        'people.Groups@Slate.store',
         'people.Advisors@Slate.store',
     ],
 
