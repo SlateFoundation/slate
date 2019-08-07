@@ -86,15 +86,15 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
         managerPanel.getPlugin('cellediting').startEdit(record, 0);
     },
 
-    onCreateChildClick: function(managerPanel, parentLocation) {
+    onCreateChildClick: function(managerPanel, parentRecord) {
         var managerPanel = this.getManagerPanel(),
             cellEditing = managerPanel.getPlugin('cellediting'),
-            location = parentLocation.insertChild(0, {
-                ParentID: parentLocation.getId(),
+            location = parentRecord.insertChild(0, {
+                ParentID: parentRecord.getId(),
                 leaf: true
             });
 
-        managerPanel.expandRecord(parentLocation, function() {
+        managerPanel.expandRecord(parentRecord, function() {
             Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
         });
     },

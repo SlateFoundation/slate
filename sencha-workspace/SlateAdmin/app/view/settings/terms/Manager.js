@@ -100,6 +100,7 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
         action: 'create-term'
     }],
     plugins: [{
+        pluginId: 'cellediting',
         ptype: 'cellediting'
     }]
 });

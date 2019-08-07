@@ -125,6 +125,16 @@ Ext.define('Slate.model.Term', {
             field: 'Title',
             type: 'presence',
             message: 'Title is required'
+        },
+        {
+            field: 'StartDate',
+            type: 'presence',
+            message: 'Start date is required'
+        },
+        {
+            field: 'EndDate',
+            type: 'presence',
+            message: 'End date is required'
         }
     ]
 });

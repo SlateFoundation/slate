@@ -75,16 +75,16 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         managerPanel.getPlugin('cellediting').startEdit(record, 0);
     },
 
-    onCreateSubgroupClick: function(managerPanel, parentLocation) {
+    onCreateSubgroupClick: function(managerPanel, parentRecord) {
         var managerPanel = this.getManagerPanel(),
             cellEditing = managerPanel.getPlugin('cellediting'),
-            location = parentLocation.insertChild(0, {
+            location = parentRecord.insertChild(0, {
                 Class: 'Emergence\\People\\Groups\\Group',
-                ParentID: parentLocation.getId(),
+                ParentID: parentRecord.getId(),
                 leaf: true
             });
 
-        managerPanel.expandRecord(parentLocation, function() {
+        managerPanel.expandRecord(parentRecord, function() {
             Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
         });
     },

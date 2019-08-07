@@ -4,8 +4,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
     // controller config
     views: [
-        'settings.terms.Manager',
-        'settings.terms.Form'
+        'settings.terms.Manager'
     ],
 
     stores: [
@@ -18,38 +17,25 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
-        manager: {
+        managerPanel: {
             selector: 'terms-manager',
             autoCreate: true,
 
             xtype: 'terms-manager'
-        },
-        termsFormWindow: {
-            selector: 'terms-form-window',
-            autoCreate: true,
-
-            xtype: 'terms-form-window'
         }
     },
 
 
 	control: {
-        manager: {
+        managerPanel: {
             activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
-            createtermclick: 'onCreateTermClick',
+            createtermclick: 'onCreateChildClick',
             deletetermclick: 'onDeleteTermClick'
         },
         'terms-manager button[action=create-term]': {
-            click: 'onCreateTermClick'
-        },
-        'terms-form-window button[action="save"]': {
-            click: 'onSaveTermClick'
-        },
-        'terms-form-window form': {
-            fieldvaliditychange: 'setFormValidity',
-            fielderrorchange: 'setFormValidity'
+            click: 'onCreateClick'
         }
     },
 
@@ -66,7 +52,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         navPanel.expand();
         Ext.util.History.resumeState(false); // false to discard any changes to state
 
-        me.application.getController('Viewport').loadCard(me.getManager());
+        me.application.getController('Viewport').loadCard(me.getManagerPanel());
 
         Ext.resumeLayouts(true);
     },
@@ -79,42 +65,26 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         Ext.util.History.pushState('settings/terms', 'Terms &mdash; Settings');
     },
 
-    onCreateTermClick: function(grid, term) {
+    onCreateClick: function() {
         var me = this,
-            formWindow = me.getTermsFormWindow(),
-            form = formWindow.down('form'),
-            titleField = form.down('textfield[name="Title"]'),
-            saveButton = formWindow.down('button[action="save"]'),
-            parentDisplayField = form.down('displayfield[name="ParentDisplay"]');
+            managerPanel = me.getManagerPanel(),
+            record = managerPanel.getRootNode().insertChild(0, { leaf: true });
 
-        form.suspendEvents();
-        form.reset();
-        form.resumeEvents();
+        managerPanel.getPlugin('cellediting').startEdit(record, 0);
+    },
 
-        if (term && term.isModel) {
-            // This term will have a parent
-            form.getForm().setValues({
-                ParentID: term.get('ID'),
-                ParentDisplay: term.get('Title'),
-                TitlesPath: '/' + term.get('Title'),
-                StartDate: term.get('StartDate'),
-                EndDate: term.get('EndDate')
+    onCreateChildClick: function(managerPanel, parentRecord) {
+        var managerPanel = this.getManagerPanel(),
+            cellEditing = managerPanel.getPlugin('cellediting'),
+            location = parentRecord.insertChild(0, {
+                StartDate: parentRecord.get('StartDate'),
+                EndDate: parentRecord.get('EndDate'),
+                ParentID: parentRecord.getId(),
+                leaf: true
             });
-            formWindow.setParentTerm(term);
-            parentDisplayField.show();
-        } else {
-            // This term has no parent
-            form.getForm().setValues({
-                TitlesPath: ''
-            });
-            formWindow.setParentTerm(null);
-            parentDisplayField.hide();
-        }
 
-        saveButton.disable();
-
-        formWindow.show(null, function() {
-            titleField.focus();
+        managerPanel.expandRecord(parentRecord, function() {
+            Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
         });
     },
 
@@ -123,37 +93,6 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
         if (record.isValid()) {
             record.save();
-        }
-    },
-
-    onSaveTermClick: function() {
-        var me = this,
-            treeStore = me.getManager().getStore(),
-            formWindow = me.getTermsFormWindow(),
-            parentTerm = formWindow.getParentTerm(),
-            form = formWindow.down('form'),
-            term = treeStore.getModel().create(form.getValues());
-
-        if (term.isValid()) {
-            term.set({
-                ID: null,
-                leaf: true,
-                TitlesPath: term.get('TitlesPath') + '/' + term.get('Title')
-            });
-
-            term.save({
-                success: function() {
-                    formWindow.close();
-
-                    if (parentTerm) {
-                        parentTerm.set('leaf', false);
-                        parentTerm.appendChild(term);
-                        parentTerm.expand();
-                    } else {
-                        treeStore.getRootNode().appendChild(term);
-                    }
-                }
-            });
         }
     },
 
@@ -177,16 +116,5 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
     onBrowseCoursesClick: function(grid,rec) {
         Ext.util.History.pushState(['course-sections', 'search', 'term:' + rec.get('Handle')]);
-    },
-
-    setFormValidity: function(form) {
-        var saveButton = form.up('window').down('button[action="save"]');
-
-        if (form.isValid()) {
-            saveButton.enable();
-        } else {
-            saveButton.disable();
-        }
     }
-
 });
