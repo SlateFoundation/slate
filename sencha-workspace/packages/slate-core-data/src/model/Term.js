@@ -11,10 +11,12 @@ Ext.define('Slate.model.Term', {
     identifier: 'negative',
 
     fields: [
+
+        // ActiveRecord fields
         {
             name: 'ID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Class',
@@ -25,22 +27,41 @@ Ext.define('Slate.model.Term', {
             name: 'Created',
             type: 'date',
             dateFormat: 'timestamp',
-            useNull: true
+            allowNull: true,
+            persist: false
         },
         {
             name: 'CreatorID',
             type: 'int',
-            useNull: true
+            allowNull: true,
+            persist: false
         },
+
+        // VersionedRecord fields
+        {
+            name: 'Modified',
+            type: 'date',
+            dateFormat: 'timestamp',
+            allowNull: true,
+            persist: false
+        },
+        {
+            name: 'ModifierID',
+            type: 'int',
+            allowNull: true,
+            persist: false
+        },
+
+        // Term fields
         {
             name: 'Title',
             type: 'string',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Handle',
             type: 'string',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Status',
@@ -51,28 +72,49 @@ Ext.define('Slate.model.Term', {
             name: 'StartDate',
             type: 'date',
             dateFormat: 'Y-m-d',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'EndDate',
             type: 'date',
             dateFormat: 'Y-m-d',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'ParentID',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Left',
             type: 'int',
-            useNull: true
+            allowNull: true
         },
         {
             name: 'Right',
             type: 'int',
-            useNull: true
+            allowNull: true
+        },
+
+        // virtual fields
+        // TOOD: test if still needed
+        {
+            name: 'titlesPath',
+            type: 'string',
+            persist: false
+        },
+        {
+            name: 'leaf',
+            type: 'boolean',
+            persist: false,
+            depends: ['Left', 'Right'],
+            convert: function(v, r) {
+                if (typeof v == 'boolean') {
+                    return v;
+                } else {
+                    return r.get('Left') == r.get('Right') - 1;
+                }
+            }
         }
     ],
 

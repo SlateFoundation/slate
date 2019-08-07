@@ -9,12 +9,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     ],
 
     stores: [
-        'Terms',
-        'TermsTree'
-    ],
-
-    models: [
-        'Term'
+        'Terms@Slate.store'
     ],
 
     routes: {
@@ -39,8 +34,8 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
 
 	control: {
-        'terms-manager': {
-            show: 'onManagerShow',
+        manager: {
+            activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
             createtermclick: 'onCreateTermClick',
@@ -78,111 +73,103 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
 
     // event handlers
-    onManagerShow: function(managerPanel) {
-        var store = Ext.getStore('Terms');
-
-        if (!store.isLoaded()) {
-            managerPanel.setLoading('Loading terms&hellip;');
-            store.load({
-                callback: function() {
-                    managerPanel.setLoading(false);
-                }
-            });
-        }
+    onManagerPanelActivate: function(managerPanel) {
+        this.getTermsStore().loadIfDirty();
 
         Ext.util.History.pushState('settings/terms', 'Terms &mdash; Settings');
     },
 
-    onCellEditorEdit: function(editor, e) {
-        var rec = e.record;
-
-        if (rec.isValid()) {
-            rec.save();
-        }
-    },
-
-    onCreateTermClick: function(grid,rec) {
+    onCreateTermClick: function(grid, term) {
         var me = this,
-            win = me.getTermsFormWindow(),
-            form = win.down('form'),
+            formWindow = me.getTermsFormWindow(),
+            form = formWindow.down('form'),
             titleField = form.down('textfield[name="Title"]'),
-            saveButton = win.down('button[action="save"]'),
+            saveButton = formWindow.down('button[action="save"]'),
             parentDisplayField = form.down('displayfield[name="ParentDisplay"]');
 
         form.suspendEvents();
         form.reset();
         form.resumeEvents();
 
-        if (rec.get && rec.get('ID')) {
+        if (term && term.isModel) {
             // This term will have a parent
             form.getForm().setValues({
-                ParentID: rec.get('ID'),
-                ParentDisplay: rec.get('Title'),
-                TitlesPath: '/' + rec.get('Title')
+                ParentID: term.get('ID'),
+                ParentDisplay: term.get('Title'),
+                TitlesPath: '/' + term.get('Title'),
+                StartDate: term.get('StartDate'),
+                EndDate: term.get('EndDate')
             });
-            win.setParentTerm(rec);
+            formWindow.setParentTerm(term);
             parentDisplayField.show();
         } else {
             // This term has no parent
             form.getForm().setValues({
                 TitlesPath: ''
             });
-            win.setParentTerm(null);
+            formWindow.setParentTerm(null);
             parentDisplayField.hide();
         }
 
         saveButton.disable();
 
-        win.show(null,function() {
+        formWindow.show(null, function() {
             titleField.focus();
         });
     },
 
+    onCellEditorEdit: function(editor, e) {
+        var record = e.record;
+
+        if (record.isValid()) {
+            record.save();
+        }
+    },
+
     onSaveTermClick: function() {
         var me = this,
-            win = me.getTermsFormWindow(),
-            parentTerm = win.getParentTerm(),
-            form = win.down('form'),
-            term;
-
-        term = me.getTermModel().create(form.getValues());
+            treeStore = me.getTermsTreeStore(),
+            formWindow = me.getTermsFormWindow(),
+            parentTerm = formWindow.getParentTerm(),
+            form = formWindow.down('form'),
+            term = treeStore.getModel().create(form.getValues());
 
         if (term.isValid()) {
-
-            term.set('ID', null);
-            term.set('leaf', true);
-            term.set('TitlesPath', term.get('TitlesPath') + '/' + term.get('Title'));
+            term.set({
+                ID: null,
+                leaf: true,
+                TitlesPath: term.get('TitlesPath') + '/' + term.get('Title')
+            });
 
             term.save({
                 success: function() {
-                    win.close();
+                    formWindow.close();
 
                     if (parentTerm) {
                         parentTerm.set('leaf', false);
                         parentTerm.appendChild(term);
                         parentTerm.expand();
                     } else {
-                        me.getTermsTreeStore().getRootNode().appendChild(term);
+                        treeStore.getRootNode().appendChild(term);
                     }
-                    me.getTermsStore().add(term);
                 }
             });
         }
     },
 
-    onDeleteTermClick: function(grid,rec) {
-        var parentNode = rec.parentNode;
+    onDeleteTermClick: function(grid, term) {
+        var parentNode = term.parentNode;
 
         Ext.Msg.confirm('Deleting Term', 'Are you sure you want to delete this term?', function(btn) {
-            if (btn == 'yes') {
-                rec.erase({
-                    success: function() {
-                        if (!parentNode.childNodes.length) {
-                            parentNode.set('leaf', true);
-                        }
-                    }
-                });
+            if (btn != 'yes') {
+                return;
             }
+
+            term.erase({
+                success: function() {
+                    parentNode.set('leaf', 0 == parentNode.childNodes.length);
+                }
+            });
         });
     },
 

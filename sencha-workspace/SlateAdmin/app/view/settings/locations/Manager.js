@@ -2,11 +2,15 @@ Ext.define('SlateAdmin.view.settings.locations.Manager', {
     extend: 'Ext.tree.Panel',
     xtype: 'locations-manager',
     requires: [
-        'Ext.grid.plugin.CellEditing'
+        'Ext.grid.plugin.CellEditing',
+        'Emergence.store.ChainedTree'
     ],
 
     rootVisible: false,
-    store: 'LocationsTree',
+    store: {
+        type: 'emergence-chainedtree',
+        source: 'Locations'
+    },
     viewConfig: {
         toggleOnDblClick: false
     },

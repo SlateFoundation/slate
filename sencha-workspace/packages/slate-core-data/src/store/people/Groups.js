@@ -1,5 +1,8 @@
 Ext.define('Slate.store.people.Groups', {
     extend: 'Ext.data.Store',
+    requires: [
+        'Slate.proxy.Groups'
+    ],
 
 
     model: 'Slate.model.person.Group',
@@ -8,8 +11,7 @@ Ext.define('Slate.store.people.Groups', {
         sorters: 'Left',
         pageSize: 0,
         proxy: {
-            type: 'slaterecords',
-            url: '/groups',
+            type: 'slate-groups',
             include: 'Population',
             extraParams: {
                 parentGroup: 'any'

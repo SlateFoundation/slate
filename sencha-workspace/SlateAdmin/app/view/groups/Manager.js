@@ -6,12 +6,13 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     requires: [
         'Ext.grid.plugin.CellEditing',
         'Jarvus.ext.actionevents.override.grid.column.ActionEvents',
-        'Slate.store.people.GroupsTree'
+        'Emergence.store.ChainedTree'
     ],
 
     rootVisible: false,
     store: {
-        xclass: 'Slate.store.people.GroupsTree'
+        type: 'emergence-chainedtree',
+        source: 'people.Groups'
     },
     viewConfig: {
         toggleOnDblClick: false

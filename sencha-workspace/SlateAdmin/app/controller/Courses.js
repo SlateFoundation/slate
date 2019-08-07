@@ -17,7 +17,11 @@ Ext.define('SlateAdmin.controller.Courses', {
         'courses.Schedules',
         'courses.Teachers',
         'courses.Courses',
-        'courses.SectionsResult'
+        'courses.SectionsResult',
+        'Terms@Slate.store',
+        'Locations@Slate.store',
+        'courses.Courses',
+        'courses.Schedules'
 //        'SectionStudents'
     ],
 

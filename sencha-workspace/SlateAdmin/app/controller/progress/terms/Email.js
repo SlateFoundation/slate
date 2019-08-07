@@ -20,7 +20,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Email', {
     ],
 
     stores: [
-        'Terms',
+        'Terms@Slate.store',
         'people.Advisors@Slate.store',
         'progress.terms.Authors',
         'progress.terms.Emails'

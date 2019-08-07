@@ -9,7 +9,7 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
         {
             name: 'ID',
             type: 'integer',
-            useNull: true,
+            allowNull: true,
             defaultValue: null
         }, {
             name: 'Class',

@@ -5,6 +5,6 @@ Ext.define('SlateAdmin.controller.Terms', {
 
     // controller config
     stores: [
-        'Terms'
+        'Terms@Slate.store'
     ]
 });

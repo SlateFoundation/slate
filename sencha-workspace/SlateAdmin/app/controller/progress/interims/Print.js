@@ -22,7 +22,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
     ],
 
     stores: [
-        'Terms',
+        'Terms@Slate.store',
         'people.Advisors@Slate.store',
         'progress.interims.Authors'
     ],

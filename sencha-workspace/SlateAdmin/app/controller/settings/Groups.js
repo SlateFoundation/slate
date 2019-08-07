@@ -8,10 +8,6 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
         'groups.Manager'
     ],
 
-    models: [
-        'person.Group@Slate.model'
-    ],
-
     stores: [
         'people.Groups@Slate.store'
     ],
@@ -32,7 +28,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
     control: {
         'groups-manager': {
-            show: 'onManagerShow',
+            activate: 'onManagerPanelActivate',
             browsemembersclick: 'onBrowseMembersClick',
             createsubgroupclick: 'onCreateSubgroupClick',
             deletegroupclick: 'onDeleteGroupClick'
@@ -62,23 +58,14 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
 
     // event handlers
-    onManagerShow: function(managerPanel) {
-        var rootNode = managerPanel.getRootNode();
-
-        if (!rootNode.isLoaded()) {
-            managerPanel.setLoading('Loading groups&hellip;');
-            rootNode.expand(false, function() {
-                managerPanel.setLoading(false);
-            });
-        }
-
+    onManagerPanelActivate: function(managerPanel) {
+        this.getPeopleGroupsStore().loadIfDirty();
         Ext.util.History.pushState('settings/groups', 'Groups &mdash; Settings');
     },
 
     onCreateOrganizationClick: function() {
         var me = this,
-            manager = me.getManager(),
-            treeStore = manager.getStore();
+            treeStore = me.getPeopleGroupsTreeStore();
 
         Ext.Msg.prompt('Create Organization', 'Enter a name for the new organization:', function(btn, text) {
             var newGroup;
@@ -86,7 +73,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
             text = Ext.String.trim(text);
 
             if (btn == 'ok' && text) {
-                newGroup = me.getPersonGroupModel().create({
+                newGroup = treeStore.getModel().create({
                     Name: text,
                     Class: 'Emergence\\People\\Groups\\Organization',
                     leaf: true,
@@ -96,16 +83,15 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                 newGroup.save({
                     success: function() {
                         treeStore.getRootNode().appendChild(newGroup);
-                        me.getPeopleGroupsStore().add(newGroup);
                     }
                 });
             }
         });
     },
 
-    onCreateSubgroupClick: function(grid,rec) {
+    onCreateSubgroupClick: function(grid, parentGroup) {
         var me = this,
-            parentGroup = rec;
+            treeStore = me.getPeopleGroupsTreeStore();
 
         Ext.Msg.prompt('Create Subgroup', 'Enter a name for the new subgroup:', function(btn, text) {
             var newGroup;
@@ -113,7 +99,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
             text = Ext.String.trim(text);
 
             if (btn == 'ok' && text) {
-                newGroup = me.getPersonGroupModel().create({
+                newGroup = treeStore.getModel().create({
                     Name: text,
                     ParentID: parentGroup.get('ID'),
                     Class: 'Emergence\\People\\Groups\\Group',
@@ -126,7 +112,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
                         parentGroup.set('leaf', false);
                         parentGroup.appendChild(newGroup);
                         parentGroup.expand();
-                        me.getPeopleGroupsStore().add(newGroup);
+                        // me.getPeopleGroupsStore().add(newGroup);
                     }
                 });
             }

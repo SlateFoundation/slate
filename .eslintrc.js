@@ -66,7 +66,7 @@ module.exports = {
                 "SwitchCase": 1,
                 "ignoredNodes": [
                     // ignore indent of subsequent literals in tpl/renderTpl/itemTpl properties
-                    "Property[value.type=ArrayExpression]:matches([key.name=tpl], [key.name=renderTpl], [key.name=itemTpl], [key.name=displayTpl]) > ArrayExpression > Literal + Literal"
+                    "Property[value.type=ArrayExpression][key.name=/(^t|[a-z]T)pl$/] > ArrayExpression > Literal + Literal"
                 ]
             }
         ],
@@ -114,7 +114,7 @@ module.exports = {
         "no-bitwise": "error",
         "no-caller": "error",
         "no-catch-shadow": "error",
-        "no-confusing-arrow": "error",
+        "no-confusing-arrow": ["error", {"allowParens": true}],
         "no-continue": "off",
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
@@ -173,6 +173,7 @@ module.exports = {
         "no-ternary": "off",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
+        "no-undef": "error",
         "no-undef-init": "error",
         "no-undefined": "error",
         "no-underscore-dangle": "error",

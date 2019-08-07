@@ -7,8 +7,7 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
     ],
 
     stores: [
-        'Locations@Slate.store',
-        'LocationsTree@Slate.store'
+        'Locations@Slate.store'
     ],
 
     models: [
@@ -33,8 +32,14 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
 
     control: {
         managerPanel: {
-            activate: 'onManagerPanelActivate'
+            activate: 'onManagerPanelActivate',
+            edit: 'onCellEditorEdit',
+            // viewclick: 'onViewClick',
+            // deleteclick: 'onDeleteClick'
         }
+        // 'locations-manager button[action=create]': {
+            // click: 'onCreateClick'
+        // }
     },
 
     listen: {
@@ -71,6 +76,44 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
 
         Ext.util.History.pushState('settings/locations', 'Locations &mdash; Settings');
     },
+
+    // onCreateClick: function() {
+    //     var me = this,
+    //     location = me.getLocationsStore().insert(0, {})[0];
+
+    //     this.getManager().getPlugin('cellediting').startEdit(location, 0);
+    // },
+
+    onCellEditorEdit: function(editor, e) {
+        var record = e.record;
+
+        if (record.isValid()) {
+            record.save();
+        }
+    },
+
+    // onViewClick: function(grid, record) {
+    //     var personData = record.get('Person'),
+    //         personId = record.get('PersonID'),
+    //         username;
+
+    //     if (!personData && !personId) {
+    //         Ext.Msg.alert('Cannot view profile', 'No person is currently selected');
+    //         return;
+    //     }
+
+    //     Ext.util.History.pushState(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
+    // },
+
+    // onDeleteClick: function(grid, record) {
+    //     grid.setSelection(record);
+
+    //     Ext.Msg.confirm('Deleting location', 'Are you sure you want to delete this location?', function(btn) {
+    //         if (btn == 'yes') {
+    //             record.erase();
+    //         }
+    //     });
+    // }
 
     onBeforeLocationsLoad: function() {
         this.getManagerPanel().setLoading('Loading locations&hellip;');

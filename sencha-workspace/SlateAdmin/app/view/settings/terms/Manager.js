@@ -5,11 +5,15 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
     requires: [
         'Ext.grid.plugin.CellEditing',
         'Ext.form.field.Date',
-        'Ext.grid.column.Date'
+        'Ext.grid.column.Date',
+        'Emergence.store.ChainedTree'
     ],
 
     rootVisible: false,
-    store: 'TermsTree',
+    store: {
+        type: 'emergence-chainedtree',
+        source: 'Terms'
+    },
     viewConfig: {
         toggleOnDblClick: false
     },

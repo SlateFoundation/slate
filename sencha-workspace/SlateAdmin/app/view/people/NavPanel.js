@@ -10,7 +10,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         'Ext.form.Panel',
         'Jarvus.ext.form.field.Search',
         'SlateAdmin.view.people.AdvancedSearchForm',
-        'Slate.store.people.GroupsTree'
+        'Emergence.store.ChainedTree'
     ],
 
     /** @cfg title="People" */
@@ -54,24 +54,29 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
     /**
      * @cfg {Object[]} items An array of child Components to be added to this container
      * @cfg {SlateAdmin.view.people.AdvancedSearchForm} items.searchform The advanced search form
-     * @cfg {Ext.tree.Panel} items.treepanel A treepanel using the people.GroupsTree store
+     * @cfg {Ext.tree.Panel} items.treepanel A treepanel of groups
      */
     items: [{
         xtype: 'people-advancedsearchform'
     }, {
+        flex: 1,
+
         xtype: 'treepanel',
         itemId: 'groups',
 
         // treepanel config
         store: {
-            xclass: 'Slate.store.people.GroupsTree',
+            type: 'emergence-chainedtree',
+            source: 'people.Groups',
             root: {
                 text: 'All People',
                 Handle: 'slate-internal-people-root-node',
-                ID: null
+                ID: null,
+                leaf: false,
+                expanded: true
             }
         },
-        scroll: false,
+        scroll: true,
         rootVisible: true,
         singleExpand: true,
         hideHeaders: true,
