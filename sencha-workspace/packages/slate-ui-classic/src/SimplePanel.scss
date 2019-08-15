@@ -1,0 +1,48 @@
+$simplepanel-header-background-color: dynamic(#888);
+
+.slate-simplepanel {
+    border-radius: 0 0 .25em .25em;
+    box-shadow: 0 .125em .25em rgba(black, (1/6));
+    overflow: hidden;
+
+    &.is-loading {
+        min-height: 150px;
+    }
+
+    .empty-text {
+        padding: 1.5em;
+        text-align: center;
+    }
+}
+
+.slate-simplepanel-header {
+    background-color: $simplepanel-header-background-color;
+    border-radius: .25em .25em 0 0;
+    color: $panel-header-color;
+    padding: .75em 1em;
+
+    .x-btn {
+        border: none;
+    }
+}
+
+.slate-simplepanel-title {
+    font-family: $heading-font;
+    font-size: 1.375em;
+    font-weight: bold;
+    line-height: 1;
+    padding-top: .25em;
+    text-shadow: 0 1px 1px rgba(black, .3);
+    -webkit-font-smoothing: antialiased;
+
+    small {
+        color: mix($simplepanel-header-background-color, $panel-header-color, 35%);
+        font-weight: bold;
+        letter-spacing: .02em;
+        margin-left: .75em;
+    }
+}
+
+.slate-simplepanel-body {
+    padding: 0 1em;
+}

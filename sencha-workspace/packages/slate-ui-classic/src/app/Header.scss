@@ -1,0 +1,66 @@
+.slate-appheader {
+    background-image: url( get-resource-path('images/nodes-bg.jpg', $packageName: 'slate-ui-classic') );
+    background-size: cover;
+    box-shadow: inset 0 -1px 0 $border-color;
+    padding: 1em 1em 1em 1.25em;
+
+    .x-toolbar-item {
+        margin-right: 2em;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .x-btn {
+        background-color: white;
+        border: 1px solid $base-color;
+        border-radius: 50%;
+        font-size: 28px;
+        height: 1.5em;
+        text-align: center;
+        width: 1.5em;
+
+        &.x-btn-over,
+        &.x-btn-focus {
+            background-color: mix($base-color, white, 20%);
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .x-btn-icon-el.x-fa {
+        color: $base-color;
+        font-size: 23px;
+        height: 1em;
+        line-height: 1;
+        margin: 0;
+        width: 1em;
+
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .x-fa.fa-pencil-square-o {
+        margin-left: 6px;
+        margin-top: 2px;
+    }
+
+    .x-btn.primary {
+        background-color: $base-color;
+        color: white;
+
+        .x-btn-icon-el {
+            color: white;
+        }
+
+        &.x-btn-over {
+            background-color: darken($base-color, 10);
+        }
+
+        &.x-btn-focus {
+            box-shadow: inset 0 0 0 1px white;
+        }
+    }
+}
