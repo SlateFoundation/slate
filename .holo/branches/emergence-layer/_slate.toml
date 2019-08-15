@@ -1,6 +1,8 @@
 [holomapping]
 files = [
     "*/**",
+    "!.vscode/",
+    "!docs/",
 
     # exclude the submodules we're using temporarily to support local dev
     # -- they would overwrite the trees coming in the right way through projection
