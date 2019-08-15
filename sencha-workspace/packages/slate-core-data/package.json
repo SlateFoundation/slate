@@ -37,7 +37,6 @@
          *
          *    "extend": "parent-theme-package",
          */
-        "extend": "theme-neptune",
 
         /**
          * The toolkit used by this theme (only for "theme" package type).
