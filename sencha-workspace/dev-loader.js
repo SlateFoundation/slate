@@ -1,5 +1,6 @@
 (() => {
     const [,apiHost] = location.search.match(/[?&]apiHost=([^&]+)/) || [];
+    const [,apiSSL] = location.search.match(/[?&]apiSSL=([^&]+)/) || [];
 
     if (!apiHost) {
         document.body.innerHTML = 'Page must be loaded with <code>?apiHost=slate.example.org</code> set'
@@ -12,7 +13,7 @@
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'document';
         xhr.withCredentials = true;
-        xhr.open('GET', `http://${apiHost}${framePath}`);
+        xhr.open('GET', `http${apiSSL?'s':''}://${apiHost}${framePath}`);
         xhr.onload = () => {
             if (xhr.status === 200) {
                 // graft head elements
