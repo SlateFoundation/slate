@@ -91,14 +91,33 @@ Ext.define('Slate.model.person.Group', {
         },
 
         // virtual fields
-        // TOOD: test if still needed
+        {
+            name: 'namesStack',
+            persist: false,
+            depends: ['Name'],
+            convert: function (v, r) {
+                var name = r.get('Name');
+
+                if (!v) {
+                    return [name];
+                }
+
+                v.pop();
+                v.push(name);
+
+                return v;
+            },
+            isEqual: function (a, b) {
+                return Ext.Array.equals(a, b);
+            }
+        },
         {
             name: 'namesPath',
             type: 'string',
             persist: false,
-            depends: ['Name'],
+            depends: ['namesStack'],
             convert: function (v, r) {
-                return v ? v.replace(/[^\/]+$/, r.get('Name')) : null;
+                return r.get('namesStack').join(' ▸ ');
             }
         },
         {

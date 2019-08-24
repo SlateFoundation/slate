@@ -22,7 +22,7 @@ Ext.define('Slate.store.people.Groups', {
 
     onProxyLoad: function(operation) {
         var me = this,
-            i = 0, count, group, parentGroup;
+            i = 0, count, group, parentGroup, namesStack;
 
         me.callParent(arguments);
 
@@ -34,7 +34,13 @@ Ext.define('Slate.store.people.Groups', {
         for (count = me.getCount(); i < count; i++) {
             group = me.getAt(i);
             parentGroup = me.getById(group.get('ParentID'));
-            group.set('namesPath', (parentGroup ? parentGroup.get('namesPath') : '') + '/' + group.get('Name'));
+            namesStack = [ group.get('Name') ];
+
+            if (parentGroup) {
+                namesStack = parentGroup.get('namesStack').concat(namesStack);
+            }
+
+            group.set('namesStack', namesStack);
         }
         me.endUpdate();
     }
