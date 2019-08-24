@@ -21,15 +21,24 @@
                     .querySelectorAll('head > *:not([href^="/webapps/"])')
                     .forEach(node => {
                         _patchHeadElement(node);
-                        document.head.appendChild(node)
+                        document.head.appendChild(node);
                     });
 
                 // graft body elements
                 xhr.response
-                    .querySelectorAll('body > *:not([src^="/webapps/"])')
+                    .querySelectorAll('body > *:not(script)')
                     .forEach(node => {
                         _patchBodyElement(node);
-                        document.body.appendChild(node)
+                        document.body.appendChild(node);
+                    });
+
+                // graft environmental data
+                xhr.response
+                    .querySelectorAll('script')
+                    .forEach(node => {
+                        if (node.textContent.match(/window\.SiteEnvironment\W/)) {
+                            eval(node.textContent)
+                        }
                     });
 
                 // finally: load app
