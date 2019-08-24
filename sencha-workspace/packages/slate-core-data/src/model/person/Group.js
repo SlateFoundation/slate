@@ -102,7 +102,7 @@ Ext.define('Slate.model.person.Group', {
                     return [name];
                 }
 
-                v.pop();
+                v = v.slice(0, -1);
                 v.push(name);
 
                 return v;
