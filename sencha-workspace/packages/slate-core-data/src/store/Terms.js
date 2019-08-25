@@ -16,6 +16,9 @@ Ext.define('Slate.store.Terms', {
             }
         },
         sorters: [{
+            property: 'masterStartDate',
+            direction: 'DESC'
+        },{
             property: 'Left',
             direction: 'ASC'
         }]
