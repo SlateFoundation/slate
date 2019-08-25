@@ -529,6 +529,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
 
         // ensure terms are loaded
         if (!termsStore.isLoaded()) {
+            managerCt.setLoading('Loading terms&hellip;');
             termsStore.on('load', function() {
                 managerCt.setLoading(false);
                 me.syncSections();

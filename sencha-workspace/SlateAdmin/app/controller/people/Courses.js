@@ -55,11 +55,14 @@ Ext.define('SlateAdmin.controller.people.Courses', {
         // ensure terms are loaded
         if (!termsStore.isLoaded()) {
             coursesPanel.setLoading('Loading terms&hellip;');
-            termsStore.load({
-                callback: function() {
-                    me.onPersonLoaded(coursesPanel, person);
-                }
-            });
+            termsStore.on('load', function() {
+                coursesPanel.setLoading(false);
+                me.onPersonLoaded(coursesPanel, person);
+            }, me, { single: true });
+
+            if (!termsStore.isLoading()) {
+                termsStore.load();
+            }
 
             return;
         }
@@ -75,7 +78,6 @@ Ext.define('SlateAdmin.controller.people.Courses', {
             selectedTerm = selectedTerm.getId();
         }
 
-        coursesPanel.setLoading(false);
 
         // configure proxy and load store
         personSectionsProxy.url = '/people/' + person.get('ID') + '/courses';
