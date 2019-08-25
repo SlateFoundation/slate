@@ -3,7 +3,8 @@ Ext.define('SlateAdmin.view.progress.terms.SectionsGrid', {
     xtype: 'progress-terms-sectionsgrid',
     requires: [
         'Ext.form.field.ComboBox',
-        'Ext.form.field.Checkbox'
+        'Ext.form.field.Checkbox',
+        'Ext.data.ChainedStore'
     ],
 
 
@@ -22,10 +23,14 @@ Ext.define('SlateAdmin.view.progress.terms.SectionsGrid', {
 
                     xtype: 'combobox',
 
+                    store: {
+                        type: 'chained',
+                        source: 'Terms'
+                    },
                     queryMode: 'local',
-                    store: 'Terms',
                     valueField: 'Handle',
                     displayField: 'Title',
+
                     forceSelection: true
                 }
             ]

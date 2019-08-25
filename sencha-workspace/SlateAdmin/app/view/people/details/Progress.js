@@ -2,7 +2,8 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-progress',
     requires: [
-        'Ext.grid.Panel'
+        'Ext.grid.Panel',
+        'Ext.data.ChainedStore'
     ],
 
 
@@ -57,10 +58,15 @@ Ext.define('SlateAdmin.view.people.details.Progress', {
             xtype: 'combobox',
             itemId: 'termSelector',
             emptyText: 'Any',
-            store: 'Terms',
+
+            store: {
+                type: 'chained',
+                source: 'Terms'
+            },
+            queryMode: 'local',
             valueField: 'Handle',
             displayField: 'Title',
-            queryMode: 'local',
+
             forceSelection: true
         }]
     }, {

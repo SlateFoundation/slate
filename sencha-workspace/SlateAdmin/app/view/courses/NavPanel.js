@@ -4,6 +4,7 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
     xtype: 'courses-navpanel',
     requires: [
         'Ext.form.Panel',
+        'Ext.data.ChainedStore',
         'Jarvus.ext.form.field.Search'
     ],
 
@@ -77,8 +78,11 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         name: 'department',
         fieldLabel: 'Dept.',
 
+        store: {
+            type: 'chained',
+            source: 'courses.Departments'
+        },
         queryMode: 'local',
-        store: 'courses.Departments',
         valueField: 'Handle',
         displayField: 'Title',
 
@@ -88,8 +92,11 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         name: 'term',
         fieldLabel: 'Term',
 
+        store: {
+            type: 'chained',
+            source: 'Terms'
+        },
         queryMode: 'local',
-        store: 'Terms',
         valueField: 'Handle',
         displayField: 'Title',
 
@@ -99,8 +106,11 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         name: 'schedule',
         fieldLabel: 'Schedule',
 
+        store: {
+            type: 'chained',
+            source: 'courses.Schedules'
+        },
         queryMode: 'local',
-        store: 'courses.Schedules',
         valueField: 'Handle',
         displayField: 'Title',
 
@@ -110,8 +120,11 @@ Ext.define('SlateAdmin.view.courses.NavPanel', {
         name: 'location',
         fieldLabel: 'Location',
 
+        store: {
+            type: 'chained',
+            source: 'Locations'
+        },
         queryMode: 'local',
-        store: 'Locations',
         valueField: 'Handle',
         displayField: 'Title',
 

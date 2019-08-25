@@ -9,7 +9,8 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
         'Ext.form.field.ComboBox',
         'Ext.form.field.Checkbox',
         'Ext.toolbar.Fill',
-        'Ext.toolbar.Separator'
+        'Ext.toolbar.Separator',
+        'Ext.data.ChainedStore'
     ],
 
 
@@ -51,9 +52,12 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
                             fieldLabel: 'Term',
                             emptyText: 'Current Term',
 
-                            store: 'Terms',
-                            displayField: 'Title',
-                            valueField: 'Handle'
+                            store: {
+                                type: 'chained',
+                                source: 'Terms'
+                            },
+                            valueField: 'Handle',
+                            displayField: 'Title'
                         },
                         {
                             name: 'advisor',
@@ -82,9 +86,12 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
                             name: 'group',
                             fieldLabel: 'Group',
 
-                            store: 'people.Groups',
-                            displayField: 'namesPath',
-                            valueField: 'Handle'
+                            store: {
+                                type: 'chained',
+                                source: 'people.Groups'
+                            },
+                            valueField: 'Handle',
+                            displayField: 'namesPath'
                         },
                         {
                             name: 'status',
