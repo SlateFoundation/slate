@@ -21,27 +21,31 @@ Ext.define('Slate.store.people.Groups', {
 
 
     onProxyLoad: function(operation) {
-        var me = this,
-            i = 0, count, group, parentGroup, namesStack;
+        var me = this;
 
-        me.callParent(arguments);
+        if (!me.destroyed && operation.wasSuccessful()) {
+            const records = operation.getRecords();
 
-        if (!operation.wasSuccessful()) {
-            return;
-        }
+            // build an initial map of records by id
+            const byId = {};
 
-        me.beginUpdate();
-        for (count = me.getCount(); i < count; i++) {
-            group = me.getAt(i);
-            parentGroup = me.getById(group.get('ParentID'));
-            namesStack = [ group.get('Name') ];
-
-            if (parentGroup) {
-                namesStack = parentGroup.get('namesStack').concat(namesStack);
+            for (const record of records) {
+                byId[record.getId()] = record;
             }
 
-            group.set('namesStack', namesStack);
+            // decorate dataset with hierarchy metadata
+            for (const record of records) {
+                let namesStack = [ record.get('Name') ];
+
+                const parentRecord = byId[record.get('ParentID')];
+                if (parentRecord) {
+                    namesStack = parentRecord.get('namesStack').concat(namesStack);
+                }
+
+                record.set('namesStack', namesStack, { commit: true });
+            }
         }
-        me.endUpdate();
+
+        me.callParent(arguments);
     }
 });
