@@ -115,6 +115,12 @@ Ext.define('Slate.model.Term', {
                     return r.get('Left') == r.get('Right') - 1;
                 }
             }
+        },
+        {
+            name: 'masterStartDate',
+            type: 'date',
+            persist: false,
+            allowNull: true
         }
     ],
 
