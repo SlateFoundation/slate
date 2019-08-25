@@ -64,19 +64,23 @@ Ext.define('SlateAdmin.controller.people.Courses', {
             return;
         }
 
-        if (!selectedTerm) {
-            selectedTerm = termsStore.getCurrentTerm();
+        if (
+            !selectedTerm
+            && (selectedTerm = termsStore.getCurrentTerm())
+        ) {
+            // push selected term to combo
+            termSelector.setSelection(selectedTerm);
+
+            // switch to int
+            selectedTerm = selectedTerm.getId();
         }
 
         coursesPanel.setLoading(false);
 
         // configure proxy and load store
         personSectionsProxy.url = '/people/' + person.get('ID') + '/courses';
-        personSectionsProxy.setExtraParam('termID', selectedTerm ? selectedTerm.getId() : null);
+        personSectionsProxy.setExtraParam('termID', selectedTerm || null);
         personSectionsStore.load();
-
-        // push selected term to combo
-        termSelector.setValue(selectedTerm);
     },
 
     onCourseTermSelect: function(field, newValue, oldValue) {
