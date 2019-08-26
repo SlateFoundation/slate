@@ -117,7 +117,7 @@ Ext.define('Slate.model.person.Group', {
             persist: false,
             depends: ['namesStack'],
             convert: function (v, r) {
-                return r.get('namesStack').join(' ▸ ');
+                return r.get('namesStack').join(unescape(' %u25B8 '));
             }
         },
         {
