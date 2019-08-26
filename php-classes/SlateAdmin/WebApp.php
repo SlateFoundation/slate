@@ -12,13 +12,4 @@ class WebApp extends \Emergence\WebApps\SenchaApp
     {
         return parent::load($name);
     }
-
-    public function render()
-    {
-        $response = parent::render();
-
-        $response->setPayloadKey('plugins', static::getPlugins());
-
-        return $response;
-    }
 }
