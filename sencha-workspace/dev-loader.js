@@ -1,5 +1,6 @@
 (() => {
     const [,apiHost] = location.search.match(/[?&]apiHost=([^&]+)/) || [];
+    const [,apiSSL] = location.search.match(/[?&]apiSSL=([^&]+)/) || [];
 
     if (!apiHost) {
         document.body.innerHTML = 'Page must be loaded with <code>?apiHost=slate.example.org</code> set'
@@ -12,7 +13,7 @@
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'document';
         xhr.withCredentials = true;
-        xhr.open('GET', `http://${apiHost}${framePath}`);
+        xhr.open('GET', `http${apiSSL?'s':''}://${apiHost}${framePath}`);
         xhr.onload = () => {
             if (xhr.status === 200) {
                 // graft head elements
@@ -20,15 +21,24 @@
                     .querySelectorAll('head > *:not([href^="/webapps/"])')
                     .forEach(node => {
                         _patchHeadElement(node);
-                        document.head.appendChild(node)
+                        document.head.appendChild(node);
                     });
 
                 // graft body elements
                 xhr.response
-                    .querySelectorAll('body > *:not([src^="/webapps/"])')
+                    .querySelectorAll('body > *:not(script)')
                     .forEach(node => {
                         _patchBodyElement(node);
-                        document.body.appendChild(node)
+                        document.body.appendChild(node);
+                    });
+
+                // graft environmental data
+                xhr.response
+                    .querySelectorAll('script')
+                    .forEach(node => {
+                        if (node.textContent.match(/window\.SiteEnvironment\W/)) {
+                            eval(node.textContent)
+                        }
                     });
 
                 // finally: load app

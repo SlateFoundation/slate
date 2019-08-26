@@ -12,7 +12,14 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
     rootVisible: false,
     store: {
         type: 'emergence-chainedtree',
-        source: 'Terms'
+        source: 'Terms',
+        sorters: [{
+            property: 'masterStartDate',
+            direction: 'DESC'
+        },{
+            property: 'Left',
+            direction: 'ASC'
+        }]
     },
     viewConfig: {
         toggleOnDblClick: false

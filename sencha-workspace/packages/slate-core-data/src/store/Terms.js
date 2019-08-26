@@ -16,6 +16,9 @@ Ext.define('Slate.store.Terms', {
             }
         },
         sorters: [{
+            property: 'masterStartDate',
+            direction: 'DESC'
+        },{
             property: 'Left',
             direction: 'ASC'
         }]
@@ -24,7 +27,7 @@ Ext.define('Slate.store.Terms', {
 
     // config handlers
     applyCurrentTerm: function (value) {
-        return typeof value == 'number' ? this.getById(value) : value;
+        return (typeof value == 'number' ? this.getById(value) : value) || null;
     },
 
     updateCurrentTerm: function (newValue, oldValue) {
@@ -32,45 +35,59 @@ Ext.define('Slate.store.Terms', {
     },
 
     applyReportingTerm:  function (value) {
-        return typeof value == 'number' ? this.getById(value) : value;
+        return (typeof value == 'number' ? this.getById(value) : value) || null;
     },
 
     updateReportingTerm: function (newValue, oldValue) {
         this.fireEvent('currentreportingchange', this, newValue, oldValue);
     },
 
-    // TODO: replace these with onProxyLoad handler that stashes them in evented config?
-    getCurrentTerm: function() {
-        var me = this,
-            rawData = me.getProxy().getReader().rawData,
-            termId = rawData && rawData.currentTerm;
-
-        return (termId && me.getById(termId)) || null;
-    },
-
-    getReportingTerm: function() {
-        var me = this,
-            rawData = me.getProxy().getReader().rawData,
-            termId = rawData && rawData.reportingTerm;
-
-        return (termId && me.getById(termId)) || null;
-    },
-
     onProxyLoad: function(operation) {
-        var me = this,
-            rawData = operation.getProxy().getReader().rawData;
+        var me = this;
 
-        // let store load first so we can look up IDs
-        me.callParent(arguments);
+        if (!me.destroyed && operation.wasSuccessful()) {
+            const records = operation.getRecords();
+            const rawData = operation.getProxy().getReader().rawData;
 
-        if (rawData) {
-            if ('currentTerm' in rawData) {
-                me.setCurrentTerm(rawData.currentTerm);
+            // build an initial map of records by id
+            const byId = {};
+
+            for (const record of records) {
+                byId[record.getId()] = record;
             }
 
-            if ('reportingTerm' in rawData) {
-                me.setReportingTerm(rawData.reportingTerm);
+
+            // load current/reporting term metadata directly from response
+            if (rawData) {
+                if ('currentTerm' in rawData) {
+                    me.setCurrentTerm(byId[rawData.currentTerm]);
+                }
+
+                if ('reportingTerm' in rawData) {
+                    me.setReportingTerm(byId[rawData.reportingTerm]);
+                }
+            }
+
+
+            // decorate dataset with hierarchy metadata
+            for (const record of records) {
+                let parentId = record.get('ParentID');
+                let parentRecord = null;
+
+                while (parentId) {
+                    parentRecord = byId[parentId];
+
+                    if (!parentRecord) {
+                        break;
+                    }
+
+                    parentId = parentRecord.get('ParentID');
+                }
+
+                record.set('masterStartDate', (parentRecord||record).get('StartDate'), { commit: true });
             }
         }
+
+        me.callParent(arguments);
     }
 });

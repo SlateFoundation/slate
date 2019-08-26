@@ -11,5 +11,11 @@ Ext.define('SlateAdmin.view.Navigation', {
     width: 200,
     layout: {
         type: 'accordion'
-    }
+    },
+    items: [{
+        // dummy first item so the rest can start collapsed
+        xtype: 'panel',
+        hidden: true,
+        collapsed: false
+    }]
 });

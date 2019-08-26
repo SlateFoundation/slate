@@ -98,6 +98,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 
             xtype: 'courses-navpanel'
         },
+        termSelector: 'courses-navpanel field[name=term]',
         sectionsManager: {
             selector: 'courses-sections-manager',
             autoCreate: true,
@@ -219,9 +220,37 @@ Ext.define('SlateAdmin.controller.Courses', {
     showResults: function(query, section, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
+            termsStore = me.getTermsStore(),
             sectionsManager = me.getSectionsManager(),
             sectionsResultStore = me.getCoursesSectionsResultStore(),
-            sectionsResultProxy = sectionsResultStore.getProxy();
+            sectionsResultProxy = sectionsResultStore.getProxy(),
+            termSelector, currentTerm;
+
+        // apply default query
+        if (!query) {
+            // ensure terms are loaded
+            if (!termsStore.isLoaded()) {
+                sectionsManager.setLoading('Loading terms&hellip;');
+                termsStore.on('load', function() {
+                    sectionsManager.setLoading(false);
+                    me.showResults(query, section, tab);
+                }, me, { single: true });
+
+                if (!termsStore.isLoading()) {
+                    termsStore.load();
+                }
+
+                return;
+            }
+
+            termSelector = me.getTermSelector();
+            currentTerm = termsStore.getCurrentTerm();
+            if (termSelector && currentTerm) {
+                query = 'term:'+currentTerm.get('Handle');
+            }
+        } else if (query == '*') {
+            query = '';
+        }
 
         ExtHistory.suspendState();
         Ext.suspendLayouts();
@@ -546,7 +575,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             }
         });
 
-        Ext.util.History.pushState(queryTerms.length ? ['course-sections', 'search', queryTerms.join(' ')] : 'course-sections');
+        Ext.util.History.pushState(['course-sections', 'search', queryTerms.join(' ') || '*']);
     }
 
 

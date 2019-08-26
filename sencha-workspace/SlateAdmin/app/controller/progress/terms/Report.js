@@ -524,11 +524,12 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
             managerCt = me.getManagerCt(),
             myClassesOnlyCheckbox = me.getMyClassesOnlyCheckbox(),
             termSelector = me.getTermSelector(),
-            termsStore = termSelector.getStore(),
+            termsStore = me.getTermsStore(),
             term = termSelector.getValue();
 
         // ensure terms are loaded
         if (!termsStore.isLoaded()) {
+            managerCt.setLoading('Loading terms&hellip;');
             termsStore.on('load', function() {
                 managerCt.setLoading(false);
                 me.syncSections();
@@ -545,7 +546,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
         if (!term) {
             term = termsStore.getReportingTerm() || termsStore.getCurrentTerm();
             if (term) {
-                termSelector.setValue(term);
+                termSelector.setSelection(term);
             } else {
                 Ext.Msg.alert('No term available', 'No current or reporting term could be detected, please select a term');
             }

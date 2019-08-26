@@ -100,10 +100,6 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             siteUserAccountLevel = siteEnv.user && siteEnv.user.AccountLevel,
             siteUserIsAdmin = siteUserAccountLevel == 'Administrator' || siteUserAccountLevel == 'Developer';
 
-        me.getTemporaryPasswordFieldCt().setVisible(siteUserIsAdmin);
-        me.getUsernameField().setReadOnly(!siteUserIsAdmin);
-        me.getMasqueradeBtnCt().setVisible(siteUserIsAdmin && person.get('Username'));
-
         profilePanel.setLoading('Loading&hellip;');
         Ext.StoreMgr.requireLoaded([
             'people.Classes',
@@ -111,9 +107,17 @@ Ext.define('SlateAdmin.controller.people.Profile', {
             'people.AccountLevels',
             'people.Advisors'
         ], function() {
+            var temporaryPasswordFieldCt = me.getTemporaryPasswordFieldCt();
+            Ext.suspendLayouts();
+
             profileForm.loadRecord(person);
-            profilePanel.setLoading(false);
+            temporaryPasswordFieldCt.setVisible(temporaryPasswordFieldCt.isVisible() && siteUserIsAdmin);
+            me.getUsernameField().setReadOnly(!siteUserIsAdmin);
+            me.getMasqueradeBtnCt().setVisible(siteUserIsAdmin && person.get('Username'));
             me.syncButtons();
+            profilePanel.setLoading(false);
+
+            Ext.resumeLayouts(true);
         });
     },
 
