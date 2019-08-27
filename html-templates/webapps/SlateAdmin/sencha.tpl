@@ -5,9 +5,3 @@
 
     {$dwoo.parent}
 {/block}
-
-{block css-app}
-    {cssmin "fonts/font-awesome.css"}
-
-    {$dwoo.parent}
-{/block}
