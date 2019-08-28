@@ -20,6 +20,20 @@ class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
         if ($Section = static::getRequestedSection()) {
             $conditions['CourseSectionID'] = $Section->ID;
             $filterObjects['Section'] = $Section;
+        } elseif ($Term = static::getRequestedTerm()) {
+            $courseSectionIds = array_map(function($section) {
+                return $section->ID;
+            }, Section::getAllByWhere(['TermID' => $Term->ID]));
+
+            $conditions['CourseSectionID'] = [
+                'operator' => 'IN',
+                'values' => $courseSectionIds
+            ];
+        }
+
+        if ($Student = static::getRequestedStudent()) {
+            $conditions['PersonID'] = $Student->ID;
+            $filterObjects['Student'] = $Student;
         }
 
         if (!empty($_REQUEST['cohort'])) {
