@@ -40,21 +40,8 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
         viewConfig: {
             emptyText: 'No courses for selected term',
             getRowClass: function(record){
-                const now = new Date();
-                let isActive = true;
-
-                if (record.get('StartDate')) {
-                    let startTime = new Date(Date.parse(record.get('StartDate')));
-                    console.log(startTime, 'start time', now);
-                    isActive = startTime && startTime.getTime() < now.getTime();
+                return record.get('isInactive') === true ? 'participant-inactive' : '';
                 }
-                if (isActive && record.get('EndDate')) {
-                    let endTime = new Date(Date.parse(record.get('EndDate')));
-                    isActive = endTime && endTime.getTime() > now.getTime();
-                }
-
-                return isActive === false ? 'inactive-participant' : 'active-participant';
-            }
         },
         plugins: {
             ptype: 'cellediting',
