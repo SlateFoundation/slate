@@ -56,6 +56,10 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 limitParam: false,
                 pageParam: false
             },
+            sorters: [{
+                property: 'isInactive',
+                direction: 'ASC'
+            }],
             autoSync: true
         },
         columns: {
