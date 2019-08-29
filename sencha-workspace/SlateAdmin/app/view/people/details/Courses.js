@@ -6,8 +6,8 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
         'Ext.grid.Panel',
         'Ext.grid.column.Template',
         'Ext.form.field.ComboBox',
-        'SlateAdmin.model.course.Section',
-        'SlateAdmin.proxy.API'
+        'Slate.model.course.SectionParticipant',
+        'Slate.proxy.courses.SectionParticipants'
     ],
 
 
@@ -41,23 +41,20 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
             emptyText: 'No courses for selected term',
             getRowClass: function(record){
                 return record.get('isInactive') === true ? 'participant-inactive' : '';
-                }
+            }
         },
         plugins: {
             ptype: 'cellediting',
             clicksToEdit: 1
         },
         store: {
-            model: 'SlateAdmin.model.course.SectionParticipant',
+            model: 'Slate.model.course.SectionParticipant',
             proxy: {
-                type: 'slaterecords',
+                type: 'slate-courses-participants',
+                include: ['Section.Location', 'Section.Schedule'],
                 startParam: false,
                 limitParam: false,
-                pageParam: false,
-                extraParams: {
-                    include: 'Section.Schedule,Section.Location'
-                },
-                url: '/section-participants'
+                pageParam: false
             },
             autoSync: true
         },
