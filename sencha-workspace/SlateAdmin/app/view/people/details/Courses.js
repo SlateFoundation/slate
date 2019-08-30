@@ -69,7 +69,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 dataIndex: 'Code',
                 width: 90,
                 xtype: 'templatecolumn',
-                tpl: '<tpl for="Section"><a href="#course-sections/lookup/{Code}" alt={Title}>{Code}</a></tpl>'
+                tpl: '<tpl for="Section"><a href="#course-sections/lookup/{Code}" title="{Title:htmlEncode}">{Code}</a></tpl>'
             },{
                 width: 100,
 
