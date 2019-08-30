@@ -51,11 +51,9 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
             model: 'Slate.model.course.SectionParticipant',
             proxy: {
                 type: 'slate-courses-participants',
-                include: ['Section.Location', 'Section.Schedule'],
-                startParam: false,
-                limitParam: false,
-                pageParam: false
+                include: ['Section.Location', 'Section.Schedule']
             },
+            pageSize: 0,
             sorters: [{
                 property: 'isInactive',
                 direction: 'ASC'
