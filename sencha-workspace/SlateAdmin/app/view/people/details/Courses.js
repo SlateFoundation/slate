@@ -65,13 +65,14 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 menuDisabled: true
             },
             items: [{
+                width: 120,
+
                 header: 'Section',
                 dataIndex: 'Code',
-                width: 90,
                 xtype: 'templatecolumn',
                 tpl: '<tpl for="Section"><a href="#course-sections/lookup/{Code}" title="{Title:htmlEncode}">{Code}</a></tpl>'
             },{
-                width: 100,
+                width: 110,
 
                 xtype: 'datecolumn',
                 header: 'Start',
@@ -79,7 +80,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 format:'Y-m-d',
                 editor: 'datefield'
             },{
-                width: 100,
+                width: 110,
 
                 xtype: 'datecolumn',
                 header: 'End',
@@ -87,14 +88,16 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 format:'Y-m-d',
                 editor: 'datefield'
             },{
+                flex: 2,
+
                 header: 'Schedule',
                 dataIndex: 'Schedule',
-                width: 90,
                 xtype: 'templatecolumn',
                 tpl: '<tpl for="Section"><tpl for="Schedule">{Title}</tpl></tpl>'
             },{
+                flex: 2,
+
                 header: 'Location',
-                width: 130,
                 dataIndex: 'Location',
                 xtype: 'templatecolumn',
                 tpl: '<tpl for="Section"><tpl for="Location">{Title}</tpl></tpl>'
