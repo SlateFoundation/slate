@@ -6,8 +6,8 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
         'Ext.grid.Panel',
         'Ext.grid.column.Template',
         'Ext.form.field.ComboBox',
-        'SlateAdmin.model.course.Section',
-        'SlateAdmin.proxy.API'
+        'Slate.model.course.SectionParticipant',
+        'Slate.proxy.courses.SectionParticipants'
     ],
 
 
@@ -38,51 +38,69 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
         xtype: 'grid',
         border: false,
         viewConfig: {
-            emptyText: 'No courses for selected term'
+            emptyText: 'No courses for selected term',
+            getRowClass: function(record){
+                return record.get('isInactive') === true ? 'participant-inactive' : '';
+            }
+        },
+        plugins: {
+            ptype: 'cellediting',
+            clicksToEdit: 1
         },
         store: {
-            model: 'SlateAdmin.model.course.Section',
+            model: 'Slate.model.course.SectionParticipant',
             proxy: {
-                type: 'slateapi',
-                startParam: false,
-                limitParam: false,
-                pageParam: false,
-                extraParams: {
-                    include: 'Schedule,Location'
-                },
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            }
+                type: 'slate-courses-participants',
+                include: ['Section.Location', 'Section.Schedule']
+            },
+            pageSize: 0,
+            sorters: [{
+                property: 'isInactive',
+                direction: 'ASC'
+            }],
+            autoSync: true
         },
         columns: {
             defaults: {
                 menuDisabled: true
             },
             items: [{
+                width: 120,
+
                 header: 'Section',
                 dataIndex: 'Code',
-                width: 90
+                xtype: 'templatecolumn',
+                tpl: '<tpl for="Section"><a href="#course-sections/lookup/{Code}" title="{Title:htmlEncode}">{Code}</a></tpl>'
             },{
-                header: 'Title',
-                dataIndex: 'Title',
-                flex: 1,
-                renderer: function(v, m, r){
-                    return r.getLink();
-                }
+                width: 110,
+
+                xtype: 'datecolumn',
+                header: 'Start',
+                dataIndex: 'StartDate',
+                format:'Y-m-d',
+                editor: 'datefield'
             },{
+                width: 110,
+
+                xtype: 'datecolumn',
+                header: 'End',
+                dataIndex: 'EndDate',
+                format:'Y-m-d',
+                editor: 'datefield'
+            },{
+                flex: 2,
+
                 header: 'Schedule',
                 dataIndex: 'Schedule',
-                width: 90,
                 xtype: 'templatecolumn',
-                tpl: '<tpl for="Schedule">{Title}</tpl>'
+                tpl: '<tpl for="Section"><tpl for="Schedule">{Title}</tpl></tpl>'
             },{
+                flex: 2,
+
                 header: 'Location',
-                width: 130,
                 dataIndex: 'Location',
                 xtype: 'templatecolumn',
-                tpl: '<tpl for="Location">{Title}</tpl>'
+                tpl: '<tpl for="Section"><tpl for="Location">{Title}</tpl></tpl>'
             }]
         }
     }
