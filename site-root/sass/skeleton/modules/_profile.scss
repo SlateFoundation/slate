@@ -1,0 +1,50 @@
+.profile-photo-form {
+    .current-photo {
+        float: left;
+        margin-bottom: 1em;
+        margin-right: 1.5em;
+    }
+
+    .available-photos {
+        @include clearfix;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        .hint {
+            margin-bottom: .25em;
+        }
+    }
+
+    .photo-item {
+        float: left;
+        a {
+            display: block;
+        }
+
+        img {
+            display: block;
+            margin: 0 .25em .25em 0;
+            opacity: .6;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &.current img {
+            outline: 1px solid $accent-color;
+            opacity: 1;
+        }
+    }
+
+    .photo-upload {
+        clear: both;
+        width: auto;
+
+        .submit {
+            margin-top: .25em;
+            width: auto;
+        }
+    }
+}

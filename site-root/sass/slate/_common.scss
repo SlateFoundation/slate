@@ -1,0 +1,114 @@
+* {
+    // -webkit-backface-visibility: hidden;
+}
+
+body {
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+::-webkit-input-placeholder {
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+::-moz-placeholder {
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+:-ms-input-placeholder {
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+:input-placeholder {
+    font-weight: normal;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.site.wrapper {
+    margin-top: $omnibar-height;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+@if $hero-header-image {
+    .site.header {
+        background-image: $hero-header-image;
+        background-size: cover;
+        background-position: top;
+        position: relative;
+
+        &.reveal-hero {
+            height: 560px;
+        }
+    }
+}
+
+.text-left      { text-align: left !important; }
+.text-right     { text-align: right !important; }
+.text-center    { text-align: center !important; }
+.text-justify   { text-align: justify !important; }
+.text-nowrap    { white-space: nowrap !important; }
+.text-nolead    { margin-top: 0 !important; }
+.text-notrail   { margin-bottom: 0 !important; }
+
+.sidebar-item {
+    margin: 1em 0 3em;
+
+    .empty-text {
+        margin: .5em 0;
+    }
+}
+
+.sidebar-item-title {
+    border-bottom: 1px solid $border-color;
+    margin: 0;
+    padding: 0 0 .5em;
+}
+
+.sidebar-group-title {
+    background-color: lighten($border-color, 7);
+    font-family: $body-font;
+    font-size: .875em;
+    margin: 0;
+    padding: .5em .75em;
+    text-transform: uppercase;
+
+    a {
+        color: mix($text-color, $link-color, 30%);
+        font-size: smaller;
+        font-weight: bold;
+    }
+}
+
+.site.footer {
+    &.has-image {
+        background-color: #444;
+        border-top: 2px solid #444;
+
+        .footer-info {
+            background: rgba(white, .9);
+            float: right;
+            padding: 2em 1.5em;
+            width: 250px;
+        }
+
+        > .inner {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding: 0;
+        }
+
+        address {
+            display: inline-block;
+        }
+
+        small {
+            clear: both;
+            display: block;
+            margin: 1em 0 0;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+.x-viewport {
+    .slate-omnibar {
+        box-shadow: none;
+        z-index: 101;
+
+        > .inner {
+            padding: 0 1em 0 .75em;
+            width: 100%;
+        }
+    }
+}
+
+.slateadmin-main {
+    margin-top: 2.75em;
+    -webkit-font-smoothing: antialiased;
+}
+
+.slate-empty-view {
+    background: $slateadmin-empty-view-background-color url('images/slate-empty-view.svg') no-repeat center;
+    // background-image: url('images/slate-empty-view.svg');
+    @include background-size(contain);
+}

@@ -1,0 +1,23 @@
+// hax to fix blurry svg glyphs when text-centered
+.x-btn-icon-top {
+    .x-btn-icon-el-default-toolbar-large {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }    
+}
+
+.x-btn-inner {
+    font-family: inherit;
+}
+
+@for $i from 15 through 30 {
+    $w: $i * 1px;
+
+    .icon-w-#{$i} {
+        .x-btn-glyph {
+            min-width: $w;
+            width: $w;
+        }
+    }
+}

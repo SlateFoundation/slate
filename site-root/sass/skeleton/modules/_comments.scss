@@ -1,0 +1,59 @@
+.comments-list,
+.comment-form {
+    max-width: $reading-width;
+
+    .author {
+        float: left;
+        margin-right: $em-spacer/2;
+    }
+
+    .message,
+    .comment {
+        overflow: hidden;
+    }
+    
+    footer {
+        color: $muted-color;
+        font-size: .875em;
+        
+        a {
+            color: inherit;
+            margin-right: $em-spacer/3;
+        }
+    }
+
+    header,
+    .message-body {
+        display: inline;
+    }
+    
+    .name {
+        font-weight: bold;
+    }
+
+    p {
+        margin: $em-spacer/2 0;
+    }
+
+    p:first-child {
+        display: inline;
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.comments-list {
+    .comment {
+        margin: $em-spacer 0;
+    }
+    
+    .message {
+        padding-top: $em-spacer/6;
+    }
+}
+
+.comment-form {
+    margin: $em-spacer (-$em-spacer);
+}

@@ -1,0 +1,14 @@
+[hololens]
+package = "holo/lens-sencha-pages" # expanded to absolute ident in holospec
+
+[hololens.input]
+root = "sencha-workspace"
+files = [
+    "ext/**",
+    "pages/**"
+]
+
+# optional and stripped from holospec:
+[hololens.output]
+root = "site-root/js/pages" # defaults to hololens.root
+merge = "overlay" # overlay / underlay / replace, defaults to overlay

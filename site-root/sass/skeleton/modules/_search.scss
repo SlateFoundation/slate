@@ -1,0 +1,158 @@
+.site-search {
+    position: relative;
+
+    @media #{$mq-phone} {
+        margin: 1em 0;
+    }
+
+    @media #{$mq-tablet} {
+        float: right;
+    }
+
+    .search-results {
+        background: rgba(lighten($page-bg-color, 10), .95);
+        border: 1px solid $border-color;
+    	@include box-shadow(0 .25em .5em rgba(black, .2));
+        @include box-sizing(border-box);
+        margin: 0;
+        min-height: 2.75em;
+        min-width: 100%;
+        overflow: auto;
+        @include experimental('overflow-scrolling', touch);
+        padding: 0 0 .5em;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        z-index: 1;
+    }
+    
+    &.no-results {
+        .search-results {
+            padding: .5em 1em;
+        }
+
+        .empty-text {
+            color: $muted-color;
+            font-style: italic;
+            text-align: center;
+        }
+    }
+    
+    &.is-waiting {
+        .results-group {
+            opacity: .5;
+        }
+    }
+    
+    &.is-loading {
+        .search-results {
+            background-image: image-url('loaders/spinner.gif');
+            background-position: center .75em;
+            background-repeat: no-repeat;
+        }
+
+        .results-group {
+            opacity: .5;
+        }
+        
+        &.no-results {
+            .empty-text {
+                display: none;
+            }
+        }
+    }
+}
+
+.site.footer .site-search {
+    float: none;
+    margin-bottom: 1em;
+}
+
+.search-field {
+    width: 100%;
+
+    @media #{$mq-tablet} {
+        width: $large-control-size;       
+    }
+}
+
+.results-group {
+    .group-title {
+        background: rgba($base-color, .3);
+        font-size: small;
+        font-weight: bold;
+        letter-spacing: 0;
+        margin: 0;
+        padding: .5em 1.25em;
+        text-transform: uppercase;
+    }
+    
+    .more-link {
+        color: $muted-color;
+        text-align: center;
+    }
+}
+
+.search-result {
+    line-height: 1.2;
+    list-style: none;
+    
+    .result-image {
+        background-position: center;
+        @include background-size(cover);
+        float: right;
+        height: 2.25em;
+        margin-left: .25em;
+        width: 2.25em;
+    }
+
+    .result-title {
+        display: block;
+        font-weight: 300;
+    }
+
+    .result-info {
+        color: $muted-color;
+        font-size: small;
+    }
+
+    a {
+        color: $text-color;
+        display: block;
+        padding: .5em 1em;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+			@include background(linear-gradient( lighten($link-color, 5%), $link-color ));
+			color: white;
+			outline: none;
+			
+			.result-info {
+    			color: mix(white, $link-color, 60%);
+			}
+        }
+    }
+}
+
+.full-search-results {
+    .section-header {
+        margin: 0 0 1em;
+    }
+}
+
+.mini-search {
+    float: right;
+    margin-top: .125em;
+
+    @media #{$mq-phone} {
+        float: none;
+        margin: 0;
+
+        label {
+        }
+
+        input {
+        }
+    }
+}

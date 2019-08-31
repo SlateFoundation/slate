@@ -1,0 +1,103 @@
+.relationship-nonguardian {
+    .glyph-shield {
+        color: $glyph-inactive-color;
+        
+        &:hover,
+        &:focus {
+            color: mix($glyph-inactive-color, $glyph-shield-color);
+        }
+    }
+}
+
+.relationship-nonemergency {
+    .glyph-emergency {
+        color: $glyph-inactive-color;
+
+        &:hover,
+        &:focus {
+            color: mix($glyph-inactive-color, $glyph-emergency-color);
+        }
+    }
+}
+
+.contact-type-header {
+    > .fa {
+        margin-right: .125em;
+    }
+}
+
+.slate-grid-phantom {
+    color: #888;
+
+    .slate-grid-cell-primary {
+        cursor: pointer;
+    }
+
+    .fa-plus-circle {
+        color: $success-color;
+        margin-right: .125em;
+    }
+
+    .x-action-col-icon {
+        display: none;
+    }
+    
+    &.slate-grid-dirty {
+        .contact-point-delete,
+        .relationship-delete {
+            display: inline-block;
+        }
+    }
+}
+
+.contact-cell-class {
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    .x-grid-cell-inner {
+        display: none;
+    }
+}
+
+.contact-point-primary {
+    color: $glyph-inactive-color;
+    visibility: hidden;
+    
+    &:hover,
+    &:focus {
+        color: mix($glyph-inactive-color, $glyph-star-color);
+    }
+}
+
+.contact-postal,
+.contact-phone,
+.contact-email {
+    .contact-point-primary {
+        visibility: visible;
+    }
+}
+
+.contact-primary {
+    .x-grid-cell-inner {
+        font-weight: bold;
+    }
+
+    .contact-point-primary {
+        color: #daa520;
+    }
+}
+
+.slate-people-details-contacts {
+    .x-column-header-first,
+    .x-grid-cell-first {
+        padding-left: 1.75em;
+    }
+}
+
+.slate-people-details-related {
+    @extend .slate-people-details-contacts;
+    
+    > .x-grid-body {
+        border-width: 1px 0;
+    }
+}

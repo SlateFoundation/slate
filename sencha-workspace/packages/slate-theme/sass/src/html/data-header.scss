@@ -1,0 +1,28 @@
+.data-header {
+    background-color: tint($base-color, 90%);
+
+    .record-image {
+        float: left;
+    }
+
+    img,
+    svg {
+        display: block;
+    }
+
+    .record-data {
+        overflow: hidden;
+        padding: 1em;
+    }
+
+    .record-title {
+        font-size: 2em;
+        font-weight: 300;
+        margin: 0;
+    }
+
+    .record-subtitle {
+        font-size: 1.25em;
+        margin: .125em 0 0;
+    }
+}

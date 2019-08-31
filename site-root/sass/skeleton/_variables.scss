@@ -1,0 +1,30 @@
+$base-color:        #e0c7a3 !default;
+$accent-color:      #356fb7 !default;
+$info-color:        #5bc0de !default;
+$success-color:     #23ad23 !default;
+$alert-color:       #f09b24 !default;
+$danger-color:      #d43734 !default;
+$text-color:        #333    !default;
+$heading-color:     $text-color !default;
+
+$page-bg-color:     white !default;
+$link-color:        change-color($accent-color, $saturation: 40) !default;
+
+$muted-color:       mix($text-color, $page-bg-color)      !default;
+$shaded-color:      mix($text-color, $base-color)         !default;
+$border-color:      mix($text-color, $page-bg-color, 17%) !default;
+                    
+$body-font:         system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !default;
+$heading-font:      $body-font !default;
+$mono-font:         Consolas, monospace !default;
+                    
+$font-weight:       400 !default;
+$font-size:         16px !default;
+$line-height:       1.5  !default;
+$em-spacer:         $line-height * 1em !default;
+
+$reading-width:     38em !default;
+                    
+$mq-phone:          'screen and (max-width: 568px)' !default;
+$mq-tablet:         'screen and (min-width: 569px)' !default;
+$mq-wide:           'screen and (min-width: 769px)' !default;

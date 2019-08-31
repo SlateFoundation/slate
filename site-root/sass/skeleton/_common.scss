@@ -1,0 +1,345 @@
+@import 'normalize'; // makes browsers render elements more consistently and in line with modern standards
+
+html {
+    background: $text-color;
+}
+
+body {
+    background: $page-bg-color;
+    @include box-shadow(0 0 1.5em black);
+    color: $text-color;
+    font: normal normal #{$font-weight} #{$font-size}/#{$line-height} $body-font;
+    text-rendering: optimizeLegibility;
+}
+
+.chromeframe {
+    background: tint($alert-color, 80%);
+    margin: 0;
+    padding: .5em 1em;
+    text-align: center;
+
+    a {
+        text-decoration: underline;
+    }
+}
+
+.site {
+    &.header,
+    &.footer {
+        // background: rgba($text-color, .1);
+        background: rgba(mix($accent-color, $text-color), .08);
+        border: 1px solid rgba($base-color, .3);
+        clear: both;
+    }
+
+    &.header {
+        border-width: 0 0 1px;
+        @include box-shadow(inset 0 -1em 1em -1em rgba($text-color, .1));
+
+        @media #{$mq-phone} {
+            & > .inner {
+                padding: 0 1.5em .25em;
+            }
+        }
+    }
+
+    &.footer {
+        border-width: 1px 0 0;
+        @include box-shadow(inset 0 1em 1em -1em rgba($text-color, .1));
+    }
+
+    & > .inner {
+        margin: auto;
+        padding: 1.5em;
+
+        @media #{$mq-wide} {
+            width: 85%;
+
+            &.fluid-width {
+                width: auto;
+            }
+
+            &.full-bleed {
+                padding: 0;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.inner {
+    @include clearfix;
+}
+
+.sidebar-layout {
+    @include clearfix;
+
+    .reading-width {
+        max-width: none;
+    }
+
+    @media #{$mq-wide} {
+        $sidebar-size: 18em;
+
+        .main-col {
+            @include box-sizing(border-box);
+            float: left;
+            width: 100%;
+
+            > .col-inner {
+                margin-right: $sidebar-size + 6;
+            }
+        }
+
+        .sidebar-col {
+            @include box-sizing(border-box);
+            float: right;
+            margin-left: -1 * $sidebar-size;
+            width: $sidebar-size;
+        }
+    }
+
+    &.sidebar-28 {
+        @media #{$mq-wide} {
+            $sidebar-size: 28em;
+
+            .main-col {
+                @include box-sizing(border-box);
+                float: left;
+                width: 100%;
+
+                > .col-inner {
+                    margin-right: $sidebar-size + 1.5;
+                }
+            }
+
+            .sidebar-col {
+                @include box-sizing(border-box);
+                float: right;
+                margin-left: -1 * $sidebar-size;
+                width: $sidebar-size;
+            }
+        }
+    }
+}
+
+.split-view {
+    @include display-flex;
+
+    > .nav-view {
+        background-color: lighten($page-bg-color, 10);
+        padding: 1.5em 0;
+        width: 320px;
+    }
+
+    > .detail-view {
+        @include flex(1);
+        padding: 1.5em 3em;
+    }
+}
+
+.site-branding {
+    a {
+        @include link-colors(inherit);
+        text-decoration: none;
+    }
+
+    img {
+        vertical-align: middle;
+    }
+
+    .text {
+        display: inline-block;
+        margin: 0 0 1em;
+    }
+
+    .site-logo + .text {
+        padding-left: 1em;
+    }
+
+    @media #{$mq-phone} {
+        float: left;
+        font-size: 1em;
+        line-height: inherit;
+        margin: 2.5em 0 0;
+    }
+
+    &.has-slogan {
+        font-size: 1em;
+
+    	.text {
+        	vertical-align: -1em;
+    	}
+
+    	@media #{$mq-phone} {
+    	    float: none;
+    	    margin: 0;
+        	padding: .75em 0 0;
+        	overflow: hidden;
+
+        	.text {
+            	display: block;
+            	margin-top: .25em;
+            	overflow: hidden;
+        	}
+    	}
+
+    	@media #{$mq-tablet} {
+        	margin-top: 1em;
+    	}
+
+    	@media #{$mq-wide} {
+        	margin: 0;
+    	}
+    }
+}
+
+.site-logo {
+    .has-slogan & {
+        @media #{$mq-phone} {
+        	float: left;
+        	height: 48px;
+        	margin-right: .75em;
+        }
+    }
+}
+
+.site-name {
+    font-family: $heading-font;
+    font-size: 2em;
+    vertical-align: middle;
+
+    .has-slogan & {
+    	display: block;
+    	line-height: 1;
+
+        @media #{$mq-phone} {
+            font-size: 1.25em;
+        }
+    }
+
+    small {
+        color: $muted-color;
+        font-size: .5em;
+    }
+}
+
+.site-slogan {
+    color: $muted-color;
+	display: block;
+	font-size: 1.125em;
+	line-height: 1.125;
+	margin-top: .125em;
+
+    @media #{$mq-phone} {
+        font-size: 1em;
+        margin-bottom: .75em;
+    }
+}
+
+@mixin nav-link {
+    background: rgba($link-color, .1);
+    border-bottom: 1px solid rgba($link-color, .2);
+    @include border-radius(.25em);
+    display: block;
+    padding: .25em 1.5em;
+    text-decoration: none;
+    @include experimental('tap-highlight-color', rgba(black, 0));
+
+    &:hover,
+    &:focus {
+        background: rgba($link-color, .2);
+    }
+
+    &:active,
+    &.current {
+        background: $link-color;
+        border-color: darken($link-color, 10);
+        color: white;
+    }
+}
+
+.user-tools {
+    margin: 0 0 -1.625em;
+
+    @media #{$mq-phone} {
+        > .inner {
+            margin: 0 -.625em;
+        }
+
+        a {
+            background: rgba($link-color, .1);
+        }
+    }
+
+    @media #{$mq-tablet} {
+        margin: -1.5em 0 1em;
+        text-align: right;
+
+        a {
+            @include nav-link;
+            @include border-top-radius(0);
+        }
+    }
+
+    a {
+        display: inline-block;
+        font-size: small;
+        height: 1.5em;
+        padding: .25em .75em;
+        vertical-align: top;
+    }
+
+    .user-link {
+        img {
+            vertical-align: -.25em;
+        }
+    }
+}
+
+.mini-login {
+    float: right;
+    margin: 0;
+    margin-left: 1em;
+    text-align: left;
+
+    fieldset {
+        background: none;
+        border: none;
+        @include box-shadow(none);
+        margin: 0;
+        padding: 0;
+    }
+
+    input {
+        font-size: small;
+        padding: .25em .5em;
+        vertical-align: middle;
+    }
+
+    .button {
+        font-size: small;
+        padding: .125em .5em;
+        vertical-align: baseline;
+    }
+}
+
+.footer {
+    address {
+        display: inline-block;
+    }
+
+    small {
+        clear: both;
+        display: block;
+        margin: 1em 0 0;
+    }
+
+    .mini-search {
+        margin-bottom: 1.5em;
+
+        @media #{$mq-phone} {
+            input { width: 100%; }
+        }
+    }
+}

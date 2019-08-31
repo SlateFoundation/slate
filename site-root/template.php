@@ -1,0 +1,3 @@
+<?php
+
+TemplatePreviewRequestHandler::handleRequest();

@@ -1,0 +1,42 @@
+.paging {
+    margin: 1em 0;
+}
+
+.paging-record-count {
+    margin-right: .5em;
+}
+
+.paging-pages {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.paging-page {
+    display: inline-block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.paging-link {
+    display: inline-block;
+    margin: .25em;
+    margin-left: 0;
+    padding: 0 .5em;
+    text-decoration: none;
+    
+    &:hover,
+    &:focus {
+        background-color: tint($link-color, 70%);
+        text-decoration: none;
+    }
+}
+
+.paging-current {
+    @extend .paging-link;
+    background: $link-color;
+    border: none;
+    color: white;
+    pointer-events: none;
+}

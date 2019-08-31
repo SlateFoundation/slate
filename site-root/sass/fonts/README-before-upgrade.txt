@@ -1,0 +1,1 @@
+Remember new versions of font-awesome.scss will need to be modified to point to the ./font-awesome subpath

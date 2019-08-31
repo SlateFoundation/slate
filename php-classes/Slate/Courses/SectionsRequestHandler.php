@@ -1,0 +1,154 @@
+<?php
+
+namespace Slate\Courses;
+
+use DB;
+use ActiveRecord;
+use DuplicateKeyException;
+
+use Emergence\People\Person;
+use Emergence\People\User;
+use Emergence\CMS\BlogPost;
+use Emergence\CMS\BlogRequestHandler;
+use Emergence\Locations\LocationsRequestHandler;
+
+use Slate\Term;
+use Slate\TermsRequestHandler;
+use Slate\People\Student;
+
+
+class SectionsRequestHandler extends \Slate\RecordsRequestHandler
+{
+    public static $recordClass = Section::class;
+    public static $accountLevelBrowse = false;
+    public static $browseOrder = ['Code' => 'ASC'];
+
+
+    public static function handleRecordsRequest($action = false)
+    {
+        switch ($action ? $action : $action = static::shiftPath()) {
+            case '*teachers':
+                return static::respond('teachers', [
+                    'data' => Person::getAllByQuery(
+                        'SELECT Teacher.* FROM (SELECT PersonID FROM `%s` WHERE Role = "Teacher") Participant JOIN `%s` Teacher ON Teacher.ID = Participant.PersonID'
+                        ,[
+                            SectionParticipant::$tableName
+                            ,Person::$tableName
+                        ]
+                    )
+                ]);
+            default:
+                return parent::handleRecordsRequest($action);
+        }
+    }
+
+    protected static function buildBrowseConditions(array $conditions = [], array &$filterObjects = [])
+    {
+        $conditions = parent::buildBrowseConditions($conditions, $filterObjects);
+
+        if ($Term = static::getRequestedTerm()) {
+            $conditions['TermID'] = [ 'values' => $Term->getRelatedTermIDs() ];
+            $filterObjects['Term'] = $Term;
+        }
+
+        if ($Course = static::getRequestedCourse()) {
+            $conditions['CourseID'] = $Course->ID;
+            $filterObjects['Course'] = $Course;
+        }
+
+        if ($Location = static::getRequestedLocation()) {
+            $conditions['LocationID'] = $Location->ID;
+            $filterObjects['Location'] = $Location;
+        }
+
+        if ($Schedule = static::getRequestedSchedule()) {
+            $conditions['ScheduleID'] = $Schedule->ID;
+            $filterObjects['Schedule'] = $Schedule;
+        }
+
+        if ($EnrolledUser = static::getRequestedStudent('enrolled_user')) {
+            $enrolledSectionIds = DB::allValues(
+                'CourseSectionID',
+                'SELECT CourseSectionID FROM `%s` WHERE PersonID = %u',
+                [
+                    SectionParticipant::$tableName,
+                    $EnrolledUser->ID
+                ]
+            );
+
+            $conditions[] = sprintf('ID IN (%s)', count($enrolledSectionIds) ? join(',', $enrolledSectionIds) : '0');
+            $filterObjects['EnrolledUser'] = $EnrolledUser;
+        }
+
+        return $conditions;
+    }
+
+    public static function handleRecordRequest(ActiveRecord $Section, $action = false)
+    {
+        switch ($action ? $action : $action = static::shiftPath()) {
+            case 'cohorts':
+                return static::handleCohortsRequest($Section);
+            case 'post':
+                $GLOBALS['Session']->requireAuthentication();
+                return BlogRequestHandler::handleCreateRequest(BlogPost::create([
+                    'Class' => BlogPost::class,
+                    'Context' => $Section
+                ]));
+            case 'students':
+                return static::handleStudentsRequest($Section);
+            default:
+                return parent::handleRecordRequest($Section, $action);
+        }
+    }
+
+    public static function handleCohortsRequest(Section $Section)
+    {
+        return static::respond('sectionCohorts', [
+            'success' => true,
+            'data' => $Section->getCohorts()
+        ]);
+    }
+
+    public static function handleStudentsRequest(Section $Section)
+    {
+        if (!$GLOBALS['Session']->hasAccountLevel('Staff')) {
+            $userIsStudent = false;
+
+            foreach ($Section->Students AS $Student) {
+                if ($Student->ID == $GLOBALS['Session']->PersonID) {
+                    $userIsStudent = true;
+                    break;
+                }
+            }
+
+            if (!$userIsStudent) {
+                return static::throwUnauthorizedError();
+            }
+        }
+
+        // conditionally filter students by cohort
+        if (!empty($_REQUEST['cohort'])) {
+            try {
+                $students = Person::getAllByQuery('
+                    SELECT Person.* FROM `%1$s` Person
+                    JOIN `%2$s` SectionParticipant ON Person.ID = SectionParticipant.PersonID
+                    WHERE SectionParticipant.CourseSectionID = %3$u
+                    AND SectionParticipant.Cohort = "%4$s"
+                ', [
+                    Person::$tableName, // 1
+                    SectionParticipant::$tableName, // 2
+                    $Section->ID, // 3
+                    DB::escape($_REQUEST['cohort']) // 4
+                ]);
+            } catch (\TableNotFoundException $e) {
+                $students = [];
+            }
+        } else {
+            $students = $Section->Students;
+        }
+
+        return static::respond('students', [
+            'data' => $students
+        ]);
+    }
+}

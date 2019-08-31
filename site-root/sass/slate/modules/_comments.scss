@@ -1,0 +1,61 @@
+.comment-form,
+.comments-list {
+    margin: 1em 0;
+
+    .author {
+        float: left;
+        margin-right: 1em;
+    }
+    
+    .message {
+        overflow: hidden;
+    }
+}
+
+.comments {
+    margin: 1.5em 0;
+}
+
+.comments-list {
+    .comment {
+        padding: 1em 1.5em;
+
+        #{headings()} {
+            font-size: 1em;
+            margin: 1em 0;
+        }
+        
+        header {
+            float: left;
+            margin-right: .25em;
+        }
+        
+        footer {
+            margin-top: .5em;
+            padding-bottom: 2px; // prevent delete button cutoff
+        }
+        
+        time {
+            color: $muted-color;
+            font-size: small;
+            
+            a { color: inherit; }
+        }
+        
+        .button {
+            margin-left: .5em;
+        }
+        
+        p {
+            margin: 0 0 1em;
+            
+            &:last-child {
+                margin: 0;
+            }
+        }
+        
+        & + .comment {
+            border-top: 1px solid rgba($border-color, .5);
+        }
+    }    
+}

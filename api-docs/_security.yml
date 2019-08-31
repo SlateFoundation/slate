@@ -1,0 +1,9 @@
+securityDefinitions:
+  Session Token:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: Session token prefixed with Token, e.g. `Token XXXXXXXXXXXXXXXXXXXXXX`
+    
+security:
+- Session Token: []

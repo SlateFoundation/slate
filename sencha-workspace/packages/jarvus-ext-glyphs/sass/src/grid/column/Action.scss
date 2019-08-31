@@ -1,0 +1,26 @@
+.x-grid-cell-inner-action-col {
+    font-size: $grid-actioncolumn-glyph-size;
+    line-height: 1;
+}
+
+.x-action-col-glyph {
+    display: inline-block;
+    font-style: normal;
+    font-weight: normal;
+    height: 14px;
+    line-height: 16px;
+    margin-right: .125em;
+    opacity: .85;
+    text-align: center;
+    text-shadow: 0 1px 0 white;
+    vertical-align: middle;
+    width: $grid-actioncolumn-glyph-size;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}

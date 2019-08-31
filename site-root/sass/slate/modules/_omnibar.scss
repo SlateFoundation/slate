@@ -1,0 +1,276 @@
+@-webkit-keyframes menu-in {
+    from {
+        opacity: 0;
+        -webkit-transform: scale(0.8, 0.6);
+                transform: scale(0.8, 0.6);
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: none;
+                transform: none;
+    }
+}
+
+@keyframes menu-in {
+    from {
+        opacity: 0;
+        -webkit-transform: scale(0.8, 0.6);
+                transform: scale(0.8, 0.6);
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: none;
+                transform: none;
+    }
+}
+
+@-webkit-keyframes fade-in {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
+
+.slate-omnibar {
+    background-color: #333;
+    box-shadow: 0 0 0.5em rgba(black, 0.6);
+    color: white;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 99;
+
+    a,
+    a:hover,
+    a:active,
+    a:visited {
+        color: white;
+        text-decoration: none;
+    }
+
+    > .inner {
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+}
+
+.omnibar-items {
+    @include align-items(stretch);
+    @include display-flex;
+    height: $omnibar-height;
+    margin: 0 -1em;
+    padding: 0;
+}
+
+.omnibar-item {
+    display: block;
+    @include display-flex;
+    list-style: none;
+
+    &:hover,
+    &:focus {
+        background-color: rgba($link-color, .4);
+
+        .omnibar-menu-ct {
+            display: block;
+        }
+    }
+}
+
+.omnibar-link {
+    @include align-items(center);
+    background-position: 1em center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    @include display-flex;
+    padding: 0 1em;
+
+    .icon-courses & {
+        background-image: inline-image('omnibar/tools-white.svg');
+        padding-left: 2.75em;
+    }
+
+    .icon-tools & {
+        background-image: inline-image('omnibar/courses-white.svg');
+        padding-left: 2.75em;
+    }
+}
+
+.omnibar-link-image {
+    margin-right: 0.5em;
+}
+
+.slate-logo {
+    height: 2em;
+    width: auto;
+}
+
+.omnibar-search-item {
+    @include flex(1);
+    margin: 0 1em 0 .5em;
+
+    &:hover,
+    &:focus {
+        background: none;
+    }
+}
+
+.omnibar-search-form {
+    @include align-items(center);
+    @include display-flex;
+    @include flex(1);
+    @include justify-content(flex-end);
+    text-align: right;
+}
+
+.omnibar-search-field {
+    background-color: transparent;
+    background-image: inline-image('omnibar/search-white.svg');
+    background-position: 0.5em center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    border: 1px solid transparent;
+    border-width: 0 0 1px;
+    box-shadow: none;
+    cursor: pointer;
+    padding-left: 2.25em;
+    padding-right: 0;
+    text-align: left;
+    @include transition(250ms cubic-bezier(1, 0, 0, 1));
+    width: 6em;
+
+    @include input-placeholder(white);
+
+    &:focus {
+        background-color: rgba(white, 0.1667);
+        border-color: $link-color;
+        cursor: text;
+        outline: none;
+        width: 100%;
+
+        @include input-placeholder(rgba(white, 0.3333));
+    }
+}
+
+.omnibar-menu-ct {
+    background-color: rgba(#444, .93);
+    box-shadow: 0 0.5em 0.5em -0.5em rgba(black, 0.6);
+    display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 100%;
+    z-index: 1;
+}
+
+.omnibar-menu {
+    margin: 0 auto;
+    padding: 1.5em 0;
+    width: 85%;
+}
+
+.omnibar-menu-item {
+    display: inline-block;
+    list-style: none;
+    margin: 0.5em -1.25em 0.5em 1.5em;
+    text-align: center;
+    vertical-align: top;
+}
+
+.omnibar-menu-link {
+    &:hover,
+    &:focus {
+        .omnibar-menu-image-bg {
+            fill: darken($link-color, 12);
+        }
+
+        .omnibar-menu-image {
+            @include scale(1.1);
+        }
+
+        .omnibar-menu-label {
+            color: tint($link-color, 60%);
+        }
+    }
+}
+
+.omnibar-menu-icon {
+    margin: 0;
+    width: 96px;
+
+    -webkit-animation: menu-in 300ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+            animation: menu-in 300ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+    -webkit-backface-visibility: hidden;
+
+    $animation-stagger: .0167s;
+
+    @for $i from 1 through 30 {
+        .omnibar-menu-item:nth-child(#{$i}) & {
+            -webkit-animation-delay: $animation-stagger * $i;
+                    animation-delay: $animation-stagger * $i;
+        }
+    }
+}
+
+.omnibar-menu-image-ct {
+    @include align-items(center);
+    @include display-flex;
+    @include justify-content(center);
+    margin: auto;
+    height: 4em;
+    position: relative;
+    width: 4em;
+}
+
+.omnibar-menu-image-bg {
+    fill: $link-color;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    @include transition(250ms cubic-bezier(0.075, 0.820, 0.165, 1.000));
+    width: 100%;
+
+    -webkit-animation: menu-in 200ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+            animation: menu-in 200ms both cubic-bezier(0.2, 0.8, 0, 1.2);
+    -webkit-backface-visibility: hidden;
+
+  $animation-stagger: 15ms;
+
+  @for $i from 1 through 30 {
+      .omnibar-menu-item:nth-child(#{$i}) & {
+          -webkit-animation-delay: 67ms + $animation-stagger * $i;
+                  animation-delay: 67ms + $animation-stagger * $i;
+      }
+  }
+}
+
+.omnibar-menu-image {
+    display: block;
+    fill: currentColor;
+    height: 75%;
+    position: relative;
+    // @include transition(250ms cubic-bezier(0.075, 0.820, 0.165, 1.000));
+    width: 75%;
+}
+
+.omnibar-menu-label {
+    color: white;
+    font-size: smaller;
+    line-height: 1.25;
+    margin-top: 0.25em;
+
+    small {
+        display: block;
+        margin: .25em 0 .125em
+    }
+}
+

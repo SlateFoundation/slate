@@ -1,0 +1,5 @@
+.x-form-item-label {
+    font-size: $font-size - 3;
+    padding-top: round(($form-field-height - $form-label-line-height) / 1.44);
+    text-transform: uppercase;
+}

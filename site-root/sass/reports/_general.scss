@@ -1,0 +1,329 @@
+@import 'variables';
+@import 'mixins';
+
+html, body {
+    font-size: $base-font-size;
+}
+
+body {
+    box-sizing: border-box;
+    color: $color;
+    font-family: $font-family;
+    font-size: 1rem;
+    line-height: $base-line-height;
+    margin: auto;
+    orphans: 3;
+    padding: .25in .5in;
+    width: 8.5in;
+    widows: 3;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+}
+
+h1 {
+    font-size: $h1-size;
+    margin-bottom: $base-spacing;
+}
+
+h2 {
+    font-size: $h2-size;
+}
+
+h3 {
+    font-size: $h3-size;
+}
+
+h4 {
+    font-size: 1rem;
+}
+
+small, aside {
+    font-size: $sm-size;
+    color: $muted-color;
+}
+
+p, ul, ol {
+    margin: 0 0 $base-spacing;
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+
+    &:hover, &:focus { color: lighten($link-color, 10); }
+            &:active { color:  darken($link-color, 5); }
+}
+
+.muted {
+    color: #888;
+}
+
+.print-url {
+    &::after {
+        content: ' <' attr(href) '>';
+        font-size: 90%;
+    }
+}
+
+header {
+    page-break-inside: avoid;
+
+    aside {
+        font-size: 1rem;
+        order: 99;
+
+        &.meta .email {
+            display: block;
+        }
+    }
+}
+
+.doc-title {
+    flex: 1;
+    line-height: 1;
+    margin: 0;
+
+    .title-prefix, .title-suffix {
+        display: block;
+        font-size: 1rem;
+    }
+
+    .title-suffix {
+        margin-top: $base-spacing;
+    }
+}
+
+.doc-group {
+    @include trailing-border;
+    margin: (4 * $base-spacing) 0;
+    padding-bottom: 0;
+    page-break-after: always;
+}
+
+header.top-header {
+    align-items: flex-end;
+    display: flex;
+    padding-bottom: $base-spacing;
+    page-break-after: avoid;
+}
+
+.group-title {
+    margin: 0 0 ($h2-size * $base-line-height);
+    page-break-after: avoid;
+}
+
+.doc-item {
+    @include leading-border;
+    @include trailer;
+    border-color: #ccc;
+    clear: both;
+}
+
+.doc-header,
+.item-header {
+    @include trailer;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
+.item-title {
+    font-weight: normal;
+
+    small {
+        line-height: 1;
+        margin-left: .25em;
+        margin-top: .3em;
+    }
+}
+
+.meta {
+    color: $muted-color;
+}
+
+.item-datetime {
+    float: right;
+}
+
+.item-body {
+}
+
+.subsection {
+    clear: both;
+    overflow: hidden;
+
+    & + .subsection {
+        @include leading-border($border-style: dotted);
+        border-color: #ccc;
+    }
+}
+
+.subhead {
+    margin-bottom: 0;
+
+    small {
+        font-weight: normal;
+        margin-left: .5em;
+        text-transform: uppercase;
+    }
+
+    &.float-left,
+    &.float-right {
+        float: left;
+        @include trailer;
+        width: 20%;
+
+        small {
+            display: block;
+            line-height: inherit;
+            margin: 0;
+        }
+    }
+
+    &.float-right {
+        float: right;
+        padding-left: $base-spacing;
+    }
+}
+
+.grade {
+    border-color: #ccc;
+    margin: $base-spacing 0;
+}
+
+.freetext {
+    &, * {
+        font-family: inherit !important;
+        font-size: inherit !important;
+        line-height: inherit !important;
+    }
+}
+
+dl {
+    display: table;
+    margin: $base-spacing 0;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.dli {
+    display: table-row;
+}
+
+dd, dt {
+    display: table-cell;
+}
+
+dt {
+    color: $muted-color;
+    font-size: $sm-size;
+    padding-right: $base-spacing;
+    padding-top: .8rem;
+    page-break-after: avoid;
+    text-align: right;
+    text-transform: uppercase;
+    width: 20%;
+}
+
+
+dd.grade {
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-bottom: 1rem;
+    page-break-before: avoid;
+    page-break-after: avoid;
+
+}
+
+dd.comments {
+    clear: left;
+    line-height: 1.4;
+    margin: 0.5em .25in 1em;
+
+    p {
+        line-height: $base-line-height !important;
+    }
+}
+
+
+dd.comments, .html-content {
+    h1 { font-size: 1.296em }
+    h2 { font-size: 1.215em }
+    h3 { font-size: 1.138em }
+    h4 { font-size: 1.067em }
+    h5 { font-size: 1em }
+    h6 { font-size: 0.937em }
+
+    &, p, span, div {
+        color: $color !important;
+        font-family: $font-family !important;
+        font-size: 1rem !important;
+    }
+}
+
+dd.instructor {
+    ul {
+        display: table;
+        margin: 0 0 1em;
+        padding: 0;
+    }
+
+    li {
+        display: table-row;
+        margin: 0;
+        list-style: none;
+
+        &:last-child > * {
+            border-width: 0;
+        }
+    }
+
+    .instructor-name,
+    .instructor-email {
+        border-bottom: 1px solid #ddd;
+        display: table-cell;
+        padding: .5em 0;
+    }
+
+    .instructor-email {
+        padding-left: 1em;
+    }
+}
+
+@media print {
+    html, body {
+        font-size: 11pt;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .doc-group:first-child {
+        margin-top: .5in;
+    }
+
+    dl.item-body {
+        &,
+        > .dli,
+        > .dli > dt,
+        > .dli > dd {
+            display: block;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        > .dli {
+            margin-bottom: 1em;
+
+            > dd {
+                margin: 0 0 0 .25in;
+            }
+        }
+    }
+
+    @page {
+        margin: .5in 1in;
+    }
+}

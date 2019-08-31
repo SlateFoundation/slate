@@ -1,0 +1,29 @@
+[hololens]
+package = "holo/lens-sencha-app"
+
+[hololens.sencha]
+app = "SlateAdmin"
+
+[hololens.input]
+root = "sencha-workspace"
+files = [
+    "SlateAdmin/**",
+    "packages/slate-theme/**",
+    "packages/slate-core-data/**",
+    "packages/emergence-apikit/**",
+    "packages/jarvus-apikit/**",
+    "packages/jarvus-routing/**",
+    "packages/jarvus-lazydata/**",
+    "packages/jarvus-griderrors/**",
+    "packages/jarvus-ext-actionevents/**",
+    "packages/jarvus-ext-treerecords/**",
+    "packages/jarvus-ext-glyphs/**",
+    "packages/jarvus-ext-searchfield/**",
+    "packages/jarvus-hotfixes/**",
+    "ext/**",
+    "workspace.json",
+]
+
+[hololens.output]
+root = "webapp-builds/SlateAdmin"
+merge = "replace"

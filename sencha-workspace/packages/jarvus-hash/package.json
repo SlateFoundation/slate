@@ -1,0 +1,21 @@
+{
+    "name": "jarvus-hash",
+    "type": "code",
+    "creator": "anonymous",
+    "summary": "Short summary",
+    "detailedDescription": "Long description of package",
+    "version": "1.0.0",
+    "compatVersion": "1.0.0",
+    "format": "1",
+    "slicer": {
+        "js": [
+            {
+                "path": "${package.dir}/sass/example/custom.js",
+                "isWidgetManifest": true
+            }
+        ]
+    },
+    "output": "${package.dir}/build",
+    "local": true,
+    "requires": []
+}

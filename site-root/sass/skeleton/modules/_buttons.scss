@@ -1,0 +1,153 @@
+// configure compass color contrast helpers
+$contrasted-lightness-threshold: 60%;
+
+// default button colors
+$button-color:      #cfe5ed !default;
+$destructive-color: $danger-color !default;
+$submit-color:      $link-color !default;
+
+// mixin to add button background, border, color, shadow, hover styles, etc to an element
+@mixin button-colors($color) {
+    $button-border-color: rgba($text-color, .2);
+
+    @include contrasted($color);
+    border: none;
+    border-bottom: 1px solid $button-border-color;
+    
+    &:hover,
+    &:focus {
+        background-color: lighten($color, 7);
+        border-color: $button-border-color;
+    }
+    
+    &:active,
+    &.active {
+        background-color: darken($color, 12);
+        border-color: transparent;
+        outline: none;
+        @include transition(none);
+    }
+}
+
+// set up base mixin for all buttons
+// mixin because we need to separate vendor-specific selectors from each other
+// (even though it dupes code)
+@mixin emergence-button {
+    @include button-colors($button-color);
+    @include border-radius(3px);
+    cursor: pointer;
+    display: inline-block;
+    font-family: $body-font;
+    font-size: large;
+    letter-spacing: 0;
+    line-height: $line-height;
+    margin-bottom: .25em;
+    padding: .125em .75em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    @include transition(background-color 75ms ease-in-out);
+    white-space: nowrap;
+    width: auto;
+    
+    &[disabled],
+    &.disabled,
+    &:disabled {
+        opacity: .3;
+        pointer-events: none;
+    }
+    
+    &.destructive { @include button-colors($destructive-color); }
+
+    &.primary,
+    &.submit,
+    &[type="submit"] { @include button-colors($link-color); }
+
+    &.block {
+        display: block;
+        margin: 1em 0;
+    }
+    
+    &.small {
+        font-size: small;
+    }
+    
+    &.tiny  {
+        font-size: small;
+        letter-spacing: .5px;
+        padding: 0 .375em;
+        vertical-align: middle;
+        width: auto;
+    }
+
+    &:disabled,
+    &.is-disabled {
+        opacity: .3;
+    }
+    
+    h1 &,
+    h2 & {
+        margin-left: .4em;
+        vertical-align: .4em;
+    }
+
+    @media #{$mq-phone} {
+        & + & {
+            margin-top: 1em;
+        }
+    }
+}
+
+// include our mixin for anything with a .button class
+.button {
+    @include emergence-button;
+}
+
+// extend the class to other elements that are buttons
+button,
+a.button,
+input[type="submit"] {
+    @extend .button;
+}
+
+// vendor nasties for file upload buttons (selector for Firefox unknown)
+::-ms-browse {
+    @include emergence-button;
+}
+
+::-webkit-file-upload-button {
+    @include emergence-button;
+}
+
+.button-group {
+    display: inline-block;
+    margin-top: .5em;
+
+    > label {
+        float: left;
+        margin-right: .5em;
+    }
+
+    > .button {
+        border-left: 1px solid rgba(black, .1);
+        border-radius: 0;
+        float: left;
+        margin: 0 !important;
+
+        &:first-of-type {
+            border-bottom-left-radius: 5px;
+            border-left: 0;
+            border-top-left-radius: 5px;
+        }
+
+
+        &:last-of-type {
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    }
+
+    + .button-group {
+        margin-left: .5em;
+    }
+}

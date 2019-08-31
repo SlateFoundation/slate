@@ -1,0 +1,56 @@
+.emergence-cms-editor {
+    border: 1px solid #d8d8d8;
+    
+    input, textarea {
+        @include box-shadow(none);
+    }
+    
+    .field-title .x-form-text{
+        font-size: 2em;
+        line-height: inherit;
+    }
+    
+    .save-btn {
+        background-color: white;
+        
+        .x-btn-glyph {
+            color: #9c9;
+            vertical-align: -3px;
+        }
+        
+        &:hover,
+        &:focus {
+            background-color: #efe;
+        }
+        
+        &:active {
+            background-color: #ddd;
+        }
+    }
+    
+    .x-btn-group {
+        border-radius: 0;
+    }
+}
+
+.emergence-cms-composer {
+    margin-top: 8px;
+    
+    > .x-panel-header {
+        padding: 4px 8px;
+    }
+}
+
+.markdown-composer,
+.embed-composer,
+.html-composer {
+    .x-form-trigger-wrap-default {
+        border: none;
+    }
+}
+
+.embed-composer {
+    .x-form-textarea {
+        font-family: monospace;
+    }
+}

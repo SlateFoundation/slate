@@ -1,0 +1,19 @@
+@import 'utilities/contrast-color';
+
+@mixin input-placeholder($color){
+    &::-webkit-input-placeholder {
+        color: $color;
+    }
+
+    &::-moz-placeholder {
+        color: $color;
+    }
+
+    &:-ms-input-placeholder {
+        color: $color;
+    }
+
+    &:input-placeholder {
+        color: $color;
+    }
+}

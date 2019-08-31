@@ -1,0 +1,8 @@
+name: Accept
+in: header
+description: Desired MIME type for response body
+type: string
+enum:
+- text/html
+- application/json
+- text/csv

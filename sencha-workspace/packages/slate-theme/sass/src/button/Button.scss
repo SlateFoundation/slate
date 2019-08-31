@@ -1,0 +1,87 @@
+@include glyph-color('danger',  $danger-color);
+@include glyph-color('success', $success-color);
+@include glyph-color('accent',  $accent-color);
+
+@include extjs-button-small-ui(
+    $ui: 'normal',
+    $background-color: $button-normal-background-color,
+    $border-color: $button-normal-border-color
+);
+
+@include extjs-button-medium-ui(
+    $ui: 'normal',
+    $background-color: $button-normal-background-color,
+    $border-color: $button-normal-border-color
+);
+
+@include extjs-button-large-ui(
+    $ui: 'normal',
+    $background-color: $button-normal-background-color,
+    $border-color: $button-normal-border-color
+);
+
+@include extjs-button-small-ui(
+    $ui: 'light',
+    $background-color: $button-light-background-color,
+    $border-color: $button-light-border-color,
+    $color: $button-light-color
+);
+
+@include extjs-button-medium-ui(
+    $ui: 'light',
+    $background-color: $button-light-background-color,
+    $border-color: $button-light-border-color,
+    $color: $button-light-color
+);
+
+@include extjs-button-large-ui(
+    $ui: 'light',
+    $background-color: $button-light-background-color,
+    $border-color: $button-light-border-color,
+    $color: $button-light-color
+);
+
+.x-btn {
+    text-decoration: none !important;
+}
+
+.x-btn-default-small,
+.x-btn-default-medium,
+.x-btn-default-large {
+    letter-spacing: .01em;
+
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.x-btn-default-toolbar-medium {
+    border-bottom-color: #d5d5d5;
+
+    &.x-btn-over {
+        border-bottom-color: #ccc;
+    }
+}
+
+.x-btn-icon-left.x-btn-button-default-medium > .x-btn-icon-el-default-medium,
+.x-btn-icon-left.x-btn-button-default-toolbar-medium > .x-btn-icon-el-default-toolbar-medium {
+    margin-left: 4px;
+    margin-right: -2px;
+}
+
+.x-btn-glyph {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+.x-btn-wrap-light-medium.x-btn-arrow-right::after {
+    background-image: none;
+    color: $color;
+    content: '\f0d7'; // fa-caret-down
+    font-family: FontAwesome;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    text-align: right;
+
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}

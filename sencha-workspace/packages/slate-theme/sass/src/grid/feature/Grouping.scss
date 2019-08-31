@@ -1,0 +1,18 @@
+.x-grid-group-title {
+    overflow: hidden;
+    padding-top: 1.5em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    small.pull-right {
+        margin-top: .0625em;
+    }
+
+    .has-small-group-headers & {
+        color: $muted-color;
+        font-size: smaller;
+        letter-spacing: .5px;
+        padding-top: 1em;
+        text-transform: uppercase;
+    }
+}

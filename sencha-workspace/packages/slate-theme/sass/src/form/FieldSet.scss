@@ -1,0 +1,11 @@
+.x-fieldset {
+    background-color: $panel-body-background-color;
+    border-radius: 0;
+    border-width: 1px 0; // doing it this way because you can't use multiple values for $fieldset-border-width
+    box-shadow: none;
+
+    &.x-fieldset-collapsed {
+        background-color: transparent;
+        border-width: 1px 0 0; // override hardcoded(!) width from the UI mixin
+    }
+}

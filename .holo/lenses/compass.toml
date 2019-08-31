@@ -1,0 +1,15 @@
+[hololens]
+package = "holo/lens-compass" # expanded to absolute ident in holospec
+
+[hololens.input]
+root = "site-root"
+files = [
+    "sass/**",
+    "fonts/**",
+    "img/**"
+]
+
+# optional and stripped from holospec:
+[hololens.output]
+root = "site-root/css" # defaults to hololens.root
+merge = "overlay" # overlay / underlay / replace, defaults to overlay
