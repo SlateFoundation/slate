@@ -1,0 +1,3 @@
+@import 'site/variables';       // declare custom colors, fonts, etc. for your site in this file
+@import 'slate/variables';      // bring in Slate theme, overriding Emergence defaults
+@import 'skeleton/variables';   // bring in default variables (will be overridden by any declared above)

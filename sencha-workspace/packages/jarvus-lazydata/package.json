@@ -1,0 +1,12 @@
+{
+    "name": "jarvus-lazydata",
+    "type": "code",
+    "creator": "Jarvus Innovations",
+    "summary": "Lazy data loading overrides",
+    "detailedDescription": "A collection of overrides that assist in loading remote data as little and as late as possible",
+    "version": "1.0.0",
+    "compatVersion": "1.0.0",
+    "format": "1",
+    "local": true,
+    "requires": []
+}

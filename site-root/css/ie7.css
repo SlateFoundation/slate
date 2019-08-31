@@ -1,0 +1,16 @@
+/* line 1, ../sass/ie7.scss */
+legend {
+  margin-left: -7px;
+}
+
+/* line 2, ../sass/ie7.scss */
+input[type="checkbox"] {
+  vertical-align: baseline;
+}
+
+/* Bicubic resizing for non-native sized IMG:
+   code.flickr.com/blog/2008/11/12/on-ui-quality-the-little-things-client-side-image-resizing/ */
+/* line 6, ../sass/ie7.scss */
+.ie7 img {
+  -ms-interpolation-mode: bicubic;
+}

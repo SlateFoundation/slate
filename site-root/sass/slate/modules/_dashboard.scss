@@ -1,0 +1,120 @@
+$dashboard-icon-color:  $link-color !default;
+$dashboard-icon-size:   96px !default;
+
+$dashboard-icon-recommended-color: #dc1357 !default;
+
+@mixin dashboard-icon-style(
+    $name: false,
+    $size: $dashboard-icon-size,
+    $bg-color: $dashboard-icon-color,
+    $glyph-color: false
+) {
+    $selector: if($name, '.dashboard-item-#{$name}', '.dashboard-icon-item'); // strip name from selector if parameter is missing
+
+    // calculate defaults
+    $glyph-color: if($glyph-color, $glyph-color, contrast-color($bg-color));
+
+    #{$selector} {
+        width: $size;
+        
+        .dashboard-icon-bg { fill: $bg-color; }
+        .dashboard-icon-glyph { fill: $glyph-color; }
+
+        .dashboard-icon-link {
+            &:hover,
+            &:focus {
+                .dashboard-icon-bg { fill: darken($bg-color, 12); }
+                .dashboard-icon-label { color: mix($text-color, $bg-color, 20%); }
+            }
+        }
+    }
+}
+
+.dashboard-tpl {
+}
+
+.dashboard-group-title {
+    border-bottom: 1px solid $border-color;
+    margin: 2em 0 1em;
+    padding: 0 .25em .5em;
+}
+
+.dashboard-icon-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-icon-item {
+    display: inline-block;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    text-align: center;
+    vertical-align: top;
+}
+
+.dashboard-icon-link {
+    color: inherit;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+
+        .dashboard-icon-glyph {
+            @include scale(1.1);
+        }
+    }
+}
+
+.dashboard-icon-ct {
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-icon {
+    margin: auto;
+    padding-top: 100%; // make square based on width
+    position: relative;
+    width: 100%;
+}
+
+.dashboard-icon-bg,
+.dashboard-icon-glyph {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.dashboard-icon-bg {
+    // fill: $dashboard-icon-bg-color;
+}
+
+.dashboard-icon-glyph {
+    box-sizing: border-box;
+    // fill: $dashboard-icon-glyph-color;
+    padding: 0 10%;
+}
+
+.dashboard-icon-label {
+    color: $text-color;
+    font-size: .875em;
+    line-height: 1.25;
+    margin-right: 1.5%; // workaround for weird alignment w/ squircle
+    margin-top: 0.25em;
+}
+
+@include dashboard-icon-style(); // default
+@include dashboard-icon-style('recommended', $size: 144px, $bg-color: $dashboard-icon-recommended-color);
+
+@-webkit-keyframes pulse {
+      0% { @include scale(.97); }
+    100% { @include scale(1.03); }
+}
+
+.dashboard-item-recommended {
+    .dashboard-icon {
+        -webkit-animation: pulse 750ms cubic-bezier(0.600, 0.040, 0.980, 0.335) infinite alternate both;
+    }
+}

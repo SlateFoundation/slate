@@ -1,0 +1,32 @@
+.status {
+    background: rgba($accent-color, .2);
+    border: 1px solid rgba($accent-color, .6);
+    padding: .5em 1em;
+}
+
+@mixin notify-colors($color) {
+    background-color: rgba($color, .15);
+    border-color: change-color($color, $lightness: 33%, $alpha: .4);
+    color: change-color($color, $lightness: 33%);
+    
+    a {
+        color: inherit;
+        text-decoration: underline;
+        
+        &:hover,
+        &:focus {
+            color: change-color($color, $lightness: 50%);
+        }
+    }
+}
+
+.notify {
+    @include notify-colors($info-color);
+    border: 1px solid;
+    @include border-radius(2px);
+    margin-bottom: 1.5em;
+    padding: .25em .5em;
+
+    &.error   { @include notify-colors($danger-color); }
+    &.success { @include notify-colors($success-color); }
+}

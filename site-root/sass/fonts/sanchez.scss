@@ -1,0 +1,4 @@
+@import 'compass/css3/font-face';
+
+@include font-face('Sanchez', inline-font-files('Sanchez/Sanchezregular.otf',      otf), false, 400, regular);
+@include font-face('Sanchez', inline-font-files('Sanchez/Sanchezregular-ita.otf',  otf), false, 400, italic);

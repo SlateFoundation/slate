@@ -1,0 +1,22 @@
+$button-default-base-color: darken($base-color, 20);
+$button-default-inner-border-color-focus: dynamic(rgba($fg-color1, .5));
+$button-toolbar-inner-border-color-focus: dynamic(rgba($fg-color1, .5));
+
+$button-small-border-radius: dynamic(3px);
+$button-medium-border-radius: dynamic(4px);
+$button-large-border-radius: dynamic(5px);
+
+$button-toolbar-background-color: dynamic($bg-color3);
+$button-toolbar-background-color-over: dynamic($bg-color4);
+$button-toolbar-background-color-pressed: dynamic($bg-color2);
+$button-toolbar-background-color-disabled: dynamic($bg-color2);
+
+$button-toolbar-border-color: dynamic($bg-color3);
+$button-toolbar-border-color-pressed: dynamic($bg-color2);
+
+$button-toolbar-color-pressed: dynamic($fg-color2);
+$button-toolbar-color-over: dynamic($fg-color3);
+$button-toolbar-color: dynamic(mix($fg-color2, $fg-color3));
+
+$button-opacity-disabled: dynamic(0.2);
+$button-toolbar-opacity-disabled: dynamic(0.2);

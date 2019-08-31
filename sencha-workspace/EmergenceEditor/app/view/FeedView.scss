@@ -1,0 +1,131 @@
+.emergence-feedview {
+    font-size: 13px;
+
+    a {
+        color: $fg-color3;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .feed-ct {
+        display: table;
+        width: 100%;
+    }
+
+    .feed-item {
+        color: $fg-color3;
+        display: table-row;
+
+        & > * {
+            //border-bottom: 1px solid rgba($base-color, 0.5);
+            display: table-cell;
+            padding: .5em;
+            white-space: nowrap;
+        }
+
+        &:nth-child(even) {
+            background: mix($bg-color2, $bg-color3);
+        }
+
+        &:hover {
+            background: rgba($base-color, .35);
+            background: linear-gradient(rgba($base-color, .4), rgba($base-color, .3));
+
+            .compare {
+                text-decoration: none;
+                visibility: visible;
+            }
+
+            mark {
+                color: $fg-color3;
+                background-color: $bg-color2;
+            }
+        }
+    }
+
+    .item-fill {
+        width: 100%;
+    }
+
+    .user,
+    .action,
+    .compare,
+    .revisions,
+    .timestamp {
+        font-size: smaller;
+        text-transform: uppercase;
+    }
+
+    .user {
+        font-weight: bold;
+
+        img {
+            background-position: center center;
+            background-repeat: no-repeat;
+            -moz-background-size: cover;
+            -webkit-background-size: cover;
+            background-size: cover;
+            margin: -7px;
+            margin-right: .5em;
+            vertical-align: -3px;
+        }
+
+        figcaption {
+            display: inline;
+        }
+    }
+
+    .action {
+        &.deleted { color: hsl(0, 80%, 65%); }
+        &.edited  { color: hsl(212, 80%, 65%); }
+        &.created { color: hsl(105, 80%, 65%); }
+    }
+
+    code {
+        white-space: pre-wrap;
+    }
+
+    code,
+    .path,
+    .filename {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Droid Sans Mono', 'Courier New', monospace;
+    }
+
+    .filename + .line-number {
+        &:before {
+            content: ':';
+        }
+
+        padding-left: 0;
+    }
+
+    .path {
+        color: $color;
+    }
+
+    .revisions {
+        float: right;
+        margin-left: 1em;
+    }
+
+    .compare {
+        border: 1px solid rgba($fg-color3, .3);
+        border-radius: 1em;
+        color: rgba($fg-color3, .90);
+        margin-left: 1em;
+        padding: 1px 5px;
+        visibility: hidden;
+
+        &:hover {
+            border-color: $fg-color3;
+        }
+
+        &:active {
+            background-color: rgba($base-color, .3);
+            border-color: $base-color;
+        }
+    }
+}

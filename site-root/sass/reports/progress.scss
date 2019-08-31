@@ -1,0 +1,16 @@
+@import 'variables';
+@import 'mixins';
+
+.progress-tpl {
+    .group-title {
+        margin-bottom: 0;
+    }
+
+    .doc-group {
+        page-break-after: auto;
+
+        > header {
+            @include trailer;
+        }
+    }
+}

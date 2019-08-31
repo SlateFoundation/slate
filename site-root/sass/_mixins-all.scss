@@ -1,0 +1,3 @@
+@import 'site/mixins';       // declare custom colors, fonts, etc. for your site in this file
+@import 'slate/mixins';      // bring in Slate theme, overriding Emergence defaults
+@import 'skeleton/mixins';   // bring in default variables (will be overridden by any declared above)

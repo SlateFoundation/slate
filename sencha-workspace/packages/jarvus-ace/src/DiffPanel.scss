@@ -1,0 +1,66 @@
+.acediffpanel {
+    .gutter {
+        border-left: 1px solid #111111;
+        border-right: 1px solid #111111;
+        background-color: #222222;
+    }
+
+    .gutter svg {
+        background-color: #222222;
+    }
+
+    .acediff-diff {
+        background-color: #004d7a;
+        border-top: 1px solid #036daa;
+        border-bottom: 1px solid #036daa;
+        position: absolute;
+        z-index: 4;
+
+        &.targetOnly {
+            height: 0px !important;
+            border-top: 1px solid #036daa;
+            border-bottom: 0px;
+            position: absolute;
+        }
+    }
+
+    .acediff-connector {
+        fill: #004d7a;
+        stroke: #003554;
+    }
+
+    .acediff-copy-right,
+    .acediff-copy-left {
+        position: relative;
+    }
+
+    .acediff-copy-left {
+        float: right;
+
+        div {
+            color: #ffffff;
+            position: absolute;
+            right: 0px;
+            margin: 2px 3px;
+            cursor: pointer;
+
+            &:hover {
+                color: #c98100;
+            }
+        }
+    }
+
+    .acediff-copy-right {
+        div {
+            color: #ffffff;
+            text-shadow: 1px 1px #ffffff;
+            position: absolute;
+            margin: 2px 3px;
+            cursor: pointer;
+
+            &:hover {
+                color: #004ea0;
+            }
+        }
+    }
+}

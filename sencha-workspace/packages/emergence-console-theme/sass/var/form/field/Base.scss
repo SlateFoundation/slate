@@ -1,0 +1,12 @@
+$form-field-background-color: dynamic($bg-color3);
+$form-field-invalid-background-color: dynamic($bg-color2);
+
+$form-field-border-color: dynamic($bg-color1);
+$form-field-border-style: solid;
+$form-field-focus-border-color: dynamic($fg-color1);
+
+$form-checkbox-glyph-focus-color: dynamic($fg-color1);
+$html-editor-border-color: transparent;
+$fieldset-border-color: dynamic($bg-color1);
+
+$form-field-color: dynamic($fg-color3);

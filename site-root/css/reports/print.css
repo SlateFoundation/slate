@@ -1,0 +1,394 @@
+@import url(/css/fonts/lato.css);
+/* line 4, ../../sass/reports/_general.scss */
+html, body {
+  font-size: 14px;
+}
+
+/* line 8, ../../sass/reports/_general.scss */
+body {
+  box-sizing: border-box;
+  color: #111;
+  font-family: Lato, sans-serif;
+  font-size: 1rem;
+  line-height: 1.45;
+  margin: auto;
+  orphans: 3;
+  padding: .25in .5in;
+  width: 8.5in;
+  widows: 3;
+}
+
+/* line 21, ../../sass/reports/_general.scss */
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+/* line 25, ../../sass/reports/_general.scss */
+h1 {
+  font-size: 2.827rem;
+  margin-bottom: 20.3px;
+}
+
+/* line 30, ../../sass/reports/_general.scss */
+h2 {
+  font-size: 1.999rem;
+}
+
+/* line 34, ../../sass/reports/_general.scss */
+h3 {
+  font-size: 1.414rem;
+}
+
+/* line 38, ../../sass/reports/_general.scss */
+h4 {
+  font-size: 1rem;
+}
+
+/* line 42, ../../sass/reports/_general.scss */
+small, aside {
+  font-size: 0.707rem;
+  color: #777;
+}
+
+/* line 47, ../../sass/reports/_general.scss */
+p, ul, ol {
+  margin: 0 0 20.3px;
+}
+
+/* line 51, ../../sass/reports/_general.scss */
+a {
+  color: #07b;
+  text-decoration: none;
+}
+/* line 55, ../../sass/reports/_general.scss */
+a:hover, a:focus {
+  color: #0097ee;
+}
+/* line 56, ../../sass/reports/_general.scss */
+a:active {
+  color: #0067a2;
+}
+
+/* line 59, ../../sass/reports/_general.scss */
+.muted {
+  color: #888;
+}
+
+/* line 64, ../../sass/reports/_general.scss */
+.print-url::after {
+  content: " <" attr(href) ">";
+  font-size: 90%;
+}
+
+/* line 70, ../../sass/reports/_general.scss */
+header {
+  page-break-inside: avoid;
+}
+/* line 73, ../../sass/reports/_general.scss */
+header aside {
+  font-size: 1rem;
+  order: 99;
+}
+/* line 77, ../../sass/reports/_general.scss */
+header aside.meta .email {
+  display: block;
+}
+
+/* line 83, ../../sass/reports/_general.scss */
+.doc-title {
+  flex: 1;
+  line-height: 1;
+  margin: 0;
+}
+/* line 88, ../../sass/reports/_general.scss */
+.doc-title .title-prefix, .doc-title .title-suffix {
+  display: block;
+  font-size: 1rem;
+}
+/* line 93, ../../sass/reports/_general.scss */
+.doc-title .title-suffix {
+  margin-top: 20.3px;
+}
+
+/* line 98, ../../sass/reports/_general.scss */
+.doc-group {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20.3px;
+  margin: 81.2px 0;
+  padding-bottom: 0;
+  page-break-after: always;
+}
+
+/* line 105, ../../sass/reports/_general.scss */
+header.top-header {
+  align-items: flex-end;
+  display: flex;
+  padding-bottom: 20.3px;
+  page-break-after: avoid;
+}
+
+/* line 112, ../../sass/reports/_general.scss */
+.group-title {
+  margin: 0 0 2.89855rem;
+  page-break-after: avoid;
+}
+
+/* line 117, ../../sass/reports/_general.scss */
+.doc-item {
+  border-top: 1px solid #ccc;
+  padding-top: 20.3px;
+  margin-bottom: 20.3px;
+  border-color: #ccc;
+  clear: both;
+}
+
+/* line 124, ../../sass/reports/_general.scss */
+.doc-header,
+.item-header {
+  margin-bottom: 20.3px;
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
+/* line 131, ../../sass/reports/_general.scss */
+.item-title {
+  font-weight: normal;
+}
+/* line 134, ../../sass/reports/_general.scss */
+.item-title small {
+  line-height: 1;
+  margin-left: .25em;
+  margin-top: .3em;
+}
+
+/* line 141, ../../sass/reports/_general.scss */
+.meta {
+  color: #777;
+}
+
+/* line 145, ../../sass/reports/_general.scss */
+.item-datetime {
+  float: right;
+}
+
+/* line 152, ../../sass/reports/_general.scss */
+.subsection {
+  clear: both;
+  overflow: hidden;
+}
+/* line 156, ../../sass/reports/_general.scss */
+.subsection + .subsection {
+  border-top: 1px dotted #ccc;
+  padding-top: 20.3px;
+  border-color: #ccc;
+}
+
+/* line 162, ../../sass/reports/_general.scss */
+.subhead {
+  margin-bottom: 0;
+}
+/* line 165, ../../sass/reports/_general.scss */
+.subhead small {
+  font-weight: normal;
+  margin-left: .5em;
+  text-transform: uppercase;
+}
+/* line 171, ../../sass/reports/_general.scss */
+.subhead.float-left, .subhead.float-right {
+  float: left;
+  margin-bottom: 20.3px;
+  width: 20%;
+}
+/* line 177, ../../sass/reports/_general.scss */
+.subhead.float-left small, .subhead.float-right small {
+  display: block;
+  line-height: inherit;
+  margin: 0;
+}
+/* line 184, ../../sass/reports/_general.scss */
+.subhead.float-right {
+  float: right;
+  padding-left: 20.3px;
+}
+
+/* line 190, ../../sass/reports/_general.scss */
+.grade {
+  border-color: #ccc;
+  margin: 20.3px 0;
+}
+
+/* line 196, ../../sass/reports/_general.scss */
+.freetext, .freetext * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* line 203, ../../sass/reports/_general.scss */
+dl {
+  display: table;
+  margin: 20.3px 0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* line 210, ../../sass/reports/_general.scss */
+.dli {
+  display: table-row;
+}
+
+/* line 214, ../../sass/reports/_general.scss */
+dd, dt {
+  display: table-cell;
+}
+
+/* line 218, ../../sass/reports/_general.scss */
+dt {
+  color: #777;
+  font-size: 0.707rem;
+  padding-right: 20.3px;
+  padding-top: .8rem;
+  page-break-after: avoid;
+  text-align: right;
+  text-transform: uppercase;
+  width: 20%;
+}
+
+/* line 230, ../../sass/reports/_general.scss */
+dd.grade {
+  font-size: 1.25em;
+  font-weight: bold;
+  padding-bottom: 1rem;
+  page-break-before: avoid;
+  page-break-after: avoid;
+}
+
+/* line 239, ../../sass/reports/_general.scss */
+dd.comments {
+  clear: left;
+  line-height: 1.4;
+  margin: 0.5em .25in 1em;
+}
+/* line 244, ../../sass/reports/_general.scss */
+dd.comments p {
+  line-height: 1.45 !important;
+}
+
+/* line 251, ../../sass/reports/_general.scss */
+dd.comments h1, .html-content h1 {
+  font-size: 1.296em;
+}
+/* line 252, ../../sass/reports/_general.scss */
+dd.comments h2, .html-content h2 {
+  font-size: 1.215em;
+}
+/* line 253, ../../sass/reports/_general.scss */
+dd.comments h3, .html-content h3 {
+  font-size: 1.138em;
+}
+/* line 254, ../../sass/reports/_general.scss */
+dd.comments h4, .html-content h4 {
+  font-size: 1.067em;
+}
+/* line 255, ../../sass/reports/_general.scss */
+dd.comments h5, .html-content h5 {
+  font-size: 1em;
+}
+/* line 256, ../../sass/reports/_general.scss */
+dd.comments h6, .html-content h6 {
+  font-size: 0.937em;
+}
+/* line 258, ../../sass/reports/_general.scss */
+dd.comments, dd.comments p, dd.comments span, dd.comments div, .html-content, .html-content p, .html-content span, .html-content div {
+  color: #111 !important;
+  font-family: Lato, sans-serif !important;
+  font-size: 1rem !important;
+}
+
+/* line 266, ../../sass/reports/_general.scss */
+dd.instructor ul {
+  display: table;
+  margin: 0 0 1em;
+  padding: 0;
+}
+/* line 272, ../../sass/reports/_general.scss */
+dd.instructor li {
+  display: table-row;
+  margin: 0;
+  list-style: none;
+}
+/* line 277, ../../sass/reports/_general.scss */
+dd.instructor li:last-child > * {
+  border-width: 0;
+}
+/* line 282, ../../sass/reports/_general.scss */
+dd.instructor .instructor-name,
+dd.instructor .instructor-email {
+  border-bottom: 1px solid #ddd;
+  display: table-cell;
+  padding: .5em 0;
+}
+/* line 289, ../../sass/reports/_general.scss */
+dd.instructor .instructor-email {
+  padding-left: 1em;
+}
+
+@media print {
+  /* line 295, ../../sass/reports/_general.scss */
+  html, body {
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  /* line 302, ../../sass/reports/_general.scss */
+  .doc-group:first-child {
+    margin-top: .5in;
+  }
+
+  /* line 307, ../../sass/reports/_general.scss */
+  dl.item-body,
+  dl.item-body > .dli,
+  dl.item-body > .dli > dt,
+  dl.item-body > .dli > dd {
+    display: block;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+  /* line 317, ../../sass/reports/_general.scss */
+  dl.item-body > .dli {
+    margin-bottom: 1em;
+  }
+  /* line 320, ../../sass/reports/_general.scss */
+  dl.item-body > .dli > dd {
+    margin: 0 0 0 .25in;
+  }
+
+  @page {
+    margin: .5in 1in;
+  }
+}
+/* line 1, ../../sass/reports/_people.scss */
+.people .subhead {
+  float: left;
+  margin-bottom: 20.3px;
+  width: 20%;
+}
+/* line 6, ../../sass/reports/_people.scss */
+.people .subhead small {
+  display: block;
+  line-height: inherit;
+  margin: 0;
+}
+/* line 13, ../../sass/reports/_people.scss */
+.people dl {
+  float: right;
+  margin-top: 0;
+  width: 80%;
+}
+/* line 19, ../../sass/reports/_people.scss */
+.people dt {
+  padding: 0 rhythm(1);
+}

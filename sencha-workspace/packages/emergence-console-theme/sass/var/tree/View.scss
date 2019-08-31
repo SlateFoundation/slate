@@ -1,0 +1,17 @@
+$tree-icon-size: dynamic(14px); // custom variable
+
+$tree-elbow-width: $tree-icon-size;
+$tree-icon-width: $tree-icon-size;
+$tree-glyph-font-size: $tree-icon-size;
+
+$tree-folder-glyph: dynamic(
+    $fa-var-folder
+    $tree-glyph-font-size
+    $font-icon-font-family);
+
+$tree-folder-open-glyph: dynamic(
+    $fa-var-folder-open
+    $tree-glyph-font-size
+    $font-icon-font-family);
+
+$grid-row-cell-focus-border-color: dynamic(rgba($fg-color1, .5));

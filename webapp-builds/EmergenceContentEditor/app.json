@@ -1,0 +1,9 @@
+{
+  "id": "466328ad-bdad-4f40-9b68-915b43d427c3",
+  "hash": "9b2a38c907662b8b75d8a415ffd2e963a43b2f5f",
+  "js": [{ "path": "app.js" }],
+  "css": [
+    { "remote": false, "exclude": ["fashion"], "path": "resources/EmergenceContentEditor-all_1.css" },
+    { "remote": false, "exclude": ["fashion"], "path": "resources/EmergenceContentEditor-all_2.css" }
+  ]
+}

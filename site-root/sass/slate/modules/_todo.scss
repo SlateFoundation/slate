@@ -1,0 +1,88 @@
+$todo-list-line-height: (4/3) !default;
+
+.todo-list {
+    margin: .5em 0 1.5em;
+    padding: 0;
+
+    .todo-item {
+        line-height: $todo-list-line-height;
+        list-style: none;
+    }
+
+    .todo-item-wrap {
+        border-radius: .25em;
+        cursor: pointer;
+        display: block;
+        overflow: hidden;
+        padding: (1em/3) .625em;
+
+        &:hover,
+        &:focus {
+            background-color: tint($link-color, 90%);
+            box-shadow: inset 0 0 0 1px rgba($link-color, .5);
+
+            .edit-link {
+                visibility: visible;
+            }
+        }
+    }
+
+    .todo-item-checkbox {
+        float: left;
+        font-size: large;
+        margin-right: .5em;
+        margin-top: .25em;
+    }
+
+    .is-complete {
+        .todo-item-title {
+            text-decoration: line-through;
+        }
+    }
+
+    .todo-item-title {
+        overflow: hidden;
+    }
+
+    .textarea-ct {
+        // display: block;
+    }
+
+    textarea {
+        $vertical-padding: .125em;
+
+        box-sizing: border-box;
+        color: $text-color;
+        height: ($vertical-padding * 2) + $todo-list-line-height;
+        min-height: ($vertical-padding * 2) + $todo-list-line-height;
+        margin: -($vertical-padding) 0;
+        padding: $vertical-padding ($vertical-padding * 2);
+        resize: vertical;
+        width: 100%; // sized by .textarea-ct
+    }
+
+    .edit-link {
+        color: $muted-color;
+        float: right;
+        font-size: small;
+        margin-left: .5em;
+        margin-top: .25em;
+        text-decoration: none;
+        visibility: hidden;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+}
+
+.completed-todo-list {
+    .is-complete {
+        color: $muted-color;
+
+        .todo-item-title {
+            text-decoration: none;
+        }
+    }
+}

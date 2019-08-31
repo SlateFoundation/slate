@@ -1,0 +1,24 @@
+.slate-popup-menu {
+    background-color: #fafafa;
+    box-shadow: 0 2px 5px rgba(black, .3);
+    min-width: 10em;
+    position: absolute;
+
+    .menu-header {
+        border-bottom: 1px solid $border-color;
+        padding: .5em 1em;
+    }
+
+    .menu-title {
+        font-family: $body-font;
+        margin: 0;
+    }
+
+    .menu-body {
+        margin: 1em;
+    }
+
+    .button.block {
+        margin: 0;
+    }
+}

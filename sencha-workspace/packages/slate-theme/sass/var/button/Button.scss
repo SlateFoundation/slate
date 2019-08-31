@@ -1,0 +1,45 @@
+$button-default-background-gradient:            dynamic('none');
+$button-default-background-gradient-disabled:   dynamic('none');
+$button-default-background-gradient-focus:      dynamic('none');
+$button-default-background-gradient-over:       dynamic('none');
+$button-default-background-gradient-pressed:    dynamic('none');
+
+$button-toolbar-background-gradient:            dynamic('none');
+$button-toolbar-background-gradient-disabled:   dynamic('none');
+$button-toolbar-background-gradient-focus:      dynamic('none');
+$button-toolbar-background-gradient-over:       dynamic('none');
+$button-toolbar-background-gradient-pressed:    dynamic('none');
+
+$button-toolbar-background-color:               dynamic(#f9f9f9);
+$button-toolbar-background-color-over:          dynamic(white);
+$button-toolbar-background-color-focus:         dynamic($button-toolbar-background-color-over);
+$button-toolbar-background-color-disabled:      dynamic(transparent);
+
+$button-toolbar-border-color:                   dynamic(rgba(#d5d5d5, 0));
+$button-toolbar-border-color-disabled:          dynamic(transparent);
+
+$button-small-border-width:     dynamic(0 0 1px);
+$button-medium-border-width:    dynamic(0 0 1px);
+$button-large-border-width:     dynamic(0 0 1px);
+
+$button-small-font-size:        dynamic($font-size * .9);
+$button-medium-font-size:       dynamic($font-size);
+$button-large-font-size:        dynamic($font-size * 1.1);
+
+$button-small-font-weight:      dynamic(normal);
+$button-medium-font-weight:     dynamic(normal);
+$button-large-font-weight:      dynamic(normal);
+
+$button-small-icon-size:        dynamic($glyph-size);
+$button-medium-icon-size:       dynamic($glyph-size);
+$button-large-icon-size:        dynamic($glyph-size * 2);
+
+$button-default-glyph-opacity:  dynamic(.6);
+$button-toolbar-glyph-opacity:  dynamic(.9);
+
+$button-normal-background-color:    dynamic(#999);
+$button-normal-border-color:        dynamic(#666);
+
+$button-light-background-color:     dynamic(white);
+$button-light-border-color:         dynamic(#ccc);
+$button-light-color:                dynamic($color);

@@ -1,0 +1,3 @@
+$form-checkbox-glyph: dynamic($fa-var-square $form-checkbox-size);
+$form-checkbox-checked-glyph: dynamic($fa-var-check-square $form-checkbox-size);
+$form-checkbox-glyph-color: dynamic(mix($fg-color2, $fg-color3));

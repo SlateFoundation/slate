@@ -1,0 +1,29 @@
+$tab-base-color: dynamic(mix($bg-color1, $bg-color2));
+$tab-base-color-over: dynamic($bg-color3);
+$tab-base-color-active: dynamic(black);
+
+$tab-background-opacity: dynamic(1);
+$tab-background-opacity-active: dynamic(1);
+$tab-background-opacity-over: dynamic(1);
+
+$tab-border-color: dynamic(transparent);
+$tab-border-color-active: dynamic($fg-color1);
+$tab-border-color-over: dynamic($tab-border-color);
+
+$tab-border-width: dynamic(2px 0);
+
+$tab-closable-icon-glyph-color: dynamic(rgba($fg-color3, .2));
+$tab-closable-icon-glyph-color-over: dynamic($fg-color3);
+$tab-closable-icon-glyph-color-active: dynamic($fg-color3);
+
+$tab-color: dynamic($fg-color2);
+$tab-color-active: dynamic($fg-color3);
+
+$tab-icon-width: dynamic(14px);
+$tab-icon-height: dynamic($tab-icon-width);
+
+$tab-margin: dynamic(0 1px 0 0);
+$tab-padding: dynamic(6px 12px);
+
+$tab-outline-color-focus: dynamic(rgba($fg-color1, .5));
+$tab-outline-offset-focus: dynamic(-1px);

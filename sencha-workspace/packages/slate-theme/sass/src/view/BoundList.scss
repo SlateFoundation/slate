@@ -1,0 +1,11 @@
+.x-boundlist {
+    .group-header {
+        background-color: $neutral-light-color;
+        border: $boundlist-item-border-width solid transparent;
+        color: $neutral-dark-color;
+        font-size: .75em;
+        margin-top: 1em/3;
+        padding: $boundlist-item-padding;
+        text-transform: uppercase;
+    }
+}

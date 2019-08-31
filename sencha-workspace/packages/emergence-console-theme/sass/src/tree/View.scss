@@ -1,0 +1,31 @@
+// align left to avoid blurries
+
+.x-tree-icon,
+.x-tree-elbow-img,
+.x-tree-checkbox {
+    text-align: left;
+}
+
+// compensate for lack of centering
+.x-tree-arrows {
+
+    .x-tree-expander {
+        &::before {
+            margin-left: 4px;
+        }
+    }
+
+    .x-grid-tree-node-expanded {
+        .x-tree-expander {
+            &::before {
+                margin-left: 2px;
+            }
+        }
+    }
+}
+
+.x-tree-icon-leaf {
+    &::before {
+        margin-left: 1px;
+    }
+}

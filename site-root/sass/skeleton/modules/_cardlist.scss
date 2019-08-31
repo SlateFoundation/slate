@@ -1,0 +1,43 @@
+// .cardlist {}
+
+.cardlist-item {
+    background: rgba(white, .6);
+    border: 1px solid $border-color;
+    @include box-shadow(0 .5em .5em -.5em rgba(black, .2));
+    @include display-flex;
+    margin: 1em 0;
+    padding: 1em;
+    
+    .title {
+        font-weight: normal;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .meta {
+        color: $muted-color;
+
+        a {
+            color: $muted-color;
+        }
+    }
+    
+    > .details {
+        @include flex(1);
+        padding: 1em;
+    }
+    
+    > footer {
+        @include align-items(stretch);
+        @include display-flex;
+        @include flex-direction(column);
+        
+        > a {
+            display: block;
+
+            + a {
+                margin-top: .125em;
+            }
+        }
+    }
+}

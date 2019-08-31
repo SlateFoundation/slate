@@ -1,0 +1,54 @@
+.kv-list {
+    .dli { @extend .kv-pair;  }
+      dt { @extend .kv-key;   }
+      dd { @extend .kv-value; }
+}
+
+.kv-pair {
+    + .kv-pair {
+        margin-top: 1em;
+    }
+}
+
+.kv-key,
+.kv-value {
+    margin: 0;
+}
+
+.kv-key {
+    color: $muted-color;
+    font-size: smaller;
+    text-transform: uppercase;
+}
+
+.kv-value {
+    font-weight: bold;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+.kv-list.align-left,
+.kv-list.align-right {
+    display: table;
+
+    .kv-pair {
+        display: table-row;
+    }
+    
+    .kv-key,
+    .kv-value {
+        display: table-cell;
+    }
+    
+    .kv-key {
+        padding-right: 1em;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+.kv-list.align-right {
+    .kv-key {
+        text-align: right;
+    }
+}

@@ -1,0 +1,20 @@
+// $slate-color:   #31a0da
+
+$base-color:    #31a0da !default;
+$accent-color:  saturate($base-color, 100%) !default;
+$page-bg-color: #f5f5f5 !default;
+
+$text-color:    #333 !default;
+$heading-color: $text-color !default; // mix($accent-color, $text-color) !default;
+$link-color:    $base-color !default;
+
+$body-font:     Lato, 'Lucida Grande', Verdana, 'Helvetica Neue', sans-serif !default;
+$heading-font:  Sanchez, Lato, Rockwell, 'Rockwell Std', Georgia, serif !default;
+
+$omnibar-height: 2.75em;
+
+$hero-header-image: image-url('header.jpg') !default;
+
+// button colors
+$button-color:      mix(#dfdfdf, $accent-color, 95%) !default;
+$destructive-color: #ff332e !default;

@@ -1,0 +1,23 @@
+$base-color: dynamic($fg-color1);
+$color: dynamic($fg-color2);
+$body-background-color: dynamic($bg-color3);
+
+$font-family: dynamic(-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
+$enable-font-smoothing: dynamic(false);
+
+a {
+    color: rgba($fg-color3, 0.9);
+}
+
+a:active, a:hover {
+    color: rgba($fg-color3, 1);
+}
+
+a:visited {
+    color: rgba($fg-color3, 0.8);
+}
+
+mark {
+    color: $bg-color2;
+    background-color: rgba($fg-color1, 0.8);
+}

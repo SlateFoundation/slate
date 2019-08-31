@@ -1,0 +1,8 @@
+name: format
+in: query
+description: Desired file format for response body
+type: string
+enum:
+- html
+- json
+- csv

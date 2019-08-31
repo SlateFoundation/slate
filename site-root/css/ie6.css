@@ -1,0 +1,9 @@
+/* line 1, ../sass/ie6.scss */
+input {
+  vertical-align: text-bottom;
+}
+
+/* line 2, ../sass/ie6.scss */
+legend {
+  margin-left: -7px;
+}

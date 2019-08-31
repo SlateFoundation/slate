@@ -1,0 +1,20 @@
+.slateadmin-navigation {
+    background-color: $slateadmin-navigation-background-color;
+
+    .x-panel-body-default,
+    .x-grid-item:not(.x-grid-item-selected) {
+        background-color: $slateadmin-navigation-background-color;
+    }
+
+    .x-fieldset-with-legend {
+        &.x-fieldset-collapsed {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.navpanel-search-criteria {
+    .x-form-item-label {
+        text-transform: none;
+    }
+}

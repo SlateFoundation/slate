@@ -1,0 +1,9 @@
+{
+  "id": "c81707ac-111e-4355-a44d-79a97c62c39c",
+  "hash": "c72743ae5859beb8846acf42046ffd628c0d7fa5",
+  "js": [{ "path": "app.js" }],
+  "css": [
+    { "remote": false, "exclude": ["fashion"], "path": "resources/EmergencePullTool-all_1.css" },
+    { "remote": false, "exclude": ["fashion"], "path": "resources/EmergencePullTool-all_2.css" }
+  ]
+}

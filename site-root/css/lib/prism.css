@@ -1,0 +1,426 @@
+/* http://prismjs.com/download.html?themes=prism-okaidia&languages=markup+css+clike+javascript+bash+diff+git+http+php+php-extras+powershell+scss+smarty&plugins=line-highlight+line-numbers+file-highlight+toolbar+previewer-base+previewer-color+command-line+normalize-whitespace+copy-to-clipboard */
+/**
+ * okaidia theme for JavaScript, CSS and HTML
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+/* line 8, ../../sass/lib/prism.scss */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+/* line 32, ../../sass/lib/prism.scss */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: .5em 0;
+  overflow: auto;
+  border-radius: 0.3em;
+}
+
+/* line 39, ../../sass/lib/prism.scss */
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #272822;
+}
+
+/* Inline code */
+/* line 45, ../../sass/lib/prism.scss */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+}
+
+/* line 51, ../../sass/lib/prism.scss */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: slategray;
+}
+
+/* line 58, ../../sass/lib/prism.scss */
+.token.punctuation {
+  color: #f8f8f2;
+}
+
+/* line 62, ../../sass/lib/prism.scss */
+.namespace {
+  opacity: .7;
+}
+
+/* line 66, ../../sass/lib/prism.scss */
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #f92672;
+}
+
+/* line 74, ../../sass/lib/prism.scss */
+.token.boolean,
+.token.number {
+  color: #ae81ff;
+}
+
+/* line 79, ../../sass/lib/prism.scss */
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #a6e22e;
+}
+
+/* line 88, ../../sass/lib/prism.scss */
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #f8f8f2;
+}
+
+/* line 97, ../../sass/lib/prism.scss */
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #e6db74;
+}
+
+/* line 103, ../../sass/lib/prism.scss */
+.token.keyword {
+  color: #66d9ef;
+}
+
+/* line 107, ../../sass/lib/prism.scss */
+.token.regex,
+.token.important {
+  color: #fd971f;
+}
+
+/* line 112, ../../sass/lib/prism.scss */
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+/* line 116, ../../sass/lib/prism.scss */
+.token.italic {
+  font-style: italic;
+}
+
+/* line 120, ../../sass/lib/prism.scss */
+.token.entity {
+  cursor: help;
+}
+
+/* line 124, ../../sass/lib/prism.scss */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+
+/* line 129, ../../sass/lib/prism.scss */
+.line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  /* Same as .prism's padding-top */
+  background: rgba(153, 122, 102, 0.08);
+  background: linear-gradient(to right, rgba(153, 122, 102, 0.1) 70%, rgba(153, 122, 102, 0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+/* line 145, ../../sass/lib/prism.scss */
+.line-highlight:before,
+.line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: rgba(153, 122, 102, 0.4);
+  color: #f5f2f0;
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+/* line 163, ../../sass/lib/prism.scss */
+.line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}
+
+/* line 169, ../../sass/lib/prism.scss */
+pre.line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+/* line 175, ../../sass/lib/prism.scss */
+pre.line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+/* line 180, ../../sass/lib/prism.scss */
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em;
+  /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 1px solid #999;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* line 197, ../../sass/lib/prism.scss */
+.line-numbers-rows > span {
+  pointer-events: none;
+  display: block;
+  counter-increment: linenumber;
+}
+
+/* line 203, ../../sass/lib/prism.scss */
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #999;
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}
+
+/* line 210, ../../sass/lib/prism.scss */
+pre.code-toolbar {
+  position: relative;
+}
+
+/* line 214, ../../sass/lib/prism.scss */
+pre.code-toolbar > .toolbar {
+  position: absolute;
+  top: .3em;
+  right: .2em;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+/* line 222, ../../sass/lib/prism.scss */
+pre.code-toolbar:hover > .toolbar {
+  opacity: 1;
+}
+
+/* line 226, ../../sass/lib/prism.scss */
+pre.code-toolbar > .toolbar .toolbar-item {
+  display: inline-block;
+}
+
+/* line 230, ../../sass/lib/prism.scss */
+pre.code-toolbar > .toolbar a {
+  cursor: pointer;
+}
+
+/* line 234, ../../sass/lib/prism.scss */
+pre.code-toolbar > .toolbar button {
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-user-select: none;
+  /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* line 247, ../../sass/lib/prism.scss */
+pre.code-toolbar > .toolbar a,
+pre.code-toolbar > .toolbar button,
+pre.code-toolbar > .toolbar span {
+  color: #bbb;
+  font-size: .8em;
+  padding: 0 .5em;
+  background: #f5f2f0;
+  background: rgba(224, 224, 224, 0.2);
+  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
+  border-radius: .5em;
+}
+
+/* line 259, ../../sass/lib/prism.scss */
+pre.code-toolbar > .toolbar a:hover,
+pre.code-toolbar > .toolbar a:focus,
+pre.code-toolbar > .toolbar button:hover,
+pre.code-toolbar > .toolbar button:focus,
+pre.code-toolbar > .toolbar span:hover,
+pre.code-toolbar > .toolbar span:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* line 269, ../../sass/lib/prism.scss */
+.prism-previewer,
+.prism-previewer:before,
+.prism-previewer:after {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* line 275, ../../sass/lib/prism.scss */
+.prism-previewer,
+.prism-previewer:after {
+  left: 50%;
+}
+
+/* line 279, ../../sass/lib/prism.scss */
+.prism-previewer {
+  margin-top: -48px;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  opacity: 0;
+  -webkit-transition: opacity .25s;
+  -o-transition: opacity .25s;
+  transition: opacity .25s;
+}
+
+/* line 290, ../../sass/lib/prism.scss */
+.prism-previewer.flipped {
+  margin-top: 0;
+  margin-bottom: -48px;
+}
+
+/* line 294, ../../sass/lib/prism.scss */
+.prism-previewer:before,
+.prism-previewer:after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+/* line 300, ../../sass/lib/prism.scss */
+.prism-previewer:before {
+  top: -5px;
+  right: -5px;
+  left: -5px;
+  bottom: -5px;
+  border-radius: 10px;
+  border: 5px solid #fff;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5) inset, 0 0 10px rgba(0, 0, 0, 0.75);
+}
+
+/* line 310, ../../sass/lib/prism.scss */
+.prism-previewer:after {
+  top: 100%;
+  width: 0;
+  height: 0;
+  margin: 5px 0 0 -7px;
+  border: 7px solid transparent;
+  border-color: rgba(255, 0, 0, 0);
+  border-top-color: #fff;
+}
+
+/* line 319, ../../sass/lib/prism.scss */
+.prism-previewer.flipped:after {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 5px;
+  border-top-color: rgba(255, 0, 0, 0);
+  border-bottom-color: #fff;
+}
+
+/* line 327, ../../sass/lib/prism.scss */
+.prism-previewer.active {
+  opacity: 1;
+}
+
+/* line 330, ../../sass/lib/prism.scss */
+.prism-previewer-color {
+  background-image: linear-gradient(45deg, #bbb 25%, transparent 25%, transparent 75%, #bbb 75%, #bbb), linear-gradient(45deg, #bbb 25%, #eee 25%, #eee 75%, #bbb 75%, #bbb);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+/* line 335, ../../sass/lib/prism.scss */
+.prism-previewer-color:before {
+  background-color: inherit;
+  background-clip: padding-box;
+}
+
+/* line 340, ../../sass/lib/prism.scss */
+.command-line-prompt {
+  border-right: 1px solid #999;
+  display: block;
+  float: left;
+  font-size: 100%;
+  letter-spacing: -1px;
+  margin-right: 1em;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* line 355, ../../sass/lib/prism.scss */
+.command-line-prompt > span:before {
+  color: #999;
+  content: ' ';
+  display: block;
+  padding-right: 0.8em;
+}
+
+/* line 362, ../../sass/lib/prism.scss */
+.command-line-prompt > span[data-user]:before {
+  content: "[" attr(data-user) "@" attr(data-host) "] $";
+}
+
+/* line 366, ../../sass/lib/prism.scss */
+.command-line-prompt > span[data-user="root"]:before {
+  content: "[" attr(data-user) "@" attr(data-host) "] #";
+}
+
+/* line 370, ../../sass/lib/prism.scss */
+.command-line-prompt > span[data-prompt]:before {
+  content: attr(data-prompt);
+}

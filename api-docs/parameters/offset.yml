@@ -1,0 +1,4 @@
+name: offset
+in: query
+type: integer
+description: Number of records to skip for current page

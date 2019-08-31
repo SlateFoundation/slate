@@ -1,0 +1,28 @@
+$bg-color1: #0a151f;
+$bg-color2: #0f202e;
+$bg-color3: #142b3d;
+$bg-color4: #19364d;
+
+$fg-color1: #f47f20;
+$fg-color2: #bdbfc1;
+$fg-color3: #fff;
+
+$bg-highlight: lighten($bg-color1, 20%);
+$fg-highlight: darken($fg-color2, 20%);
+
+::-webkit-scrollbar             { height: .5rem; width: .5rem; }
+::-webkit-scrollbar-button      { background-color: $bg-highlight; }
+::-webkit-scrollbar-track       { background-color: $bg-highlight; }
+::-webkit-scrollbar-track-piece { background-color: $bg-color1; }
+::-webkit-scrollbar-thumb       { background-color: $bg-highlight; }
+::-webkit-scrollbar-corner      { background-color: $bg-highlight; }
+::-webkit-resizer               { background-color: $bg-highlight; }
+
+.x-fa,
+.x-tree-icon,
+.x-tree-checkbox,
+.x-tree-elbow-img,
+.x-form-checkbox-default {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}

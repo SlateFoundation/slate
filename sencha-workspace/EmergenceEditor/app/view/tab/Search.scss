@@ -1,0 +1,24 @@
+.emergence-tab-search {
+
+    .match-content {
+        .filename {
+            text-align: right;
+        }
+    }
+
+    .match-nocontent {
+        .path {
+            text-align: right;
+            width: 50%;
+
+            &:after {
+                content: '/';
+            }
+        }
+
+        .filename {
+            padding-left: 0;
+            width: 50%;
+        }
+    }
+}

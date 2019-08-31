@@ -1,0 +1,7 @@
+# derived files produced by sencha-cmd
+build/
+/*/bootstrap.*
+
+# temporary files produced by sencha-cmd
+.sass-cache
+sencha-error-*.log

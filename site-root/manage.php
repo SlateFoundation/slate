@@ -1,0 +1,3 @@
+<?php
+
+SlateAdmin\RequestHandler::handleRequest();

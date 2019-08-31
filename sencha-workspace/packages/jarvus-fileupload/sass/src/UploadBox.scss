@@ -1,0 +1,62 @@
+.jarvus-uploadbox {
+    border: 2px dashed #ccc;
+    margin-bottom: 8px;
+    position: relative;
+    text-align: center;
+    
+    &.file-drag-over {
+        background-color: #9f9;
+        
+        &::before {
+            content: 'Drop Here';
+            display: table-cell;
+            font-size: large;
+            font-weight: bold;
+            left: 50%;
+            padding: .5em 1em;
+            position: absolute;
+            top: 50%;
+            @include translate(-50%, -50%);
+            vertical-align: middle;
+        }
+        
+        .placeholder {
+            visibility: hidden;
+        }
+        
+        img {
+            opacity: .2;
+        }
+    }
+
+    input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+    
+    img {
+        display: block;
+        margin: auto;
+        max-width: 100%;
+        pointer-events: none;
+    }
+    
+    .progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        opacity: 0.5;
+        background-color: green;
+        -webkit-transition: width 50ms;
+    }
+    
+    .placeholder {
+        padding: 2em;
+    }
+}

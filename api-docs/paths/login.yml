@@ -1,0 +1,46 @@
+post:
+  description: Create a new session
+  security: []
+  consumes:
+  - application/x-www-form-urlencoded
+  parameters:
+  - name: '_LOGIN[username]'
+    in: formData
+    required: true
+    type: string
+  - name: '_LOGIN[password]'
+    in: formData
+    required: true
+    type: string
+    format: password
+  - name: '_LOGIN[returnMethod]'
+    in: formData
+    description: Set to `POST` to return session in response to POST request instead of redirecting to post-login URL
+    type: string
+    default: POST
+    enum:
+    - GET
+    - POST
+  - $ref: '#/parameters/include'
+  - $ref: '#/parameters/format'
+  - $ref: '#/parameters/accept'
+  responses:
+    200:
+      description: Login credentials accepted, session created
+      schema:
+        $ref: '#/definitions/SessionResponse'
+    401:
+      description: Username or password invalid
+get:
+  description: Get current Session
+  parameters:
+  - $ref: '#/parameters/include'
+  - $ref: '#/parameters/format'
+  - $ref: '#/parameters/accept'
+  responses:
+    200:
+      description: Session found
+      schema:
+        $ref: '#/definitions/SessionResponse'
+    401:
+      description: Sesson not provided, not valid, or expired

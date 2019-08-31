@@ -1,0 +1,8 @@
+{
+  "id": "e21d2a04-1fe0-4793-a299-186188656a28",
+  "js": [{ "path": "app.js" }],
+  "css": [
+    { "remote": false, "exclude": ["fashion"], "path": "resources/SlateAdmin-all_1.css" },
+    { "remote": false, "exclude": ["fashion"], "path": "resources/SlateAdmin-all_2.css" }
+  ]
+}

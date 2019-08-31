@@ -1,0 +1,6 @@
+$boundlist-background-color: dynamic($bg-color1);
+$boundlist-border-color: dynamic($bg-color3);
+$boundlist-item-over-background-color: dynamic(darken($bg-color3, 2%));
+$boundlist-item-over-text-color: dynamic($fg-color3);
+$boundlist-item-selected-background-color: dynamic($bg-highlight);
+$boundlist-item-selected-text-color : dynamic($fg-highlight);

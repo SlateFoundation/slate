@@ -1,0 +1,3 @@
+<?php
+
+EmailSubscriberRequestHandler::handleRequest();

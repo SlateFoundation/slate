@@ -1,0 +1,12 @@
+/* line 5, ../../sass/reports/progress.scss */
+.progress-tpl .group-title {
+  margin-bottom: 0;
+}
+/* line 9, ../../sass/reports/progress.scss */
+.progress-tpl .doc-group {
+  page-break-after: auto;
+}
+/* line 12, ../../sass/reports/progress.scss */
+.progress-tpl .doc-group > header {
+  margin-bottom: 20.3px;
+}

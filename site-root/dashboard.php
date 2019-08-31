@@ -1,0 +1,3 @@
+<?php
+
+Slate\DashboardRequestHandler::handleRequest();

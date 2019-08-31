@@ -1,0 +1,23 @@
+@keyframes emergenceTabSaveAnimation {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+
+.emergence-tabpanel {
+    .x-tab.is-dirty {
+        .x-tab-inner:after {
+            color: $base-color;
+            content: '\f111';
+            font-family: FontAwesome;
+            font-size: .5em;
+            line-height: 1;
+            margin-left: 1.5em;
+            vertical-align: .375em;
+        }
+
+        &.is-saving .x-tab-inner:after {
+            animation: emergenceTabSaveAnimation 500ms infinite;
+        }
+    }
+}

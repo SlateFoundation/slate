@@ -1,0 +1,3 @@
+<?php
+
+Session::$timeout = false;

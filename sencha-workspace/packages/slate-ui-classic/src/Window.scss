@@ -1,0 +1,15 @@
+.slate-window .slate-panelfooter {
+    background-color: #e0e0e0;
+    box-shadow: inset 0 1px 0 0 #ccc;
+    padding: .5em 1em;
+}
+
+// these fixes are out of scope in here
+
+.x-webkit .x-form-text {
+    height: 100%;
+}
+
+.x-form-cb-label-default {
+    margin-top: 0;
+}

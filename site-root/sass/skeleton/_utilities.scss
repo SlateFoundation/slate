@@ -1,0 +1,36 @@
+@mixin clearfix { // override Compass default because `overflow: hidden` is easy to type by itself, and typing `pie-` is weird
+    @include pie-clearfix;
+}
+
+@media #{$mq-phone} {
+    .mobile-hidden {
+        display: none !important;
+    }
+}
+
+@media #{$mq-tablet} {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+.clearfix {
+    @include clearfix;
+}
+
+.text-left    { text-align: left; }
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+.text-justify { text-align: justify; }
+
+.pull-left {
+    @include float-left;
+}
+
+.pull-right {
+    @include float-right;
+}
+
+.reading-width {
+    max-width: $reading-width;
+}

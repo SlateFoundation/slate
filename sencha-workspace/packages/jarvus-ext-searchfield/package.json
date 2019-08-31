@@ -1,0 +1,20 @@
+{
+    "name": "jarvus-ext-searchfield",
+    "type": "code",
+    "creator": "anonymous",
+    "summary": "A text field specialized for search query input",
+    "version": "1.0.0",
+    "compatVersion": "1.0.0",
+    "format": "1",
+    "slicer": {
+        "js": [
+            {
+                "path": "${package.dir}/sass/example/custom.js",
+                "isWidgetManifest": true
+            }
+        ]
+    },
+    "output": "${package.dir}/build",
+    "local": true,
+    "requires": []
+}

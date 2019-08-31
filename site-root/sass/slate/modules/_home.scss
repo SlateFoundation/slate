@@ -1,0 +1,40 @@
+.important-links {
+    background: rgba(gold, .17);
+    @include border-bottom-radius(.5em);
+    box-shadow: 0 1px 0 rgba(darken(gold, 10), .4);
+    line-height: 1.75;
+    margin: -1.5em -1.5em 2em;
+    padding: .25em 1em;
+
+	@media #{$mq-phone} {
+		.links-label { display: block; }
+	}
+    
+    @media #{$mq-wide} {
+        margin: -1.5em -1em 2em;
+    }
+    
+    .links-label {
+        margin-right: .25em;
+    }
+    
+    .links-list {
+        display: inline;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .links-list-item {
+        display: inline;
+        margin-right: .25em;
+    }
+    
+    .links-list-link {
+        background: rgba($base-color, .167);
+        @include border-radius(.25em);
+        padding: .125em .375em;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+}

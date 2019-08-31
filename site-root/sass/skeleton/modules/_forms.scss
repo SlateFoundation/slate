@@ -1,0 +1,411 @@
+// default control sizes in ems
+$tiny-control-size:     3em;
+$small-control-size:    8em;
+$medium-control-size:   12em;
+$large-control-size:    18em;
+$xlarge-control-size:   27em;
+
+// basic styles
+// ========================================================================
+
+.notify > .validation-errors {
+    margin: 0;
+}
+
+form {
+    @include reset-box-model;
+}
+
+fieldset {
+    @extend .well;
+}
+
+label {
+    cursor: pointer;
+}
+
+.field {
+    display: block;
+    margin-bottom: 1em;
+    width: $large-control-size;
+
+    &.tiny   { width: $tiny-control-size; }
+    &.small  { width: $small-control-size; }
+    &.medium { width: $medium-control-size; }
+    &.large  { width: $large-control-size; }
+    &.xlarge { width: $xlarge-control-size; }
+    &.auto-width { width: auto; }
+
+    @media #{$mq-phone}{
+        width: 100%;
+
+        &.medium { width: 100%; }
+        &.large  { width: 100%; }
+        &.xlarge { width: 100%; }
+    }
+}
+
+.field-label {
+    color: mix($text-color, $muted-color);
+    font-size: small;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.field-control {
+    // by default, fill available space
+    @include box-sizing(border-box);
+    width: 100%;
+
+    &.inline {
+        display: inline;
+        width: auto;
+    }
+
+    &.tiny   { width: $tiny-control-size; }
+    &.small  { width: $small-control-size; }
+    &.medium { width: $medium-control-size; }
+    &.large  { width: $large-control-size; }
+    &.xlarge { width: $xlarge-control-size; }
+
+    &:disabled {
+        color: $muted-color;
+        cursor: not-allowed;
+        opacity: .4;
+    }
+}
+
+.radio-group {
+    list-style: none;
+    margin: 0 0 1em;
+    padding: 0;
+}
+
+.radio-group-item {
+    margin: .5em 0 0;
+    padding: 0;
+
+    label {
+        display: inline;
+    }
+}
+
+.checkbox-group {
+    @extend .radio-group;
+}
+
+.checkbox-group-item {
+    @extend .radio-group-item;
+}
+
+// combining selectors seems to break this, so use a mixin
+@mixin placeholder-style {
+    font-weight: 300;
+}
+
+::-webkit-input-placeholder { @include placeholder-style; }
+          :-moz-placeholder { @include placeholder-style; }
+         ::-moz-placeholder { @include placeholder-style; }
+     :-ms-input-placeholder { @include placeholder-style; }
+
+ul.errors {
+    color: $danger-color;
+}
+
+// field control types
+// ========================================================================
+
+input,
+textarea,
+input.field-control,
+textarea.field-control { // styles for text-box-like controls
+    background-color: white;
+    border: 1px solid darken($border-color, 5);
+    border-width: 0 0 1px;
+    @include border-radius(0);
+    padding: .4375em;
+    text-align: inherit;
+    @include transition(border-color .1s);
+}
+
+:focus {
+    border-color: saturate($link-color, 100%);
+    box-shadow: inset 0 0 0 1px rgba($link-color, .2);
+    outline: none;
+}
+
+textarea {
+    min-height: $small-control-size;
+}
+
+input[type="file"] {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: .25em;
+}
+
+select.field-control {
+    background-color: white;
+    border: 1px solid darken($border-color, 5);
+    border-width: 0 0 1px;
+    border-radius: 0;
+    font: inherit;
+    height: 2.0625em;
+    vertical-align: top;
+
+    &.inline {
+        vertical-align: baseline;
+    }
+
+    &:focus {
+        border-color: $link-color;
+    }
+}
+
+.tiny {
+    width: $tiny-control-size;
+}
+
+.file-field .field-control {
+    border: none;
+    padding: 0;
+}
+
+.checkbox-field {
+    .field-label {
+        display: inline;
+    }
+
+    input {
+        float: left;
+        margin: .375em .5em 0 0;
+        width: auto;
+    }
+
+    .hint {
+        margin-bottom: 0;
+    }
+}
+
+.submit-area {
+    @media #{$mq-phone} {
+        margin-top: 2em;
+
+        .button {
+            display: block;
+            min-width: 5em;
+            width: 100%;
+        }
+
+        .submit-text {
+            display: block;
+            margin-top: 1em;
+            text-align: center;
+        }
+    }
+
+    &.clear {
+        clear: both;
+    }
+}
+
+// special form types
+// ========================================================================
+
+.form-table {
+    th,
+    td {
+        vertical-align: top;
+    }
+
+    th:first-child {
+        min-width: 10em;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .field-label {
+        letter-spacing: 0;
+        text-transform: none;
+    }
+}
+
+.form-table-row-label,
+.form-table-row-decoration {
+    padding-top: .625em;
+}
+
+.form-table-row-label {
+    font-weight: normal;
+
+    &.for-compact-input {
+        padding-top: .25em;
+    }
+}
+
+.form-table-row-decoration {
+    color: #949494;
+    font-size: large;
+    line-height: 1;
+}
+
+.form-table-row-input {
+    width: 100%;
+}
+
+.form-table-expansion-intro {
+    margin: 1em 0;
+}
+
+// special fieldset types
+// ========================================================================
+
+fieldset {
+    &.plain {
+        background: none;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+}
+
+@media #{$mq-tablet}{
+    .left-labels {
+        display: table;
+
+        .field {
+            display: table-row;
+
+            & > * {
+                max-width: ($large-control-size / 1em) * $font-size;
+            }
+        }
+
+        .field-label,
+        .field-control {
+            display: table-cell;
+        }
+
+        .field-label {
+            padding: .75em 1em 1em 0;
+            text-align: right;
+            vertical-align: top;
+        }
+
+        .field-control {
+            width: $large-control-size;
+        }
+
+        .submit-area {
+            margin-top: 1em;
+            text-align: right;
+        }
+    }
+
+    .inline-fields {
+        .field {
+            display: inline-block;
+            vertical-align: top;
+            width: auto;
+
+            & + .field {
+                margin-left: 1em;
+            }
+
+            & + .button {
+                margin-left: 1em;
+                vertical-align: middle;
+            }
+        }
+
+        .or {
+            color: $muted-color;
+            display: inline-block;
+            margin: 0 .5em;
+            vertical-align: -1.5em;
+        }
+
+        .hint {
+            margin-bottom: 0;
+        }
+        
+        .field-label + .inline {
+	        margin-left: .25em;
+        }
+    }
+
+    .compound-field {
+        color: $muted-color;
+        width: auto;
+
+        .field-label {
+            color: initial;
+            display: block;
+        }
+
+        input, select {
+            display: inline-block;
+        }
+    }
+
+    .stretch {
+        .field {
+            width: 100%;
+        }
+    }
+
+    .shrink-break {
+        clear: left;
+        float: left;
+    }
+}
+
+// special conditions for fields
+// ========================================================================
+
+.has-error {
+    color: #c00;
+
+    .field-control {
+        border-color: red;
+    }
+}
+
+.show-required { // per fieldset or form
+    .is-required {
+        .field-label::after {
+            content: '\00a0*';
+        }
+    }
+
+    .submit-area::after {
+        color: $muted-color;
+        content: '* Required';
+        float: left;
+        margin: .333em 1em 0 0;
+    }
+}
+
+input[name='_LOGIN[username]'] { // show favicon in login field, if available
+    background-image: url(/favicon.ico);
+    background-repeat: no-repeat;
+    background-position: 97% center;
+    @include background-size(16px);
+}
+
+// explanatory text
+// ========================================================================
+
+form .hint {
+    margin-top: .25em;
+}
+
+.error-text {
+    @extend .hint;
+    color: mix($muted-color, red, 75%);
+}

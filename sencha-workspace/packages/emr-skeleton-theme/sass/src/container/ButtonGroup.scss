@@ -1,0 +1,15 @@
+.segmented-btn-group {
+    .x-btn {
+        border-radius: 0;
+        border-right-width: 0;
+        
+        &:first-of-type {
+            @include border-left-radius($button-large-border-radius);
+        }
+        
+        &:last-of-type {
+            @include border-right-radius($button-large-border-radius);
+            border-right-width: $button-large-border-width;
+        }
+    }
+}

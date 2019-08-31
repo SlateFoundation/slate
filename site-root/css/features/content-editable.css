@@ -1,0 +1,62 @@
+/* line 9, ../../sass/features/content-editable.scss */
+.content-editable {
+  border: 2px dashed rgba(222, 182, 0, 0.8) !important;
+  min-height: 1em;
+}
+/* line 13, ../../sass/features/content-editable.scss */
+.content-editable:hover {
+  background: rgba(222, 182, 0, 0.3);
+  cursor: pointer;
+}
+
+/* line 19, ../../sass/features/content-editable.scss */
+.content-editor {
+  background: rgba(32, 67, 80, 0.95);
+  border: 1px solid #19343e;
+  padding: 1em;
+}
+/* line 24, ../../sass/features/content-editable.scss */
+.content-editor.drag-over {
+  background: #81c734;
+}
+/* line 28, ../../sass/features/content-editable.scss */
+.content-editor.uploading {
+  background: #05b3c1;
+}
+/* line 32, ../../sass/features/content-editable.scss */
+.content-editor .hint {
+  color: rgba(255, 255, 255, 0.8);
+  display: none;
+}
+/* line 37, ../../sass/features/content-editable.scss */
+.content-editor.renderer-markdown .hint-markdown {
+  display: block;
+}
+/* line 41, ../../sass/features/content-editable.scss */
+.content-editor.renderer-html .hint-html {
+  display: block;
+}
+/* line 45, ../../sass/features/content-editable.scss */
+.content-editor.renderer-text .hint-text {
+  display: block;
+}
+/* line 49, ../../sass/features/content-editable.scss */
+.content-editor textarea {
+  border-color: white;
+  display: block;
+  font-family: Consolas, Inconsolata, monospace;
+  font-size: 1em;
+  padding: 1em;
+  height: 200px;
+  width: 600px;
+}
+/* line 59, ../../sass/features/content-editable.scss */
+.content-editor button {
+  float: right;
+  margin: 1em 0 0 1em;
+}
+/* line 64, ../../sass/features/content-editable.scss */
+.content-editor.saving {
+  opacity: .6;
+  pointer-events: none;
+}

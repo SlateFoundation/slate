@@ -1,0 +1,5 @@
+/* FONT PATH
+ * -------------------------- */
+@import "compass/css3";
+
+@include font-face("FontAwesome", inline-font-files("fontawesome-webfont.woff", woff));

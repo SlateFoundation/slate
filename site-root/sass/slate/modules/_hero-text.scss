@@ -1,0 +1,27 @@
+.hero-ct {
+    bottom: 0;
+    box-sizing: border-box;
+    display: none;
+    left: 50%;
+    position: absolute;
+    @include translateX(-50%);
+
+    .reveal-hero & {
+        display: block;
+    }
+}
+
+.hero-text {
+    background-color: rgba($text-color, .9);
+    bottom: 2em;
+    color: $page-bg-color;
+    font-size: large;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    width: 61.8%;
+
+    > :last-child {
+        margin-bottom: 0;
+    }
+}

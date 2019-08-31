@@ -1,0 +1,23 @@
+@import './compass-all';            // import compass for useful functions, mixins, etc.
+                                    // compass's variables can be overridden by 'site/compass'
+
+@import './variables-all';          // loads the variable files in order for all layers
+
+@import './mixins-all';             // Loads mixin files in order for all layers
+
+
+@import 'skeleton/utilities';   // utility classes such as .pull-left and .clearfix
+
+@import 'skeleton/common';      // set styles for common elements such as layout, typography, etc.
+@import 'skeleton/content';     // typography and header styles, etc. that go inside a {block "content"}
+@import 'skeleton/modules';     // bring in styles for forms, buttons, paging, etc.
+                                // you can also omit this line and import only the modules you need
+                                // e.g. @import 'base/modules/buttons';
+
+@import 'slate/common';         // bring in Slate modifications to skeleton/common
+@import 'slate/modules';        // bring in Slate module styles
+
+
+
+@import 'site/modules';         // put your site-specific style rules and overrides (other than variables) in here
+                                // variables should go in 'site/variables' above

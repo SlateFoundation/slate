@@ -1,0 +1,36 @@
+.content-markdown {
+    h1, h2, h3, h4, h5, h6 {
+        clear: both;
+    }
+
+    img.pull-right {
+        margin-top: 0;
+    }
+
+    table {
+        display: block;
+        width: 100%;
+        overflow: auto;
+
+        th, td {
+            border: 1px solid #ddd;
+
+            &[align=center] {
+                text-align: center;
+            }
+
+            &[align=right] {
+                text-align: right;
+            }
+        }
+
+        tr {
+            border-top: 1px solid #ccc
+        }
+
+        tr:nth-child(2n) {
+            background-color: #f8f8f8;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+    }
+}

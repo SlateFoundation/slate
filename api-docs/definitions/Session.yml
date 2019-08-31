@@ -1,0 +1,21 @@
+properties:
+  ID:
+    type: integer
+  Handle:
+    type: string
+    description: The session token that can be used to authenticate requests
+  Created:
+    type: integer
+    description: Timestamp of when session was created
+  LastRequest:
+    type: integer
+    description: Timestamp of last requested authenticated by session
+  LastIP:
+    type: integer
+    description: Long integer IP that made last request
+  PersonID:
+    type: integer
+    description: ID of authenticated person
+  Person:
+    type: object
+    description: Full Person object referenced by `PersonID` if `include=Person`

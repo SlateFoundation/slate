@@ -1,0 +1,391 @@
+.page-section {
+    margin-bottom: 2em;
+}
+
+.page-header {
+    @include clearfix;
+    border-bottom: 1px solid $border-color;
+    margin: 2em 0;
+    padding-bottom: .25em;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.page-info {
+    @extend .reading-width;
+    color: $muted-color;
+    margin-top: -.75em;
+}
+
+.section-header {
+    @extend .page-header;
+}
+
+.section-info {
+    @extend .page-info;
+    margin: -1.75em 0 2em;
+}
+
+.article-header {
+    @extend .section-header;
+    
+    h1 {
+        margin-bottom: 0;
+    }
+}
+
+.article-collection {
+    .article-header {
+        border-bottom: none;
+    }
+    
+    > article {
+        border-top: 1px solid rgba($text-color, .2);
+        margin: 2em 0;
+    	padding-top: 1em;
+    	
+    	&:first-of-type {
+    	    border: 0;
+    		margin-top: 0;
+    		padding-top: 0;
+    	}
+    	
+    	&:only-of-type {
+        	border-top: none;
+    	}
+    }
+}
+
+.header-title {
+    float: left;
+
+    @media #{$mq-phone} {
+        float: none;
+    }
+}
+
+h1.header-title,
+.title-1.header-title{
+    margin: .5625em 0 0;
+}
+
+h2.header-title,
+.title-2.header-title {
+    margin: .375em 0 0;
+}
+
+h3.header-title,
+.title-3.header-title{
+    margin: .5em 0 0;
+}
+
+.header-buttons {
+    float: right;
+
+    @media #{$mq-phone} {
+        clear: left;
+        float: none;
+    }
+
+    .button {
+        &.small {
+            margin-top: .4em;
+        }
+
+        &.tiny {
+            margin-top: .5em;
+            margin-bottom: .5em;
+        }
+
+        + .button {
+            margin-left: .25em;
+        }
+    }
+}
+
+#{headers(all)} {
+    color: $heading-color;
+    font-family: $heading-font;
+    font-weight: 300;
+    line-height: 1;
+    margin: 1em 0;
+
+    img {
+        margin: 0;
+    }
+}
+
+.title-jumbo {
+    font-size: 2em;
+    margin-bottom: 0.50em;
+    margin-top: -.5em;
+
+    @media #{$mq-phone} {
+        font-size: 1em;
+        margin: 2em 0 .75em;
+    }
+}
+
+h1,
+.title-1 {
+    font-size: 2em;
+    margin-bottom: 0.75em;
+    margin-top: 1.5em;
+
+    &:first-of-type {
+        margin-top: 0;
+    }
+
+    @media #{$mq-phone} {
+        font-size: 1.5em;
+        margin-bottom: 1em;
+    }
+}
+
+h2,
+.title-2 {
+    font-size: 1.6667em;
+    margin-top: 2em;
+    margin-bottom: .5em;
+
+    @media #{$mq-phone} {
+        font-size: 1.2em;
+        // margin-bottom: 1.25em;
+    }
+}
+
+h3,
+.title-3 {
+    font-size: 1.25em;
+    font-weight: normal;
+    margin-bottom: 1.25em;
+
+    @media #{$mq-phone} {
+        font-size: 1em;
+        margin-bottom: 1.5em;
+    }
+}
+
+h4,
+.title-4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 1.5em;
+
+    @media #{$mq-phone} {
+        margin-bottom: 0;
+    }
+}
+
+h5,
+.title-5 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+h6,
+.title-6 {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+p {
+    margin: 0 0 $em-spacer;
+
+    a {
+        text-decoration: underline;
+    }
+
+    .pull-left {
+        @include float-left;
+        margin: 1.5em 1.5em 1.5em 0;
+        padding: 0;
+    }
+
+    .pull-right {
+        @include float-right;
+        margin: 1.5em 0 1.5em 1.5em;
+        padding: 0;
+    }
+}
+
+blockquote {
+    border-left: 1px solid rgba($text-color, .2);
+    margin: 1em 0;
+    padding: 0 1em;
+}
+
+ol {
+    list-style: decimal;
+    margin: $em-spacer 0;
+    padding-left: 1.125em;
+    
+    &.plain,
+    &.plain li {
+        display: block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+ul {
+    @extend ol;
+    list-style: square;
+}
+
+// dl {}
+
+.dli {
+    margin: $em-spacer 0;
+}
+
+dt {
+    font-weight: bold;
+}
+
+dd {
+    margin: 0;
+}
+
+dl.align-left {
+    @media #{$mq-tablet} {
+        display: table;
+        
+        .dli {
+            display: table-row;
+        }
+        
+        dt, dd {
+            display: table-cell;
+            padding: ($em-spacer/2) 0;
+        }
+        
+        dt {
+            padding-right: ($em-spacer/2);
+            white-space: nowrap;
+            
+            &.wrap {
+                white-space: normal;
+            }
+        }
+    }
+}
+
+dl.align-right {
+    @media #{$mq-tablet} {
+        display: table;
+        
+        .dli {
+            display: table-row;
+        }
+        
+        dt, dd {
+            display: table-cell;
+            padding: ($em-spacer/2) 0;
+        }
+        
+        dt {
+            padding-right: ($em-spacer/2);
+            text-align: right;
+            white-space: nowrap;
+            
+            &.wrap {
+                white-space: normal;
+            }
+        }
+    }
+}
+
+dl.compact {
+   @media #{$mq-tablet} {
+        dt, dd {
+            padding: ($em-spacer/6) 0;
+        }
+
+        dt {
+            padding-right: ($em-spacer/2);
+        }
+    }
+}
+
+.lead {
+    font-size: 1.2em;
+    line-height: 1.25;
+    margin-bottom: 1.25em;
+}
+
+address {
+    font-style: inherit;
+    margin: 0 1em 1em 0;
+}
+
+a {
+    @include link-colors(
+        $link-color,
+        darken($link-color, 15),
+        lighten($link-color, 10),
+        $link-color,
+        darken($link-color, 15)
+    );
+
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}
+
+.hint {
+    color: $muted-color;
+    font-size: small;
+}
+
+.muted {
+    color: $muted-color;
+}
+
+.empty-text {
+    color: $muted-color;
+    font-style: italic;
+}
+
+.well {
+    background: rgba(mix($text-color, $page-bg-color), .08);
+    border: none;
+    border-radius: 3px;
+    box-shadow: 0 .125em .375em rgba(black, .2);
+    margin: 0 0 1.5em;
+    padding: 1.5em;
+
+    > :first-child {
+        margin-top: 0;
+
+        > :first-child {
+            margin-top: 0;
+        }
+    }
+
+    > :last-child {
+        margin-bottom: 0;
+
+        > :last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    @media #{$mq-tablet} {
+        &.shrink {
+            display: inline-block;
+        }
+    }
+
+    @media #{$mq-phone} {
+        @include border-radius(0);
+        border-width: 1px 0;
+        margin: 0 -1.5em 1.5em;
+    }
+}

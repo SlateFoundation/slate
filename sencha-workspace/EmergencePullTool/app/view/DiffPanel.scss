@@ -1,0 +1,44 @@
+.emergence-diff-container {
+    .ux-codeViewer-line {
+        height: 16px;
+        padding-left: 35px;
+        position: relative;
+    }
+
+    .ux-codeViewer-lineNumber {
+        color: blue;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 29px;
+        height: 16px;
+        border-right: 1px solid blue;
+        background-color: #c0c0ff;
+    }
+
+    .ux-codeViewer-inserted {
+        background-color: #ccffcc;
+    }
+
+    .ux-codeViewer-deleted {
+        background-color: #ffcccc;
+    }
+
+    .ux-codeViewer-modified {
+        background-color: #ffffcc;
+    }
+
+    .ux-codeViewer-empty {
+        background-color: #cccccc;
+    }
+
+    .ux-codeEditor {
+        border: 0;
+    }
+
+    .ux-codeViewer-token-string { color: #036a07; }
+    .ux-codeViewer-token-number { color: #2f88de; }
+    .ux-codeViewer-token-operator { color: #aaa; }
+    .ux-codeViewer-token-keyword { color: #0000ff; }
+    .ux-codeViewer-token-function { color: #0000a2; }
+}

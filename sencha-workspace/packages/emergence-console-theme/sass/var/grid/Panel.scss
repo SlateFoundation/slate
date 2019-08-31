@@ -1,0 +1,17 @@
+$grid-header-background-color: dynamic($bg-color1);
+$grid-header-over-background-color: dynamic($bg-color3);
+$grid-header-border-color: dynamic($bg-color2);
+$grid-header-color: dynamic($fg-color2);
+
+$grid-row-cell-background-color: dynamic($bg-color1);
+$grid-row-cell-alt-background-color: dynamic($bg-color1);
+$grid-row-cell-border-color: dynamic(lighten($bg-color2, 10%));
+$grid-row-cell-color: dynamic($fg-color2);
+
+$grid-row-cell-over-background-color: dynamic(darken($bg-color3, 2%));
+$grid-row-cell-over-color: dynamic($fg-color2);
+
+$grid-row-cell-selected-background-color: dynamic($bg-highlight);
+$grid-row-cell-selected-color: dynamic($fg-color3);
+
+$grid-row-cell-focus-color: dynamic($fg-color3);

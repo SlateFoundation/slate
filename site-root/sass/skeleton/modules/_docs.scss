@@ -1,0 +1,381 @@
+.openAPI-tpl {
+    .site > .inner {
+        width: auto;
+    }
+
+    .content > .inner {
+        padding: 0;
+    }
+
+    section[id] { // anchored sections should have padding so their headers aren't jammed against the top of the viewport
+        padding-top: 1em;
+    }
+
+    .page-header {
+        margin: 1.5em 0;
+    }
+
+    .section-header {
+        margin: 0 0 1em;
+    }
+
+    .header-title {
+        font-weight: normal;
+        margin-bottom: 0;
+    }
+
+    .http-method {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .markdown {
+        @include word-break(break-all);
+    }
+
+    .indent {
+        margin-left: 1.5em;
+
+        &.markdown {
+            border-left: .25em solid $border-color;
+            margin-left: 0;
+            padding-left: 1.5em;
+        }
+    }
+
+    code, kbd, pre, samp {
+        background-color: rgba($accent-color, .1);
+        font-family: Consolas, Inconsolata, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+        padding: .125em .25em;
+    }
+
+
+    @-webkit-keyframes fade-request {
+          0% { opacity: .2; }
+        100% { opacity: 1; }
+    }
+    
+    @keyframes fade-in {
+          0% { opacity: .2; }
+        100% { opacity: 1; }
+    }
+    
+    .console-ct {
+        margin: 1.5em 0;
+    
+        &.is-loading {
+            .loading-indicator {
+                display: inline-block;
+            }
+    
+            .request-ct {
+                -webkit-animation: fade-request .5s both;
+                        animation: fade-request .5s both;
+            }
+    
+            .response-ct {
+                opacity: .2;
+                @include transition(none);
+            }
+        }
+    }
+    
+    @-webkit-keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+    
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    
+    @keyframes load8 {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    
+    .loading-indicator {
+        border: 3px solid rgba($text-color, .2);
+        border-left-color: $text-color;
+        box-sizing: border-box;
+        display: none;
+        margin: 0 1em;
+        overflow: hidden;
+        position: relative;
+        text-indent: 100%;
+        vertical-align: -.125em;
+        white-space: nowrap;
+    
+        -webkit-animation: load8 .25s infinite linear;
+        animation: load8 .25s infinite linear;
+    
+        &,
+        &::after {
+            border-radius: 50%;
+            width: 1em;
+            height: 1em;
+        }
+    }
+    
+    .request-ct,
+    .response-ct {
+        margin: 1.5em 0;
+        @include transition(opacity .5s);
+    }
+    
+    .response-body {
+        background: rgba(white, .4);
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        max-height: 500px;
+        max-height: 60vh;
+        white-space: pre-wrap;
+    }
+    
+    .request-headers,
+    .response-headers {
+        display: table;
+    
+        .dli {
+            display: table-row;
+        }
+    
+        dt, dd {
+            display: table-cell;
+        }
+    
+        dt {
+            color: $muted-color;
+            min-width: 10em;
+            padding-right: 1em;
+            text-align: right;
+        }
+    
+        dd {
+            margin: 0;
+        }
+    }
+    
+    .schema-table {
+        .merge-up {
+            color: $muted-color;
+            font-weight: 300;
+        }
+    }
+
+    .key-selector-ct {
+        margin-bottom: -1em;
+    }
+    
+    .key-selector {
+        border: 1px solid $border-color;
+        display: inline-block;
+        margin-bottom: -1px;
+        padding: .25em .5em;
+    }
+
+    .endpoint-path-method {
+        margin-bottom: 2em;
+    
+        .section-header {
+            border: 0;
+        }
+    }
+    
+    .endpoint-model {
+        .docs-table {
+            margin: 0;
+        }
+    }
+    
+    .swagger-button {
+        border-radius: .25em;
+        display: inline-block;
+        margin-right: .125em;
+        overflow: hidden;
+        vertical-align: -.6667em;
+    
+        img {
+            display: block;
+        }
+    
+        &:hover,
+        &:focus {
+            opacity: .8;
+        }
+    }
+    
+    .toggle {
+        position: relative;
+    
+        input {
+            position: absolute;
+            visibility: hidden;
+        }
+    
+        .toggle-off { display: inline; }
+        .toggle-on  { display: none; }
+        .toggle-off-to-on { display: none; }
+        .toggle-on-to-off { display: none; }
+    
+        :checked {
+            ~ .toggle-off { display: none; }
+            ~ .toggle-on  { display: inline; }
+        }
+    
+        &.off-to-on {
+            .toggle-off { display: none; }
+            .toggle-on  { display: none; }
+            .toggle-off-to-on { display: inline; }
+            .toggle-on-to-off { display: none; }
+        }
+    
+        &.on-to-off {
+            .toggle-off { display: none; }
+            .toggle-on  { display: none; }
+            .toggle-off-to-on { display: none; }
+            .toggle-on-to-off { display: inline; }
+        }
+    }
+}
+
+.docs-toc {
+    $link-left-pad: 1.5em;
+    $link-left-indent: $link-left-pad / 2;
+
+    @function link-left-pad($level: 1) {
+        @return $link-left-indent + ($level * $link-left-pad);
+    }
+
+    background-color: white;
+    border-right: 1px solid $border-color;
+    bottom: 0;
+    margin: 0;
+    overflow: auto;
+    overflow-x: hidden;
+    padding: 1em 0;
+    position: fixed;
+    top: 0;
+    width: 320px;
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        a {
+            font-weight: bold;
+            padding-left: link-left-pad();
+            text-indent: -1 * $link-left-indent;
+        }
+
+        li a { font-weight: normal; padding-left: link-left-pad(2); }
+        li li a { font-weight: 300; padding-left: link-left-pad(3); }
+        li li li a { padding-left: link-left-pad(4); }
+    }
+
+    a {
+        display: block;
+        line-height: 1.25;
+        padding: .375em 1.5em;
+        text-decoration: none;
+        @include word-break(break-all);
+
+        &:hover,
+        &:focus {
+            background-color: rgba($link-color, .2);
+        }
+
+        &.current {
+            background-color: $link-color;
+            color: white;
+        }
+    }
+}
+
+.docs-table {
+    background-color: rgba(white, .4);
+    border: 1px solid $border-color;
+
+    caption {
+        background-color: darken($border-color, 25);
+        color: white;
+        font-size: smaller;
+        font-weight: normal;
+        padding: .375em .625em;
+        text-transform: uppercase;
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+            text-transform: none;
+        }
+    }
+
+    td, th {
+        vertical-align: top;
+    }
+
+    td {
+        border-top: 1px solid $border-color;
+    }
+
+    .markdown {
+        color: $muted-color;
+    }
+
+    .parameter-description,
+    .response-description {
+        font-size: smaller;
+        margin: .25em 0;
+    }
+
+    .merge-up {
+        background-color: $page-bg-color;
+        border-top: 0;
+    }
+
+    p {
+        margin: 0;
+
+        + p {
+            margin-top: 1em;
+        }
+    }
+
+    thead {
+        th {
+
+        }
+    }
+
+    .docs-table {
+        font-size: small;
+        font-weight: normal;
+        margin: .5em 0;
+        width: auto;
+    }
+
+    input {
+        padding: .125em .25em;
+
+        &.invalid {
+            background-color: tint(red, 90%);
+            border-color: red;
+        }
+    }
+}

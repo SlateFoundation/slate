@@ -1,0 +1,8 @@
+$menu-background-color: dynamic($bg-color1);
+$menu-item-active-background-color: dynamic($bg-color3);
+$menu-item-active-font-weight: dynamic($menu-item-font-weight);
+$menu-item-over-font-weight: dynamic($menu-item-font-weight);
+$menu-border-color: dynamic($bg-color4);
+$menu-text-color: dynamic($fg-color2);
+$menu-separator-background-color: dynamic(transparent);
+$menu-separator-border-color: dynamic($menu-border-color);
