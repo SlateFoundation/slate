@@ -79,6 +79,20 @@ Ext.define('Slate.model.course.SectionParticipant', {
             calculate: function(data) {
                 return data.PersonFirstName + ' ' + data.PersonLastName;
             }
+        },
+        {
+            name: 'isInactive',
+            persist: false,
+            depends: ['StartDate', 'EndDate'],
+            convert: function(v, rec) {
+                var start = rec.get('StartDate'),
+                    end = rec.get('EndDate');
+
+                return Boolean(
+                    (start && start.getTime() > Date.now()) ||
+                    (end && end.getTime() < Date.now())
+                );
+            }
         }
     ],
 

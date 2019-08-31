@@ -80,8 +80,8 @@ Ext.define('SlateAdmin.controller.people.Courses', {
 
 
         // configure proxy and load store
-        personSectionsProxy.url = '/people/' + person.get('ID') + '/courses';
-        personSectionsProxy.setExtraParam('termID', selectedTerm || null);
+        personSectionsProxy.setExtraParam('student', person.get('ID'));
+        personSectionsProxy.setExtraParam('term', selectedTerm || null);
         personSectionsStore.load();
     },
 
@@ -90,7 +90,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
             personSectionsStore = me.getCoursesGrid().getStore(),
             personSectionsProxy = personSectionsStore.getProxy();
 
-        personSectionsProxy.setExtraParam('termID', newValue);
+        personSectionsProxy.setExtraParam('term', newValue);
 
         if (personSectionsProxy.isExtraParamsDirty()) {
             personSectionsStore.load();
