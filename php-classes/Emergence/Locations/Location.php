@@ -64,7 +64,7 @@ class Location extends \VersionedRecord
     ];
 
 
-    public static function getOrCreateByHandle($handle, $title = null)
+    public static function getOrCreateByHandle($handle, $save = false, $title = null)
     {
         $handle = HandleBehavior::transformText($handle);
 
@@ -74,7 +74,7 @@ class Location extends \VersionedRecord
             return static::create([
                 'Title' => $title ? $title : $handle
                 ,'Handle' => $handle
-            ], true);
+            ], $save);
         }
     }
 
