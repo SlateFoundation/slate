@@ -1561,7 +1561,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         }
 
         if (!empty($row['Location'])) {
-            $Section->Location = Location::getOrCreateByHandle('room-'.$row['Location'], false, 'Room '.$row['Location']);
+            $Section->Location = Location::getOrCreateByHandle('room-'.$row['Location'], false, [
+                'Title' => 'Room '.$row['Location'],
+                'Parent' => static::$sectionsRootLocation ? Location::getByHandle(static::$sectionsRootLocation) : null
+            ]);
         }
 
         if (!empty($row['StudentsCapacity'])) {
