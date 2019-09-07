@@ -69,7 +69,7 @@ Ext.define('SlateAdmin.controller.people.Courses', {
 
         if (
             !selectedTerm
-            && (selectedTerm = termsStore.getCurrentTerm())
+            && (selectedTerm = termsStore.getCurrentMasterTerm())
         ) {
             // push selected term to combo
             termSelector.setSelection(selectedTerm);

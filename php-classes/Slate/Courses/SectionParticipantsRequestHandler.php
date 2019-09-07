@@ -23,7 +23,12 @@ class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
         } elseif ($Term = static::getRequestedTerm()) {
             $courseSectionIds = array_map(function($section) {
                 return $section->ID;
-            }, Section::getAllByWhere(['TermID' => $Term->ID]));
+            }, Section::getAllByWhere([
+                'TermID' => [
+                    'operator' => 'IN',
+                    'values' => $Term->getContainedTermIDs()
+                ]
+            ]));
 
             $conditions['CourseSectionID'] = [
                 'operator' => 'IN',
