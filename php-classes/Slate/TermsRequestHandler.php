@@ -36,6 +36,7 @@ class TermsRequestHandler extends \RecordsRequestHandler
             $reportingTerm = Term::getCurrentReporting();
 
             $responseData['currentTerm'] = $currentTerm ? $currentTerm->ID : null;
+            $responseData['currentMasterTerm'] = $currentTerm ? $currentTerm->getMaster()->ID : null;
             $responseData['reportingTerm'] = $reportingTerm ? $reportingTerm->ID : null;
         }
 

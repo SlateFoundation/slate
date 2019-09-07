@@ -64,17 +64,17 @@ class Location extends \VersionedRecord
     ];
 
 
-    public static function getOrCreateByHandle($handle, $title = null)
+    public static function getOrCreateByHandle($handle, $save = false, array $defaults = [])
     {
         $handle = HandleBehavior::transformText($handle);
 
         if ($Location = static::getByHandle($handle)) {
             return $Location;
         } else {
-            return static::create([
-                'Title' => $title ? $title : $handle
-                ,'Handle' => $handle
-            ], true);
+            return static::create(array_merge($defaults, [
+                'Title' => empty($defaults['Title']) ? $handle : $defaults['Title'],
+                'Handle' => $handle
+            ]), $save);
         }
     }
 

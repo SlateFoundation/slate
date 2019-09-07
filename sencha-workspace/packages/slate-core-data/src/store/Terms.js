@@ -6,6 +6,7 @@ Ext.define('Slate.store.Terms', {
 
     config: {
         currentTerm: null,
+        currentMasterTerm: null,
         reportingTerm: null,
 
         pageSize: 0,
@@ -32,6 +33,14 @@ Ext.define('Slate.store.Terms', {
 
     updateCurrentTerm: function (newValue, oldValue) {
         this.fireEvent('currenttermchange', this, newValue, oldValue);
+    },
+
+    applyCurrentMasterTerm: function (value) {
+        return (typeof value == 'number' ? this.getById(value) : value) || null;
+    },
+
+    updateCurrentMasterTerm: function (newValue, oldValue) {
+        this.fireEvent('currentmastertermchange', this, newValue, oldValue);
     },
 
     applyReportingTerm:  function (value) {
@@ -61,6 +70,10 @@ Ext.define('Slate.store.Terms', {
             if (rawData) {
                 if ('currentTerm' in rawData) {
                     me.setCurrentTerm(byId[rawData.currentTerm]);
+                }
+
+                if ('currentMasterTerm' in rawData) {
+                    me.setCurrentMasterTerm(byId[rawData.currentMasterTerm]);
                 }
 
                 if ('reportingTerm' in rawData) {

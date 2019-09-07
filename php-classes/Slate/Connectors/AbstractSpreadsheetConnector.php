@@ -46,10 +46,12 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $teachersRootGroup = 'teachers';
     public static $parentsRootGroup = 'parents';
 
-
     // section referencing
     public static $sectionCodeReferences = false;
     public static $sectionMappingReferences = true;
+
+    // location assignments
+    public static $sectionsRootLocation = null;
 
     // workflow callable overrides
     public static $sectionTitleFormatter;
@@ -1559,7 +1561,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         }
 
         if (!empty($row['Location'])) {
-            $Section->Location = Location::getOrCreateByHandle('room-'.$row['Location'], 'Room '.$row['Location']);
+            $Section->Location = Location::getOrCreateByHandle('room-'.$row['Location'], false, [
+                'Title' => 'Room '.$row['Location'],
+                'Parent' => static::$sectionsRootLocation ? Location::getByHandle(static::$sectionsRootLocation) : null
+            ]);
         }
 
         if (!empty($row['StudentsCapacity'])) {

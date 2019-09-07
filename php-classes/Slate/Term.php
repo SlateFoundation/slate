@@ -158,7 +158,7 @@ class Term extends \VersionedRecord
         return static::getAllByWhere('ParentID IS NULL', ['order' => 'StartDate DESC']);
     }
 
-    public static function getOrCreateByHandle($handle)
+    public static function getOrCreateByHandle($handle, $save = false)
     {
         if ($Term = static::getByHandle($handle)) {
             return $Term;
@@ -166,7 +166,7 @@ class Term extends \VersionedRecord
             return static::create([
                 'Title' => $handle
                 ,'Handle' => $handle
-            ], true);
+            ], $save);
         }
     }
 
