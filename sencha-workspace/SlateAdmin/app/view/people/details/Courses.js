@@ -51,7 +51,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
             model: 'Slate.model.course.SectionParticipant',
             proxy: {
                 type: 'slate-courses-participants',
-                include: ['Section.Location', 'Section.Schedule']
+                include: ['Section.Location', 'Section.Schedule', 'Section.Term']
             },
             pageSize: 0,
             sorters: [{
@@ -87,6 +87,13 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
                 dataIndex: 'EndDate',
                 format:'Y-m-d',
                 editor: 'datefield'
+            },{
+                flex: 2,
+
+                header: 'Term',
+                dataIndex: 'Term',
+                xtype: 'templatecolumn',
+                tpl: '<tpl for="Section"><tpl for="Term">{Handle}</tpl></tpl>'
             },{
                 flex: 2,
 

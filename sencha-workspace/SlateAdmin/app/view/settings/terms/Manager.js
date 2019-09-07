@@ -40,6 +40,12 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
             xtype: 'textfield'
         }
     },{
+        text: 'masterStartDate',
+        xtype: 'datecolumn',
+        format :'Y-m-d',
+        width: 160,
+        dataIndex: 'masterStartDate'
+    },{
         text: 'Start Date',
         xtype: 'datecolumn',
         format :'Y-m-d',
