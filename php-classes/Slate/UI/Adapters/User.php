@@ -24,7 +24,7 @@ class User implements \Slate\UI\ILinksSource
 
         $links = [];
 
-        if ($User = $_SESSION['User']) {
+        if (isset($_SESSION['User']) && $User = $_SESSION['User']) {
             $userMenu = [
                 '_shortLabel' => $User->FirstName,
                 '_href' => $User->getUrl(),
@@ -62,7 +62,11 @@ class User implements \Slate\UI\ILinksSource
 
             $links[$User->FullName] = $userMenu;
         } elseif (static::$logIn) {
-            $links['Log In'] = '/login?return='.urlencode($_SERVER['REQUEST_URI']);
+            $return = '';
+            if (isset($_SERVER['REQUEST_URI'])) {
+                $return = '?return='.urlencode($_SERVER['REQUEST_URI']);
+            }
+            $links['Log In'] = '/login'.$return;
         }
 
         return $links;
