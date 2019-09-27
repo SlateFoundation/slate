@@ -63,7 +63,7 @@ class User implements \Slate\UI\ILinksSource
             $links[$User->FullName] = $userMenu;
         } elseif (static::$logIn) {
             $return = '';
-            if (isset($_SERVER['REQUEST_URI'])) {
+            if (!empty($_SERVER['REQUEST_URI'])) {
                 $return = '?return='.urlencode($_SERVER['REQUEST_URI']);
             }
             $links['Log In'] = '/login'.$return;
