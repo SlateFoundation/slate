@@ -330,12 +330,12 @@ class Person extends VersionedRecord implements IPerson
         return $EmailPoint ? $EmailPoint->Person : null;
     }
 
-    public static function getByFullName($firstName, $lastName)
+    public static function getByFullName($firstName, $lastName, array $conditions = [])
     {
-        return static::getByWhere([
+        return static::getByWhere(array_merge([
             'FirstName' => $firstName
             ,'LastName' => $lastName
-        ]);
+        ], $conditions));
     }
 
     public static function getOrCreateByFullName($firstName, $lastName, $save = false)
