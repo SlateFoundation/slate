@@ -2,7 +2,7 @@
 
 function Dwoo_Plugin_log_report(Dwoo_Core $dwoo, $groupers = array())
 {
-    if (!$GLOBALS['Session'] || !$GLOBALS['Session']->hasAccountLevel('Developer') || empty($_GET['log_report'])) {
+    if (empty($GLOBALS['Session']) || !$GLOBALS['Session']->hasAccountLevel('Developer') || empty($_GET['log_report'])) {
         return '';
     }
 

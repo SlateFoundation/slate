@@ -2799,7 +2799,7 @@ class ActiveRecord
                 if ($condition === null || ($condition == '' && !empty($fieldOptions['blankisnull']))) {
                     $condition = sprintf('%s IS NULL', $columnName);
                 } elseif (is_array($condition)) {
-                    if ($condition['operator'] == 'BETWEEN') {
+                    if (isset($condition['operator']) && $condition['operator'] == 'BETWEEN') {
                         $condition = sprintf(
                             '%s BETWEEN %s AND %s',
                             $columnName,
