@@ -595,7 +595,13 @@ class ActiveRecord
         $validators = static::getStackedConfig('validators');
         if (count(static::getStackedConfig('validators'))) {
             foreach (static::getStackedConfig('validators') AS $validator => $options) {
-                $fieldId = !empty($options['id']) ? $options['id'] : $options['field'];
+                $fieldId = !empty($options['id'])
+                    ? $options['id']
+                    : (
+                        !empty($options['field'])
+                        ? $options['field']
+                        : $validator
+                    );
 
                 if (isset($options['validator']) && $options['validator'] == 'require-relationship') {
                     if (!$this->_getRelationshipValue($options['field'])) {
