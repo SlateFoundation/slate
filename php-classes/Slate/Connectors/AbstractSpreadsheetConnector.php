@@ -58,6 +58,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $onUserNotFound;
     public static $onApplyUserChanges;
     public static $onApplySectionChanges;
+    public static $getSectionTerm;
 
     public static $filterPerson;
     public static $filterSection;
@@ -1513,7 +1514,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function getSectionTerm(IJob $Job, Term $MasterTerm, Section $Section, array $row)
     {
-        if (empty($row['Term'])) {
+        if (is_callable(static::$getSectionTerm)) {
+            return call_user_func(static::$getSectionTerm, $Job, $MasterTerm, $Section, $row);
+        } else if (empty($row['Term'])) {
             return null;
         }
 
