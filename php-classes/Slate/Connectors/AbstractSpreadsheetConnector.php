@@ -527,10 +527,19 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 // apply values from spreadsheet
                 static::_applySectionChanges($Job, $MasterTerm, $Record, $row, $results);
             } catch (RemoteRecordInvalid $e) {
+                if (!isset($results['failed'][$e->getMessageKey()])) {
+                    $results['failed'][$e->getMessageKey()] = [
+                        'no-value' => 0
+                    ];
+                }
                 if ($e->getValueKey()) {
+                    if (!isset($results['failed'][$e->getMessageKey()][$e->getValueKey()])) {
+                        $results['failed'][$e->getMessageKey()][$e->getValueKey()] = 0;
+                    }
+
                     $results['failed'][$e->getMessageKey()][$e->getValueKey()]++;
                 } else {
-                    $results['failed'][$e->getMessageKey()]++;
+                    $results['failed'][$e->getMessageKey()]['no-value']++;
                 }
 
                 $Job->logException($e);
