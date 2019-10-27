@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'v2.*'
-  schedule:
-    - cron: '0 * * * *'
 
 
 jobs:
