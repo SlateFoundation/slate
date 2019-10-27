@@ -28,3 +28,22 @@ jobs:
         ref: releases/v2
         holobranch: emergence-vfs-site
         commit-to: emergence/vfs-site/v2
+    - name: 'Update v2.slate.is'
+      env:
+        VFS_DEV_TOKEN: ${{ secrets.VFS_DEV_TOKEN }}
+      run: |
+        # pull latest commit
+        curl -X POST \
+          --silent \
+          -H "Authorization: Token ${VFS_DEV_TOKEN}" \
+          -H "Accept: application/json" \
+          "http://v2.slate.is/site-admin/sources/slate/pull" \
+          | jq '.'
+
+        # sync VFS to git
+        curl -X POST \
+          --silent \
+          -H "Authorization: Token ${VFS_DEV_TOKEN}" \
+          -H "Accept: application/json" \
+          "http://v2.slate.is/site-admin/sources/slate/sync-to-vfs" \
+          | jq '.'
