@@ -1,6 +1,7 @@
 [holomapping]
 files = [
     "*/**",
+    "!.github/",
     "!.vscode/",
     "!docs/",
 
