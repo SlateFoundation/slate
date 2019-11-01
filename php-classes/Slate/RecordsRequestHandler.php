@@ -83,7 +83,8 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
         }
 
         // try to load
-        if (!$students = Student::getAllByListIdentifier($_REQUEST[$fieldName])) {
+        $students = Student::getAllByListIdentifier($_REQUEST[$fieldName]);
+        if (!is_array($students)) {
             throw new OutOfBoundsException($fieldName.' list not found');
         }
 
