@@ -71,7 +71,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
             'Class' => Student::class
         ];
 
-        if ($students = SlateRecordsRequestHandler::getRequestedStudents('list')) {
+        if (is_array($students = SlateRecordsRequestHandler::getRequestedStudents('list'))) {
             $conditions['ID'] = [
                 'values' => array_map(function ($Student) {
                     return $Student->ID;
