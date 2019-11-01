@@ -58,6 +58,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     public static $onUserNotFound;
     public static $onApplyUserChanges;
     public static $onApplySectionChanges;
+    public static $getSectionTerm;
 
     public static $filterPerson;
     public static $filterSection;
@@ -253,9 +254,23 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 continue;
             }
 
+            $Record = null;
+            $Mapping = null;
+
+            if (!empty($row['ForeignKey'])) {
+                if ($Mapping = static::_getPersonMapping($row['ForeignKey'])) {
+                    $Record = $Mapping->Context;
+                }
+            }
+
+
+            if (!$Record) {
+                 $Record = static::_getPerson($Job, $row);
+            }
+
 
             // get existing user or start creating a new one
-            if (!$Record = static::_getPerson($Job, $row)) {
+            if (!$Record) {
                 $Record = Student::create();
                 $Record->setTemporaryPassword();
             }
@@ -284,6 +299,21 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // save record
             static::_saveRecord($Job, $Record, $pretend, $results, static::_getPersonLogOptions());
+
+            if ($row['ForeignKey'] && !$Mapping) {
+                $Mapping = Mapping::create([
+                    'Context' => $Record,
+                    'Source' => 'creation',
+                    'Connector' => static::getConnectorId(),
+                    'ExternalKey' => static::$personForeignKeyName,
+                    'ExternalIdentifier' => $row['ForeignKey']
+                ], !$pretend);
+
+                $Job->notice('Mapping external identifier {externalIdentifier} to student {studentUsername}', [
+                    'externalIdentifier' => $row['ForeignKey'],
+                    'studentUsername' => $Record->Username
+                ]);
+        }
         }
 
 
@@ -491,15 +521,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             if (!empty($row['SectionExternal'])) {
                 $externalIdentifier = sprintf('%s:%s', $MasterTerm->Handle, $row['SectionExternal']);
-
-                $Mapping = Mapping::getByWhere([
-                    'ContextClass' => Section::getStaticRootClass(),
-                    'Connector' => static::getConnectorId(),
-                    'ExternalKey' => static::$sectionForeignKeyName,
-                    'ExternalIdentifier' => $externalIdentifier
-                ]);
-
-                if ($Mapping) {
+                if ($Mapping = static::_getSectionMapping($externalIdentifier)) {
                     $Record = $Mapping->Context;
                 }
             }
@@ -526,10 +548,19 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 // apply values from spreadsheet
                 static::_applySectionChanges($Job, $MasterTerm, $Record, $row, $results);
             } catch (RemoteRecordInvalid $e) {
+                if (!isset($results['failed'][$e->getMessageKey()])) {
+                    $results['failed'][$e->getMessageKey()] = [
+                        'no-value' => 0
+                    ];
+                }
                 if ($e->getValueKey()) {
+                    if (!isset($results['failed'][$e->getMessageKey()][$e->getValueKey()])) {
+                        $results['failed'][$e->getMessageKey()][$e->getValueKey()] = 0;
+                    }
+
                     $results['failed'][$e->getMessageKey()][$e->getValueKey()]++;
                 } else {
-                    $results['failed'][$e->getMessageKey()]++;
+                    $results['failed'][$e->getMessageKey()]['no-value']++;
                 }
 
                 $Job->logException($e);
@@ -899,7 +930,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $row;
     }
 
-    protected static function _readStaff($Job, array $row)
+    protected static function _readStaff(IJob $Job, array $row)
     {
         $row = static::_readRow($row, static::getStackedConfig('staffColumns'));
 
@@ -935,7 +966,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $row;
     }
 
-    protected static function _filterPerson(Job $Job, array $row)
+    protected static function _filterPerson(IJob $Job, array $row)
     {
         $filterResult = false;
 
@@ -980,20 +1011,33 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         return $filterResult;
     }
 
-    protected static function _getPerson(IJob $Job, array $row)
+    protected static function _getPersonMapping($foreignKey)
     {
-        // try to get existing account by foreign key column
-        if (!empty($row['ForeignKey'])) {
-            $Mapping = Mapping::getByWhere([
+        return Mapping::getByWhere([
                 'ContextClass' => User::getStaticRootClass(),
                 'Connector' => static::getConnectorId(),
                 'ExternalKey' => static::$personForeignKeyName,
-                'ExternalIdentifier' => $row['ForeignKey']
+                'ExternalIdentifier' => $foreignKey
             ]);
+    }
+
+
+    protected static function _getPersonByExternalIdentifier($foreignKey)
+    {
+        $Mapping = static::_getPersonMapping($foreignKey);
 
             if ($Mapping) {
                 return $Mapping->Context;
             }
+
+        return null;
+    }
+
+    protected static function _getPerson(IJob $Job, array $row)
+    {
+        // try to get existing account by foreign key column
+        if (!empty($row['ForeignKey']) && ($User = static::_getPersonByExternalIdentifier($row['ForeignKey']))) {
+            return $User;
         }
 
 
@@ -1466,6 +1510,27 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         ];
     }
 
+    protected static function _getSectionMapping($foreignKey)
+    {
+        return Mapping::getByWhere([
+            'ContextClass' => Section::getStaticRootClass(),
+            'Connector' => static::getConnectorId(),
+            'ExternalKey' => static::$sectionForeignKeyName,
+            'ExternalIdentifier' => $foreignKey
+        ]);
+    }
+
+    protected static function _getSectionByExternalIdentifier($externalIdentifier)
+    {
+        $Mapping = static::_getSectionMapping($externalIdentifier);
+
+        if ($Mapping) {
+            return $Mapping->Context;
+        }
+
+        return null;
+    }
+
     protected static function getSection(IJob $Job, Term $MasterTerm, array $row)
     {
         // try to get existing section by code
@@ -1513,7 +1578,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
     protected static function getSectionTerm(IJob $Job, Term $MasterTerm, Section $Section, array $row)
     {
-        if (empty($row['Term'])) {
+        if (is_callable(static::$getSectionTerm)) {
+            return call_user_func(static::$getSectionTerm, $Job, $MasterTerm, $Section, $row);
+        } else if (empty($row['Term'])) {
             return null;
         }
 
