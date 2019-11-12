@@ -335,12 +335,31 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         // optionally filter by course section
         if (!empty($_REQUEST['course_section'])) {
-            if (!$Section = Section::getByHandle($_REQUEST['course_section'])) {
-                return static::throwNotFoundError('course_section not found');
+            $courseSections = [];
+            if (!is_array($_REQUEST['course_section'])) {
+                $requestedCourseSections = [$_REQUEST['course_section']];
+            } else {
+                $requestedCourseSections = $_REQUEST['course_section'];
             }
 
-            $conditions['SectionID'] = $Section->ID;
-            $responseData['course_section'] = $Section;
+            foreach ($requestedCourseSections as $courseSection) {
+                if (!$Section = Section::getByHandle($courseSection)) {
+                    return static::throwNotFoundError(sprintf('course_section %s not found', $courseSection));
+                }
+                $courseSections[$Section->ID] = $Section;
+            }
+
+            if (count($courseSections) === 1) {
+                $conditions['SectionID'] = array_shift(array_keys($courseSections));
+                $responseData['course_section'] = $Section;
+            } else {
+                $conditions['SectionID'] = [
+                    'operator' => 'IN',
+                    'values' => array_keys($courseSections)
+                ];
+                $responseData['course_section'] = $courseSections;
+            }
+
         }
 
 
