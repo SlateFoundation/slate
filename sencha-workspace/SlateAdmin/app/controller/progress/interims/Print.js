@@ -40,7 +40,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Print', {
         // emailsGrid: 'progress-interims-email-grid',
         // emailsTotalCmp: 'progress-interims-email-grid #emailsTotal',
         // sendEmailsBtn: 'progress-interims-email-grid button[action=send-emails]',
-        printoutCmp: 'progress-interims-print-container #printout'
+        printoutCmp: 'progress-interims-print-container slate-printpreview'
     },
 
     routes: {

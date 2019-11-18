@@ -5,13 +5,18 @@ namespace Emergence\Connectors;
 use ActiveRecord;
 use HandleBehavior;
 use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
 use Emergence\Logger;
+use Emergence\Site\Storage;
 
 class Job extends ActiveRecord implements IJob
 {
     use \Psr\Log\LoggerTrait;
 
     public $logEntries;
+    public $muteLog = false;
+    private $tmpLogPath;
+    private $logger;
 
     // ActiveRecord configuration
     public static $tableName = 'connector_jobs';
@@ -87,6 +92,16 @@ class Job extends ActiveRecord implements IJob
     {
         $className = $this->Connector;
         return $className::getTitle();
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 
     public function logRecordDelta(ActiveRecord $Record, $options = array())
@@ -194,14 +209,24 @@ class Job extends ActiveRecord implements IJob
 
     public function getLogPath()
     {
-        return $this->isPhantom ? null : \Site::$rootPath.'/site-data/connector-jobs/'.$this->ID.'.json';
+        $logBase = Storage::getLocalStorageRoot().'/connector-jobs';
+
+        if (!$this->isPhantom) {
+            return "{$logBase}/{$this->ID}.json";
+        }
+
+        if (!$this->tmpLogPath) {
+            $this->tmpLogPath = tempnam($logBase, 'phantom');
+        }
+
+        return $this->tmpLogPath;
     }
 
     public function writeLog($compress = true)
     {
         $logPath = $this->getLogPath();
 
-        if (!$logPath) { // record is phantom
+        if (!$logPath) {
             return;
         }
 
@@ -218,6 +243,10 @@ class Job extends ActiveRecord implements IJob
 
     public function log($level, $message, array $context = [])
     {
+        if ($this->logger) {
+            return $this->logger->log($level, $message, $context);
+        }
+
         $entry = [
             'time' => date('Y-m-d H:i:s'),
             'message' => $message,
@@ -225,7 +254,9 @@ class Job extends ActiveRecord implements IJob
             'level' => $level
         ];
 
-        $this->logEntries[] = $entry;
+        if (!$this->muteLog) {
+            $this->logEntries[] = $entry;
+        }
 
         return $entry;
     }

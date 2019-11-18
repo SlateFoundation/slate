@@ -6,6 +6,8 @@ use Site;
 use Cache;
 use Emergence_FS;
 
+use Emergence\Site\Storage;
+
 class Locale
 {
     public static $default = 'en_US.utf8';
@@ -86,7 +88,7 @@ class Locale
 
     public static function loadLocale($locale)
     {
-        $localesPath = Site::$rootPath.'/site-data/locales';
+        $localesPath = Storage::getLocalStorageRoot().'/locales';
         $localePath = "$localesPath/$locale";
         $messagesPath = "$localePath/LC_MESSAGES";
         $poPath = "$messagesPath/site.po";

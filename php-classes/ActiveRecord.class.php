@@ -1,8 +1,10 @@
 <?php
 
 use Emergence\People\IPerson;
+use Emergence\Interfaces\Image AS IImage;
 
 class ActiveRecord
+    implements IImage
 {
     // configurables
     /**
@@ -421,20 +423,45 @@ class ActiveRecord
         return $url;
     }
 
-    public function getThumbnailURL($width, $height = null, $exactSize = true)
+    /**
+     * @deprecated
+     */
+    public function getThumbnailURL($maxWidth, $maxHeight = null, $exactSize = true)
+    {
+        return $this->getImageUrl($maxWidth, $maxHeight, [
+            'fillColor' => $exactSize && is_string($exactSize) ? $exactSize : null,
+            'cropped' => $exactSize && !is_string($exactSize)
+        ]);
+    }
+
+    // implement Image interface:
+    public function getProxiedImageObject()
     {
         if (
             static::$thumbnailRelationship &&
             static::_relationshipExists(static::$thumbnailRelationship) &&
-            ($ThumbMedia = $this->_getRelationshipValue(static::$thumbnailRelationship)) &&
-            $ThumbMedia->isA('Media')
+            ($ThumbObject = $this->_getRelationshipValue(static::$thumbnailRelationship)) &&
+            $ThumbObject instanceof IImage
         ) {
-            return $ThumbMedia->getThumbnailRequest(
-                $width,
-                $height,
-                $exactSize && is_string($exactSize) ? $exactSize : null,
-                $exactSize && !is_string($exactSize)
-            );
+            return $ThumbObject;
+        }
+
+        return null;
+    }
+
+    public function getImageUrl($maxWidth = null, $maxHeight = null, array $options = [])
+    {
+        if ($proxiedImageObject = $this->getProxiedImageObject()) {
+            return $proxiedImageObject->getImageUrl($maxWidth, $maxHeight, $options);
+        }
+
+        return null;
+    }
+
+    public function getImage(array $options = [])
+    {
+        if ($proxiedImageObject = $this->getProxiedImageObject()) {
+            return $proxiedImageObject->getImage($options);
         }
 
         return null;
@@ -2233,6 +2260,7 @@ class ActiveRecord
         // pre-process value
         $forceDirty = false;
         switch ($fieldOptions['type']) {
+            case 'enum':
             case 'clob':
             case 'string':
             {
