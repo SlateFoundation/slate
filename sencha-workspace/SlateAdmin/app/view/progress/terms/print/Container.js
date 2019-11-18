@@ -3,6 +3,7 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
     xtype: 'progress-terms-print-container',
     requires: [
         'SlateAdmin.widget.field.Person',
+        'SlateAdmin.widget.PrintPreview',
 
         'Ext.form.Panel',
         'Ext.form.FieldSet',
@@ -176,13 +177,7 @@ Ext.define('SlateAdmin.view.progress.terms.print.Container', {
         {
             flex: 1,
 
-            xtype: 'component',
-            itemId: 'printout',
-            cls: 'print-preview',
-            renderTpl: '<iframe width="100%" height="100%"></iframe>',
-            renderSelectors: {
-                iframeEl: 'iframe'
-            },
+            xtype: 'slate-printpreview',
             listeners: {
                 afterrender: {
                     fn: function (previewCmp) {

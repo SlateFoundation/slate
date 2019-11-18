@@ -5,6 +5,8 @@ namespace Jarvus\Sencha;
 use Site;
 use Emergence_FS;
 
+use Emergence\Site\Storage;
+
 class Framework
 {
     public static $versions = [
@@ -180,7 +182,7 @@ class Framework
 
         // try to get VFS copy first, export to site-data instead of cacheDirectory
         if ($virtualPath = $this->getVirtualPath(false)) {
-            $physicalPath = Site::$rootPath."/site-data/sencha-frameworks/$this";
+            $physicalPath = Storage::getLocalStorageRoot()."/sencha-frameworks/$this";
 
             if (!is_dir($physicalPath)) {
                 if (!$autoLoad) {

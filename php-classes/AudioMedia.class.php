@@ -53,13 +53,9 @@ class AudioMedia extends Media
         return $node ? $node->RealPath : null;
     }
 
-    public function getImage($sourceFile = null)
+    public function getImage(array $options = [])
     {
-        if (!isset($sourceFile)) {
-            $sourceFile = $this->BlankPath;
-        }
-
-        return imagecreatefromstring(file_get_contents($sourceFile));
+        return imagecreatefromstring(file_get_contents($this->BlankPath));
     }
 
     public function createPreview()

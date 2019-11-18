@@ -4,11 +4,18 @@ namespace Emergence\SiteAdmin;
 
 use Site;
 
+use Emergence\Site\Storage;
+
 
 class LogsRequestHandler extends \RequestHandler
 {
     public static $files = [
         'site-data/site.log' => [
+            'format' => 'php-app',
+            'title' => 'PHP Application Log',
+            'allowEdit' => true
+        ],
+        'logs/general.log' => [
             'format' => 'php-app',
             'title' => 'PHP Application Log',
             'allowEdit' => true
@@ -85,12 +92,26 @@ class LogsRequestHandler extends \RequestHandler
                     $file['format'] = 'raw';
                 }
 
-                $file['realPath'] = Site::$rootPath . '/' . $path;
+                list ($pathPrefix, $pathSuffix) = explode('/', $path, 2);
+                if (
+                    ($pathPrefix == 'logs' || $path == 'site-data/site.log')
+                    && ($loggerConfig = \Site::getConfig('logger'))
+                    && !empty($loggerConfig['root'])
+                ) {
+                    $file['realPath'] = $loggerConfig['root'] . '/' . $pathSuffix;
+                } elseif ($pathPrefix == 'site-data') {
+                    $file['realPath'] = Storage::getLocalStorageRoot() . '/' . $pathSuffix;
+                } else {
+                    $file['realPath'] = Site::$rootPath . '/' . $path;
+                }
+
                 $file['size'] = @filesize($file['realPath']) ?: null;
                 $file['modified'] = @filemtime($file['realPath']) ?: null;
             }
         }
 
-        return $files;
+        return array_filter($files, function ($file) {
+            return $file['size'] !== null;
+        });
     }
 }

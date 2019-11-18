@@ -2,6 +2,7 @@
 
 namespace Emergence;
 
+use Emergence\Site\Storage;
 use Psr\Log\LogLevel;
 
 class Logger extends \Psr\Log\AbstractLogger
@@ -24,7 +25,16 @@ class Logger extends \Psr\Log\AbstractLogger
     public static function __classLoaded()
     {
         if (!static::$logPath) {
-            static::$logPath = \Site::$rootPath.'/site-data/site.log';
+            if (
+                ($loggerConfig = \Site::getConfig('logger'))
+                && !empty($loggerConfig['root'])
+            ) {
+                static::$logPath = $loggerConfig['root'];
+            } else {
+                static::$logPath = Storage::getLocalStorageRoot();
+            }
+
+            static::$logPath .= '/site.log';
         }
     }
 

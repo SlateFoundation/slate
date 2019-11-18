@@ -10,6 +10,7 @@ use Gitonomy\Git\Admin AS GitAdmin;
 use Gitonomy\Git\Repository;
 use Gitonomy\Git\Exception\ProcessException AS GitProcessException;
 use Emergence\SSH\KeyPair;
+use Emergence\Site\Storage;
 
 
 class Source
@@ -49,7 +50,7 @@ class Source
 
     public static function getRepositoriesRootPath()
     {
-        $path = Site::$rootPath . '/site-data/git';
+        $path = Storage::getLocalStorageRoot() . '/git';
 
         if (!is_dir($path)) {
             mkdir($path, 0770, true);

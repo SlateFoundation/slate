@@ -1,5 +1,7 @@
 <?php
 
+use Emergence\Site\Storage;
+
 class Media extends ActiveRecord
 {
     public static $useCache = true;
@@ -189,6 +191,9 @@ class Media extends ActiveRecord
         );
     }
 
+    /**
+     * @deprecated
+     */
     public function getThumbnailRequest($width, $height = null, $fillColor = null, $cropped = false)
     {
         return sprintf(
@@ -200,12 +205,21 @@ class Media extends ActiveRecord
         ).($cropped ? '/cropped' : '');
     }
 
-    public function getImage($sourceFile = null)
+    /**
+     * Wrap around original getThumbnailRequest to override new interface getThumbnailRequest
+     */
+    public function getImageUrl($maxWidth = null, $maxHeight = null, array $options = [])
     {
-        if (!isset($sourceFile)) {
-            $sourceFile = $this->FilesystemPath ? $this->FilesystemPath : $this->BlankPath;
-        }
+        return $this->getThumbnailRequest(
+            $maxWidth ?: $maxHeight,
+            $maxHeight ?: $maxWidth,
+            !empty($options['fillColor']) ? $options['fillColor'] : null,
+            !empty($options['cropped'])
+        );
+    }
 
+    public function getImage(array $options = [])
+    {
         switch ($this->MIMEType) {
             case 'application/psd':
             case 'image/tiff':
@@ -218,13 +232,14 @@ class Media extends ActiveRecord
 
             case 'application/pdf':
 
-               return PDFMedia::getImage($sourceFile);
+               return PDFMedia::getImage();
 
             case 'application/postscript':
 
                 return imagecreatefromstring(shell_exec("gs -r150 -dEPSCrop -dNOPAUSE -dBATCH -sDEVICE=png48 -sOutputFile=- -q $this->FilesystemPath"));
 
             default:
+                $sourceFile = $this->FilesystemPath ? $this->FilesystemPath : $this->BlankPath;
 
                 if (!$fileData = @file_get_contents($sourceFile)) {
                     throw new Exception('Could not load media source: '.$sourceFile);
@@ -279,7 +294,7 @@ class Media extends ActiveRecord
             $thumbFormat .= '.cropped';
         }
 
-        $thumbPath = Site::$rootPath.'/site-data/media/'.$thumbFormat.'/'.$this->Filename;
+        $thumbPath = Storage::getLocalStorageRoot().'/media/'.$thumbFormat.'/'.$this->Filename;
 
         // look for cached thumbnail
         if (!file_exists($thumbPath)) {
@@ -613,9 +628,9 @@ class Media extends ActiveRecord
 
         if ($node = Site::resolvePath($path)) {
             return $node->RealPath;
-        } else {
-            throw new Exception('Could not load '.implode('/',$path));
         }
+
+        return null;
     }
 
     public static function getBlank($contextClass)
@@ -659,7 +674,7 @@ class Media extends ActiveRecord
             return null;
         }
 
-        return Site::$rootPath.'/site-data/media/'.$variant.'/'.($filename ?: $this->getFilename($variant));
+        return Storage::getLocalStorageRoot().'/media/'.$variant.'/'.($filename ?: $this->getFilename($variant));
     }
 
     public function getFilename($variant = 'original')

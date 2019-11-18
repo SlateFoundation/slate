@@ -45,16 +45,21 @@ class PDFMedia extends Media
 
 
     // public methods
-    public function getImage($sourceFile = null)
+    public function getImage(array $options = [])
     {
-        if (!isset($sourceFile)) {
-            $sourceFile = $this->FilesystemPath ? $this->FilesystemPath : $this->BlankPath;
+        foreach (['FilesystemPath', 'BlankPath'] as $pathAttribute) {
+            if (!$sourcePath = $this->$pathAttribute) {
+                continue;
+            }
+
+            $cmd = sprintf(static::$extractPageCommand, $sourcePath, static::$extractPageIndex);
+
+            if ($imageData = shell_exec($cmd)) {
+                return imagecreatefromstring($imageData);
+            }
         }
 
-        $cmd = sprintf(static::$extractPageCommand, $sourceFile, static::$extractPageIndex);
-        $fileImage = imagecreatefromstring(shell_exec($cmd));
-
-        return $fileImage;
+        return null;
     }
 
     // static methods
