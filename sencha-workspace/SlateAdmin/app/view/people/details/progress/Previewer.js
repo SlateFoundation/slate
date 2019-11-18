@@ -4,7 +4,8 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     xtype: 'people-details-progress-previewer',
     requires: [
         /* global SlateAdmin */
-        'SlateAdmin.API'
+        'SlateAdmin.API',
+        'SlateAdmin.widget.PrintPreview'
     ],
 
     config: {
@@ -18,14 +19,9 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     modal: true,
     title: 'Report Preview',
     items: [{
-        xtype: 'component',
-        itemId: 'previewBox',
-        cls: 'print-preview',
         flex: 1,
-        renderTpl: '<iframe width="100%" height="100%"></iframe>',
-        renderSelectors: {
-            iframeEl: 'iframe'
-        },
+
+        xtype: 'slate-printpreview',
         listeners: {
             afterrender: {
                 fn: function (previewBox) {
@@ -50,7 +46,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     updateReport: function (report) {
         var me = this,
             noun = report.get('Noun'),
-            previewBox = me.getComponent('previewBox');
+            previewBox = me.down('slate-printpreview');
 
         me.setTitle('Preview '+noun);
         previewBox.setLoading({
@@ -61,6 +57,6 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     },
 
     updateUrl: function(url) {
-        this.getComponent('previewBox').iframeEl.dom.src = url;
+        this.down('slate-printpreview').iframeEl.dom.src = url;
     }
 });
