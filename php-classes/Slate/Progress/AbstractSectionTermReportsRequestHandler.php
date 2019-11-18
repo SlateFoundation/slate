@@ -337,7 +337,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         if (!empty($_REQUEST['course_section'])) {
             $courseSections = [];
             if (!is_array($_REQUEST['course_section'])) {
-                $requestedCourseSections = [$_REQUEST['course_section']];
+                $requestedCourseSections = explode(',', $_REQUEST['course_section']);
             } else {
                 $requestedCourseSections = $_REQUEST['course_section'];
             }
