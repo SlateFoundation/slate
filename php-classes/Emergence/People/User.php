@@ -99,6 +99,11 @@ class User extends Person implements IUser
         // call parent
         parent::validate($deep);
 
+        // disallow 'system' username
+        if ($this->isFieldDirty('Username') && strtolower($this->Username) === 'system') {
+            $this->_validator->addError('Username', 'System username is restricted.');
+        }
+
         // check username uniqueness
         if ($this->isDirty && !$this->_validator->hasErrors('Username') && $this->Username) {
             $ExistingUser = static::getByUsername($this->Username);
