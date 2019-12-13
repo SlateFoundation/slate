@@ -350,7 +350,8 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             }
 
             if (count($courseSections) === 1) {
-                $conditions['SectionID'] = array_shift(array_keys($courseSections));
+                $courseSectionIds = array_keys($courseSections);
+                $conditions['SectionID'] = $courseSectionIds[0];
                 $responseData['course_section'] = $Section;
             } else {
                 $conditions['SectionID'] = [
