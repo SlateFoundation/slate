@@ -1,20 +1,34 @@
 {
     "name": "jarvus-ext-searchfield",
-    "type": "code",
-    "creator": "anonymous",
-    "summary": "A text field specialized for search query input",
-    "version": "1.0.0",
-    "compatVersion": "1.0.0",
-    "format": "1",
-    "slicer": {
-        "js": [
-            {
-                "path": "${package.dir}/sass/example/custom.js",
-                "isWidgetManifest": true
+    "sencha": {
+        "version": "1.0.1",
+        "namespace": "Jarvus.searchfield",
+        "type": "code",
+        "framework": "ext",
+        "toolkit": "classic",
+        "theme": "theme-neptune",
+        "requires": [
+        ],
+        "classpath": [
+            "${package.dir}/src"
+        ],
+        "overrides": [
+            "${package.dir}/overrides"
+        ],
+        "sass": {
+            "namespace": "Jarvus.searchfield",
+            "etc": [
+                "${package.dir}/sass/etc/all.scss"
+            ]
+        },
+        "compressor": {
+            "polyfills": "none"
+        },
+        "output": {
+            "base": "${package.dir}/build",
+            "js": {
+                "version": "ES6"
             }
-        ]
-    },
-    "output": "${package.dir}/build",
-    "local": true,
-    "requires": []
+        }
+    }
 }

@@ -106,7 +106,8 @@ abstract class AbstractConnector extends \RequestHandler implements IConnector
                 return static::throwNotFoundError('Template job not found');
             }
 
-            $Job = Job::create(array(
+            $jobClass = $TemplateJob->Class;
+            $Job = $jobClass::create(array(
                 'Connector' => $TemplateJob->Connector
                 ,'Template' => $TemplateJob
                 ,'Config' => $TemplateJob->Config

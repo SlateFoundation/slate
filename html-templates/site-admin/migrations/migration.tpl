@@ -28,4 +28,11 @@
             </dl>
         </div>
     </div>
+
+    <div class="card mb-3">
+        <div class="card-header">Script output</div>
+        <div class="card-body">
+            <samp style="white-space: pre; display: block" class="p-2">{$migration.output|escape}</samp>
+        </div>
+    </div>
 {/block}

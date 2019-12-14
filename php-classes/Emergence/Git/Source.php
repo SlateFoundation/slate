@@ -403,14 +403,14 @@ class Source
         $output = trim($this->getRepository()->run('merge', ['--ff-only', '--no-stat', '@{upstream}']));
         $output = explode(PHP_EOL, $output);
 
-        if ($output[0] == 'Already up-to-date.') {
+        if ($output[0] == 'Already up-to-date.' || $output[0] == 'Already up to date.') {
             return false;
         }
 
         list ($status, $commits) = explode(' ', $output[0]);
 
         if ($status != 'Updating') {
-            throw new \Exception('Unexpected merge status output: ' . $status);
+            throw new \Exception("Unexpected merge status output '{$status}' from line: {$output[0]}");
         }
 
         list ($from, $to) = explode('..', $commits);
