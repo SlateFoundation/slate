@@ -3,6 +3,7 @@
 class SQL
 {
     protected static $aggregateFieldConfigs;
+    public static $mysqlStorageEngine = 'MyISAM';
 
     protected static function getAggregateFieldOptions($recordClass, $field = null)
     {
@@ -98,9 +99,10 @@ class SQL
 
 
         $createSQL = sprintf(
-            "CREATE TABLE IF NOT EXISTS `%s` (\n\t%s\n) ENGINE=MyISAM DEFAULT CHARSET=utf8;"
+            "CREATE TABLE IF NOT EXISTS `%s` (\n\t%s\n) ENGINE=%s DEFAULT CHARSET=utf8;"
             , $historyVariant ? $recordClass::getHistoryTableName() : $recordClass::$tableName
             , join("\n\t,", $queryFields)
+            , static::$mysqlStorageEngine
         );
 
         // append history table SQL

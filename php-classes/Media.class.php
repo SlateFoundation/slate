@@ -94,7 +94,6 @@ class Media extends ActiveRecord
     public static $defaultFilenameFormat = 'default.%s.jpg';
     public static $newDirectoryPermissions = 0775;
     public static $newFilePermissions = 0664;
-    public static $magicPath = null;//'/usr/share/misc/magic.mgc';
     public static $useFaceDetection = true;
     public static $faceDetectionTimeLimit = 10;
 
@@ -570,17 +569,16 @@ class Media extends ActiveRecord
         }
 
         // get mime type
-        $finfo = finfo_open(FILEINFO_MIME_TYPE, static::$magicPath);
-
-        if (!$finfo || !($mimeType = finfo_file($finfo, $filename))) {
-            throw new Exception('Unable to load media file info');
-        }
-
-        finfo_close($finfo);
+        $mimeType = File::getMIMEType($filename);
 
         // dig deeper if only generic mimetype returned
         if ($mimeType == 'application/octet-stream') {
-            $finfo = finfo_open(FILEINFO_NONE, static::$magicPath);
+            // prefer kernel method if available
+            if (is_callable([File::class, 'getFileInfoResource'])) {
+                $finfo = File::getFileInfoResource(FILEINFO_NONE);
+            } else {
+                $finfo = finfo_open(FILEINFO_NONE);
+            }
 
             if (!$finfo || !($fileInfo = finfo_file($finfo, $filename))) {
                 throw new Exception('Unable to load media file info');

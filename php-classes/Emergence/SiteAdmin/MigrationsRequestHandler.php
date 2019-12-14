@@ -4,8 +4,12 @@ namespace Emergence\SiteAdmin;
 
 use DB;
 use Site;
+use Debug;
 use Emergence_FS;
+use OutOfBoundsException;
+use RangeException;
 use TableNotFoundException;
+use QueryException;
 
 
 class MigrationsRequestHandler extends \RequestHandler
@@ -61,85 +65,157 @@ class MigrationsRequestHandler extends \RequestHandler
 
     public static function handleMigrationRequest($migrationKey)
     {
-        $migrationPath = 'php-migrations/'.$migrationKey.'.php';
-        $migrationNode = Site::resolvePath($migrationPath);
-
-        if (!$migrationNode) {
-            return static::throwNotFoundError('Migration not found');
-        }
-
-        try {
-            $migrationRecord = DB::oneRecord('SELECT * FROM _e_migrations WHERE `Key` = "%s"', DB::escape($migrationKey));
-        } catch (TableNotFoundException $e) {
-            $migrationRecord = null;
-        }
-
-        $migration = [
-            'key' => $migrationKey,
-            'path' => $migrationPath,
-            'status' => $migrationRecord ? $migrationRecord['Status'] : static::STATUS_NEW,
-            'executed' => $migrationRecord ? $migrationRecord['Timestamp'] : null,
-            'sha1' => $migrationNode->SHA1
-        ];
-
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if ($migrationRecord) {
-                return static::throwError('Cannot execute requested migration, it has already been skipped, started, or executed');
-            }
-
-            $insertSql = sprintf('INSERT INTO `_e_migrations` SET `Key` = "%s", SHA1 = "%s", Timestamp = FROM_UNIXTIME(%u), Status = "%s"', $migrationKey, $migrationNode->SHA1, time(), static::STATUS_STARTED);
-
             try {
-                DB::nonQuery($insertSql);
-            } catch (TableNotFoundException $e) {
-                static::createMigrationsTable();
-                DB::nonQuery($insertSql);
-            }
-
-            \Site::$debug = true;
-            $debugLogStartIndex = count(\Debug::$log);
-
-
-            $resetMigrationStatus = function() use ($migrationKey) {
-                static::resetMigrationStatus($migrationKey);
-            };
-
-            ob_start();
-            $migration['status'] = call_user_func(function() use ($migration, $migrationNode, $resetMigrationStatus) {
-                return include($migrationNode->RealPath);
-            });
-            $output = ob_get_clean();
-
-            $migration['executed'] = time();
-
-            if ($migration['status'] == static::STATUS_DEBUG) {
-                static::resetMigrationStatus($migrationKey);
-            } else {
-                if (!in_array($migration['status'], [static::STATUS_SKIPPED, static::STATUS_EXECUTED])) {
-                    $migration['status'] = static::STATUS_FAILED;
-                }
-
-                DB::nonQuery(
-                    'UPDATE `_e_migrations` SET Timestamp = FROM_UNIXTIME(%u), Status = "%s" WHERE `Key` = "%s"',
-                    [
-                        $migration['executed'],
-                        $migration['status'],
-                        $migrationKey
-                    ]
-                );
+                $migration = static::executeMigration($migrationKey);
+            } catch (OutOfBoundsException $e) {
+                return static::throwNotFoundError($e->getMessage());
+            } catch (RangeException $e) {
+                return static::throwInvalidRequestError($e->getMessage());
             }
 
             return static::respond('migrationExecuted', [
-                'migration' => $migration,
-                'log' => array_slice(\Debug::$log, $debugLogStartIndex),
-                'output' => $output
+                'migration' => $migration
             ]);
+        }
+
+        $migration = static::getMigrationData($migrationKey);
+
+        if (!$migration) {
+            return static::throwNotFoundError("Migration not found: {$migrationKey}");
         }
 
         return static::respond('migration', [
             'migration' => $migration
         ]);
+    }
+
+    public static function getMigrationNode($migrationKey)
+    {
+        return Site::resolvePath("php-migrations/{$migrationKey}.php");
+    }
+
+    public static function getMigrationData($migrationKey, array $migrationRecord = null)
+    {
+        $migrationNode = static::getMigrationNode($migrationKey);
+
+        if (!$migrationNode) {
+            return null;
+        }
+
+        if (!$migrationRecord) {
+            try {
+                $migrationRecord = DB::oneRecord('SELECT * FROM _e_migrations WHERE `Key` = "%s"', DB::escape($migrationKey));
+            } catch (TableNotFoundException $e) {
+                $migrationRecord = null;
+            }
+        }
+
+        preg_match('#^(\d{8})(\d*)#', basename($migrationKey), $keyMatches);
+
+        return [
+            'key' => $migrationKey,
+            'path' => $migrationNode->FullPath,
+            'realpath' => $migrationNode->RealPath,
+            'status' => $migrationRecord ? $migrationRecord['Status'] : static::STATUS_NEW,
+            'executed' => $migrationRecord ? $migrationRecord['Timestamp'] : null,
+            'sha1' => $migrationNode->SHA1,
+            'output' => $migrationRecord ? $migrationRecord['Output'] : null,
+            'sequence' => $keyMatches && $keyMatches[1] ? (int)$keyMatches[1] : 0,
+            'sequenceTime' => $keyMatches && $keyMatches[2] ? (int)$keyMatches[2] : 0
+        ];
+    }
+
+    public static function executeMigration($migration, $force = false)
+    {
+        if (is_string($migration)) {
+            $migrationKey = $migration;
+            $migration = static::getMigrationData($migrationKey);
+
+            if (!$migration) {
+                throw new OutOfBoundsException("Migration not found: {$migrationKey}");
+            }
+        }
+
+        if (!$force && $migration['status'] != static::STATUS_NEW) {
+            throw new RangeException('Cannot execute requested migration, it has already been skipped, started, or executed');
+        }
+
+        $insertSql = sprintf(
+            '
+                INSERT INTO `_e_migrations`
+                   SET `Key` = "%1$s",
+                       SHA1 = "%2$s",
+                       Timestamp = FROM_UNIXTIME(%3$u),
+                       Status = "%4$s"
+                    ON DUPLICATE KEY UPDATE
+                       SHA1 = "%2$s",
+                       Timestamp = FROM_UNIXTIME(%3$u),
+                       Status = "%4$s"
+            ',
+            $migration['key'],
+            $migration['sha1'],
+            time(),
+            static::STATUS_STARTED
+        );
+
+        try {
+            DB::nonQuery($insertSql);
+        } catch (TableNotFoundException $e) {
+            static::createMigrationsTable();
+            DB::nonQuery($insertSql);
+        }
+
+        Site::$debug = true;
+        $debugLogStartIndex = count(Debug::$log);
+
+
+        $resetMigrationStatus = function() use ($migration) {
+            static::resetMigrationStatus($migration['key']);
+        };
+
+        ob_start();
+        $migration['status'] = call_user_func(function() use ($migration, $resetMigrationStatus) {
+            return include($migration['realpath']);
+        });
+        $migration['output'] = ob_get_clean();
+
+        $migration['executed'] = time();
+
+        if ($migration['status'] == static::STATUS_DEBUG) {
+            static::resetMigrationStatus($migration['key']);
+        } else {
+            if (!in_array($migration['status'], [static::STATUS_SKIPPED, static::STATUS_EXECUTED])) {
+                $migration['status'] = static::STATUS_FAILED;
+            }
+
+            $upgraded = false;
+            do {
+                try {
+                    DB::nonQuery(
+                        'UPDATE `_e_migrations` SET Timestamp = FROM_UNIXTIME(%u), Status = "%s", Output = "%s" WHERE `Key` = "%s"',
+                        [
+                            $migration['executed'],
+                            $migration['status'],
+                            DB::escape($migration['output']),
+                            $migration['key'],
+                        ]
+                    );
+                    break;
+                } catch (QueryException $e) {
+                    if ($upgraded) {
+                        throw $e;
+                    }
+
+                    static::upgradeMigrationsTable();
+                    $upgraded = true;
+                }
+            } while (true);
+        }
+
+        $migration['queryLog'] = array_slice(Debug::$log, $debugLogStartIndex);
+
+        return $migration;
     }
 
     public static function getMigrations()
@@ -164,17 +240,7 @@ class MigrationsRequestHandler extends \RequestHandler
         foreach (Emergence_FS::getTreeFiles('php-migrations') AS $migrationPath => $migrationNodeData) {
             $migrationKey = preg_replace('#^php-migrations/(.*)\.php$#i', '$1', $migrationPath);
             $migrationRecord = array_key_exists($migrationKey, $migrationRecords) ? $migrationRecords[$migrationKey] : null;
-            preg_match('#^(\d{8})(\d*)#', basename($migrationKey), $matches);
-
-            $migrations[$migrationKey] = [
-                'key' => $migrationKey,
-                'path' => 'php-migrations/'.$migrationKey.'.php',
-                'status' => $migrationRecord ? $migrationRecord['Status'] : static::STATUS_NEW,
-                'executed' => $migrationRecord ? $migrationRecord['Timestamp'] : null,
-                'sha1' => $migrationNodeData['SHA1'],
-                'sequence' => $matches && $matches[1] ? (int)$matches[1] : 0,
-                'sequenceTime' => $matches && $matches[2] ? (int)$matches[2] : 0
-            ];
+            $migrations[$migrationKey] = static::getMigrationData($migrationKey, $migrationRecord);
         }
 
         // sort migrations by sequence
@@ -201,9 +267,17 @@ class MigrationsRequestHandler extends \RequestHandler
                 .',`SHA1` char(40) NOT NULL'
                 .',`Timestamp` timestamp NOT NULL'
                 .',`Status` enum("skipped","started","failed","executed") NOT NULL'
+                .',`Output` TEXT NULL DEFAULT NULL'
                 .',PRIMARY KEY (`Key`)'
             .')'
         );
+    }
+
+    protected static function upgradeMigrationsTable()
+    {
+        if (!static::columnExists('_e_migrations', 'Output')) {
+            return DB::nonQuery('ALTER TABLE `_e_migrations` ADD COLUMN `Output` TEXT NULL DEFAULT NULL AFTER Status');
+        }
     }
 
 

@@ -18,13 +18,6 @@
 
     {$dwoo.parent}
 
-    <div class="card mb-3">
-        <div class="card-header">Script output</div>
-        <div class="card-body">
-            <samp style="white-space: pre; display: block" class="p-2">{$output|escape}</samp>
-        </div>
-    </div>
-
     <div class="card">
         <div class="card-header">Query Log</div>
         <table class="card-body table table-striped">
@@ -37,7 +30,7 @@
             </thead>
 
             <tbody>
-                {foreach item=entry from=$log}
+                {foreach item=entry from=$migration.queryLog}
                     <tr>
                         <td>{$entry.query|escape}</td>
                         <td>{$entry.affected_rows|default:entry.result_rows|number_format}</td>

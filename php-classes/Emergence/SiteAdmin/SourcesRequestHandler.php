@@ -169,6 +169,10 @@ class SourcesRequestHandler extends \RequestHandler
             ]);
         }
 
+        if (!empty($_REQUEST['fetch'])) {
+            $source->fetch();
+        }
+
         $result = $source->pull();
 
         return static::respondStatusMessage($source, $result ? "Updated local branch from commit $result[from] to upstream commit $result[to]" : 'Local branch already up-to-date');

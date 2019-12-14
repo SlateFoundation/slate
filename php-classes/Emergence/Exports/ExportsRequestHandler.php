@@ -14,8 +14,12 @@ use SpreadsheetWriter;
 
 class ExportsRequestHandler extends \RequestHandler
 {
-    public static function getScripts()
+    public static $accountLevelBrowse = 'Staff';
+    public static $accountLevelUseDefault = 'Administrator';
+
+    public static function getScripts($all = false)
     {
+        global $Session;
         static $scripts;
 
         if ($scripts === null) {
@@ -37,6 +41,22 @@ class ExportsRequestHandler extends \RequestHandler
                     throw new Exception("Script $nodePath does not return array");
                 }
 
+                // filter based on account level, unless $all == true
+                if (
+                    !$all
+                    && (
+                        !$Session
+                        || !$Session->hasAccountLevel(
+                            !empty($config['requireAccountLevel'])
+                                ? $config['requireAccountLevel']
+                                : static::$accountLevelUseDefault
+                        )
+                    )
+                ) {
+                    continue;
+                }
+
+                // use readQuery to initialize query if available
                 $config['query'] = is_callable($config['readQuery']) ? call_user_func($config['readQuery'], $_REQUEST, $config) : [];
 
                 $scripts[$path] = $config;
@@ -50,8 +70,6 @@ class ExportsRequestHandler extends \RequestHandler
 
     public static function handleRequest()
     {
-        $GLOBALS['Session']->requireAccountLevel('Administrator');
-
         // execute a selected script
         $scriptPath = array_filter(static::getPath());
 
@@ -60,6 +78,8 @@ class ExportsRequestHandler extends \RequestHandler
         }
 
         // show list of exports
+        $GLOBALS['Session']->requireAccountLevel(static::$accountLevelBrowse);
+
         static::respond('exports', [
             'scripts' => static::getScripts()
         ]);
@@ -77,6 +97,13 @@ class ExportsRequestHandler extends \RequestHandler
 
         // load config
         $config = include($scriptNode->RealPath);
+
+        // check account level
+        $GLOBALS['Session']->requireAccountLevel(
+            !empty($config['requireAccountLevel'])
+                ? $config['requireAccountLevel']
+                : static::$accountLevelUseDefault
+        );
 
         // check config
         if (empty($config['buildRows']) || !is_callable($config['buildRows'])) {
