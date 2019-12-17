@@ -12,9 +12,9 @@ function systemUserExists() {
 
 $tableName = User::$tableName;
 
+// create table if it doesn't exist
 if (!static::tableExists($tableName)) {
-    printf('Table `%s` does not exist, skipping.', $tableName);
-    return static::STATUS_SKIPPED;
+    DB::multiQuery(SQL::getCreateTable(User::class));
 }
 
 if (!systemUserExists()) {
