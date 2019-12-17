@@ -101,7 +101,7 @@ class User extends Person implements IUser
 
         // disallow 'system' username
         if ($this->isFieldDirty('Username') && strtolower($this->Username) === 'system') {
-            $this->_validator->addError('Username', 'System username is restricted.');
+            $this->_validator->addError('Username', "Username 'system' is forbidden");
         }
 
         // check username uniqueness
