@@ -41,7 +41,7 @@
 
         $sectionTeacherIds = array_map(function($Teacher) {
             return $Teacher->ID;
-        }, $this->scope['Section']->Teachers);
+        }, $this->scope['Section']->ActiveTeachers);
 
         $latestTeacherPost = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], array_merge_recursive($options, [
             'conditions' => [
@@ -157,9 +157,9 @@
                     </div>
                 {/foreach}
 
-                <h3>Teacher{tif count($Section->Teachers) != 1 ? s}</h3>
+                <h3>Teacher{tif count($Section->ActiveTeachers) != 1 ? s}</h3>
                 <ul class="roster teachers">
-                {foreach item=Teacher from=$Section->Teachers}
+                {foreach item=Teacher from=$Section->ActiveTeachers}
                     <li>{personLink $Teacher photo=true}</li>
                 {foreachelse}
                     <p class="empty-text">No instructors currently listed.</p>
@@ -169,7 +169,7 @@
                 {if $.User}
                     <h3>Students</h3>
                     <ul class="roster students">
-                    {foreach item=Student from=$Section->Students}
+                    {foreach item=Student from=$Section->ActiveStudents}
                         <li>{personLink $Student photo=true}</li>
                     {foreachelse}
                         <p class="empty-text">No students currently listed.</p>

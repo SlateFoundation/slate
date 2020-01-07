@@ -141,6 +141,18 @@ class Section extends \VersionedRecord
             ,'foreign' => 'CourseSectionID'
             ,'order' => 'Role DESC, (SELECT CONCAT(LastName,FirstName) FROM people WHERE people.id = PersonID)'
         ]
+        ,'ActiveTeachers' => [
+            'type' => 'many-many'
+            ,'class' => Person::class
+            ,'linkClass' => SectionParticipant::class
+            ,'linkLocal' => 'CourseSectionID'
+            ,'linkForeign' => 'PersonID'
+            ,'conditions' => [
+                'Link.Role = "Teacher"',
+                '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
+                '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
+            ]
+        ]
         ,'Teachers' => [
             'type' => 'many-many'
             ,'class' => Person::class
@@ -148,6 +160,18 @@ class Section extends \VersionedRecord
             ,'linkLocal' => 'CourseSectionID'
             ,'linkForeign' => 'PersonID'
             ,'conditions' => ['Link.Role = "Teacher"']
+        ]
+        ,'ActiveStudents' => [
+            'type' => 'many-many'
+            ,'class' => Person::class
+            ,'linkClass' => SectionParticipant::class
+            ,'linkLocal' => 'CourseSectionID'
+            ,'linkForeign' => 'PersonID'
+            ,'conditions' => [
+                'Link.Role = "Student"',
+                '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
+                '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
+            ]
         ]
         ,'Students' => [
             'type' => 'many-many'

@@ -71,8 +71,8 @@
             {foreach item=Section from=$group.sections}
                 <tr>
                     <td><a href="{$Section->getURL()}">{$Section->Code}</a></td>
-                    <td>{foreach item=Teacher from=$Section->Teachers implode=', '}{personLink $Teacher}{/foreach}</td>
-                    <td>{$Section->Students|count}</td>
+                    <td>{foreach item=Teacher from=$Section->ActiveTeachers implode=', '}{personLink $Teacher}{/foreach}</td>
+                    <td>{$Section->ActiveStudents|count}</td>
                     <td>{$Section->Location->Title|escape}</td>
                     <td>{$Section->Schedule->Title|escape}</td>
                 </tr>
