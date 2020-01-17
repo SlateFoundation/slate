@@ -143,8 +143,10 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
             } catch (\TableNotFoundException $e) {
                 $students = [];
             }
-        } else {
+        } elseif (!empty($_REQUEST['inactive'])) {
             $students = $Section->Students;
+        } else {
+            $students = $Section->ActiveStudents;
         }
 
         return static::respond('students', [
