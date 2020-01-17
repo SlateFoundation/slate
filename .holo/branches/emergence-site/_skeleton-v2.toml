@@ -1,6 +1,6 @@
 [holomapping]
 files = [
-    "*/**",
-    "!php-config/Git.config.d/"
+    "**",
+    "!php-config/Git.config.d/*"
 ]
 before = "*"

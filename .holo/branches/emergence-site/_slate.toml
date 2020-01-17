@@ -1,3 +1,13 @@
 [holomapping]
-holosource = "=>emergence-layer"
-files = "**"
+files = [
+    "*/**",
+    "!.github/",
+    "!.vscode/",
+    "!docs/",
+
+    # exclude the submodules we're using temporarily to support local dev
+    # -- they would overwrite the trees coming in the right way through projection
+    "!sencha-workspace/ext",
+    "!sencha-workspace/packages.remote/*"
+]
+after = "*"
