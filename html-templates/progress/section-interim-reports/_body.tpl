@@ -17,12 +17,12 @@
 
 <dl class="item-body">
     {block teachers}
-        {if count($Report->Section->Teachers) && !(count($Report->Section->Teachers) == 1 && $Report->Section->Teachers[0]->ID == $Report->getAuthor()->ID)}
+        {if count($Report->Section->ActiveTeachers) && !(count($Report->Section->ActiveTeachers) == 1 && $Report->Section->ActiveTeachers[0]->ID == $Report->getAuthor()->ID)}
             <div class="dli">
-                <dt class="instructor">Teacher{tif count($Report->Section->Teachers) != 1 ? s}</dt>
+                <dt class="instructor">Teacher{tif count($Report->Section->ActiveTeachers) != 1 ? s}</dt>
                 <dd class="instructor">
                     <ul>
-                        {foreach item=Teacher from=$Report->Section->Teachers}
+                        {foreach item=Teacher from=$Report->Section->ActiveTeachers}
                                 <li>
                                     <span class="instructor-name">{$Teacher->FullName|escape}</span>
                                     <span class="instructor-email"><a href="mailto:{$Teacher->Email|escape}">{$Teacher->Email|escape}</a></span>
