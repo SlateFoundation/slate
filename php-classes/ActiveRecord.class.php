@@ -2551,8 +2551,7 @@ class ActiveRecord
 
                 $conditions = is_callable($rel['conditions']) ? call_user_func($rel['conditions'], $this, $relationship, $rel) : $rel['conditions'];
 
-                // TODO: support order
-                $query = 'SELECT Related.* FROM `%s` Link JOIN `%s` Related ON (Related.`%s` = Link.%s) WHERE Link.`%s` = %u AND %s';
+                $query = 'SELECT Related.* FROM `%s` Link JOIN `%s` Related ON (Related.`%s` = Link.%s) WHERE Link.`%s` = %u AND %s %s';
                 $params = array(
                     $rel['linkClass']::$tableName
                     ,$rel['class']::$tableName
@@ -2561,6 +2560,7 @@ class ActiveRecord
                     ,$rel['linkLocal']
                     ,$this->_getFieldValue($rel['local'])
                     ,$conditions ? join(' AND ', $conditions) : '1'
+                    ,empty($rel['order']) ? '' : ' ORDER BY ' . join(',', static::_mapFieldOrder($rel['order']))
                 );
 
                 if ($rel['indexField']) {

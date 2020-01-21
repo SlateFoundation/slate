@@ -161,14 +161,16 @@ class Session extends ActiveRecord
         parent::save($deep);
 
         // set cookie
-        setcookie(
-            static::$cookieName,
-            $this->Handle,
-            static::$cookieExpires ? (time() + static::$cookieExpires) : 0,
-            static::$cookiePath,
-            static::$cookieDomain,
-            static::$cookieSecure
-        );
+        if (!headers_sent()) {
+            setcookie(
+                static::$cookieName,
+                $this->Handle,
+                static::$cookieExpires ? (time() + static::$cookieExpires) : 0,
+                static::$cookiePath,
+                static::$cookieDomain,
+                static::$cookieSecure
+            );
+        }
     }
 
     public function terminate()

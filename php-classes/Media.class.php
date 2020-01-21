@@ -539,15 +539,14 @@ class Media extends ActiveRecord
                 ,'recordData' => $Media ? $Media->getData() : null
                 ,'mediaInfo' => $mediaInfo
             ));
-            // fall through to cleanup below
-        }
 
-        // remove photo record
-        if ($Media) {
-            $Media->destroy();
-        }
+            // remove photo record
+            if ($Media) {
+                $Media->destroy();
+            }
 
-        return null;
+            throw $e;
+        }
     }
 
     public function initializeFromAnalysis($mediaInfo)

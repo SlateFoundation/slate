@@ -213,7 +213,12 @@ class MigrationsRequestHandler extends \RequestHandler
             } while (true);
         }
 
-        $migration['queryLog'] = array_slice(Debug::$log, $debugLogStartIndex);
+        $migration['queryLog'] = array_filter(
+            array_slice(Debug::$log, $debugLogStartIndex),
+            function ($entry) {
+                return !empty($entry['query']);
+            }
+        );
 
         return $migration;
     }

@@ -26,18 +26,18 @@
 
 // from https://github.com/javieraviles/cypress-upload-file-post-form
 Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
-  cy.get(selector).then(subject => {
-    cy.fixture(fileName, 'base64')
-      .then(Cypress.Blob.base64StringToBlob)
-      .then(blob => {
-        const el = subject[0]
-        const testFile = new File([blob], fileName, { type: fileType })
-        const dataTransfer = new DataTransfer()
-        dataTransfer.items.add(testFile)
-        el.files = dataTransfer.files
-      })
-  })
-});
+    cy.get(selector).then(subject => {
+      cy.fixture(fileName, 'base64')
+        .then(Cypress.Blob.base64StringToBlob)
+        .then(blob => {
+          const el = subject[0]
+          const testFile = new File([blob], fileName, { type: fileType })
+          const dataTransfer = new DataTransfer()
+          dataTransfer.items.add(testFile)
+          el.files = dataTransfer.files
+        })
+    })
+  });
 
 // Login command
 Cypress.Commands.add('loginAs', (user) => {
@@ -62,28 +62,12 @@ Cypress.Commands.add('resetDatabase', () => {
 
 // Drops the entire
 Cypress.Commands.add('dropDatabase', () => {
-  const studioContainer = Cypress.env('STUDIO_CONTAINER');
-  const studioSSH = Cypress.env('STUDIO_SSH');
-  const studioDocker = studioSSH
-    ? `ssh ${studioSSH} docker`
-    : 'docker'
-
-  if (studioContainer) {
-      cy.exec(`echo 'DROP DATABASE IF EXISTS \`default\`; CREATE DATABASE \`default\`;' | ${studioDocker} exec -i ${studioContainer} hab pkg exec core/mysql mysql -u root -h 127.0.0.1`);
-  }
+  cy.exec(`echo 'DROP DATABASE IF EXISTS \`default\`; CREATE DATABASE \`default\`;' | ${_buildHabExec('core/mysql', 'mysql')} -u root -h 127.0.0.1`);
 });
 
 // Reload the original data fixtures
 Cypress.Commands.add('loadDatabase', () => {
-  const studioContainer = Cypress.env('STUDIO_CONTAINER');
-  const studioSSH = Cypress.env('STUDIO_SSH');
-  const studioDocker = studioSSH
-    ? `ssh ${studioSSH} docker`
-    : 'docker'
-
-  if (studioContainer) {
-    cy.exec(`cat cypress/fixtures/database/*.sql | ${studioDocker} exec -i ${studioContainer} hab pkg exec core/mysql mysql -u root -h 127.0.0.1 default`);
-  }
+  cy.exec(`cat cypress/fixtures/database/*.sql | ${_buildHabExec('core/mysql', 'mysql')} -u root -h 127.0.0.1 default`);
 });
 
 // Ext command getter
@@ -97,3 +81,17 @@ Cypress.Commands.add('withExt', () => {
     };
   });
 });
+
+// private method
+function _buildHabExec(pkg, pkgCmd) {
+  const studioContainer = Cypress.env('STUDIO_CONTAINER') || null;
+  const studioSSH = Cypress.env('STUDIO_SSH') || null;
+
+  let cmd = `hab pkg exec ${pkg} ${pkgCmd}`;
+
+  if (studioContainer) {
+    cmd = `${studioSSH ? `ssh ${studioSSH}` : ''} docker exec -i ${studioContainer} ${cmd}`;
+  }
+
+  return cmd;
+}

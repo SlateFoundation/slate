@@ -6,7 +6,7 @@ abstract class AbstractMailer implements IMailer
 {
     public static function getDefaultFrom()
     {
-        return Mailer::$defaultFrom ? Mailer::$defaultFrom : \Site::getConfig('label').' <support@'.\Site::getConfig('primary_hostname').'>';
+        return Mailer::$defaultFrom ? Mailer::$defaultFrom : '"'.\Site::getConfig('label').'" <support@'.\Site::getConfig('primary_hostname').'>';
     }
 
     public static function sendFromTemplate($to, $template, $data = array(), $options = array())

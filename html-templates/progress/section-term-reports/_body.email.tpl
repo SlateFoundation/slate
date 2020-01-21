@@ -7,10 +7,10 @@
 
 {block teachers}
     <div style="margin: 1em 0;">
-        <span style="color: #5e6366; font-size: smaller; font-style: italic;">Teacher{tif count($Section->Teachers) != 1 ? s}</span>
+        <span style="color: #5e6366; font-size: smaller; font-style: italic;">Teacher{tif count($Section->ActiveTeachers) != 1 ? s}</span>
         <br />
         <span style="display: block; margin-left: 1.5em;">
-            {foreach item=Teacher from=$Section->Teachers implode='<br />'}
+            {foreach item=Teacher from=$Section->ActiveTeachers implode='<br />'}
                 <strong>{$Teacher->FullName|escape}</strong>
                 &lt;<a href="mailto:{$Teacher->Email|escape}?subject=Re:%20{$subject|escape:url}" style="color: #a35500;">{$Teacher->Email|escape}</a>&gt;
             {/foreach}

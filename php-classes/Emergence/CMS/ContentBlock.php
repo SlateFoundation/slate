@@ -33,6 +33,19 @@ class ContentBlock extends \VersionedRecord
         )
     );
 
+    public static $searchConditions = array(
+        'Content' => array(
+            'qualifiers' => array('any', 'content')
+            ,'points' => 2
+            ,'sql' => 'Content Like "%%%s%%"'
+        )
+        ,'Handle' => array(
+            'qualifiers' => array('any', 'handle')
+            ,'points' => 2
+            ,'sql' => 'Handle Like "%%%s%%"'
+        )
+    );
+
 
     public static function getByHandle($contentHandle)
     {
