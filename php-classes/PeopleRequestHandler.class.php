@@ -107,6 +107,10 @@ class PeopleRequestHandler extends RecordsRequestHandler
             case 'thumbnail':
                 return static::handleThumbnailRequest($Person);
             default:
+                if ($Person->AccountLevel == 'Disabled') {
+                    return static::throwNotFoundError('profile not found');
+                }
+
                 return parent::handleRecordRequest($Person, $action);
         }
     }
@@ -132,6 +136,10 @@ class PeopleRequestHandler extends RecordsRequestHandler
 
     public static function handleThumbnailRequest(IPerson $Person)
     {
+        if ($Person->AccountLevel == 'Disabled') {
+            return static::throwNotFoundError('profile not found');
+        }
+
         return MediaRequestHandler::handleThumbnailRequest($Person->PrimaryPhoto ? $Person->PrimaryPhoto : Media::getBlank('person'));
     }
 }

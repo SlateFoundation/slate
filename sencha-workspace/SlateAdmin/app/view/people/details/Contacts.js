@@ -169,7 +169,8 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 {
                     xtype: 'actioncolumn',
                     dataIndex: 'Class',
-                    width: 54,
+                    width: 50, // n*15+20
+                    align: 'end',
                     items: [
                         {
                             action: 'delete',
@@ -417,7 +418,8 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             {
                 xtype: 'actioncolumn',
                 dataIndex: 'Primary',
-                width: 36,
+                width: 50, // n*15+20
+                align: 'end',
                 items: [
                     {
                         action: 'delete',

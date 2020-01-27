@@ -14,7 +14,7 @@
 .clearfix {
   *zoom: 1;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 .clearfix:after {
   content: "";
   display: table;
@@ -400,7 +400,7 @@ body {
 .inner {
   *zoom: 1;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 .inner:after {
   content: "";
   display: table;
@@ -411,7 +411,7 @@ body {
 .sidebar-layout {
   *zoom: 1;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 .sidebar-layout:after {
   content: "";
   display: table;
@@ -728,7 +728,7 @@ body {
   margin: 2em 0;
   padding-bottom: .25em;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 .page-header:after, .section-header:after, .article-header:after {
   content: "";
   display: table;
@@ -1089,19 +1089,19 @@ a {
   color: #31a0da;
   text-decoration: none;
 }
-/* line 18, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 18, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 a:visited {
   color: #31a0da;
 }
-/* line 21, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 21, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 a:focus {
   color: #1d74a1;
 }
-/* line 24, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 24, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 a:hover {
   color: #1d74a1;
 }
-/* line 27, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
+/* line 27, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/typography/links/_link-colors.scss */
 a:active {
   color: #5cb4e2;
 }
@@ -3044,7 +3044,7 @@ form .hint, form .error-text {
   margin: 0;
   padding: 1em;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 .panel-body:after {
   content: "";
   display: table;
@@ -3093,7 +3093,7 @@ table.panel-body tbody > tr:last-child > * {
   margin: 0;
   padding: 0;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 .profile-photo-form .available-photos:after {
   content: "";
   display: table;
@@ -3325,7 +3325,7 @@ caption {
   padding: 0;
   text-align: left;
 }
-/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20191025134736/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
+/* line 38, ../../../../../pkgs/jarvus/compass/1.0.3/20200124164725/gems/compass-core-1.0.3/stylesheets/compass/utilities/general/_clearfix.scss */
 caption:after {
   content: "";
   display: table;
@@ -3907,44 +3907,52 @@ body {
 
 /* line 16, ../sass/slate/modules/_events.scss */
 .vevent {
-  background: url(/img/icons/fugue/calendar.png) no-repeat;
   font-size: .95em;
   line-height: 1.3;
   margin-bottom: .6em;
+  position: relative;
 }
 /* line 22, ../sass/slate/modules/_events.scss */
+.vevent:before {
+  content: '\f133';
+  font-family: FontAwesome;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* line 30, ../sass/slate/modules/_events.scss */
 .vevent a {
   color: inherit;
   display: inline-block;
   padding-left: 24px;
   text-decoration: none;
 }
-/* line 28, ../sass/slate/modules/_events.scss */
+/* line 36, ../sass/slate/modules/_events.scss */
 .vevent a:hover {
   color: #31a0da;
 }
-/* line 33, ../sass/slate/modules/_events.scss */
+/* line 41, ../sass/slate/modules/_events.scss */
 .vevent .summary,
 .vevent .contact {
   display: block;
 }
-/* line 38, ../sass/slate/modules/_events.scss */
+/* line 46, ../sass/slate/modules/_events.scss */
 .vevent .meta-info {
   color: #949494;
   font-size: .9em;
 }
 
-/* line 44, ../sass/slate/modules/_events.scss */
+/* line 52, ../sass/slate/modules/_events.scss */
 .event-listing {
   border-bottom: 1px solid rgba(212, 212, 212, 0.5);
   padding: 1em 0;
 }
-/* line 48, ../sass/slate/modules/_events.scss */
+/* line 56, ../sass/slate/modules/_events.scss */
 .event-listing .event-title {
   font-size: large;
   margin: 0;
 }
-/* line 53, ../sass/slate/modules/_events.scss */
+/* line 61, ../sass/slate/modules/_events.scss */
 .event-listing .event-times {
   color: #949494;
 }
