@@ -68,7 +68,7 @@ class LinkUtil
                 throw new \UnexpectedValueException('Link tree value must be array, string, or ActiveRecord instance');
             }
 
-            
+
             // apply dynamically-derived attributes
             if (!empty($value['_tag'])) {
                 $children = [];
@@ -140,6 +140,7 @@ class LinkUtil
             // copy normalized children to link
             if (count($children)) {
                 $link['children'] = static::normalizeTree($children, $context);
+                uasort($link['children'], [static::class, 'sortLinks']);
             }
 
             // apply weight
