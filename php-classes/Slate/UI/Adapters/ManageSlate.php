@@ -13,6 +13,7 @@ class ManageSlate implements \Slate\UI\ILinksSource
     public static $courseSections = 1100;
     public static $schoolSettings = 1200;
     public static $pages = 1300;
+    public static $exports = 10000;
 
     public static function getLinks($context = null)
     {
@@ -66,6 +67,14 @@ class ManageSlate implements \Slate\UI\ILinksSource
                 '_href' => '/pages',
                 '_icon' => 'records',
                 '_weight' => static::$pages
+            ];
+        }
+
+        if (is_int(static::$exports)) {
+            $menu['Exports'] = [
+                '_icon' => 'export',
+                '_href' => '/exports',
+                '_weight' => static::$exports
             ];
         }
 
