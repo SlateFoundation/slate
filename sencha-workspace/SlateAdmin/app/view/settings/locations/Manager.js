@@ -48,7 +48,8 @@ Ext.define('SlateAdmin.view.settings.locations.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 80,
+        width: 65, // n*15+20
+        align: 'end',
         items: [
             {
                 action: 'browsecourses',
