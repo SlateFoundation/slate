@@ -9,15 +9,16 @@ class ManageSlate implements \Slate\UI\ILinksSource
     public static $parentTree = 'Tools';
     public static $icon = 'tools';
 
-    public static $people = true;
-    public static $courseSections = true;
-    public static $schoolSettings = true;
-    public static $pages = true;
+    public static $people = 1000;
+    public static $courseSections = 1100;
+    public static $schoolSettings = 1200;
+    public static $pages = 1300;
+    public static $exports = 10000;
 
     public static function getLinks($context = null)
     {
         $manageLinks = static::getManageLinks();
-        
+
         if (empty($manageLinks)) {
             return null;
         }
@@ -37,31 +38,43 @@ class ManageSlate implements \Slate\UI\ILinksSource
             '_weight' => static::$weight
         ];
 
-        if (static::$people) {
+        if (is_int(static::$people)) {
             $menu['People'] = [
                 '_href' => '/manage#people',
-                '_icon' => 'users'
+                '_icon' => 'users',
+                '_weight' => static::$people
             ];
         }
 
-        if (static::$courseSections) {
+        if (is_int(static::$courseSections)) {
             $menu['Course Sections'] = [
                 '_href' => '/manage#course-sections',
-                '_icon' => 'books'
+                '_icon' => 'books',
+                '_weight' => static::$courseSections
             ];
         }
 
-        if (static::$schoolSettings) {
+        if (is_int(static::$schoolSettings)) {
             $menu['School Settings'] = [
                 '_href' => '/manage#settings',
-                '_icon' => 'gears'
+                '_icon' => 'gears',
+                '_weight' => static::$schoolSettings
             ];
         }
 
-        if (static::$pages) {
+        if (is_int(static::$pages)) {
             $menu['Pages'] = [
                 '_href' => '/pages',
-                '_icon' => 'records'
+                '_icon' => 'records',
+                '_weight' => static::$pages
+            ];
+        }
+
+        if (is_int(static::$exports)) {
+            $menu['Exports'] = [
+                '_icon' => 'export',
+                '_href' => '/exports',
+                '_weight' => static::$exports
             ];
         }
 

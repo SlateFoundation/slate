@@ -19,7 +19,7 @@
         label=$label
         blankOption=$blankOption
         blankValue=$blankValue
-        default=$default->Handle
+        default=tif(is_string($default) ? $default : $default->Handle)
         error=$error
         hint=$hint
         required=$required
@@ -41,7 +41,7 @@
         label=$label
         blankOption=$blankOption
         blankValue=$blankValue
-        default=$default->Code
+        default=tif(is_string($default) ? $default : $default->Code)
         error=$error
         hint=$hint
         required=$required
@@ -63,7 +63,7 @@
         label=$label
         blankOption=$blankOption
         blankValue=$blankValue
-        default=$default->Handle
+        default=tif(is_string($default) ? $default : $default->Handle)
         error=$error
         hint=$hint
         required=$required
@@ -85,7 +85,7 @@
         label=$label
         blankOption=$blankOption
         blankValue=$blankValue
-        default=$default->Handle
+        default=tif(is_string($default) ? $default : $default->Handle)
         error=$error
         hint=$hint
         required=$required

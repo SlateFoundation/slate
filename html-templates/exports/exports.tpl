@@ -1,6 +1,8 @@
 {extends designs/site.tpl}
 
 {block content}
+    {load_templates "subtemplates/slate-forms.tpl"}
+
     {foreach key=scriptPath item=script from=$scripts implode="<hr>"}
         <h2>{$script.title|escape}</h2>
 
@@ -19,6 +21,35 @@
                         default=$value
                         placeholder='123,345'
                         hint='List of student IDs, group:grouphandle, or section:sectioncode, or all'
+                    }
+                {elseif $key == 'term'}
+                    {termField
+                        inputName=$key
+                        label=$label
+                        default=$value
+                        blankOption='any'
+                        currentOption='current'
+                    }
+                {elseif $key == 'course'}
+                    {courseField
+                        inputName=$key
+                        label=$label
+                        default=$value
+                        blankOption='any'
+                    }
+                {elseif $key == 'location'}
+                    {locationField
+                        inputName=$key
+                        label=$label
+                        default=$value
+                        blankOption='any'
+                    }
+                {elseif $key == 'schedule'}
+                    {scheduleField
+                        inputName=$key
+                        label=$label
+                        default=$value
+                        blankOption='any'
                     }
                 {elseif is_bool($value)}
                     {checkbox

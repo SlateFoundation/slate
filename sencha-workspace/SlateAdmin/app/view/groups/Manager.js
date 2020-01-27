@@ -26,6 +26,10 @@ Ext.define('SlateAdmin.view.groups.Manager', {
             xtype: 'textfield'
         }
     },{
+        text: 'namesPath',
+        dataIndex: 'namesPath',
+        flex: 4
+    },{
         text: 'Code',
         width: 200,
         dataIndex: 'Handle',
@@ -59,7 +63,8 @@ Ext.define('SlateAdmin.view.groups.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 80,
+        width: 65, // n*15+20
+        align: 'end',
         items: [
             {
                 action: 'browsemembers',
