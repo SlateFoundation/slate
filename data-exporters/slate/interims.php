@@ -1,7 +1,9 @@
 <?php
 
 use Slate\Term;
+use Slate\TermsRequestHandler;
 use Slate\Progress\SectionInterimReport;
+
 
 return [
     'title' => 'Interim Reports',
@@ -9,27 +11,29 @@ return [
     'filename' => 'interim-reports',
     'headers' => [
         'ReportID' => 'Report ID',
-        'ReportDate' => 'Report Date',
-        'StudentName' => 'Student Name',
-        'StudentID' => 'Student ID',
-        'StudentYear' => 'Student Year',
+        'ReportCreated' => 'Report Date',
+        'StudentFullName' => 'Student Name',
+        'StudentNumber' => 'Student ID',
+        'StudentGraduationYear' => 'Student Year',
         'StudentGradeLevel' => 'Student Grade Level',
-        'StudentAdvisor' => 'Student Advisor',
-        'InterimSection' => 'Interim Section',
-        'InterimAuthor' => 'Interim Author',
-        'InterimGrade' => 'Interim Grade'
+        'AdvisorFullName' => 'Student Advisor',
+        'SectionCode' => 'Interim Section',
+        'AuthorFullName' => 'Interim Author',
+        'ReportGrade' => 'Interim Grade'
     ],
     'readQuery' => function (array $input) {
         $query = [
-            'term' => null
+            'term' => '*'
         ];
 
-        if (!empty($input['term'])) {
-            if ($input['term'] == '*current') {
-                if (!$Term = Term::getClosest()) {
-                    throw new OutOfBoundsException('no current term found');
-                }
-            } elseif (!$Term = Term::getByHandle($input['term'])) {
+        if (empty($input['term']) || $input['term'] == '*current') {
+            if (!$Term = Term::getClosest()) {
+                throw new OutOfBoundsException('no current term could be found');
+            }
+
+            $query['term'] = $Term->Handle;
+        } else {
+            if (!$Term = TermsRequestHandler::getRecordByHandle($input['term'])) {
                 throw new OutOfBoundsException('term not found');
             }
 
@@ -40,59 +44,55 @@ return [
     },
     'buildRows' => function (array $query = [], array $config = []) {
 
-        // calculate closest graduation year for converting year to grade
-        $closestGraduationYear = Term::getClosestGraduationYear();
-
-        // build conditions
+        // build SectionInterimReport conditions
         $conditions = [];
-        $order = [
-            'ID'
-        ];
+        $order = ['ID'];
 
         if ($query['term']) {
-            $conditions['TermID'] = [
-                'values' => Term::getByHandle($query['term'])->getRelatedTermIDs()
-            ];
+            if (!$Term = TermsRequestHandler::getRecordByHandle($query['term'])) {
+                throw new Exception('term not found');
+            }
+
+            $conditions['TermID'] = $Term->ID;
         }
 
         $conditions = SectionInterimReport::mapConditions($conditions);
 
+
+        // calculate closest graduation year for converting year to grade
+        $closestGraduationYear = Term::getClosestGraduationYear();
+
+
         // build rows
-        try {
-            $result = DB::query(
-                '
-                    SELECT Report.*
-                      FROM `%s` Report
-                     WHERE (%s)
-                     ORDER BY %s
-                ',
-                [
-                    SectionInterimReport::$tableName,
-                    count($conditions) ? join(') AND (', $conditions) : 'TRUE',
-                    implode(',', $order)
-                ]
-            );
+        $result = DB::query(
+            '
+                SELECT SectionInterimReport.*
+                  FROM `%s` SectionInterimReport
+                 WHERE (%s)
+                 ORDER BY %s
+            ',
+            [
+                SectionInterimReport::$tableName,
+                count($conditions) ? join(') AND (', $conditions) : 'TRUE',
+                implode(',', $order)
+            ]
+        );
 
-            while ($record = $result->fetch_assoc()) {
-                $Report = SectionInterimReport::instantiateRecord($record);
+        while ($record = $result->fetch_assoc()) {
+            $Report = SectionInterimReport::instantiateRecord($record);
 
-                yield [
-                    'ReportID' => $Report->ID,
-                    'ReportDate' => date('Y-m-d H:i', $Report->Created),
-                    'StudentName' => $Report->Student->LastName.', '.$Report->Student->FirstName,
-                    'StudentID' => $Report->Student->StudentNumber,
-                    'StudentYear' => $Report->Student->GraduationYear,
-                    'StudentGradeLevel' => 12 - ($Report->Student->GraduationYear - $closestGraduationYear),
-                    'StudentAdvisor' => $Report->Student->Advisor->LastName.', '.$Report->Student->Advisor->FirstName,
-                    'InterimSection' => $Report->Section->Code,
-                    'InterimAuthor' => $Report->Creator->LastName.', '.$Report->Creator->FirstName,
-                    'InterimGrade' => $Report->Grade
-                ];
-            }
-        } finally {
-            if ($result) {
-                $result->free();
-            }
+            yield [
+                'ReportID' => $Report->ID,
+                'ReportCreated' => date('Y-m-d H:i', $Report->Created),
+                'StudentFullName' => $Report->Student->LastName.', '.$Report->Student->FirstName,
+                'StudentNumber' => $Report->Student->StudentNumber,
+                'StudentGraduationYear' => $Report->Student->GraduationYear,
+                'StudentGradeLevel' => 12 - ($Report->Student->GraduationYear - $closestGraduationYear),
+                'AdvisorFullName' => $Report->Student->Advisor ? $Report->Student->Advisor->LastName.', '.$Report->Student->Advisor->FirstName : null,
+                'SectionCode' => $Report->Section->Code,
+                'AuthorFullName' => $Report->Creator->LastName.', '.$Report->Creator->FirstName,
+                'ReportGrade' => $Report->Grade
+            ];
         }
     }
 ];
