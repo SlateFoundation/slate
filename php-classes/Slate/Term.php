@@ -220,6 +220,26 @@ class Term extends \VersionedRecord
         parent::save($deep);
     }
 
+    public function getStartTimestamp()
+    {
+        return $this->StartDate ? strtotime($this->StartDate) : null;
+    }
+
+    public function getEndTimestamp()
+    {
+        if (!$this->EndDate) {
+            return null;
+        }
+
+        $time = strtotime($this->EndDate);
+
+        // treat "empty" time component as end of day
+        if (date('H:i:s', $time) == '00:00:00') {
+            $time += 60*60*24-1;
+        }
+
+        return $time;
+    }
 
     public function getConcurrentTermIDs()
     {
