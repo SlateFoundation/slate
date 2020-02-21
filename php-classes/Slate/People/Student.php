@@ -41,6 +41,17 @@ class Student extends User
             'type' => 'one-one'
             ,'class' => Person::class
             ,'local' => 'AdvisorID'
+        ],
+        'ActiveSections' => [
+            'type' => 'many-many'
+            ,'class' => Section::class
+            ,'linkClass' => SectionParticipant::class
+            ,'linkLocal' => 'PersonID'
+            ,'linkForeign' => 'CourseSectionID'
+            ,'conditions' => [
+                '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
+                '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
+            ]
         ]
     ];
 
