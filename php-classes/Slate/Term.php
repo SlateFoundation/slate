@@ -190,6 +190,44 @@ class Term extends \VersionedRecord
         return $Term->getGraduationYear();
     }
 
+    public static function getClosestConcurrentTermIDs($forceRefresh = false)
+    {
+        $cacheKey = "slate-terms/closest-concurrent-ids";
+
+        if (!$forceRefresh && false !== ($termIds = Cache::fetch($cacheKey))) {
+            return $termIds;
+        }
+
+        try {
+            $termIds = static::getClosest()->getConcurrentTermIDs();
+        } catch (TableNotFoundException $e) {
+            $termIds = [];
+        }
+
+        Cache::store($cacheKey, $termIds);
+
+        return $termIds;
+    }
+
+    public static function getClosestMasterConcurrentTermIDs($forceRefresh = false)
+    {
+        $cacheKey = "slate-terms/closest-master-concurrent-ids";
+
+        if (!$forceRefresh && false !== ($termIds = Cache::fetch($cacheKey))) {
+            return $termIds;
+        }
+
+        try {
+            $termIds = static::getClosest()->getMaster()->getConcurrentTermIDs();
+        } catch (TableNotFoundException $e) {
+            $termIds = [];
+        }
+
+        Cache::store($cacheKey, $termIds);
+
+        return $termIds;
+    }
+
     public function validate($deep = true)
     {
         // call parent

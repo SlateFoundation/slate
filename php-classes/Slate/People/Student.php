@@ -11,6 +11,7 @@ use Emergence\People\User;
 use Emergence\People\Groups\Group;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
+use Slate\Term;
 
 
 class Student extends User
@@ -52,6 +53,22 @@ class Student extends User
                 '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
                 '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
             ]
+        ],
+        'CurrentSections' => [
+            'type' => 'many-many'
+            ,'class' => Section::class
+            ,'linkClass' => SectionParticipant::class
+            ,'linkLocal' => 'PersonID'
+            ,'linkForeign' => 'CourseSectionID'
+            ,'conditions' => [__CLASS__, 'getCurrentSectionsConditions']
+        ],
+        'CurrentMasterSections' => [
+            'type' => 'many-many'
+            ,'class' => Section::class
+            ,'linkClass' => SectionParticipant::class
+            ,'linkLocal' => 'PersonID'
+            ,'linkForeign' => 'CourseSectionID'
+            ,'conditions' => [__CLASS__, 'getCurrentMasterSectionsConditions']
         ]
     ];
 
@@ -186,5 +203,49 @@ class Student extends User
         }
 
         return sprintf('AdvisorID = %u', $advisor);
+    }
+
+    protected static function getCurrentSectionsConditions()
+    {
+        $courseSectionsInTerm = DB::allValues(
+            'ID',
+            '
+                SELECT ID
+                  FROM `%s`
+                 WHERE TermID IN (%s)
+            ',
+            [
+                Section::$tableName,
+                join(',', Term::getClosestConcurrentTermIDs())
+            ]
+        );
+
+        return [
+            sprintf('(Link.CourseSectionID IN(%s))', join(',', $courseSectionsInTerm)),
+            '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
+            '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
+        ];
+    }
+
+    protected static function getCurrentMasterSectionsConditions()
+    {
+        $courseSectionsInTerm = DB::allValues(
+            'ID',
+            '
+                SELECT ID
+                  FROM `%s`
+                 WHERE TermID IN (%s)
+            ',
+            [
+                Section::$tableName,
+                join(',', Term::getClosestMasterConcurrentTermIDs())
+            ]
+        );
+
+        return [
+            sprintf('(Link.CourseSectionID IN(%s))', join(',', $courseSectionsInTerm)),
+            '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
+            '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
+        ];
     }
 }
