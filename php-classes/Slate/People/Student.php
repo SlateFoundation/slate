@@ -238,7 +238,7 @@ class Student extends User
             ',
             [
                 Section::$tableName,
-                join(',', Term::getClosestMasterConcurrentTermIDs())
+                join(',', Term::getClosestMasterContainedTermIDs())
             ]
         );
 

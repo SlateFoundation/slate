@@ -209,16 +209,16 @@ class Term extends \VersionedRecord
         return $termIds;
     }
 
-    public static function getClosestMasterConcurrentTermIDs($forceRefresh = false)
+    public static function getClosestMasterContainedTermIDs($forceRefresh = false)
     {
-        $cacheKey = "slate-terms/closest-master-concurrent-ids";
+        $cacheKey = "slate-terms/closest-master-contained-ids";
 
         if (!$forceRefresh && false !== ($termIds = Cache::fetch($cacheKey))) {
             return $termIds;
         }
 
         try {
-            $termIds = static::getClosest()->getMaster()->getConcurrentTermIDs();
+            $termIds = static::getClosest()->getMaster()->getContainedTermIDs();
         } catch (TableNotFoundException $e) {
             $termIds = [];
         }
@@ -258,7 +258,7 @@ class Term extends \VersionedRecord
         parent::save($deep);
 
         // clear cache
-        Cache::delete("slate-terms/closest-master-concurrent-ids");
+        Cache::delete("slate-terms/closest-master-contained-ids");
         Cache::delete("slate-terms/closest-concurrent-ids");
     }
 
