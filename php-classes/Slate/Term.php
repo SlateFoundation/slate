@@ -256,6 +256,10 @@ class Term extends \VersionedRecord
 
         // call parent
         parent::save($deep);
+
+        // clear cache
+        Cache::delete("slate-terms/closest-master-concurrent-ids");
+        Cache::delete("slate-terms/closest-concurrent-ids");
     }
 
     public function getStartTimestamp()
