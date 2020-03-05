@@ -154,6 +154,11 @@ class User extends Person implements IUser
         }
     }
 
+    public static function getByFullName($firstName, $lastName, array $conditions = ['AccountLevel' => ['operator' => '!=', 'value' => 'Disabled']])
+    {
+        return parent::getByFullName($firstName, $lastName, $conditions);
+    }
+
     public static function getByUsername($username)
     {
         // try to get by username first
