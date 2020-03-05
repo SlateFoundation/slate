@@ -7,14 +7,12 @@ class EditorRequestHandler extends RequestHandler
 
     public static $userResponseModes = [
         'application/json' => 'json',
-        'text/csv' => 'csv'
+        'text/csv' => 'csv',
     ];
-
 
     public static function handleRequest()
     {
-        switch ($action ?: $action = static::shiftPath())
-        {
+        switch ($action ?: $action = static::shiftPath()) {
             case 'revisions':
                 return static::handleRevisionsRequest();
             // case 'getCodeMap': // Don't write verbs in the path, HTTP method is the verb!
@@ -34,12 +32,11 @@ class EditorRequestHandler extends RequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Developer');
 
-
         // read content query
         $contentQuery = null;
 
         if (!empty($_GET['content'])) {
-            if (!empty($_GET['contentFormat']) && $_GET['contentFormat'] == 'regex') {
+            if (!empty($_GET['contentFormat']) && 'regex' == $_GET['contentFormat']) {
                 $contentQuery = $_GET['content'];
             } else {
                 $contentQuery = preg_quote($_GET['content'], '/');
@@ -49,7 +46,7 @@ class EditorRequestHandler extends RequestHandler
         // read case sensitivity
         $caseMatch = false;
 
-        if (!empty($_GET['case']) && $_GET['case'] == 'match') {
+        if (!empty($_GET['case']) && 'match' == $_GET['case']) {
             $caseMatch = true;
         }
 
@@ -77,7 +74,7 @@ class EditorRequestHandler extends RequestHandler
         if (!empty($_GET['filename'])) {
             $filename = str_replace('_', '\\_', $_GET['filename']); // escape literal underscores which mean wildcard to LIKE
             $filename = strtr($filename, '*?', '%_'); // translate * and ? wildcards to LIKE equivelents
-            $fileConditions[] = 'Handle LIKE "'.DB::escape($filename) . '"';
+            $fileConditions[] = 'Handle LIKE "'.DB::escape($filename).'"';
         }
 
         // read buffers limit
@@ -86,7 +83,6 @@ class EditorRequestHandler extends RequestHandler
         if (!empty($_GET['contextLimit']) && ctype_digit($_GET['contextLimit'])) {
             $contextLimit = intval($_GET['contextLimit']);
         }
-
 
         // query list of files
         $filesByPath = Emergence_FS::getTreeFiles($path, $localOnly, $fileConditions);
@@ -101,7 +97,6 @@ class EditorRequestHandler extends RequestHandler
             $filesById[$fileData['ID']] = &$fileData;
         }
 
-
         // filter by content
         if ($contentQuery) {
             // open grep process
@@ -109,7 +104,7 @@ class EditorRequestHandler extends RequestHandler
                 'xargs grep -nIP '.escapeshellarg(($caseMatch ? '' : '(?i)').$contentQuery),
                 [
                     0 => ['pipe', 'r'],
-                    1 => ['pipe', 'w']
+                    1 => ['pipe', 'w'],
                 ],
                 $pipes,
                 Site::$rootPath.'/data'
@@ -132,18 +127,18 @@ class EditorRequestHandler extends RequestHandler
                 }
 
                 // parse grep output
-                list ($fileId, $line, $content) = explode(':', $outputLine, 3);
+                list($fileId, $line, $content) = explode(':', $outputLine, 3);
 
                 // build match data
                 $matchData = [
-                    'line' => intval($line)
+                    'line' => intval($line),
                 ];
 
                 // find position of match within content
                 preg_match('/'.$contentQuery.'/'.($caseMatch ? '' : 'i'), $content, $matches, PREG_OFFSET_CAPTURE);
 
                 if ($match = array_shift($matches)) {
-                    list ($matchSubstring, $matchOffset) = $match;
+                    list($matchSubstring, $matchOffset) = $match;
                     $matchLength = strlen($matchSubstring);
 
                     // split content by prefix, match, suffix
@@ -166,21 +161,21 @@ class EditorRequestHandler extends RequestHandler
             fclose($pipes[1]);
             proc_close($grepProc);
 
-            // filter to matches
+        // filter to matches
         } else {
             $results = array_values($filesById);
         }
-
 
         // respond with output
         return static::respond('searchResults', [
             'success' => true,
             'total' => count($results),
-            'data' => $results
+            'data' => $results,
         ]);
     }
 
-    public static function handleRevisionsRequest() {
+    public static function handleRevisionsRequest()
+    {
         $GLOBALS['Session']->requireAccountLevel('Developer');
 
         if (!empty($_REQUEST['ID'])) {
@@ -206,7 +201,7 @@ class EditorRequestHandler extends RequestHandler
                 'AuthorID',
                 'AncestorID',
                 'CollectionID',
-                'FullPath'
+                'FullPath',
             ];
 
             foreach ($node->getRevisions() as $item) {
@@ -215,7 +210,7 @@ class EditorRequestHandler extends RequestHandler
                 foreach ($fields as $field) {
                     $record[$field] = $item->$field;
 
-                    if ($field == 'AuthorID') {
+                    if ('AuthorID' == $field) {
                         $record['Author'] = Person::getByID($item->AuthorID);
                     }
                 }
@@ -262,11 +257,12 @@ class EditorRequestHandler extends RequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Developer');
 
-        if(static::peekPath() == 'all')
+        if ('all' == static::peekPath()) {
             static::$activityPageSize = false;
+        }
 
-        $activity = array();
-        $openFiles = array();
+        $activity = [];
+        $openFiles = [];
         $editResults = DB::query(
             'SELECT f.*'
             .' FROM _e_files f'
@@ -275,113 +271,76 @@ class EditorRequestHandler extends RequestHandler
             .' ORDER BY ID DESC'
         );
 
-        $closeFile = function($path) use (&$activity, &$openFiles) {
-
+        $closeFile = function ($path) use (&$activity, &$openFiles) {
             list($authorID, $collectionID, $handle) = explode('/', $path, 3);
             $Collection = SiteCollection::getByID($collectionID);
             $Author = Person::getByID($authorID);
 
-            $activity[] = array(
-                'EventType' => 'save'
-                ,'Author' => $Author ? $Author->getData() : null
-                ,'Collection' => $Collection->getData()
-                ,'Handle' => $handle
-                ,'CollectionPath' => $Collection->FullPath
-                ,'Timestamp' => $openFiles[$path][count($openFiles[$path])-1]['Timestamp']
-                ,'FirstTimestamp' => $openFiles[$path][0]['Timestamp']
-                ,'RevisionID' => $openFiles[$path][count($openFiles[$path])-1]['ID']
-                ,'FirstRevisionID' => $openFiles[$path][0]['ID']
-                ,'FirstAncestorID' => $openFiles[$path][0]['AncestorID']
-                ,'revisions' => $openFiles[$path]
-            );
+            $activity[] = [
+                'EventType' => 'save', 'Author' => $Author ? $Author->getData() : null, 'Collection' => $Collection->getData(), 'Handle' => $handle, 'CollectionPath' => $Collection->FullPath, 'Timestamp' => $openFiles[$path][count($openFiles[$path]) - 1]['Timestamp'], 'FirstTimestamp' => $openFiles[$path][0]['Timestamp'], 'RevisionID' => $openFiles[$path][count($openFiles[$path]) - 1]['ID'], 'FirstRevisionID' => $openFiles[$path][0]['ID'], 'FirstAncestorID' => $openFiles[$path][0]['AncestorID'], 'revisions' => $openFiles[$path],
+            ];
 
             unset($openFiles[$path]);
         };
 
-        while((!static::$activityPageSize || (count($activity)+count($openFiles) < static::$activityPageSize)) && ($editRecord = $editResults->fetch_assoc()))
-        {
+        while ((!static::$activityPageSize || (count($activity) + count($openFiles) < static::$activityPageSize)) && ($editRecord = $editResults->fetch_assoc())) {
             $editRecord['Timestamp'] = strtotime($editRecord['Timestamp']);
             $path = $editRecord['AuthorID'].'/'.$editRecord['CollectionID'].'/'.$editRecord['Handle'];
 
-
-            if($editRecord['Status'] == 'Deleted')
-            {
-                if(array_key_exists($path, $openFiles))
+            if ('Deleted' == $editRecord['Status']) {
+                if (array_key_exists($path, $openFiles)) {
                     $closeFile($path);
+                }
 
                 $Author = Person::getByID($editRecord['AuthorID']);
                 $Collection = SiteCollection::getByID($editRecord['CollectionID']);
 
-                $lastActivity = count($activity) ? $activity[count($activity)-1] : null;
-                if($lastActivity && $lastActivity['EventType'] == 'delete' && $lastActivity['Author']['ID'] == $Author->ID)
-                {
+                $lastActivity = count($activity) ? $activity[count($activity) - 1] : null;
+                if ($lastActivity && 'delete' == $lastActivity['EventType'] && $lastActivity['Author']['ID'] == $Author->ID) {
                     // compound into last activity entry if it was a delete by the same person
-                    $activity[count($activity)-1]['FirstTimestamp'] = $editRecord['Timestamp'];
-                    $activity[count($activity)-1]['files'][] = array(
-                        'Collection' => $Collection->getData()
-                        ,'Handle' => $editRecord['Handle']
-                        ,'CollectionPath' => $Collection->FullPath
-                        ,'Timestamp' => $editRecord['Timestamp']
-                    );
-                }
-                else
-                {
+                    $activity[count($activity) - 1]['FirstTimestamp'] = $editRecord['Timestamp'];
+                    $activity[count($activity) - 1]['files'][] = [
+                        'Collection' => $Collection->getData(), 'Handle' => $editRecord['Handle'], 'CollectionPath' => $Collection->FullPath, 'Timestamp' => $editRecord['Timestamp'],
+                    ];
+                } else {
                     // push new activity
-                    $activity[] = array(
-                        'EventType' => 'delete'
-                        ,'Author' => $Author ? $Author->getData() : null
-                        ,'Timestamp' => $editRecord['Timestamp']
-                        ,'files' => array(
-                            array(
-                                'Collection' => $Collection->getData()
-                                ,'Handle' => $editRecord['Handle']
-                                ,'CollectionPath' => $Collection->FullPath
-                                ,'Timestamp' => $editRecord['Timestamp']
-                            )
-                        )
-                    );
+                    $activity[] = [
+                        'EventType' => 'delete', 'Author' => $Author ? $Author->getData() : null, 'Timestamp' => $editRecord['Timestamp'], 'files' => [
+                            [
+                                'Collection' => $Collection->getData(), 'Handle' => $editRecord['Handle'], 'CollectionPath' => $Collection->FullPath, 'Timestamp' => $editRecord['Timestamp'],
+                            ],
+                        ],
+                    ];
                 }
-
-
-
-            }
-            elseif(array_key_exists($path, $openFiles))
-            {
-                if($editRecord['Timestamp'] < $openFiles[$path][0]['Timestamp'] - static::$activitySessionThreshold)
-                {
+            } elseif (array_key_exists($path, $openFiles)) {
+                if ($editRecord['Timestamp'] < $openFiles[$path][0]['Timestamp'] - static::$activitySessionThreshold) {
                     $closeFile($path);
-                    $openFiles[$path] = array($editRecord);
-                }
-                else
-                {
+                    $openFiles[$path] = [$editRecord];
+                } else {
                     array_unshift($openFiles[$path], $editRecord);
                 }
-            }
-            else
-            {
-                $openFiles[$path] = array($editRecord);
+            } else {
+                $openFiles[$path] = [$editRecord];
             }
         }
-
 
         // close any files still open
         $openFileKeys = array_keys($openFiles);
         array_walk($openFileKeys, $closeFile);
 
         // sort activity by last edit
-        usort($activity, function($a, $b) {
+        usort($activity, function ($a, $b) {
             return ($a['Timestamp'] > $b['Timestamp']) ? -1 : 1;
         });
 
-        return static::respond('activity', array(
-            'success' => true
-            ,'data' => $activity
-        ));
+        return static::respond('activity', [
+            'success' => true, 'data' => $activity,
+        ]);
     }
 
     public static function handleTimesheetRequest()
     {
-        if(static::peekPath() == 'html') {
+        if ('html' == static::peekPath()) {
             static::$responseMode = 'html';
         }
 
@@ -392,7 +351,7 @@ class EditorRequestHandler extends RequestHandler
         $minimumSessionDuration = isset($_REQUEST['minimumSessionDuration']) ? $_REQUEST['minimumSessionDuration'] : 120;
         $dayShift = isset($_REQUEST['dayShift']) ? $_REQUEST['dayShift'] : 18000; // 5 hours
 
-        $workDays = array();
+        $workDays = [];
 
         $editResults = DB::query(
             'SELECT UNIX_TIMESTAMP(Timestamp) AS Timestamp, AuthorID'
@@ -401,73 +360,63 @@ class EditorRequestHandler extends RequestHandler
             .' ORDER BY ID DESC'
         );
 
-        while($editRecord = $editResults->fetch_assoc()) {
+        while ($editRecord = $editResults->fetch_assoc()) {
             $day = date('Y-m-d', $editRecord['Timestamp'] - $dayShift);
 
-            if(!array_key_exists($day, $workDays)) {
-                if(count($workDays) == $daysLimit) {
+            if (!array_key_exists($day, $workDays)) {
+                if (count($workDays) == $daysLimit) {
                     break;
                 }
 
-                $workDays[$day] = array();
+                $workDays[$day] = [];
             }
 
-            if(!array_key_exists($editRecord['AuthorID'], $workDays[$day])) {
-                $workDays[$day][$editRecord['AuthorID']] = array();
+            if (!array_key_exists($editRecord['AuthorID'], $workDays[$day])) {
+                $workDays[$day][$editRecord['AuthorID']] = [];
             }
 
-            if(
+            if (
                 !count($workDays[$day][$editRecord['AuthorID']])
                 || ($workDays[$day][$editRecord['AuthorID']][0]['firstEdit'] - $gapLimit) > $editRecord['Timestamp']
             ) {
-                array_unshift($workDays[$day][$editRecord['AuthorID']], array(
-                    'firstEdit' => $editRecord['Timestamp']
-                    ,'lastEdit' => $editRecord['Timestamp']
-                ));
-            }
-            else {
+                array_unshift($workDays[$day][$editRecord['AuthorID']], [
+                    'firstEdit' => $editRecord['Timestamp'], 'lastEdit' => $editRecord['Timestamp'],
+                ]);
+            } else {
                 $workDays[$day][$editRecord['AuthorID']][0]['firstEdit'] = $editRecord['Timestamp'];
             }
-
         }
 
         // compile results
-        $results = array();
-        foreach($workDays AS $day => $authors) {
-#            print("<h1>$day</h1>");
-            $dayResults = array(
-                'date'  => $day
-                ,'authors' => array()
-            );
+        $results = [];
+        foreach ($workDays as $day => $authors) {
+//            print("<h1>$day</h1>");
+            $dayResults = [
+                'date' => $day, 'authors' => [],
+            ];
 
-            foreach($authors AS $authorID => $sessions) {
-                $authorResults = array(
-                    'Person' => Person::getByID($authorID)
-                    ,'totalDuration' => 0
-                    ,'sessions' => array()
-                );
-#                print("<h2>$Author->FullName</h2><pre>");
+            foreach ($authors as $authorID => $sessions) {
+                $authorResults = [
+                    'Person' => Person::getByID($authorID), 'totalDuration' => 0, 'sessions' => [],
+                ];
+//                print("<h2>$Author->FullName</h2><pre>");
 
-                foreach($sessions AS $authorSession) {
+                foreach ($sessions as $authorSession) {
                     $authorSession['duration'] = $authorSession['lastEdit'] - $authorSession['firstEdit'];
                     $authorResults['sessions'][] = $authorSession;
-#                    printf("%s\t->\t%s\t:\t%s minutes\n", date('g:i:sa', $authorSession['firstEdit']), date('g:i:sa', $authorSession['lastEdit']), number_format($authorSession['duration']/60,1));
+//                    printf("%s\t->\t%s\t:\t%s minutes\n", date('g:i:sa', $authorSession['firstEdit']), date('g:i:sa', $authorSession['lastEdit']), number_format($authorSession['duration']/60,1));
                     $authorResults['totalDuration'] += max($authorSession['duration'], $minimumSessionDuration);
                 }
 
                 $dayResults['authors'][] = $authorResults;
-#                print("</pre><p>".number_format($dayAuthor['duration'] / 60, 1)." minutes estimated total</p>");
+//                print("</pre><p>".number_format($dayAuthor['duration'] / 60, 1)." minutes estimated total</p>");
             }
 
             $results[] = $dayResults;
         }
 
-        return static::respond('timesheet', array(
-            'data' => $results
-            ,'daysLimit' => $daysLimit
-            ,'gapLimit' => $gapLimit
-            ,'minimumSessionDuration' => $minimumSessionDuration
-            ,'dayShift' => $dayShift
-        ));
+        return static::respond('timesheet', [
+            'data' => $results, 'daysLimit' => $daysLimit, 'gapLimit' => $gapLimit, 'minimumSessionDuration' => $minimumSessionDuration, 'dayShift' => $dayShift,
+        ]);
     }
 }

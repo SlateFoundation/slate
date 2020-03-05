@@ -26,6 +26,7 @@ class StreamWrapper
     {
         if ($this->node = static::getNodeByPath($path)) {
             $this->fh = $this->node->get();
+
             return true;
         } else {
             return false;
@@ -62,21 +63,9 @@ class StreamWrapper
                 $mode |= 0040000;
             }
 
-            return array(
-                'dev' => 0
-                ,'ino' => 0
-                ,'mode' => $mode
-                ,'nlink' => 0
-                ,'uid' => 0
-                ,'gid' => 0
-                ,'rdev' => 0
-                ,'size' => $size
-                ,'atime' => 0
-                ,'mtime' => $timestamp
-                ,'ctime' => $timestamp
-                ,'blksize' => -1
-                ,'blocks' => -1
-            );
+            return [
+                'dev' => 0, 'ino' => 0, 'mode' => $mode, 'nlink' => 0, 'uid' => 0, 'gid' => 0, 'rdev' => 0, 'size' => $size, 'atime' => 0, 'mtime' => $timestamp, 'ctime' => $timestamp, 'blksize' => -1, 'blocks' => -1,
+            ];
         }
     }
 }

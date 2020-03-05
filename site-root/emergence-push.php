@@ -18,22 +18,19 @@ if (!$sourceCollection = Site::resolvePath($_REQUEST['path'])) {
 }
 
 // create stream context for remote server
-$syncer = new EmergenceSyncer(array(
-    'host' => $_REQUEST['host']
-    ,'authUsername' => $_SERVER['PHP_AUTH_USER']
-    ,'authPassword' => $_SERVER['PHP_AUTH_PW']
-));
-
+$syncer = new EmergenceSyncer([
+    'host' => $_REQUEST['host'], 'authUsername' => $_SERVER['PHP_AUTH_USER'], 'authPassword' => $_SERVER['PHP_AUTH_PW'],
+]);
 
 $diff = $syncer->diffCollection($sourceCollection, !empty($_REQUEST['deep']));
 
 if (empty($_REQUEST['push'])) {
-    RequestHandler::respond('diff', array(
-        'diff' => $diff
-    ));
+    RequestHandler::respond('diff', [
+        'diff' => $diff,
+    ]);
 } else {
     $result = $syncer->pushDiff($diff);
-    RequestHandler::respond('pushComplete', array(
-        'result' => $result
-    ));
+    RequestHandler::respond('pushComplete', [
+        'result' => $result,
+    ]);
 }

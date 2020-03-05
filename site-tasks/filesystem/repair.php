@@ -7,7 +7,7 @@ return [
     'icon' => 'wrench',
     'requireAccountLevel' => 'Developer',
     'handler' => function () {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ('POST' == $_SERVER['REQUEST_METHOD']) {
             set_time_limit(0);
 
             $ops = !empty($_POST['ops']) && is_array($_POST['ops']) ? $_POST['ops'] : [];
@@ -66,7 +66,7 @@ return [
                 $messages[] = sprintf('Found %u ghost collections', count($duplicates));
 
                 // merge all collections and files into the not deleted collection and erase the deleted collection
-                foreach ($duplicates AS $duplicate) {
+                foreach ($duplicates as $duplicate) {
                     DB::nonQuery('UPDATE _e_files SET CollectionID = %u WHERE CollectionID = %u', [$duplicate['current'], $duplicate['deleted']]);
                     $movedFiles = DB::affectedRows();
 
@@ -89,16 +89,16 @@ return [
             if (in_array('clear-cache', $ops)) {
                 // clear EFS cache
                 $keysDeleted = Cache::deleteByPattern('/^efs:/');
-                
+
                 $messages[] = "Cleared $keysDeleted cache entries";
             }
 
             return static::respond('message', [
                 'title' => 'Filesystem repaired',
-                'message' => count($messages) ? ' - ' . implode("\n - ", $messages) : 'No operations performed'
+                'message' => count($messages) ? ' - '.implode("\n - ", $messages) : 'No operations performed',
             ]);
         }
 
         return static::respond('repair');
-    }
+    },
 ];

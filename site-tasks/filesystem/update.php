@@ -9,5 +9,5 @@ return [
     'icon' => 'clone',
     'handler' => function () {
         RequestHandler::sendResponse(SenchaApp::load('EmergencePullTool')->render());
-    }
+    },
 ];

@@ -6,16 +6,16 @@ class RootCollection extends \Sabre\DAV\Collection
 {
     public static $allowCreateRootCollections = true;
 
-    public static $siteDirectories = array(
-        '_parent' => '\Emergence\DAV\ParentCollection'
-    );
+    public static $siteDirectories = [
+        '_parent' => '\Emergence\DAV\ParentCollection',
+    ];
 
     public function getChildren()
     {
-        $children = array();
+        $children = [];
 
         // static directories
-        foreach (static::$siteDirectories AS $name => $class) {
+        foreach (static::$siteDirectories as $name => $class) {
             $instance = $this->getChild($name);
 
             if ($instance->getName()) {
@@ -44,6 +44,7 @@ class RootCollection extends \Sabre\DAV\Collection
         // check if child exists
         if (array_key_exists($name, static::$siteDirectories)) {
             $className = static::$siteDirectories[$name];
+
             return new $className($name);
         } elseif ($collection = Collection::getByHandle($name)) {
             return $collection;
@@ -57,7 +58,7 @@ class RootCollection extends \Sabre\DAV\Collection
         // filter name
         $name = static::filterName($name);
 
-        return (boolean)$this->getChild($name);
+        return (bool) $this->getChild($name);
     }
 
     public function getName()

@@ -3,6 +3,8 @@
 namespace Emergence\Connectors;
 
 use Site;
+use DB;
+use ActiveRecord;
 
 use Emergence\EventBus;
 use Emergence\Logger;
@@ -18,6 +20,7 @@ abstract class AbstractConnector extends \RequestHandler implements IConnector
 
     public static $synchronizeRequiredAccountLevel = 'Administrator';
     public static $synchronizeTimeLimit = 0;
+    public static $globalRecordCaching = true;
 
     public static function getTitle()
     {
@@ -163,6 +166,14 @@ abstract class AbstractConnector extends \RequestHandler implements IConnector
         set_time_limit(static::$synchronizeTimeLimit);
 
 
+        // configure logging and caching
+        DB::suspendQueryLogging();
+
+        if (static::$globalRecordCaching) {
+            ActiveRecord::$useCache = true;
+        }
+
+
         // execute synchronization
         try {
             $success = static::synchronize($Job, $pretend);
@@ -174,6 +185,10 @@ abstract class AbstractConnector extends \RequestHandler implements IConnector
         if (!$success) {
             $Job->Status = 'Failed';
         }
+
+
+        // restore logging
+        DB::resumeQueryLogging();
 
 
         // save job if not pretend

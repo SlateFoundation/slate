@@ -5,7 +5,7 @@ namespace Emergence\DAV;
 class ServerPlugin extends \Sabre\DAV\ServerPlugin
 {
     /**
-     * reference to server class
+     * reference to server class.
      *
      * @var Sabre\DAV\Server
      */
@@ -15,14 +15,14 @@ class ServerPlugin extends \Sabre\DAV\ServerPlugin
     {
         $this->server = $server;
 
-        $server->subscribeEvent('beforeMethod', array($this, 'httpGetInterceptor'));
-        $server->subscribeEvent('beforeMethod', array($this, 'beforeMethod'));
-        $server->subscribeEvent('beforeCreateFile', array($this, 'beforeCreateFile'));
+        $server->subscribeEvent('beforeMethod', [$this, 'httpGetInterceptor']);
+        $server->subscribeEvent('beforeMethod', [$this, 'beforeMethod']);
+        $server->subscribeEvent('beforeCreateFile', [$this, 'beforeCreateFile']);
     }
 
     public function httpGetInterceptor($method, $uri)
     {
-        if ($method !== 'GET' || DevelopRequestHandler::getResponseMode() != 'json') {
+        if ('GET' !== $method || 'json' != DevelopRequestHandler::getResponseMode()) {
             return true;
         }
 
@@ -44,7 +44,7 @@ class ServerPlugin extends \Sabre\DAV\ServerPlugin
             throw new \Sabre\DAV\Exception\FileNotFound();
         }
 
-        $children = array();
+        $children = [];
         foreach ($node->getChildren() as $child) {
             $children[] = $child->getData();
         }
@@ -52,10 +52,9 @@ class ServerPlugin extends \Sabre\DAV\ServerPlugin
         $this->server->httpResponse->sendStatus(200);
         $this->server->httpResponse->setHeader('Content-Type', 'application/json');
 
-        $this->server->httpResponse->sendBody(json_encode(array(
-            'path' => $uri
-            ,'children' => $children
-        )));
+        $this->server->httpResponse->sendBody(json_encode([
+            'path' => $uri, 'children' => $children,
+        ]));
 
         return false;
     }
@@ -68,22 +67,25 @@ class ServerPlugin extends \Sabre\DAV\ServerPlugin
      *
      * @param string $method
      * @param string $uri
+     *
      * @return bool
      */
     public function beforeMethod($method, $uri)
     {
         switch ($method) {
-            case 'GET' :
+            case 'GET':
                 if (!$node) {
                     $node = $this->server->tree->getNodeForPath($uri);
                 }
 
                 $this->server->httpResponse->setHeader('X-Revision-ID', $node->ID);
+
                 break;
-            case 'PUT' :
-                if (stripos($uri, '_parent/') === 0) {
-                    $this->server->httpResponse->setHeader('Location', 'http://'.$_SERVER['HTTP_HOST'].'/develop/'.str_replace('_parent/',null,$uri));
+            case 'PUT':
+                if (0 === stripos($uri, '_parent/')) {
+                    $this->server->httpResponse->setHeader('Location', 'http://'.$_SERVER['HTTP_HOST'].'/develop/'.str_replace('_parent/', null, $uri));
                 }
+
                 break;
         }
 
@@ -95,9 +97,9 @@ class ServerPlugin extends \Sabre\DAV\ServerPlugin
         list($dir, $name) = \Sabre\DAV\URLUtil::splitPath($uri);
 
         $currentNode = null;
-        foreach (explode('/',trim($dir,'/')) as $pathPart) {
+        foreach (explode('/', trim($dir, '/')) as $pathPart) {
             $parentNode = $currentNode;
-            $currentNode = \SiteCollection::getByHandle($pathPart, $parentNode?$parentNode->ID:null);
+            $currentNode = \SiteCollection::getByHandle($pathPart, $parentNode ? $parentNode->ID : null);
 
             if (!$currentNode) {
                 $currentNode = \SiteCollection::create($pathPart, $parentNode);

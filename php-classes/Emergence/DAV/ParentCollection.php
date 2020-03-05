@@ -30,13 +30,12 @@ class ParentCollection extends RootCollection
     {
         if (!isset(static::$_children)) {
             $results = \DB::query(
-                'SELECT * FROM `%s` WHERE Site = "Remote" AND ParentID IS NULL'
-                ,array(
-                    Collection::$tableName
-                )
+                'SELECT * FROM `%s` WHERE Site = "Remote" AND ParentID IS NULL', [
+                    Collection::$tableName,
+                ]
             );
 
-            static::$_children = array();
+            static::$_children = [];
             while ($record = $results->fetch_assoc()) {
                 static::$_children[$record['Handle']] = new Collection($record['Handle'], $record);
             }
@@ -53,10 +52,11 @@ class ParentCollection extends RootCollection
 
         $node = $this;
         while ($childHandle = array_shift($path)) {
-            if (method_exists($node,'getChild') && $nextNode = $node->getChild($childHandle)) {
+            if (method_exists($node, 'getChild') && $nextNode = $node->getChild($childHandle)) {
                 $node = $nextNode;
             } else {
                 $node = false;
+
                 break;
             }
         }
@@ -106,10 +106,8 @@ class ParentCollection extends RootCollection
 
     public function getData()
     {
-        return array(
-            'Class' => 'SiteCollection'
-            ,'Handle' => $this->getName()
-            ,'FullPath' => static::$handle
-        );
+        return [
+            'Class' => 'SiteCollection', 'Handle' => $this->getName(), 'FullPath' => static::$handle,
+        ];
     }
 }

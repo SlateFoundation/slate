@@ -12,8 +12,10 @@ $timestampColumns = DB::allRecords('
            IS_NULLABLE,
            COLUMN_TYPE
       FROM information_schema.`COLUMNS`
+      JOIN information_schema.`TABLES` USING (TABLE_SCHEMA, TABLE_NAME)
      WHERE TABLE_SCHEMA = SCHEMA()
        AND DATA_TYPE = "timestamp"
+       AND TABLE_TYPE = "BASE TABLE"
 ');
 
 foreach($timestampColumns as $timestampColumn) {

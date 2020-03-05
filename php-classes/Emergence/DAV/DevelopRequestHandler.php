@@ -2,23 +2,21 @@
 
 namespace Emergence\DAV;
 
+use Emergence\WebApps\SenchaApp;
+use Sabre\DAV\Mount\Plugin as MountPlugin;
+use Sabre\DAV\Server;
+use Sabre\DAV\TemporaryFileFilterPlugin;
 use Site;
 use User;
 use UserSession;
-
-use Emergence\WebApps\SenchaApp;
-
-use Sabre\DAV\Server;
-use Sabre\DAV\TemporaryFileFilterPlugin;
-use Sabre\DAV\Mount\Plugin AS MountPlugin;
 
 class DevelopRequestHandler extends \Emergence\Site\RequestHandler
 {
     public static $userClass = User::class;
 
-    public static $userResponseModes = array(
-        'application/json' => 'json'
-    );
+    public static $userResponseModes = [
+        'application/json' => 'json',
+    ];
 
     public static function handleRequest()
     {
@@ -35,7 +33,7 @@ class DevelopRequestHandler extends \Emergence\Site\RequestHandler
             $authUserPass = $authEngine->getUserPass();
 
             // try to get session
-            if ($authUserPass[0] == '$session' || $authUserPass[0] == '_session') {
+            if ('$session' == $authUserPass[0] || '_session' == $authUserPass[0]) {
                 if ($Session = UserSession::getByHandle($authUserPass[1])) {
                     $User = $Session->Person;
                 }
@@ -55,21 +53,21 @@ class DevelopRequestHandler extends \Emergence\Site\RequestHandler
 
         // store login to session
         if (isset($GLOBALS['Session'])) {
-            $GLOBALS['Session'] = $GLOBALS['Session']->changeClass('UserSession', array(
-                'PersonID' => $User->ID
-            ));
+            $GLOBALS['Session'] = $GLOBALS['Session']->changeClass('UserSession', [
+                'PersonID' => $User->ID,
+            ]);
         }
 
         // detect base path
         $basePath = array_slice(Site::$requestPath, 0, count(Site::$resolvedPath));
 
         // switch to JSON response mode
-        if (static::peekPath() == 'json') {
+        if ('json' == static::peekPath()) {
             $basePath[] = static::$responseMode = static::shiftPath();
         }
 
         // handle /develop request
-        if ($_SERVER['REQUEST_METHOD'] == 'GET' && static::getResponseMode() == 'html' && !static::peekPath()) {
+        if ('GET' == $_SERVER['REQUEST_METHOD'] && 'html' == static::getResponseMode() && !static::peekPath()) {
             return static::sendResponse(SenchaApp::load('EmergenceEditor')->render());
         }
 
@@ -79,9 +77,9 @@ class DevelopRequestHandler extends \Emergence\Site\RequestHandler
 
         // The lock manager is reponsible for making sure users don't overwrite each others changes. Change 'data' to a different
         // directory, if you're storing your data somewhere else.
-#       $lockBackend = new Sabre_DAV_Locks_Backend_FS('/tmp/dav-lock');
-#       $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
-#       $server->addPlugin($lockPlugin);
+//       $lockBackend = new Sabre_DAV_Locks_Backend_FS('/tmp/dav-lock');
+//       $lockPlugin = new Sabre_DAV_Locks_Plugin($lockBackend);
+//       $server->addPlugin($lockPlugin);
 
         // filter temporary files
         $server->addPlugin(new TemporaryFileFilterPlugin('/tmp/dav-tmp'));

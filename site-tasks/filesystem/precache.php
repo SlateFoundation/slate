@@ -5,15 +5,14 @@ return [
     'description' => 'Scan parent site for new files and cache them locally',
     'icon' => 'cloud-download',
     'handler' => function () {
-
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ('POST' == $_SERVER['REQUEST_METHOD']) {
             Site::$autoPull = true;
             Site::$debug = true;
 
             set_time_limit(0);
 
             $message = '';
-            foreach ($_POST['collections'] AS $collection) {
+            foreach ($_POST['collections'] as $collection) {
                 if (!$collection = trim($collection)) {
                     continue;
                 }
@@ -22,9 +21,9 @@ return [
                 $message .= sprintf('Precached %03u files in %s'.PHP_EOL, $filesCached, $collection);
             }
         }
-        
+
         return static::respond('precache', [
-            'message' => $message
+            'message' => $message,
         ]);
-    }
+    },
 ];

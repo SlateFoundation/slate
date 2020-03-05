@@ -19,16 +19,16 @@ class Collection extends \SiteCollection implements \Sabre\DAV\ICollection
     // localize file creation
     public function createDirectory($handle)
     {
-        if ($this->Site != 'Local') {
+        if ('Local' != $this->Site) {
             throw new \Sabre\DAV\Exception\Forbidden('Cannot create collections under _parent');
         }
 
         return parent::createDirectory($handle);
     }
 
-    public function createFile($path, $data = null, $ancestorID = NULL)
+    public function createFile($path, $data = null, $ancestorID = null)
     {
-        if ($this->Site != "Local") {
+        if ('Local' != $this->Site) {
             throw new \Sabre\DAV\Exception\Forbidden('New files cannot be created under _parent');
             //return $this->getLocalizedCollection()->createFile($path, $data);
         }
@@ -38,7 +38,7 @@ class Collection extends \SiteCollection implements \Sabre\DAV\ICollection
 
     public function setName($handle)
     {
-        if ($this->Site != 'Local') {
+        if ('Local' != $this->Site) {
             throw new \Sabre\DAV\Exception\Forbidden('Cannot rename collections under _parent');
         }
 
@@ -47,7 +47,7 @@ class Collection extends \SiteCollection implements \Sabre\DAV\ICollection
 
     public function delete()
     {
-        if ($this->Site != 'Local') {
+        if ('Local' != $this->Site) {
             throw new \Sabre\DAV\Exception\Forbidden('Cannot delete collections under _parent');
         }
 
@@ -67,6 +67,7 @@ class Collection extends \SiteCollection implements \Sabre\DAV\ICollection
     {
         try {
             $this->getChild($name);
+
             return true;
         } catch (\Sabre\DAV\Exception\FileNotFound $e) {
             return false;

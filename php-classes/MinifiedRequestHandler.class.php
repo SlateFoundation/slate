@@ -135,6 +135,17 @@ class MinifiedRequestHandler extends RequestHandler
                 }
 
                 if ($node->Type != $contentType) {
+                    if (
+                        $node->Type != 'application/php'
+                        && count($paths) == 1
+                        && method_exists($node, 'outputAsResponse')
+                    ) {
+                        // if the non-matching file is a static asset and the only path,
+                        // just output it as it might be linked to relatively
+                        $node->outputAsResponse();
+                        exit();
+                    }
+
                     throw new Exception('Source file "'.implode('/', $path).'" does not match requested content type "'.$contentType.'"', self::ERROR_TYPE_MISMATCH);
                 }
 
