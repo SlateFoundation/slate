@@ -73,7 +73,7 @@ abstract class RequestHandler
             $responseMode = static::getResponseMode();
         }
 
-        if ($responseMode != 'return') {
+        if ($responseMode != 'return' && !headers_sent()) {
             header('X-Response-ID: '.$responseID);
         }
 
@@ -121,7 +121,9 @@ abstract class RequestHandler
 
     public static function respondYaml($responseID, $responseData = array())
     {
-        header('Content-type: application/x-yaml; charset=utf-8');
+        if (!headers_sent()) {
+            header('Content-type: application/x-yaml; charset=utf-8');
+        }
 
         $responseData = JSON::translateObjects($responseData, !empty($_GET['summary']), !empty($_GET['include']) ? $_GET['include'] : null);
         print(Yaml::dump($responseData, 10, 2, Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE));
@@ -164,7 +166,7 @@ abstract class RequestHandler
 
         if ($format == 'pdf') {
             $tmpPath = tempnam('/tmp', 'e_pdf_');
-    
+
             file_put_contents($tmpPath.'.html', $html);
 
             $command = implode(' ', [
@@ -188,7 +190,10 @@ abstract class RequestHandler
             readfile($tmpPath.'.pdf');
             exit();
         } elseif ($format == 'html') {
-            header('Content-Type: text/html; charset=utf-8');
+            if (!headers_sent()) {
+                header('Content-Type: text/html; charset=utf-8');
+            }
+
             print($html);
             exit();
         } else {
@@ -198,13 +203,19 @@ abstract class RequestHandler
 
     public static function respondXml($responseID, $responseData = array())
     {
-        header('Content-Type: text/xml; charset=utf-8');
+        if (!headers_sent()) {
+            header('Content-Type: text/xml; charset=utf-8');
+        }
+
         return DwooEngine::respond($responseID, $responseData);
     }
 
     public static function respondHtml($responseID, $responseData = array())
     {
-        header('Content-Type: text/html; charset=utf-8');
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=utf-8');
+        }
+
         $responseData['responseID'] = $responseID;
         return DwooEngine::respond($responseID, $responseData);
     }

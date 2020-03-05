@@ -42,7 +42,7 @@ class SourcesRequestHandler extends \RequestHandler
 
     public static function handleSourceGitRequest(Source $source)
     {
-        return GitHttpBackend::handleRepositoryRequest($source->getRepository());
+        return GitHttpBackend::handleRepositoryRequest($source->getRepository(), static::getPath());
     }
 
     public static function handleSourceRequest(Source $source)

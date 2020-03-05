@@ -2,6 +2,7 @@
 
 namespace Emergence;
 
+use Emergence\KeyedDiff;
 use Emergence\Site\Storage;
 use Psr\Log\LogLevel;
 
@@ -129,10 +130,49 @@ class Logger extends \Psr\Log\AbstractLogger
     {
         $replace = [];
         foreach ($context as $key => $value) {
-            $replace['{' . $key . '}'] = (string)$value;
+            $replace['{' . $key . '}'] = static::toLogString($value);
         }
 
         return strtr($message, $replace);
+    }
+
+    protected static function toLogString($value)
+    {
+        if (is_array($value)) {
+            $formatted = [];
+            foreach ($value as $key => $value) {
+                $value = static::toLogString($value);
+
+                if (is_string($key)) {
+                    $formatted[] = "{$key} = {$value}";
+                }
+            }
+
+            return '[ '.implode(', ', $formatted).' ]';
+        } elseif (is_bool($value)) {
+            // return $value ? '✔' : '✘';
+            return $value ? 'T' : 'F';
+        } elseif ($value === null) {
+            return '∅';
+        } elseif ($value instanceof KeyedDiff) {
+            $newValues = $value->getNewValues();
+            $oldValues = $value->getOldValues();
+            $diff = [];
+
+            foreach ($newValues as $key => $newValue) {
+                $diff[$key] = sprintf(
+                    '%s → %s',
+                    $oldValues && isset($oldValues[$key])
+                        ? static::toLogString($oldValues[$key])
+                        : '⁇',
+                    static::toLogString($newValue)
+                );
+            }
+
+            return static::toLogString($diff);
+        }
+
+        return (string)$value;
     }
 
     // permit log messages for the default logger instance to be called statically by prefixing them with general_

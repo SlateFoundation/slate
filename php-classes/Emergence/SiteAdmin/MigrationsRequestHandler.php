@@ -324,6 +324,116 @@ class MigrationsRequestHandler extends \RequestHandler
         return DB::oneValue('SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = SCHEMA() AND TABLE_NAME = "%s" AND COLUMN_NAME = "%s"', DB::escape([$tableName, $columnName]));
     }
 
+    protected static function getColumnEnumValues($tableName, $columnName)
+    {
+        $columnType = static::getColumnType($tableName, $columnName);
+
+        if (substr($columnType, 0, 5) != 'enum(') {
+            throw new RangeException("Column {$tableName}.{$columnName} is not enum");
+        }
+
+        return array_map(function ($value) {
+            return str_replace(['\\\\', '\'\''], ['\\', '\''], $value);
+        }, explode("','", substr($columnType, 6, -2)));
+    }
+
+    protected static function hasColumnEnumValue($tableName, $columnName, $value)
+    {
+        return in_array($value, static::getColumnEnumValues($tableName, $columnName));
+    }
+
+    protected static function addColumnEnumValue($tableName, $columnName, $value)
+    {
+        $column = static::getColumn($tableName, $columnName);
+
+        if (substr($column['COLUMN_TYPE'], 0, 5) != 'enum(') {
+            throw new RangeException("Column {$tableName}.{$columnName} is not enum");
+        }
+
+        $escapedValue = str_replace(['\\', '\''], ['\\\\', '\'\''], $value);
+        $definition = 'enum(' . substr($column['COLUMN_TYPE'], 5, -1) . ",'{$escapedValue}')";
+
+        $definition .= $column['IS_NULLABLE'] == 'YES'
+            ? ' NULL'
+            : ' NOT NULL';
+
+        $definition .= $column['COLUMN_DEFAULT'] === null
+            ? ' DEFAULT NULL'
+            : ' DEFAULT "'.DB::escape($column['COLUMN_DEFAULT']).'"';
+
+        printf("Adding value '%s' to enum column `%s`.`%s`\n", $escapedValue, $tableName, $columnName);
+
+        return DB::nonQuery(
+            'ALTER TABLE `%1$s` CHANGE `%2$s` `%2$s` %3$s',
+            [
+                $tableName,
+                $columnName,
+                $definition
+            ]
+        );
+    }
+
+    protected static function removeColumnEnumValue($tableName, $columnName, $value)
+    {
+        $column = static::getColumn($tableName, $columnName);
+
+        if (substr($column['COLUMN_TYPE'], 0, 5) != 'enum(') {
+            throw new RangeException("Column {$tableName}.{$columnName} is not enum");
+        }
+
+        $escapedValue = str_replace(['\\', '\''], ['\\\\', '\'\''], $value);
+
+        // extract values list
+        $values = substr($column['COLUMN_TYPE'], 5, -1);
+
+        // remove quoted value
+        $values = preg_replace('/(?<=^|,)\''.preg_quote($escapedValue).'\'(?=,|$)/', '', $values);
+
+        // trim leftover commas
+        $values = trim($values, ',');
+        $values = str_replace("',,'", "','", $values);
+
+        // build field definition
+        $definition = 'enum('.$values.')';
+
+        $definition .= $column['IS_NULLABLE'] == 'YES'
+            ? ' NULL'
+            : ' NOT NULL';
+
+        $definition .= $column['COLUMN_DEFAULT'] === null
+            ? ' DEFAULT NULL'
+            : ' DEFAULT "'.DB::escape($column['COLUMN_DEFAULT']).'"';
+
+        printf("Removing value '%s' from enum column `%s`.`%s`\n", $escapedValue, $tableName, $columnName);
+
+        return DB::nonQuery(
+            'ALTER TABLE `%1$s` CHANGE `%2$s` `%2$s` %3$s',
+            [
+                $tableName,
+                $columnName,
+                $definition
+            ]
+        );
+    }
+
+    protected static function replaceColumnEnumValue($tableName, $columnName, $oldValue, $newValue)
+    {
+        static::addColumnEnumValue($tableName, $columnName, $newValue);
+
+        printf("Replacing value '%s' with value '%s' in enum column `%s`.`%s`\n", $oldValue, $newValue, $tableName, $columnName);
+        DB::nonQuery(
+            'UPDATE `%1$s` SET `%2$s` = "%3$s" WHERE `%2$s` = "%4$s"',
+            [
+                $tableName,
+                $columnName,
+                $newValue,
+                $oldValue
+            ]
+        );
+
+        static::removeColumnEnumValue($tableName, $columnName, $oldValue);
+    }
+
     protected static function getColumnKey($tableName, $columnName)
     {
         return DB::oneValue('SELECT COLUMN_KEY FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = SCHEMA() AND TABLE_NAME = "%s" AND COLUMN_NAME = "%s"', DB::escape([$tableName, $columnName]));

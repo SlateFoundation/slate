@@ -50,9 +50,9 @@
             {$changes = default($entry.changes, $entry.context.changes)}
             {if $changes}
                 <dl>
-                    {foreach item=delta key=field from=$changes}
+                    {foreach item=delta key=field from=$changes->getDiff()}
                         <dt>{$field}</dt>
-                        <dd>{default($delta.from, '∅')|escape} &rarr; {default($delta.to, '∅')|escape}</dd>
+                        <dd>{default($delta.old, '∅')|escape} &rarr; {default($delta.new, '∅')|escape}</dd>
                     {/foreach}
                 </dl>
             {/if}

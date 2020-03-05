@@ -53,7 +53,7 @@ Ext.define('Emergence.cms.view.composer.Markdown', {
             _doRender();
         } else {
             Ext.Loader.loadScripts({
-                url: '/js/markdown.js',
+                url: '/js/lib/markdown.js',
                 cache: true,
                 onLoad: _doRender
             });

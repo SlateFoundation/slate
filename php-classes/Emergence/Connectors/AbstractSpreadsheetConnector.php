@@ -74,6 +74,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractConnect
         foreach ($columnsMap as $alias => $key) {
             // a falsey-value indicates a disabled mapping
             if (!$key) {
+                unset($row[$alias]);
                 continue;
             }
 

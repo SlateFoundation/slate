@@ -2,16 +2,13 @@
 
 namespace Emergence\Git;
 
+use Emergence\Site\Storage;
+use Emergence\SSH\KeyPair;
+use Emergence_FS;
+use Gitonomy\Git\Admin as GitAdmin;
+use Gitonomy\Git\Exception\ProcessException as GitProcessException;
 use Site;
 use SiteFile;
-use Emergence_FS;
-
-use Gitonomy\Git\Admin AS GitAdmin;
-use Gitonomy\Git\Repository;
-use Gitonomy\Git\Exception\ProcessException AS GitProcessException;
-use Emergence\SSH\KeyPair;
-use Emergence\Site\Storage;
-
 
 class Source
 {
@@ -23,15 +20,21 @@ class Source
     protected $trees;
     protected $deployKey;
 
+    public function __construct($id, $config = [])
+    {
+        $this->id = $id;
+        $this->config = $config;
+    }
+
     public static function getAll()
     {
         static $sources = null;
 
-        if ($sources === null) {
+        if (null === $sources) {
             $sources = \Git::$repositories;
 
             // instantiate sources
-            foreach ($sources AS $id => &$source) {
+            foreach ($sources as $id => &$source) {
                 if (is_array($source)) {
                     $source = new static($id, $source);
                 }
@@ -50,20 +53,13 @@ class Source
 
     public static function getRepositoriesRootPath()
     {
-        $path = Storage::getLocalStorageRoot() . '/git';
+        $path = Storage::getLocalStorageRoot().'/git';
 
         if (!is_dir($path)) {
             mkdir($path, 0770, true);
         }
 
         return $path;
-    }
-
-
-    public function __construct($id, $config = [])
-    {
-        $this->id = $id;
-        $this->config = $config;
     }
 
     public function getId()
@@ -113,33 +109,33 @@ class Source
 
     public function isInitialized()
     {
-        return (bool)$this->getRepository();
+        return (bool) $this->getRepository();
     }
 
     public function getRepositoryPath()
     {
-        return static::getRepositoriesRootPath() . '/' . $this->id;
+        return static::getRepositoriesRootPath().'/'.$this->id;
     }
 
     public function getPrivateKeyPath()
     {
-        return $this->getRepositoryPath() . '.key';
+        return $this->getRepositoryPath().'.key';
     }
 
     public function getPublicKeyPath()
     {
-        return $this->getRepositoryPath() . '.pub';
+        return $this->getRepositoryPath().'.pub';
     }
 
     public function getDraftCommitMessagePath()
     {
-        return $this->getRepositoryPath() . '/.git/COMMIT_MSG';
+        return $this->getRepositoryPath().'/.git/COMMIT_MSG';
     }
 
     public function getGitEnvironment()
     {
         $env = [
-            'GIT_SSH' => $this->getSshWrapperPath()
+            'GIT_SSH' => $this->getSshWrapperPath(),
         ];
 
         if (!empty($GLOBALS['Session']) && ($User = $GLOBALS['Session']->Person)) {
@@ -157,7 +153,7 @@ class Source
 
             if (is_dir($gitDir)) {
                 $this->repository = new Repository($gitDir, [
-                    'environment_variables' => $this->getGitEnvironment()
+                    'environment_variables' => $this->getGitEnvironment(),
                 ]);
             } else {
                 $this->repository = false;
@@ -186,11 +182,11 @@ class Source
     public function setDeployKey(KeyPair $keyPair)
     {
         $privateKeyPath = $this->getPrivateKeyPath();
-        file_put_contents($privateKeyPath, $keyPair->getPrivateKey() . PHP_EOL);
+        file_put_contents($privateKeyPath, $keyPair->getPrivateKey().PHP_EOL);
         chmod($privateKeyPath, 0600);
 
         $publicKeyPath = $this->getPublicKeyPath();
-        file_put_contents($publicKeyPath, $keyPair->getPublicKey() . PHP_EOL);
+        file_put_contents($publicKeyPath, $keyPair->getPublicKey().PHP_EOL);
         chmod($publicKeyPath, 0600);
 
         $this->deployKey = $keyPair;
@@ -202,7 +198,7 @@ class Source
             return null;
         }
 
-        $wrapperPath = $this->getRepositoryPath() . '.git.sh';
+        $wrapperPath = $this->getRepositoryPath().'.git.sh';
 
         if (!is_file($wrapperPath)) {
             file_put_contents(
@@ -217,11 +213,11 @@ class Source
 
     public function getCloneUrl()
     {
-        return (empty($_SERVER['HTTPS']) ? 'http' : 'https') . '://' . Site::getConfig('primary_hostname') . '/site-admin/sources/' . $this->getId() . '.git';
+        return (empty($_SERVER['HTTPS']) ? 'http' : 'https').'://'.Site::getConfig('primary_hostname').'/site-admin/sources/'.$this->getId().'.git';
     }
 
     /**
-     * Return active or configured remote URL
+     * Return active or configured remote URL.
      */
     public function getRemoteUrl()
     {
@@ -240,7 +236,7 @@ class Source
     {
         $remoteUrl = $this->getRemoteUrl();
 
-        return strpos($remoteUrl, 'https://') === 0 || strpos($remoteUrl, 'http://') === 0 ? 'http' : 'ssh';
+        return 0 === strpos($remoteUrl, 'https://') || 0 === strpos($remoteUrl, 'http://') ? 'http' : 'ssh';
     }
 
     public function getTrees()
@@ -248,7 +244,7 @@ class Source
         if (!$this->trees) {
             $this->trees = [];
 
-            foreach ($this->getConfig('trees') AS $treeKey => $treeValue) {
+            foreach ($this->getConfig('trees') as $treeKey => $treeValue) {
                 $this->trees[] = $this->getTreeOptions($treeKey, $treeValue);
             }
         }
@@ -291,12 +287,11 @@ class Source
 
             // append next path component to group name for meta-groups
             if (in_array($groupName, $metaGroups)) {
-                $groupName .= '/' . array_shift($ref);
+                $groupName .= '/'.array_shift($ref);
             }
 
             $groups[$groupName][] = implode('/', $ref);
         }
-
 
         return $groups;
     }
@@ -323,7 +318,7 @@ class Source
                 return null;
             }
 
-            if (strpos($upstreamBranch, 'origin/') === 0) {
+            if (0 === strpos($upstreamBranch, 'origin/')) {
                 $upstreamBranch = substr($upstreamBranch, 7);
             }
         }
@@ -343,7 +338,7 @@ class Source
 
         // create new repo
         $this->repository = GitAdmin::init($this->getRepositoryPath(), false, [
-            'environment_variables' => $this->getGitEnvironment()
+            'environment_variables' => $this->getGitEnvironment(),
         ]);
 
         // add remote
@@ -367,15 +362,13 @@ class Source
             throw new \Exception('repository must be initialized first');
         }
 
-
         // determine ref / branch
-        if (strpos($ref, 'heads/') === 0) {
+        if (0 === strpos($ref, 'heads/')) {
             $branch = substr($ref, 6);
             $ref = null;
-        } elseif (strpos($ref, 'remotes/') === 0) {
+        } elseif (0 === strpos($ref, 'remotes/')) {
             list($remotes, $remote, $branch) = explode('/', $ref, 3);
         }
-
 
         // build and run git command
         $args = [];
@@ -394,7 +387,6 @@ class Source
 
         $repository->run('checkout', $args);
 
-
         return $branch;
     }
 
@@ -403,17 +395,17 @@ class Source
         $output = trim($this->getRepository()->run('merge', ['--ff-only', '--no-stat', '@{upstream}']));
         $output = explode(PHP_EOL, $output);
 
-        if ($output[0] == 'Already up-to-date.' || $output[0] == 'Already up to date.') {
+        if ('Already up-to-date.' == $output[0] || 'Already up to date.' == $output[0]) {
             return false;
         }
 
-        list ($status, $commits) = explode(' ', $output[0]);
+        list($status, $commits) = explode(' ', $output[0]);
 
-        if ($status != 'Updating') {
+        if ('Updating' != $status) {
             throw new \Exception("Unexpected merge status output '{$status}' from line: {$output[0]}");
         }
 
-        list ($from, $to) = explode('..', $commits);
+        list($from, $to) = explode('..', $commits);
 
         return ['from' => $from, 'to' => $to];
     }
@@ -423,13 +415,13 @@ class Source
         $output = trim($this->getRepository()->run('push', ['--porcelain', 'origin', 'HEAD']));
         $output = explode(PHP_EOL, $output);
 
-        list ($symbol, $refs, $status) = explode("\t", $output[1]);
+        list($symbol, $refs, $status) = explode("\t", $output[1]);
 
-        if ($status == '[up to date]') {
+        if ('[up to date]' == $status) {
             return false;
         }
 
-        list ($from, $to) = explode('..', $status);
+        list($from, $to) = explode('..', $status);
 
         return ['from' => $from, 'to' => $to];
     }
@@ -451,18 +443,18 @@ class Source
 
         while (($header = array_shift($output)) && ($details = array_shift($output))) {
             // parse header
-            list ($objectType, $hash) = explode(' ', $header);
+            list($objectType, $hash) = explode(' ', $header);
 
-            if ($objectType != 'commit') {
-                throw new \Exception('unexpected object type in rev-list output: ' . $objectType);
+            if ('commit' != $objectType) {
+                throw new \Exception('unexpected object type in rev-list output: '.$objectType);
             }
 
-            $position = $hash[0] == '<' ? 'ahead' : 'behind';
+            $position = '<' == $hash[0] ? 'ahead' : 'behind';
             $hash = substr($hash, 1);
-            ${$position}++;
+            ++${$position};
 
             // parse details
-            list ($authorName, $authorEmail, $timestamp, $subject) = explode("\t", $details);
+            list($authorName, $authorEmail, $timestamp, $subject) = explode("\t", $details);
 
             $commit = [
                 'hash' => $hash,
@@ -470,7 +462,7 @@ class Source
                 'authorName' => $authorName,
                 'authorEmail' => $authorEmail,
                 'timestamp' => $timestamp,
-                'subject' => $subject
+                'subject' => $subject,
             ];
 
             if (!empty($options['groupByPosition'])) {
@@ -483,7 +475,7 @@ class Source
         return [
             'commits' => $commits,
             'ahead' => $ahead,
-            'behind' => $behind
+            'behind' => $behind,
         ];
     }
 
@@ -494,38 +486,38 @@ class Source
 
         $files = [];
 
-        foreach ($output AS $line) {
-            if ($line[0] == '#') {
+        foreach ($output as $line) {
+            if ('#' == $line[0]) {
                 continue; // skip comment lines
             }
 
             if (!preg_match('/^(?<indexStatus>[ MADRCU?!])(?<workTreeStatus>[ MADRCU?!]) (?<path>.+?)( -> (?<renamePath>.+?))?$/', $line, $matches)) {
-                throw new \Exception('Could not parse git status output line: ' . $line);
+                throw new \Exception('Could not parse git status output line: '.$line);
             }
 
             $file = [
                 'path' => $matches['path'],
                 'renamedPath' => $matches['renamePath'] ?: null,
-                'indexStatus' => $matches['indexStatus'] == ' ' ? null : $matches['indexStatus'],
-                'workTreeStatus' => $matches['workTreeStatus'] == ' ' ? null : $matches['workTreeStatus']
+                'indexStatus' => ' ' == $matches['indexStatus'] ? null : $matches['indexStatus'],
+                'workTreeStatus' => ' ' == $matches['workTreeStatus'] ? null : $matches['workTreeStatus'],
             ];
 
             // handle quoted paths
-            if ($file['path'][0] == '"') {
+            if ('"' == $file['path'][0]) {
                 $file['path'] = stripslashes(substr($file['path'], 1, -1));
             }
 
-            if ($file['renamedPath'] && $file['renamedPath'][0] == '"') {
+            if ($file['renamedPath'] && '"' == $file['renamedPath'][0]) {
                 $file['renamedPath'] = stripslashes(substr($file['renamedPath'], 1, -1));
             }
 
             $file['currentPath'] = !empty($file['renamedPath']) ? $file['renamedPath'] : $file['path'];
 
             // decode status
-            $file['tracked'] = $file['indexStatus'] != '?' && $file['workTreeStatus'] != '?';
-            $file['ignored'] = $file['indexStatus'] == '!' && $file['workTreeStatus'] == '!';
-            $file['staged'] = $file['tracked'] && !$file['ignored'] && (bool)$file['indexStatus'];
-            $file['unstaged'] = !$file['ignored'] && (bool)$file['workTreeStatus'];
+            $file['tracked'] = '?' != $file['indexStatus'] && '?' != $file['workTreeStatus'];
+            $file['ignored'] = '!' == $file['indexStatus'] && '!' == $file['workTreeStatus'];
+            $file['staged'] = $file['tracked'] && !$file['ignored'] && (bool) $file['indexStatus'];
+            $file['unstaged'] = !$file['ignored'] && (bool) $file['workTreeStatus'];
 
             if (!empty($options['groupByStatus'])) {
                 if ($file['staged']) {
@@ -542,7 +534,6 @@ class Source
             } else {
                 $files[$file['currentPath']] = $file;
             }
-
         }
 
         return $files;
@@ -552,21 +543,21 @@ class Source
     {
         $results = [];
         $exportOptions = [
-            'localOnly' => true
+            'localOnly' => true,
         ];
 
-        if ($this->getConfig('localOnly') === false) {
+        if (false === $this->getConfig('localOnly')) {
             $exportOptions['localOnly'] = false;
         }
 
         chdir($this->getRepositoryPath());
 
-        foreach ($this->getConfig('trees') AS $treeKey => $treeValue) {
+        foreach ($this->getConfig('trees') as $treeKey => $treeValue) {
             $treeOptions = array_merge(
                 $exportOptions,
                 static::getTreeOptions($treeKey, $treeValue),
                 [
-                    'dataPath' => false
+                    'dataPath' => false,
                 ]
             );
 
@@ -610,7 +601,7 @@ class Source
                 continue;
             }
 
-            if ($matches['modeFrom'] == '100755') {
+            if ('100755' == $matches['modeFrom']) {
                 chmod($matches['path'], 0755);
             }
         }
@@ -624,11 +615,11 @@ class Source
 
         chdir($this->getRepositoryPath());
 
-        foreach ($this->getConfig('trees') AS $treeKey => $treeValue) {
+        foreach ($this->getConfig('trees') as $treeKey => $treeValue) {
             $treeOptions = array_merge(
                 static::getTreeOptions($treeKey, $treeValue),
                 [
-                    'dataPath' => false
+                    'dataPath' => false,
                 ]
             );
 
@@ -668,7 +659,7 @@ class Source
     {
         $results = [];
 
-        foreach ($this->getConfig('trees') AS $treeKey => $treeValue) {
+        foreach ($this->getConfig('trees') as $treeKey => $treeValue) {
             $treeOptions = static::getTreeOptions($treeKey, $treeValue);
 
             $result = [];
@@ -676,11 +667,11 @@ class Source
             try {
                 if ($srcFileNode = Site::resolvePath($treeOptions['vfsPath'])) {
                     if ($srcFileNode instanceof SiteFile) {
-#                        \Debug::dumpVar($srcFileNode, false, "Found file at path: $treeOptions[vfsPath]");
+//                        \Debug::dumpVar($srcFileNode, false, "Found file at path: $treeOptions[vfsPath]");
                         $srcFileNode->delete();
                         $result = ['filesDeleted' => 1];
                     } else {
-#                        \Debug::dumpVar($treeOptions, false, "Found tree at path: $treeOptions[vfsPath]");
+//                        \Debug::dumpVar($treeOptions, false, "Found tree at path: $treeOptions[vfsPath]");
                         $result = static::eraseTree($treeOptions['vfsPath'], $treeOptions);
                     }
 
@@ -702,12 +693,14 @@ class Source
     public function stage(array $paths)
     {
         $this->getRepository()->run('add', array_merge(['--all'], $paths));
+
         return count($paths);
     }
 
     public function unstage(array $paths)
     {
         $this->getRepository()->run('reset', array_merge(['HEAD'], $paths));
+
         return count($paths);
     }
 
@@ -748,15 +741,14 @@ class Source
 
         if (empty($options['group'])) {
             $options['group'] = 'unstaged';
-        } elseif ($options['group'] != 'staged' && $options['group'] != 'unstaged') {
+        } elseif ('staged' != $options['group'] && 'unstaged' != $options['group']) {
             throw new \Exception('group must be staged or unstaged');
         }
-
 
         // build diff args
         $diffArgs = [];
 
-        if ($options['group'] == 'staged') {
+        if ('staged' == $options['group']) {
             $diffArgs[] = '--cached';
         }
 
@@ -773,12 +765,11 @@ class Source
         $this->getRepository()->run('clean', ['-df']);
     }
 
-
     protected function getTreeOptions($key, $value)
     {
         if (is_string($value)) {
             $treeOptions = [
-                'gitPath' => $value
+                'gitPath' => $value,
             ];
         } else {
             $treeOptions = $value;
@@ -787,7 +778,7 @@ class Source
         $treeOptions['dataPath'] = false;
 
         if (!isset($treeOptions['localOnly'])) {
-            $treeOptions['localOnly'] = $this->getConfig('localOnly') === null ? true : $this->getConfig('localOnly');
+            $treeOptions['localOnly'] = null === $this->getConfig('localOnly') ? true : $this->getConfig('localOnly');
         }
 
         if (is_string($key)) {
@@ -807,7 +798,7 @@ class Source
         unset($treeOptions['path']);
 
         if (is_string($treeOptions['exclude'])) {
-            $treeOptions['exclude'] = array($treeOptions['exclude']);
+            $treeOptions['exclude'] = [$treeOptions['exclude']];
         }
 
         if (!empty($_REQUEST['minId']) && ctype_digit($_REQUEST['minId'])) {
@@ -834,59 +825,55 @@ class Source
         $filesExcluded = 0;
         $filesDeleted = [];
 
-
         // prepare options
         $options = array_merge([
             'exclude' => [],
-            'pretend' => false
+            'pretend' => false,
         ], $options);
-
 
         if (!empty($options['exclude']) && is_string($options['exclude'])) {
             $options['exclude'] = [$options['exclude']];
         }
 
         // normalize input paths
-        if (!$path || $path == '/' || $path == '.' || $path == './') {
+        if (!$path || '/' == $path || '.' == $path || './' == $path) {
             $path = null;
         } else {
             $path = trim($path, '/');
         }
 
-
         // build map of subtrees to be erased
         $prefixLen = strlen($path);
         $tree = Emergence_FS::getTree($path, true);
 
-        foreach ($tree AS $collectionId => &$node) {
-
+        foreach ($tree as $collectionId => &$node) {
             if ($node['ParentID'] && $tree[$node['ParentID']]) {
-                $node['_path'] = $tree[$node['ParentID']]['_path'] . '/' . $node['Handle'];
+                $node['_path'] = $tree[$node['ParentID']]['_path'].'/'.$node['Handle'];
             } else {
                 $node['_path'] = $path;
             }
 
             $relPath = substr($node['_path'], $prefixLen);
 
-            if ($node['Status'] != 'Normal') {
+            if ('Normal' != $node['Status']) {
                 continue;
             }
 
             if (Emergence_FS::matchesExclude($relPath, $options['exclude'])) {
-                $collectionsExcluded++;
+                ++$collectionsExcluded;
                 $collectionsNotEmptied[] = $collectionId;
+
                 continue;
             }
 
             $collectionsAnalyzed[] = $collectionId;
         }
 
-
         // erase files
         if (count($collectionsAnalyzed)) {
             $conditions = [
                 sprintf('CollectionID IN (%s)', join(',', $collectionsAnalyzed)),
-                'Status != "Phantom"'
+                'Status != "Phantom"',
             ];
 
             $fileResult = \DB::query(
@@ -903,19 +890,19 @@ class Source
                 ',
                 [
                     SiteFile::$tableName,
-                    implode(') AND (', $conditions)
+                    implode(') AND (', $conditions),
                 ]
             );
 
             // copy each
             while ($fileRow = $fileResult->fetch_assoc()) {
-                $filesAnalyzed++;
-                $fileCollection =& $tree[$fileRow['CollectionID']];
+                ++$filesAnalyzed;
+                $fileCollection = &$tree[$fileRow['CollectionID']];
                 $filePath = $fileCollection['_path'].'/'.$fileRow['Handle'];
                 $relPath = substr($filePath, $prefixLen);
 
                 if (Emergence_FS::matchesExclude($relPath, $options['exclude'])) {
-                    $filesExcluded++;
+                    ++$filesExcluded;
 
                     if (!in_array($fileRow['CollectionID'], $collectionsNotEmptied)) {
                         $collectionsNotEmptied[] = $fileRow['CollectionID'];
@@ -940,9 +927,8 @@ class Source
             }
         }
 
-
         // erase empty trees
-        foreach (array_reverse($tree, true) AS $collectionId => $collection) {
+        foreach (array_reverse($tree, true) as $collectionId => $collection) {
             if (in_array($collectionId, $collectionsNotEmptied)) {
                 if (!empty($collection['ParentID'])) {
                     $collectionsNotEmptied[] = $collection['ParentID'];
@@ -955,14 +941,13 @@ class Source
                 'UPDATE `%s` SET Status = "Deleted" WHERE ID = %u',
                 [
                     \SiteCollection::$tableName,
-                    $collectionId
+                    $collectionId,
                 ]
             );
             \Cache::delete(\SiteCollection::getCacheKey($collection['Handle'], $collection['ParentID']));
 
             $collectionsDeleted[] = $collection['_path'];
         }
-
 
         return [
             'collectionsExcluded' => $collectionsExcluded,
@@ -971,7 +956,7 @@ class Source
             'collectionsDeleted' => $collectionsDeleted,
             'filesExcluded' => $filesExcluded,
             'filesAnalyzed' => $filesAnalyzed,
-            'filesDeleted' => $filesDeleted
+            'filesDeleted' => $filesDeleted,
         ];
     }
 }

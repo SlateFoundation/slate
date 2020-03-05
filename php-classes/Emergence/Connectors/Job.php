@@ -6,6 +6,7 @@ use ActiveRecord;
 use HandleBehavior;
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
+use Emergence\KeyedDiff;
 use Emergence\Logger;
 use Emergence\Site\Storage;
 
@@ -121,7 +122,7 @@ class Job extends ActiveRecord implements IJob
         };
 
         $logEntry = array(
-            'changes' => array()
+            'changes' => new KeyedDiff()
             ,'level' => array_key_exists('level', $options) ? $options['level'] : LogLevel::NOTICE
             ,'record' => &$Record
         );
@@ -153,15 +154,12 @@ class Job extends ActiveRecord implements IJob
                 }
             }
 
-            $logEntry['changes'][$fieldLabel] = array(
-                'from' => $from
-                ,'to' => $to
-            );
+            $logEntry['changes']->addChange($fieldLabel, $to, $from);
         }
 
         if ($Record->isPhantom || $Record->isNew) {
             $logEntry['action'] = 'create';
-        } elseif ($Record->isDirty && count($logEntry['changes'])) {
+        } elseif ($Record->isDirty && $logEntry['changes']->hasChanges()) {
             $logEntry['action'] = 'update';
         } else {
             return;

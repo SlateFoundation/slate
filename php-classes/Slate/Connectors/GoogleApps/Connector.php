@@ -5,6 +5,7 @@ namespace Slate\Connectors\GoogleApps;
 use Slate;
 use Emergence\Connectors\IJob;
 use Emergence\Connectors\Mapping;
+use Emergence\KeyedDiff;
 use Emergence\People\User;
 use Emergence\People\ContactPoint\Email AS EmailContactPoint;
 use RemoteSystems\GoogleApps;
@@ -155,28 +156,19 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
                 // compare records and prepare changes
-                $changes = [];
+                $changes = new KeyedDiff();
 
                 $givenName = $User->PreferredName ?: $User->FirstName;
                 if ($googleUser['name']['givenName'] != $givenName) {
-                    $changes['name.givenName'] = [
-                        'from' => $googleUser['name']['givenName'],
-                        'to' => $givenName
-                    ];
+                    $changes->addChange('name.givenName', $givenName, $googleUser['name']['givenName']);
                 }
 
                 if ($googleUser['name']['familyName'] != $User->LastName) {
-                    $changes['name.familyName'] = [
-                        'from' => $googleUser['name']['familyName'],
-                        'to' => $User->LastName
-                    ];
+                    $changes->addChange('name.familyName', $User->LastName, $googleUser['name']['familyName']);
                 }
 
                 if ($googleUser['primaryEmail'] != $DomainEmailPoint->address) {
-                    $changes['primaryEmail'] = [
-                        'from' => $googleUser['primaryEmail'],
-                        'to' => $DomainEmailPoint->address
-                    ];
+                    $changes->addChange('primaryEmail', $DomainEmailPoint->address, $googleUser['primaryEmail']);
                 }
 
 
@@ -199,14 +191,16 @@ class Connector extends \Emergence\Connectors\AbstractConnector implements \Emer
 
 
                 // log and apply changes
-                if (count($changes)) {
+                if ($changes->hasChanges()) {
+                    dump([
+                        $googleUser['id'],
+                        DataUtil::expandDottedKeysToTree($changes->getNewValues())
+                    ]);
                     if (!$pretend) {
                         try {
                             GoogleApps::patchUser(
                                 $googleUser['id'],
-                                DataUtil::extractToFromDelta(
-                                    DataUtil::expandDottedKeysToTree($changes)
-                                )
+                                DataUtil::expandDottedKeysToTree($changes->getNewValues())
                             );
                         } catch (\Exception $e) {
                             $Job->error('Failed to patch Google user {googleId}: {errorMessage}', [

@@ -77,4 +77,23 @@ class SectionParticipant extends \ActiveRecord
             'min' => 1
         ]
     ];
+
+    public function getEffectiveStartTimestamp()
+    {
+        return $this->StartDate ?: $this->Section->Term->getStartTimestamp();
+    }
+
+    public function getEffectiveEndTimestamp()
+    {
+        if (!$time = $this->EndDate) {
+            return $this->Section->Term->getEndTimestamp();
+        }
+
+        // treat "empty" time component as end of day
+        if (date('H:i:s', $time) == '00:00:00') {
+            $time += 60*60*24-1;
+        }
+
+        return $time;
+    }
 }

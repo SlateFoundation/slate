@@ -772,6 +772,10 @@ abstract class RecordsRequestHandler extends RequestHandler
     public static function checkBrowseAccess()
     {
         if (static::$accountLevelBrowse) {
+            if (empty($GLOBALS['Session'])) {
+                return false;
+            }
+
             $GLOBALS['Session']->requireAuthentication();
             return $GLOBALS['Session']->hasAccountLevel(static::$accountLevelBrowse);
         }
@@ -782,6 +786,10 @@ abstract class RecordsRequestHandler extends RequestHandler
     public static function checkReadAccess(ActiveRecord $Record = null, $suppressLogin = false)
     {
         if (static::$accountLevelRead) {
+            if (empty($GLOBALS['Session'])) {
+                return false;
+            }
+
             if (!$suppressLogin) {
                 $GLOBALS['Session']->requireAuthentication();
             }
@@ -795,6 +803,10 @@ abstract class RecordsRequestHandler extends RequestHandler
     public static function checkWriteAccess(ActiveRecord $Record = null, $suppressLogin = false)
     {
         if (static::$accountLevelWrite) {
+            if (empty($GLOBALS['Session'])) {
+                return false;
+            }
+
             if (!$suppressLogin) {
                 $GLOBALS['Session']->requireAuthentication();
             }
@@ -808,6 +820,10 @@ abstract class RecordsRequestHandler extends RequestHandler
     public static function checkCommentAccess(ActiveRecord $Record = null)
     {
         if (static::$accountLevelComment) {
+            if (empty($GLOBALS['Session'])) {
+                return false;
+            }
+
             return $GLOBALS['Session']->hasAccountLevel(static::$accountLevelComment);
         }
 
@@ -817,6 +833,10 @@ abstract class RecordsRequestHandler extends RequestHandler
     public static function checkAPIAccess($responseID, $responseData, $responseMode)
     {
         if (static::$accountLevelAPI) {
+            if (empty($GLOBALS['Session'])) {
+                return false;
+            }
+
             $GLOBALS['Session']->requireAuthentication();
             return $GLOBALS['Session']->hasAccountLevel(static::$accountLevelAPI);
         }
