@@ -192,7 +192,7 @@ class Term extends \VersionedRecord
 
     public static function getClosestConcurrentTermIDs($forceRefresh = false)
     {
-        $cacheKey = "slate-terms/closest-concurrent-ids";
+        $cacheKey = 'slate-terms/closest-concurrent-ids';
 
         if (!$forceRefresh && false !== ($termIds = Cache::fetch($cacheKey))) {
             return $termIds;
@@ -211,7 +211,7 @@ class Term extends \VersionedRecord
 
     public static function getClosestMasterContainedTermIDs($forceRefresh = false)
     {
-        $cacheKey = "slate-terms/closest-master-contained-ids";
+        $cacheKey = 'slate-terms/closest-master-contained-ids';
 
         if (!$forceRefresh && false !== ($termIds = Cache::fetch($cacheKey))) {
             return $termIds;
@@ -258,8 +258,8 @@ class Term extends \VersionedRecord
         parent::save($deep);
 
         // clear cache
-        Cache::delete("slate-terms/closest-master-contained-ids");
-        Cache::delete("slate-terms/closest-concurrent-ids");
+        Cache::delete('slate-terms/closest-master-contained-ids');
+        Cache::delete('slate-terms/closest-concurrent-ids');
     }
 
     public function getStartTimestamp()
