@@ -2,6 +2,7 @@
 
 namespace Slate;
 
+use Cache;
 use DB;
 use HandleBehavior, NestingBehavior;
 
