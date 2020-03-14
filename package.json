@@ -2,7 +2,7 @@
     /**
      * The name of the package.
      */
-    "name": "slate-core-data",
+    "name": "slate-theme",
 
     "sencha": {
         /**
@@ -28,7 +28,7 @@
          *  - locale : A package containing localization strings or locale-specific code.
          *  - template : A package containing one or more templates.
          */
-        "type": "code",
+        "type": "theme",
 
         /**
          * The parent theme package (only for "theme" package type).
@@ -37,6 +37,7 @@
          *
          *    "extend": "parent-theme-package",
          */
+        "extend": "theme-neptune",
 
         /**
          * The toolkit used by this theme (only for "theme" package type).
@@ -266,9 +267,6 @@
          *          }
          *      }
          */
-        "requires": [
-            "jarvus-apikit",
-            "emergence-apikit"
-        ]
+        "requires": []
     }
 }
