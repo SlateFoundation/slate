@@ -2,7 +2,7 @@
     /**
      * The name of the package.
      */
-    "name": "slate-core-data",
+    "name": "slate-ui-classic",
 
     "sencha": {
         /**
@@ -17,7 +17,7 @@
           * As a general rule, all classes that belong to this package should be under this namespace
           * if multiple namespaces are part of this package, set this to "".
           */
-         "namespace": "Ext",
+         "namespace": "Slate.ui",
 
         /**
          * The package type.
@@ -29,14 +29,6 @@
          *  - template : A package containing one or more templates.
          */
         "type": "code",
-
-        /**
-         * The parent theme package (only for "theme" package type).
-         *
-         * Themes can also use extend to inherit Sass and resources from another theme package.
-         *
-         *    "extend": "parent-theme-package",
-         */
 
         /**
          * The toolkit used by this theme (only for "theme" package type).
@@ -116,15 +108,15 @@
         "sass" : {
             /**
              * The namespace to which this package's SASS corresponds. The default value of
-             * "Ext" means that the files in ./sass/src (and ./sass/var) match classes in
-             * the Ext" root namespace. In other words, "Ext.panel.Panel" maps to
+             * "Slate.ui.classic" means that the files in ./sass/src (and ./sass/var) match classes in
+             * the Slate.ui.classic" root namespace. In other words, "Slate.ui.classic.panel.Panel" maps to
              * ./sass/src/panel/Panel.scss.
              *
              * To style classes from any namespace, set this to blank. If this is blank,
-             * then to style "Ext.panel.Panel" you would put SASS in
-             * ./sass/src/Ext/panel/Panel.scss.
+             * then to style "Slate.ui.classic.panel.Panel" you would put SASS in
+             * ./sass/src/Slate.ui.classic/panel/Panel.scss.
              */
-            "namespace": "Ext",
+            "namespace": "Slate.ui",
 
             /**
              * Comma-separated list of files or folders containing extra Sass. These
@@ -239,7 +231,6 @@
          *
          *     "framework": "ext",
          */
-        "framework": "ext",
 
         /**
          * Packages can require other packages in the same way that applications can require
@@ -266,9 +257,6 @@
          *          }
          *      }
          */
-        "requires": [
-            "jarvus-apikit",
-            "emergence-apikit"
-        ]
+        "requires": []
     }
 }
