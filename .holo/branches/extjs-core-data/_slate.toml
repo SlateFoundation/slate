@@ -1,0 +1,3 @@
+[holomapping]
+root = "sencha-workspace/packages/slate-core-data"
+files = "**"

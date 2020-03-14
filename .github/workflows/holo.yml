@@ -28,6 +28,33 @@ jobs:
         ref: releases/v2
         holobranch: emergence-vfs-site
         commit-to: emergence/vfs-site/v2
+    - name: 'Update holobranch: subpackages/extjs-core-data/v2'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HAB_LICENSE: accept
+      with:
+        ref: releases/v2
+        holobranch: extjs-core-data
+        commit-to: subpackages/extjs-core-data/v2
+    - name: 'Update holobranch: subpackages/extjs-ui-classic/v2'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HAB_LICENSE: accept
+      with:
+        ref: releases/v2
+        holobranch: extjs-ui-classic
+        commit-to: subpackages/extjs-ui-classic/v2
+    - name: 'Update holobranch: subpackages/extjs-theme/v2'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HAB_LICENSE: accept
+      with:
+        ref: releases/v2
+        holobranch: extjs-theme
+        commit-to: subpackages/extjs-theme/v2
     - name: 'Update v2.slate.is'
       env:
         VFS_DEV_TOKEN: ${{ secrets.VFS_DEV_TOKEN }}
