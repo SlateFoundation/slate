@@ -150,19 +150,19 @@ class Tag extends ActiveRecord
         $Tag = false;
 
         if (is_numeric($handle)) {
-            $Tag = Tag::getByID($handle);
+            $Tag = static::getByID($handle);
         }
 
         if (!$Tag) {
-            $Tag = Tag::getByHandle($handle);
+            $Tag = static::getByHandle($handle);
         }
 
         if (!$Tag) {
-            $Tag = Tag::getByTitle($handle, $prefix);
+            $Tag = static::getByTitle($handle, $prefix);
         }
 
         if (!$Tag && $autoCreate) {
-            $Tag = Tag::create(array(
+            $Tag = static::create(array(
                 'Title' => $handle,
                 'Handle' => HandleBehavior::getUniqueHandle(__CLASS__, $prefix ? "$prefix.$handle" : $handle)
             ), true);
