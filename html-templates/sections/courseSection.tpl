@@ -129,7 +129,7 @@
                 </section>
 
                 {template linksEntry entry}
-                    {if $entry.href}<a href="{$entry.href|escape}">{/if}
+                    {if $entry.href}<a href="{$entry.href|escape}" {$entry.attribs}>{/if}
                         {$entry.label|escape}
                     {if $entry.href}</a>{/if}
                 {/template}
