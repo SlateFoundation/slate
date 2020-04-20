@@ -11,3 +11,5 @@ $tab-icon-height: $glyph-size !default;
 $tab-icon-width: $glyph-size !default;
 
 $tab-padding: 10px !default;
+
+$tab-line-height: $tab-font-size + 2; // +2 prevents cutting off lato descenders
