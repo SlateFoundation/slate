@@ -169,7 +169,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 {
                     xtype: 'actioncolumn',
                     dataIndex: 'Class',
-                    width: 50, // n*15+20
                     align: 'end',
                     items: [
                         {
@@ -418,7 +417,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             {
                 xtype: 'actioncolumn',
                 dataIndex: 'Primary',
-                width: 50, // n*15+20
                 align: 'end',
                 items: [
                     {
