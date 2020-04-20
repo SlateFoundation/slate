@@ -1,7 +1,7 @@
 .relationship-nonguardian {
     .glyph-shield {
         color: $glyph-inactive-color;
-        
+
         &:hover,
         &:focus {
             color: mix($glyph-inactive-color, $glyph-shield-color);
@@ -41,7 +41,7 @@
     .x-action-col-icon {
         display: none;
     }
-    
+
     &.slate-grid-dirty {
         .contact-point-delete,
         .relationship-delete {
@@ -62,7 +62,7 @@
 .contact-point-primary {
     color: $glyph-inactive-color;
     visibility: hidden;
-    
+
     &:hover,
     &:focus {
         color: mix($glyph-inactive-color, $glyph-star-color);
@@ -87,16 +87,7 @@
     }
 }
 
-.slate-people-details-contacts {
-    .x-column-header-first,
-    .x-grid-cell-first {
-        padding-left: 1.75em;
-    }
-}
-
 .slate-people-details-related {
-    @extend .slate-people-details-contacts;
-    
     > .x-grid-body {
         border-width: 1px 0;
     }
