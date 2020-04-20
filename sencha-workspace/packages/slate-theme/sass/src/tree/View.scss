@@ -7,7 +7,8 @@
 .x-tree-icon-parent {
     background-image: theme-background-image('tree/folder-closed', 'svg');
 
-    .x-grid-tree-node-expanded & {
+    .x-grid-tree-node-expanded &,
+    &-expanded {
         background-image: theme-background-image('tree/folder-open', 'svg');
     }
 }
