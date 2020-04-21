@@ -22,6 +22,7 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
     tbar: [{
         xtype: 'combobox',
         fieldLabel: 'Term',
+        labelSeparator: '',
         labelWidth: 36,
         editable: false,
         emptyText: 'Current Term',
@@ -37,6 +38,8 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
     items: {
         xtype: 'grid',
         border: false,
+        stateful: true,
+        stateId: 'peopleCoursesGrid',
         viewConfig: {
             emptyText: 'No courses for selected term',
             getRowClass: function(record){
@@ -61,9 +64,6 @@ Ext.define('SlateAdmin.view.people.details.Courses', {
             autoSync: true
         },
         columns: {
-            defaults: {
-                menuDisabled: true
-            },
             items: [{
                 width: 120,
 

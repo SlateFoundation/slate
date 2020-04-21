@@ -45,28 +45,29 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             labelAlign: 'right',
             labelPad: 10,
             labelSeparator: '',
-            anchor: '100%'
+            anchor: '100%',
+            labelWidth: 120,
         },
         defaults: {
             xtype: 'fieldset',
             defaultType: 'textfield'
         },
         items: [{
-            xtype: 'combo',
-            name: 'Class',
-            store: 'people.Classes',
-            queryMode: 'local',
-            valueField: 'name',
-            displayField: 'label',
-            fieldLabel: 'Record Type',
-            triggerAction: 'all',
-            editable: false
-        },{
             xtype: 'fieldset',
             itemId: 'loginFields',
 
-            title: 'Login',
+            title: 'Admin',
             items: [{
+                xtype: 'combo',
+                name: 'Class',
+                store: 'people.Classes',
+                queryMode: 'local',
+                valueField: 'name',
+                displayField: 'label',
+                fieldLabel: 'Record Type',
+                triggerAction: 'all',
+                editable: false
+            },{
                 xtype: 'combo',
                 store: 'people.AccountLevels',
                 fieldLabel: 'Account Level',
@@ -85,7 +86,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             },{
                 xtype: 'fieldcontainer',
                 itemId: 'temporaryPasswordFieldCt',
-                fieldLabel: 'Temporary Password',
+                fieldLabel: 'Temp Password',
                 layout: 'hbox',
                 hidden: true,
                 items: [{
@@ -104,7 +105,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             },{
                 xtype: 'fieldcontainer',
                 itemId: 'masqueradeBtnCt',
-                fieldLabel: 'Masquerading',
+                fieldLabel: 'Masquerade',
                 hidden: true,
                 items: [{
                     xtype: 'button',
@@ -154,7 +155,7 @@ Ext.define('SlateAdmin.view.people.details.Profile', {
             },{
                 xtype: 'numberfield',
                 name: 'GraduationYear',
-                fieldLabel: 'Graduation Year',
+                fieldLabel: 'Grad Year',
                 minValue: 1990,
                 hidden: true
             },{
