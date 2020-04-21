@@ -84,12 +84,11 @@ Ext.define('SlateAdmin.view.settings.terms.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 65, // n*15+20
         align: 'end',
         items: [
             {
                 action: 'browsecourses',
-                glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
+                glyph: 0xf14c, // fa-external-link-sign
                 tooltip: 'Browse Courses'
             },
             {

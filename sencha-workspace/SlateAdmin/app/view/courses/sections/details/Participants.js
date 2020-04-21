@@ -114,7 +114,6 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
                 }
             },{
                 xtype: 'actioncolumn',
-                width: 50, // n*15+20
                 align: 'end',
                 items: [{
                     action: 'open',

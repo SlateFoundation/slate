@@ -1,6 +1,20 @@
 Ext.define('Jarvus.ext.glyphs.override.grid.column.Action', {
     override: 'Ext.grid.column.Action',
 
+    beforeRender: function() {
+        var me = this,
+            itemsCount = me.items.length;
+
+        // auto-size the column
+        me.setWidth(
+            itemsCount * 16 // icons
+            + (itemsCount - 1) * 4 // space between
+            + 10 // cell padding
+        );
+
+        me.callParent();
+    },
+
     // overridden to implement
     defaultRenderer: function(v, meta, record, rowIdx, colIdx, store, view){
         var me = this,
