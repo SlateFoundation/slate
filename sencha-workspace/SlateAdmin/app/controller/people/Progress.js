@@ -308,7 +308,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 this.getPeopleProgressReportsStore().getProxy().getExtraParams()
             );
 
-        Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports', function(btn) {
+        Ext.Msg.confirm('Exporting Reports', 'Are you sure want to export the currently loaded reports?', function(btn) {
             if (btn != 'yes') {
                 return;
             }
