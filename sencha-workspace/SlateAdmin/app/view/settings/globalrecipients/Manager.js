@@ -36,12 +36,11 @@ Ext.define('SlateAdmin.view.settings.globalrecipients.Manager', {
     },{
         xtype: 'actioncolumn',
         dataIndex: 'Class',
-        width: 50, // n*15+20
         align: 'end',
         items: [
             {
                 action: 'view',
-                glyph: 0xf06e, // fa-eye // 0xf0ca, // fa-list-ul
+                glyph: 0xf14c, // fa-external-link-sign
                 tooltip: 'View Profile'
             },
             {

@@ -169,7 +169,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 {
                     xtype: 'actioncolumn',
                     dataIndex: 'Class',
-                    width: 50, // n*15+20
                     align: 'end',
                     items: [
                         {
@@ -206,6 +205,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         // columnLines: true,
         hideHeaders: true,
         componentCls: 'slate-people-details-contacts',
+        cls: 'has-small-group-headers',
         disableSelection: true,
         store: {
             model: 'SlateAdmin.model.person.ContactPoint',
@@ -289,7 +289,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 collapsible: false,
                 groupHeaderTpl: [
                     '<tpl for="this.getHeaderConfig(values)">',
-                        '<span class="contact-type-header {typeCls}"><i class="fa fa-lg fa-fw {glyph}"></i> {title}</span>',
+                        '<span class="contact-type-header {typeCls}"><i class="fa fa-fw {glyph}"></i> {title}</span>',
                     '</tpl>',
                     {
                         getHeaderConfig: function(values) {
@@ -418,7 +418,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             {
                 xtype: 'actioncolumn',
                 dataIndex: 'Primary',
-                width: 50, // n*15+20
                 align: 'end',
                 items: [
                     {
