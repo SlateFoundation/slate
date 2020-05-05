@@ -169,12 +169,23 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         // collect recipients
         foreach ($students AS &$student) {
+            $sentRecipients = SectionInterimReportRecipient::getAllByWhere([
+                'StudentID' => $student['student']->ID,
+                'TermID' => $conditions['TermID']
+            ]);
+
+            $sentByEmail = [];
+            foreach ($sentRecipients as $sentRecipient) {
+                $sentByEmail[$sentRecipient->EmailContactID] = $sentRecipient->Status;
+            }
+
             if (in_array('student', $recipients)) {
                 $student['recipients'][] = [
                     'id' => $student['student']->ID,
                     'name' => $student['student']->FullName,
                     'email' => $student['student']->Email,
-                    'relationship' => 'student'
+                    'relationship' => 'student',
+                    'status' => $sentByEmail[$student['student']->PrimaryEmailID] ?: 'proposed'
                 ];
             }
 
@@ -183,7 +194,8 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                     'id' => $student['student']->Advisor->ID,
                     'name' => $student['student']->Advisor->FullName,
                     'email' => $student['student']->Advisor->Email,
-                    'relationship' => 'advisor'
+                    'relationship' => 'advisor',
+                    'status' => $sentByEmail[$student['student']->Advisor->PrimaryEmailID] ?: 'proposed'
                 ];
             }
 
@@ -197,7 +209,8 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                         'id' => $GuardianRelationship->RelatedPerson->ID,
                         'name' => $GuardianRelationship->RelatedPerson->FullName,
                         'email' => $GuardianRelationship->RelatedPerson->Email,
-                        'relationship' => $GuardianRelationship->Label
+                        'relationship' => $GuardianRelationship->Label,
+                        'status' => $sentByEmail[$GuardianRelationship->RelatedPerson->PrimaryEmailID] ?: 'proposed'
                     ];
                 }
             }
