@@ -158,6 +158,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             Slate.API.request({
                 method: 'POST',
                 url: '/progress/section-interim-reports/*emails',
+                timeout: 300000,
                 jsonData: emails,
                 callback: function(options, success, response) {
                     var data = response.data || {};

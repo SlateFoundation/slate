@@ -71,6 +71,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
     public static function handleEmailsRequest()
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
+        set_time_limit(0);
         $recordClass = static::$recordClass;
 
         $responseData = [];
