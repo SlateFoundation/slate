@@ -45,7 +45,7 @@ Ext.define('SlateAdmin.view.progress.terms.email.Grid', {
             tpl: [
                 '<ul class="recipients-list">',
                 '   <tpl for="recipients">',
-                '       <li>{name} <span class="recipient-contact">{email}</span> ({relationship})</li>',
+                '       <li class="status-{status}">{name} <span class="recipient-contact">{email}</span> ({relationship})</li>',
                 '   </tpl>',
                 '</ul>'
             ]
