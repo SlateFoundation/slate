@@ -109,8 +109,13 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             count = emailsStore.getCount();
 
         if (count) {
-            me.getEmailsTotalCmp().setText(count + ' report email' + (count == 1 ? '' : 's') + ' ready');
-            me.getSendEmailsBtn().enable();
+            if (emailsStore.getProxy().getReader().rawData.author) {
+                me.getEmailsTotalCmp().setText('Auther filter for preview only, cannot send partial reports');
+                me.getSendEmailsBtn().disable();
+            } else {
+                me.getEmailsTotalCmp().setText(count + ' report email' + (count == 1 ? '' : 's') + ' ready');
+                me.getSendEmailsBtn().enable();
+            }
         } else {
             me.resetEmails();
             me.resetPreview();
@@ -136,17 +141,27 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             emailsStore = me.getProgressInterimsEmailsStore(),
             emailsCount = emailsStore.getCount(),
             i = 0, email,
-            emails = [];
+            emails = [], recipients;
 
         sendEmailsBtn.disable();
 
         for (; i < emailsCount; i++) {
             email = emailsStore.getAt(i);
+            recipients = email.get('recipients').filter(recipient => recipient.status == 'proposed');
+
+            if (!recipients.length) {
+                continue;
+            }
 
             emails.push({
                 reports: email.get('reports'),
-                recipients: Ext.Array.pluck(email.get('recipients'), 'id')
+                recipients: Ext.Array.pluck(recipients, 'id')
             });
+        }
+
+        if (emails.length == 0) {
+            Ext.Msg.alert('No emails sent', 'No new emails need to be sent');
+            return;
         }
 
         Ext.Msg.confirm('Send report emails', 'Are you sure you want to send out '+emails.length+' emails now?', function(btn) {
@@ -158,6 +173,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             Slate.API.request({
                 method: 'POST',
                 url: '/progress/section-interim-reports/*emails',
+                timeout: 300000,
                 jsonData: emails,
                 callback: function(options, success, response) {
                     var data = response.data || {};
