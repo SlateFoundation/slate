@@ -16,6 +16,8 @@ use Emergence\Mailer\Mailer;
 
 abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestHandler
 {
+    public static $recipientClass;
+
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
@@ -73,6 +75,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         $GLOBALS['Session']->requireAccountLevel('Staff');
         set_time_limit(0);
         $recordClass = static::$recordClass;
+        $recipientClass = static::$recipientClass;
 
         $responseData = [];
 
@@ -91,9 +94,9 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $recipientsCount = 0;
 
             foreach ($emails AS $email) {
-                $reports = [];
-                $recipients = [];
 
+                // compile reports
+                $reports = [];
                 foreach ($email['reports'] AS $reportId) {
                     $Report = $recordClass::getByID($reportId);
 
@@ -102,13 +105,24 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                     }
                 }
 
+                $recipientEmails = [];
                 foreach ($email['recipients'] AS $recipientId) {
-                    $recipients[] = Person::getByID($recipientId)->EmailRecipient;
+                    $Person = Person::getByID($recipientId);
+
+                    if (!$Person || !$Person->PrimaryEmail) {
+                        continue;
+                    }
+
+                    $recipientEmails[] = $Person->PrimaryEmail;
                 }
 
                 // filter out any unavailable recipients
-                $recipients = array_filter($recipients);
-                $recipientsCount += count($recipients);
+                $recipientsCount += count($recipientEmails);
+
+                // skip if no recipients
+                if ($recipientsCount == 0) {
+                    continue;
+                }
 
                 // prepare template data
                 $emailData = static::getEmailTemplateData($reports);
@@ -117,14 +131,39 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 // TODO: make this configurable
                 if (Slate::$userEmailDomain) {
                     if (count($emailData['students']) == 1) {
-                        $recipients[] = 'progress+'.$emailData['students'][0]->Username.'@'.Slate::$userEmailDomain;
+                        $recipientEmails[] = 'progress+'.$emailData['students'][0]->Username.'@'.Slate::$userEmailDomain;
                     } else {
-                        $recipients[] = 'progress@'.Slate::$userEmailDomain;
+                        $recipientEmails[] = 'progress@'.Slate::$userEmailDomain;
                     }
                 }
 
+                // serialize recipients
+                $recipientEmailStrings = [];
+                foreach ($recipientEmails as $recipientEmail) {
+                    $recipientEmailStrings[] = is_string($recipientEmail) ? $recipientEmail : $recipientEmail->toRecipientString();
+                }
+
                 // send email
-                $emailsCount += Mailer::sendFromTemplate(implode(', ', $recipients), static::getTemplateName($recordClass::$pluralNoun), $emailData);
+                $sent = Mailer::sendFromTemplate(implode(', ', $recipientEmailStrings), static::getTemplateName($recordClass::$pluralNoun), $emailData);
+                $emailsCount += $sent;
+
+                // save receipts
+                foreach ($recipientEmails as $recipientEmail) {
+                    if (is_string($recipientEmail)) {
+                        continue;
+                    }
+
+                    foreach ($emailData['students'] as $Student) {
+                        foreach ($emailData['terms'] as $Term) {
+                            $recipientClass::create([
+                                'StudentID' => $Student->ID,
+                                'TermID' => $Term->ID,
+                                'EmailContactID' => $recipientEmail->ID,
+                                'Status' => 'sent'
+                            ], true);
+                        }
+                    }
+                }
             }
 
             return static::respond('emailsSent', [
@@ -170,7 +209,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         // collect recipients
         foreach ($students AS &$student) {
-            $sentRecipients = SectionInterimReportRecipient::getAllByWhere([
+            $sentRecipients = $recipientClass::getAllByWhere([
                 'StudentID' => $student['student']->ID,
                 'TermID' => $conditions['TermID']
             ]);

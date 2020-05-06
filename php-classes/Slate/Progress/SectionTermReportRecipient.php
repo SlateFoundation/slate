@@ -6,11 +6,11 @@ use Emergence\People\ContactPoint\Email;
 use Slate\People\Student;
 use Slate\Term;
 
-class SectionInterimReportRecipient extends \ActiveRecord
+class SectionTermReportRecipient extends \ActiveRecord
 {
-    public static $tableName = 'section_interim_report_recipients';
-    public static $singularNoun = 'section interim report recipient';
-    public static $pluralNoun = 'section interim report recipients';
+    public static $tableName = 'section_term_report_recipients';
+    public static $singularNoun = 'section term report recipient';
+    public static $pluralNoun = 'section term report recipients';
     public static $updateOnDuplicateKey = true;
 
     public static $fields = [
@@ -46,7 +46,7 @@ class SectionInterimReportRecipient extends \ActiveRecord
     ];
 
     public static $indexes = [
-        'SectionInterimReportRecipient' => [
+        'SectionTermReportRecipient' => [
             'fields' => ['StudentID', 'TermID', 'EmailContactID'],
             'unique' => true
         ]
