@@ -136,17 +136,27 @@ Ext.define('SlateAdmin.controller.progress.terms.Email', {
             emailsStore = me.getProgressTermsEmailsStore(),
             emailsCount = emailsStore.getCount(),
             i = 0, email,
-            emails = [];
+            emails = [], recipients;
 
         sendEmailsBtn.disable();
 
         for (; i < emailsCount; i++) {
             email = emailsStore.getAt(i);
+            recipients = email.get('recipients').filter(recipient => recipient.status == 'proposed');
+
+            if (!recipients.length) {
+                continue;
+            }
 
             emails.push({
                 reports: email.get('reports'),
-                recipients: Ext.Array.pluck(email.get('recipients'), 'id')
+                recipients: Ext.Array.pluck(recipients, 'id')
             });
+        }
+
+        if (emails.length == 0) {
+            Ext.Msg.alert('No emails sent', 'No new emails need to be sent');
+            return;
         }
 
         Ext.Msg.confirm('Send report emails', 'Are you sure you want to send out '+emails.length+' emails now?', function(btn) {
