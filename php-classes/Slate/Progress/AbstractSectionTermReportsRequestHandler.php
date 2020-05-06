@@ -113,7 +113,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 // prepare template data
                 $emailData = static::getEmailTemplateData($reports);
 
-                // add central achive recipient
+                // add central achieve recipient
                 // TODO: make this configurable
                 if (Slate::$userEmailDomain) {
                     if (count($emailData['students']) == 1) {
