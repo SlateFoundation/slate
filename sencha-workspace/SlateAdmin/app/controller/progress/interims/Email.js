@@ -109,8 +109,13 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
             count = emailsStore.getCount();
 
         if (count) {
-            me.getEmailsTotalCmp().setText(count + ' report email' + (count == 1 ? '' : 's') + ' ready');
-            me.getSendEmailsBtn().enable();
+            if (emailsStore.getProxy().getReader().rawData.author) {
+                me.getEmailsTotalCmp().setText('Auther filter for preview only, cannot send partial reports');
+                me.getSendEmailsBtn().disable();
+            } else {
+                me.getEmailsTotalCmp().setText(count + ' report email' + (count == 1 ? '' : 's') + ' ready');
+                me.getSendEmailsBtn().enable();
+            }
         } else {
             me.resetEmails();
             me.resetPreview();

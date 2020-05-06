@@ -67,14 +67,6 @@ Ext.define('SlateAdmin.view.progress.terms.email.Container', {
                             valueField: 'Username'
                         },
                         {
-                            name: 'author',
-                            fieldLabel: 'Author',
-
-                            store: 'progress.terms.Authors',
-                            displayField: 'SortName',
-                            valueField: 'Username'
-                        },
-                        {
                             xtype: 'slate-personfield',
                             name: 'student',
                             fieldLabel: 'Student',
@@ -91,6 +83,14 @@ Ext.define('SlateAdmin.view.progress.terms.email.Container', {
                             },
                             valueField: 'Handle',
                             displayField: 'namesPath'
+                        },
+                        {
+                            name: 'author',
+                            fieldLabel: 'Author',
+
+                            store: 'progress.terms.Authors',
+                            displayField: 'SortName',
+                            valueField: 'Username'
                         }
                     ]
                 },
