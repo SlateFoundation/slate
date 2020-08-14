@@ -430,7 +430,7 @@ abstract class RecordsRequestHandler extends RequestHandler
                 ));
             } catch (UserUnauthorizedException $e) {
                 $failed[] = array(
-                    'record' => $Record->getData()
+                    'record' => $datum
                     ,'errors' => $e->getMessage()
                 );
 
@@ -439,7 +439,7 @@ abstract class RecordsRequestHandler extends RequestHandler
                 }
             } catch (RecordValidationException $e) {
                 $failed[] = array(
-                    'record' => $Record->getData()
+                    'record' => $datum
                     ,'validationErrors' => $e->validationErrors
                 );
 
@@ -455,7 +455,7 @@ abstract class RecordsRequestHandler extends RequestHandler
                 $duplicateMessage = 'Duplicate value(s) "'.$e->getDuplicateValue().'" for key "'.$e->getDuplicateKey().'"';
 
                 $failed[] = array(
-                    'record' => $Record->getData()
+                    'record' => $datum
                     ,'validationErrors' => array(
                         $e->getDuplicateKey() => $duplicateMessage
                     )

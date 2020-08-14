@@ -182,8 +182,8 @@ class Mysqldump
             $pdoSettingsDefault[PDO::MYSQL_ATTR_USE_BUFFERED_QUERY] = false;
         }
 
-        $this->pdoSettings = self::array_replace_recursive($pdoSettingsDefault, $pdoSettings);
-        $this->dumpSettings = self::array_replace_recursive($dumpSettingsDefault, $dumpSettings);
+        $this->pdoSettings = array_replace_recursive($pdoSettingsDefault, $pdoSettings);
+        $this->dumpSettings = array_replace_recursive($dumpSettingsDefault, $dumpSettings);
         $this->dumpSettings['init_commands'][] = "SET NAMES ".$this->dumpSettings['default-character-set'];
 
         if (false === $this->dumpSettings['skip-tz-utc']) {
@@ -215,31 +215,6 @@ class Mysqldump
     public function __destruct()
     {
         $this->dbHandler = null;
-    }
-
-    /**
-     * Custom array_replace_recursive to be used if PHP < 5.3
-     * Replaces elements from passed arrays into the first array recursively.
-     *
-     * @param array $array1 The array in which elements are replaced
-     * @param array $array2 The array from which elements will be extracted
-     *
-     * @return array Returns an array, or NULL if an error occurs.
-     */
-    public static function array_replace_recursive($array1, $array2)
-    {
-        if (function_exists('array_replace_recursive')) {
-            return array_replace_recursive($array1, $array2);
-        }
-
-        foreach ($array2 as $key => $value) {
-            if (is_array($value)) {
-                $array1[$key] = self::array_replace_recursive($array1[$key], $value);
-            } else {
-                $array1[$key] = $value;
-            }
-        }
-        return $array1;
     }
 
     /**
@@ -287,7 +262,7 @@ class Mysqldump
      */
     public function getTableLimit($tableName)
     {
-        if (empty($this->tableLimits[$tableName])) {
+        if (!isset($this->tableLimits[$tableName])) {
             return false;
         }
 
@@ -1133,7 +1108,7 @@ class Mysqldump
 
         $limit = $this->getTableLimit($tableName);
 
-        if ($limit) {
+        if ($limit !== false) {
             $stmt .= " LIMIT {$limit}";
         }
 
@@ -2294,6 +2269,10 @@ class TypeAdapterMysql extends TypeAdapterFactory
                 "/*!40103 SET TIME_ZONE='+00:00' */;".PHP_EOL;
         }
 
+        if ($this->dumpSettings['no-autocommit']) {
+                $ret .= "/*!40101 SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT */;".PHP_EOL;
+        }
+
         $ret .= "/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;".PHP_EOL.
             "/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;".PHP_EOL.
             "/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;".PHP_EOL.
@@ -2308,6 +2287,10 @@ class TypeAdapterMysql extends TypeAdapterFactory
 
         if (false === $this->dumpSettings['skip-tz-utc']) {
             $ret .= "/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;".PHP_EOL;
+        }
+
+        if ($this->dumpSettings['no-autocommit']) {
+                $ret .= "/*!40101 SET AUTOCOMMIT=@OLD_AUTOCOMMIT */;".PHP_EOL;
         }
 
         $ret .= "/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;".PHP_EOL.
