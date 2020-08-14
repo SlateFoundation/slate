@@ -73,7 +73,7 @@ class PeopleRequestHandler extends RecordsRequestHandler
 
     public static function handleBrowseRequest($options = array(), $conditions = array(), $responseID = null, $responseData = array())
     {
-        if ($_REQUEST['q'] != 'all') {
+        if ($_REQUEST['q'] != 'all' && $_REQUEST['status'] != '*') {
             $conditions[] = 'AccountLevel != "Disabled"';
         }
 
