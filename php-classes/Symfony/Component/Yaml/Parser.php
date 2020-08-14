@@ -230,8 +230,12 @@ class Parser
                         $this->parseBlock($this->getRealCurrentLineNb() + 1, $this->getNextEmbedBlock(null, true), $flags)
                     );
                 } else {
-                    if (isset($values['leadspaces'])
-                        && self::preg_match('#^(?P<key>'.Inline::REGEX_QUOTED_STRING.'|[^ \'"\{\[].*?) *\:(\s+(?P<value>.+?))?\s*$#u', $this->trimTag($values['value']), $matches)
+                    if (
+                        isset($values['leadspaces'])
+                        && (
+                            '!' === $values['value'][0]
+                            || self::preg_match('#^(?P<key>'.Inline::REGEX_QUOTED_STRING.'|[^ \'"\{\[].*?) *\:(\s+(?P<value>.+?))?\s*$#u', $this->trimTag($values['value']), $matches)
+                        )
                     ) {
                         // this is a compact notation element, add to next block and parse
                         $block = $values['value'];
@@ -757,7 +761,8 @@ class Parser
                 $lines[] = trim($this->currentLine);
 
                 // quoted string values end with a line that is terminated with the quotation character
-                if ('' !== $this->currentLine && substr($this->currentLine, -1) === $quotation) {
+                $escapedLine = str_replace(['\\\\', '\\"'], '', $this->currentLine);
+                if ('' !== $escapedLine && substr($escapedLine, -1) === $quotation) {
                     break;
                 }
             }
