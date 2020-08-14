@@ -287,6 +287,9 @@ class Relationship extends \VersionedRecord
         ,'Notes' => [
             'notnull' => false
         ]
+        ,'Slot' => [
+            'default' => null
+        ]
     ];
 
 
@@ -319,6 +322,10 @@ class Relationship extends \VersionedRecord
     public static $indexes = [
         'PersonRelationship' => [
             'fields' => ['PersonID', 'RelatedPersonID']
+            ,'unique' => true
+        ]
+        ,'PersonSlot' => [
+            'fields' => ['PersonID', 'Slot']
             ,'unique' => true
         ]
     ];
