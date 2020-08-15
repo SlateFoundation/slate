@@ -42,6 +42,9 @@ class Person extends VersionedRecord implements IPerson
         ,'PreferredName' => [
             'default' => null
         ]
+        ,'NameSuffix' => [
+            'default' => null
+        ]
         ,'Gender' => [
             'type' => 'enum'
             ,'values' => ['Male','Female']
