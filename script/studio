@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# script/studio: Enter a Chef Habitat studio for the application.
+
+set -e
+cd "$(dirname "$0")/.."
+
+
+script/-studio-bootstrap
+
+
+unset DEBUG
+
+
+echo
+echo "==> studio: configuring Chef Habitat studio Docker options…"
+STUDIO_NAME="${STUDIO_NAME:-slate-studio}"
+export HAB_DOCKER_OPTS="
+    --name ${STUDIO_NAME}
+    -p 7080:80
+    -p 7036:3306
+    -v $(cd ~/.ssh; pwd)/known_hosts:/root/.ssh/known_hosts:ro
+    --env STUDIO_DEVELOPER_UID=$(id -u)
+    --env STUDIO_DEVELOPER_GID=$(id -g)
+"
+echo "${HAB_DOCKER_OPTS}"
+
+
+launch_studio=true
+if [ "$(docker ps -aq -f name="${STUDIO_NAME}")" ]; then
+    echo
+    echo "==> studio: a ${STUDIO_NAME} container is already running…"
+    echo
+    while true; do
+        read -p "==> studio: would you like to (A)ttach to it, (s)top it, or do (n)othing? [A/s/n] " choice
+        case "${choice}" in
+        r|R|a|A|"")
+            echo
+            echo "==> studio: you can run studio-help at anytime to get a list of commands"
+            echo
+            docker attach "${STUDIO_NAME}"
+            launch_studio=false
+            break;;
+        s|S)
+            echo "==> studio: stopping existing container…"
+            docker stop "${STUDIO_NAME}" > /dev/null
+            break;;
+        n|N)
+            echo "==> studio: doing nothing with existing container… an error is likely to occur"
+            break ;;
+        *)
+            echo "==> studio: $choice is invalid";;
+        esac
+    done
+fi
+
+if [ $launch_studio = true ]; then
+    echo
+    echo "==> studio: launching Docker-powered Chef Habitat studio…"
+    set +e
+    if ! hab studio enter -D; then
+        echo "===> studio: failed to launch studio… try executing the following and try again:"
+        echo "docker rm -f ${STUDIO_NAME}"
+    fi
+fi

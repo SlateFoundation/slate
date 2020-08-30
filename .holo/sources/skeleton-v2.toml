@@ -1,6 +1,6 @@
 [holosource]
 url = "https://github.com/JarvusInnovations/emergence-skeleton-v2"
-ref = "refs/tags/v2.4.2"
+ref = "refs/tags/v2.4.3"
 
 [holosource.project]
 holobranch = "emergence-skeleton"

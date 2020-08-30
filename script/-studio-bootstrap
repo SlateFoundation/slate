@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# script/-studio-bootstrap: Check dependencies for Chef Habitat studio.
+
+set -e
+cd "$(dirname "$0")/.."
+
+
+echo
+echo "==> studio-bootstrap: verifying Docker…"
+
+if ! [ -x "$(command -v docker)" ]; then
+    echo "Please install Docker Engine: https://docs.docker.com/engine/install/"
+    exit 1
+fi
+
+if ! docker info > /dev/null 2>&1; then
+    echo "Docker Engine is not running, or your user does not have access to connect."
+    echo "Try starting Docker Engine, and adding your user to the docker group: sudo gpasswd -a $USER docker"
+    exit 1
+fi
+
+
+echo
+echo "==> studio-bootstrap: verifying Chef Habitat…"
+
+if ! [ -x "$(command -v hab)" ]; then
+    echo "Please install Chef Habitat: https://www.habitat.sh/docs/install-habitat/"
+    exit 1
+fi
+
+set +e
+hab_version="$(hab --version < /dev/null)"
+if [ $? -ne 0 ]; then
+    echo
+    echo "   Failed to read hab version, you may need to accept the Chef Habitat"
+    echo "   license. Please run \`hab setup\` or configure HAB_LICENSE in the environment"
+    exit 1
+fi
+set -e
+
+if ! [[ $hab_version =~ ^hab[[:space:]][0-9]+\.[0-9]+\.[0-9]+/[0-9]+$ ]]; then
+    echo
+    echo "    Could not parse hab version: ${hab_version}"
+    echo "    Please install hab 1.6+"
+    exit 1
+fi
+
+hab_version="$(echo "${hab_version}" | awk '{print $2}' | awk -F'/' '{print $1}')"
+echo "    Found hab version: ${hab_version}"
+
+
+# check that node >= MAJOR.MINOR
+hab_min_major="1"
+hab_min_minor="6"
+
+IFS='.' read -ra hab_version_split <<< "${hab_version#v}"
+if [ "${hab_version_split[0]}" -lt "${hab_min_major}" ] || [[ "${hab_version_split[0]}" -le "${hab_min_major}" && "${hab_version_split[1]}" -lt "${hab_min_minor}" ]]; then
+    echo
+    echo "     Please install hab >= ${hab_min_major}.${hab_min_minor}.x"
+    exit 1
+fi
+
+if ! [ -f ~/.hab/etc/cli.toml ] || ! grep -q '^origin =' ~/.hab/etc/cli.toml; then
+    echo "Please re-run \`hab setup\` and choose to set a default origin, it can be anything"
+    exit 1
+fi
+
+_origin=$(awk -F'"' '/^origin = /{print $2}' ~/.hab/etc/cli.toml)
+
+
+echo
+echo "==> studio-bootstrap: verifying origin '${_origin}'…"
+
+_root_owned_key_count=$(ls -l ~/.hab/cache/keys | cut -f 3,4 -d " " | grep "root root" | wc -l)
+
+if [ "$_root_owned_key_count" -gt 0 ]; then
+    echo "Working around: https://github.com/habitat-sh/habitat/issues/7737"
+    echo "Found ${_root_owned_key_count} keys owned by root. Chowning them to $USER:$USER."
+    sudo chown $USER:$USER ~/.hab/cache/keys/*
+fi
+
+if ! hab origin key export --type secret "${_origin}" > /dev/null; then
+    echo "No key has been generated for origin ${_origin}, run: hab origin key generate ${_origin}"
+    exit 1
+fi
+
+
+echo
+echo "==> studio-bootstrap: all set 👍"
+echo
