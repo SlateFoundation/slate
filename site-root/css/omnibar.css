@@ -38,18 +38,19 @@
     opacity: 1;
   }
 }
-/* line 40, ../sass/slate/modules/_omnibar.scss */
+/* line 42, ../sass/slate/modules/_omnibar.scss */
 .slate-omnibar {
   background-color: #333;
   box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.6);
   color: white;
   left: 0;
+  max-width: 100vw;
   position: fixed;
-  right: 0;
   top: 0;
+  width: 100%;
   z-index: 99;
 }
-/* line 50, ../sass/slate/modules/_omnibar.scss */
+/* line 53, ../sass/slate/modules/_omnibar.scss */
 .slate-omnibar a,
 .slate-omnibar a:hover,
 .slate-omnibar a:active,
@@ -57,13 +58,13 @@
   color: white;
   text-decoration: none;
 }
-/* line 58, ../sass/slate/modules/_omnibar.scss */
+/* line 61, ../sass/slate/modules/_omnibar.scss */
 .slate-omnibar > .inner {
   padding-bottom: 0;
   padding-top: 0;
 }
 
-/* line 64, ../sass/slate/modules/_omnibar.scss */
+/* line 67, ../sass/slate/modules/_omnibar.scss */
 .omnibar-items {
   -webkit-align-items: stretch;
   align-items: stretch;
@@ -74,23 +75,23 @@
   padding: 0;
 }
 
-/* line 72, ../sass/slate/modules/_omnibar.scss */
+/* line 75, ../sass/slate/modules/_omnibar.scss */
 .omnibar-item {
   display: block;
   display: -webkit-flex;
   display: flex;
   list-style: none;
 }
-/* line 77, ../sass/slate/modules/_omnibar.scss */
+/* line 80, ../sass/slate/modules/_omnibar.scss */
 .omnibar-item:hover, .omnibar-item:focus {
   background-color: rgba(49, 160, 218, 0.4);
 }
-/* line 81, ../sass/slate/modules/_omnibar.scss */
+/* line 84, ../sass/slate/modules/_omnibar.scss */
 .omnibar-item:hover .omnibar-menu-ct, .omnibar-item:focus .omnibar-menu-ct {
   display: block;
 }
 
-/* line 87, ../sass/slate/modules/_omnibar.scss */
+/* line 90, ../sass/slate/modules/_omnibar.scss */
 .omnibar-link {
   -webkit-align-items: center;
   align-items: center;
@@ -101,40 +102,40 @@
   display: flex;
   padding: 0 1em;
 }
-/* line 95, ../sass/slate/modules/_omnibar.scss */
+/* line 98, ../sass/slate/modules/_omnibar.scss */
 .icon-courses .omnibar-link {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+CiAgICA8cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjMuMSA4LjZoMnYzMC44aC0yek0xMC4yNDggMTcuMTRsMS0xLjczIDI2LjY3MyAxNS40LTEgMS43M3pNMTEuMjIgMzIuNTRsLTEtMS43MyAyNi42NzItMTUuNCAxIDEuNzN6TTQxLjEgMjguOWMuMy0uOS40LTEuOS42LTIuOCAxLjYtLjMgMy4zLS43IDQuOS0xLjMgMC0uOSAwLTEuOC0uMS0yLjgtMS43LS42LTMuMy0xLTUtMS4zLS4yLTEtLjQtMS45LS44LTIuOC0uNC0uOS0uNy0xLjgtMS4yLTIuNiAxLjItMS4yIDIuMy0yLjUgMy4yLTMuOS0uNS0uOC0xLjEtMS41LTEuNy0yLjItMS43LjUtMy4zIDEuMS00LjggMS45LS43LS43LTEuNS0xLjMtMi4zLTEuOC0uOC0uNS0xLjYtMS0yLjUtMS40LjItMS43LjMtMy4zLjMtNS0uOS0uNC0xLjgtLjUtMi42LS44LTEuMSAxLjQtMiAyLjktMi43IDQuNC0xLS4xLTEuOS0uMi0yLjktLjEtMSAwLTEuOS4xLTIuOS4zLS43LTEuNS0xLjYtMy0yLjYtNC4zLS45LjMtMS44LjUtMi42LjkgMCAxLjguMSAzLjQuMyA1LjEtLjkuNC0xLjYgMS0yLjQgMS42LS43LjYtMS41IDEuMi0yLjEgMi0xLjUtLjctMy4xLTEuNC00LjctMS45LS42LjctMS4xIDEuNS0xLjYgMi4zIDEgMS40IDIuMSAyLjggMy4zIDQtLjQuOS0uOCAxLjgtMSAyLjctLjQuOS0uNSAxLjktLjcgMi44LTEuNi4zLTMuMy43LTQuOSAxLjMgMCAuOSAwIDEuOC4xIDIuOCAxLjcuNiAzLjMgMSA1IDEuMy4yIDEgLjQgMS45LjggMi44LjQuOS43IDEuOCAxLjIgMi42LTEuMiAxLjItMi4zIDIuNS0zLjIgMy45LjUuOCAxLjEgMS41IDEuNyAyLjIgMS43LS41IDMuMy0xLjEgNC44LTEuOS43LjcgMS41IDEuMyAyLjMgMS44LjguNSAxLjYgMSAyLjUgMS40LS4yIDEuNy0uMyAzLjMtLjMgNSAuOS40IDEuOC41IDIuNi44IDEuMS0xLjQgMi0yLjkgMi43LTQuNCAxIC4xIDEuOS4yIDIuOS4xIDEgMCAxLjktLjEgMi45LS4zLjggMS41IDEuNyAyLjkgMi43IDQuMy45LS4zIDEuOC0uNSAyLjYtLjkgMC0xLjgtLjEtMy40LS4zLTUuMS45LS40IDEuNi0xIDIuNC0xLjYuNy0uNiAxLjUtMS4yIDIuMS0yIDEuNS43IDMuMSAxLjQgNC43IDEuOS42LS43IDEuMS0xLjUgMS42LTIuMy0xLTEuNC0yLjEtMi44LTMuMy00IC40LS44LjgtMS43IDEtMi43em0tMTYuOSA5LjdjLTggMC0xNC41LTYuNS0xNC41LTE0LjVTMTYuMiA5LjYgMjQuMiA5LjZzMTQuNSA2LjUgMTQuNSAxNC41LTYuNSAxNC41LTE0LjUgMTQuNXoiLz4KPC9zdmc+Cg==');
   padding-left: 2.75em;
 }
-/* line 100, ../sass/slate/modules/_omnibar.scss */
+/* line 103, ../sass/slate/modules/_omnibar.scss */
 .icon-tools .omnibar-link {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+CiAgICA8cGF0aCBmaWxsPSIjZmZmIiBkPSJNNDcuNiA2LjZDNDQuNCAzLjEgNDAuMyAxIDM2LjIgMWMtNC41IDAtOC44IDIuNS0xMS44IDYuN0MyMS40IDMuNSAxNyAxIDEyLjUgMSA4LjQgMSA0IDMuMS44IDYuNmMtLjQuMy0uOC44LS44IDEuM3YzNi4yYzAgLjcgMS4xIDEuMiAxLjcuOCA0LjYtMi44IDkuOC01LjMgMTIuOC01LjMgMy45IDAgNi43IDIuNyA4LjYgNi43LjIuMy42LjcuOS43aC43Yy40IDAgLjctLjMuOS0uNyAxLjktNCA0LjctNi43IDguNS02LjcgMyAwIDggMi40IDEyLjUgNS4yLjYuNCAxLjMtLjEgMS4zLS44VjcuOWMuMS0uNSAwLTEtLjMtMS4zek0yMiA0MC4zYy0xLTEuNS00LjEtNC4yLTkuMS00LjItMy4zIDAtNi40IDEuNi05LjcgMy41TDMuMSA4LjJjMi41LTIuNCA1LTMuOCA3LjgtMy44QzE2LjMgNC4zIDIxIDcuNiAyMiAxMXYyOS4zem0yMi42LS43Yy0zLjMtMS45LTYuNi0zLjUtMTAtMy41LTUgMC03LjcgMi43LTguNyA0LjJWMTFjMS0zLjQgNS4yLTYuNyAxMC42LTYuNyAyLjcgMCA1LjggMS40IDguMyAzLjhsLS4yIDMxLjV6Ii8+Cjwvc3ZnPgo=');
   padding-left: 2.75em;
 }
 
-/* line 106, ../sass/slate/modules/_omnibar.scss */
+/* line 109, ../sass/slate/modules/_omnibar.scss */
 .omnibar-link-image {
   margin-right: 0.5em;
 }
 
-/* line 110, ../sass/slate/modules/_omnibar.scss */
+/* line 113, ../sass/slate/modules/_omnibar.scss */
 .slate-logo {
   height: 2em;
   width: auto;
 }
 
-/* line 115, ../sass/slate/modules/_omnibar.scss */
+/* line 118, ../sass/slate/modules/_omnibar.scss */
 .omnibar-search-item {
   -webkit-flex: 1;
   flex: 1;
   margin: 0 1em 0 .5em;
 }
-/* line 119, ../sass/slate/modules/_omnibar.scss */
+/* line 122, ../sass/slate/modules/_omnibar.scss */
 .omnibar-search-item:hover, .omnibar-search-item:focus {
   background: none;
 }
 
-/* line 125, ../sass/slate/modules/_omnibar.scss */
+/* line 128, ../sass/slate/modules/_omnibar.scss */
 .omnibar-search-form {
   -webkit-align-items: center;
   align-items: center;
@@ -147,7 +148,7 @@
   text-align: right;
 }
 
-/* line 133, ../sass/slate/modules/_omnibar.scss */
+/* line 136, ../sass/slate/modules/_omnibar.scss */
 .omnibar-search-field {
   background-color: transparent;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+CiAgICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTMyLjYgMjguNkMzNC43IDI1LjYgMzYgMjIgMzYgMTggMzYgOCAyOCAwIDE4IDBTMCA4IDAgMThjMCA5LjkgOCAxOCAxOCAxOCA0IDAgNy42LTEuMyAxMC42LTMuNEw0NCA0OGw0LTQtMTUuNC0xNS40ek00IDE4YzAtNy43IDYuMy0xNCAxNC0xNHMxNCA2LjMgMTQgMTQtNi4zIDE0LTE0IDE0UzQgMjUuNyA0IDE4eiIvPgo8L3N2Zz4K');
@@ -183,7 +184,7 @@
 .omnibar-search-field:input-placeholder {
   color: white;
 }
-/* line 151, ../sass/slate/modules/_omnibar.scss */
+/* line 154, ../sass/slate/modules/_omnibar.scss */
 .omnibar-search-field:focus {
   background-color: rgba(255, 255, 255, 0.1667);
   border-color: #31a0da;
@@ -208,7 +209,7 @@
   color: rgba(255, 255, 255, 0.3333);
 }
 
-/* line 162, ../sass/slate/modules/_omnibar.scss */
+/* line 165, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-ct {
   background-color: rgba(68, 68, 68, 0.93);
   box-shadow: 0 0.5em 0.5em -0.5em rgba(0, 0, 0, 0.6);
@@ -221,14 +222,14 @@
   z-index: 1;
 }
 
-/* line 174, ../sass/slate/modules/_omnibar.scss */
+/* line 177, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu {
   margin: 0 auto;
   padding: 1.5em 0;
   width: 85%;
 }
 
-/* line 180, ../sass/slate/modules/_omnibar.scss */
+/* line 183, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item {
   display: inline-block;
   list-style: none;
@@ -238,181 +239,186 @@
 }
 
 /* line 191, ../sass/slate/modules/_omnibar.scss */
+.omnibar-menu-link {
+  display: block;
+}
+/* line 196, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-link:hover .omnibar-menu-image-bg, .omnibar-menu-link:focus .omnibar-menu-image-bg {
   fill: #1f7dae;
 }
-/* line 195, ../sass/slate/modules/_omnibar.scss */
+/* line 200, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-link:hover .omnibar-menu-image, .omnibar-menu-link:focus .omnibar-menu-image {
   -moz-transform: scale(1.1, 1.1);
   -ms-transform: scale(1.1, 1.1);
   -webkit-transform: scale(1.1, 1.1);
   transform: scale(1.1, 1.1);
 }
-/* line 199, ../sass/slate/modules/_omnibar.scss */
+/* line 204, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-link:hover .omnibar-menu-label, .omnibar-menu-link:focus .omnibar-menu-label {
   color: #add9f0;
 }
 
-/* line 205, ../sass/slate/modules/_omnibar.scss */
+/* line 210, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-icon {
   margin: 0;
   width: 96px;
   -webkit-animation: menu-in 300ms both cubic-bezier(0.2, 0.8, 0, 1.2);
   animation: menu-in 300ms both cubic-bezier(0.2, 0.8, 0, 1.2);
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(1) .omnibar-menu-icon {
   -webkit-animation-delay: 0.0167s;
   animation-delay: 0.0167s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(2) .omnibar-menu-icon {
   -webkit-animation-delay: 0.0334s;
   animation-delay: 0.0334s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(3) .omnibar-menu-icon {
   -webkit-animation-delay: 0.0501s;
   animation-delay: 0.0501s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(4) .omnibar-menu-icon {
   -webkit-animation-delay: 0.0668s;
   animation-delay: 0.0668s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(5) .omnibar-menu-icon {
   -webkit-animation-delay: 0.0835s;
   animation-delay: 0.0835s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(6) .omnibar-menu-icon {
   -webkit-animation-delay: 0.1002s;
   animation-delay: 0.1002s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(7) .omnibar-menu-icon {
   -webkit-animation-delay: 0.1169s;
   animation-delay: 0.1169s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(8) .omnibar-menu-icon {
   -webkit-animation-delay: 0.1336s;
   animation-delay: 0.1336s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(9) .omnibar-menu-icon {
   -webkit-animation-delay: 0.1503s;
   animation-delay: 0.1503s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(10) .omnibar-menu-icon {
   -webkit-animation-delay: 0.167s;
   animation-delay: 0.167s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(11) .omnibar-menu-icon {
   -webkit-animation-delay: 0.1837s;
   animation-delay: 0.1837s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(12) .omnibar-menu-icon {
   -webkit-animation-delay: 0.2004s;
   animation-delay: 0.2004s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(13) .omnibar-menu-icon {
   -webkit-animation-delay: 0.2171s;
   animation-delay: 0.2171s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(14) .omnibar-menu-icon {
   -webkit-animation-delay: 0.2338s;
   animation-delay: 0.2338s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(15) .omnibar-menu-icon {
   -webkit-animation-delay: 0.2505s;
   animation-delay: 0.2505s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(16) .omnibar-menu-icon {
   -webkit-animation-delay: 0.2672s;
   animation-delay: 0.2672s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(17) .omnibar-menu-icon {
   -webkit-animation-delay: 0.2839s;
   animation-delay: 0.2839s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(18) .omnibar-menu-icon {
   -webkit-animation-delay: 0.3006s;
   animation-delay: 0.3006s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(19) .omnibar-menu-icon {
   -webkit-animation-delay: 0.3173s;
   animation-delay: 0.3173s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(20) .omnibar-menu-icon {
   -webkit-animation-delay: 0.334s;
   animation-delay: 0.334s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(21) .omnibar-menu-icon {
   -webkit-animation-delay: 0.3507s;
   animation-delay: 0.3507s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(22) .omnibar-menu-icon {
   -webkit-animation-delay: 0.3674s;
   animation-delay: 0.3674s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(23) .omnibar-menu-icon {
   -webkit-animation-delay: 0.3841s;
   animation-delay: 0.3841s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(24) .omnibar-menu-icon {
   -webkit-animation-delay: 0.4008s;
   animation-delay: 0.4008s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(25) .omnibar-menu-icon {
   -webkit-animation-delay: 0.4175s;
   animation-delay: 0.4175s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(26) .omnibar-menu-icon {
   -webkit-animation-delay: 0.4342s;
   animation-delay: 0.4342s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(27) .omnibar-menu-icon {
   -webkit-animation-delay: 0.4509s;
   animation-delay: 0.4509s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(28) .omnibar-menu-icon {
   -webkit-animation-delay: 0.4676s;
   animation-delay: 0.4676s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(29) .omnibar-menu-icon {
   -webkit-animation-delay: 0.4843s;
   animation-delay: 0.4843s;
 }
-/* line 216, ../sass/slate/modules/_omnibar.scss */
+/* line 222, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(30) .omnibar-menu-icon {
   -webkit-animation-delay: 0.501s;
   animation-delay: 0.501s;
 }
 
-/* line 223, ../sass/slate/modules/_omnibar.scss */
+/* line 229, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-image-ct {
   -webkit-align-items: center;
   align-items: center;
@@ -426,7 +432,7 @@
   width: 4em;
 }
 
-/* line 233, ../sass/slate/modules/_omnibar.scss */
+/* line 239, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-image-bg {
   fill: #31a0da;
   height: 100%;
@@ -441,159 +447,160 @@
   -webkit-animation: menu-in 200ms both cubic-bezier(0.2, 0.8, 0, 1.2);
   animation: menu-in 200ms both cubic-bezier(0.2, 0.8, 0, 1.2);
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(1) .omnibar-menu-image-bg {
   -webkit-animation-delay: 82ms;
   animation-delay: 82ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(2) .omnibar-menu-image-bg {
   -webkit-animation-delay: 97ms;
   animation-delay: 97ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(3) .omnibar-menu-image-bg {
   -webkit-animation-delay: 112ms;
   animation-delay: 112ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(4) .omnibar-menu-image-bg {
   -webkit-animation-delay: 127ms;
   animation-delay: 127ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(5) .omnibar-menu-image-bg {
   -webkit-animation-delay: 142ms;
   animation-delay: 142ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(6) .omnibar-menu-image-bg {
   -webkit-animation-delay: 157ms;
   animation-delay: 157ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(7) .omnibar-menu-image-bg {
   -webkit-animation-delay: 172ms;
   animation-delay: 172ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(8) .omnibar-menu-image-bg {
   -webkit-animation-delay: 187ms;
   animation-delay: 187ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(9) .omnibar-menu-image-bg {
   -webkit-animation-delay: 202ms;
   animation-delay: 202ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(10) .omnibar-menu-image-bg {
   -webkit-animation-delay: 217ms;
   animation-delay: 217ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(11) .omnibar-menu-image-bg {
   -webkit-animation-delay: 232ms;
   animation-delay: 232ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(12) .omnibar-menu-image-bg {
   -webkit-animation-delay: 247ms;
   animation-delay: 247ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(13) .omnibar-menu-image-bg {
   -webkit-animation-delay: 262ms;
   animation-delay: 262ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(14) .omnibar-menu-image-bg {
   -webkit-animation-delay: 277ms;
   animation-delay: 277ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(15) .omnibar-menu-image-bg {
   -webkit-animation-delay: 292ms;
   animation-delay: 292ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(16) .omnibar-menu-image-bg {
   -webkit-animation-delay: 307ms;
   animation-delay: 307ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(17) .omnibar-menu-image-bg {
   -webkit-animation-delay: 322ms;
   animation-delay: 322ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(18) .omnibar-menu-image-bg {
   -webkit-animation-delay: 337ms;
   animation-delay: 337ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(19) .omnibar-menu-image-bg {
   -webkit-animation-delay: 352ms;
   animation-delay: 352ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(20) .omnibar-menu-image-bg {
   -webkit-animation-delay: 367ms;
   animation-delay: 367ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(21) .omnibar-menu-image-bg {
   -webkit-animation-delay: 382ms;
   animation-delay: 382ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(22) .omnibar-menu-image-bg {
   -webkit-animation-delay: 397ms;
   animation-delay: 397ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(23) .omnibar-menu-image-bg {
   -webkit-animation-delay: 412ms;
   animation-delay: 412ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(24) .omnibar-menu-image-bg {
   -webkit-animation-delay: 427ms;
   animation-delay: 427ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(25) .omnibar-menu-image-bg {
   -webkit-animation-delay: 442ms;
   animation-delay: 442ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(26) .omnibar-menu-image-bg {
   -webkit-animation-delay: 457ms;
   animation-delay: 457ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(27) .omnibar-menu-image-bg {
   -webkit-animation-delay: 472ms;
   animation-delay: 472ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(28) .omnibar-menu-image-bg {
   -webkit-animation-delay: 487ms;
   animation-delay: 487ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(29) .omnibar-menu-image-bg {
   -webkit-animation-delay: 502ms;
   animation-delay: 502ms;
 }
-/* line 249, ../sass/slate/modules/_omnibar.scss */
+/* line 256, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-item:nth-child(30) .omnibar-menu-image-bg {
   -webkit-animation-delay: 517ms;
   animation-delay: 517ms;
 }
 
-/* line 256, ../sass/slate/modules/_omnibar.scss */
+/* line 263, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-image {
   display: block;
   fill: currentColor;
@@ -602,15 +609,232 @@
   width: 75%;
 }
 
-/* line 265, ../sass/slate/modules/_omnibar.scss */
+/* line 271, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-label {
   color: white;
   font-size: smaller;
   line-height: 1.25;
   margin-top: 0.25em;
 }
-/* line 271, ../sass/slate/modules/_omnibar.scss */
+/* line 277, ../sass/slate/modules/_omnibar.scss */
 .omnibar-menu-label small {
   display: block;
-  margin: 0.25em 0 0.125em;
+  margin: .25em 0 .125em;
+  opacity: .4;
+}
+
+/* line 285, ../sass/slate/modules/_omnibar.scss */
+.slate-omnibar.mobile-only .omnibar-link {
+  padding: .875em;
+}
+/* line 289, ../sass/slate/modules/_omnibar.scss */
+.slate-omnibar.mobile-only .omnibar-search-item {
+  margin: 0;
+}
+/* line 293, ../sass/slate/modules/_omnibar.scss */
+.slate-omnibar.mobile-only .omnibar-search-field {
+  height: 100%;
+  width: 2.25em;
+}
+/* line 4, ../sass/slate/_mixins.scss */
+.slate-omnibar.mobile-only .omnibar-search-field::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.33333);
+}
+/* line 8, ../sass/slate/_mixins.scss */
+.slate-omnibar.mobile-only .omnibar-search-field::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.33333);
+}
+/* line 12, ../sass/slate/_mixins.scss */
+.slate-omnibar.mobile-only .omnibar-search-field:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.33333);
+}
+/* line 16, ../sass/slate/_mixins.scss */
+.slate-omnibar.mobile-only .omnibar-search-field:input-placeholder {
+  color: rgba(255, 255, 255, 0.33333);
+}
+/* line 299, ../sass/slate/modules/_omnibar.scss */
+.slate-omnibar.mobile-only .omnibar-search-field:focus {
+  width: 100%;
+}
+
+/* line 305, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-item {
+  position: relative;
+}
+
+/* line 309, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input {
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+/* line 318, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-icon {
+  height: 1em;
+  padding: .875em;
+  width: 1em;
+}
+
+/* line 324, ../sass/slate/modules/_omnibar.scss */
+.omnibar-mobile-overlay {
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 2.75em;
+}
+
+/* line 333, ../sass/slate/modules/_omnibar.scss */
+.omnibar-overlay-background {
+  background-color: rgba(68, 68, 68, 0.97);
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: 400ms;
+}
+
+/* line 344, ../sass/slate/modules/_omnibar.scss */
+.omnibar-overlay-contents {
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  overflow: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 1.25em;
+  transform: translateY(-1em);
+  transition: 200ms;
+}
+
+/* line 357, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-icon rect {
+  transform-origin: center;
+  transition: 200ms;
+}
+/* line 362, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-icon rect:nth-child(1) {
+  transform: translateY(-5px);
+}
+/* line 363, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-icon rect:nth-child(3) {
+  transform: translateY(5px);
+}
+
+/* line 368, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-toggle-label rect:nth-child(1) {
+  transform: rotate(45deg) translateY(0);
+}
+/* line 372, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-toggle-label rect:nth-child(2) {
+  transform: scaleX(0);
+}
+/* line 376, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-toggle-label rect:nth-child(3) {
+  transform: rotate(-45deg) translateY(0);
+}
+/* line 381, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay {
+  pointer-events: all;
+}
+/* line 384, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-background {
+  opacity: 1;
+}
+/* line 388, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-contents {
+  opacity: 1;
+  transform: translate(0);
+  transition-delay: 200ms;
+}
+/* line 394, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group {
+  opacity: 1;
+  transform: scale(1);
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 1) {
+  transition-delay: 75ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 2) {
+  transition-delay: 150ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 3) {
+  transition-delay: 225ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 4) {
+  transition-delay: 300ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 5) {
+  transition-delay: 375ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 6) {
+  transition-delay: 450ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 7) {
+  transition-delay: 525ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 8) {
+  transition-delay: 600ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 9) {
+  transition-delay: 675ms;
+}
+/* line 400, ../sass/slate/modules/_omnibar.scss */
+.omnibar-toggle-input:checked ~ .omnibar-mobile-overlay .omnibar-overlay-group:nth-child(n + 10) {
+  transition-delay: 750ms;
+}
+
+/* line 408, ../sass/slate/modules/_omnibar.scss */
+.omnibar-overlay-group {
+  opacity: 0;
+  transform: scale(0.95) translateY(-1em);
+  transform-origin: right top;
+  transition: 200ms;
+}
+
+/* line 415, ../sass/slate/modules/_omnibar.scss */
+.ombnibar-overlay-group-items {
+  display: grid;
+  grid-gap: 1em .5em;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  margin: 0 0 2em;
+  padding: 0;
+}
+/* line 422, ../sass/slate/modules/_omnibar.scss */
+.ombnibar-overlay-group-items .omnibar-menu-item {
+  margin: 0;
+}
+/* line 426, ../sass/slate/modules/_omnibar.scss */
+.ombnibar-overlay-group-items .omnibar-menu-icon {
+  width: 100%;
+}
+/* line 430, ../sass/slate/modules/_omnibar.scss */
+.ombnibar-overlay-group-items .omnibar-menu-img-ct {
+  height: 60px;
+  width: 60px;
+}
+
+/* line 436, ../sass/slate/modules/_omnibar.scss */
+.omnibar-overlay-heading {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  margin: 0 0 1em;
+  padding: 0 0 .25em;
 }

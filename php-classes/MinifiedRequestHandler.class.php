@@ -53,7 +53,7 @@ class MinifiedRequestHandler extends RequestHandler
 
 
         // if URL includes correct hash, response can be cached permenantly by the client
-        if (!empty($_GET['_sha1']) && (!$sourceReport ||$_GET['_sha1'] == $sourceReport['hash'])) {
+        if (!empty($_GET['_sha1']) && (empty($sourceReport) ||$_GET['_sha1'] == $sourceReport['hash'])) {
             $expires = 60*60*24*365;
             header('Cache-Control: public, max-age='.$expires);
             header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time()+$expires));
