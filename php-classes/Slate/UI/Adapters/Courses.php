@@ -13,27 +13,39 @@ class Courses implements \Slate\UI\ILinksSource
 
     public static $courseIcons = [
         'arithmetic' => [
-            'courseCodes' => ['ALG']
+            'courseCodes' => ['ALG', 'CALC', 'MATH', 'PRECALC', 'STAT']
         ],
         'writing' => [
-            'courseCodes' => ['ENG']
+            'courseCodes' => ['ENG', 'ELA', 'PHILO', 'JOURNAL', 'SS']
         ],
         'chemistry' => [
-            'courseCodes' => ['BIO', 'CHEM']
+            'courseCodes' => ['BIO', 'CHEM', 'ADVCHEM', 'BC', 'ENVSCI', 'PHYS']
         ],
         'globe' => [
-            'courseCodes' => ['HIS', 'HIST', 'GEO']
+            'courseCodes' => ['HIS', 'HIST', 'GEO', 'AMHIST', 'WRLDHIST']
         ],
         'palette' => [
-            'courseCodes' => ['ART']
+            'courseCodes' => ['ART', 'CRAFTS', 'DRAMA', 'MUSIC', 'SRART']
         ],
         'binoculars' => [
         ],
         'heartbeat' => [
-            'courseCodes' => ['HEALTH']
+            'courseCodes' => ['HEALTH', 'PE', 'ANAT']
         ],
         'intl' => [
-            'courseCodes' => ['SP']
+            'courseCodes' => ['SP', 'FR', 'GR', 'SASTUDIES']
+        ],
+        'graduate' => [
+            'courseCodes' => ['ILP', 'ADV', 'CAP', 'ISP', 'SAT']
+        ],
+        'users' => [
+            'courseCodes' => ['INTERSECT', 'AFAM', 'AMGOV']
+        ],
+        'network' => [
+            'courseCodes' => ['PODCAST', 'DIGFILM', 'ADVCSE', 'CSE', 'CTEENG', 'ENGIN', 'TECH']
+        ],
+        'chat' => [
+            'courseCodes' => ['DEB']
         ]
     ];
 
@@ -79,7 +91,7 @@ class Courses implements \Slate\UI\ILinksSource
 
         $linkGroups = [
             'Courses' => [
-                '_icon' => 'courses',
+                '_icon' => 'diploma',
                 '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current' ]),
                 '_weight' => $weight++,
                 '_children' => array_map(function(Section $Section) {
@@ -101,7 +113,7 @@ class Courses implements \Slate\UI\ILinksSource
                 }
 
                 $linkGroups[$Ward->Username] = [
-                    '_icon' => 'courses',
+                    '_icon' => 'diploma',
                     '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current', 'enrolled_user' => $Ward->Username ]),
                     '_label' => $Ward->FirstNamePossessive . ' Courses',
                     '_weight' => $weight++,
