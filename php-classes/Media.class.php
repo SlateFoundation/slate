@@ -357,7 +357,10 @@ class Media extends ActiveRecord
             Cache::delete($cacheKey);
         } else {
             // load source image
-            $srcImage = $this->getImage();
+            if (!$srcImage = $this->getImage()) {
+                throw new OutOfBoundsException("{$this->MIMEType} source not available as an image");
+            }
+
             $srcWidth = imagesx($srcImage);
             $srcHeight = imagesy($srcImage);
 
@@ -637,7 +640,7 @@ class Media extends ActiveRecord
         $sourceInfo = @getimagesize($sourcePath);
 
         if (!$sourceInfo) {
-            throw new Exception("Unable to load blank image for context '$contextClass' from '$sourcePath'");
+            throw new OutOfBoundsException("Unable to load blank image for context '$contextClass'");
         }
 
         // get mime type
