@@ -541,7 +541,11 @@ class MediaRequestHandler extends RecordsRequestHandler
 
 
         // fetch thumbnail
-        $thumbPath = $Media->getThumbnail($maxWidth, $maxHeight, $fillColor, $cropped);
+        try {
+            $thumbPath = $Media->getThumbnail($maxWidth, $maxHeight, $fillColor, $cropped);
+        } catch (OutOfBoundsException $e) {
+            return static::throwNotFoundError($e->getMessage());
+        }
 
 
         // dump it out
