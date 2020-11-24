@@ -267,6 +267,21 @@ class Section extends \VersionedRecord
         parent::save($deep);
     }
 
+    public function getTitle()
+    {
+        $title = $this->Title;
+
+        if (count($this->Teachers)) {
+            $title .= " / {$this->Teachers[0]->LastName}";
+        }
+
+        if ($this->Schedule) {
+            $title .= " / {$this->Schedule->Title}";
+        }
+
+        return $title;
+    }
+
     public function getHandle()
     {
         return $this->Code;
