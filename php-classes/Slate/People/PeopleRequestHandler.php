@@ -102,7 +102,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                 $lists[] = [
                     'groupId' => 'sections',
                     'groupLabel' => 'My Sections',
-                    'label' => $Section->Code,
+                    'label' => $Section->getTitle(),
                     'value' => "section:{$Section->Code}"
                 ];
 
@@ -110,7 +110,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                     $lists[] = [
                         'groupId' => 'sections',
                         'groupLabel' => 'My Sections',
-                        'label' => "{$Section->Code} ▸ {$cohort}",
+                        'label' => "{$Section->getTitle} ▸ {$cohort}",
                         'value' => "section:{$Section->Code}:{$cohort}"
                     ];
                 }
