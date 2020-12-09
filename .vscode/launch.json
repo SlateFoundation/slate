@@ -11,6 +11,18 @@
             "webRoot": "${workspaceFolder}/sencha-workspace",
             "url": "http://localhost:7081/SlateAdmin/?cache=1&apiHost=localhost:7080"
         },
+        // {
+        //     "type": "devtools-for-chrome",
+        //     "request": "launch",
+        //     "name": "Launch SlateAdmin DevTools",
+        //     "file": "http://localhost:7081/SlateAdmin/?cache=1&apiHost=localhost:7080"
+        // },
+        // {
+        //     "type": "devtools-for-chrome",
+        //     "request": "attach",
+        //     "name": "Attach SlateAdmin DevTools",
+        //     "url": "http://localhost:7081/"
+        // },
         {
             "name": "Attach to Chrome",
             "type": "chrome",

@@ -58,7 +58,7 @@ class Email extends AbstractPoint
         $string = $this->address;
 
         if ($this->Person && $this->Person->FullName) {
-            $string = $this->Person->FullName." <$string>";
+            $string = sprintf('"%s" <%s>', $this->Person->FullName, $string);
         }
 
         return $string;
