@@ -4,6 +4,7 @@ files = [
     "!.github/",
     "!.vscode/",
     "!docs/",
+    "!fixtures/",
     "!script/",
     "!php-config/Git.config.d/",
 
