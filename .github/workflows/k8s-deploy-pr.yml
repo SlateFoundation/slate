@@ -127,11 +127,6 @@ jobs:
         set -e
         kubectl wait --for condition=ready "pod/${POD_NAME}" --timeout=30s
 
-    - name: Download fixtures
-      run: |
-        wget https://codeload.github.com/SlateFoundation/slate-fixtures/zip/cbl/demo -O slate-fixtures.zip
-        unzip slate-fixtures.zip
-
     - name: Wait for MySQL to be Ready
       run: |
         set -e
@@ -143,7 +138,7 @@ jobs:
           echo 'DROP DATABASE IF EXISTS `slate`;'
           echo 'CREATE DATABASE `slate`;'
           echo 'USE `slate`;'
-          cat slate-fixtures-cbl-demo/*.sql
+          cat fixtures/base/*.sql
         ) | kubectl -n slate exec -i "${POD_NAME}" -- hab pkg exec slate/slate-composite mysql
 
     - name: Mark deployment as failed
