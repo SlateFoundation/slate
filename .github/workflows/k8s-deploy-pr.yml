@@ -17,6 +17,8 @@ env:
   PR_NAME: pr-${{ github.event.number }}
   KUBE_HOSTNAME: ${{ secrets.kube_hostname }}
 
+  DATABASE_NAME: slate
+
   HAB_LICENSE: accept-no-persist
 
 jobs:
@@ -134,12 +136,19 @@ jobs:
 
     - name: Load fixtures into database
       run: |
-        (
-          echo 'DROP DATABASE IF EXISTS `slate`;'
-          echo 'CREATE DATABASE `slate`;'
-          echo 'USE `slate`;'
-          cat fixtures/base/*.sql
-        ) | kubectl -n slate exec -i "${POD_NAME}" -- hab pkg exec slate/slate-composite mysql
+        kubectl -n slate exec "${POD_NAME}" -- \
+          hab pkg exec slate/slate-composite \
+          mysqladmin drop "${DATABASE_NAME}" --force
+
+        kubectl -n slate exec "${POD_NAME}" -- \
+          hab pkg exec slate/slate-composite \
+          mysqladmin create "${DATABASE_NAME}"
+
+        cat fixtures/base/*.sql \
+        | kubectl -n slate exec "${POD_NAME}" -- \
+            hab pkg exec slate/slate-composite \
+            mysql "${DATABASE_NAME}"
+
 
     - name: Mark deployment as failed
       if: failure()
