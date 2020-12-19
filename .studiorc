@@ -1,14 +1,24 @@
 #!/bin/bash
+
+# install dependent studios
 hab pkg install emergence/studio chakijs/studio
+
+# disable studios printing their own help
+export STUDIO_NOHELP="yes"
+
 source "$(hab pkg path emergence/studio)/studio.sh"
 source "$(hab pkg path chakijs/studio)/studio.sh"
 
 
 # declare shortcuts for this repository's applications
-echo "    * Use 'build-admin' to build SlateAdmin for testing"
+STUDIO_HELP['build-admin']="Build SlateAdmin for local development and testing"
 build-admin() {
     build-app SlateAdmin
 }
+
+
+## final init and output
+studio-help
 
 
 # final blank line
