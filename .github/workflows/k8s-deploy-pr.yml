@@ -31,12 +31,12 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
 
+    # TODO: publish v1 and switch back
     - name: 'Initialize Chef Habitat environment'
       uses: JarvusInnovations/habitat-action@action/develop
       with:
         deps: |
           jarvus/hologit
-          jarvus/kubectl
 
     - name: Create Github Deployment
       run: |
@@ -77,6 +77,7 @@ jobs:
 
     - id: projection
       name: 'Project holobranch: emergence-site'
+      # TODO: publish v1 and switch back
       uses: JarvusInnovations/hologit@actions/projector/develop
       with:
         holobranch: emergence-site
@@ -105,8 +106,6 @@ jobs:
         $(printf '%s' "$KUBE_CONFIG_DATA" | base64 -d)
         EOF
 
-    - uses: azure/setup-kubectl@v1
-
     - name: Create K8S Deployment from Template
       run: |
         set -e
@@ -133,7 +132,10 @@ jobs:
       timeout-minutes: 10
       run: |
         set -e
-        until kubectl rollout status deployment "${PR_NAME}" 2>/dev/null >/dev/null; do echo -n "."; sleep .5; done;
+        until kubectl rollout status deployment "${PR_NAME}" 2>/dev/null >/dev/null; do
+          echo -n "."
+          sleep .5
+        done
 
     - name: Retrieve/Store Pod Name
       run: |
