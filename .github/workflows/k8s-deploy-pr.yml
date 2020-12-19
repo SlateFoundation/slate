@@ -102,10 +102,10 @@ jobs:
 
         kubectl config set-context --current --namespace=${KUBE_NAMESPACE}
 
-        # delete any existing pod first to force image to re-pull without changing tag
-        # kubectl delete pod -l app.kubernetes.io/instance="${PR_NAME}"
-        # helm uninstall ${{ env.PR_NAME }} -n ${{ env.KUBE_NAMESPACE }}
+        echo "Deleting existing pods to force image refresh"
+        kubectl delete pod -l app.kubernetes.io/instance="${{ env.PR_NAME }}"
 
+        echo "Using helm upgrade to apply ./helm-chart to release ${{ env.PR_NAME }}"
         helm upgrade ${{ env.PR_NAME }} ./helm-chart \
           --install \
           --set name=${{ env.PR_NAME }} \
