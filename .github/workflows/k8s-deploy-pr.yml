@@ -138,7 +138,8 @@ jobs:
       run: |
         kubectl -n slate exec "${POD_NAME}" -- \
           hab pkg exec slate/slate-composite \
-          mysqladmin drop "${DATABASE_NAME}" --force
+          mysqladmin drop "${DATABASE_NAME}" --force \
+        || true
 
         kubectl -n slate exec "${POD_NAME}" -- \
           hab pkg exec slate/slate-composite \
