@@ -31,6 +31,13 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
 
+    - name: 'Initialize Chef Habitat environment'
+      uses: JarvusInnovations/habitat-action@action/v1
+      with:
+        deps: |
+          jarvus/hologit
+          jarvus/kubectl
+
     - name: Create Github Deployment
       run: |
         set -e
