@@ -75,6 +75,12 @@ jobs:
       run: |
         echo "REPO_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
+    - id: projection
+      name: 'Project holobranch: emergence-site'
+      uses: JarvusInnovations/hologit@actions/projector/develop
+      with:
+        holobranch: emergence-site
+
     - name: Build & Publish Docker image
       uses: whoan/docker-build-with-cache-action@v5
       with:
@@ -85,6 +91,8 @@ jobs:
         image_name: ${{ env.REPO_NAME }}/${{ env.PACKAGE_NAME }}
         image_tag: ${{ env.PR_NAME }}
         build_extra_args: |
+          --build-arg=SITE_TREE=${{ steps.projection.outputs.tree }}
+          --build-arg=SITE_VERSION=0.0.0-pr.${{ github.event.number }}
           --build-arg=SOURCE_COMMIT=${{ github.sha }}
           --build-arg=SOURCE_TAG=${{ env.PR_NAME }}
           --build-arg=HAB_LICENSE=${{ env.HAB_LICENSE }}

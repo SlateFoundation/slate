@@ -23,6 +23,11 @@ RUN hab pkg install \
 
 
 FROM habitat as projector
+ARG SITE_TREE
+ENV SITE_TREE=$SITE_TREE
+ARG SITE_VERSION
+ENV SITE_VERSION=$SITE_VERSION
+
 # pre-layer all build-time plan deps
 RUN hab pkg install \
     core/hab-plan-build \
@@ -42,6 +47,11 @@ RUN hab pkg exec core/hab-plan-build hab-plan-build /src/habitat/composite
 
 
 FROM habitat as runtime
+ARG SOURCE_TAG
+ENV SOURCE_TAG=$SOURCE_TAG
+ARG SOURCE_COMMIT
+ENV SOURCE_COMMIT=$SOURCE_COMMIT
+
 # install .hart artifact from builder stage
 COPY --from=projector /hab/cache/artifacts/$HAB_ORIGIN-* /hab/cache/artifacts/
 RUN hab pkg install /hab/cache/artifacts/$HAB_ORIGIN-* \
