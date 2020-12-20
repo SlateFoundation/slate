@@ -31,9 +31,8 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
 
-    # TODO: publish v1 and switch back
     - name: 'Initialize Chef Habitat environment'
-      uses: JarvusInnovations/habitat-action@action/develop
+      uses: JarvusInnovations/habitat-action@action/v1
       with:
         deps: |
           jarvus/hologit
@@ -117,6 +116,7 @@ jobs:
         kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
 
         echo "Deleting existing pods to force image refresh"
+        # TODO: log pod, delete after update if it still exists
         kubectl delete pod -l app.kubernetes.io/instance="${PR_NAME}"
 
         echo "Using helm upgrade to apply ./helm-chart to release ${PR_NAME}"
