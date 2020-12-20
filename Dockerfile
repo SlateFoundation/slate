@@ -53,14 +53,14 @@ RUN hab pkg exec core/hab-plan-build hab-plan-build /src/habitat/composite
 
 FROM habitat as runtime
 
+# configure persistent volumes
+RUN hab pkg exec core/coreutils mkdir -p '/hab/svc/mysql/data' '/hab/svc/slate/data' '/hab/svc/nginx/files' \
+    && hab pkg exec core/coreutils chown hab:hab -R '/hab/svc/mysql/data' '/hab/svc/slate/data' '/hab/svc/nginx/files'
+
 # configure entrypoint
 VOLUME ["/hab/svc/mysql/data", "/hab/svc/slate/data", "/hab/svc/nginx/files"]
 ENTRYPOINT ["hab", "sup", "run"]
 CMD ["slate/slate-composite"]
-
-# configure persistent volumes
-RUN hab pkg exec core/coreutils mkdir -p '/hab/svc/mysql/data' '/hab/svc/slate/data' '/hab/svc/nginx/files' \
-    && hab pkg exec core/coreutils chown hab:hab -R '/hab/svc/mysql/data' '/hab/svc/slate/data' '/hab/svc/nginx/files'
 
 # install .hart artifact from builder stage
 COPY --from=projector /hab/cache/artifacts/$HAB_ORIGIN-* /hab/cache/artifacts/
