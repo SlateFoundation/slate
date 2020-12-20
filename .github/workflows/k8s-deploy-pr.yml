@@ -115,9 +115,12 @@ jobs:
 
         kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
 
-        echo "Deleting existing pods to force image refresh"
-        # TODO: log pod, delete after update if it still exists
-        kubectl delete pod -l app.kubernetes.io/instance="${PR_NAME}"
+        echo "Listing pods existing before deploy"
+        kubectl get pods \
+          -l app.kubernetes.io/instance="${PR_NAME}" \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+          | sort \
+          | tee ./.pods-before
 
         echo "Using helm upgrade to apply ./helm-chart to release ${PR_NAME}"
         helm upgrade "${PR_NAME}" ./helm-chart \
@@ -127,6 +130,16 @@ jobs:
           --set image="${image_url}" \
           --set hostname="${hostname}"
 
+        echo "Listing pods existing after deploy"
+        kubectl get pods \
+          -l app.kubernetes.io/instance="${PR_NAME}" \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+          | sort \
+          | tee ./.pods-after
+
+        echo "Deleting stale pods to force image refresh"
+        comm -12 ./.pods-before ./.pods-after \
+          | xargs --no-run-if-empty kubectl delete pod
 
     - name: Wait for Deployment to be Ready
       timeout-minutes: 10
