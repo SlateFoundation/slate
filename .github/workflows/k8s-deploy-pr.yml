@@ -105,7 +105,7 @@ jobs:
         $(printf '%s' "$KUBE_CONFIG_DATA" | base64 -d)
         EOF
 
-    - name: Create K8S Deployment from Template
+    - name: Deploy instance via Helm template
       run: |
         set -e
 
