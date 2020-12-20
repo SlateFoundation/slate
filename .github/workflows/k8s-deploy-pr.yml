@@ -147,6 +147,7 @@ jobs:
         kubectl wait --for condition=ready "pod/${POD_NAME}" --timeout=30s
 
     - name: Wait for MySQL to be Ready
+      timeout-minutes: 5
       run: |
         set -e
         until kubectl exec "${POD_NAME}" -- hab pkg exec slate/slate-composite mysqladmin ping; do
