@@ -74,11 +74,17 @@ jobs:
       run: |
         echo "REPO_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
-    - id: projection
+    - id: site-projection
       name: 'Project holobranch: emergence-site'
       uses: JarvusInnovations/hologit@actions/projector/v1
       with:
         holobranch: emergence-site
+
+    - id: fixtures-projection
+      name: 'Project holobranch: fixtures'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      with:
+        holobranch: fixtures
 
     - name: Build & Publish Docker image
       uses: whoan/docker-build-with-cache-action@v5
@@ -90,7 +96,7 @@ jobs:
         image_name: ${{ env.REPO_NAME }}/${{ env.PACKAGE_NAME }}
         image_tag: ${{ env.PR_NAME }}
         build_extra_args: |
-          --build-arg=SITE_TREE=${{ steps.projection.outputs.tree }}
+          --build-arg=SITE_TREE=${{ steps.site-projection.outputs.tree }}
           --build-arg=SITE_VERSION=0.0.0-pr.${{ github.event.number }}
           --build-arg=SOURCE_COMMIT=${{ github.sha }}
           --build-arg=SOURCE_TAG=${{ env.PR_NAME }}
@@ -179,9 +185,12 @@ jobs:
           hab pkg exec slate/slate-composite \
           mysqladmin create "${DATABASE_NAME}"
 
-        echo "Loading fixtures/base/*.sql..."
-        cat fixtures/base/*.sql \
-        | kubectl exec -i "${POD_NAME}" -- \
+        echo "Loading fixtures..."
+        (
+          for fixture_file in $(git ls-tree -r --name-only ${{ steps.fixtures-projection.outputs.tree }}); do
+            git cat-file -p "${{ steps.fixtures-projection.outputs.tree }}:${fixture_file}"
+          done
+        ) | kubectl exec -i "${POD_NAME}" -- \
             hab pkg exec slate/slate-composite \
             mysql "${DATABASE_NAME}"
 
