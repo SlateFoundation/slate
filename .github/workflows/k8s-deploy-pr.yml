@@ -169,19 +169,19 @@ jobs:
     - name: Load fixtures into database
       run: |
         echo "Dropping any existing database..."
-        kubectl -n slate exec "${POD_NAME}" -- \
+        kubectl exec "${POD_NAME}" -- \
           hab pkg exec slate/slate-composite \
           mysqladmin drop "${DATABASE_NAME}" --force \
         || true
 
         echo "Creating an empty database..."
-        kubectl -n slate exec "${POD_NAME}" -- \
+        kubectl exec "${POD_NAME}" -- \
           hab pkg exec slate/slate-composite \
           mysqladmin create "${DATABASE_NAME}"
 
         echo "Loading fixtures/base/*.sql..."
         cat fixtures/base/*.sql \
-        | kubectl -n slate exec "${POD_NAME}" -- \
+        | kubectl exec -i "${POD_NAME}" -- \
             hab pkg exec slate/slate-composite \
             mysql "${DATABASE_NAME}"
 
