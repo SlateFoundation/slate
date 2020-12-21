@@ -23,11 +23,11 @@ CREATE TABLE `course_sections` (
   FULLTEXT KEY `FULLTEXT` (`Notes`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-INSERT INTO `course_sections` VALUES (1,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-001','Live',NULL,NULL,15,NULL,NULL);
-INSERT INTO `course_sections` VALUES (2,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,2,'ELA Studio','ELA-001','Live',NULL,NULL,15,NULL,NULL);
-INSERT INTO `course_sections` VALUES (3,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,2,'ELA Studio','ELA-EMPTY','Live',NULL,NULL,15,NULL,NULL);
-INSERT INTO `course_sections` VALUES (4,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-002','Live',NULL,NULL,18,NULL,NULL);
-INSERT INTO `course_sections` VALUES (5,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-003','Live',NULL,NULL,8,NULL,NULL);
+INSERT INTO `course_sections` VALUES (1,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-001','Live',NULL,NULL,8,1,2);
+INSERT INTO `course_sections` VALUES (2,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,2,'ELA Studio','ELA-001','Live',NULL,NULL,8,2,3);
+INSERT INTO `course_sections` VALUES (3,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,2,'ELA Studio','ELA-EMPTY','Live',NULL,NULL,8,3,4);
+INSERT INTO `course_sections` VALUES (4,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-002','Live',NULL,NULL,11,4,NULL);
+INSERT INTO `course_sections` VALUES (5,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-003','Live',NULL,NULL,15,NULL,5);
 
 
 CREATE TABLE `history_course_sections` (
