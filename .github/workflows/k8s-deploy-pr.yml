@@ -17,6 +17,8 @@ env:
   PR_NAME: pr-${{ github.event.number }}
   KUBE_HOSTNAME: ${{ secrets.kube_hostname }}
 
+  DATABASE_NAME: slate
+
   HAB_LICENSE: accept-no-persist
 
 jobs:
@@ -29,11 +31,17 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
 
+    - name: 'Initialize Chef Habitat environment'
+      uses: JarvusInnovations/habitat-action@action/v1
+      with:
+        deps: |
+          jarvus/hologit
+
     - name: Create Github Deployment
       run: |
         set -e
         # Create deployment
-        hub api /repos/${{ github.repository }}/deployments -X POST --input <(cat <<EOF
+        hub api "/repos/${{ github.repository }}/deployments" -X POST --input <(cat <<EOF
         {
           "ref": "${{ github.head_ref }}",
           "auto_merge": false,
@@ -43,15 +51,15 @@ jobs:
         }
         EOF) > /tmp/deployment.json
 
-        DEPLOYMENT_ID=$(jq .id < /tmp/deployment.json)
-        echo "GH_DEPLOYMENT_ID=$(echo $DEPLOYMENT_ID)" >> $GITHUB_ENV
+        DEPLOYMENT_ID="$(jq .id < /tmp/deployment.json)"
+        echo "GH_DEPLOYMENT_ID=${DEPLOYMENT_ID}" >> $GITHUB_ENV
 
     - name: Update GH Deployment Status
       run: |
         set -e
 
         # Set status to pending
-        hub api /repos/${{ github.repository }}/deployments/${{ env.GH_DEPLOYMENT_ID }}/statuses  \
+        hub api "/repos/${{ github.repository }}/deployments/${GH_DEPLOYMENT_ID}/statuses"  \
           -X POST                                                                                      \
           -H "Accept: application/json, application/vnd.github.flash-preview+json"                     \
           --input <(cat <<EOF
@@ -64,7 +72,13 @@ jobs:
 
     - name: Update Environment
       run: |
-        echo "REPO_NAME=$(echo ${GITHUB_REPOSITORY,,})" >> $GITHUB_ENV
+        echo "REPO_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+    - id: projection
+      name: 'Project holobranch: emergence-site'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      with:
+        holobranch: emergence-site
 
     - name: Build & Publish Docker image
       uses: whoan/docker-build-with-cache-action@v5
@@ -76,6 +90,8 @@ jobs:
         image_name: ${{ env.REPO_NAME }}/${{ env.PACKAGE_NAME }}
         image_tag: ${{ env.PR_NAME }}
         build_extra_args: |
+          --build-arg=SITE_TREE=${{ steps.projection.outputs.tree }}
+          --build-arg=SITE_VERSION=0.0.0-pr.${{ github.event.number }}
           --build-arg=SOURCE_COMMIT=${{ github.sha }}
           --build-arg=SOURCE_TAG=${{ env.PR_NAME }}
           --build-arg=HAB_LICENSE=${{ env.HAB_LICENSE }}
@@ -88,35 +104,50 @@ jobs:
         $(printf '%s' "$KUBE_CONFIG_DATA" | base64 -d)
         EOF
 
-    - uses: azure/setup-kubectl@v1
-
-    - name: Create K8S Deployment from Template
+    - name: Deploy instance via Helm template
       run: |
         set -e
 
-        image_id=$(echo ${{ env.REPO_NAME }}/${{ env.PACKAGE_NAME }}:${{ env.PR_NAME }})
-        image_url=$(echo docker.pkg.github.com/$image_id)
-        hostname=$(echo ${{ env.PR_NAME }}.${{ env.KUBE_HOSTNAME }})
+        image_id="${REPO_NAME}/${PACKAGE_NAME}:${PR_NAME}"
+        image_url="docker.pkg.github.com/${image_id}"
+        hostname="${PR_NAME}.${KUBE_HOSTNAME}"
 
-        kubectl config set-context --current --namespace=${KUBE_NAMESPACE}
+        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
 
-        # delete any existing pod first to force image to re-pull without changing tag
-        # kubectl delete pod -l app.kubernetes.io/instance="${PR_NAME}"
-        # helm uninstall ${{ env.PR_NAME }} -n ${{ env.KUBE_NAMESPACE }}
+        echo "Listing pods existing before deploy"
+        kubectl get pods \
+          -l app.kubernetes.io/instance="${PR_NAME}" \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+          | sort \
+          | tee ./.pods-before
 
-        helm upgrade ${{ env.PR_NAME }} ./helm-chart \
+        echo "Using helm upgrade to apply ./helm-chart to release ${PR_NAME}"
+        helm upgrade "${PR_NAME}" ./helm-chart \
           --install \
-          --set name=${{ env.PR_NAME }} \
-          --set namespace=${{ env.KUBE_NAMESPACE }} \
-          --set image=${image_url} \
-          --set hostname=${hostname}
+          --set name="${PR_NAME}" \
+          --set namespace="${KUBE_NAMESPACE}" \
+          --set image="${image_url}" \
+          --set hostname="${hostname}"
 
+        echo "Listing pods existing after deploy"
+        kubectl get pods \
+          -l app.kubernetes.io/instance="${PR_NAME}" \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+          | sort \
+          | tee ./.pods-after
+
+        echo "Deleting stale pods to force image refresh"
+        comm -12 ./.pods-before ./.pods-after \
+          | xargs --no-run-if-empty kubectl delete pod
 
     - name: Wait for Deployment to be Ready
       timeout-minutes: 10
       run: |
         set -e
-        until kubectl rollout status deployment "${PR_NAME}" 2>/dev/null >/dev/null; do echo -n "."; sleep .5; done;
+        until kubectl rollout status deployment "${PR_NAME}" 2>/dev/null >/dev/null; do
+          echo -n "."
+          sleep .5
+        done
 
     - name: Retrieve/Store Pod Name
       run: |
@@ -127,29 +158,38 @@ jobs:
         set -e
         kubectl wait --for condition=ready "pod/${POD_NAME}" --timeout=30s
 
-    - name: Download fixtures
-      run: |
-        wget https://codeload.github.com/SlateFoundation/slate-fixtures/zip/cbl/demo -O slate-fixtures.zip
-        unzip slate-fixtures.zip
-
     - name: Wait for MySQL to be Ready
+      timeout-minutes: 5
       run: |
         set -e
-        until kubectl exec "${POD_NAME}" -- hab pkg exec slate/slate-composite mysqladmin ping; do sleep .5; done;
+        until kubectl exec "${POD_NAME}" -- hab pkg exec slate/slate-composite mysqladmin ping; do
+          sleep .5
+        done
 
     - name: Load fixtures into database
       run: |
-        (
-          echo 'DROP DATABASE IF EXISTS `slate`;'
-          echo 'CREATE DATABASE `slate`;'
-          echo 'USE `slate`;'
-          cat slate-fixtures-cbl-demo/*.sql
-        ) | kubectl -n slate exec -i "${POD_NAME}" -- hab pkg exec slate/slate-composite mysql
+        echo "Dropping any existing database..."
+        kubectl exec "${POD_NAME}" -- \
+          hab pkg exec slate/slate-composite \
+          mysqladmin drop "${DATABASE_NAME}" --force \
+        || true
+
+        echo "Creating an empty database..."
+        kubectl exec "${POD_NAME}" -- \
+          hab pkg exec slate/slate-composite \
+          mysqladmin create "${DATABASE_NAME}"
+
+        echo "Loading fixtures/base/*.sql..."
+        cat fixtures/base/*.sql \
+        | kubectl exec -i "${POD_NAME}" -- \
+            hab pkg exec slate/slate-composite \
+            mysql "${DATABASE_NAME}"
+
 
     - name: Mark deployment as failed
       if: failure()
       run: |
-        hub api /repos/${{ github.repository }}/deployments/${{ env.GH_DEPLOYMENT_ID }}/statuses  \
+        hub api "/repos/${{ github.repository }}/deployments/${GH_DEPLOYMENT_ID}/statuses"  \
           -X POST                                                                                      \
           -H "Accept: application/json, application/vnd.github.flash-preview+json"                     \
           --input <(cat <<EOF
@@ -162,7 +202,7 @@ jobs:
 
     - name: Mark deployment completed
       run: |
-        hub api /repos/${{ github.repository }}/deployments/${{ env.GH_DEPLOYMENT_ID }}/statuses  \
+        hub api "/repos/${{ github.repository }}/deployments/${GH_DEPLOYMENT_ID}/statuses"  \
           -X POST                                                                                      \
           -H "Accept: application/json, application/vnd.github.flash-preview+json"                     \
           --input <(cat <<EOF
