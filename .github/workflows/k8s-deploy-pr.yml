@@ -179,9 +179,17 @@ jobs:
           hab pkg exec slate/slate-composite \
           mysqladmin create "${DATABASE_NAME}"
 
-        echo "Loading fixtures/base/*.sql..."
-        cat fixtures/base/*.sql \
-        | kubectl exec -i "${POD_NAME}" -- \
+        echo "Projecting fixtures tree..."
+        fixtures_tree=$(git holo project fixtures)
+
+          git ls-tree -r --name-only c1aed964b06a1a9ec0e02586daf57154af3af927
+
+        echo "Loading fixtures..."
+        (
+          for fixture_file in $(git ls-tree -r --name-only ${fixtures_tree}); do
+            git cat-file -p "${fixtures_tree}:${fixture_file}"
+          done
+        ) | kubectl exec -i "${POD_NAME}" -- \
             hab pkg exec slate/slate-composite \
             mysql "${DATABASE_NAME}"
 
