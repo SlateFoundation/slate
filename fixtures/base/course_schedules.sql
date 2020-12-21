@@ -26,7 +26,6 @@ INSERT INTO `course_schedules` VALUES (6,'Slate\\Courses\\Schedule','2019-01-02 
 INSERT INTO `course_schedules` VALUES (7,'Slate\\Courses\\Schedule','2019-01-02 03:04:05',1,NULL,NULL,'Y Band','y','Live',NULL);
 
 
-
 CREATE TABLE `history_course_schedules` (
   `RevisionID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ID` int(10) unsigned NOT NULL,
