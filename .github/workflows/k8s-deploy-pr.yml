@@ -76,8 +76,7 @@ jobs:
 
     - id: projection
       name: 'Project holobranch: emergence-site'
-      # TODO: publish v1 and switch back
-      uses: JarvusInnovations/hologit@actions/projector/develop
+      uses: JarvusInnovations/hologit@actions/projector/v1
       with:
         holobranch: emergence-site
 
