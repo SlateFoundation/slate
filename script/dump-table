@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+# get input
+SITE_NAMESPACE="${SITE_NAMESPACE:-slate}"
+SITE_DATABASE="${SITE_DATABASE:-slate}"
+
+instance="${1:?Usage: dump-table <instance> <table>}"
+table="${2:?Usage: dump-table <instance> <table>}"
+
+
+# configuration
+DUMP_OPTIONS=(
+  --force
+  --skip-opt
+  --skip-comments
+  --skip-dump-date
+  --tz-utc
+  --create-options
+  --order-by-primary
+  --single-transaction
+  --quick
+)
+
+
+# collect identifiers
+>&2 echo
+>&2 echo "==> dump-table: examining pod…"
+
+pod=$(
+  kubectl -n "${SITE_NAMESPACE}" get pod \
+    -l app.kubernetes.io/instance="${instance}" \
+    -o jsonpath='{.items[0].metadata.name}'
+)
+
+>&2 echo "    pod=${SITE_NAMESPACE}/${pod}"
+
+
+# dump table
+>&2 echo
+>&2 echo "==> dump-table: dumping table ${table}…"
+
+kubectl -n "${SITE_NAMESPACE}" exec -i "${pod}" -- \
+  hab pkg exec slate/slate-composite \
+  mysqldump "${DUMP_OPTIONS[@]}" \
+  "${SITE_DATABASE}" \
+  "${table}" \
+  "history_${table}"

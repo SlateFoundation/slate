@@ -30,7 +30,7 @@ class SectionParticipant extends \ActiveRecord
             'type' => 'enum'
             ,'values' => ['Observer','Student','Assistant','Teacher']
         ]
-        ,'StartDate' => [
+        ,'StartDate' => [ // WTF: this is called date but it's a timestamp :'(
             'type' => 'timestamp'
             ,'notnull' => false
         ]
