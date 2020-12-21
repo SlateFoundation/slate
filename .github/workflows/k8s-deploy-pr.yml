@@ -11,6 +11,7 @@ env:
   KUBE_NAMESPACE: ${{ secrets.kube_namespace }}
   KUBE_CONFIG_DATA: ${{ secrets.kube_config }}
 
+  PACKAGE_ORIGIN: slate
   PACKAGE_NAME: slate-composite
   PACKAGE_REGISTRY: docker.pkg.github.com
 
@@ -168,7 +169,7 @@ jobs:
       timeout-minutes: 5
       run: |
         set -e
-        until kubectl exec "${POD_NAME}" -- hab pkg exec slate/slate-composite mysqladmin ping; do
+        until kubectl exec "${POD_NAME}" -- hab pkg exec "${PACKAGE_ORIGIN}/${PACKAGE_NAME}" mysqladmin ping; do
           sleep .5
         done
 
@@ -176,13 +177,13 @@ jobs:
       run: |
         echo "Dropping any existing database..."
         kubectl exec "${POD_NAME}" -- \
-          hab pkg exec slate/slate-composite \
+          hab pkg exec "${PACKAGE_ORIGIN}/${PACKAGE_NAME}" \
           mysqladmin drop "${DATABASE_NAME}" --force \
         || true
 
         echo "Creating an empty database..."
         kubectl exec "${POD_NAME}" -- \
-          hab pkg exec slate/slate-composite \
+          hab pkg exec "${PACKAGE_ORIGIN}/${PACKAGE_NAME}" \
           mysqladmin create "${DATABASE_NAME}"
 
         echo "Loading fixtures..."
@@ -191,7 +192,7 @@ jobs:
             git cat-file -p "${{ steps.fixtures-projection.outputs.tree }}:${fixture_file}"
           done
         ) | kubectl exec -i "${POD_NAME}" -- \
-            hab pkg exec slate/slate-composite \
+            hab pkg exec "${PACKAGE_ORIGIN}/${PACKAGE_NAME}" \
             mysql "${DATABASE_NAME}"
 
 
