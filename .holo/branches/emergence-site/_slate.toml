@@ -9,8 +9,8 @@ files = [
     "!fixtures/",
     "!habitat/",
     "!helm-chart/",
-    "!script/",
     "!php-config/Git.config.d/",
+    "!script/",
 
     # exclude submodules that support local Sencha app development
     "!sencha-workspace/ext",
