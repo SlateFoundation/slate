@@ -269,7 +269,7 @@ class Section extends \VersionedRecord
 
     public function getTitle()
     {
-        $title = $this->Title;
+        $title = $this->Course->Title;
 
         if (count($this->Teachers)) {
             $title .= "\xC2\xA0\xC2\xB7 {$this->Teachers[0]->LastName}";
