@@ -264,6 +264,10 @@ class Section extends \VersionedRecord
 
     public function getTitle()
     {
+        if ($this->Title) {
+            return $this->Title;
+        }
+
         $title = $this->Course->Title;
 
         if (count($this->Teachers)) {
