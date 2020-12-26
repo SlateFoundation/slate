@@ -195,6 +195,10 @@ jobs:
             hab pkg exec "${PACKAGE_ORIGIN}/${PACKAGE_NAME}" \
             mysql "${DATABASE_NAME}"
 
+        echo "Running migrations..."
+        kubectl exec "${POD_NAME}" -- \
+          hab pkg exec "${PACKAGE_ORIGIN}/${PACKAGE_NAME}" \
+           emergence-console-run migrations:execute --all
 
     - name: Mark deployment as failed
       if: failure()
