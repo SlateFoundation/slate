@@ -272,11 +272,11 @@ class Section extends \VersionedRecord
         $title = $this->Title;
 
         if (count($this->Teachers)) {
-            $title .= ", {$this->Teachers[0]->LastName}";
+            $title .= "\xC2\xA0\xC2\xB7 {$this->Teachers[0]->LastName}";
         }
 
         if ($this->Schedule) {
-            $title .= ", {$this->Schedule->Title}";
+            $title .= "\xC2\xA0\xC2\xB7 {$this->Schedule->Title}";
         }
 
         return $title;
