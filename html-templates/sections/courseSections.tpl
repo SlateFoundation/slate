@@ -51,6 +51,7 @@
         <thead>
             <tr>
                 <th scope="col">Code</th>
+                <th scope="col">Title</th>
                 <th scope="col">Teachers</th>
                 <th scope="col">Students</th>
                 <th scope="col">Location</th>
@@ -70,6 +71,7 @@
             </tr>
             {foreach item=Section from=$group.sections}
                 <tr>
+                    <td>{$Section->getTitle()|escape}</td>
                     <td><a href="{$Section->getURL()}">{$Section->Code}</a></td>
                     <td>{foreach item=Teacher from=$Section->ActiveTeachers implode=', '}{personLink $Teacher}{/foreach}</td>
                     <td>{$Section->ActiveStudents|count}</td>
