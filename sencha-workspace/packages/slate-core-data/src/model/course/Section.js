@@ -76,6 +76,12 @@ Ext.define('Slate.model.course.Section', {
             name: 'LocationID',
             type: 'int',
             allowNull: true
+        },
+
+        // virtual fields
+        {
+            name: 'recordTitle',
+            persist: false
         }
     ],
 

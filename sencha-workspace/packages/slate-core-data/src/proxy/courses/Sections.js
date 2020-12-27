@@ -5,6 +5,6 @@ Ext.define('Slate.proxy.courses.Sections', {
 
     config: {
         url: '/sections',
-        include: ['Term']
+        include: ['Term', 'recordTitle']
     }
 });

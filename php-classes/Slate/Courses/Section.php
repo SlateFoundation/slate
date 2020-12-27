@@ -81,7 +81,7 @@ class Section extends \VersionedRecord
             ,'index' => true
         ]
         ,'Title' => [
-            'notnull' => true
+            'default' => null
         ]
         ,'Code' => [
             'unique' => true
@@ -248,11 +248,6 @@ class Section extends \VersionedRecord
 
     public function save($deep = true)
     {
-        // set title
-        if (!$this->Title) {
-            $this->Title = $this->Course->Title;
-        }
-
         // generate short code
         if (!$this->Code) {
             $this->Code = HandleBehavior::getUniqueHandle(static::class, $this->Course->Code, [
@@ -265,6 +260,25 @@ class Section extends \VersionedRecord
 
         // call parent
         parent::save($deep);
+    }
+
+    public function getTitle()
+    {
+        if ($this->Title) {
+            return $this->Title;
+        }
+
+        $title = $this->Course->Title;
+
+        if (count($this->Teachers)) {
+            $title .= "\xC2\xA0\xC2\xB7 {$this->Teachers[0]->LastName}";
+        }
+
+        if ($this->Schedule) {
+            $title .= "\xC2\xA0\xC2\xB7 {$this->Schedule->Title}";
+        }
+
+        return $title;
     }
 
     public function getHandle()
