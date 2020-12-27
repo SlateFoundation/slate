@@ -103,6 +103,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                     'groupId' => 'sections',
                     'groupLabel' => 'My Sections',
                     'label' => $Section->getTitle(),
+                    'code' => $Section->Code,
                     'value' => "section:{$Section->Code}"
                 ];
 
@@ -111,6 +112,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                         'groupId' => 'sections',
                         'groupLabel' => 'My Sections',
                         'label' => "{$Section->getTitle()} ▸ {$cohort}",
+                        'code' => $Section->Code,
                         'value' => "section:{$Section->Code}:{$cohort}"
                     ];
                 }
@@ -137,6 +139,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                     'groupId' => 'sections',
                     'groupLabel' => "All sections in {$Term->Title}",
                     'label' => $Section->getTitle(),
+                    'code' => $Section->Code,
                     'value' => "section:{$Section->Code}"
                 ];
 
@@ -145,6 +148,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                         'groupId' => 'sections',
                         'groupLabel' => "All sections in {$Term->Title}",
                         'label' => "{$Section->getTitle()} ▸ {$cohort}",
+                        'code' => $Section->Code,
                         'value' => "section:{$Section->Code}:{$cohort}"
                     ];
                 }
