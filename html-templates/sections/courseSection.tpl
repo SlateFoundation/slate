@@ -4,7 +4,7 @@
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/sections/{$data->Handle}/rss">
 {/block}
 
-{block title}{$data->Title|escape} &mdash; {$dwoo.parent}{/block}
+{block title}{$data->getTitle()|escape} &mdash; {$dwoo.parent}{/block}
 
 {block js-bottom}
     <script type="text/javascript">
@@ -66,7 +66,7 @@
         <div class="main-col">
             <div class="col-inner">
                 <header class="page-header">
-                    <h2 class="header-title">{$Section->Title|escape} <small class="muted">Public Feed</small></h2>
+                    <h2 class="header-title">{$Section->getTitle()|escape} <small class="muted">Public Feed</small></h2>
                     <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
 

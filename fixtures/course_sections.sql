@@ -49,6 +49,6 @@ CREATE TABLE `history_course_sections` (
   `LocationID` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `history_course_sections` SELECT NULL AS RevisionID, `course_sections`.* FROM `course_sections`;

@@ -20,7 +20,7 @@
                         {if $labelPrefix}
                             <small>{$labelPrefix|escape}</small>
                         {/if}
-                        {$link.shortLabel|default:$link.label|escape}
+                        {$link.label|default:$link.shortLabel|escape}
                     </figcaption>
                 </figure>
             </a>

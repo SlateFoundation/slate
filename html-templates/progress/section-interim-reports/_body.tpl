@@ -1,6 +1,6 @@
 <header class="doc-header">
     {block header}
-        <h{$headingLevel} class="item-title">{block title}{$Report->Section->Title|escape}{/block}</h{$headingLevel}>
+        <h{$headingLevel} class="item-title">{block title}{$Report->Section->getTitle()|escape}{/block}</h{$headingLevel}>
 
         <div class="meta">
             {block meta}

@@ -37,6 +37,6 @@ CREATE TABLE `history_contact_points` (
   `Data` text NOT NULL,
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `history_contact_points` SELECT NULL AS RevisionID, `contact_points`.* FROM `contact_points`;

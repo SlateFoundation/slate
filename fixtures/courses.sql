@@ -19,8 +19,8 @@ CREATE TABLE `courses` (
   FULLTEXT KEY `FULLTEXT` (`Title`,`Description`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-INSERT INTO `courses` VALUES (1,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'Math Studio','MATH','Live',NULL,NULL,NULL);
-INSERT INTO `courses` VALUES (2,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'ELA Studio','ELA','Live',NULL,NULL,NULL);
+INSERT INTO `courses` VALUES (1,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'Math Studio','MATH','Live',NULL,NULL,1);
+INSERT INTO `courses` VALUES (2,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'ELA Studio','ELA','Live',NULL,NULL,2);
 
 
 CREATE TABLE `history_courses` (
@@ -39,6 +39,6 @@ CREATE TABLE `history_courses` (
   `DepartmentID` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `history_courses` SELECT NULL AS RevisionID, `courses`.* FROM `courses`;

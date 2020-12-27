@@ -4,6 +4,7 @@
 # get input
 SITE_NAMESPACE="${SITE_NAMESPACE:-slate}"
 SITE_DATABASE="${SITE_DATABASE:-slate}"
+SITE_COMPOSITE="${SITE_COMPOSITE:-slate/slate-composite}"
 
 instance="${1:?Usage: dump-table <instance> <table>}"
 table="${2:?Usage: dump-table <instance> <table>}"
@@ -33,6 +34,13 @@ pod=$(
     -o jsonpath='{.items[0].metadata.name}'
 )
 
+if [ -z "${pod}" ]; then
+  >&2 echo "    Failed to find pod for instance ${instance} in namespace ${SITE_NAMESPACE}"
+  >&2 echo
+  >&2 echo "    Is the correct KUBECONFIG exported in the current shell?"
+  exit 1
+fi
+
 >&2 echo "    pod=${SITE_NAMESPACE}/${pod}"
 
 
@@ -41,7 +49,7 @@ pod=$(
 >&2 echo "==> dump-table: dumping table ${table}…"
 
 kubectl -n "${SITE_NAMESPACE}" exec -i "${pod}" -- \
-  hab pkg exec slate/slate-composite \
+  hab pkg exec "${SITE_COMPOSITE}" \
   mysqldump "${DUMP_OPTIONS[@]}" \
   "${SITE_DATABASE}" \
   "${table}" \

@@ -32,7 +32,8 @@
             <tr>
                 <th scope="col">Code</th>
                 <th scope="col">Title</th>
-                <th scope="col">Sections</th>
+                <th scope="col">Status</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -43,8 +44,9 @@
             {foreach item=Course from=$group.courses}
                 <tr>
                     <td><a href="{$Course->getURL()}">{$Course->Code}</a></td>
-                    <td><a href="{$Course->getURL()}">{$Course->Title|escape}</a></td>
-                    <td><a href="/sections?course={$Course->Code}">{$Course->Sections|count}</a></td>
+                    <td>{$Course->getTitle()|escape}</td>
+                    <td>{$Course->Status}</td>
+                    <td><a class="button small" href="/sections?course={$Course->Code}">Browse {$Course->Sections|count} sections</a></td>
                 </tr>
             {/foreach}
         {/foreach}

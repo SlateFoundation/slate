@@ -38,6 +38,6 @@ CREATE TABLE `history_course_departments` (
   `Description` text,
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `history_course_departments` SELECT NULL AS RevisionID, `course_departments`.* FROM `course_departments`;

@@ -70,6 +70,6 @@ CREATE TABLE `history_people` (
   `GraduationYear` year(4) DEFAULT NULL,
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `history_people` SELECT NULL AS RevisionID, `people`.* FROM `people`;

@@ -51,18 +51,21 @@
         <thead>
             <tr>
                 <th scope="col">Code</th>
+                <th scope="col">Title</th>
                 <th scope="col">Teachers</th>
                 <th scope="col">Students</th>
                 <th scope="col">Location</th>
                 <th scope="col">Schedule</th>
+                <th scope="col">Term</th>
+                <th scope="col">Course</th>
             </tr>
         </thead>
         <tbody>
         {foreach item=group from=$sectionsByCourse}
             <tr>
-                <th colspan="5">
+                <th colspan="8">
                     {if $group.Course->Department}
-                        {$group.Course->Department->Title|escape}
+                        {$group.Course->Department->getTitle()|escape}
                         &raquo;
                     {/if}
 
@@ -71,10 +74,37 @@
             {foreach item=Section from=$group.sections}
                 <tr>
                     <td><a href="{$Section->getURL()}">{$Section->Code}</a></td>
+                    <td>{$Section->getTitle()|escape}</td>
                     <td>{foreach item=Teacher from=$Section->ActiveTeachers implode=', '}{personLink $Teacher}{/foreach}</td>
                     <td>{$Section->ActiveStudents|count}</td>
-                    <td>{$Section->Location->Title|escape}</td>
-                    <td>{$Section->Schedule->Title|escape}</td>
+                    <td>
+                        {if $Section->Location}
+                            <a href="{$Section->Location->getURL()}">{$Section->Location->getTitle()|escape}</a>
+                        {else}
+                            &nbsp;
+                        {/if}
+                    </td>
+                    <td>
+                        {if $Section->Schedule}
+                            <a href="{$Section->Schedule->getURL()}">{$Section->Schedule->getTitle()|escape}</a>
+                        {else}
+                            &nbsp;
+                        {/if}
+                    </td>
+                    <td>
+                        {if $Section->Term}
+                            <a href="{$Section->Term->getURL()}">{$Section->Term->getTitle()|escape}</a>
+                        {else}
+                            &nbsp;
+                        {/if}
+                    </td>
+                    <td>
+                        {if $Section->Course}
+                            <a href="{$Section->Course->getURL()}">{$Section->Course->getTitle()|escape}</a>
+                        {else}
+                            &nbsp;
+                        {/if}
+                    </td>
                 </tr>
             {/foreach}
         {/foreach}

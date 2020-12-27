@@ -48,6 +48,6 @@ CREATE TABLE `history_locations` (
   `Right` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `history_locations` SELECT NULL AS RevisionID, locations.* FROM `locations`;
