@@ -66,6 +66,20 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
             $filterObjects['Schedule'] = $Schedule;
         }
 
+        if ($Department = static::getRequestedDepartment()) {
+            $courseIds = DB::allValues(
+                'ID',
+                'SELECT ID FROM `%s` WHERE DepartmentID = %u',
+                [
+                    Course::$tableName,
+                    $Department->ID
+                ]
+            );
+
+            $conditions[] = sprintf('CourseID IN (%s)', count($courseIds) ? join(',', $courseIds) : '0');
+            $filterObjects['Department'] = $Department;
+        }
+
         if ($EnrolledUser = static::getRequestedStudent('enrolled_user')) {
             $enrolledSectionIds = DB::allValues(
                 'CourseSectionID',
