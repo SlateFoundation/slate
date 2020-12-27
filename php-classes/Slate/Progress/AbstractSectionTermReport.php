@@ -73,6 +73,6 @@ abstract class AbstractSectionTermReport extends AbstractReport implements IStud
 
     public function getTitle()
     {
-        return sprintf('%s, %s', $this->Section->Title, $this->Term->Title);
+        return sprintf('%s, %s', $this->Section->getTitle(), $this->Term->getTitle());
     }
 }

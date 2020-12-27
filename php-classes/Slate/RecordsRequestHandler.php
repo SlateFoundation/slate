@@ -8,6 +8,7 @@ use Emergence\People\GuardianRelationship;
 use Emergence\Locations\LocationsRequestHandler;
 
 use Slate\Courses\CoursesRequestHandler;
+use Slate\Courses\DepartmentsRequestHandler;
 use Slate\Courses\SectionsRequestHandler;
 use Slate\Courses\SchedulesRequestHandler;
 use Slate\People\Student;
@@ -205,6 +206,26 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         // try to load
         if (!$Schedule = SchedulesRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
+            throw new OutOfBoundsException($fieldName.' not found');
+        }
+
+        return $Schedule;
+    }
+
+    /**
+     * Examine the current request, determine if an individual
+     * department has been explicitly requested
+     */
+    public static function getRequestedDepartment($fieldName = 'department')
+    {
+        // return null if no department was explicitly requested, let caller
+        // decide what to do with that
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // try to load
+        if (!$Schedule = DepartmentsRequestHandler::getRecordByHandle($_REQUEST[$fieldName])) {
             throw new OutOfBoundsException($fieldName.' not found');
         }
 

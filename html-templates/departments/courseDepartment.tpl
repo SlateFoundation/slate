@@ -1,0 +1,1 @@
+{Site::redirect('/sections', array('department' => $data->Handle))}
