@@ -24,8 +24,8 @@ INSERT INTO `course_section_participants` VALUES (4,'Slate\\Courses\\SectionPart
 INSERT INTO `course_section_participants` VALUES (5,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,1,2,'Observer',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (6,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,3,'Teacher',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (7,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,5,'Teacher',NULL,NULL,NULL);
-INSERT INTO `course_section_participants` VALUES (8,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,4,'Student',NULL,NULL,NULL);
-INSERT INTO `course_section_participants` VALUES (9,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,6,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (8,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,4,'Student',NULL,NULL,'Group A');
+INSERT INTO `course_section_participants` VALUES (9,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,6,'Student',NULL,NULL,'Group B');
 INSERT INTO `course_section_participants` VALUES (10,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,2,2,'Observer',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (11,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,4,4,'Student',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (12,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,4,6,'Student',NULL,NULL,NULL);
