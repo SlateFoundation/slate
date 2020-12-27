@@ -2,7 +2,7 @@
 {$Instructor = $Section->Instructors.0}
 
 {block header}
-    <h{$headingLevel} style="margin: 0 0 1em; color: #004b66;">{$Section->Title}</h{$headingLevel}>
+    <h{$headingLevel} style="margin: 0 0 1em; color: #004b66;">{$Section->getTitle()}</h{$headingLevel}>
 {/block}
 
 {block teachers}

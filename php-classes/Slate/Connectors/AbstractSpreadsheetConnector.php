@@ -1647,8 +1647,6 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $title = null;
         if (!empty($row['Title'])) {
             $title = $row['Title'];
-        } elseif (!$Section->Title) {
-            $title = $Section->Course->Title ?: $Section->Course->Code;
         }
 
         if ($title) {
