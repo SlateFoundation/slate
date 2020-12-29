@@ -20,6 +20,7 @@ export HAB_DOCKER_OPTS="
     --name ${STUDIO_NAME}
     -p 5580:80
     -p 5581:7081
+    -p 5588:8000
     -p 5536:3306
     -v $(cd ~/.ssh; pwd)/known_hosts:/root/.ssh/known_hosts:ro
     --env STUDIO_DEVELOPER_UID=$(id -u)
