@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+     <loc>https://slatefoundation.github.io/slate/slate/development/clone-from-git/</loc>
+     <lastmod>2020-12-30</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://slatefoundation.github.io/slate/slate-admin/development/test-locally/</loc>
+     <lastmod>2020-12-30</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://slatefoundation.github.io/slate/slate-admin/development/test-online/</loc>
+     <lastmod>2020-12-30</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>
