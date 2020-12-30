@@ -15,6 +15,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         HAB_LICENSE: accept
       with:
-        ref: master
         holobranch: docs-site
         commit-to: gh-pages
