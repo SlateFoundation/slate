@@ -9,21 +9,21 @@
       
       
       
-        <link rel="canonical" href="https://slatefoundation.github.io/slate/slate-admin/development/test-online/">
+        <link rel="canonical" href="https://slatefoundation.github.io/slate/development/email/">
       
-      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.3">
     
     
       
-        <title>Testing slate-admin online from an emergence instance - Slate Docs</title>
+        <title>Working with Email - Slate Docs</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.3b61ea93.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3b61ea93.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.39b8e14a.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.39b8e14a.min.css">
         
           
           
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#testing-slate-admin-online-from-an-emergence-instance" class="md-skip">
+        <a href="#working-with-email" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Testing slate-admin online from an emergence instance
+              Working with Email
             
           </span>
         </div>
@@ -167,7 +167,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../../.." class="md-tabs__link">
+    <a href="../.." class="md-tabs__link">
       Slate Documentation
     </a>
   </li>
@@ -176,13 +176,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../../../development/email/" class="md-tabs__link">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
         Development
       </a>
     </li>
@@ -203,7 +205,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../slate/development/clone-from-git/" class="md-tabs__link">
+      <a href="../../slate/development/clone-from-git/" class="md-tabs__link">
         Slate
       </a>
     </li>
@@ -214,8 +216,6 @@
       
         
   
-  
-    
   
 
 
@@ -228,7 +228,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../test-locally/" class="md-tabs__link md-tabs__link--active">
+      <a href="../../slate-admin/development/test-locally/" class="md-tabs__link">
         Slate admin
       </a>
     </li>
@@ -290,7 +290,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../.." class="md-nav__link">
+    <a href="../.." class="md-nav__link">
       Slate Documentation
     </a>
   </li>
@@ -301,12 +301,14 @@
       
 
 
+  
+
 
   
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
       Development
@@ -325,11 +327,69 @@
           
 
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../../development/email/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Working with Email
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       Working with Email
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#catching-emails-in-development" class="md-nav__link">
+    Catching emails in development
+  </a>
+  
+    <nav class="md-nav" aria-label="Catching emails in development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-helo" class="md-nav__link">
+    Using HELO
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sending-a-test-email" class="md-nav__link">
+    Sending a test email
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -340,7 +400,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../development/migrations/" class="md-nav__link">
+    <a href="../migrations/" class="md-nav__link">
       Developing Migrations
     </a>
   </li>
@@ -406,7 +466,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../slate/development/clone-from-git/" class="md-nav__link">
+    <a href="../../slate/development/clone-from-git/" class="md-nav__link">
       Clone Slate from git
     </a>
   </li>
@@ -427,14 +487,12 @@
       
 
 
-  
-
 
   
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
     
     <label class="md-nav__link" for="nav-4">
       Slate admin
@@ -453,14 +511,12 @@
           
 
 
-  
-
 
   
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" >
     
     <label class="md-nav__link" for="nav-4-1">
       Development
@@ -481,7 +537,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../test-locally/" class="md-nav__link">
+    <a href="../../slate-admin/development/test-locally/" class="md-nav__link">
       Testing slate-admin locally
     </a>
   </li>
@@ -492,20 +548,11 @@
           
 
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../slate-admin/development/test-online/" class="md-nav__link">
       Testing slate-admin online from an emergence instance
     </a>
-    
   </li>
 
         
@@ -537,6 +584,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#catching-emails-in-development" class="md-nav__link">
+    Catching emails in development
+  </a>
+  
+    <nav class="md-nav" aria-label="Catching emails in development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-helo" class="md-nav__link">
+    Using HELO
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sending-a-test-email" class="md-nav__link">
+    Sending a test email
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -547,16 +629,82 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/SlateFoundation/slate/edit/develop/docs/slate-admin/development/test-online.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/SlateFoundation/slate/edit/develop/docs/development/email.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="testing-slate-admin-online-from-an-emergence-instance">Testing slate-admin online from an emergence instance<a class="headerlink" href="#testing-slate-admin-online-from-an-emergence-instance" title="Permanent link"> ¶</a></h1>
-<ul>
-<li>Visit <kbd>/sencha-cmd/init-development?app=SlateAdmin</kbd> to import all dependencies into the VFS</li>
-<li>Visit <kbd>/app/SlateAdmin/development/</kbd></li>
-</ul>
+                <h1 id="working-with-email">Working with Email<a class="headerlink" href="#working-with-email" title="Permanent link"> ¶</a></h1>
+<h2 id="catching-emails-in-development">Catching emails in development<a class="headerlink" href="#catching-emails-in-development" title="Permanent link"> ¶</a></h2>
+<p>In the studio, you can enable relaying email to a specified SMTP endpoint.</p>
+<p><a href="https://usehelo.com/">HELO</a> and <a href="https://mailtrap.io/">mailtrap</a> are easy SMTP endpoints to set up for development that provide UIs for reviewing emails sent to all recipients. When emails are configured to be relayed to these services, they will be trapped for review and never actually delivered to anyone externally, no matter what recipients you use. As opposed to overriding recipient emails to test email features, this approach enables you to verify that personalized bulk emails send the right content to the right recipients.</p>
+<h3 id="using-helo">Using HELO<a class="headerlink" href="#using-helo" title="Permanent link"> ¶</a></h3>
+<ol>
+<li>Download and open the HELO app</li>
+<li>Launch studio, run <code>start-all</code></li>
+<li>
+<p>Install and activate postfix email backend:</p>
+<div class="highlight"><pre><span></span><code>enable-email
+</code></pre></div>
+</li>
+<li>
+<p>Configure postfix email backend to relay to EHLO app on Docker host machine:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">docker_host_ip</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>hab pkg <span class="nb">exec</span> core/busybox-static ip route<span class="p">|</span>awk <span class="s1">&#39;/default/ { print $3 }&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+enable-email-relay <span class="s2">&quot;</span><span class="si">${</span><span class="nv">docker_host_ip</span><span class="si">}</span><span class="s2">&quot;</span> <span class="m">2525</span> studio
+</code></pre></div>
+</li>
+</ol>
+<h2 id="sending-a-test-email">Sending a test email<a class="headerlink" href="#sending-a-test-email" title="Permanent link"> ¶</a></h2>
+<p>From the studio:</p>
+<ol>
+<li>
+<p>Install netcat:</p>
+<div class="highlight"><pre><span></span><code>hab pkg install --binlink core/netcat
+</code></pre></div>
+</li>
+<li>
+<p>Open SMTP connection:</p>
+<div class="highlight"><pre><span></span><code>nc localhost <span class="m">25</span>
+</code></pre></div>
+</li>
+<li>
+<p>Start SMTP session:</p>
+<div class="highlight"><pre><span></span><code><span class="go">EHLO localhost.localdomain</span>
+</code></pre></div>
+</li>
+<li>
+<p>Set sender:</p>
+<div class="highlight"><pre><span></span><code><span class="go">MAIL FROM: &lt;sender@example.com&gt;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Set recipient:</p>
+<div class="highlight"><pre><span></span><code><span class="go">RCPT TO: &lt;recipient@example.com&gt;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Set message:</p>
+<div class="highlight"><pre><span></span><code><span class="go">DATA</span>
+<span class="go">Subject: Hello world!</span>
+
+<span class="go">This is the body of my email.</span>
+
+<span class="go">Have a good day.</span>
+
+<span class="go">.</span>
+</code></pre></div>
+</li>
+<li>
+<p>Close SMTP session:</p>
+<div class="highlight"><pre><span></span><code><span class="go">QUIT</span>
+</code></pre></div>
+</li>
+<li>
+<p>Review postfix backend log:</p>
+<div class="highlight"><pre><span></span><code><span class="go">less -S /hab/cache/sys.log</span>
+</code></pre></div>
+</li>
+</ol>
                 
               
               
@@ -575,7 +723,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../test-locally/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../.." class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -584,11 +732,25 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Testing slate-admin locally
+                Slate Documentation
               </div>
             </div>
           </a>
         
+        
+          <a href="../migrations/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Developing Migrations
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
         
       </nav>
     </div>
@@ -609,15 +771,15 @@
       
     </div>
     
-      <script src="../../../assets/javascripts/vendor.08c56446.min.js"></script>
-      <script src="../../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../../assets/javascripts/vendor.08c56446.min.js"></script>
+      <script src="../../assets/javascripts/bundle.6ced434e.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
-          base: "../../..",
+          base: "../..",
           features: ['navigation.tabs'],
           search: Object.assign({
-            worker: "../../../assets/javascripts/worker/search.8c7e0a7e.min.js"
+            worker: "../../assets/javascripts/worker/search.8c7e0a7e.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
