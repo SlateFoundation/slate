@@ -1,4 +1,4 @@
 [holomapping]
-holosource="=>emergence-skeleton"
+holosource="=>docs-skeleton"
 files = "**"
 before = "*"
