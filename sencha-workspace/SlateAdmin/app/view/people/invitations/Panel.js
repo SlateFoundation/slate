@@ -143,7 +143,8 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
             '{recipientFirst} {recipientLast},',
             '\n\n',
             'You have been invited to setup an account at the {schoolName} website -- **{websiteHostname}**.',
-            'With this account you will be able to log in to your personal dashboard and access all of our connected systems with one click.'
+            'With this account you will be able to log in to your personal dashboard and access all of our connected systems with one click.',
+            'For more information about how to check your students dashboards, watch this video: https://google.com.'
         ].join(' ')
     }, {
         xtype: 'panel',
