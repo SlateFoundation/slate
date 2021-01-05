@@ -29,8 +29,6 @@ jobs:
     steps:
 
     - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
 
     - name: 'Initialize Chef Habitat environment'
       uses: JarvusInnovations/habitat-action@action/v1
@@ -134,7 +132,8 @@ jobs:
           --set name="${PR_NAME}" \
           --set namespace="${KUBE_NAMESPACE}" \
           --set image="${image_url}" \
-          --set hostname="${hostname}"
+          --set hostname="${hostname}" \
+          --set hab.runtime.error.display=true
 
         echo "Listing pods existing after deploy"
         kubectl get pods \
