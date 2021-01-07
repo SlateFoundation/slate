@@ -1,0 +1,19 @@
+name: Publish Website
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  publish-website:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Update holobranch: gh-pages'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HAB_LICENSE: accept
+      with:
+        holobranch: docs-site
+        commit-to: gh-pages

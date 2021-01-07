@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install dependent studios
-hab pkg install emergence/studio chakijs/studio
+hab pkg install emergence/studio chakijs/studio jarvus/mkdocs-studio
 
 # disable studios printing their own help
 export STUDIO_NOHELP="yes"
@@ -9,12 +9,39 @@ export STUDIO_NOHELP="yes"
 source "$(hab pkg path emergence/studio)/studio.sh"
 source "$(hab pkg path chakijs/studio)/studio.sh"
 
+export DOCS_HOLOBRANCH="docs-site"
+source "$(hab pkg path jarvus/mkdocs-studio)/studio.sh"
+
 
 # declare shortcuts for this repository's applications
 STUDIO_HELP['build-admin']="Build SlateAdmin for local development and testing"
 build-admin() {
     build-app SlateAdmin
 }
+
+STUDIO_HELP['load-fixtures']="Reset database and load fixture data"
+load-fixtures() {
+    echo "Building fixtures from working tree..."
+    pushd "${EMERGENCE_REPO}" > /dev/null
+    fixtures_tree=$(git holo project --working fixtures)
+    popd > /dev/null
+
+    : "${fixtures_tree:?Failed to build fixtures tree}"
+
+    echo "Resetting database"
+    reset-mysql
+
+    echo "Loading fixtures..."
+    (
+        for fixture_file in $(git ls-tree -r --name-only ${fixtures_tree}); do
+            git cat-file -p "${fixtures_tree}:${fixture_file}"
+        done
+    ) | mysql "${DB_DATABASE}"
+
+    echo "Running migrations..."
+    console-run migrations:execute --all
+}
+
 
 
 ## final init and output
