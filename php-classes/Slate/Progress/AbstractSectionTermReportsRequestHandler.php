@@ -159,7 +159,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                                 'StudentID' => $Student->ID,
                                 'TermID' => $Term->ID,
                                 'EmailContactID' => $recipientEmail->ID,
-                                'Status' => 'sent'
+                                'Status' => $sent > 0 ? 'sent' : 'failed'
                             ], true);
                         }
                     }

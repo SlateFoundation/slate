@@ -12,7 +12,7 @@
 {/block}
 
 {block "content"}
-    <div id="app-viewport">Loading content editor&hellip;</div>
+    <div id="app-viewport">{_ "Loading content editor&hellip;"}</div>
 {/block}
 
 {block "js-bottom"}
