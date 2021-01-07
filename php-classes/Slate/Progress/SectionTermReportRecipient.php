@@ -19,7 +19,7 @@ class SectionTermReportRecipient extends \ActiveRecord
         'EmailContactID' => 'uint',
         'Status' => [
             'type' => 'enum',
-            'values' => ['pending', 'sent', 'bounced'],
+            'values' => ['failed', 'pending', 'sent', 'bounced'],
             'default' => 'pending'
         ]
     ];

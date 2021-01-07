@@ -147,7 +147,12 @@ Ext.define('SlateAdmin.controller.progress.interims.Email', {
 
         for (; i < emailsCount; i++) {
             email = emailsStore.getAt(i);
-            recipients = email.get('recipients').filter(recipient => recipient.status == 'proposed');
+            recipients = email.get('recipients').filter(
+                recipient =>
+                    recipient.status == 'proposed'
+                    || recipient.status == 'failed'
+                    || recipient.status == 'bounced'
+            );
 
             if (!recipients.length) {
                 continue;

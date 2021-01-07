@@ -175,9 +175,14 @@ class MigrationsRequestHandler extends \RequestHandler
         };
 
         ob_start();
-        $migration['status'] = call_user_func(function() use ($migration, $resetMigrationStatus) {
-            return include($migration['realpath']);
-        });
+        try {
+            $migration['status'] = call_user_func(function() use ($migration, $resetMigrationStatus) {
+                return include($migration['realpath']);
+            });
+        } catch (\Exception $e) {
+            $migration['status'] = static::STATUS_FAILED;
+            printf('Caught %s: %s\n\n%s\n\n', get_class($e), $e->getMessage(), $e->getTraceAsString());
+        }
         $migration['output'] = ob_get_clean();
 
         $migration['executed'] = time();

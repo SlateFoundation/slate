@@ -11,15 +11,33 @@
         }
 
         &:before {
-            color: lightgrey;
-            content: '\f0c8'; // fa-square
             font-family: FontAwesome;
             margin-right: 0.5em;
+        }
+
+        &.status-proposed:before {
+            color: lightgrey;
+            content: '\f0c8'; // fa-square
+        }
+
+        &.status-pending:before {
+            color: orange;
+            content: '\f254'; // fa-hourglass
         }
 
         &.status-sent:before {
             color: green;
             content: '\f14a'; // fa-check-square
+        }
+
+        &.status-failed:before {
+            color: red;
+            content: '\f057'; // fa-times-circle
+        }
+
+        &.status-bounced:before {
+            color: red;
+            content: '\f04c'; // fa-pause
         }
     }
 
