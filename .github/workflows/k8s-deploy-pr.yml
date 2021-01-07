@@ -48,7 +48,8 @@ jobs:
           "environment": "${{ env.PR_NAME }}",
           "transient_environment": true
         }
-        EOF) > /tmp/deployment.json
+        EOF
+        ) > /tmp/deployment.json
 
         DEPLOYMENT_ID="$(jq .id < /tmp/deployment.json)"
         echo "GH_DEPLOYMENT_ID=${DEPLOYMENT_ID}" >> $GITHUB_ENV
@@ -67,7 +68,8 @@ jobs:
           "description": "Building deployment artifacts",
           "log_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         }
-        EOF)
+        EOF
+        )
 
     - name: Update Environment
       run: |
@@ -105,9 +107,7 @@ jobs:
       run: |
         set -e
         test -e ~/.kube || mkdir ~/.kube
-        cat <<EOF > ~/.kube/config
-        $(printf '%s' "$KUBE_CONFIG_DATA" | base64 -d)
-        EOF
+        printf '%s' "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
 
     - name: Deploy instance via Helm template
       run: |
@@ -211,7 +211,8 @@ jobs:
           "description": "Error in job kubernetes-deploy",
           "log_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         }
-        EOF)
+        EOF
+        )
 
     - name: Mark deployment completed
       run: |
@@ -225,4 +226,5 @@ jobs:
           "log_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
           "environment_url": "https://${{ env.PR_NAME}}.${{ env.KUBE_HOSTNAME }}"
         }
-        EOF)
+        EOF
+        )
