@@ -1,0 +1,211 @@
+name: Deploy K8s Preview
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [opened, reopened, synchronize]
+  push:
+    branches: [develop]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  DOCKER_REGISTRY: docker.pkg.github.com
+  DOCKER_PACKAGE: slate-composite
+
+  KUBE_NAMESPACE: ${{ secrets.kube_namespace }}
+  KUBE_CONFIG_DATA: ${{ secrets.kube_config }}
+  KUBE_HOSTNAME: ${{ secrets.kube_hostname }}
+
+  DATABASE_NAME: slate
+
+  HAB_LICENSE: accept-no-persist
+  HAB_ORIGIN: slate
+
+jobs:
+
+  k8s-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Cancel superseded runs
+      uses: styfle/cancel-workflow-action@0.7.0
+      with:
+        access_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Configure environment
+      run: |
+        if [ "${GITHUB_EVENT_NAME}" == "pull_request" ]; then
+          RELEASE_NAME="pr-$(jq --raw-output .pull_request.number "${GITHUB_EVENT_PATH}")"
+          RELEASE_TRANSIENT='true'
+        else
+          RELEASE_NAME="latest"
+          RELEASE_TRANSIENT='false'
+        fi
+
+        echo "Using RELEASE_NAME=${RELEASE_NAME}"
+        echo "RELEASE_NAME=${RELEASE_NAME}" >> $GITHUB_ENV
+
+        echo "Using RELEASE_TRANSIENT=${RELEASE_TRANSIENT}"
+        echo "RELEASE_TRANSIENT=${RELEASE_TRANSIENT}" >> $GITHUB_ENV
+
+        DOCKER_REPOSITORY="${GITHUB_REPOSITORY,,}"
+
+        echo "Using DOCKER_REPOSITORY=${DOCKER_REPOSITORY}"
+        echo "DOCKER_REPOSITORY=${DOCKER_REPOSITORY}" >> $GITHUB_ENV
+
+    - name: Create Github Deployment
+      uses: bobheadxi/deployments@v0.4.3
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: '${{ env.RELEASE_NAME }}'
+        ref: '${{ github.head_ref }}'
+        transient: ${{ env.RELEASE_TRANSIENT }}
+        logs: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+        no_override: false
+
+    - uses: actions/checkout@v2
+
+    - name: 'Initialize Chef Habitat environment'
+      uses: JarvusInnovations/habitat-action@action/develop
+      with:
+        deps: |
+          jarvus/hologit
+
+    - id: site-projection
+      name: 'Project holobranch: emergence-site'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      with:
+        holobranch: emergence-site
+
+    - id: fixtures-projection
+      name: 'Project holobranch: fixtures'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      with:
+        holobranch: fixtures
+
+    - name: Build & push Docker image
+      uses: whoan/docker-build-with-cache-action@v5
+      with:
+        dockerfile: Dockerfile
+        username: ${{ github.actor }}
+        password: ${{ env.GITHUB_TOKEN }}
+        registry: ${{ env.DOCKER_REGISTRY }}
+        image_name: ${{ env.DOCKER_REPOSITORY }}/${{ env.DOCKER_PACKAGE }}
+        image_tag: ${{ env.RELEASE_NAME }}
+        build_extra_args: |
+          --build-arg=SITE_TREE=${{ steps.site-projection.outputs.tree }}
+          --build-arg=SITE_VERSION=0.0.0-${{ env.RELEASE_NAME }}
+          --build-arg=SOURCE_COMMIT=${{ github.sha }}
+          --build-arg=SOURCE_TAG=${{ env.RELEASE_NAME }}
+          --build-arg=HAB_LICENSE=${{ env.HAB_LICENSE }}
+
+    - name: Configure kubectl
+      run: |
+        set -e
+        test -e ~/.kube || mkdir ~/.kube
+        printf '%s' "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
+
+    - name: Deploy instance via Helm template
+      run: |
+        set -e
+
+        docker_image="${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_PACKAGE}:${RELEASE_NAME}"
+        release_hostname="${RELEASE_NAME}.${KUBE_HOSTNAME}"
+
+        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
+
+        echo "Listing pods existing before deploy"
+        kubectl get pods \
+          -l app.kubernetes.io/instance="${RELEASE_NAME}" \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+          | sort \
+          | tee ./.pods-before
+
+        echo "Using helm upgrade to apply ./helm-chart to release ${RELEASE_NAME}"
+        helm upgrade "${RELEASE_NAME}" ./helm-chart \
+          --install \
+          --set name="${RELEASE_NAME}" \
+          --set namespace="${KUBE_NAMESPACE}" \
+          --set image="${docker_image}" \
+          --set hostname="${release_hostname}" \
+          --set hab.runtime.error.display=true
+
+        echo "Listing pods existing after deploy"
+        kubectl get pods \
+          -l app.kubernetes.io/instance="${RELEASE_NAME}" \
+          --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+          | sort \
+          | tee ./.pods-after
+
+        echo "Deleting stale pods to force image refresh"
+        comm -12 ./.pods-before ./.pods-after \
+          | xargs --no-run-if-empty kubectl delete pod
+
+    - name: Wait for Deployment to be ready
+      timeout-minutes: 10
+      run: |
+        until kubectl rollout status deployment "${RELEASE_NAME}" 2>/dev/null >/dev/null; do
+          echo -n "."
+          sleep .5
+        done
+
+    - name: Find new Pod
+      run: |
+        POD_NAME=$(
+          kubectl get pod \
+            -l app.kubernetes.io/instance="${RELEASE_NAME}" \
+            -o jsonpath='{.items[0].metadata.name}'
+        )
+
+        echo "Using POD_NAME=${POD_NAME}"
+        echo "POD_NAME=${POD_NAME}" >> $GITHUB_ENV
+
+    - name: Wait For Pod to be ready
+      timeout-minutes: 5
+      run: kubectl wait --for condition=ready "pod/${POD_NAME}" --timeout=30s
+
+    - name: Wait for MySQL to be Ready
+      timeout-minutes: 5
+      run: |
+        until kubectl exec "${POD_NAME}" -- hab pkg exec "${HAB_ORIGIN}/${DOCKER_PACKAGE}" mysqladmin ping; do
+          sleep .5
+        done
+
+    - name: Load fixtures into database
+      run: |
+        echo "Dropping any existing database..."
+        kubectl exec "${POD_NAME}" -- \
+          hab pkg exec "${HAB_ORIGIN}/${DOCKER_PACKAGE}" \
+          mysqladmin drop "${DATABASE_NAME}" --force \
+        || true
+
+        echo "Creating an empty database..."
+        kubectl exec "${POD_NAME}" -- \
+          hab pkg exec "${HAB_ORIGIN}/${DOCKER_PACKAGE}" \
+          mysqladmin create "${DATABASE_NAME}"
+
+        echo "Loading fixtures..."
+        (
+          for fixture_file in $(git ls-tree -r --name-only ${{ steps.fixtures-projection.outputs.tree }}); do
+            git cat-file -p "${{ steps.fixtures-projection.outputs.tree }}:${fixture_file}"
+          done
+        ) | kubectl exec -i "${POD_NAME}" -- \
+            hab pkg exec "${HAB_ORIGIN}/${DOCKER_PACKAGE}" \
+            mysql "${DATABASE_NAME}"
+
+        echo "Running migrations..."
+        kubectl exec "${POD_NAME}" -- \
+          hab pkg exec "${HAB_ORIGIN}/${DOCKER_PACKAGE}" \
+           emergence-console-run migrations:execute --all
+
+    - name: Update Github Deployment
+      uses: bobheadxi/deployments@v0.4.3
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        env_url: 'https://${{ env.RELEASE_NAME}}.${{ env.KUBE_HOSTNAME }}/'
