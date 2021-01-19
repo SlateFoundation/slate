@@ -203,6 +203,7 @@ jobs:
 
     - name: Update Github Deployment
       uses: bobheadxi/deployments@v0.4.3
+      if: ${{ always() }}
       with:
         step: finish
         token: ${{ secrets.GITHUB_TOKEN }}
