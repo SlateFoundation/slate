@@ -1,0 +1,40 @@
+name: Destroy K8s Preview
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [closed]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  KUBE_NAMESPACE: ${{ secrets.kube_namespace }}
+  KUBE_CONFIG_DATA: ${{ secrets.kube_config }}
+
+  RELEASE_NAME: pr-${{ github.event.number }}
+
+jobs:
+
+  k8s-destroy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Configure kubectl
+      run: |
+        set -e
+        test -e ~/.kube || mkdir ~/.kube
+        printf '%s' "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
+
+    - name: Delete PR Deployment
+      run: |
+        set -e
+        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
+        kubectl delete all,ingress -l "app.kubernetes.io/instance=${RELEASE_NAME}"
+        kubectl delete secret "${RELEASE_NAME}-tls"
+
+    - name: Deactivate Github Deployment
+      uses: bobheadxi/deployments@v0.4.3
+      with:
+        step: deactivate-env
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: '${{ env.RELEASE_NAME }}'
