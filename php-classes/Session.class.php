@@ -57,8 +57,10 @@ class Session extends ActiveRecord
 
     public static function getFromRequest($create = true)
     {
+        $clientIp = Emergence\Site\Client::getAddress();
+
         $sessionData = array(
-            'LastIP' => !empty($_SERVER['REMOTE_ADDR']) ? ip2long($_SERVER['REMOTE_ADDR']) : null
+            'LastIP' => $clientIp ? ip2long($clientIp) : null
             ,'LastRequest' => time()
         );
 

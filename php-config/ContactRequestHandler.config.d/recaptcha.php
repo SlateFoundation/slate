@@ -7,7 +7,7 @@ if ($recaptcha = \RemoteSystems\ReCaptcha::getInstance()) {
         'required' => true,
         'errorMessage' => 'Please prove that you aren\'t a spam robot by completing the reCAPTCHA',
         'validator' => function ($response) use ($recaptcha) {
-            $recaptchaResponse = $recaptcha->verify($response, $_SERVER['REMOTE_ADDR']);
+            $recaptchaResponse = $recaptcha->verify($response, Emergence\Site\Client::getAddress());
 
             return $recaptchaResponse->isSuccess();
         }

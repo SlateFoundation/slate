@@ -37,7 +37,7 @@ class GroupsRequestHandler extends RecordsRequestHandler
             case 'members':
                 return static::handleMembersRequest($Group);
             default:
-                return parent::handleRecordRequest(Group, $action);
+                return parent::handleRecordRequest($Group, $action);
         }
     }
 
