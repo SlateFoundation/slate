@@ -365,13 +365,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             return;
         }
 
-        grid.setLoading('Toggling guardian status&hellip;');
         record.set('Class', record.get('Class') == 'Emergence\\People\\Relationship' ? 'Emergence\\People\\GuardianRelationship' : 'Emergence\\People\\Relationship');
-        record.save({
-            callback: function (records, operation, success) {
-                grid.setLoading(false);
-            }
-        });
+        record.save();
     },
 
     onBeforeContactsGridEdit: function (editingPlugin, context) {
@@ -494,8 +489,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             return false;
         }
 
-        grid.setLoading('Changing primary contact point&hellip;');
-
         loadedPerson.set(primaryFieldName, newValue);
         loadedPerson.save({
             callback: function (records, operation, success) {
@@ -513,8 +506,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
                     contactsStore.endUpdate();
                 }
-
-                grid.setLoading(false);
             }
         });
     },
