@@ -179,21 +179,17 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         },
                         {
                             action: 'guardian',
-                            iconCls: 'relationship-guardian glyph-shield',
                             glyph: 0xf132, // fa-shield
-                            getTip: function (v, meta, record) {
+                            getClass: function (v) {
+                                return [
+                                    'glyph-shield',
+                                    v == 'Emergence\\People\\Relationship' ? '' : 'glyph-inactive',
+                                ].join(' ');
+                            },
+                            getTip: function (v) {
                                 return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' guardian';
                             }
-                        }
-                        // {
-                        //     action: 'emergency',
-                        //     iconCls: 'relationship-emergency glyph-emergency',
-                        //     glyph: 0xf0f9, // fa-ambulance
-                        //     getTip: function(v, meta, record) {
-                        //         // TODO make this work
-                        //         return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' emergency contact';
-                        //     }
-                        // }
+                        },
                     ]
                 }
             ]
@@ -202,7 +198,6 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         xtype: 'grid',
         itemId: 'contactPoints',
         title: 'Contact Points',
-        // columnLines: true,
         hideHeaders: true,
         componentCls: 'slate-people-details-contacts',
         cls: 'has-small-group-headers',
@@ -428,11 +423,16 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     },
                     {
                         action: 'primary',
-                        iconCls: 'contact-point-primary glyph-star',
                         glyph: 0xf005, // fa-star
-                        getTip: function (v, meta, record) {
+                        getClass: function (v) {
+                            return [
+                                'glyph-star',
+                                v ? '' : 'glyph-inactive',
+                            ].join(' ');
+                        },
+                        getTip: function (v) {
                             return (v ? 'Unmark' : 'Mark') + ' as primary point for this type';
-                        }
+                        },
                     }
                 ]
             }
