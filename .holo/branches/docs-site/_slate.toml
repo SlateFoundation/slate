@@ -1,5 +1,5 @@
 [holomapping]
 files = [
     "docs/**",
-    "mkdocs.yml"
+    "mkdocs.*.yml"
 ]

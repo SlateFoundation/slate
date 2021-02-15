@@ -1,0 +1,8 @@
+site_name: Slate Docs
+repo_url: https://github.com/SlateFoundation/slate
+site_url: https://slatefoundation.github.io/slate
+
+theme:
+  palette:
+    primary: "cyan"
+    accent: "orange"

@@ -1,0 +1,3 @@
+[holobranch]
+extend = "docs-site"
+lens = false
