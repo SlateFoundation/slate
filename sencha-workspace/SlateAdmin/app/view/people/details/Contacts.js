@@ -187,7 +187,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                                 ].join(' ');
                             },
                             getTip: function (v) {
-                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' guardian';
+                                return (v == 'Emergence\\People\\Relationship' ? 'Undesignate' : 'Designate') + ' guardian';
                             }
                         },
                     ]
