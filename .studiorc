@@ -3,6 +3,7 @@
 # install dependent studios
 hab pkg install emergence/studio chakijs/studio jarvus/mkdocs-studio
 
+
 # disable studios printing their own help
 export STUDIO_NOHELP="yes"
 
@@ -10,6 +11,7 @@ source "$(hab pkg path emergence/studio)/studio.sh"
 source "$(hab pkg path chakijs/studio)/studio.sh"
 
 export DOCS_HOLOBRANCH="docs-site"
+export DOCS_PARENT_SOURCE="skeleton-v2"
 source "$(hab pkg path jarvus/mkdocs-studio)/studio.sh"
 
 
