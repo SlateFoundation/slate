@@ -145,7 +145,7 @@ Ext.define('SlateAdmin.view.people.invitations.Panel', {
             'You have been invited to setup a Slate account at the {schoolName} website -- **{websiteHostname}**.',
             'With this account you will be able to log in to your personal dashboard as well as all dashboards for any connected students.',
             'If you are connected to one or more students, you will be able to view their courses, tasks, and competency progress.',
-            'Once you have actived your account, watch this video to learn more: https://youtu.be/uEtRZcCLbg4.'
+            'Once you have activated your account, watch this video to learn more: https://youtu.be/uEtRZcCLbg4.'
         ].join(' ')
     }, {
         xtype: 'panel',
