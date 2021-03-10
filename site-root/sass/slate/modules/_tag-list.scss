@@ -1,0 +1,30 @@
+.tag-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    >li {
+        display: inline-block;
+    }
+
+    .tag {
+        background-color: rgba($link-color, .05);
+        border-radius: .25em;
+        display: block;
+        font-size: .875em;
+        margin-bottom: .25em;
+        padding: 0 .5em;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            background-color: rgba($link-color, .1);
+        }
+    }
+
+    .tag-count {
+        color: rgba($text-color, .4);
+        font-size: .75em;
+        font-weight: bold;
+    }
+}

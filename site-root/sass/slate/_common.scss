@@ -45,19 +45,73 @@ body {
     }
 }
 
-.text-left      { text-align: left !important; }
-.text-right     { text-align: right !important; }
-.text-center    { text-align: center !important; }
-.text-justify   { text-align: justify !important; }
-.text-nowrap    { white-space: nowrap !important; }
-.text-nolead    { margin-top: 0 !important; }
-.text-notrail   { margin-bottom: 0 !important; }
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.text-justify {
+    text-align: justify !important;
+}
+
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
+.text-nolead {
+    margin-top: 0 !important;
+}
+
+.text-notrail {
+    margin-bottom: 0 !important;
+}
 
 .sidebar-item {
     margin: 1em 0 3em;
 
     .empty-text {
         margin: .5em 0;
+    }
+
+    .sidebar-collapsible-toggle {
+        background-color: rgba($text-color, .05);
+        border-radius: .25em;
+        cursor: pointer;
+        font-size: .75em;
+        margin-top: 1em;
+        padding: .25em;
+        text-align: center;
+        text-transform: uppercase;
+
+        &:hover,
+        &:focus {
+            background-color: rgba($text-color, .1);
+        }
+    }
+
+    .collapsible-collapse-text {
+        display: none;
+    }
+
+    .sidebar-collapsible[open] {
+        >.sidebar-collapsible-toggle {
+            margin-bottom: 1em;
+        }
+
+        .collapsible-expand-text {
+            display: none;
+        }
+
+        .collapsible-collapse-text {
+            display: unset;
+        }
     }
 }
 
@@ -94,7 +148,7 @@ body {
             width: 250px;
         }
 
-        > .inner {
+        >.inner {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;

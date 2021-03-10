@@ -13,6 +13,7 @@
 .kv-key,
 .kv-value {
     margin: 0;
+    padding: 0;
 }
 
 .kv-key {
@@ -34,12 +35,16 @@
     .kv-pair {
         display: table-row;
     }
-    
+
     .kv-key,
-    .kv-value {
+    .kv-value,
+    > .kv-key,
+    > .kv-value {
         display: table-cell;
+        padding-bottom: 0;
+        padding-top: 0;
     }
-    
+
     .kv-key {
         padding-right: 1em;
     }
