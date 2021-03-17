@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * Advanced Search Form
  */
@@ -84,7 +83,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     { name: 'LastName' },
                     {
                         name: 'FullName',
-                        calculate: function(data) {
+                        calculate: function (data) {
                             return data.LastName + ', ' + data.FirstName;
                         },
                         depends: ['FirstName', 'LastName']
@@ -116,7 +115,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     { name: 'LastName' },
                     {
                         name: 'FullName',
-                        calculate: function(data) {
+                        calculate: function (data) {
                             return data.LastName + ', ' + data.FirstName;
                         },
                         depends: ['FirstName', 'LastName']
@@ -145,7 +144,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                 proxy: {
                     type: 'slateapi',
                     summary: true,
-                    url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/'+window.SiteEnvironment.user.Username+'/courses') : '/sections',
+                    url: window.SiteEnvironment && window.SiteEnvironment.user ? '/people/' + window.SiteEnvironment.user.Username + '/courses' : '/sections',
                     reader: {
                         type: 'json',
                         rootProperty: 'data'
