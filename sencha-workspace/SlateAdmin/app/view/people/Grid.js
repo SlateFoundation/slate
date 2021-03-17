@@ -26,6 +26,20 @@ Ext.define('SlateAdmin.view.people.Grid', {
         pruneRemoved: false
     },
 
+    tbar: {
+        cls: 'info-bar',
+        items: [{
+            xtype: 'tbtext',
+            html: '<i class="fa fa-info-circle"></i>&ensp;6 disabled accounts hidden.',
+        }, {
+            xtype: 'button',
+            text: 'Show All',
+        }, {
+            xtype: 'button',
+            text: 'Dismiss',
+        }],
+    },
+
     bbar: [{
         xtype: 'tbtext',
         itemId: 'selectionCount',

@@ -14,8 +14,10 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
     layout: 'auto',
     items: [{
         xtype: 'fieldset',
+        border: 0,
         title: 'Advanced Search',
         cls: 'navpanel-search-criteria',
+        id: 'navpanel-search-criteria',
         collapsible: true,
         collapsed: true,
         // stateful: true, TODO fix collapsing state bug
@@ -150,6 +152,20 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                         rootProperty: 'data'
                     }
                 }
+            }
+        }, {
+            xtype: 'combo',
+            name: 'status',
+            fieldLabel: 'Status',
+            displayField: 'label',
+            emptyText: 'Active only',
+            store: {
+                fields: ['label', 'value'],
+                data: [
+                    { label: 'Active only', },
+                    { label: 'Disabled only', },
+                    { label: 'Any' },
+                ]
             }
         }, {
             xtype: 'button',
