@@ -1,27 +1,8 @@
-.relationship-nonguardian {
-    .glyph-shield {
-        color: $glyph-inactive-color;
-
-        &:hover,
-        &:focus {
-            color: mix($glyph-inactive-color, $glyph-shield-color);
-        }
-    }
-}
-
-.relationship-nonemergency {
-    .glyph-emergency {
-        color: $glyph-inactive-color;
-
-        &:hover,
-        &:focus {
-            color: mix($glyph-inactive-color, $glyph-emergency-color);
-        }
-    }
-}
+@include glyph-color('shield', $glyph-shield-color);
+@include glyph-color('star', $glyph-star-color);
 
 .contact-type-header {
-    > .fa {
+    >.fa {
         margin-right: .125em;
     }
 }
@@ -43,6 +24,7 @@
     }
 
     &.slate-grid-dirty {
+
         .contact-point-delete,
         .relationship-delete {
             display: inline-block;
@@ -60,13 +42,7 @@
 }
 
 .contact-point-primary {
-    color: $glyph-inactive-color;
     visibility: hidden;
-
-    &:hover,
-    &:focus {
-        color: mix($glyph-inactive-color, $glyph-star-color);
-    }
 }
 
 .contact-postal,
@@ -81,14 +57,10 @@
     .x-grid-cell-inner {
         font-weight: bold;
     }
-
-    .contact-point-primary {
-        color: #daa520;
-    }
 }
 
 .slate-people-details-related {
-    > .x-grid-body {
+    >.x-grid-body {
         border-width: 1px 0;
     }
 }

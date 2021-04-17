@@ -11,4 +11,17 @@ $payload = !empty($payload) ? json_decode($payload, true) : [];
 $_COMMAND['LOGGER']->info("Firing {event}@{context}", compact('event', 'context', 'payload'));
 
 // fire event
-$result = Emergence\EventBus::fireEvent($event, $context, $payload);
+$event = Emergence\EventBus::fireEvent($event, $context, $payload);
+
+// print results
+foreach ($event['RESULTS'] as $handler => $result) {
+    $_COMMAND['LOGGER']->debug("Result for handler {handler}:", compact('handler'));
+    $result = print_r($result, true);
+
+    if ($output = trim($result)) {
+        $output = explode(PHP_EOL, $output);
+        foreach ($output as $line) {
+            $_COMMAND['LOGGER']->debug("    $line");
+        }
+    }
+}
