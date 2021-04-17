@@ -268,12 +268,51 @@ class Section extends \VersionedRecord
             return $this->Title;
         }
 
+        // start with course title
         $title = $this->Course->Title;
 
-        if (count($this->Teachers)) {
-            $title .= "\xC2\xA0\xC2\xB7 {$this->Teachers[0]->LastName}";
+        // append teachers list
+        $teachers = $this->Teachers;
+
+        if (count($teachers)) {
+            static $adviseesByTeacher = null;
+            if (!$adviseesByTeacher) {
+                $adviseesByTeacher = DB::valuesTable(
+                    'AdvisorID',
+                    'Advisees',
+                    'SELECT AdvisorID, COUNT(*) AS Advisees FROM people WHERE GraduationYear >= YEAR(CURRENT_DATE) - 1 GROUP BY AdvisorID'
+                );
+            }
+
+            usort(
+                $teachers,
+                function (IPerson $Teacher1, IPerson $Teacher2) use ($adviseesByTeacher) {
+                    $advisees1 = @$adviseesByTeacher[$Teacher1->ID];
+                    $advisees2 = @$adviseesByTeacher[$Teacher2->ID];
+
+                    if ($advisees1 == $advisees2) {
+                        return strcasecmp(
+                            "{$Teacher1->LastName}, {$Teacher1->FirstName}",
+                            "{$Teacher2->LastName}, {$Teacher2->FirstName}"
+                        );
+                    }
+
+                    return ($advisees1 > $advisees2) ? -1 : 1;
+                }
+            );
+
+            $title .= "\xC2\xA0\xC2\xB7 ".implode(
+                '/',
+                array_map(
+                    function (IPerson $Teacher) {
+                        return $Teacher->LastName;
+                    },
+                    $teachers
+                )
+            );
         }
 
+        // append schedule
         if ($this->Schedule) {
             $title .= "\xC2\xA0\xC2\xB7 {$this->Schedule->Title}";
         }

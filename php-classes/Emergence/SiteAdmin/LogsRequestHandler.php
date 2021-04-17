@@ -17,7 +17,12 @@ class LogsRequestHandler extends \RequestHandler
         ],
         'logs/general.log' => [
             'format' => 'php-app',
-            'title' => 'PHP Application Log',
+            'title' => 'PHP Application General Log',
+            'allowEdit' => true
+        ],
+        'logs/crash.log' => [
+            'format' => 'php-app',
+            'title' => 'PHP Application Crash Log',
             'allowEdit' => true
         ],
         'logs/access.log' => [

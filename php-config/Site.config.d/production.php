@@ -1,3 +1,3 @@
 <?php
 
-//Site::$production = true; // set to true for heavy file caching
+Site::$production = true; // set to false for less source code caching
