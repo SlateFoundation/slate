@@ -9,14 +9,14 @@
       
       
       
-        <link rel="canonical" href="https://slatefoundation.github.io/slate/development/testing/e2e/">
+        <link rel="canonical" href="https://slatefoundation.github.io/slate/development/getting-started/local-studio/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.1">
     
     
       
-        <title>End-to-end (E2E) testing - Slate Docs</title>
+        <title>Local Studio Container - Slate Docs</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#end-to-end-e2e-testing" class="md-skip">
+        <a href="#local-studio-container" class="md-skip">
           Skip to content
         </a>
       
@@ -97,7 +97,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              End-to-end (E2E) testing
+              Local Studio Container
             
           </span>
         </div>
@@ -190,7 +190,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../getting-started/local-studio/" class="md-tabs__link md-tabs__link--active">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
         Development
       </a>
     </li>
@@ -287,12 +287,14 @@
             
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" checked>
       
       <label class="md-nav__link" for="__nav_2_1">
         Getting started
@@ -302,59 +304,6 @@
         <label class="md-nav__title" for="__nav_2_1">
           <span class="md-nav__icon md-icon"></span>
           Getting started
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting-started/local-studio/" class="md-nav__link">
-        Local Studio Container
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../getting-started/virtual-multisite/" class="md-nav__link">
-        Virtual Multi-site Container
-      </a>
-    </li>
-  
-
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-          
-            
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_2" type="checkbox" id="__nav_2_2" checked>
-      
-      <label class="md-nav__link" for="__nav_2_2">
-        Testing
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-      <nav class="md-nav" aria-label="Testing" data-md-level="2">
-        <label class="md-nav__title" for="__nav_2_2">
-          <span class="md-nav__icon md-icon"></span>
-          Testing
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -372,12 +321,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          End-to-end (E2E) testing
+          Local Studio Container
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        End-to-end (E2E) testing
+        Local Studio Container
       </a>
       
         
@@ -394,8 +343,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    Running tests
+  <a href="#launch-studio-container" class="md-nav__link">
+    Launch studio container
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrap-and-develop-backend" class="md-nav__link">
+    Bootstrap and develop backend
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-user-registration" class="md-nav__link">
+    Enable user registration
   </a>
   
 </li>
@@ -404,6 +367,57 @@
   
 </nav>
       
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../virtual-multisite/" class="md-nav__link">
+        Virtual Multi-site Container
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_2" type="checkbox" id="__nav_2_2" >
+      
+      <label class="md-nav__link" for="__nav_2_2">
+        Testing
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Testing" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_2">
+          <span class="md-nav__icon md-icon"></span>
+          Testing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/e2e/" class="md-nav__link">
+        End-to-end (E2E) testing
+      </a>
     </li>
   
 
@@ -469,8 +483,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    Running tests
+  <a href="#launch-studio-container" class="md-nav__link">
+    Launch studio container
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrap-and-develop-backend" class="md-nav__link">
+    Bootstrap and develop backend
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-user-registration" class="md-nav__link">
+    Enable user registration
   </a>
   
 </li>
@@ -487,20 +515,130 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/SlateFoundation/slate/edit/develop/docs/development/testing/e2e.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/SlateFoundation/slate/edit/develop/docs/development/getting-started/local-studio.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="end-to-end-e2e-testing">End-to-end (E2E) testing<a class="headerlink" href="#end-to-end-e2e-testing" title="Permanent link"> ¶</a></h1>
-<h2 id="running-tests">Running tests<a class="headerlink" href="#running-tests" title="Permanent link"> ¶</a></h2>
-<p><a href="https://www.cypress.io/">Cypress</a> is used to provide browser-level full-stack testing. The <code>package.json</code> file at the root of the repository specifies the dependencies for running the test suite and all the configuration/tests for Cypress are container in the <code>cypress/</code> tree at the root of the repository.</p>
-<p>To get started, from a terminal <strong>outside the studio</strong> in the root of the repository:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># install development tooling locally</span>
-npm install
+                <h1 id="local-studio-container">Local Studio Container<a class="headerlink" href="#local-studio-container" title="Permanent link"> ¶</a></h1>
+<p>This guide will walk you through launching a Docker-container local development studio and using it to test changes made within a local Git repository.</p>
+<h2 id="launch-studio-container">Launch studio container<a class="headerlink" href="#launch-studio-container" title="Permanent link"> ¶</a></h2>
+<ol>
+<li>
+<p>Install Chef Habitat:</p>
+<div class="highlight"><pre><span></span><code>curl -s https://raw.githubusercontent.com/habitat-sh/habitat/master/components/hab/install.sh <span class="p">|</span> sudo bash
+</code></pre></div>
+</li>
+<li>
+<p>Set up Chef Habitat, accepting defaults for all prompts:</p>
+<div class="highlight"><pre><span></span><code>hab setup
+</code></pre></div>
+</li>
+<li>
+<p>Clone <code>emergence-skeleton</code> repository and any submodules:</p>
+<div class="highlight"><pre><span></span><code>git clone --recursive git@github.com:JarvusInnovations/emergence-skeleton.git
+</code></pre></div>
+</li>
+<li>
+<p>Change into cloned directory:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./emergence-skeleton
+</code></pre></div>
+</li>
+<li>
+<p>Launch studio:</p>
+</li>
+</ol>
+<p>Use the included <a href="https://github.com/github/scripts-to-rule-them-all">scripts-to-rules-them-all</a> workflow script to configure and launch a studio session:</p>
+<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><code>```<span class="nv">bash</span>
+<span class="nv">script</span><span class="o">/</span><span class="nv">studio</span>
+```
 
-<span class="c1"># launch cypress app</span>
-npm run cypress:open
+<span class="nv">Review</span> <span class="nv">the</span> <span class="nv">notes</span> <span class="nv">printed</span> <span class="nv">to</span> <span class="nv">your</span> <span class="nv">terminal</span> <span class="nv">at</span> <span class="nv">the</span> <span class="k">end</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">studio</span> <span class="nv">startup</span> <span class="nv">process</span> <span class="k">for</span> <span class="nv">a</span> <span class="nv">list</span> <span class="nv">of</span> <span class="nv">all</span> <span class="nv">available</span> <span class="nv">studio</span> <span class="nv">commands</span>.
+</code></pre></div>
+</td></tr></table>
+<h2 id="bootstrap-and-develop-backend">Bootstrap and develop backend<a class="headerlink" href="#bootstrap-and-develop-backend" title="Permanent link"> ¶</a></h2>
+<ol>
+<li>
+<p>Start services:</p>
+<p>Use the studio command <code>start-all</code> to launch the http server (nginx), the application runtime (php-fpm), and a local mysql server:</p>
+<div class="highlight"><pre><span></span><code>start-all
+</code></pre></div>
+<p>At this point, you should be able to open <a href="http://localhost:7080">localhost:7080</a> and see the error message <code>Page not found</code>.</p>
+</li>
+<li>
+<p>Build site:</p>
+<p>To build the entire site and load it, use the studio command <code>update-site</code>:</p>
+<div class="highlight"><pre><span></span><code>update-site
+</code></pre></div>
+<p>At this point, <a href="http://localhost:7080">localhost:7080</a> should display the current build of the site</p>
+</li>
+<li>
+<p>Load fixture data into site database (optional):</p>
+<div class="highlight"><pre><span></span><code>load-fixtures
+</code></pre></div>
+<p>The standard fixture data includes the following users:</p>
+<table>
+<thead>
+<tr>
+<th>Username</th>
+<th>Password</th>
+<th>AccountLevel</th>
+<th>About</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system</code></td>
+<td><code>system</code></td>
+<td><code>Developer</code></td>
+<td>Full system access</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td><code>admin</code></td>
+<td><code>Administrator</code></td>
+<td>Manage site and staff</td>
+</tr>
+<tr>
+<td><code>staff</code></td>
+<td><code>staff</code></td>
+<td><code>Staff</code></td>
+<td>Staff access</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td><code>user</code></td>
+<td><code>User</code></td>
+<td>Regular user</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Make and apply changes:</p>
+<p>After editing code in the working tree, you must rebuild and update the site:</p>
+<div class="highlight"><pre><span></span><code>update-site
+</code></pre></div>
+<p>A command to automatically rebuild and update the site as changes are made to the working tree is also available, but currently not that efficient or reliable:</p>
+<div class="highlight"><pre><span></span><code>watch-site
+</code></pre></div>
+</li>
+</ol>
+<h2 id="enable-user-registration">Enable user registration<a class="headerlink" href="#enable-user-registration" title="Permanent link"> ¶</a></h2>
+<p>To enable user registration on a site that comes with it disabled:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># write class configuring enabling registration</span>
+mkdir -p php-config/Emergence/People
+<span class="nb">echo</span> <span class="s1">&#39;&lt;?php Emergence\People\RegistrationRequestHandler::$enableRegistration = true;&#39;</span> &gt; php-config/Emergence/People/RegistrationRequestHandler.config.php
+
+<span class="c1"># rebuild environment</span>
+update-site
+</code></pre></div>
+<p>After visiting <a href="http://localhost:7080/register"><code>/register</code></a> and creating a new user account, you can use the studio command <code>promote-user</code> to upgrade the user account you just registered to the highest access level:</p>
+<div class="highlight"><pre><span></span><code>promote-user &lt;myuser&gt;
 </code></pre></div>
                 
               
@@ -520,7 +658,7 @@ npm run cypress:open
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../../getting-started/virtual-multisite/" class="md-footer__link md-footer__link--prev" rel="prev">
+        <a href="../../.." class="md-footer__link md-footer__link--prev" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -529,19 +667,19 @@ npm run cypress:open
               <span class="md-footer__direction">
                 Previous
               </span>
-              Virtual Multi-site Container
+              Welcome
             </div>
           </div>
         </a>
       
       
-        <a href="../../email/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../virtual-multisite/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Working with Email
+              Virtual Multi-site Container
             </div>
           </div>
           <div class="md-footer__button md-icon">
