@@ -1,4 +1,4 @@
-name: 'Release: Create'
+name: 'Release: Deploy PR'
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  release-create:
+  release-deploy:
 
     if: github.event.pull_request.merged == true # only run on PR merge
     runs-on: ubuntu-latest

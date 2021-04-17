@@ -1,4 +1,4 @@
-name: 'Release: Validate PR Title'
+name: 'Release: Validate PR'
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  release-validate-title:
+  release-validate:
 
     runs-on: ubuntu-latest
     steps:
