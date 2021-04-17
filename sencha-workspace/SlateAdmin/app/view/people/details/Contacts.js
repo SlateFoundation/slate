@@ -1,4 +1,4 @@
-/*jslint browser: true, undef: true *//*global Ext*/
+/* jslint browser: true, undef: true *//* global Ext*/
 Ext.define('SlateAdmin.view.people.details.Contacts', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-contacts',
@@ -49,7 +49,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
             loadMask: false,
             autoScroll: false,
             emptyText: 'No related people',
-            getRowClass: function(record) {
+            getRowClass: function (record) {
                 var cls = record.get('Class') == 'Emergence\\People\\GuardianRelationship' ? 'relationship-guardian' : 'relationship-nonguardian';
 
                 if (record.phantom) {
@@ -89,22 +89,22 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     flex: 1,
                     tpl: [
                         '<tpl if="RelatedPerson && RelatedPerson.isModel">',
-                            '<tpl if="ID && !RelatedPerson.phantom"><a href="#{[this.getSearchRoute(values)]}"></tpl>',
-                                '<tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>',
-                            '<tpl if="ID && !RelatedPerson.phantom"></a></tpl>',
+                        '<tpl if="ID && !RelatedPerson.phantom"><a href="#{[this.getSearchRoute(values)]}"></tpl>',
+                        '<tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>',
+                        '<tpl if="ID && !RelatedPerson.phantom"></a></tpl>',
                         '<tpl elseif="!RelatedPerson">',
-                            '<i class="fa fa-plus-circle"></i> Add new&hellip;',
+                        '<i class="fa fa-plus-circle"></i> Add new&hellip;',
                         '</tpl>',
                         {
-                            getSearchRoute: function(relationship) {
-                                var path = ['people', 'search', 'related-to-id:'+relationship.PersonID],
+                            getSearchRoute: function (relationship) {
+                                var path = ['people', 'search', 'related-to-id:' + relationship.PersonID],
                                     relatedPerson = relationship.RelatedPerson,
                                     relatedUsername = relatedPerson.get('Username');
 
                                 if (relatedUsername) {
                                     path.push(relatedUsername);
                                 } else {
-                                    path.push('?id='+relatedPerson.getId());
+                                    path.push('?id=' + relatedPerson.getId());
                                 }
 
                                 path.push('contacts');
@@ -118,7 +118,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         forceSelection: false,
                         displayField: 'FullName',
                         listeners: {
-                            select: function(comboField) {
+                            select: function (comboField) {
                                 comboField.up('editor').completeEdit();
                             }
                         }
@@ -139,10 +139,10 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         triggerAction: 'all',
                         autoSelect: false,
                         listeners: {
-                            focus: function(comboField) {
+                            focus: function (comboField) {
                                 comboField.expand();
                             },
-                            select: function(comboField) {
+                            select: function (comboField) {
                                 comboField.up('editor').completeEdit();
                             }
                         }
@@ -157,9 +157,9 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     width: 120,
                     tpl: [
                         '<tpl if="InverseRelationship">',
-                            '{InverseRelationship.Label}',
-    //                    '<tpl else>',
-    //                        '<em>Unknown</em>',
+                        '{InverseRelationship.Label}',
+                        //                    '<tpl else>',
+                        //                        '<em>Unknown</em>',
                         '</tpl>'
                     ],
                     editor: {
@@ -179,30 +179,25 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                         },
                         {
                             action: 'guardian',
-                            iconCls: 'relationship-guardian glyph-shield',
                             glyph: 0xf132, // fa-shield
-                            getTip: function(v, meta, record) {
-                                return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' guardian';
+                            getClass: function (v) {
+                                return [
+                                    'glyph-shield',
+                                    v == 'Emergence\\People\\Relationship' ? '' : 'glyph-inactive',
+                                ].join(' ');
+                            },
+                            getTip: function (v) {
+                                return (v == 'Emergence\\People\\Relationship' ? 'Undesignate' : 'Designate') + ' guardian';
                             }
-                        }
-                        // {
-                        //     action: 'emergency',
-                        //     iconCls: 'relationship-emergency glyph-emergency',
-                        //     glyph: 0xf0f9, // fa-ambulance
-                        //     getTip: function(v, meta, record) {
-                        //         // TODO make this work
-                        //         return (v == 'Emergence\\People\\Relationship' ? 'Designate' : 'Undesignate') + ' emergency contact';
-                        //     }
-                        // }
+                        },
                     ]
                 }
             ]
         }
-    },{
+    }, {
         xtype: 'grid',
         itemId: 'contactPoints',
         title: 'Contact Points',
-        // columnLines: true,
         hideHeaders: true,
         componentCls: 'slate-people-details-contacts',
         cls: 'has-small-group-headers',
@@ -217,7 +212,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     direction: 'ASC'
                 },
                 {
-                    sorterFn: function(r1, r2) {
+                    sorterFn: function (r1, r2) {
                         r1 = r1.phantom;
                         r2 = r2.phantom;
 
@@ -237,7 +232,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         viewConfig: {
             loadMask: false,
             autoScroll: false,
-            getRowClass: function(record) {
+            getRowClass: function (record) {
                 var cls = '';
 
                 switch (record.get('Class')) {
@@ -289,10 +284,10 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 collapsible: false,
                 groupHeaderTpl: [
                     '<tpl for="this.getHeaderConfig(values)">',
-                        '<span class="contact-type-header {typeCls}"><i class="fa fa-fw {glyph}"></i> {title}</span>',
+                    '<span class="contact-type-header {typeCls}"><i class="fa fa-fw {glyph}"></i> {title}</span>',
                     '</tpl>',
                     {
-                        getHeaderConfig: function(values) {
+                        getHeaderConfig: function (values) {
                             var title, typeCls, glyph;
 
                             switch (values.groupValue) {
@@ -354,15 +349,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     triggerAction: 'all',
                     autoSelect: false,
                     listeners: {
-                        focus: function(comboField) {
+                        focus: function (comboField) {
                             comboField.expand();
                         },
-                        select: function(comboField) {
+                        select: function (comboField) {
                             comboField.up('editor').completeEdit();
                         }
                     }
                 },
-                renderer: function(v, m, r) {
+                renderer: function (v, m, r) {
                     return v || '<i class="fa fa-plus-circle"></i> Add new&hellip;';
                 }
             },
@@ -375,10 +370,10 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 renderer: function (v) {
                     return v ? v.replace(/\n/g, ', ') : '';
                 },
-                getEditor: function(record) {
+                getEditor: function (record) {
                     var me = this,
                         pointCls = record.get('Class'),
-                        editorId = me.getItemId()+'-'+pointCls,
+                        editorId = me.getItemId() + '-' + pointCls,
                         editors = me.up('grid').findPlugin('cellediting').editors,
                         editor = editors.getByKey(editorId),
                         field;
@@ -388,14 +383,14 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     }
 
                     switch (pointCls) {
-//                        case 'Emergence\\People\\ContactPoint\\Email':
-//                            return 'contact-email';
-//                        case 'Emergence\\People\\ContactPoint\\Link':
-//                            return 'contact-link';
-//                        case 'Emergence\\People\\ContactPoint\\Network':
-//                            return 'contact-network';
-//                        case 'Emergence\\People\\ContactPoint\\Phone':
-//                            return 'contact-phone ';
+                        //                        case 'Emergence\\People\\ContactPoint\\Email':
+                        //                            return 'contact-email';
+                        //                        case 'Emergence\\People\\ContactPoint\\Link':
+                        //                            return 'contact-link';
+                        //                        case 'Emergence\\People\\ContactPoint\\Network':
+                        //                            return 'contact-network';
+                        //                        case 'Emergence\\People\\ContactPoint\\Phone':
+                        //                            return 'contact-phone ';
                         case 'Emergence\\People\\ContactPoint\\Postal':
                             field = Ext.create('SlateAdmin.widget.field.contact.Postal');
                             break;
@@ -428,11 +423,16 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                     },
                     {
                         action: 'primary',
-                        iconCls: 'contact-point-primary glyph-star',
                         glyph: 0xf005, // fa-star
-                        getTip: function(v, meta, record) {
+                        getClass: function (v) {
+                            return [
+                                'glyph-star',
+                                v ? '' : 'glyph-inactive',
+                            ].join(' ');
+                        },
+                        getTip: function (v) {
                             return (v ? 'Unmark' : 'Mark') + ' as primary point for this type';
-                        }
+                        },
                     }
                 ]
             }
