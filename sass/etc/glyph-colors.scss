@@ -1,9 +1,27 @@
 // use this mixin in src/button/Button.scss to fit properly in the cascade
 @mixin glyph-color($name, $color) {
-    .glyph-#{$name},
-    .glyph-#{$name} .x-btn-glyph {
-        color: $color;
+
+  .glyph-#{$name},
+  .glyph-#{$name} .x-btn-glyph {
+    color: $color;
+
+    &:active {
+      color: mix($glyph-inactive-color, $color, 30%);
     }
+
+    &.glyph-inactive {
+      color: $glyph-inactive-color;
+
+      &:hover,
+      &:focus {
+        color: mix($glyph-inactive-color, $color, 70%);
+      }
+
+      &:active {
+        color: mix($glyph-inactive-color, $color, 30%);
+      }
+    }
+  }
 }
 
 $base-color: dynamic(#1f83b1);
@@ -17,7 +35,7 @@ $glyph-inactive-color: dynamic(#c9c9c9); // gray
 /**
   * Color for star glyph (e.g., primary contact point)
   */
-$glyph-star-color: dynamic(#daa520); // goldenrod
+$glyph-star-color: dynamic(#f4a460); // sandybrown
 
 /**
   * Color for shield glyph (e.g., guardian)
