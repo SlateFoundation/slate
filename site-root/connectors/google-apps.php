@@ -1,3 +1,3 @@
 <?php
 
-Slate\Connectors\GoogleApps\Connector::handleRequest();
+Site::redirect('/connectors/gsuite');
