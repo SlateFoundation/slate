@@ -153,6 +153,11 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                 }
             }
         }, {
+            xtype: 'checkboxfield',
+            name: 'accountlevel',
+            fieldLabel: 'Disabled Only',
+            inputValue: 'Disabled',
+        }, {
             xtype: 'button',
             anchor: false,
             margin: '0 0 0 70',
