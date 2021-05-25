@@ -14,8 +14,10 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
     layout: 'auto',
     items: [{
         xtype: 'fieldset',
+        border: 0,
         title: 'Advanced Search',
         cls: 'navpanel-search-criteria',
+        id: 'navpanel-search-criteria',
         collapsible: true,
         collapsed: true,
         // stateful: true, TODO fix collapsing state bug
@@ -152,10 +154,19 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                 }
             }
         }, {
-            xtype: 'checkboxfield',
+            xtype: 'combo',
             name: 'accountlevel',
-            fieldLabel: 'Disabled Only',
-            inputValue: 'Disabled',
+            fieldLabel: 'Status',
+            displayField: 'label',
+            emptyText: 'Active only',
+            store: {
+                fields: ['label', 'value'],
+                data: [
+                    { label: 'Active only', value: null },
+                    { label: 'Disabled only', value: 'Disabled' },
+                    { label: 'Any', value: '*any' },
+                ]
+            }
         }, {
             xtype: 'button',
             anchor: false,

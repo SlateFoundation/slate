@@ -7,7 +7,7 @@ Ext.define('SlateAdmin.view.Navigation', {
 
     cls: 'slateadmin-navigation',
 
-    width: 200,
+    width: 240,
     layout: {
         type: 'accordion'
     },

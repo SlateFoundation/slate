@@ -1,0 +1,27 @@
+.navpanel-advanced-search-toggle {
+    background-color: $form-field-background-color;
+    border-style: $form-field-border-style;
+    border-color: $form-field-border-color;
+    border-width: 0 0 1px 1px;
+
+    &:not(.x-btn-pressed) {
+        color: #aaa;
+    }
+
+    >.x-btn-icon-el-default-medium,
+    >.x-btn-icon-el-default-toolbar-medium {
+        margin: 0;
+    }
+
+    .x-btn-glyph {
+        color: inherit;
+        display: block;
+        transition: transform .5s ease-in-out;
+    }
+
+    &.x-btn-pressed {
+        .x-btn-glyph {
+            transform: rotate(360deg);
+        }
+    }
+}
