@@ -268,7 +268,7 @@ Ext.define('SlateAdmin.controller.People', {
         proxy.setExtraParam('q', query);
         
         // set ?status=* when querying by account level
-        if (query && query.match('accountlevel\:')) {
+        if (query && query.match('accountlevel:')) {
             proxy.setExtraParam('status', '*');
         } else {
             proxy.setExtraParam('status', null);

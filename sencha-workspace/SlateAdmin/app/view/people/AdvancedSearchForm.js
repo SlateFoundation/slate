@@ -158,13 +158,14 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             name: 'accountlevel',
             fieldLabel: 'Status',
             displayField: 'label',
+            valueField: 'value',
             emptyText: 'Active only',
             store: {
                 fields: ['label', 'value'],
                 data: [
                     { label: 'Active only', value: null },
                     { label: 'Disabled only', value: 'Disabled' },
-                    { label: 'Any', value: '*any' },
+                    { label: 'Any', value: '%' },
                 ]
             }
         }, {

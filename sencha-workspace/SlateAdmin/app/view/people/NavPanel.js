@@ -34,7 +34,7 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             items: [{
                 flex: 1,
                 xtype: 'jarvus-searchfield',
-                reference: 'people-search-field',
+                reference: 'peopleSearchField',
                 hideTrigger: true,
                 triggers: {
                     clear: {
