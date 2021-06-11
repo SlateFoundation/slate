@@ -2,8 +2,15 @@
 
 namespace Slate\Connectors\GoogleSheets;
 
+use Exception;
 use SpreadsheetReader;
+
+use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 use Emergence\Connectors\IJob;
+use Emergence\Connectors\Mapping;
+
+use Emergence\People\User;
+use Slate\People\Student;
 
 class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implements \Emergence\Connectors\ISynchronize
 {
@@ -99,5 +106,117 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
         }
 
         return true;
+    }
+
+    public static function pullStudents(IJob $Job, SpreadsheetReader $spreadsheet, $pretend = true)
+    {
+        // check input
+        try {
+            static::_requireColumns('students', $spreadsheet, static::getStackedConfig('studentRequiredColumns'), static::getStackedConfig('studentColumns'));
+        } catch (Exception $e) {
+            $Job->logException($e);
+            return false;
+        }
+
+        // initialize results
+        $results = [
+            'analyzed' => 0
+        ];
+
+
+        // loop through rows
+        while ($row = $spreadsheet->getNextRow()) {
+
+            // process input row through column mapping
+            $row = static::_readStudent($Job, $row);
+
+
+            // start logging analysis
+            $results['analyzed']++;
+            static::_logRow($Job, 'student', $results['analyzed'], $row);
+
+
+            // skip row if filter function flags it
+            if ($filterReason = static::_filterPerson($Job, $row)) {
+                $results['filtered'][$filterReason]++;
+                $Job->notice('Skipping student row #{rowNumber} due to filter: {reason}', [
+                    'rowNumber' => $results['analyzed'],
+                    'reason' => $filterReason
+                ]);
+                continue;
+            }
+
+            $Record = null;
+            $Mapping = null;
+
+            if (!empty($row['ForeignKey'])) {
+                if ($Mapping = static::_getPersonMapping($row['ForeignKey'])) {
+                    $Record = $Mapping->Context;
+                }
+            }
+
+
+            if (!$Record) {
+                 $Record = static::_getPerson($Job, $row);
+            }
+
+
+            // get existing user or start creating a new one
+            if (!$Record) {
+                $Record = Student::create();
+                $Record->setTemporaryPassword();
+            }
+
+
+            // apply values from spreadsheet
+            try {
+                static::_applyStudentUserChanges($Job, $Record, $row, $results);
+            } catch (RemoteRecordInvalid $e) {
+                if ($e->getValueKey()) {
+                    $results['failed'][$e->getMessageKey()][$e->getValueKey()]++;
+                } else {
+                    $results['failed'][$e->getMessageKey()]++;
+                }
+
+                $Job->logException($e);
+                continue;
+            }
+
+
+            // validate record
+            if (!static::_validateRecord($Job, $Record, $results)) {
+                continue;
+            }
+
+
+            // save record
+            static::_saveRecord($Job, $Record, $pretend, $results, static::_getPersonLogOptions());
+
+            if ($row['ForeignKey'] && !$Mapping) {
+                $Mapping = Mapping::create([
+                    'Context' => $Record,
+                    'Source' => 'creation',
+                    'Connector' => static::getConnectorId(),
+                    'ExternalKey' => static::$personForeignKeyName,
+                    'ExternalIdentifier' => $row['ForeignKey']
+                ], !$pretend);
+
+                $Job->notice('Mapping external identifier {externalIdentifier} to student {studentUsername}', [
+                    'externalIdentifier' => $row['ForeignKey'],
+                    'studentUsername' => $Record->Username
+                ]);
+            }
+        }
+
+        return $results;
+    }
+
+    protected static function _applyStudentUserChanges(IJob $Job, User $User, array $row, array &$results)
+    {
+        parent::_applyUserChanges($Job, $User, $row, $results);
+
+        if ($User->AccountLevel == 'Disabled') {
+            $User->AccountLevel = 'User';
+        }
     }
 }
