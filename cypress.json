@@ -1,0 +1,6 @@
+{
+    "baseUrl": "http://localhost:5580",
+    "env": {
+        "STUDIO_CONTAINER": "slate-studio"
+    }
+}
