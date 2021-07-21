@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# script/test: Run all tests
+
+set -e
+cd "$(dirname "$0")/.."
+
+
+temp_path="$(pwd)"
+temp_path="${temp_path:1}"
+temp_path="${temp_path//\//--}"
+temp_path="/tmp/cypress-workspaces/${temp_path}"
+
+
+echo
+echo "==> test: setting up temporary workspace diretory…"
+if [ -d "${temp_path}" ]; then
+    echo "removing existing content..."
+    rm -R "${temp_path}"
+fi
+
+mkdir -pv "${temp_path}"
+
+
+echo
+echo "==> test: projecting Cypress workspace…"
+workspace_tree="$(git holo project cypress-workspace)"
+
+if [ -z "${workspace_tree}" ]; then
+    echo
+    echo "==> test: failed to project Cypress workspace"
+    exit 1
+fi
+
+
+echo
+echo "==> test: writing Cypress workspace…"
+git archive "${workspace_tree}" --format=tar | (cd "${temp_path}" && tar -xf -)
+
+
+echo
+echo "==> test: setting up node_modules…"
+(cd "${temp_path}" && npm install)
+
+
+echo
+echo "==> test: executing \`cypress run\`…"
+(cd "${temp_path}" && npx cypress run)

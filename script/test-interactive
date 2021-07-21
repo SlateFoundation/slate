@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# script/test-interactive: Run all tests interactively with Cypress GUI
+
+set -e
+cd "$(dirname "$0")/.."
+
+
+repo_path="$(pwd)"
+temp_path="${repo_path}.cypress-workspace"
+
+
+echo
+echo "==> test-interactive: verifying unionfs…"
+
+if ! [ -x "$(command -v unionfs)" ]; then
+    echo "Please clone, build, and install the unionfs command:"
+    echo "git clone https://github.com/rpodgorny/unionfs-fuse"
+    echo "cd unionfs-fuse"
+    echo "make"
+    echo "sudo make install"
+    exit 1
+fi
+
+
+echo
+echo "==> test-interactive: setting up cleanup trap…"
+function _cleanup {
+    echo
+    echo "cleaning up workspace..."
+    if [ -d "${temp_path}/merged" ] && mount | grep -q "${temp_path}/merged"; then
+        sudo umount -f "${temp_path}/merged"
+    fi
+    rm -rf "${temp_path}"
+}
+trap _cleanup EXIT
+
+
+echo
+echo "==> test-interactive: setting up temporary workspace diretory…"
+if [ -d "${temp_path}" ]; then
+    _cleanup
+fi
+
+mkdir -pv "${temp_path}/base"
+mkdir -pv "${temp_path}/merged"
+
+
+echo
+echo "==> test-interactive: projecting Cypress workspace…"
+workspace_tree="$(git holo project cypress-workspace)"
+
+if [ -z "${workspace_tree}" ]; then
+    echo
+    echo "==> test-interactive: failed to project Cypress workspace"
+    exit 1
+fi
+
+
+echo
+echo "==> test-interactive: writing Cypress workspace…"
+git archive "${workspace_tree}" --format=tar | (cd "${temp_path}/base" && tar -xf -)
+
+
+echo
+echo "==> test-interactive: setting up overlay mount…"
+
+# unionfs was selected for mac+linux compatibility, though under Linux Kernel 4.10+
+# overlayfs might offer the advantage of propogating FS events from upperdir to mergedir
+# (see https://github.com/libuv/libuv/issues/1201)
+unionfs -o cow \
+    "${repo_path}"=RW:"${temp_path}/base"=RO \
+    "${temp_path}/merged"
+
+
+echo
+echo "==> test-interactive: installing node_modules…"
+(cd "${temp_path}/merged" && npm install)
+
+
+echo
+echo "==> test-interactive: executing \`cypress open\`…"
+(cd "${temp_path}/merged" && npx cypress open)
