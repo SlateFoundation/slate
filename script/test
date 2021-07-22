@@ -24,7 +24,7 @@ mkdir -pv "${temp_path}"
 
 echo
 echo "==> test: projecting Cypress workspace…"
-workspace_tree="$(git holo project cypress-workspace)"
+workspace_tree="$(git holo project cypress-workspace --working)"
 
 if [ -z "${workspace_tree}" ]; then
     echo
