@@ -1,0 +1,6 @@
+repo_url: https://github.com/SlateFoundation/slate
+
+extra:
+  repository:
+    name: slate
+    url: git@github.com:SlateFoundation/slate.git

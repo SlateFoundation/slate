@@ -1,18 +1,7 @@
 site_name: Slate Docs
-repo_url: https://github.com/SlateFoundation/slate
 site_url: https://slatefoundation.github.io/slate
 
 theme:
   palette:
     primary: "cyan"
     accent: "orange"
-
-extra:
-  repository:
-    name: slate
-    url: git@github.com:SlateFoundation/slate.git
-  studio:
-    web_port: 5580
-    static_port: 5581
-    docs_port: 5588
-    mysql_port: 5536
