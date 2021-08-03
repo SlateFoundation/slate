@@ -28,7 +28,8 @@ Ext.define('Emergence.cms.view.composer.Markdown', {
     }],
 
     items: {
-        xtype: 'textarea'
+        xtype: 'textarea',
+        emptyText: 'Type your post here, using Markdown for formatting.',
         //        grow: true // temporarily disabled due to ExtJS bug that causes the page to scroll to top on grow
     },
 
@@ -64,5 +65,13 @@ Ext.define('Emergence.cms.view.composer.Markdown', {
         return Ext.applyIf({
             Data: this.textarea.getValue()
         }, this.callParent());
-    }
+    },
+
+    isEmpty: function () {
+        if (this.textarea) {
+            return Ext.isEmpty(this.textarea.getValue().trim());
+        } else {
+            return false;
+        }
+    },
 });

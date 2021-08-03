@@ -264,7 +264,7 @@ class MediaRequestHandler extends RecordsRequestHandler
 
             // determine variant
             if ($variant = static::shiftPath()) {
-                if (!$Media->isVariantAvailable($variant)) {
+                if ($variant != 'original' && !$Media->isVariantAvailable($variant)) {
                     return static::throwNotFoundError('Requested variant is not available');
                 }
             } else {
@@ -541,11 +541,7 @@ class MediaRequestHandler extends RecordsRequestHandler
 
 
         // fetch thumbnail
-        try {
-            $thumbPath = $Media->getThumbnail($maxWidth, $maxHeight, $fillColor, $cropped);
-        } catch (OutOfBoundsException $e) {
-            return static::throwNotFoundError($e->getMessage());
-        }
+        $thumbPath = $Media->getThumbnail($maxWidth, $maxHeight, $fillColor, $cropped);
 
 
         // dump it out

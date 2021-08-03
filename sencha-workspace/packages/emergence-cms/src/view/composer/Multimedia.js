@@ -87,6 +87,10 @@ Ext.define('Emergence.cms.view.composer.Multimedia', {
         }, me.callParent());
     },
 
+    isEmpty: function () {
+        return Ext.isEmpty(this.getMedia()) && Ext.isEmpty(this.captionField.getValue().trim());
+    },
+
 
     // config handlers
     updateMedia: function(media) {

@@ -27,71 +27,94 @@
 // from https://github.com/javieraviles/cypress-upload-file-post-form
 Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
     cy.get(selector).then(subject => {
-      cy.fixture(fileName, 'base64')
-        .then(Cypress.Blob.base64StringToBlob)
-        .then(blob => {
-          const el = subject[0]
-          const testFile = new File([blob], fileName, { type: fileType })
-          const dataTransfer = new DataTransfer()
-          dataTransfer.items.add(testFile)
-          el.files = dataTransfer.files
-        })
+        cy.fixture(fileName, 'base64')
+            .then(Cypress.Blob.base64StringToBlob)
+            .then(blob => {
+                const el = subject[0]
+                const testFile = new File([blob], fileName, { type: fileType })
+                const dataTransfer = new DataTransfer()
+                dataTransfer.items.add(testFile)
+                el.files = dataTransfer.files
+            })
     })
-  });
+});
 
 // Login command
-Cypress.Commands.add('loginAs', (user) => {
-  cy.visit('/');
-  cy.request({
-      method: 'POST',
-      url: '/login/?format=json',
-      form: true,
-      body: {
-          '_LOGIN[username]': user,
-          '_LOGIN[password]': user,
-          '_LOGIN[returnMethod]': 'POST'
-      }
-  });
+Cypress.Commands.add('loginAs', (user, password) => {
+    if (!user) {
+        user = Cypress.env('TEST_USER') || 'user';
+    }
+
+    if (!password) {
+        password = Cypress.env('TEST_PASSWORD') || user;
+    }
+
+    cy.visit('/');
+    cy.request({
+        method: 'POST',
+        url: '/login/?format=json',
+        form: true,
+        body: {
+            '_LOGIN[username]': user,
+            '_LOGIN[password]': password,
+            '_LOGIN[returnMethod]': 'POST'
+        }
+    });
 });
 
 // Drop and load database in one step
 Cypress.Commands.add('resetDatabase', () => {
-  cy.dropDatabase();
-  cy.loadDatabase();
+    cy.dropDatabase();
+    cy.loadDatabase();
 });
 
 // Drops the entire
 Cypress.Commands.add('dropDatabase', () => {
-  cy.exec(`echo 'DROP DATABASE IF EXISTS \`default\`; CREATE DATABASE \`default\`;' | ${_buildHabExec('core/mysql', 'mysql')} -u root -h 127.0.0.1`);
+    cy.exec(`echo 'DROP DATABASE IF EXISTS \`default\`; CREATE DATABASE \`default\`;' | ${_buildHabExec('core/mysql', 'mysql')} -u root -h 127.0.0.1`);
 });
 
 // Reload the original data fixtures
 Cypress.Commands.add('loadDatabase', () => {
-  cy.exec(`cat cypress/fixtures/database/*.sql | ${_buildHabExec('core/mysql', 'mysql')} -u root -h 127.0.0.1 default`);
+    cy.exec(`${_buildHabExec('jarvus/hologit', 'git')} holo project fixtures --working`)
+        .then(({ stdout: treeHash }) => {
+            if (!treeHash) {
+                throw new Error('unable to compute tree hash for fixtures data');
+            }
+
+            cy.exec(`${_buildHabExec('emergence/php-runtime', 'bash')} -c '
+                (
+                    for fixture_file in $(git ls-tree -r --name-only ${treeHash}); do
+                        git cat-file -p "${treeHash}:\${fixture_file}"
+                    done
+                ) | mysql default
+            '`);
+
+            cy.exec(`${_buildHabExec('emergence/php-runtime', 'emergence-console-run')} migrations:execute --all`);
+        });
 });
 
 // Ext command getter
 Cypress.Commands.add('withExt', () => {
-  cy.window().then((win) => {
-    const Ext = win.Ext;
-    return {
-      Ext: win.Ext,
-      extQuerySelector: query => Ext.ComponentQuery.query(query)[0],
-      extQuerySelectorAll: query => Ext.ComponentQuery.query(query)
-    };
-  });
+    cy.window().then((win) => {
+        const Ext = win.Ext;
+        return {
+            Ext: win.Ext,
+            extQuerySelector: query => Ext.ComponentQuery.query(query)[0],
+            extQuerySelectorAll: query => Ext.ComponentQuery.query(query)
+        };
+    });
 });
 
 // private method
 function _buildHabExec(pkg, pkgCmd) {
-  const studioContainer = Cypress.env('STUDIO_CONTAINER') || null;
-  const studioSSH = Cypress.env('STUDIO_SSH') || null;
+    const studioContainer = Cypress.env('STUDIO_CONTAINER') || null;
+    const studioSSH = Cypress.env('STUDIO_SSH') || null;
 
-  let cmd = `hab pkg exec ${pkg} ${pkgCmd}`;
+    let cmd = `hab pkg exec ${pkg} ${pkgCmd}`;
 
-  if (studioContainer) {
-    cmd = `${studioSSH ? `ssh ${studioSSH}` : ''} docker exec -i ${studioContainer} ${cmd}`;
-  }
+    if (studioContainer) {
+        cmd = `${studioSSH ? `ssh ${studioSSH}` : ''} docker exec -i ${studioContainer} ${cmd}`;
+    }
 
-  return cmd;
+    return cmd;
 }

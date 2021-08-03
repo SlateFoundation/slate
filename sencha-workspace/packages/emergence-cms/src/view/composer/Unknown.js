@@ -17,5 +17,9 @@ Ext.define('Emergence.cms.view.composer.Unknown', {
         me.update(me.contentItem);
 
         me.callParent();
+    },
+
+    isEmpty: function() {
+        return false; // we cannot know for sure
     }
 });

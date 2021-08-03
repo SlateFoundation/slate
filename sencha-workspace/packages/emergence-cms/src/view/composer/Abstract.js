@@ -51,6 +51,10 @@ Ext.define('Emergence.cms.view.composer.Abstract', {
         return data;
     },
 
+    isEmpty: function () {
+        return Ext.isEmpty(this.getItemData().Data);
+    },
+
     firePreviewChange: function(html) {
         var me = this;
 

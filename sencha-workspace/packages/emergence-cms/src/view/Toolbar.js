@@ -58,7 +58,7 @@ Ext.define('Emergence.cms.view.Toolbar', {
                         group: 'visibility',
                         text: 'Login required',
                         value: 'Private',
-                        glyph: 0xf0c0+'@FontAwesome', // fa-group
+                        glyph: 0xf023+'@FontAwesome', // fa-lock
                         tooltip: 'Only users logged into the site can find or view this content'
                     },
                     {
@@ -72,10 +72,17 @@ Ext.define('Emergence.cms.view.Toolbar', {
                 ]
             }
         },
+        {
+            reference: 'summaryToggleBtn',
+
+            xtype: 'button',
+            text: 'Summary',
+            glyph: 0xf10d + '@FontAwesome', // fa-quote-left
+            enableToggle: true,
+        },
         '->',
         {
-            reference: 'publishedTimeBtn',
-
+            itemId: 'publishTimeBtn',
             xtype: 'button',
             text: 'Publication time',
             glyph: 0xf017+'@FontAwesome', // fa-clock-o
@@ -85,11 +92,13 @@ Ext.define('Emergence.cms.view.Toolbar', {
                 items: [
                     '<div class="menu-title">Publication time</div>',
                     {
+                        itemId: 'publishOnSaveCheck',
                         xtype: 'menucheckitem',
                         text: 'Publish on save'
                     },
                     '-',
                     {
+                        itemId: 'publishTimeCt',
                         xtype: 'fieldcontainer',
                         layout: 'anchor',
                         defaults: { anchor: '100%' },

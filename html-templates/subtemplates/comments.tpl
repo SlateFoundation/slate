@@ -19,7 +19,7 @@
 
                 <div class="message">
                     {capture assign=authorName}{personName $author}{/capture}
-                    {textarea Message $authorName $validationErrors.Message hint='You can use <a href="http://daringfireball.net/projects/markdown/basics" target="_blank">Markdown</a> for formatting.' required=true default=$Comment->Message}
+                    {textarea Message $authorName $validationErrors.Message hint='You can use <a href="https://www.markdownguide.org/cheat-sheet" target="_blank">Markdown</a> for formatting.' required=true default=$Comment->Message}
 
                     <div class="submit-area">
                         <input type="submit" class="submit" value="{tif $Comment ? Edit : Post} Comment">
