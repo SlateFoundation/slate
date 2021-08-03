@@ -594,14 +594,14 @@
 <p>Use the studio command <code>start-all</code> to launch the http server (nginx), the application runtime (php-fpm), and a local mysql server:</p>
 <div class="highlight"><pre><span></span><code>start-all
 </code></pre></div>
-<p>At this point, you should be able to open <a href="http://localhost:7180">localhost:7180</a> and see the error message <code>Page not found</code>.</p>
+<p>At this point, you should be able to open <a href="http://localhost:5580">localhost:5580</a> and see the error message <code>Page not found</code>.</p>
 </li>
 <li>
 <p>Build site:</p>
 <p>To build the entire site and load it, use the studio command <code>update-site</code>:</p>
 <div class="highlight"><pre><span></span><code>update-site
 </code></pre></div>
-<p>At this point, <a href="http://localhost:7180">localhost:7180</a> should display the current build of the site</p>
+<p>At this point, <a href="http://localhost:5580">localhost:5580</a> should display the current build of the site</p>
 </li>
 <li>
 <p>Load fixture data into site database (optional):</p>
@@ -682,14 +682,14 @@ mkdir -p php-config/Emergence/People
 <span class="c1"># rebuild environment</span>
 update-site
 </code></pre></div>
-<p>After visiting <a href="http://localhost:7180/register"><code>/register</code></a> and creating a new user account, you can use the studio command <code>promote-user</code> to upgrade the user account you just registered to the highest access level:</p>
+<p>After visiting <a href="http://localhost:5580/register"><code>/register</code></a> and creating a new user account, you can use the studio command <code>promote-user</code> to upgrade the user account you just registered to the highest access level:</p>
 <div class="highlight"><pre><span></span><code>promote-user &lt;myuser&gt;
 </code></pre></div>
 <h2 id="connect-to-local-database">Connect to local database<a class="headerlink" href="#connect-to-local-database" title="Permanent link"> ¶</a></h2>
 <p>The studio container hosts a local MySQL instance that can be connected to at:</p>
 <ul>
 <li><strong>Host</strong>: <code>localhost</code> (or LAN/WAN IP of machine hosting Docker engine)</li>
-<li><strong>Port</strong>: <code>7136</code></li>
+<li><strong>Port</strong>: <code>5536</code></li>
 <li><strong>Username</strong>: <code>admin</code></li>
 <li><strong>Password</strong>: <code>admin</code></li>
 </ul>

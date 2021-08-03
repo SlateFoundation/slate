@@ -582,8 +582,8 @@
 <p>Then, use the shortcut studio command for building the frontend application:</p>
 <div class="highlight"><pre><span></span><code>build-content-editor
 </code></pre></div>
-<p>Once built, the live-editable version of the app can be accessed via the static web server that the studio runs on port <code>7181</code>. The backend host must be provided to the apps via the <code>?apiHost</code> query parameter. Any remote backend with CORS enabled will work, or you can use the local backend:</p>
-<p><a href="http://localhost:7181/EmergenceContentEditor/?apiHost=localhost:7180"><code>localhost:7181/EmergenceContentEditor/?apiHost=localhost:7180</code></a></p>
+<p>Once built, the live-editable version of the app can be accessed via the static web server that the studio runs on port <code>5581</code>. The backend host must be provided to the apps via the <code>?apiHost</code> query parameter. Any remote backend with CORS enabled will work, or you can use the local backend:</p>
+<p><a href="http://localhost:5581/EmergenceContentEditor/?apiHost=localhost:5580"><code>localhost:5581/EmergenceContentEditor/?apiHost=localhost:5580</code></a></p>
 <h2 id="working-with-breakpoints">Working with breakpoints<a class="headerlink" href="#working-with-breakpoints" title="Permanent link"> ¶</a></h2>
 <p>By default, the Sencha framework will automatically append random cache buster values to every loaded <code>.js</code> source. This helps ensures that your latest code always runs, but will also prevent any breakpoints you set from persisting across reloads.</p>
 <p>With the <strong>Disable cache</strong> option of the network inspector activated, you can disable this built-in cache buster by appending <code>&amp;cache=1</code> to the current page&rsquo;s query string.</p>
