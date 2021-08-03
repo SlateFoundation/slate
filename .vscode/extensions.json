@@ -5,6 +5,7 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		"bmewburn.vscode-intelephense-client",
-		"imperez.smarty"
+		"imperez.smarty",
+		"felixfbecker.php-debug"
 	]
 }
