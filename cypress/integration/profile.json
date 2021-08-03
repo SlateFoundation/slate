@@ -1,0 +1,20 @@
+{
+    "selectors": {
+        "gallery-photo": ".available-photos .photo-item",
+        "gallery-photo-first": ".available-photos .photo-item:first-of-type",
+        "gallery-default-link": "a[title=\"Make Default\"][href^=\"/profile/primaryPhoto?\"]"
+    },
+    "values": {
+        "gallery-photo-selected-class": "current",
+        "profile-markdown-link-text": "Markdown",
+        "profile-markdown-link-href": "https://www.markdownguide.org/cheat-sheet",
+        "profile-save-button-text": "Save Profile",
+        "profile-data": {
+            "Class": "Slate\\People\\Student",
+            "FirstName": "Student",
+            "LastName": "Slate",
+            "Username": "student",
+            "AccountLevel": "User"
+        }
+    }
+}
