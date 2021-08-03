@@ -1,0 +1,31 @@
+extra:
+  fixtures:
+    users:
+      - username: system
+        password: system
+        level: Developer
+        about: 'Full system access'
+      - username: admin
+        password: admin
+        level: Administrator
+        about: 'Manage site and staff'
+      - username: teacher
+        password: teacher
+        level: Staff
+        about: 'Staff access with teaching role in multiple courses sections'
+      - username: teacher2
+        password: teacher2
+        level: Staff
+        about: 'Staff access with teaching role in multiple course sections'
+      - username: student
+        password: student
+        level: User
+        about: 'Student user with student role in multiple course sections'
+      - username: student2
+        password: student2
+        level: User
+        about: 'Student user with student role in multiple course sections'
+      - username: student3
+        password: student3
+        level: User
+        about: 'Student user with no roles in any course sections'
