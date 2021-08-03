@@ -42,7 +42,7 @@ jobs:
 
         if [ -n "${pr_number}" ]; then
           echo "Updating PR #${pr_number}"
-          existing_comment_id=$(hub api "/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments" | jq '.[] | select(.user.login=="github-actions[bot]") | .id')
+          existing_comment_id=$(hub api "/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments" | jq '.[] | select(.user.login=="jarvus-bot") | .id')
         else
           echo "Opening PR"
           hub pull-request -b "${RELEASE_BRANCH}" -h develop -F <(echo "${pr_body}") > /tmp/pr.json

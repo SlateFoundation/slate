@@ -1,0 +1,7 @@
+extra:
+  studio:
+    name: slate-studio
+    web_port: 5580
+    static_port: 5581
+    docs_port: 5588
+    mysql_port: 5536
