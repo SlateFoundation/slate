@@ -217,6 +217,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
 
     public static function getByString($string, $conditions = [], $options = [])
     {
+        $conditions['Class'] = static::class;
         $conditions['Data'] = static::fromString($string)->serialize();
 
         return static::getByWhere($conditions, $options);
@@ -224,6 +225,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
 
     public static function getAllByString($string, $conditions = [], $options = [])
     {
+        $conditions['Class'] = static::class;
         $conditions['Data'] = static::fromString($string)->serialize();
 
         return static::getAllByWhere($conditions, $options);
