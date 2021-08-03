@@ -25,7 +25,8 @@ Ext.define('Emergence.cms.view.Editor', {
 
     config: {
         contentRecord: null,
-        composers: ['html', 'markdown', 'multimedia', 'embed']
+        composers: ['html', 'markdown', 'multimedia', 'embed'],
+        includeSummary: false,
     },
 
     columnWidths: [1],
@@ -40,23 +41,6 @@ Ext.define('Emergence.cms.view.Editor', {
         xtype: 'toolbar',
         padding: '4 7',
         items: [
-            '->',
-            {
-                cls: 'save-btn',
-                text: 'Save',
-                glyph: 0xf0ee+'@FontAwesome', // fa-cloud-upload
-                action: 'save'
-            }
-        ]
-    },
-
-    dockedItems: [{
-        dock: 'top',
-
-        xtype: 'toolbar',
-        border: '1 0 0',
-        padding: '8 0 4 8',
-        items: [
             {
                 reference: 'titleField',
                 flex: 1,
@@ -66,9 +50,22 @@ Ext.define('Emergence.cms.view.Editor', {
                 selectOnFocus: true,
                 emptyText: 'Title',
                 hideLabel: true
+            },
+            {
+                xtype: 'tbspacer',
+                width: 7,
+            },
+            {
+                cls: 'save-btn',
+                text: 'Save',
+                glyph: 0xf0ee + '@FontAwesome', // fa-cloud-upload
+                scale: 'large',
+                action: 'save'
             }
         ]
-    }, {
+    },
+
+    dockedItems: [{
         dock: 'top',
 
         xtype: 'toolbar',
@@ -121,7 +118,24 @@ Ext.define('Emergence.cms.view.Editor', {
         border: false,
         layout: {
             overflowHandler: 'menu'
-        }
+        },
+    }, {
+        reference: 'summaryFieldCt',
+        dock: 'top',
+        hidden: !this.includeSummary,
+
+        xtype: 'toolbar',
+        border: false,
+        padding: '0 0 0 8',
+        items: [
+            {
+                reference: 'summaryField',
+                flex: 1,
+                xtype: 'textarea',
+                emptyText: 'Summarize your post here. This summary may appear in blog feeds, with a link to the full contents.',
+                grow: true,
+            },
+        ],
     }, {
         reference: 'inserterCt',
 
@@ -145,9 +159,9 @@ Ext.define('Emergence.cms.view.Editor', {
     }],
 
     getSelectedDateTime: function() {
-        var publishedTimeBtn = this.lookupReference('publishedTimeBtn'),
-            date = publishedTimeBtn.down('datefield').getValue() || new Date(),
-            time = publishedTimeBtn.down('timefield').getValue() || new Date();
+        var publishedTimeCt = this.down('#publishTimeCt'),
+            date = publishedTimeCt.down('datefield').getValue() || new Date(),
+            time = publishedTimeCt.down('timefield').getValue() || new Date();
 
         date.setHours(time.getHours());
         date.setMinutes(time.getMinutes());
@@ -191,7 +205,57 @@ Ext.define('Emergence.cms.view.Editor', {
         }
 
         return composers;
-    }
+    },
+
+    updateIncludeSummary: function (includeSummary, includeSummaryOld) {
+        var me = this,
+            fieldCt = me.lookup('summaryFieldCt'),
+            field = me.lookup('summaryField'),
+            toggleBtn = me.lookup('summaryToggleBtn'),
+            _removeSummary = function () {
+                fieldCt.setVisible(false); // hide field
+                field.setValue(); // clear it
+            };
+
+        if (field) {
+            if (includeSummary) {
+                fieldCt.setVisible(true);
+                field.focus();
+            } else {
+                // before removing summary, confirm deleting the field contents
+                if (field.getValue().trim().length > 0) {
+                    Ext.Msg.show({
+                        title: 'Delete post summary',
+                        message: 'Removing the summary will delete any text you have written there.',
+                        icon: Ext.Msg.WARNING,
+                        buttons: [
+                            Ext.Msg.YES,
+                            Ext.Msg.NO,
+                        ],
+                        buttonText: {
+                            // yes and no reversed so that "Keep it" will be the default
+                            no: 'Delete and remove',
+                            yes: 'Keep it',
+                        },
+                        fn: function (btn) {
+                            if (btn === 'no') {
+                                _removeSummary();
+                            } else if (btn === 'yes') {
+                                // if we want to keep the summary, then toggle it back on
+                                if (toggleBtn.toggle) {
+                                    toggleBtn.toggle(true);
+                                } else if (toggleBtn.setChecked) {
+                                    toggleBtn.setChecked(true); // if it's in an overflow menu
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    _removeSummary();
+                }
+            }
+        }
+    },
 //     onComposerDrop: function(dropEvent) {
 //         var composer = dropEvent.panel;
 //

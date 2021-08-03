@@ -15,10 +15,10 @@ Ext.define('Emergence.cms.view.DualViewController', {
         'emergence-cms-editor field[reference=tagsField]': {
             change: 'onTagsChange'
         },
-        'emergence-cms-editor button[reference=publishedTimeBtn] menucheckitem': {
+        'emergence-cms-editor menucheckitem#publishOnSaveCheck': {
             checkchange: 'onPublishTimeChange'
         },
-        'emergence-cms-editor button[reference=publishedTimeBtn] field': {
+        'emergence-cms-editor #publishTimeCt field': {
             change: 'onPublishTimeChange'
         },
         'emergence-cms-editor dashboard-column': {
@@ -92,9 +92,9 @@ Ext.define('Emergence.cms.view.DualViewController', {
     onPublishTimeChange: Ext.Function.createBuffered(function() {
         var editorView = this.lookupReference('editor'),
             previewCmp = this.lookupReference('preview'),
-            date = editorView.lookupReference('publishedTimeBtn').down('menucheckitem').checked ? new Date() : editorView.getSelectedDateTime();
+            date = editorView.down('menucheckitem#publishOnSaveCheck').checked ? new Date() : editorView.getSelectedDateTime();
 
-        previewCmp.timeEl.set({ datetime: Ext.Date.format(date, 'c') }).update(Ext.Date.format(date, 'l, F n, Y \\a\\t g:i a'));
+        previewCmp.timeEl.set({ datetime: Ext.Date.format(date, 'c') }).update(Ext.Date.format(date, 'l, F j, Y \\a\\t g:i a'));
         previewCmp.timeWrapper.show();
         previewCmp.infoWrapper.show();
     }, 50),

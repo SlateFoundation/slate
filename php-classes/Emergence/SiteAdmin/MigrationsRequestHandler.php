@@ -362,9 +362,11 @@ class MigrationsRequestHandler extends \RequestHandler
             ? ' NULL'
             : ' NOT NULL';
 
-        $definition .= $column['COLUMN_DEFAULT'] === null
-            ? ' DEFAULT NULL'
-            : ' DEFAULT "'.DB::escape($column['COLUMN_DEFAULT']).'"';
+        if ($column['COLUMN_DEFAULT'] !== null || $column['IS_NULLABLE'] == 'YES') {
+            $definition .= $column['COLUMN_DEFAULT'] === null
+                ? ' DEFAULT NULL'
+                : ' DEFAULT "'.DB::escape($column['COLUMN_DEFAULT']).'"';
+        }
 
         printf("Adding value '%s' to enum column `%s`.`%s`\n", $escapedValue, $tableName, $columnName);
 

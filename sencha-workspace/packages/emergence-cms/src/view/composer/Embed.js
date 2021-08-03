@@ -42,5 +42,13 @@ Ext.define('Emergence.cms.view.composer.Embed', {
         return Ext.applyIf({
             Data: this.textarea.getValue()
         }, this.callParent());
-    }
+    },
+
+    isEmpty: function () {
+        if (this.textarea) {
+            return Ext.isEmpty(this.textarea.getValue().trim());
+        } else {
+            return false;
+        }
+    },
 });

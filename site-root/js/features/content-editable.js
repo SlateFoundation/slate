@@ -8,7 +8,7 @@ $(function() {
         display: 'none'
     }).appendTo('body');
 
-    $('<p class="hint hint-markdown">Use <a href="http://daringfireball.net/projects/markdown/basics" target=_blank>Markdown</a> for formatting.<br>You can drag an image into this area to upload and generate a code for it.</p>').appendTo(editorEl);
+    $('<p class="hint hint-markdown">Use <a href="https://www.markdownguide.org/cheat-sheet" target=_blank>Markdown</a> for formatting.<br>You can drag an image into this area to upload and generate a code for it.</p>').appendTo(editorEl);
     $('<p class="hint hint-html">Use <strong>HTML</strong> for formatting.<br>You can drag an image into this area to upload and generate a code for it.</p>').appendTo(editorEl);
     $('<p class="hint hint-text">Use plain text, no formatting is available.</p>').appendTo(editorEl);
     var textareaEl = $('<textarea/>').appendTo(editorEl);

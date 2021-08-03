@@ -273,9 +273,9 @@ class Person extends VersionedRecord implements IPerson
                     return $fullName.$rsquo.'s';
                 }
             case 'Email':
-                \Emergence\Logger::general_warning('Deprecated: Read on Person(#{PersonID})->Email, use ->PrimaryEmail instead', ['PersonID' => $this->ID]);
-
                 return $this->PrimaryEmail ? (string)$this->PrimaryEmail : null;
+            case 'Phone':
+                return $this->PrimaryPhone ? (string)$this->PrimaryPhone : null;
             case 'EmailRecipient':
                 return $this->PrimaryEmail ? sprintf('"%s" <%s>', $this->FullName, $this->PrimaryEmail) : null;
             default:
@@ -304,6 +304,10 @@ class Person extends VersionedRecord implements IPerson
             return true;
         }
 
+        if ($relationship == 'Phone') {
+            return true;
+        }
+
         return parent::_relationshipExists($relationship);
     }
 
@@ -311,16 +315,24 @@ class Person extends VersionedRecord implements IPerson
     {
         switch ($relationship) {
             case 'Email':
-                \Emergence\Logger::general_warning('Deprecated: Write on Person(#{PersonID})->Email, use ->PrimaryEmail = Email::fromString(...) instead', ['PersonID' => $this->ID]);
-
                 if (!$value) {
                     $this->PrimaryEmail = null;
                     break;
                 }
 
-                $Existing = $this->isPhantom ? ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]) : null;
+                $Existing = $this->isPhantom ? null : ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]);
 
                 $this->PrimaryEmail = $Existing ? $Existing : ContactPoint\Email::fromString($value, $this);
+                break;
+            case 'Phone':
+                if (!$value) {
+                    $this->PrimaryPhone = null;
+                    break;
+                }
+
+                $Existing = $this->isPhantom ? null : ContactPoint\Phone::getByString($value, ['PersonID' => $this->ID]);
+
+                $this->PrimaryPhone = $Existing ? $Existing : ContactPoint\Phone::fromString($value, $this);
                 break;
             default:
                 return parent::_setRelationshipValue($relationship, $value);

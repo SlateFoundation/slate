@@ -10,7 +10,6 @@ files = [
     "EmergenceContentEditor/**",
     "packages/emr-skeleton-theme/**",
     "packages/emergence-cms/**",
-    "packages/emergence-cms-summaries/**",
     "packages/emergence-apikit/**",
     "packages/jarvus-apikit/**",
     "packages/jarvus-fileupload/**",

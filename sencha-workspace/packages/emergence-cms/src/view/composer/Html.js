@@ -58,7 +58,16 @@ Ext.define('Emergence.cms.view.composer.Html', {
         return Ext.applyIf({
             Data: this.down('htmleditor').getValue()
         }, this.callParent());
-    }
+    },
+
+    isEmpty: function () {
+        var editor = this.down('htmleditor');
+        if (editor) {
+            return Ext.isEmpty(editor.getValue().trim());
+        } else {
+            return false;
+        }
+    },
 
 //    repairEditor: function() {
 //        var me = this,
