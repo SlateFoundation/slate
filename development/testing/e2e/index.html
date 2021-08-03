@@ -12,7 +12,7 @@
         <link rel="canonical" href="https://slatefoundation.github.io/slate/development/testing/e2e/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.0">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.2">
     
     
       
@@ -20,7 +20,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.fe914879.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.1118c9be.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ba0d045b.min.css">
@@ -335,6 +335,18 @@
   
 
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/content-editor/" class="md-nav__link">
+        Content Editor webapp
+      </a>
+    </li>
+  
+
+          
         </ul>
       </nav>
     </li>
@@ -404,6 +416,13 @@
         <li class="md-nav__item">
   <a href="#running-tests" class="md-nav__link">
     Running tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-against-a-remote-server" class="md-nav__link">
+    Testing against a remote server
   </a>
   
 </li>
@@ -484,6 +503,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#testing-against-a-remote-server" class="md-nav__link">
+    Testing against a remote server
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -505,12 +531,44 @@
 <h2 id="running-tests">Running tests<a class="headerlink" href="#running-tests" title="Permanent link"> ¶</a></h2>
 <p><a href="https://www.cypress.io/">Cypress</a> is used to provide browser-level full-stack testing. The <code>package.json</code> file at the root of the repository specifies the dependencies for running the test suite and all the configuration/tests for Cypress are container in the <code>cypress/</code> tree at the root of the repository.</p>
 <p>To get started, from a terminal <strong>outside the studio</strong> in the root of the repository:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># install development tooling locally</span>
-npm install
-
-<span class="c1"># launch cypress app</span>
-npm run cypress:open
+<ol>
+<li>
+<p>Install development tooling locally:</p>
+<div class="highlight"><pre><span></span><code>npm install
 </code></pre></div>
+</li>
+<li>
+<p>Launch the Cypress GUI:</p>
+<div class="highlight"><pre><span></span><code>npm run cypress:open
+</code></pre></div>
+</li>
+</ol>
+<h2 id="testing-against-a-remote-server">Testing against a remote server<a class="headerlink" href="#testing-against-a-remote-server" title="Permanent link"> ¶</a></h2>
+<p>By setting environment variables before launching the Cypress GUI, the E2E test suite can be configured to execute against a backend studio hosted on a remote machine or server.</p>
+<p>On the local terminal <strong>outside the studio</strong> in the root of the repository:</p>
+<ol>
+<li>
+<p>Set base URL to studo HTTP root reachable from local workstation:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CYPRESS_BASE_URL</span><span class="o">=</span><span class="s1">&#39;http://workstation.mydomain:7080&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Configure the SSH host that the backend studio is running on:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CYPRESS_STUDIO_SSH</span><span class="o">=</span><span class="s1">&#39;workstation.mydomain&#39;</span>
+</code></pre></div>
+<p>Your local terminal must be set up to connect to it without password.</p>
+</li>
+<li>
+<p>Configure the name of the Docker container running the backend studio:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CYPRESS_STUDIO_CONTAINER</span><span class="o">=</span><span class="s1">&#39;skeleton-v2-studio&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Launch the Cypress GUI:</p>
+<div class="highlight"><pre><span></span><code>npm run cypress:open
+</code></pre></div>
+</li>
+</ol>
                 
               
               
@@ -530,7 +588,7 @@ npm run cypress:open
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../getting-started/virtual-multisite/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Virtual Multi-site Container" rel="prev">
+        <a href="../../getting-started/content-editor/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Content Editor webapp" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -539,7 +597,7 @@ npm run cypress:open
               <span class="md-footer__direction">
                 Previous
               </span>
-              Virtual Multi-site Container
+              Content Editor webapp
             </div>
           </div>
         </a>
@@ -581,10 +639,10 @@ npm run cypress:open
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.53c85856.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.709b4209.min.js", "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.716f8af4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.2b46852b.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js"></script>
       

@@ -9,14 +9,14 @@
       
       
       
-        <link rel="canonical" href="https://slatefoundation.github.io/slate/development/getting-started/virtual-multisite/">
+        <link rel="canonical" href="https://slatefoundation.github.io/slate/development/getting-started/content-editor/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.2">
     
     
       
-        <title>Virtual Multi-site Container - Slate Docs</title>
+        <title>Content Editor webapp - Slate Docs</title>
       
     
     
@@ -69,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#virtual-multi-site-container" class="md-skip">
+        <a href="#content-editor-webapp" class="md-skip">
           Skip to content
         </a>
       
@@ -99,7 +99,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Virtual Multi-site Container
+              Content Editor webapp
             
           </span>
         </div>
@@ -328,6 +328,18 @@
             
   
   
+  
+    <li class="md-nav__item">
+      <a href="../virtual-multisite/" class="md-nav__link">
+        Virtual Multi-site Container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
     
   
   
@@ -340,12 +352,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Virtual Multi-site Container
+          Content Editor webapp
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Virtual Multi-site Container
+        Content Editor webapp
       </a>
       
         
@@ -363,8 +375,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#launch-virtual-multisite-container" class="md-nav__link">
-    Launch virtual multisite container
+  <a href="#code-layout" class="md-nav__link">
+    Code layout
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-live-changes" class="md-nav__link">
+    Running live changes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-breakpoints" class="md-nav__link">
+    Working with breakpoints
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-to-remote-server" class="md-nav__link">
+    Connecting to remote server
   </a>
   
 </li>
@@ -373,18 +406,6 @@
   
 </nav>
       
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../content-editor/" class="md-nav__link">
-        Content Editor webapp
-      </a>
     </li>
   
 
@@ -490,8 +511,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#launch-virtual-multisite-container" class="md-nav__link">
-    Launch virtual multisite container
+  <a href="#code-layout" class="md-nav__link">
+    Code layout
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-live-changes" class="md-nav__link">
+    Running live changes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-breakpoints" class="md-nav__link">
+    Working with breakpoints
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-to-remote-server" class="md-nav__link">
+    Connecting to remote server
   </a>
   
 </li>
@@ -508,21 +550,45 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/SlateFoundation/slate/edit/develop/docs/development/getting-started/virtual-multisite.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/SlateFoundation/slate/edit/develop/docs/development/getting-started/content-editor.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="virtual-multi-site-container">Virtual Multi-site Container<a class="headerlink" href="#virtual-multi-site-container" title="Permanent link"> ¶</a></h1>
-<h2 id="launch-virtual-multisite-container">Launch virtual multisite container<a class="headerlink" href="#launch-virtual-multisite-container" title="Permanent link"> ¶</a></h2>
-<div class="highlight"><pre><span></span><code>docker run <span class="se">\</span>
-    --name emergence <span class="se">\</span>
-    -v emergence:/emergence <span class="se">\</span>
-    -p <span class="m">80</span>:80 <span class="se">\</span>
-    -p <span class="m">3306</span>:3306 <span class="se">\</span>
-    -p <span class="m">9083</span>:9083 <span class="se">\</span>
-    jarvus/emergence
+                <h1 id="content-editor-webapp">Content Editor webapp<a class="headerlink" href="#content-editor-webapp" title="Permanent link"> ¶</a></h1>
+<h2 id="code-layout">Code layout<a class="headerlink" href="#code-layout" title="Permanent link"> ¶</a></h2>
+<ul>
+<li><code>sencha-workspace/</code><ul>
+<li><code>packages/</code><ul>
+<li><code>emergence-cms/</code>: Primary location for content editor UI code</li>
+<li><code>emr-skeleton-theme/</code>: The Sencha theme used when rendering the content editor</li>
+</ul>
+</li>
+<li><code>EmergenceContentEditor/</code>: A thin Sencha application used to make development easier and to provide a build target for generating the theme</li>
+</ul>
+</li>
+<li><code>html-templates/</code><ul>
+<li><code>webapps/EmergenceContentEditor/sencha.tpl</code>: A template for rendering the content editor embedded in the site&rsquo;s design frame</li>
+<li><code>html-templates/blog/blogPostEdit.tpl</code>: A wrapper around <code>sencha.tpl</code> to provide the content editor UI on the blog post edit form</li>
+<li><code>html-templates/pages/pageEdit.tpl</code>: A wrapper around <code>sencha.tpl</code> to provide the content editor UI on the page edit form</li>
+</ul>
+</li>
+</ul>
+<h2 id="running-live-changes">Running live changes<a class="headerlink" href="#running-live-changes" title="Permanent link"> ¶</a></h2>
+<p>The frontend Sencha application needs to be built at least once with the Sencha CMD build tool to scaffold/update a set of loader files. After that, you can just edit files the working tree and reload the browser. The two exceptions where you need to build again are changing the list of packages or changing the list of override files.</p>
+<p>Before the frontend application can be built to run from live changes, you&rsquo;ll need to ensure all submodules are initialized:</p>
+<div class="highlight"><pre><span></span><code>git submodule update --init
 </code></pre></div>
+<p>Then, use the shortcut studio command for building the frontend application:</p>
+<div class="highlight"><pre><span></span><code>build-content-editor
+</code></pre></div>
+<p>Once built, the live-editable version of the app can be accessed via the static web server that the studio runs on port <code>7181</code>. The backend host must be provided to the apps via the <code>?apiHost</code> query parameter. Any remote backend with CORS enabled will work, or you can use the local backend:</p>
+<p><a href="http://localhost:7181/EmergenceContentEditor/?apiHost=localhost:7180"><code>localhost:7181/EmergenceContentEditor/?apiHost=localhost:7180</code></a></p>
+<h2 id="working-with-breakpoints">Working with breakpoints<a class="headerlink" href="#working-with-breakpoints" title="Permanent link"> ¶</a></h2>
+<p>By default, the Sencha framework will automatically append random cache buster values to every loaded <code>.js</code> source. This helps ensures that your latest code always runs, but will also prevent any breakpoints you set from persisting across reloads.</p>
+<p>With the <strong>Disable cache</strong> option of the network inspector activated, you can disable this built-in cache buster by appending <code>&amp;cache=1</code> to the current page&rsquo;s query string.</p>
+<h2 id="connecting-to-remote-server">Connecting to remote server<a class="headerlink" href="#connecting-to-remote-server" title="Permanent link"> ¶</a></h2>
+<p>You can connect to any remote instance that has CORS enabled by appending the query parameter <code>apiHost</code> when loading the page. If the remote instance requires HTTPS, append <code>apiSSL=1</code> as well.</p>
                 
               
               
@@ -542,7 +608,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../local-studio/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Local Studio Container" rel="prev">
+        <a href="../virtual-multisite/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Virtual Multi-site Container" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -551,20 +617,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Local Studio Container
+              Virtual Multi-site Container
             </div>
           </div>
         </a>
       
       
         
-        <a href="../content-editor/" class="md-footer__link md-footer__link--next" aria-label="Next: Content Editor webapp" rel="next">
+        <a href="../../testing/e2e/" class="md-footer__link md-footer__link--next" aria-label="Next: End-to-end (E2E) testing" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Content Editor webapp
+              End-to-end (E2E) testing
             </div>
           </div>
           <div class="md-footer__button md-icon">

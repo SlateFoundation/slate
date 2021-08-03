@@ -12,7 +12,7 @@
         <link rel="canonical" href="https://slatefoundation.github.io/slate/development/getting-started/local-studio/">
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.0">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.2">
     
     
       
@@ -20,7 +20,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.fe914879.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.1118c9be.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ba0d045b.min.css">
@@ -371,6 +371,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#connect-to-local-database" class="md-nav__link">
+    Connect to local database
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -386,6 +393,18 @@
     <li class="md-nav__item">
       <a href="../virtual-multisite/" class="md-nav__link">
         Virtual Multi-site Container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../content-editor/" class="md-nav__link">
+        Content Editor webapp
       </a>
     </li>
   
@@ -512,6 +531,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#connect-to-local-database" class="md-nav__link">
+    Connect to local database
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -544,31 +570,23 @@
 </code></pre></div>
 </li>
 <li>
-<p>Clone <code>emergence-skeleton</code> repository and any submodules:</p>
-<div class="highlight"><pre><span></span><code>git clone --recursive git@github.com:JarvusInnovations/emergence-skeleton.git
+<p>Clone <code>slate</code> repository and any submodules:</p>
+<div class="highlight"><pre><span></span><code>git clone --recursive git@github.com:SlateFoundation/slate.git
 </code></pre></div>
 </li>
 <li>
 <p>Change into cloned directory:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./emergence-skeleton
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./slate
 </code></pre></div>
 </li>
 <li>
 <p>Launch studio:</p>
+<p>Use the included <a href="https://github.com/github/scripts-to-rule-them-all">scripts-to-rules-them-all</a> workflow script to configure and launch a studio session:</p>
+<div class="highlight"><pre><span></span><code>script/studio
+</code></pre></div>
+<p>Review the notes printed to your terminal at the end of the studio startup process for a list of all available studio commands.</p>
 </li>
 </ol>
-<p>Use the included <a href="https://github.com/github/scripts-to-rule-them-all">scripts-to-rules-them-all</a> workflow script to configure and launch a studio session:</p>
-<table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span></pre></div></td><td class="code"><div class="codehilite"><pre><span></span><code>```<span class="nv">bash</span>
-<span class="nv">script</span><span class="o">/</span><span class="nv">studio</span>
-```
-
-<span class="nv">Review</span> <span class="nv">the</span> <span class="nv">notes</span> <span class="nv">printed</span> <span class="nv">to</span> <span class="nv">your</span> <span class="nv">terminal</span> <span class="nv">at</span> <span class="nv">the</span> <span class="k">end</span> <span class="nv">of</span> <span class="nv">the</span> <span class="nv">studio</span> <span class="nv">startup</span> <span class="nv">process</span> <span class="k">for</span> <span class="nv">a</span> <span class="nv">list</span> <span class="nv">of</span> <span class="nv">all</span> <span class="nv">available</span> <span class="nv">studio</span> <span class="nv">commands</span>.
-</code></pre></div>
-</td></tr></table>
 <h2 id="bootstrap-and-develop-backend">Bootstrap and develop backend<a class="headerlink" href="#bootstrap-and-develop-backend" title="Permanent link"> ¶</a></h2>
 <ol>
 <li>
@@ -576,14 +594,14 @@
 <p>Use the studio command <code>start-all</code> to launch the http server (nginx), the application runtime (php-fpm), and a local mysql server:</p>
 <div class="highlight"><pre><span></span><code>start-all
 </code></pre></div>
-<p>At this point, you should be able to open <a href="http://localhost:7080">localhost:7080</a> and see the error message <code>Page not found</code>.</p>
+<p>At this point, you should be able to open <a href="http://localhost:7180">localhost:7180</a> and see the error message <code>Page not found</code>.</p>
 </li>
 <li>
 <p>Build site:</p>
 <p>To build the entire site and load it, use the studio command <code>update-site</code>:</p>
 <div class="highlight"><pre><span></span><code>update-site
 </code></pre></div>
-<p>At this point, <a href="http://localhost:7080">localhost:7080</a> should display the current build of the site</p>
+<p>At this point, <a href="http://localhost:7180">localhost:7180</a> should display the current build of the site</p>
 </li>
 <li>
 <p>Load fixture data into site database (optional):</p>
@@ -613,16 +631,34 @@
 <td>Manage site and staff</td>
 </tr>
 <tr>
-<td><code>staff</code></td>
-<td><code>staff</code></td>
+<td><code>teacher</code></td>
+<td><code>teacher</code></td>
 <td><code>Staff</code></td>
-<td>Staff access</td>
+<td>Staff access with teaching role in multiple courses sections</td>
 </tr>
 <tr>
-<td><code>user</code></td>
-<td><code>user</code></td>
+<td><code>teacher2</code></td>
+<td><code>teacher2</code></td>
+<td><code>Staff</code></td>
+<td>Staff access with teaching role in multiple course sections</td>
+</tr>
+<tr>
+<td><code>student</code></td>
+<td><code>student</code></td>
 <td><code>User</code></td>
-<td>Regular user</td>
+<td>Student user with student role in multiple course sections</td>
+</tr>
+<tr>
+<td><code>student2</code></td>
+<td><code>student2</code></td>
+<td><code>User</code></td>
+<td>Student user with student role in multiple course sections</td>
+</tr>
+<tr>
+<td><code>student3</code></td>
+<td><code>student3</code></td>
+<td><code>User</code></td>
+<td>Student user with no roles in any course sections</td>
 </tr>
 </tbody>
 </table>
@@ -646,9 +682,17 @@ mkdir -p php-config/Emergence/People
 <span class="c1"># rebuild environment</span>
 update-site
 </code></pre></div>
-<p>After visiting <a href="http://localhost:7080/register"><code>/register</code></a> and creating a new user account, you can use the studio command <code>promote-user</code> to upgrade the user account you just registered to the highest access level:</p>
+<p>After visiting <a href="http://localhost:7180/register"><code>/register</code></a> and creating a new user account, you can use the studio command <code>promote-user</code> to upgrade the user account you just registered to the highest access level:</p>
 <div class="highlight"><pre><span></span><code>promote-user &lt;myuser&gt;
 </code></pre></div>
+<h2 id="connect-to-local-database">Connect to local database<a class="headerlink" href="#connect-to-local-database" title="Permanent link"> ¶</a></h2>
+<p>The studio container hosts a local MySQL instance that can be connected to at:</p>
+<ul>
+<li><strong>Host</strong>: <code>localhost</code> (or LAN/WAN IP of machine hosting Docker engine)</li>
+<li><strong>Port</strong>: <code>7136</code></li>
+<li><strong>Username</strong>: <code>admin</code></li>
+<li><strong>Password</strong>: <code>admin</code></li>
+</ul>
                 
               
               
@@ -719,10 +763,10 @@ update-site
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.53c85856.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.709b4209.min.js", "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.716f8af4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.2b46852b.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js"></script>
       
