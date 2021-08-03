@@ -273,8 +273,6 @@ class Person extends VersionedRecord implements IPerson
                     return $fullName.$rsquo.'s';
                 }
             case 'Email':
-                \Emergence\Logger::general_warning('Deprecated: Read on Person(#{PersonID})->Email, use ->PrimaryEmail instead', ['PersonID' => $this->ID]);
-
                 return $this->PrimaryEmail ? (string)$this->PrimaryEmail : null;
             case 'EmailRecipient':
                 return $this->PrimaryEmail ? sprintf('"%s" <%s>', $this->FullName, $this->PrimaryEmail) : null;
@@ -311,8 +309,6 @@ class Person extends VersionedRecord implements IPerson
     {
         switch ($relationship) {
             case 'Email':
-                \Emergence\Logger::general_warning('Deprecated: Write on Person(#{PersonID})->Email, use ->PrimaryEmail = Email::fromString(...) instead', ['PersonID' => $this->ID]);
-
                 if (!$value) {
                     $this->PrimaryEmail = null;
                     break;
