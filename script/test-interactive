@@ -15,8 +15,11 @@ echo "==> test-interactive: verifying unionfs…"
 
 if ! [ -x "$(command -v unionfs)" ]; then
     echo "Please clone, build, and install the unionfs command:"
-    echo "git clone https://github.com/rpodgorny/unionfs-fuse"
-    echo "cd unionfs-fuse"
+    echo
+    echo "sudo apt-get install build-essential pkg-config fuse libfuse-dev # or equiv for your system"
+    echo
+    echo "git clone https://github.com/rpodgorny/unionfs-fuse /tmp/unionfs-fuse"
+    echo "cd /tmp/unionfs-fuse"
     echo "make"
     echo "sudo make install"
     exit 1
