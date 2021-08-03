@@ -314,7 +314,7 @@ class Person extends VersionedRecord implements IPerson
                     break;
                 }
 
-                $Existing = $this->isPhantom ? ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]) : null;
+                $Existing = $this->isPhantom ? null : ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]);
 
                 $this->PrimaryEmail = $Existing ? $Existing : ContactPoint\Email::fromString($value, $this);
                 break;
