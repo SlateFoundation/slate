@@ -2,7 +2,9 @@
     "selectors": {
         "gallery-photo": ".available-photos .photo-item",
         "gallery-photo-first": ".available-photos .photo-item:first-of-type",
-        "gallery-default-link": "a[title=\"Make Default\"][href^=\"/profile/primaryPhoto?\"]"
+        "gallery-default-link": "a[title=\"Make Default\"][href^=\"/profile/primaryPhoto?\"]",
+        "gallery-default-link": "a[title=\"Make Default\"][href^=\"/profile/primaryPhoto?\"]",
+        "about-content": "main.content .about-bio"
     },
     "values": {
         "gallery-photo-selected-class": "current",
@@ -10,11 +12,15 @@
         "profile-markdown-link-href": "https://www.markdownguide.org/cheat-sheet",
         "profile-save-button-text": "Save Profile",
         "profile-data": {
-            "Class": "Slate\\People\\Student",
-            "FirstName": "Student",
+            "Class": "Emergence\\People\\User",
+            "FirstName": "Teacher",
             "LastName": "Slate",
-            "Username": "student",
-            "AccountLevel": "User"
+            "Username": "teacher",
+            "AccountLevel": "Staff"
         }
+    },
+    "features": {
+        "location": false,
+        "gallery": false
     }
 }
