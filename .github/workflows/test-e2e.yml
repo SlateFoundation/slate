@@ -1,0 +1,111 @@
+name: 'Test: End-to-end'
+
+on: pull_request
+
+env:
+  HAB_LICENSE: accept-no-persist
+  HOLO_CACHE_TO: origin
+  HOLO_CACHE_FROM: origin
+
+jobs:
+  test-e2e:
+
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    # TODO: wrap the next three steps an an emergence-studio action
+    - name: 'Stop default mysql service'
+      run: sudo service mysql stop
+
+    - name: 'Initialize Chef Habitat environment'
+      uses: JarvusInnovations/habitat-action@action/v1
+      env:
+        HAB_NGINX: |
+          [http.listen]
+          port = 5580
+        HAB_MYSQL: |
+          app_username = 'appadmin'
+          app_password = 'appadmin'
+          bind = '0.0.0.0'
+        HAB_PHP_RUNTIME: |
+          [sites.default.holo]
+          gitDir = '${{ github.workspace }}/.git'
+      with:
+        deps: |
+          jarvus/hologit
+        supervisor: |
+          core/mysql
+          emergence/php-runtime --bind="database:mysql.default"
+          emergence/nginx --bind="backend:php-runtime.default"
+
+    - name: Waiting for MySQL
+      run: |
+        until nc -z localhost 3306; do
+          sleep 0.5
+          echo -n "."
+        done
+
+    - name: Waiting for Emergence runtime
+      run: |
+        until nc -z localhost 9123; do
+          sleep 0.5
+          echo -n "."
+        done
+
+    - name: Configure command-line client access
+      run: |
+        sudo chmod ugo+xr \
+          /hab/svc/mysql/config \
+          /hab/svc/mysql/config/client.cnf \
+          /hab/svc/php-runtime/config \
+          /hab/svc/php-runtime/config/fpm-exec
+
+        ln -sf /hab/svc/mysql/config/client.cnf ~/.my.cnf
+
+    - name: Load site projection into emergence runtime
+      env:
+        HOLO_CACHE_FROM: origin
+        HOLO_CACHE_TO: origin
+      run: |
+        SITE_TREE="$(hab pkg exec jarvus/hologit git-holo project emergence-site)"
+        [ -n "${SITE_TREE}" ] || exit 1
+        hab pkg exec emergence/php-runtime emergence-php-load "${SITE_TREE}"
+
+    - name: Set up Cypress workspace
+      run: |
+        CYPRESS_TREE="$(hab pkg exec jarvus/hologit git-holo project cypress-workspace)"
+        [ -n "${CYPRESS_TREE}" ] || exit 1
+        mkdir "${GITHUB_WORKSPACE}.cypress-workspace"
+        git archive --format=tar "${CYPRESS_TREE}" | (cd "${GITHUB_WORKSPACE}.cypress-workspace" && tar xf -)
+
+    - name: Run Cypress tests
+      uses: cypress-io/github-action@v2
+      env:
+        GIT_DIR: ${{ github.workspace }}/.git
+        GIT_WORK_TREE: ${{ github.workspace }}
+      with:
+        env: STUDIO_CONTAINER=,STUDIO_SSH=
+        working-directory: ${{ github.workspace }}.cypress-workspace
+
+    - name: Upload supervisor log
+      uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: supervisor-log
+        path: /hab/sup/default/sup.log
+
+    - name: Upload Cypress screenshots
+      uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: ${{ github.workspace }}.cypress-workspace/cypress/screenshots
+
+    - name: Upload Cypress videos
+      uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: cypress-videos
+        path: ${{ github.workspace }}.cypress-workspace/cypress/videos

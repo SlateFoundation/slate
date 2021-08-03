@@ -5,6 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Listen for XDebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9000,
+            "pathMappings": {
+                "/hab/svc/php-runtime/var/site/php-classes/Slate": "${workspaceFolder:slate}/php-classes/Slate",
+                "/hab/svc/php-runtime/var/site/php-classes/Emergence/CMS": "${workspaceFolder:slate}/php-classes/Emergence/CMS",
+                "/hab/svc/php-runtime/var/site/php-classes/Emergence/Locations": "${workspaceFolder:slate}/php-classes/Emergence/Locations",
+                "/hab/svc/php-runtime/var/site/php-classes/Emergence/People": "${workspaceFolder:slate}/php-classes/Emergence/People",
+                "/hab/svc/php-runtime/var/site/php-classes": "${workspaceFolder:emergence-skeleton}/php-classes",
+                "/hab/svc/php-runtime/var/site": "${workspaceFolder:slate}",
+                // "/src/emergence-php-core": "${workspaceFolder:php-core}"
+            },
+            "ignore": [
+                "**/vendor/**/*"
+            ]
+        },
+        {
             "name": "Launch SlateAdmin",
             "type": "chrome",
             "request": "launch",
