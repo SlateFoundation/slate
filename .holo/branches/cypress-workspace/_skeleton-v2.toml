@@ -1,0 +1,4 @@
+[holomapping]
+holosource="=>cypress-workspace"
+files = "**"
+before = "*"

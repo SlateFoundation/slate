@@ -64,7 +64,7 @@
                         <h2 class="legend title-3">Profile Details</h2>
 
                         {field inputName="Location" label="Location" default=$User->Location}
-                        {textarea inputName="About" label="About Me" default=$User->About hint="Use <a href='http://daringfireball.net/projects/markdown'>Markdown</a> to give your text some style"}
+                        {textarea inputName="About" label="About Me" default=$User->About hint="Use <a href='https://www.markdownguide.org/cheat-sheet'>Markdown</a> to give your text some style"}
 
                         <div class="submit-area">
                             <input type="submit" class="submit" value="Save Profile">
