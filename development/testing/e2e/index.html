@@ -414,8 +414,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    Running tests
+  <a href="#run-tests-quickly" class="md-nav__link">
+    Run tests quickly
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-tests-interactively" class="md-nav__link">
+    Run tests interactively
   </a>
   
 </li>
@@ -497,8 +504,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#running-tests" class="md-nav__link">
-    Running tests
+  <a href="#run-tests-quickly" class="md-nav__link">
+    Run tests quickly
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-tests-interactively" class="md-nav__link">
+    Run tests interactively
   </a>
   
 </li>
@@ -528,28 +542,57 @@
                 
                 
                 <h1 id="end-to-end-e2e-testing">End-to-end (E2E) testing<a class="headerlink" href="#end-to-end-e2e-testing" title="Permanent link"> ¶</a></h1>
-<h2 id="running-tests">Running tests<a class="headerlink" href="#running-tests" title="Permanent link"> ¶</a></h2>
-<p><a href="https://www.cypress.io/">Cypress</a> is used to provide browser-level full-stack testing. The <code>package.json</code> file at the root of the repository specifies the dependencies for running the test suite and all the configuration/tests for Cypress are container in the <code>cypress/</code> tree at the root of the repository.</p>
-<p>To get started, from a terminal <strong>outside the studio</strong> in the root of the repository:</p>
-<ol>
-<li>
-<p>Install development tooling locally:</p>
-<div class="highlight"><pre><span></span><code>npm install
+<p><a href="https://www.cypress.io/">Cypress</a> is used to provide browser-level full-stack testing.</p>
+<p>In this project, Cypress gets run within the <code>cypress-workspace</code> holobranch defined at <code>.holo/branch/cypress-workspace/**</code> within the project repository. This allows local test suite additions and overrides to be stacked on top of those provided by parent projects. The base implemenation is published from <a href="https://github.com/JarvusInnovations/emergence-skeleton"><code>emergence-skeleton</code></a> and your local project may have any number of parent projects stacked in between, so there can be many layers contributing to the below content structure.</p>
+<p>The <code>cypress-workspace</code> holobranch typically copies the following overrides from the local project repository:</p>
+<ul>
+<li><code>cypress.json</code>: top-level project configuration for cypress</li>
+<li><code>cypress/integrations/**/*.js</code>: additional or overridden test suites</li>
+<li><code>cypress/integrations/**/*.json</code>: additional or overridden test suite configurations (provides some flexibility for test suites to support different downstream reskinnings without all their code needing to be duplicated and overridden)</li>
+<li><code>cypress/fixtures/**</code>: static content test suites can make use of</li>
+</ul>
+<p>Less commonly, the following files might also be copied from the local project repository to override the Cypress setup in more depth:</p>
+<ul>
+<li><code>cypress/support/index.js</code>: Cypress plugins and additional commands get loaded here for all test suites</li>
+<li><code>package.json</code>/<code>package-lock.json</code>: Tracks the Cypress version and those of installed plugin packages</li>
+</ul>
+<p>Try to avoid having copies of these in local project repositories:</p>
+<ul>
+<li><code>cypress/support/commands.js</code>: Base set of additional commands that test suites can rely on. Instead of overridding this file, add additional project-specific commands to some new files under <code>cypress/support</code> and override <code>cypress/support/index.js</code> to load them</li>
+<li><code>cypress/plugins/index.js</code>: Base set of automatic environment setup logic</li>
+</ul>
+<h2 id="run-tests-quickly">Run tests quickly<a class="headerlink" href="#run-tests-quickly" title="Permanent link"> ¶</a></h2>
+<p>To quickly run the full test suite headlessly, run on the local terminal <strong>outside the studio</strong> in the root of your local project repository:</p>
+<div class="highlight"><pre><span></span><code>script/test
 </code></pre></div>
-</li>
-<li>
-<p>Launch the Cypress GUI:</p>
-<div class="highlight"><pre><span></span><code>npm run cypress:open
+<h2 id="run-tests-interactively">Run tests interactively<a class="headerlink" href="#run-tests-interactively" title="Permanent link"> ¶</a></h2>
+<p>To run tests with Cypress&rsquo; interactive GUI open, run on the local terminal <strong>outside the studio</strong> in the root of your local project repository:</p>
+<div class="highlight"><pre><span></span><code>script/test-interactive
 </code></pre></div>
+<p>This script uses <a href="https://github.com/rpodgorny/unionfs-fuse"><code>unionfs-fuse</code></a> to set up a virtual directory mount on your workstation&rsquo;s filesystem to run Cypress out of. This union mount provides a live workspace where your local project workspace is merged on top of the base set of <code>cypress-workspace</code> content pulled from your parent project.</p>
+<p>This virtual directory mount gets set up at <code>${path_to_your_repo}.cypress-workspace/merged</code> and Cypress gets run from there.</p>
+<ul>
+<li>Changes you save to Cypress content in <strong>your local project work tree</strong> will immediately be reflected in the <code>merged</code> mount<ul>
+<li>The filesystem events needed to drive auto-reload <strong>may not work</strong></li>
+<li>Exit the Cypress GUI and reload it to thoroughly force your latest content to be used</li>
+</ul>
 </li>
-</ol>
+<li>Changes you save to Cypress content in <strong>your local <code>merged</code> mount</strong> will immediately be reflected back to your local project work tree</li>
+<li>If parent project content changes / you&rsquo;ve edited a source config, exit the Cypress GUI and re-run <code>script/test-interactive</code> to restart in a fresh environment</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Making Cypress auto-reload as you save changes</p>
+<p>Because filesystem change events from your local project work tree to the merged unionfs that Cypress runs out of don&rsquo;t always work, work on Cypress tests out of the <code>merged</code> mount instead.</p>
+<p>Any changes you make will immediately be written to to your local project work tree ready to stage into a git commit, and filesystem change events will fire live for Cypress to auto-reload test suites as you work.</p>
+<p>The <strong>Open in IDE</strong> button that Cypress&rsquo; main window will how you as you hover over tests in the list can be used to open the copy of the file in the <code>merged</code> mount where changes will trigger auto-reload.</p>
+</div>
 <h2 id="testing-against-a-remote-server">Testing against a remote server<a class="headerlink" href="#testing-against-a-remote-server" title="Permanent link"> ¶</a></h2>
 <p>By setting environment variables before launching the Cypress GUI, the E2E test suite can be configured to execute against a backend studio hosted on a remote machine or server.</p>
-<p>On the local terminal <strong>outside the studio</strong> in the root of the repository:</p>
+<p>On the local terminal <strong>outside the studio</strong> in the root of your local project repository:</p>
 <ol>
 <li>
 <p>Set base URL to studo HTTP root reachable from local workstation:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CYPRESS_BASE_URL</span><span class="o">=</span><span class="s1">&#39;http://workstation.mydomain:7080&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CYPRESS_BASE_URL</span><span class="o">=</span><span class="s1">&#39;http://workstation.mydomain:5580&#39;</span>
 </code></pre></div>
 </li>
 <li>
@@ -565,7 +608,7 @@
 </li>
 <li>
 <p>Launch the Cypress GUI:</p>
-<div class="highlight"><pre><span></span><code>npm run cypress:open
+<div class="highlight"><pre><span></span><code>script/test-interactive
 </code></pre></div>
 </li>
 </ol>
