@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * Advanced Search Form
  */
@@ -15,8 +14,10 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
     layout: 'auto',
     items: [{
         xtype: 'fieldset',
+        border: 0,
         title: 'Advanced Search',
         cls: 'navpanel-search-criteria',
+        id: 'navpanel-search-criteria',
         collapsible: true,
         collapsed: true,
         // stateful: true, TODO fix collapsing state bug
@@ -84,7 +85,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     { name: 'LastName' },
                     {
                         name: 'FullName',
-                        calculate: function(data) {
+                        calculate: function (data) {
                             return data.LastName + ', ' + data.FirstName;
                         },
                         depends: ['FirstName', 'LastName']
@@ -116,7 +117,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     { name: 'LastName' },
                     {
                         name: 'FullName',
-                        calculate: function(data) {
+                        calculate: function (data) {
                             return data.LastName + ', ' + data.FirstName;
                         },
                         depends: ['FirstName', 'LastName']
@@ -145,12 +146,27 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                 proxy: {
                     type: 'slateapi',
                     summary: true,
-                    url: window.SiteEnvironment && window.SiteEnvironment.user ? ('/people/'+window.SiteEnvironment.user.Username+'/courses') : '/sections',
+                    url: window.SiteEnvironment && window.SiteEnvironment.user ? '/people/' + window.SiteEnvironment.user.Username + '/courses' : '/sections',
                     reader: {
                         type: 'json',
                         rootProperty: 'data'
                     }
                 }
+            }
+        }, {
+            xtype: 'combo',
+            name: 'accountlevel',
+            fieldLabel: 'Status',
+            displayField: 'label',
+            valueField: 'value',
+            emptyText: 'Active only',
+            store: {
+                fields: ['label', 'value'],
+                data: [
+                    { label: 'Active only', value: null },
+                    { label: 'Disabled only', value: 'Disabled' },
+                    { label: 'Any', value: '%' },
+                ]
             }
         }, {
             xtype: 'button',
