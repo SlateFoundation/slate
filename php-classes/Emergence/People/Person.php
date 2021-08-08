@@ -204,6 +204,11 @@ class Person extends VersionedRecord implements IPerson
             ,'points' => 1
             ,'callback' => 'getRelatedToConditions'
             ,'valueType' => 'id'
+        ],
+        'AccountLevel' => [
+            'qualifiers' => ['accountlevel', 'account', 'level'],
+            'points' => 2,
+            'sql' => 'AccountLevel IN ("%s")'
         ]
     ];
 

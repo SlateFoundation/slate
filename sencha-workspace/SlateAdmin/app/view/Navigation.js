@@ -1,6 +1,5 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.Navigation', {
-    extend: 'Ext.Container' ,
+    extend: 'Ext.Container',
     xtype: 'slateadmin-navigation',
     requires: [
         'Ext.layout.container.Accordion'
@@ -8,7 +7,7 @@ Ext.define('SlateAdmin.view.Navigation', {
 
     cls: 'slateadmin-navigation',
 
-    width: 200,
+    width: 240,
     layout: {
         type: 'accordion'
     },

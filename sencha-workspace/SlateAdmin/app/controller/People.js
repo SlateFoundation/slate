@@ -266,6 +266,13 @@ Ext.define('SlateAdmin.controller.People', {
         // queue store to load
         proxy.abortLastRequest(true);
         proxy.setExtraParam('q', query);
+        
+        // set ?status=* when querying by account level
+        if (query && query.match('accountlevel:')) {
+            proxy.setExtraParam('status', '*');
+        } else {
+            proxy.setExtraParam('status', null);
+        }
 
         // sync search field and form
         me.getSearchField().setValue(query);
@@ -842,7 +849,7 @@ Ext.define('SlateAdmin.controller.People', {
         for (; fieldIndex < fieldsLen; fieldIndex++) {
             field = fields[fieldIndex];
             fieldName = field.getName();
-            fieldValue = field.getValue();
+            fieldValue = field.getSubmitValue();
 
             fieldNames.push(fieldName);
 

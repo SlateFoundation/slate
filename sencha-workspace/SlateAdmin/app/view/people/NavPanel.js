@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * People Navigation Panel, an extension of Ext Panel with a vbox layout containing the advanced search form and
  * a tree panel, with a formpanel/searchfield docked to top of container.
@@ -27,9 +26,46 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
         xtype: 'form',
         cls: 'navpanel-search-form',
         items: [{
-            xtype: 'jarvus-searchfield',
-            anchor: '100%',
-            emptyText: 'Search all people…'
+            xtype: 'container',
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [{
+                flex: 1,
+                xtype: 'jarvus-searchfield',
+                reference: 'peopleSearchField',
+                hideTrigger: true,
+                triggers: {
+                    clear: {
+                        cls: 'x-form-clear-trigger',
+                        handler: function () {
+                            this.setValue('');
+                        }
+                    }
+                },
+                emptyText: 'Search all people…',
+                listeners: {
+                    change: function (me, newValue) {
+                        if (newValue.length > 0) {
+                            me.setHideTrigger(false);
+                        } else {
+                            me.setHideTrigger(true);
+                        }
+                    }
+                }
+            }, {
+                width: 36,
+                xtype: 'button',
+                enableToggle: true,
+                glyph: 0xf013, // fa-cog
+                cls: 'navpanel-advanced-search-toggle',
+                ariaLabel: 'Toggle advanced search options',
+                ui: 'plain',
+                toggleHandler: function (me, state) {
+                    Ext.getCmp('navpanel-search-criteria').setCollapsed(!state);
+                }
+            }],
         }]
     }, {
         dock: 'bottom',
@@ -87,9 +123,9 @@ Ext.define('SlateAdmin.view.people.NavPanel', {
             xtype: 'treecolumn',
             flex: 1,
             dataIndex: 'Name'
-//        },{
-//            width: 20,
-//            dataIndex: 'Population'
+            //        },{
+            //            width: 20,
+            //            dataIndex: 'Population'
         }]
     }]
 });
