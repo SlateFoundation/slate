@@ -23,16 +23,16 @@ return [
     ],
     'readQuery' => function (array $input) {
         $query = [
-            'term' => '*'
+            'term' => ''
         ];
 
-        if (empty($input['term']) || $input['term'] == '*current') {
+        if ($input['term'] == '*current') {
             if (!$Term = Term::getClosest()) {
                 throw new OutOfBoundsException('no current term could be found');
             }
 
             $query['term'] = $Term->Handle;
-        } else {
+        } elseif(!empty($input['term'])) {
             if (!$Term = TermsRequestHandler::getRecordByHandle($input['term'])) {
                 throw new OutOfBoundsException('term not found');
             }
