@@ -17,7 +17,7 @@ CREATE TABLE `terms` (
   UNIQUE KEY `Handle` (`Handle`),
   UNIQUE KEY `Left` (`Left`),
   FULLTEXT KEY `FULLTEXT` (`Title`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `history_terms` (
   `RevisionID` int(10) unsigned NOT NULL AUTO_INCREMENT,
