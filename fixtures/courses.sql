@@ -19,8 +19,10 @@ CREATE TABLE `courses` (
   FULLTEXT KEY `FULLTEXT` (`Title`,`Description`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO `courses` VALUES (1,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'Math Studio','MATH','Live',NULL,NULL,1);
-INSERT INTO `courses` VALUES (2,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'ELA Studio','ELA','Live',NULL,NULL,2);
+INSERT INTO `courses` VALUES (1,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'Mathematics','MATH','Live',NULL,NULL,1);
+INSERT INTO `courses` VALUES (2,'Slate\\Courses\\Course','2019-01-02 03:04:05',1,NULL,NULL,'English Language Arts','ELA','Live',NULL,NULL,2);
+INSERT INTO `courses` VALUES (3,'Slate\\Courses\\Course','2021-05-28 20:57:06',1,NULL,NULL,'Social Studies','SS','Live',NULL,NULL,NULL);
+INSERT INTO `courses` VALUES (4,'Slate\\Courses\\Course','2021-05-28 20:57:31',1,NULL,NULL,'Science','SCI','Live',NULL,NULL,NULL);
 
 
 CREATE TABLE `history_courses` (

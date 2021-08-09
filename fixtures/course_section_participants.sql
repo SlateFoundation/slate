@@ -30,3 +30,14 @@ INSERT INTO `course_section_participants` VALUES (10,'Slate\\Courses\\SectionPar
 INSERT INTO `course_section_participants` VALUES (11,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,4,4,'Student',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (12,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,4,6,'Student',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (13,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,5,4,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (14,'Slate\\Courses\\SectionParticipant','2021-05-28 20:58:46',3,6,3,'Teacher',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (15,'Slate\\Courses\\SectionParticipant','2021-05-28 20:59:20',3,6,24,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (16,'Slate\\Courses\\SectionParticipant','2021-05-28 20:59:31',3,6,25,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (17,'Slate\\Courses\\SectionParticipant','2021-05-28 20:59:35',3,6,26,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (18,'Slate\\Courses\\SectionParticipant','2021-05-28 20:59:44',3,6,23,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (19,'Slate\\Courses\\SectionParticipant','2021-05-29 13:05:06',5,7,5,'Teacher',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (20,'Slate\\Courses\\SectionParticipant','2021-05-29 13:05:37',5,7,10,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (21,'Slate\\Courses\\SectionParticipant','2021-05-29 13:05:42',5,7,9,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (22,'Slate\\Courses\\SectionParticipant','2021-05-29 13:05:48',5,7,12,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (23,'Slate\\Courses\\SectionParticipant','2021-05-29 13:05:58',5,7,8,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (24,'Slate\\Courses\\SectionParticipant','2021-05-29 13:06:05',5,7,11,'Student',NULL,NULL,NULL);
