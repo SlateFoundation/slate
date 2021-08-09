@@ -19,7 +19,7 @@ CREATE TABLE `locations` (
   UNIQUE KEY `Handle` (`Handle`),
   UNIQUE KEY `Left` (`Left`),
   FULLTEXT KEY `FULLTEXT` (`Title`,`Description`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `locations` VALUES (1,'Emergence\\Locations\\Location','2019-01-02 03:04:05',1,NULL,NULL,'123 Main St','main_st','Live',NULL,NULL,1,16);
 INSERT INTO `locations` VALUES (2,'Emergence\\Locations\\Location','2019-01-02 03:04:05',1,NULL,NULL,'Room 100','room_100','Live',NULL,1,2,3);
