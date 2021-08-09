@@ -15,7 +15,7 @@ CREATE TABLE `course_schedules` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Handle` (`Handle`),
   FULLTEXT KEY `FULLTEXT` (`Title`,`Description`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `course_schedules` VALUES (1,'Slate\\Courses\\Schedule','2019-01-02 03:04:05',1,NULL,NULL,'E Band','e','Live',NULL);
 INSERT INTO `course_schedules` VALUES (2,'Slate\\Courses\\Schedule','2019-01-02 03:04:05',1,NULL,NULL,'C Band','c','Live',NULL);

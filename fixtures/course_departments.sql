@@ -17,7 +17,7 @@ CREATE TABLE `course_departments` (
   UNIQUE KEY `Handle` (`Handle`),
   UNIQUE KEY `Code` (`Code`),
   FULLTEXT KEY `FULLTEXT` (`Title`,`Description`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `course_departments` VALUES (1,'Slate\\Courses\\Department','2019-01-02 03:04:05',1,NULL,NULL,'Math','math',NULL,'Live',NULL);
 INSERT INTO `course_departments` VALUES (2,'Slate\\Courses\\Department','2019-01-02 03:04:05',1,NULL,NULL,'English','english',NULL,'Live',NULL);

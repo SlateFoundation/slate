@@ -15,7 +15,7 @@ CREATE TABLE `course_section_participants` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Participant` (`CourseSectionID`,`PersonID`),
   KEY `PersonID` (`PersonID`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `course_section_participants` VALUES (1,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,1,3,'Teacher',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (2,'Slate\\Courses\\SectionParticipant','2019-01-02 03:04:05',1,1,5,'Teacher',NULL,NULL,NULL);

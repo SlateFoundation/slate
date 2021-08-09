@@ -21,7 +21,7 @@ CREATE TABLE `course_sections` (
   UNIQUE KEY `Code` (`Code`),
   KEY `CourseID` (`CourseID`),
   FULLTEXT KEY `FULLTEXT` (`Notes`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `course_sections` VALUES (1,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,1,'Math Studio','MATH-001','Live',NULL,NULL,8,1,2);
 INSERT INTO `course_sections` VALUES (2,'Slate\\Courses\\Section','2019-01-02 03:04:05',1,NULL,NULL,2,'ELA Studio','ELA-001','Live',NULL,NULL,8,2,3);

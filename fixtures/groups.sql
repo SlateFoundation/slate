@@ -17,7 +17,7 @@ CREATE TABLE `groups` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Handle` (`Handle`),
   UNIQUE KEY `Left` (`Left`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `groups` VALUES (1,'Emergence\\People\\Groups\\Organization','2019-01-02 03:04:05',1,'Example School','example_school','Active',NULL,1,26,'2019-01-02 03:04:05',NULL);
 INSERT INTO `groups` VALUES (2,'Emergence\\People\\Groups\\Organization','2019-01-02 03:04:05',1,'Jarvus Innovations','jarvus','Active',NULL,27,28,'2019-01-02 03:04:05',NULL);

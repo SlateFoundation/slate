@@ -13,7 +13,7 @@ CREATE TABLE `contact_points` (
   `Data` text NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `PersonID` (`PersonID`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `contact_points` VALUES (1,'Emergence\\People\\ContactPoint\\Email','2019-01-02 03:04:05',NULL,NULL,NULL,1,'Email','slate+system@example.org');
 INSERT INTO `contact_points` VALUES (2,'Emergence\\People\\ContactPoint\\Email','2019-01-02 03:04:05',NULL,NULL,NULL,2,'Email','slate+admin@example.org');

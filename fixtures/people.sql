@@ -30,7 +30,7 @@ CREATE TABLE `people` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Username` (`Username`),
   UNIQUE KEY `StudentNumber` (`StudentNumber`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `people` VALUES (1,'Emergence\\People\\User','2019-01-02 03:04:05',NULL,NULL,NULL,'System','Slate',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,'system','$2y$10$Ap2JdhW3.PK9j9NGhhnvQO6aU55rNiKB/fgcpiEvtWDNUkj54T7uS','Developer',NULL,NULL,NULL,NULL);
 INSERT INTO `people` VALUES (2,'Emergence\\People\\User','2019-01-02 03:04:05',NULL,NULL,NULL,'Admin','Slate',NULL,NULL,NULL,NULL,NULL,NULL,NULL,2,NULL,NULL,'admin','$2y$10$4GG7HXbLKMrm84TiRhl40eWpMgip2XPnDh9ykBYtiOjtXRP2bsFj.','Administrator',NULL,NULL,NULL,NULL);

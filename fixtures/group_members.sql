@@ -15,7 +15,7 @@ CREATE TABLE `group_members` (
   `Expires` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `GroupPerson` (`GroupID`,`PersonID`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `group_members` VALUES (1,'Emergence\\People\\Groups\\GroupMember','2019-01-02 03:04:05',1,2,1,'Member',NULL,NULL,'2019-01-02 03:04:05',NULL);
 INSERT INTO `group_members` VALUES (2,'Emergence\\People\\Groups\\GroupMember','2019-01-02 03:04:05',1,5,2,'Member',NULL,NULL,'2019-01-02 03:04:05',NULL);
