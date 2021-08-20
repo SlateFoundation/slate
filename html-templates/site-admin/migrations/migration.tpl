@@ -8,13 +8,16 @@
 {/block}
 
 {block content}
-    <div class="card mb-3 {tif $migration.status == executed ? 'bg-success text-white'} {tif $migration.status == skipped ? 'bg-info text-white'} {tif $migration.status == started ? 'bg-warning text-white'} {tif $migration.status == failed ? 'bg-danger text-white'}">
+    <div class="card mb-3 {tif $migration.status == 'executed' ? 'bg-success text-white'} {tif $migration.status == 'skipped' ? 'bg-info text-white'} {tif $migration.status == 'started' ? 'bg-warning text-white'} {tif $migration.status == 'failed' ? 'bg-danger text-white'}">
         <div class="card-header">
-            {if $migration.status == new}
-                <form action="/site-admin/migrations/{$migration.key|escape}" method="POST" class="btn-group btn-group-sm float-right">
+            <form action="/site-admin/migrations/{$migration.key|escape}" method="POST" class="btn-group btn-group-sm float-right">
+                {if $migration.status == 'new'}
                     <button type="submit" class="btn btn-primary">Execute</button>
-                </form>
-            {/if}
+                {else}
+                    <input type="hidden" name="force" value="yes">
+                    <button type="submit" class="btn btn-danger">Force re-execute</button>
+                {/if}
+            </form>
 
             Migration {$migration.key|escape}
         </div>

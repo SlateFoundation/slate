@@ -30,8 +30,10 @@ class MigrationsRequestHandler extends \RequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Developer');
 
-        if (static::peekPath() == 'refresh') {
+        if (static::peekPath() == '!refresh') {
             return static::handleRefreshRequest();
+        } elseif (static::peekPath() == '!all') {
+            return static::handleAllMigrationsRequest();
         } elseif (count(array_filter($migrationKey = static::getPath()))) {
             return static::handleMigrationRequest(implode('/', $migrationKey));
         }
@@ -63,11 +65,33 @@ class MigrationsRequestHandler extends \RequestHandler
         ]);
     }
 
+    public static function handleAllMigrationsRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            return static::respond('confirm', [
+                'question' => 'Are you sure you want to execute all new migrations?'
+            ]);
+        }
+
+        $migrations = [];
+        foreach (static::getMigrations() as $migration) {
+            if ($migration['status'] != static::STATUS_NEW) {
+                continue;
+            }
+
+            $migrations []= static::executeMigration($migration);
+        }
+
+        return static::respond('allMigrationsExecuted', [
+            'migrations' => $migrations
+        ]);
+    }
+
     public static function handleMigrationRequest($migrationKey)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
-                $migration = static::executeMigration($migrationKey);
+                $migration = static::executeMigration($migrationKey, !empty($_REQUEST['force']));
             } catch (OutOfBoundsException $e) {
                 return static::throwNotFoundError($e->getMessage());
             } catch (RangeException $e) {

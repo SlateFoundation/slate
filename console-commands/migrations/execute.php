@@ -8,7 +8,7 @@ $logger = $_COMMAND['LOGGER'];
 
 // parse args
 if (empty($_COMMAND['ARGS'])) {
-    die('Usage: migrations:execute <migration-key|--all>');
+    die('Usage: migrations:execute <migration-key|--all> [--retry] [--force]');
 }
 
 $migrationKeys = [];
