@@ -278,7 +278,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // apply values from spreadsheet
             try {
-                static::_applyUserChanges($Job, $Record, $row, $results);
+                static::_applyStudentUserChanges($Job, $Record, $row, $results);
             } catch (RemoteRecordInvalid $e) {
                 if ($e->getValueKey()) {
                     $results['failed'][$e->getMessageKey()][$e->getValueKey()]++;
@@ -313,9 +313,8 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                     'externalIdentifier' => $row['ForeignKey'],
                     'studentUsername' => $Record->Username
                 ]);
+            }
         }
-        }
-
 
         return $results;
     }
@@ -1493,6 +1492,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         // call configurable hook
         if (is_callable(static::$onApplyUserChanges)) {
             call_user_func(static::$onApplyUserChanges, $Job, $User, $row);
+        }
+    }
+
+    protected static function _applyStudentUserChanges(IJob $Job, User $User, array $row, array &$results)
+    {
+        static::_applyUserChanges($Job, $User, $row, $results);
+
+        if ($User->AccountLevel == 'Disabled') {
+            $User->AccountLevel = 'User';
         }
     }
 
