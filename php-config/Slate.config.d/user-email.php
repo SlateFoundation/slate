@@ -1,3 +1,3 @@
 <?php
 
-Slate::$userEmailDomain = 'scienceleadership.org';
+//Slate::$userEmailDomain = 'example.org';
