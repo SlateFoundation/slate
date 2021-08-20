@@ -8,6 +8,7 @@ class Session extends ActiveRecord
     public static $cookiePath = '/';
     public static $cookieSecure = false;
     public static $cookieExpires = false;
+    public static $cookieSameSite = 'Lax';
     public static $timeout = 3600;
 
     // support subclassing
@@ -164,14 +165,26 @@ class Session extends ActiveRecord
 
         // set cookie
         if (!headers_sent()) {
-            setcookie(
-                static::$cookieName,
-                $this->Handle,
-                static::$cookieExpires ? (time() + static::$cookieExpires) : 0,
-                static::$cookiePath,
-                static::$cookieDomain,
-                static::$cookieSecure
-            );
+            $cookie = sprintf('Set-Cookie: %s=%s', static::$cookieName, $this->Handle);
+            $cookie .= sprintf('; Path=%s', static::$cookiePath);
+
+            if (static::$cookieExpires) {
+                $cookie .= sprintf('; Expires=%s', date('D, d M Y H:i:s \G\M\T', time() + static::$cookieExpires));
+            }
+
+            if (static::$cookieDomain) {
+                $cookie .= sprintf('; Domain=%s', static::$cookieDomain);
+            }
+
+            if (static::$cookieSameSite) {
+                $cookie .= sprintf('; SameSite=%s', static::$cookieSameSite);
+            }
+
+            if (static::$cookieSecure) {
+                $cookie .= '; Secure';
+            }
+
+            header($cookie);
         }
     }
 

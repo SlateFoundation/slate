@@ -8,8 +8,11 @@
 {block content}
     <div class="page-header">
         <div class="btn-toolbar float-right">
-            <form method="POST" action="/site-admin/migrations/refresh" class="btn-group">
-                <button type="submit" class="btn btn-secondary">Refresh Inherited Migrations</button>
+            <form method="POST" action="/site-admin/migrations/!refresh" class="ml-2">
+                <button type="submit" class="btn btn-secondary">Refresh inherited migrations</button>
+            </form>
+            <form method="POST" action="/site-admin/migrations/!all" class="ml-2">
+                <button type="submit" class="btn btn-primary">Execute all</button>
             </form>
         </div>
 
@@ -33,9 +36,14 @@
                     <td class="migration-status">{$migration.status}</td>
                     <td class="migration-timestamp">{$migration.executed}</td>
                     <td class="migration-action">
-                        {if $migration.status == 'new'}
+                        {if $migration.status != 'executed'}
                             <form class="execute-migration" action="/site-admin/migrations/{$migration.key|escape}" method="POST">
-                                <button type="submit" class="btn btn-primary">Execute</button>
+                                {if $migration.status == 'new'}
+                                    <button type="submit" class="btn btn-primary">Execute</button>
+                                {elseif $migration.status == 'started' || $migration.status == 'failed'}
+                                    <input type="hidden" name="force" value="yes">
+                                    <button type="submit" class="btn btn-danger">Force re-execute</button>
+                                {/if}
                             </form>
                         {/if}
                     </td>
