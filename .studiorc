@@ -7,9 +7,12 @@ hab pkg install emergence/studio chakijs/studio jarvus/mkdocs-studio
 # disable studios printing their own help
 export STUDIO_NOHELP="yes"
 
+
+# load emergence studio
 source "$(hab pkg path emergence/studio)/studio.sh"
 source "$(hab pkg path chakijs/studio)/studio.sh"
 
+# load mkdocs studio
 export DOCS_HOLOBRANCH="docs-site"
 export DOCS_PARENT_SOURCE="skeleton-v2"
 source "$(hab pkg path jarvus/mkdocs-studio)/studio.sh"
@@ -20,7 +23,6 @@ STUDIO_HELP['build-admin']="Build SlateAdmin for local development and testing"
 build-admin() {
     build-app SlateAdmin
 }
-
 
 
 ## final init and output
