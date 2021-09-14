@@ -2,37 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://slatefoundation.github.io/slate/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <lastmod>2021-09-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://slatefoundation.github.io/slate/development/</loc>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/email/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/migrations/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://slatefoundation.github.io/slate/development/getting-started/content-editor/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <loc>https://slatefoundation.github.io/slate/development/running-tests/e2e/</loc>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://slatefoundation.github.io/slate/development/getting-started/local-studio/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <loc>https://slatefoundation.github.io/slate/development/workspace-setup/content-editor/</loc>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://slatefoundation.github.io/slate/development/getting-started/virtual-multisite/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <loc>https://slatefoundation.github.io/slate/development/workspace-setup/local-studio/</loc>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://slatefoundation.github.io/slate/development/testing/e2e/</loc>
-         <lastmod>2021-08-04</lastmod>
+         <loc>https://slatefoundation.github.io/slate/development/workspace-setup/virtual-multisite/</loc>
+         <lastmod>2021-09-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://slatefoundation.github.io/slate/getting-started/</loc>
+         <lastmod>2021-09-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://slatefoundation.github.io/slate/operations/</loc>
+         <lastmod>2021-09-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://slatefoundation.github.io/slate/usage/</loc>
+         <lastmod>2021-09-14</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
