@@ -62,6 +62,7 @@ jobs:
         # pull latest commit
         curl -X POST \
           --silent \
+          --show-error \
           --fail \
           -H "Authorization: Token ${VFS_DEV_TOKEN}" \
           -H "Accept: application/json" \
@@ -71,6 +72,7 @@ jobs:
         # sync VFS to git
         curl -X POST \
           --silent \
+          --show-error \
           --fail \
           -H "Authorization: Token ${VFS_DEV_TOKEN}" \
           -H "Accept: application/json" \

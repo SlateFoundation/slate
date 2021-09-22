@@ -21,6 +21,7 @@ jobs:
 
     - name: 'Initialize Chef Habitat environment'
       uses: JarvusInnovations/habitat-action@action/v1
+      timeout-minutes: 5
       env:
         HAB_NGINX: |
           [http.listen]
