@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-site
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "site.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "site.selectorLabels" . | nindent 6 }}
+  ports:
+  - name: http
+    port: {{ .Values.services.http.port }}
+    protocol: TCP

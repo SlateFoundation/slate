@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "site.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.site.replicaCount }}
+  strategy:
+    type: {{ .Values.site.strategyType }}
+  selector:
+    matchLabels:
+      {{- include "site.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "site.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Always
+
+      {{- with .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ . | quote }}
+      {{- end }}
+
+      volumes:
+
+      {{- if .Values.volumes.site }}
+        - name: {{ .Release.Name }}-site
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-site
+      {{- else }}
+        - name: {{ .Release.Name }}-site
+          emptyDir: {}
+      {{- end }}
+
+      {{- if .Values.volumes.database }}
+        - name: {{ .Release.Name }}-database
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-database
+      {{- else }}
+        - name: {{ .Release.Name }}-database
+          emptyDir: {}
+      {{- end }}
+
+      securityContext:
+        fsGroup: 42 # hab
+
+      containers:
+        - image: {{ .Values.site.image.repository }}:{{ .Values.site.image.tag | default .Chart.AppVersion }}
+          name: {{ .Release.Name }}-site
+          imagePullPolicy: {{ .Values.site.image.pullPolicy }}
+
+          env:
+            - name: HAB_LICENSE
+              value: {{ .Values.hab.license }}
+
+            - name: HAB_{{ .Values.site.svcName | upper | replace "-" "_"}}_COMPOSITE
+              value: |
+                [services.mysql]
+                pkg_ident = {{ .Values.database.pkg | quote }}
+
+            - name: HAB_{{ .Values.site.svcName | upper | replace "-" "_"}}
+              value: |
+                {{- if .Values.site.timezone }}
+                default_timezone = {{ .Values.site.timezone | quote }}
+                {{- end }}
+
+                [sites.default]
+                {{- if .Values.site.canonicalHostname }}
+                  primary_hostname = {{ .Values.site.canonicalHostname | quote }}
+                {{- end }}
+
+                [core]
+                {{- if .Values.site.displayErrors }}
+                  debug = true
+                {{- end }}
+
+            - name: HAB_{{ .Values.database.svcName | upper | replace "-" "_"}}
+              value: |
+                app_username = {{ .Values.database.username | quote }}
+                app_password = {{ .Values.database.password | quote }}
+                bind = "0.0.0.0"
+
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+
+          volumeMounts:
+            - name: {{ .Release.Name }}-site
+              mountPath: /hab/svc/{{ .Values.site.svcName }}/data
+              subPath: data
+            - name: {{ .Release.Name }}-database
+              mountPath: /hab/svc/{{ .Values.database.svcName }}/data
+              subPath: data
