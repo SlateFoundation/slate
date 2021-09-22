@@ -2,12 +2,12 @@
 
 // See http://slate.is/docs/integrations/general/saml2
 
-/*
-Emergence\Connectors\SAML2::$privateKey = '-----BEGIN RSA PRIVATE KEY-----
-PASTE YOUR PRIVATE KEY HERE
------END RSA PRIVATE KEY-----';
+/**
+ * Should start with: -----BEGIN RSA PRIVATE KEY-----
+ */
+Emergence\SAML2\Connector::$privateKey = getenv('SAML2_PRIVATE_KEY');
 
-Emergence\Connectors\SAML2::$certificate = '-----BEGIN CERTIFICATE-----
-PASTE YOUR CERTIFICATE HERE
------END CERTIFICATE-----';
-*/
+/**
+ * Should start with: -----BEGIN CERTIFICATE-----
+ */
+Emergence\SAML2\Connector::$certificate = getenv('SAML2_CERTIFICATE');

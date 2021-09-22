@@ -1,0 +1,95 @@
+{{- if .Values.backups.enabled -}}
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-backups
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "site.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backups.schedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 2700 # 45 minutes
+      template:
+        spec:
+          serviceAccountName: {{ .Release.Name }}-cron
+          restartPolicy: Never
+          containers:
+          - name: kubectl
+            image: lachlanevenson/k8s-kubectl:v1.18.16
+            imagePullPolicy: IfNotPresent
+            envFrom:
+            - secretRef:
+                name: {{ .Values.backups.secretName }}
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                # resolve pod name for running instance (there should just be one)
+                pod_name=$(kubectl get pod \
+                    -l app.kubernetes.io/name={{ .Values.site.name }} \
+                    -l app.kubernetes.io/instance={{ .Release.Name }} \
+                    --field-selector=status.phase==Running \
+                    -o jsonpath='{.items[0].metadata.name}'
+                )
+
+                # snapshot mysql database and site data to remote restic repository
+                kubectl exec "${pod_name}" -- bash -c "
+
+                  # configure restic repository
+                  {{- range $.Values.backups.secretKeys }}
+                  export {{ . }}='${{ . }}'
+                  {{- end }}
+
+                  # install CLI dependencies
+                  hab pkg install jarvus/restic core/gzip core/curl
+
+                  # get composite service name
+                  composite_svc_name=\"\$(hab svc status | tail -n +2 | awk '{print \$1}' | grep -- "-composite/" | cut -d '/' -f 1,2)\"
+
+                  # get current database name
+                  database_name=\"\$(hab pkg exec \${composite_svc_name} mysql -srNe 'SELECT SCHEMA()')\"
+
+                  # snapshot database
+                  echo \"Snapshotting database: \${database_name}\"
+                  hab pkg exec \${composite_svc_name} \
+                    mysqldump \
+                      --default-character-set=utf8 \
+                      --force \
+                      --single-transaction \
+                      --quick \
+                      --compact \
+                      --extended-insert \
+                      --order-by-primary \
+                      --ignore-table=\"\${database_name}.sessions\" \
+                      \"\${database_name}\" \
+                    | hab pkg exec core/gzip gzip --rsyncable \
+                    | hab pkg exec jarvus/restic restic backup \
+                      --host '{{ .Release.Name }}' \
+                      --stdin \
+                      --stdin-filename database.sql.gz
+
+                  {{ if .Values.backups.snitchUrl -}}
+                    wget -q -O - --post-data "s=$?" {{ .Values.backups.snitchUrl }}
+                  {{- end }}
+
+                  # snapshot data
+                  echo 'Snapshotting site data'
+                  hab pkg exec jarvus/restic restic backup \
+                    /hab/svc/{{ .Values.site.svcName }}/data \
+                    --host '{{ .Release.Name }}' \
+                    --exclude='*.log' \
+                    --exclude='/hab/svc/{{ .Values.site.svcName }}/data/media/*x*/**'
+
+                  # prune aged snapshots
+                  echo 'Pruning snapshots'
+                  hab pkg exec jarvus/restic restic forget \
+                    --host '{{ .Release.Name }}' \
+                    --keep-last {{ .Values.backups.prune.keepLast }} \
+                    --keep-daily {{ .Values.backups.prune.keepDaily }} \
+                    --keep-weekly {{ .Values.backups.prune.keepWeekly }}
+                "
+
+{{- end }}

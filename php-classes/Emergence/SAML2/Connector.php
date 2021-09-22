@@ -55,10 +55,10 @@ class Connector extends AbstractConnector implements IIdentityConsumer
         $response = static::getSAMLResponse($binding->receive(), $Person);
 
         // encode response manually if needed for debugging
-        // $responseXML = $response->toSignedXML();
-        // $responseString = $responseXML->ownerDocument->saveXML($responseXML);
-        // header('Content-Type: text/xml');
-        // die($responseString);
+        $responseXML = $response->toSignedXML();
+        $responseString = $responseXML->ownerDocument->saveXML($responseXML);
+        header('Content-Type: text/xml');
+        die($responseString);
 
         // send response
         $responseBinding = new HTTPPost();

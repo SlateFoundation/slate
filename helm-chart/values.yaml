@@ -1,0 +1,66 @@
+site:
+  name: emergence-site
+  title: "Site"
+  canonicalHostname: localhost
+  timezone: "America/New_York"
+  svcName: site
+  displayErrors: false
+
+  replicaCount: 1
+  strategyType: Recreate
+
+  envFrom: []
+    # - secretName: 'mysecret'
+    #   required: true
+
+  image:
+    repository: ""
+    tag: latest
+    pullPolicy: Always
+
+database:
+  pkg: "core/mysql"
+  svcName: mysql
+  username: admin
+  password: admin
+
+imagePullSecret: ~
+
+volumes:
+  site: ~
+  database: ~
+
+services:
+  http:
+    port: 80
+  # mysql:
+  #   port: 3306
+
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+  secondaryHostnames: []
+
+backups:
+  enabled: false
+  schedule: "40 * * * *"
+  snitchUrl: ""
+  secretName: "restic"
+  secretKeys:
+    - RESTIC_REPOSITORY
+    - RESTIC_PASSWORD
+    - B2_ACCOUNT_ID
+    - B2_ACCOUNT_KEY
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+  prune:
+    keepLast: 3
+    keepDaily: 7
+    keepWeekly: 52
+
+hab:
+  license: no-accept

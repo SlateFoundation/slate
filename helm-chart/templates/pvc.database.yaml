@@ -1,0 +1,17 @@
+{{- if .Values.volumes.database -}}
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-database
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "site.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.volumes.database }}
+
+{{- end }}
