@@ -1,0 +1,32 @@
+.contacts-list {
+    .x-dataview-item {
+        background-color: $grid-row-cell-background-color;
+        text-align: center;
+
+        &:not(:first-child) {
+            border-top: 1px solid black;
+        }
+    }
+
+    .forward-relationship {
+        font-size: 125%;
+        padding: 2px;
+    }
+
+    .inverse-relationship {
+        font-size: 90%;
+        padding: 2px;
+    }
+
+    .relationship-label, .relationship-guardian-toggle {
+        border: 1px dashed grey;
+        cursor: pointer;
+        padding: 2px 5px;
+    }
+
+    .relationship-delete {
+        cursor: pointer;
+        float: right;
+        margin: 5px;
+    }
+}

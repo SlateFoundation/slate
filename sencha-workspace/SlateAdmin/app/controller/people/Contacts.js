@@ -45,7 +45,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
             xtype: 'people-details-contacts'
         },
-        relationshipsGrid: 'people-details-contacts grid#relationships',
+        relationshipsList: 'people-details-contacts-list',
+        // relationshipsGrid: 'people-details-contacts grid#relationships',
         contactsGrid: 'people-details-contacts grid#contactPoints'
     },
 
@@ -56,12 +57,12 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         'people-details-contacts': {
             personloaded: 'onPersonLoaded'
         },
-        'people-details-contacts grid#relationships': {
-            beforeedit: 'onBeforeRelationshipsGridEdit',
-            edit: 'onRelationshipsGridEdit',
-            deleteclick: 'onRelationshipsGridDeleteClick',
-            guardianclick: 'onRelationshipsGridGuardianClick'
-        },
+        // 'people-details-contacts grid#relationships': {
+        //     beforeedit: 'onBeforeRelationshipsGridEdit',
+        //     edit: 'onRelationshipsGridEdit',
+        //     deleteclick: 'onRelationshipsGridDeleteClick',
+        //     guardianclick: 'onRelationshipsGridGuardianClick'
+        // },
         'people-details-contacts grid#contactPoints': {
             beforeedit: 'onBeforeContactsGridEdit',
             edit: 'onContactsGridEdit',
@@ -110,8 +111,10 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             contactPointTemplatesStoreLoaded = contactPointTemplatesStore.isLoaded(),
             relationshipTemplatesStore = me.getPeopleRelationshipTemplatesStore(),
             relationshipTemplatesStoreLoaded = relationshipTemplatesStore.isLoaded(),
-            relationshipsGrid = me.getRelationshipsGrid(),
-            relationshipsStore = relationshipsGrid.getStore(),
+            relationshipsList = me.getRelationshipsList(),
+            relationshipsStore = relationshipsList.getStore(),
+            // relationshipsGrid = me.getRelationshipsGrid(),
+            // relationshipsStore = relationshipsGrid.getStore(),
             relationshipsStoreLoaded = false,
             contactsGrid = me.getContactsGrid(),
             contactsStore = contactsGrid.getStore(), contactsStoreLoaded = false;
@@ -160,223 +163,221 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             });
 
             // load relationships
-            relationshipsStore.getProxy().setExtraParam('person', person.getId());
-            relationshipsStore.load({
-                callback: function () {
-                    relationshipsStoreLoaded = true;
-                    _onStoresLoaded();
-                }
+            relationshipsStore.setPerson(person.getId());
+            relationshipsStore.loadIfDirty(false, () => {
+                relationshipsStoreLoaded = true;
+                _onStoresLoaded();
             });
 
         }, 1);
     },
 
-    onBeforeRelationshipsGridEdit: function (editingPlugin, context) {
-        var record = context.record,
-            fieldName = context.field,
-            activeEditor = editingPlugin.activeEditor,
-            loadedPersonId, comboStore;
+    // onBeforeRelationshipsGridEdit: function (editingPlugin, context) {
+    //     var record = context.record,
+    //         fieldName = context.field,
+    //         activeEditor = editingPlugin.activeEditor,
+    //         loadedPersonId, comboStore;
 
-        if (record.phantom) {
-            if (fieldName == 'RelatedPerson') {
-                loadedPersonId = this.getContactsPanel().getLoadedPerson().getId();
-                comboStore = context.column.getEditor(record).getStore();
-                comboStore.clearFilter(true);
-                comboStore.addFilter(function (comboRecord) {
-                    var id = comboRecord.getId();
+    //     if (record.phantom) {
+    //         if (fieldName == 'RelatedPerson') {
+    //             loadedPersonId = this.getContactsPanel().getLoadedPerson().getId();
+    //             comboStore = context.column.getEditor(record).getStore();
+    //             comboStore.clearFilter(true);
+    //             comboStore.addFilter(function (comboRecord) {
+    //                 var id = comboRecord.getId();
 
-                    return id != loadedPersonId && context.store.findBy(function (existingRecord) {
-                        return !existingRecord.phantom && existingRecord.get('RelatedPersonID') == id;
-                    }) == -1;
-                });
-            } else {
-                return !Ext.isEmpty(activeEditor && activeEditor.editorId == 'person' ? activeEditor.getValue() : record.get('RelatedPerson'));
-            }
-        } else {
-            return fieldName != 'RelatedPerson';
-        }
-    },
+    //                 return id != loadedPersonId && context.store.findBy(function (existingRecord) {
+    //                     return !existingRecord.phantom && existingRecord.get('RelatedPersonID') == id;
+    //                 }) == -1;
+    //             });
+    //         } else {
+    //             return !Ext.isEmpty(activeEditor && activeEditor.editorId == 'person' ? activeEditor.getValue() : record.get('RelatedPerson'));
+    //         }
+    //     } else {
+    //         return fieldName != 'RelatedPerson';
+    //     }
+    // },
 
-    onRelationshipsGridEdit: function (editingPlugin, context) {
-        var me = this,
-            dataSession = me.dataSession,
-            value = context.value,
-            originalValue = context.originalValue,
-            fieldName = context.field,
-            editedRecord = context.record,
-            gridView = context.view,
-            editor = context.column.getEditor(editedRecord),
-            columnManager = context.grid.getColumnManager(),
-            invalid = false,
-            relatedPeopleStore, relatedPersonModel, relatedPersonRecord,
-            templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender, relationshipConfig, inverseRecord;
+    // onRelationshipsGridEdit: function (editingPlugin, context) {
+    //     var me = this,
+    //         dataSession = me.dataSession,
+    //         value = context.value,
+    //         originalValue = context.originalValue,
+    //         fieldName = context.field,
+    //         editedRecord = context.record,
+    //         gridView = context.view,
+    //         editor = context.column.getEditor(editedRecord),
+    //         columnManager = context.grid.getColumnManager(),
+    //         invalid = false,
+    //         relatedPeopleStore, relatedPersonModel, relatedPersonRecord,
+    //         templateRecord, oldTemplateRecord, currentInverse, templateInverse, loadedPersonGender, relationshipConfig, inverseRecord;
 
-        gridView.clearInvalid(editedRecord);
+    //     gridView.clearInvalid(editedRecord);
 
-        if (fieldName == 'RelatedPerson') {
-            relatedPeopleStore = editor.getStore();
-            relatedPersonModel = relatedPeopleStore.getModel();
-            relatedPersonRecord = editor.getSelection();
+    //     if (fieldName == 'RelatedPerson') {
+    //         relatedPeopleStore = editor.getStore();
+    //         relatedPersonModel = relatedPeopleStore.getModel();
+    //         relatedPersonRecord = editor.getSelection();
 
-            if (relatedPersonRecord) {
-                // ensure selected record remains available
-                dataSession.adopt(relatedPersonRecord);
-            } else if (Ext.isString(value)) {
-                // build a phantom model
-                value = value.trim().split(/\s+/);
-                relatedPersonRecord = dataSession.createRecord(relatedPersonModel);
+    //         if (relatedPersonRecord) {
+    //             // ensure selected record remains available
+    //             dataSession.adopt(relatedPersonRecord);
+    //         } else if (Ext.isString(value)) {
+    //             // build a phantom model
+    //             value = value.trim().split(/\s+/);
+    //             relatedPersonRecord = dataSession.createRecord(relatedPersonModel);
 
-                if (value.length < 2) {
-                    relatedPersonRecord.set('LastName', value[0]);
-                    invalid = true;
-                    gridView.markCellInvalid(editedRecord, 'person', 'At least a first and last name must be provided to add a new person');
-                } else {
-                    relatedPersonRecord.set({
-                        LastName: value.pop(),
-                        MiddleName: value.length == 1 ? null : value.pop(),
-                        FirstName: value.join(' ')
-                    });
-                }
+    //             if (value.length < 2) {
+    //                 relatedPersonRecord.set('LastName', value[0]);
+    //                 invalid = true;
+    //                 gridView.markCellInvalid(editedRecord, 'person', 'At least a first and last name must be provided to add a new person');
+    //             } else {
+    //                 relatedPersonRecord.set({
+    //                     LastName: value.pop(),
+    //                     MiddleName: value.length == 1 ? null : value.pop(),
+    //                     FirstName: value.join(' ')
+    //                 });
+    //             }
 
-                relatedPeopleStore.add(relatedPersonRecord);
-                editor.setValue(relatedPersonRecord);
-            } else if (Ext.isNumber(value)) {
-                // look up previously selected model
-                relatedPersonRecord = dataSession.getRecord(relatedPersonModel, value);
-            }
+    //             relatedPeopleStore.add(relatedPersonRecord);
+    //             editor.setValue(relatedPersonRecord);
+    //         } else if (Ext.isNumber(value)) {
+    //             // look up previously selected model
+    //             relatedPersonRecord = dataSession.getRecord(relatedPersonModel, value);
+    //         }
 
-            editedRecord.set({
-                RelatedPersonID: relatedPersonRecord.phantom ? null : relatedPersonRecord.getId(),
-                RelatedPerson: relatedPersonRecord || null
-            });
+    //         editedRecord.set({
+    //             RelatedPersonID: relatedPersonRecord.phantom ? null : relatedPersonRecord.getId(),
+    //             RelatedPerson: relatedPersonRecord || null
+    //         });
 
-            if (!invalid) {
-                gridView.clearInvalid(editedRecord, 'person');
-            }
+    //         if (!invalid) {
+    //             gridView.clearInvalid(editedRecord, 'person');
+    //         }
 
-            if (!editedRecord.get('Label')) {
-                // auto advance to relationship column if the editor isn't already active after a short delay
-                // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
-                Ext.defer(function () {
-                    if (!editingPlugin.editing) {
-                        editingPlugin.startEdit(editedRecord, columnManager.getHeaderById('relationship'));
-                    }
-                }, 50);
-                return;
-            }
-        } else if (fieldName == 'Label') {
-            templateRecord = editor.findRecordByValue(value);
-            loadedPersonGender = me.getContactsPanel().getLoadedPerson().get('Gender');
-            currentInverse = editedRecord.get('InverseRelationship');
+    //         if (!editedRecord.get('Label')) {
+    //             // auto advance to relationship column if the editor isn't already active after a short delay
+    //             // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
+    //             Ext.defer(function () {
+    //                 if (!editingPlugin.editing) {
+    //                     editingPlugin.startEdit(editedRecord, columnManager.getHeaderById('relationship'));
+    //                 }
+    //             }, 50);
+    //             return;
+    //         }
+    //     } else if (fieldName == 'Label') {
+    //         templateRecord = editor.findRecordByValue(value);
+    //         loadedPersonGender = me.getContactsPanel().getLoadedPerson().get('Gender');
+    //         currentInverse = editedRecord.get('InverseRelationship');
 
-            // apply template defaults for relationship and related person if this is a new record
-            if (editedRecord.phantom && templateRecord) {
-                if (templateRecord.get('Relationship')) {
-                    editedRecord.set(templateRecord.get('Relationship'));
-                }
+    //         // apply template defaults for relationship and related person if this is a new record
+    //         if (editedRecord.phantom && templateRecord) {
+    //             if (templateRecord.get('Relationship')) {
+    //                 editedRecord.set(templateRecord.get('Relationship'));
+    //             }
 
-                relatedPersonRecord = editedRecord.get('RelatedPerson');
-                if (relatedPersonRecord && relatedPersonRecord.phantom && templateRecord.get('Person')) {
-                    relatedPersonRecord.set(templateRecord.get('Person'));
-                }
-            }
+    //             relatedPersonRecord = editedRecord.get('RelatedPerson');
+    //             if (relatedPersonRecord && relatedPersonRecord.phantom && templateRecord.get('Person')) {
+    //                 relatedPersonRecord.set(templateRecord.get('Person'));
+    //             }
+    //         }
 
-            // auto-set inverse for new or changes between stock values, or advance editor to inverse field
-            if (
-                templateRecord
-                && (
-                    !currentInverse || !currentInverse.Label
-                    || (oldTemplateRecord = editor.findRecordByValue(originalValue))
-                    && oldTemplateRecord.getInverseLabel(loadedPersonGender) == currentInverse.Label
+    //         // auto-set inverse for new or changes between stock values, or advance editor to inverse field
+    //         if (
+    //             templateRecord
+    //             && (
+    //                 !currentInverse || !currentInverse.Label
+    //                 || (oldTemplateRecord = editor.findRecordByValue(originalValue))
+    //                 && oldTemplateRecord.getInverseLabel(loadedPersonGender) == currentInverse.Label
 
-                )
-                && (templateInverse = templateRecord.getInverseLabel(loadedPersonGender))
-            ) {
-                relationshipConfig = {
-                    Label: templateInverse
-                };
+    //             )
+    //             && (templateInverse = templateRecord.getInverseLabel(loadedPersonGender))
+    //         ) {
+    //             relationshipConfig = {
+    //                 Label: templateInverse
+    //             };
 
-                if ((inverseRecord = editor.getStore().findRecord('label', templateInverse)) && inverseRecord.get('class')) {
-                    relationshipConfig.Class = inverseRecord.get('class');
-                }
-                editedRecord.set('InverseRelationship', relationshipConfig);
-            } else {
-                // auto advance to inverse column if the editor isn't already active after a short delay
-                // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
-                Ext.defer(function () {
-                    if (!editingPlugin.editing) {
-                        editingPlugin.startEdit(editedRecord, columnManager.getHeaderById('inverse'));
-                    }
-                }, 50);
-                return;
-            }
-        } else if (fieldName == 'InverseRelationship.Label' && value != originalValue) {
-            if (value) {
-                editedRecord.set('InverseRelationship', {
-                    Label: value
-                });
-            } else {
-                gridView.markCellInvalid(editedRecord, 'inverse', 'Enter an inverse label for this relationship');
-            }
-        }
+    //             if ((inverseRecord = editor.getStore().findRecord('label', templateInverse)) && inverseRecord.get('class')) {
+    //                 relationshipConfig.Class = inverseRecord.get('class');
+    //             }
+    //             editedRecord.set('InverseRelationship', relationshipConfig);
+    //         } else {
+    //             // auto advance to inverse column if the editor isn't already active after a short delay
+    //             // this delay is necessary in case this completeEdit was already spawned by a startEdit on another field that's not finished yet
+    //             Ext.defer(function () {
+    //                 if (!editingPlugin.editing) {
+    //                     editingPlugin.startEdit(editedRecord, columnManager.getHeaderById('inverse'));
+    //                 }
+    //             }, 50);
+    //             return;
+    //         }
+    //     } else if (fieldName == 'InverseRelationship.Label' && value != originalValue) {
+    //         if (value) {
+    //             editedRecord.set('InverseRelationship', {
+    //                 Label: value
+    //             });
+    //         } else {
+    //             gridView.markCellInvalid(editedRecord, 'inverse', 'Enter an inverse label for this relationship');
+    //         }
+    //     }
 
-        if (editedRecord.dirty && editedRecord.isValid()) {
-            editedRecord.save({
-                callback: function (savedRecord, operation, success) {
+    //     if (editedRecord.dirty && editedRecord.isValid()) {
+    //         editedRecord.save({
+    //             callback: function (savedRecord, operation, success) {
 
-                    if (!success) {
-                        // render any server-side validation errors
-                        Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function (result) {
-                            gridView.markRowInvalid(editedRecord, result.validationErrors);
-                        });
-                    }
+    //                 if (!success) {
+    //                     // render any server-side validation errors
+    //                     Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function (result) {
+    //                         gridView.markRowInvalid(editedRecord, result.validationErrors);
+    //                     });
+    //                 }
 
-                    // ensure there is a blank row for creating another record
-                    me.injectBlankRelationshipRecord();
-                }
-            });
-        }
-    },
+    //                 // ensure there is a blank row for creating another record
+    //                 me.injectBlankRelationshipRecord();
+    //             }
+    //         });
+    //     }
+    // },
 
-    onRelationshipsGridDeleteClick: function (grid, record) {
-        var me = this,
-            editingPlugin = grid.getPlugin('cellediting'),
-            relatedPerson = record.get('RelatedPerson');
+    // onRelationshipsGridDeleteClick: function (grid, record) {
+    //     var me = this,
+    //         editingPlugin = grid.getPlugin('cellediting'),
+    //         relatedPerson = record.get('RelatedPerson');
 
-        editingPlugin.cancelEdit();
+    //     editingPlugin.cancelEdit();
 
-        if (record.phantom) {
-            if (record.dirty) {
-                record.reject();
-            }
+    //     if (record.phantom) {
+    //         if (record.dirty) {
+    //             record.reject();
+    //         }
 
-            return;
-        }
+    //         return;
+    //     }
 
 
-        Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0}?', relatedPerson.get('FullName')), function (btn) {
-            if (btn != 'yes') {
-                return;
-            }
+    //     Ext.Msg.confirm('Delete relationship', Ext.String.format('Are you sure you want to delete the relationship with {0}?', relatedPerson.get('FullName')), function (btn) {
+    //         if (btn != 'yes') {
+    //             return;
+    //         }
 
-            var inverseData = record.get('InverseRelationship');
+    //         var inverseData = record.get('InverseRelationship');
 
-            record.erase();
+    //         record.erase();
 
-            if (inverseData) {
-                me.getPersonRelationshipModel().create(inverseData).erase();
-            }
-        });
-    },
+    //         if (inverseData) {
+    //             me.getPersonRelationshipModel().create(inverseData).erase();
+    //         }
+    //     });
+    // },
 
-    onRelationshipsGridGuardianClick: function (grid, record) {
-        if (record.phantom) {
-            return;
-        }
+    // onRelationshipsGridGuardianClick: function (grid, record) {
+    //     if (record.phantom) {
+    //         return;
+    //     }
 
-        record.set('Class', record.get('Class') == 'Emergence\\People\\Relationship' ? 'Emergence\\People\\GuardianRelationship' : 'Emergence\\People\\Relationship');
-        record.save();
-    },
+    //     record.set('Class', record.get('Class') == 'Emergence\\People\\Relationship' ? 'Emergence\\People\\GuardianRelationship' : 'Emergence\\People\\Relationship');
+    //     record.save();
+    // },
 
     onBeforeContactsGridEdit: function (editingPlugin, context) {
         var me = this,
@@ -548,7 +549,7 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     injectBlankRelationshipRecord: function () {
         var me = this,
             loadedPerson = me.getContactsPanel().getLoadedPerson(),
-            relationshipsStore = me.getRelationshipsGrid().getStore(),
+            relationshipsStore = me.getRelationshipsList().getStore(),
             phantomIndex = relationshipsStore.findBy(function (record) {
                 return record.phantom;
             });
