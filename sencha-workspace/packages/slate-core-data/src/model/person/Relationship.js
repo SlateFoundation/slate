@@ -1,58 +1,66 @@
-/*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.person.Relationship', {
+Ext.define('Slate.model.person.Relationship', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records',
+        'Slate.proxy.people.Relationships',
         'Slate.validator.CallbackValidator',
+        'Slate.model.person.Person',
         'Ext.data.validator.Presence',
-
-        /* globals Slate */
-        'Slate.model.person.Person'
     ],
 
+
+    // model config
     idProperty: 'ID',
+    identifier: 'negative',
 
     fields: [
+
+        // ActiveRecord fields
         {
-            name: "ID",
-            type: "int",
+            name: 'ID',
+            type: 'int',
             allowNull: true
         },
         {
-            name: "Class",
-            type: "string",
-            defaultValue: "Emergence\\People\\Relationship"
+            name: 'Class',
+            type: 'string',
+            defaultValue: 'Emergence\\People\\Relationship'
         },
         {
-            name: "Created",
-            type: "date",
-            dateFormat: "timestamp",
+            name: 'Created',
+            type: 'date',
+            dateFormat: 'timestamp',
+            allowNull: true,
+            persist: false
+        },
+        {
+            name: 'CreatorID',
+            type: 'int',
+            allowNull: true,
+            persist: false
+        },
+
+        // Relationship fields
+        {
+            name: 'PersonID',
+            type: 'int'
+        },
+        {
+            name: 'RelatedPersonID',
+            type: 'int',
             allowNull: true
         },
         {
-            name: "CreatorID",
-            type: "int",
+            name: 'Label',
+            type: 'string',
             allowNull: true
         },
         {
-            name: "PersonID",
-            type: "int"
-        },
-        {
-            name: "RelatedPersonID",
-            type: "int",
+            name: 'Notes',
+            type: 'string',
             allowNull: true
         },
-        {
-            name: "Label",
-            type: "string",
-            allowNull: true
-        },
-        {
-            name: "Notes",
-            type: "string",
-            allowNull: true
-        },
+
+        // dynamic fields
         {
             name: 'RelatedPerson',
             allowNull: true,
@@ -75,6 +83,8 @@ Ext.define('SlateAdmin.model.person.Relationship', {
         }
     ],
 
+    proxy: 'slate-relationships',
+
     validators: {
         Class: 'presence',
         PersonID: 'presence',
@@ -93,11 +103,5 @@ Ext.define('SlateAdmin.model.person.Relationship', {
                 return val && val.Label;
             }
         }
-    },
-
-    proxy: {
-        type: 'slaterecords',
-        url: '/relationships',
-        include: ['RelatedPerson', 'InverseRelationship']
     }
 });

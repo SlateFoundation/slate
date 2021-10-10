@@ -27,11 +27,11 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
     stores: [
         'people.ContactPointTemplates',
-        'people.RelationshipTemplates'
+        'people.RelationshipTemplates@Slate.store'
     ],
 
     models: [
-        'person.Relationship'
+        'person.Relationship@Slate.model'
     ],
     //    stores: [
     //        'people.ContactPoints',

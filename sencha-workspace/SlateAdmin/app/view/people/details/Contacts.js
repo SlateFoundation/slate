@@ -9,8 +9,8 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         'Ext.grid.plugin.CellEditing',
         'Ext.grid.feature.Grouping',
         'Ext.form.field.ComboBox',
-        'SlateAdmin.model.person.Relationship',
-        'SlateAdmin.store.people.RelationshipTemplates',
+        'Slate.model.person.Relationship',
+        'Slate.model.person.RelationshipTemplate',
         'SlateAdmin.model.person.ContactPoint',
         'SlateAdmin.store.people.ContactPointTemplates',
         'SlateAdmin.widget.field.Person',
@@ -40,7 +40,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         componentCls: 'slate-people-details-related',
         bodyBorder: '1 0',
         store: {
-            model: 'SlateAdmin.model.person.Relationship',
+            model: 'Slate.model.person.Relationship',
             pageSize: false,
             remoteSort: true,
             autoSync: false

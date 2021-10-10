@@ -1,7 +1,11 @@
-/*jslint browser: true, undef: true *//*global Ext*/
-Ext.define('SlateAdmin.model.person.RelationshipTemplate', {
+Ext.define('Slate.model.person.RelationshipTemplate', {
     extend: 'Ext.data.Model',
+    requires: [
+        'Slate.proxy.API'
+    ],
 
+
+    // model config
     idProperty: 'label',
 
     fields: [
@@ -25,6 +29,18 @@ Ext.define('SlateAdmin.model.person.RelationshipTemplate', {
             name: 'Inverse'
         }
     ],
+
+    proxy: {
+        type: 'slate-api',
+        url: '/relationships/*templates',
+        pageParam: false,
+        startParam: false,
+        limitParam: false,
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
 
     getInverseLabel: function(gender) {
         var inverse = this.get('Inverse');
