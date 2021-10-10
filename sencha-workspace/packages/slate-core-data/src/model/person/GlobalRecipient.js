@@ -2,7 +2,6 @@ Ext.define('Slate.model.person.GlobalRecipient', {
     extend: 'Ext.data.Model',
     requires: [
         'Slate.proxy.people.GlobalRecipients',
-        'Emergence.ext.proxy.Records',
         'Ext.data.identifier.Negative',
         'Ext.data.validator.Presence',
         'Ext.data.validator.Bound'
