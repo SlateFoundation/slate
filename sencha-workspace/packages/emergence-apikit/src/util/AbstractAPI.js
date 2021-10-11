@@ -7,7 +7,22 @@ Ext.define('Emergence.util.AbstractAPI', {
     alternateClassName: 'Emergence.ext.util.AbstractAPI',
 
     config: {
+        token: null,
         sessionData: null
+    },
+
+
+    constructor: function() {
+        var me = this,
+            pageParams;
+
+        me.callParent(arguments);
+
+        pageParams = Ext.Object.fromQueryString(location.search);
+
+        if (pageParams.apiToken) {
+            me.setToken(pageParams.apiToken);
+        }
     },
 
 
@@ -18,10 +33,16 @@ Ext.define('Emergence.util.AbstractAPI', {
      */
 
     buildHeaders: function(headers) {
+        var token = this.getToken();
+
         headers = headers || {};
 
         if (!('Accept' in headers)) {
             headers.Accept = 'application/json';
+        }
+
+        if (token) {
+            headers.Authorization = `Token ${token}`;
         }
 
         return headers;

@@ -1,0 +1,113 @@
+name: 'Release: Prepare PR'
+
+on:
+  push:
+    branches: [ develop ]
+
+env:
+  GITHUB_USERNAME: jarvus-bot
+  GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+  RELEASE_BRANCH: master
+
+jobs:
+  release-prepare:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    # - uses: mxschmitt/action-tmate@v3
+
+    - name: Create/update pull request
+      run: |
+        # get latest release tag
+        latest_release=$(git describe --tags --abbrev=0 "origin/${RELEASE_BRANCH}")
+        latest_release_bumped=$(echo $latest_release | awk -F. -v OFS=. '{$NF++;print}')
+
+
+        # create or update PR
+        pr_body="$(cat <<EOF
+        Release: ${latest_release_bumped}
+
+        ## Improvements
+
+        ## Technical
+
+        EOF
+        )"
+
+        pr_number=$(hub pr list -h develop -f '%I')
+
+        if [ -n "${pr_number}" ]; then
+          echo "Updating PR #${pr_number}"
+          existing_comment_id=$(hub api "/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments" | jq ".[] | select(.user.login==\"${GITHUB_USERNAME}\") | .id")
+        else
+          echo "Opening PR"
+          hub pull-request -b "${RELEASE_BRANCH}" -h develop -F <(echo "${pr_body}") > /tmp/pr.json
+          pr_number=$(hub pr list -h develop -f '%I')
+          echo "Opened PR #${pr_number}"
+        fi
+
+
+        # build changelog
+        commits=$(
+          git log \
+            --first-parent \
+            --reverse \
+            --format="%H" \
+            "origin/${RELEASE_BRANCH}..develop"
+        )
+
+        changelog=()
+
+        while read -r commit; do
+          subject="$(git show -s --format=%s "${commit}")"
+          line=""
+
+          if [[ "${subject}" =~ Merge\ pull\ request\ \#([0-9]+) ]]; then
+            line="$(hub pr show -f '%t [%i] @%au' "${BASH_REMATCH[1]}" || true)"
+          fi
+
+          if [ -z "${line}" ]; then
+            author="$(hub api "/repos/${GITHUB_REPOSITORY}/commits/${commit}" -H Accept:application/vnd.github.v3+json | jq -r '.author.login')"
+            if [ -n "${author}" ]; then
+              author="@${author}"
+            else
+              author="$(git show -s --format=%ae "${commit}")"
+            fi
+
+            line="${subject} ${author}"
+          fi
+
+          # move ticket number prefix into to existing square brackets at end
+          line="$(echo "${line}" | perl -pe 's/^([A-Z]+-[0-9]+):?\s*(.*?)\s*\[([^]]+)\]\s*(\S+)$/\2 [\3, \1] \4/')"
+
+          # move ticket number prefix into to new square brackets at end
+          line="$(echo "${line}" | perl -pe 's/^([A-Z]+-[0-9]+):?\s*(.*?)\s*(\S+)$/\2 [\1] \3/')"
+
+          # combine doubled square brackets at the end
+          line="$(echo "${line}" | perl -pe 's/^\s*(.*?)\s*\[([A-Z]+-[0-9]+)\]\s*\[([^]]+)\]\s*(\S+)$/\1 [\3, \2] \4/')"
+
+          changelog+=("- ${line}")
+        done <<< "${commits}"
+
+
+        # create or update comment
+        comment_body="$(cat <<EOF
+        ## Changelog
+
+        \`\`\`markdown
+        $(IFS=$'\n'; echo "${changelog[*]}")
+        \`\`\`
+        EOF
+        )"
+
+        if [ -n "${existing_comment_id}" ]; then
+          echo "Updating comment #${existing_comment_id}"
+          hub api "/repos/${GITHUB_REPOSITORY}/issues/comments/${existing_comment_id}" -f body="${comment_body}"
+        else
+          echo "Creating comment"
+          hub api "/repos/${GITHUB_REPOSITORY}/issues/${pr_number}/comments" -f body="${comment_body}"
+        fi

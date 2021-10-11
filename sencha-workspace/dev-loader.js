@@ -1,11 +1,16 @@
 (() => {
-    const [,apiHost] = location.search.match(/[?&]apiHost=([^&]+)/) || [];
-    const [,apiSSL] = location.search.match(/[?&]apiSSL=([^&]+)/) || [];
+    let [,apiHost] = location.search.match(/[?&]apiHost=([^&]+)/) || [];
+    let [,apiSSL] = location.search.match(/[?&]apiSSL=([^&]*)/) || [];
+    let [,apiToken] = location.search.match(/[?&]apiToken=([^&]+)/) || [];
 
     if (!apiHost) {
         document.body.innerHTML = 'Page must be loaded with <code>?apiHost=slate.example.org</code> set'
         return;
     }
+
+    const urlMatch = apiHost.match(/(^([a-zA-Z]+):\/\/)?([^/]+).*/);
+    apiHost = urlMatch[3];
+    apiSSL = apiSSL !== undefined ? Boolean(apiSSL) : urlMatch[2] == 'https';
 
     const framePath = document.currentScript.getAttribute('data-frame');
 
@@ -14,6 +19,9 @@
         xhr.responseType = 'document';
         xhr.withCredentials = true;
         xhr.open('GET', `http${apiSSL?'s':''}://${apiHost}${framePath}`);
+        if (apiToken) {
+            xhr.setRequestHeader('Authorization', `Token ${apiToken}`);
+        }
         xhr.onload = () => {
             if (xhr.status === 200) {
                 // graft head elements
