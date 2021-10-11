@@ -183,11 +183,11 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                             getClass: function (v) {
                                 return [
                                     'glyph-shield',
-                                    v == 'Emergence\\People\\Relationship' ? '' : 'glyph-inactive',
+                                    v == 'Emergence\\People\\GuardianRelationship' ? '' : 'glyph-inactive',
                                 ].join(' ');
                             },
                             getTip: function (v) {
-                                return (v == 'Emergence\\People\\Relationship' ? 'Undesignate' : 'Designate') + ' guardian';
+                                return (v == 'Emergence\\People\\GuardianRelationship' ? 'Undesignate' : 'Designate') + ' guardian';
                             }
                         },
                     ]
