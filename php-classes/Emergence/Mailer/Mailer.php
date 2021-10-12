@@ -4,7 +4,7 @@ namespace Emergence\Mailer;
 
 class Mailer
 {
-    public static $defaultImplementation = '\Emergence\Mailer\PHPMailer';
+    public static $defaultImplementation = PHPMailer::class;
     public static $defaultFrom;
 
     public static function __callStatic($name, $args)

@@ -9,9 +9,9 @@ site:
   replicaCount: 1
   strategyType: Recreate
 
-  envFrom: []
-    # - secretName: 'mysecret'
-    #   required: true
+  secrets: []
+    # - name: 'mysecret'
+    #   optional: true
 
   image:
     repository: ""
