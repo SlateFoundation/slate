@@ -1,0 +1,4 @@
+[holomapping]
+holosource="=>helm-chart"
+files = "**"
+before = "*"
