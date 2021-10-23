@@ -19,3 +19,28 @@ Person::$relationships['GuardianRelationships'] = [
     'foreign' => 'PersonID',
     'conditions' => ['Class' => GuardianRelationship::class]
 ];
+
+Person::$searchConditions['HasGuardian'] = [
+    'qualifiers' => ['has'],
+    'points' => 1,
+    'callback' => function ($what) {
+        if ($what != 'guardian') {
+            return null;
+        }
+
+        $ids = DB::allValues(
+            'PersonID',
+            '
+                SELECT PersonID
+                  FROM `%s` relationships
+                 WHERE relationships.Class = "%s"
+            ',
+            [
+                GuardianRelationship::$tableName,
+                DB::escape(GuardianRelationship::class)
+            ]
+        );
+
+        return count($ids) ? 'Emergence_People_Person.ID IN ('.implode(',', $ids).')' : '0';
+    }
+];

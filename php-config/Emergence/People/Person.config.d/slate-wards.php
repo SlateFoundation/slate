@@ -51,3 +51,28 @@ Person::$searchConditions['WardAdvisor'] = [
         return count($ids) ? 'Emergence_People_Person.ID IN ('.implode(',', $ids).')' : '0';
     }
 ];
+
+Person::$searchConditions['HasWard'] = [
+    'qualifiers' => ['has'],
+    'points' => 1,
+    'callback' => function ($what) {
+        if ($what != 'ward') {
+            return null;
+        }
+
+        $ids = DB::allValues(
+            'RelatedPersonID',
+            '
+                SELECT RelatedPersonID
+                  FROM `%s` relationships
+                 WHERE relationships.Class = "%s"
+            ',
+            [
+                GuardianRelationship::$tableName,
+                DB::escape(GuardianRelationship::class)
+            ]
+        );
+
+        return count($ids) ? 'Emergence_People_Person.ID IN ('.implode(',', $ids).')' : '0';
+    }
+];
