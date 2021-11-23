@@ -1,32 +1,57 @@
 .contacts-list {
     .x-dataview-item {
+        align-items: baseline;
         background-color: $grid-row-cell-background-color;
-        text-align: center;
+        display: grid;
+        gap: $grid-cell-inner-padding;
+        grid-template-columns: auto 1fr auto 1fr auto;
+        line-height: $grid-row-cell-line-height;
+        padding: ($grid-cell-inner-padding * .5) $grid-cell-inner-padding $grid-cell-inner-padding;
 
         &:not(:first-child) {
-            border-top: 1px solid black;
+            border-top: 1px solid $grid-row-border-color;
+        }
+    }
+
+    button {
+        font-size: 1em;
+        padding: 0;
+    }
+
+    .guardianship {
+        label {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            gap: .25em;
         }
     }
 
     .forward-relationship {
-        font-size: 125%;
-        padding: 2px;
+        text-align: right;
     }
 
-    .inverse-relationship {
-        font-size: 90%;
-        padding: 2px;
-    }
-
-    .relationship-label, .relationship-guardian-toggle {
-        border: 1px dashed grey;
+    .relationship-label {
+        border-bottom: 1px dashed;
         cursor: pointer;
-        padding: 2px 5px;
+
+        &:hover,
+        &:focus {
+            border-bottom-style: solid;
+        }
     }
 
     .relationship-delete {
-        cursor: pointer;
-        float: right;
-        margin: 5px;
+        text-align: right;
+    }
+
+    .relationship-delete-btn {
+        background: none;
+        border: 0;
+        padding: 0;
+    }
+
+    .slate-grid-phantom {
+        padding-top: ($grid-cell-inner-padding * .5);
     }
 }

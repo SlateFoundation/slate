@@ -30,44 +30,43 @@
         loadMask: false,
         emptyText: 'No contacts have been linked or created yet.',
         disableSelection: true,
-        itemTpl: [
-            '<tpl if="RelatedPerson && RelatedPerson.isModel">',
-            '    <i class="relationship-delete fa fa-minus-circle glyph-danger"></i>',
-            '    <div class="forward-relationship">',
-            '        <tpl if="ID && !RelatedPerson.phantom">',
-            '            <a href="#{[this.getSearchRoute(values)]}">',
-            '        </tpl>',
-            '        <tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>',
-            '        <tpl if="ID && !RelatedPerson.phantom">',
-            '            </a>',
-            '        </tpl>',
-            '        is a',
-            '        <span class="relationship-label">{Label}</span>',
-            '        <tpl if="Class == this.CLASS_GUARDIAN">',
-            '            (<i class="relationship-guardian-toggle fa fa-shield glyph-shield"></i> guardian)',
-            '        <tpl else>',
-            '            <i class="relationship-guardian-toggle fa fa-shield glyph-inactive"></i>',
-            '        </tpl>',
-            '        to this person',
-            '    </div>',
-            '    <tpl for="InverseRelationship">',
-            '        <div class="inverse-relationship">',
-            '            <strong>Inverse: </strong>',
-            '            This person is a',
-            '            <span class="relationship-label">{Label}</span>',
-            '            <tpl if="Class == this.CLASS_GUARDIAN">',
-            '                (<i class="relationship-guardian-toggle fa fa-shield glyph-shield"></i> guardian)',
-            '            <tpl else>',
-            '                <i class="relationship-guardian-toggle fa fa-shield glyph-inactive"></i>',
-            '            </tpl>',
-            '            to',
-            '            <tpl for="parent.RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>',
-            '        </div>',
-            '    </tpl>',
-            '<tpl elseif="!RelatedPerson">',
-            '    <i class="fa fa-plus-circle"></i> Add new&hellip;',
-            '</tpl>',
-            {
+        itemTpl: [`
+            <tpl if="RelatedPerson && RelatedPerson.isModel">
+                <div class="guardianship">
+                    <label>
+                        <span class="{[this.getGuardianLabelClass(values)]}">Guardian</span>
+                        <input type="checkbox" <tpl if="Class == this.CLASS_GUARDIAN">checked</tpl>>
+                    </label>
+                </div>
+                <div class="forward-relationship">
+                    <tpl if="ID && !RelatedPerson.phantom">
+                        <a href="#{[this.getSearchRoute(values)]}">
+                    </tpl>
+                    <tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>
+                    <tpl if="ID && !RelatedPerson.phantom">
+                        </a>
+                    </tpl>
+                    <br>
+                    <span class="relationship-label">{Label}</span>
+                </div>
+                <i class="relationship-icon fa fa-exchange muted"></i>
+                <tpl for="InverseRelationship">
+                    <div class="inverse-relationship">
+                        <div class="muted">[Person Name]</div>
+                        <span class="relationship-label">{Label}</span>
+                    </div>
+                </tpl>
+                <div class="relationship-delete">
+                    <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
+                        <i class="fa fa-minus-circle glyph-danger"></i>
+                    </button>
+                </div>
+            <tpl elseif="!RelatedPerson">
+                <div class="slate-grid-phantom">
+                    <i class="fa fa-plus-circle"></i> Add new&hellip;
+                </div>
+            </tpl>
+            `,{
                 CLASS_RELATIONSHIP,
                 CLASS_GUARDIAN,
                 getSearchRoute: function (relationship) {
@@ -84,7 +83,10 @@
                     path.push('contacts');
 
                     return Ext.util.History.encodeRouteArray(path);
-                }
+                },
+                getGuardianLabelClass: function(relationship) {
+                    return relationship.Class == CLASS_GUARDIAN ? 'glyph-shield' : 'muted';
+                },
             }
         ],
 

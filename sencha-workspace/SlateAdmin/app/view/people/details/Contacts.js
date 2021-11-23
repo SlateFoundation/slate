@@ -36,7 +36,11 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
     },
 
     items: [{
-        xtype: 'people-details-contacts-list',
+        xtype: 'panel',
+        title: 'Relationships',
+        items: [{
+            xtype: 'people-details-contacts-list',
+        }],
     }, {
     //     xtype: 'grid',
     //     itemId: 'relationships',
