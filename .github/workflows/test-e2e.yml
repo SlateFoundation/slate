@@ -90,22 +90,35 @@ jobs:
         env: STUDIO_CONTAINER=,STUDIO_SSH=
         working-directory: ${{ github.workspace }}.cypress-workspace
 
+    - name: Open access to crash log
+      if: always()
+      run: |
+        sudo chmod ugo+rX /hab/svc/php-runtime/{var,var/logs} || true
+        sudo chmod ugo+r /hab/svc/php-runtime/var/logs/crash.log || true
+
+    - name: Upload crash log
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: crash-log
+        path: /hab/svc/php-runtime/var/logs/crash.log
+
     - name: Upload supervisor log
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       if: always()
       with:
         name: supervisor-log
         path: /hab/sup/default/sup.log
 
     - name: Upload Cypress screenshots
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       if: failure()
       with:
         name: cypress-screenshots
         path: ${{ github.workspace }}.cypress-workspace/cypress/screenshots
 
     - name: Upload Cypress videos
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       if: always()
       with:
         name: cypress-videos
