@@ -32,12 +32,6 @@
         disableSelection: true,
         itemTpl: [`
             <tpl if="RelatedPerson && RelatedPerson.isModel">
-                <div class="guardianship">
-                    <label>
-                        <span class="{[this.getGuardianLabelClass(values)]}">Guardian</span>
-                        <input type="checkbox" <tpl if="Class == this.CLASS_GUARDIAN">checked</tpl>>
-                    </label>
-                </div>
                 <div class="forward-relationship">
                     <tpl if="ID && !RelatedPerson.phantom">
                         <a href="#{[this.getSearchRoute(values)]}">
@@ -47,13 +41,23 @@
                         </a>
                     </tpl>
                     <br>
-                    <span class="relationship-label">{Label}</span>
+                    <span class="relationship-label">
+                        <tpl if="Class == this.CLASS_GUARDIAN">
+                            <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
+                        </tpl>
+                        <span class="label-text">{Label}</span>
+                    </span>
                 </div>
                 <i class="relationship-icon fa fa-exchange muted"></i>
                 <tpl for="InverseRelationship">
                     <div class="inverse-relationship">
                         <div class="muted">[Person Name]</div>
-                        <span class="relationship-label">{Label}</span>
+                        <span class="relationship-label">
+                            <tpl if="Class == this.CLASS_GUARDIAN">
+                                <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
+                            </tpl>
+                            <span class="label-text">{Label}</span>
+                        </span>
                     </div>
                 </tpl>
                 <div class="relationship-delete">

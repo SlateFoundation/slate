@@ -38,6 +38,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
     items: [{
         xtype: 'panel',
         title: 'Relationships',
+        dockedItems: [{
+            dock: 'top',
+            xtype: 'people-details-contacts-panellegend',
+            data: [{
+                icon: 'shield',
+                iconCls: 'glyph-shield',
+                label: 'Guardian',
+            }],
+        }],
         items: [{
             xtype: 'people-details-contacts-list',
         }],
@@ -237,6 +246,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 }
             ]
         },
+        dockedItems: [{
+            dock: 'top',
+            xtype: 'people-details-contacts-panellegend',
+            data: [{
+                icon: 'star',
+                iconCls: 'glyph-star',
+                label: 'Primary',
+            }],
+        }],
         viewConfig: {
             loadMask: false,
             autoScroll: false,
