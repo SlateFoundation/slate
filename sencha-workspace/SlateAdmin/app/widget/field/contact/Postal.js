@@ -107,7 +107,8 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
                     formBind: true,
                     handler: function() {
                         me.collapse();
-                        
+
+                        // a picker implementation fires select to finish a pick
                         me.fireEvent('select', me, me.getSerializedData());
                     }
                 }
@@ -123,37 +124,32 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
             }
         });
     },
-    
+
     valueToRaw: function(value) {
         return value ? value.replace(/\n/g, ', ') : '';
     },
-    
+
     onChange: function() {
         this.collapse();
         this.callParent(arguments);
     },
-    
-    mimicBlur: function(e) {
-        if (!this.isEventWithinPickerForm(e)) {
-            this.callParent(arguments);
-        }
-    },
-    
+
     collapseIf: function(e) {
-        if (!this.isEventWithinPickerForm(e)) {
-            this.callParent(arguments);
+        if (this.isEventWithinPickerForm(e)) {
+            return;
         }
+        this.callParent(arguments);
     },
-    
+
     isEventWithinPickerForm: function(e) {
         var me = this,
             picker = me.picker,
             stateField = picker && picker.getForm().findField('state'),
             statePicker = stateField && stateField.picker;
-        
+
         return statePicker && e.within(statePicker.el, false, true);
     },
-    
+
     onFormDirtyChange: function(formPanel, dirty) {
         this.setReadOnly(dirty);
     },
@@ -163,20 +159,20 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
             fields = form.getFields().getRange(),
             values = {},
             fieldsLen = fields.length, i = 0, field;
-        
+
         for (; i < fieldsLen; i++) {
             field = fields[i];
-            
+
             values[field.getName()] = '';
         }
-        
+
         if (serialized) {
             Ext.apply(values, Ext.decode(serialized));
         }
-        
+
         form.setValues(values);
     },
-    
+
     getSerializedData: function() {
         return Ext.encode(this.getPicker().getForm().getValues());
     }
