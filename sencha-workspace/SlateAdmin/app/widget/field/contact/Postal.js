@@ -17,6 +17,7 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
 
         return Ext.widget({
             xtype: 'form',
+            cls: 'contact-postal-picker-form',
             floating: true,
             constrain: true,
             border: true,
