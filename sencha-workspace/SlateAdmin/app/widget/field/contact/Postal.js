@@ -11,6 +11,8 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
     ],
 
     triggerCls: Ext.baseCSSPrefix + 'form-arrow-trigger',
+    matchFieldWidth: false,
+    pickerAlign: 'tr-br?',
 
     createPicker: function() {
         var me = this;
@@ -18,6 +20,7 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
         return Ext.widget({
             xtype: 'form',
             cls: 'contact-postal-picker-form',
+            width: 400,
             floating: true,
             constrain: true,
             border: true,
@@ -47,7 +50,7 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
                             maskRe: /\d/,
                             allowBlank: false,
                             margin: '0 5 0 0',
-                            width: 50
+                            width: 60
                         },
                         {
                             xtype: 'textfield',
@@ -80,6 +83,7 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
                         {
                             xtype: 'slate-statefield',
                             name: 'state',
+                            width: 65,
                             margin: '0 5 0 0'
                         },
                         {
