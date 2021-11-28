@@ -87,6 +87,7 @@ jobs:
         GIT_DIR: ${{ github.workspace }}/.git
         GIT_WORK_TREE: ${{ github.workspace }}
       with:
+        browser: chrome
         env: STUDIO_CONTAINER=,STUDIO_SSH=
         working-directory: ${{ github.workspace }}.cypress-workspace
 
