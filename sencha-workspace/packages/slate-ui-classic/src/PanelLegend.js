@@ -1,6 +1,9 @@
-Ext.define('SlateAdmin.view.people.PanelLegend', {
+Ext.define('Slate.ui.PanelLegend', {
     extend: 'Ext.Component',
-    xtype: 'people-details-contacts-panellegend',
+    xtype: 'slate-panellegend',
+
+
+    // component configuration
     componentCls: 'panel-legend',
     padding: '5 10',
     tpl: `

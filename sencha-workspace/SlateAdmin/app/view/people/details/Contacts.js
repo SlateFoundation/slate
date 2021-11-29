@@ -2,6 +2,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-contacts',
     requires: [
+        'Slate.ui.PanelLegend',
         'SlateAdmin.view.people.details.contacts.List',
 
         // TODO: audit for removals:
@@ -40,7 +41,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         title: 'Relationships',
         dockedItems: [{
             dock: 'top',
-            xtype: 'people-details-contacts-panellegend',
+            xtype: 'slate-panellegend',
             data: [{
                 icon: 'shield',
                 iconCls: 'glyph-shield',
@@ -248,7 +249,7 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         },
         dockedItems: [{
             dock: 'top',
-            xtype: 'people-details-contacts-panellegend',
+            xtype: 'slate-panellegend',
             data: [{
                 icon: 'star',
                 iconCls: 'glyph-star',

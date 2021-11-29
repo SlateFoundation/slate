@@ -10,6 +10,7 @@ files = [
     "SlateAdmin/**",
     "packages/slate-theme/**",
     "packages/slate-core-data/**",
+    "packages/slate-ui-classic/**",
     "packages/emergence-apikit/**",
     "packages/jarvus-apikit/**",
     "packages/jarvus-routing/**",
