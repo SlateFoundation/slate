@@ -9,7 +9,9 @@
         extend: 'Ext.view.View',
         xtype: 'people-details-contacts-list',
         requires: [
-            'Slate.store.people.Relationships'
+            'SlateAdmin.view.people.details.contacts.RelationshipEditor',
+            'SlateAdmin.widget.field.contact.Relationship',
+            'Slate.store.people.Relationships',
         ],
 
 
@@ -103,20 +105,7 @@
                 };
             }
 
-            if (typeof labelEditor == 'object' && !labelEditor.isComponent && !oldLabelEditor) {
-                labelEditor = Ext.apply({
-                    alignment: 'l-l',
-                    // autoSize: {
-                    //     width: 'boundEl'
-                    // },
-                    field: {
-                        xtype: 'textfield',
-                        selectOnFocus: true
-                    }
-                }, labelEditor);
-            }
-
-            return Ext.factory(labelEditor, 'Ext.Editor', oldLabelEditor);
+            return Ext.factory(labelEditor, 'SlateAdmin.view.people.details.contacts.RelationshipEditor', oldLabelEditor);
         },
 
         updateLabelEditor: function (labelEditor) {
@@ -196,14 +185,19 @@
         },
 
         onRelationshipLabelClick: function(relationship, isInverse, targetEl, ev) {
-            var editor = this.getLabelEditor(),
-                originalLabel = isInverse
-                    ? relationship.get('InverseRelationship').Label
-                    : relationship.get('Label');
+            var editor = this.getLabelEditor();
 
             editor.activeRelationship = relationship;
             editor.activeIsInverse = isInverse;
-            editor.startEdit(targetEl, originalLabel);
+            editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
+            editor.startEdit(targetEl, {
+                Class: isInverse
+                    ? relationship.get('InverseRelationship').Class
+                    : relationship.get('Class'),
+                Label: isInverse
+                    ? relationship.get('InverseRelationship').Label
+                    : relationship.get('Label')
+            });
         },
 
         onBeforeLabelEditorComplete: function(editor, value, startValue) {
@@ -217,29 +211,9 @@
             if (isInverse) {
                 const inverseRelationship = relationship.get('InverseRelationship');
 
-                relationship.set('InverseRelationship', Ext.applyIf({
-                    Label: value
-                }, inverseRelationship));
+                relationship.set('InverseRelationship', Ext.applyIf(value, inverseRelationship));
             } else {
-                relationship.set('Label', value);
-            }
-        },
-
-        onRelationshipGuardianToggleClick: function(relationship, isInverse, targetEl, ev) {
-            if (isInverse) {
-                const inverseRelationship = relationship.get('InverseRelationship');
-
-                relationship.set('InverseRelationship', Ext.applyIf({
-                    Class: inverseRelationship.Class == CLASS_GUARDIAN
-                        ? CLASS_RELATIONSHIP
-                        : CLASS_GUARDIAN
-                }, inverseRelationship));
-            } else {
-                if (relationship.get('Class') == CLASS_GUARDIAN) {
-                    relationship.set('Class', CLASS_RELATIONSHIP);
-                } else {
-                    relationship.set('Class', CLASS_GUARDIAN);
-                }
+                relationship.set(value);
             }
         },
     };
