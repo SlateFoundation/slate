@@ -69,7 +69,7 @@
                 </div>
             <tpl elseif="!RelatedPerson">
                 <div class="slate-grid-phantom">
-                    <i class="fa fa-plus-circle"></i> Add new&hellip;
+                    <i class="fa fa-plus-circle"></i> Add another related person&hellip;
                 </div>
             </tpl>
             `,{
