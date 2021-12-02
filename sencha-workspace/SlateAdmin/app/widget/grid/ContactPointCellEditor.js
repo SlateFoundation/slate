@@ -10,15 +10,13 @@ Ext.define('SlateAdmin.widget.grid.ContactPointCellEditor', {
         me.field.on('select', 'onSerializedSelect', me);
     },
 
-    startEdit: function(el, value, context) {
+    startEdit: function() {
         var me = this,
             field = me.field;
 
         if (field.setSerializedData) {
-            field.setSerializedData(context.record.get('Data'));
+            field.setSerializedData(me.editingPlugin.context.record.get('Data'));
         }
-
-        me.activeContext = context;
 
         me.callParent(arguments);
 
@@ -27,32 +25,26 @@ Ext.define('SlateAdmin.widget.grid.ContactPointCellEditor', {
         me.startValue = field.getValue();
     },
 
-    completeEdit : function(remainVisible) {
+    completeEdit: function(remainVisible) {
         var me = this,
             field = me.field,
             serializedValue = me.serializedValue,
-            context = me.activeContext,
-            record = context.record;
+            record = me.context.record;
 
-        if (!me.editing) {
-            return;
-        }
-
-        if (serializedValue) {
-            record.set('Data', serializedValue);
+        // more advanced editors might set a serialized value for saving instead of the string value
+        if (me.editing && serializedValue) {
             delete me.serializedValue;
 
-            if (record.dirty) {
-                field.disable();
-                record.set('String', null);
-                record.save({
-                    callback: function() {
-                        me.hideEdit(remainVisible);
-                        me.fireEvent('complete', me, record.get('String'), me.startValue);
-                        field.enable();
-                    }
+            if (record.get('Data') != serializedValue) {
+                // silently revert any raw field change and apply serialized value change instead
+                field.suspendEvents();
+                me.setValue(me.startValue);
+                field.resumeEvents();
+
+                record.set({
+                    Data: serializedValue,
+                    String: null
                 });
-                return;
             }
         }
 
