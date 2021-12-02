@@ -11,6 +11,15 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     ],
 
 
+    statics: {
+        contactClassPrimaryFieldMap: {
+            'Emergence\\People\\ContactPoint\\Email': 'PrimaryEmailID',
+            'Emergence\\People\\ContactPoint\\Phone': 'PrimaryPhoneID',
+            'Emergence\\People\\ContactPoint\\Postal': 'PrimaryPostalID'
+        }
+    },
+
+
     // controller config
     views: [
         'people.details.Contacts'
@@ -413,7 +422,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
         var me = this,
             editedRecord = context.record,
             gridView = context.view,
-            store = gridView.getStore();
+            loadedPerson = me.getContactsPanel().getLoadedPerson(),
+            primaryFieldName;
 
         if (context.field == 'Label' && !editedRecord.get('String')) {
             // auto advance to value column if the editor isn't already active after a short delay
@@ -435,6 +445,11 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     Ext.Array.each(editedRecord.getProxy().getReader().rawData.failed || [], function (result) {
                         gridView.markCellInvalid(editedRecord, 'value', result.validationErrors);
                     });
+
+                    primaryFieldName = me.self.contactClassPrimaryFieldMap[editedRecord.get('Class')];
+                    if (primaryFieldName && editedRecord.get('Primary')) {
+                        loadedPerson.set(primaryFieldName, editedRecord.getId(), { dirty: false });
+                    }
 
                     // ensure each class has a phantom row
                     me.injectBlankContactRecords();
@@ -468,18 +483,9 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             loadedPerson = me.getContactsPanel().getLoadedPerson(),
             primaryFieldName, originalValue, newValue, originalRecord;
 
-        switch (record.get('Class')) {
-            case 'Emergence\\People\\ContactPoint\\Email':
-                primaryFieldName = 'PrimaryEmailID';
-                break;
-            case 'Emergence\\People\\ContactPoint\\Phone':
-                primaryFieldName = 'PrimaryPhoneID';
-                break;
-            case 'Emergence\\People\\ContactPoint\\Postal':
-                primaryFieldName = 'PrimaryPostalID';
-                break;
-            default:
-                return false;
+        primaryFieldName = me.self.contactClassPrimaryFieldMap[record.get('Class')];
+        if (!primaryFieldName) {
+            return false;
         }
 
         originalValue = loadedPerson.get(primaryFieldName);
