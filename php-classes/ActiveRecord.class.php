@@ -2128,6 +2128,19 @@ class ActiveRecord
                 case 'timestamp':
                 {
                     if (!isset($this->_convertedValues[$field])) {
+                        if ($fieldOptions['type'] == 'timestamp') {
+                            static $mysqlStaticTimezoneOffset;
+
+                            if ($mysqlStaticTimezoneOffset === null) {
+                                $mysqlStaticTimezoneOffset = DB::oneValue('SELECT @@SESSION.time_zone');
+                                if (!preg_match('/^-?\d+:\d+$/', $mysqlStaticTimezoneOffset)) {
+                                    $mysqlStaticTimezoneOffset = '';
+                                }
+                            }
+
+                            $value .= $mysqlStaticTimezoneOffset;
+                        }
+
                         if ($value && $value != '0000-00-00 00:00:00') {
                             $this->_convertedValues[$field] = strtotime($value);
                         } else {
