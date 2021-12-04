@@ -48,7 +48,7 @@
                         <tpl if="Class == this.CLASS_GUARDIAN">
                             <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
                         </tpl>
-                        <span class="label-text">{Label}</span>
+                        <span class="label-text">{Label:defaultValue('&varnothing;')}</span>
                     </span>
                 </div>
                 <i class="relationship-icon fa fa-exchange muted"></i>
@@ -63,7 +63,7 @@
                             <tpl if="Class == this.CLASS_GUARDIAN">
                                 <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
                             </tpl>
-                            <span class="label-text">{Label}</span>
+                            <span class="label-text">{Label:defaultValue('&varnothing;')}</span>
                         </span>
                     </div>
                 </tpl>
