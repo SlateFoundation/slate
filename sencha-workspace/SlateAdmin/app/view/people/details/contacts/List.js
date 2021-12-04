@@ -16,6 +16,7 @@
 
 
         config: {
+            person: null,
             labelEditor: true,
 
             store: {
@@ -53,7 +54,11 @@
                 <i class="relationship-icon fa fa-exchange muted"></i>
                 <tpl for="InverseRelationship">
                     <div class="inverse-relationship">
-                        <div class="muted">[Person Name]</div>
+                        <tpl for="parent.Person.getData()">
+                            <div class="muted">
+                                {FirstName} {MiddleName} {LastName}
+                            </div>
+                        </tpl>
                         <span class="relationship-label">
                             <tpl if="Class == this.CLASS_GUARDIAN">
                                 <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
@@ -98,6 +103,10 @@
 
 
         // config handlers
+        updatePerson: function(person) {
+            this.getStore().setPerson(person.getId());
+        },
+
         applyLabelEditor: function(labelEditor, oldLabelEditor) {
             if (!labelEditor || typeof labelEditor == 'boolean') {
                 labelEditor = {
@@ -120,6 +129,12 @@
 
 
         // dataview lifecycle
+        prepareData: function(data) {
+            var data = this.callParent(arguments);
+            data.Person = this.getPerson();
+            return data;
+        },
+
         onBeforeItemClick: function(relationship, item, index, ev) {
             var targetEl;
 

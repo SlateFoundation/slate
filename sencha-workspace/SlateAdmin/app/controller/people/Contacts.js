@@ -112,7 +112,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             relationshipTemplatesStore = me.getPeopleRelationshipTemplatesStore(),
             relationshipTemplatesStoreLoaded = relationshipTemplatesStore.isLoaded(),
             relationshipsList = me.getRelationshipsList(),
-            relationshipsStore = relationshipsList.getStore(),
             // relationshipsGrid = me.getRelationshipsGrid(),
             // relationshipsStore = relationshipsGrid.getStore(),
             relationshipsStoreLoaded = false,
@@ -163,8 +162,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             });
 
             // load relationships
-            relationshipsStore.setPerson(person.getId());
-            relationshipsStore.loadIfDirty(false, () => {
+            relationshipsList.setPerson(person);
+            relationshipsList.getStore().loadIfDirty(false, () => {
                 relationshipsStoreLoaded = true;
                 _onStoresLoaded();
             });
