@@ -17,7 +17,7 @@
 
         config: {
             person: null,
-            labelEditor: true,
+            relationshipEditor: true,
 
             store: {
                 xclass: 'Slate.store.people.Relationships'
@@ -107,24 +107,24 @@
             this.getStore().setPerson(person.getId());
         },
 
-        applyLabelEditor: function(labelEditor, oldLabelEditor) {
-            if (!labelEditor || typeof labelEditor == 'boolean') {
-                labelEditor = {
-                    disabled: !labelEditor
+        applyRelationshipEditor: function(relationshipEditor, oldRelationshipEditor) {
+            if (!relationshipEditor || typeof relationshipEditor == 'boolean') {
+                relationshipEditor = {
+                    disabled: !relationshipEditor
                 };
             }
 
-            return Ext.factory(labelEditor, 'SlateAdmin.view.people.details.contacts.RelationshipEditor', oldLabelEditor);
+            return Ext.factory(relationshipEditor, 'SlateAdmin.view.people.details.contacts.RelationshipEditor', oldRelationshipEditor);
         },
 
-        updateLabelEditor: function (labelEditor) {
-            labelEditor.on({
+        updateRelationshipEditor: function (relationshipEditor) {
+            relationshipEditor.on({
                 scope: this,
-                beforecomplete: 'onBeforeLabelEditorComplete',
-                complete: 'onLabelEditorComplete'
+                beforecomplete: 'onBeforeRelationshipEditorComplete',
+                complete: 'onRelationshipEditorComplete'
             });
 
-            labelEditor.ownerCmp = this;
+            relationshipEditor.ownerCmp = this;
         },
 
 
@@ -200,7 +200,7 @@
         },
 
         onRelationshipLabelClick: function(relationship, isInverse, targetEl, ev) {
-            var editor = this.getLabelEditor();
+            var editor = this.getRelationshipEditor();
 
             editor.activeRelationship = relationship;
             editor.activeIsInverse = isInverse;
@@ -215,8 +215,8 @@
             });
         },
 
-        onBeforeLabelEditorComplete: function(editor, value, startValue) {
-            console.info('onBeforeLabelEditorComplete(%o, %o, %o)', editor, value, startValue);
+        onBeforeRelationshipEditorComplete: function(editor, value, startValue) {
+            console.info('onBeforeRelationshipEditorComplete(%o, %o, %o)', editor, value, startValue);
         },
 
         onLabelEditorComplete: function(editor, value, startValue) {
