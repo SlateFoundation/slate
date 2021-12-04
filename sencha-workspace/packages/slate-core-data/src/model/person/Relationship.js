@@ -79,7 +79,17 @@ Ext.define('Slate.model.person.Relationship', {
         {
             name: 'InverseRelationship',
             allowNull: true,
-            defaultValue: null
+            defaultValue: null,
+            serialize: function({ Class, Label }) {
+                return { Class, Label };
+            },
+            isEqual: function(a, b) {
+                if (!a || !b) {
+                    return false;
+                }
+
+                return Ext.Object.equals(a, b);
+            }
         }
     ],
 

@@ -216,8 +216,9 @@
             console.info('onBeforeRelationshipEditorComplete(%o, %o, %o)', editor, value, startValue);
         },
 
-        onLabelEditorComplete: function(editor, value, startValue) {
-            var relationship = editor.activeRelationship,
+        onRelationshipEditorComplete: function(editor, value, startValue) {
+            var me = this,
+                relationship = editor.activeRelationship,
                 isInverse = editor.activeIsInverse;
 
             if (isInverse) {
@@ -226,6 +227,15 @@
                 relationship.set('InverseRelationship', Ext.applyIf(value, inverseRelationship));
             } else {
                 relationship.set(value);
+            }
+
+            if (relationship.dirty && relationship.isValid()) {
+                me.setLoading('Updating relationship&hellip;');
+                relationship.save({
+                    callback: function (savedRecord, operation, success) {
+                        me.setLoading(false);
+                    }
+                });
             }
         },
     };
