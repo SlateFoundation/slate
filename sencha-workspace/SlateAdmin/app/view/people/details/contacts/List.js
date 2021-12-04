@@ -94,10 +94,7 @@
                     path.push('contacts');
 
                     return Ext.util.History.encodeRouteArray(path);
-                },
-                getGuardianLabelClass: function(relationship) {
-                    return relationship.Class == CLASS_GUARDIAN ? 'glyph-shield' : 'muted';
-                },
+                }
             }
         ],
 
