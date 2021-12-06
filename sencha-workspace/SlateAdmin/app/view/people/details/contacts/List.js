@@ -20,7 +20,9 @@
             relationshipEditor: true,
 
             store: {
-                xclass: 'Slate.store.people.Relationships'
+                xclass: 'Slate.store.people.Relationships',
+                remoteSort: true,
+                autoSync: false
             },
         },
 
