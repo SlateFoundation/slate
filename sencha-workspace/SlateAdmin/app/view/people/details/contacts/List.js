@@ -236,7 +236,9 @@
                 me.setLoading('Updating relationship&hellip;');
                 relationship.save({
                     callback: function (savedRecord, operation, success) {
-                        me.setLoading(false);
+                        if (success) {
+                            me.setLoading(false);
+                        }
                     }
                 });
             }
