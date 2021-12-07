@@ -22,6 +22,8 @@
         me.mon(me.field.getLabelField(), 'specialkey', 'onFieldSpecialKey', me);
         me.mon(me.field.getClassField(), 'specialkey', 'onFieldSpecialKey', me);
 
+        me.toggleCls('text-right', !me.activeIsInverse);
+
         // HACK: align after start edit for first show
         if (!me.realigned) {
             me.realign(true);

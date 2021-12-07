@@ -73,6 +73,7 @@
                     flex: 1,
 
                     name: 'Class',
+                    afterBoxLabelTextTpl: `&nbsp;<i class="fa fa-sm fa-shield glyph-guardian"></i>&nbsp;`,
                     boxLabel: 'Guardian',
                     inputValue: CLASS_GUARDIAN,
                     uncheckedValue: CLASS_RELATIONSHIP
