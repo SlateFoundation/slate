@@ -74,7 +74,7 @@
                 </div>
             <tpl elseif="!RelatedPerson">
                 <div class="slate-grid-phantom">
-                    <i class="fa fa-plus-circle"></i> Add another related person&hellip;
+                    <i class="fa fa-plus-circle"></i> Add a related person&hellip;
                 </div>
             </tpl>
             `,{
@@ -202,6 +202,7 @@
             editor.activeRelationship = relationship;
             editor.activeIsInverse = isInverse;
             editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
+            editor.offsets = isInverse ? [-6, -6] : [5, -6];
             editor.startEdit(targetEl, {
                 Class: isInverse
                     ? relationship.get('InverseRelationship').Class
