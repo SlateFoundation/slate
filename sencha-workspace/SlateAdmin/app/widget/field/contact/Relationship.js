@@ -9,7 +9,7 @@
         extend: 'Slate.ui.form.ContainerField',
         xtype: 'slate-relationshipfield',
         requires: [
-            'Ext.form.field.Text',
+            'Ext.form.field.ComboBox',
             'Ext.form.field.Checkbox'
         ],
 
@@ -43,11 +43,18 @@
                     itemId: 'labelField',
                     flex: 1,
 
-                    name: 'Label'
+                    name: 'Label',
+                    store: 'people.RelationshipTemplates',
+                    allowBlank: false,
+                    queryMode: 'local',
+                    valueField: 'label',
+                    displayField: 'label',
+                    triggerAction: 'all',
+                    autoSelect: false,
                 });
             }
 
-            return Ext.factory(labelField, 'Ext.form.field.Text', oldLabelField);
+            return Ext.factory(labelField, 'Ext.form.field.ComboBox', oldLabelField);
         },
 
         updateLabelField: function(labelField, oldLabelField) {
