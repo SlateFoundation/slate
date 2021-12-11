@@ -9,7 +9,7 @@
         extend: 'Slate.ui.form.ContainerField',
         xtype: 'slate-relationshipfield',
         requires: [
-            'Ext.form.field.ComboBox',
+            'Slate.ui.form.FlippableComboBox',
             'Ext.form.field.Checkbox'
         ],
 
@@ -54,7 +54,7 @@
                 });
             }
 
-            return Ext.factory(labelField, 'Ext.form.field.ComboBox', oldLabelField);
+            return Ext.factory(labelField, 'Slate.ui.form.FlippableComboBox', oldLabelField);
         },
 
         updateLabelField: function(labelField, oldLabelField) {

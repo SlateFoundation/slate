@@ -8,11 +8,28 @@
     ],
 
 
+    config: {
+        isInverse: false,
+    },
+
+
     // editor config
     updateEl: false,
     allowBlur: false,
     field: {
         xtype: 'slate-relationshipfield'
+    },
+
+
+    // config handlers
+    updateIsInverse: function(isInverse) {
+        var field = this.field;
+
+        if (field.isComponent) {
+            field.getLabelField().setFlipTrigger(!isInverse);
+        } else {
+            field.labelField = { flipTrigger: !isInverse };
+        }
     },
 
 

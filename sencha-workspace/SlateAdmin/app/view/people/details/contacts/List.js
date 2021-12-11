@@ -201,6 +201,7 @@
             var editor = this.getRelationshipEditor();
 
             editor.activeRelationship = relationship;
+            editor.setIsInverse(isInverse);
             editor.activeIsInverse = isInverse;
             editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
             editor.offsets = isInverse ? [-6, -6] : [5, -6];
