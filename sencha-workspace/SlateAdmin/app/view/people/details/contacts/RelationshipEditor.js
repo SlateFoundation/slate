@@ -63,8 +63,17 @@
 
     // event handlers
     onBodyMouseDown: function(ev) {
-        if (!ev.within(this.field.el, false, true)) {
-            this.completeEdit();
+        var me = this,
+            picker = me.field.getLabelField().picker;
+
+            if (
+            !ev.within(me.field.el, false, true)
+            && (
+                !picker
+                || !ev.within(picker.el, false, true)
+            )
+        ) {
+            me.completeEdit();
         }
     },
 
