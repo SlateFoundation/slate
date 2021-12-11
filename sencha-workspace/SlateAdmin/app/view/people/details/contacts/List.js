@@ -10,7 +10,6 @@
         xtype: 'people-details-contacts-list',
         requires: [
             'SlateAdmin.view.people.details.contacts.RelationshipEditor',
-            'SlateAdmin.widget.field.contact.Relationship',
             'Slate.store.people.Relationships',
         ],
 

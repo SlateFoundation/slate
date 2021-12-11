@@ -11,12 +11,8 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
         'Ext.grid.column.Template',
         'Ext.grid.plugin.CellEditing',
         'Ext.grid.feature.Grouping',
-        'Ext.form.field.ComboBox',
-        'Slate.model.person.Relationship',
-        'Slate.model.person.RelationshipTemplate',
         'SlateAdmin.model.person.ContactPoint',
         'SlateAdmin.store.people.ContactPointTemplates',
-        'SlateAdmin.widget.field.Person',
         'SlateAdmin.widget.field.contact.Postal',
         'SlateAdmin.widget.grid.ContactPointCellEditor'
     ],

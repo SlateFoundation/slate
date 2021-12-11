@@ -3,6 +3,9 @@
  */
  Ext.define('SlateAdmin.view.people.details.contacts.RelationshipEditor', {
     extend: 'Ext.Editor',
+    requires: [
+        'SlateAdmin.widget.field.contact.Relationship',
+    ],
 
 
     // editor config
