@@ -374,8 +374,9 @@
                         }
 
                         const personTemplate = matchedTemplate.get('Person');
-                        if (personTemplate) {
-                            relationship.get('RelatedPerson').set(personTemplate);
+                        const relatedPerson = relationship.get('RelatedPerson');
+                        if (personTemplate && relatedPerson.phantom) {
+                            relatedPerson.set(personTemplate);
                         }
                     }
                 }
