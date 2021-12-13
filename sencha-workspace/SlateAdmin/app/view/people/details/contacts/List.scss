@@ -1,16 +1,21 @@
 .contacts-list {
-    .x-dataview-item {
-        align-items: baseline;
+
+    .x-dataview-item,
+    .relationship-creator {
         background-color: $grid-row-cell-background-color;
-        display: grid;
-        gap: $grid-cell-inner-padding;
-        grid-template-columns: 1fr auto 1fr auto;
         line-height: $grid-row-cell-line-height;
         padding: ($grid-cell-inner-padding * .5) $grid-cell-inner-padding $grid-cell-inner-padding;
 
         &:not(:first-child) {
             border-top: 1px solid $grid-row-border-color;
         }
+    }
+
+    .x-dataview-item {
+        align-items: baseline;
+        display: grid;
+        gap: $grid-cell-inner-padding;
+        grid-template-columns: 1fr auto 1fr auto;
     }
 
     button {
@@ -57,7 +62,14 @@
         padding: 0;
     }
 
-    .slate-grid-phantom {
-        padding-top: ($grid-cell-inner-padding * .5);
+    .relationship-creator {
+        color: #888;
+        cursor: pointer;
+        padding-top: $grid-cell-inner-padding;
+
+        .fa-plus-circle {
+            color: $success-color;
+            margin-right: .125em;
+        }
     }
 }

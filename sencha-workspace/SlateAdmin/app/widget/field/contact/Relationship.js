@@ -38,9 +38,7 @@
             }
 
             if (Ext.isSimpleObject(labelField)) {
-                // TODO: change to combo field with templates
                 Ext.applyIf(labelField, {
-                    itemId: 'labelField',
                     flex: 1,
 
                     name: 'Label',
@@ -76,7 +74,6 @@
 
             if (Ext.isSimpleObject(classField)) {
                 Ext.applyIf(classField, {
-                    itemId: 'classField',
                     flex: 1,
 
                     name: 'Class',

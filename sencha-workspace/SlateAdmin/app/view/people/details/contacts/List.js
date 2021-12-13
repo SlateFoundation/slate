@@ -34,32 +34,19 @@
         loadMask: false,
         emptyText: 'No contacts have been linked or created yet.',
         disableSelection: true,
-        itemTpl: [`
-            <tpl if="RelatedPerson && RelatedPerson.isModel">
-                <div class="forward-relationship">
-                    <tpl if="ID && !RelatedPerson.phantom">
-                        <a href="#{[this.getSearchRoute(values)]}">
-                    </tpl>
-                    <tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>
-                    <tpl if="ID && !RelatedPerson.phantom">
-                        </a>
-                    </tpl>
-                    <br>
-                    <span class="relationship-label">
-                        <tpl if="Class == this.CLASS_GUARDIAN">
-                            <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
+        itemSelector: '.x-dataview-item',
+        tpl: [`
+            <tpl for=".">
+                <div class="x-dataview-item <tpl if="ID < 0">relationship-phantom</tpl>" role="option">
+                    <div class="forward-relationship">
+                        <tpl if="ID && !RelatedPerson.phantom">
+                            <a href="#{[this.getSearchRoute(values)]}">
                         </tpl>
-                        <span class="label-text">{Label:defaultValue('&varnothing;')}</span>
-                    </span>
-                </div>
-                <i class="relationship-icon fa fa-exchange muted"></i>
-                <tpl for="InverseRelationship">
-                    <div class="inverse-relationship">
-                        <tpl for="parent.Person.getData()">
-                            <div class="muted">
-                                {FirstName} {MiddleName} {LastName}
-                            </div>
+                        <tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>
+                        <tpl if="ID && !RelatedPerson.phantom">
+                            </a>
                         </tpl>
+                        <br>
                         <span class="relationship-label">
                             <tpl if="Class == this.CLASS_GUARDIAN">
                                 <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
@@ -67,17 +54,32 @@
                             <span class="label-text">{Label:defaultValue('&varnothing;')}</span>
                         </span>
                     </div>
-                </tpl>
-                <div class="relationship-delete">
-                    <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
-                        <i class="fa fa-minus-circle glyph-danger"></i>
-                    </button>
-                </div>
-            <tpl elseif="!RelatedPerson">
-                <div class="slate-grid-phantom">
-                    <i class="fa fa-plus-circle"></i> Add a related person&hellip;
+                    <i class="relationship-icon fa fa-exchange muted"></i>
+                    <tpl for="InverseRelationship">
+                        <div class="inverse-relationship">
+                            <tpl for="parent.Person.getData()">
+                                <div class="muted">
+                                    {FirstName} {MiddleName} {LastName}
+                                </div>
+                            </tpl>
+                            <span class="relationship-label">
+                                <tpl if="Class == this.CLASS_GUARDIAN">
+                                    <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
+                                </tpl>
+                                <span class="label-text">{Label:defaultValue('&varnothing;')}</span>
+                            </span>
+                        </div>
+                    </tpl>
+                    <div class="relationship-delete">
+                        <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
+                            <i class="fa fa-minus-circle glyph-danger"></i>
+                        </button>
+                    </div>
                 </div>
             </tpl>
+            <div class="relationship-creator">
+                <i class="fa fa-plus-circle"></i> Add a related person&hellip;
+            </div>
             `,{
                 CLASS_RELATIONSHIP,
                 CLASS_GUARDIAN,
@@ -127,6 +129,11 @@
 
 
         // dataview lifecycle
+
+        // disable built-in focus manipulation that can interfere with editing
+        onFocusEnter: Ext.emptyFn,
+        onFocusLeave: Ext.emptyFn,
+
         prepareData: function(data) {
             var data = this.callParent(arguments);
             data.Person = this.getPerson();
@@ -151,11 +158,6 @@
 
             if (targetEl = ev.getTarget('.relationship-label')) {
                 this.onRelationshipLabelClick(relationship, isInverse, targetEl, ev);
-                return false;
-            }
-
-            if (targetEl = ev.getTarget('.relationship-guardian-toggle')) {
-                this.onRelationshipGuardianToggleClick(relationship, isInverse, targetEl, ev);
                 return false;
             }
 

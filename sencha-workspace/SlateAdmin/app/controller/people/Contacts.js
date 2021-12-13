@@ -125,7 +125,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             // resume rendering and finish when all 3 stores are loaded
             function _onStoresLoaded() {
                 if (contactPointTemplatesStoreLoaded && relationshipTemplatesStoreLoaded && contactsStoreLoaded && relationshipsStoreLoaded) {
-                    me.injectBlankRelationshipRecord();
                     me.injectBlankContactRecords();
                     contactsPanel.setLoading(false);
                     Ext.resumeLayouts(true);
@@ -544,21 +543,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
         pointsStore.endUpdate();
     },
-
-    injectBlankRelationshipRecord: function () {
-        var me = this,
-            loadedPerson = me.getContactsPanel().getLoadedPerson(),
-            relationshipsStore = me.getRelationshipsList().getStore(),
-            phantomIndex = relationshipsStore.findBy(function (record) {
-                return record.phantom;
-            });
-
-        if (phantomIndex == -1) {
-            relationshipsStore.add({
-                PersonID: loadedPerson.getId()
-            });
-        }
-    }
 
     //    onCellEdit: function(editor, e) {
     //        var me = this;
