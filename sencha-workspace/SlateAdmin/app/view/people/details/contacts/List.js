@@ -260,10 +260,11 @@
         },
 
         startRelationshipLabelEdit: function(relationship, isInverse, targetEl, values) {
-            var editor = this.getRelationshipEditor();
+            var me = this,
+                editor = me.getRelationshipEditor();
 
             if (!targetEl) {
-                targetEl = this.getNodeByRecord(relationship);
+                targetEl = me.getNodeByRecord(relationship);
                 targetEl = Ext.fly(targetEl).down(`.${isInverse ? 'inverse' : 'forward'}-relationship .relationship-label`);
             }
 
@@ -271,6 +272,11 @@
             editor.setIsInverse(isInverse);
             editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
             editor.offsets = isInverse ? [-6, -6] : [5, -6];
+            editor.field.getHeaderCmp().setData(
+                isInverse
+                    ? me.getPerson().getData()
+                    : relationship.get('RelatedPerson').getData()
+            );
             editor.startEdit(targetEl, Ext.apply({
                 Class: isInverse
                     ? relationship.get('InverseRelationship').Class

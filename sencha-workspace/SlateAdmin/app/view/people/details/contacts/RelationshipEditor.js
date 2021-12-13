@@ -54,13 +54,16 @@
 
         me.callParent(arguments);
 
+        // automatically adjust offset
+        if (!me.offsets.shifted) {
+            me.offsets[1] -= me.field.getHeaderCmp().getHeight();
+            me.offsets.shifted = true;
+        }
+
         me.toggleCls('text-right', !me.getIsInverse());
 
-        // HACK: align after start edit for first show
-        if (!me.realigned) {
-            me.realign(true);
-            me.realigned = true;
-        }
+        // HACK: align after start edit for first show and for dynamic offset above
+        me.realign(true);
 
         // use current value for dirty detection
         labelField.resetOriginalValue();

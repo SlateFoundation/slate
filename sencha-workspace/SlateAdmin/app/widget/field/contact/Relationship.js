@@ -15,6 +15,7 @@
 
 
         config: {
+            headerCmp: true,
             labelField: true,
             classField: true
         },
@@ -30,6 +31,25 @@
 
 
         // config handlers
+        applyHeaderCmp: function(headerCmp, oldHeaderCmp) {
+            if (!headerCmp || typeof headerCmp == 'boolean') {
+                headerCmp = {
+                    hidden: !headerCmp
+                };
+            }
+
+            if (Ext.isSimpleObject(headerCmp)) {
+                Ext.applyIf(headerCmp, {
+                    flex: 1,
+
+                    width: '100%',
+                    tpl: '{FullName:htmlEncode}'
+                });
+            }
+
+            return Ext.factory(headerCmp, 'Ext.Component', oldHeaderCmp);
+        },
+
         applyLabelField: function(labelField, oldLabelField) {
             if (!labelField || typeof labelField == 'boolean') {
                 labelField = {
@@ -104,6 +124,7 @@
             var me = this;
 
             this.items = [
+                me.getHeaderCmp(),
                 me.getLabelField(),
                 me.getClassField()
             ];
