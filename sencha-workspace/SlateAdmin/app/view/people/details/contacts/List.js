@@ -332,8 +332,15 @@
             personField.up('editor').completeEdit();
         },
 
-        onBeforePersonEditorComplete: function(editor, value, startValue) {
-            console.info('onBeforePersonEditorComplete(%o, %o, %o)', editor, value, startValue);
+        onBeforePersonEditorComplete: function(editor, value) {
+            // test creating a model from provided string
+            if (
+                Ext.isString(value)
+                && !editor.field.getStore().getModel().createFromName(value).isValid()
+            ) {
+                editor.field.setActiveError('A complete first and last name must be provided');
+                return false;
+            }
         },
 
         onPersonEditorComplete: function(editor, value, startValue) {
@@ -346,15 +353,13 @@
                 selectedRecord = editorField.getSelection(),
                 relationship;
 
-            console.info('onPersonEditorComplete(%o, %o, %o)', editor, value, startValue);
-
             if (selectedRecord) {
                 value = selectedRecord;
             } else if (Ext.isString(value)) {
                 value = editorModel.createFromName(value);
 
                 if (!value.isValid()) {
-                    // TODO: show error somewhere
+                    return false;
                 }
 
                 editorStore.add(value);
