@@ -45,7 +45,7 @@
                         <tpl if="ID && !RelatedPerson.phantom">
                             <a href="#{[this.getSearchRoute(values)]}">
                         </tpl>
-                        <tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>
+                        {[values.RelatedPerson.get('FullName')]}
                         <tpl if="ID && !RelatedPerson.phantom">
                             </a>
                         </tpl>
@@ -60,11 +60,9 @@
                     <i class="relationship-icon fa fa-exchange muted"></i>
                     <tpl for="InverseRelationship">
                         <div class="inverse-relationship">
-                            <tpl for="parent.Person.getData()">
-                                <div class="muted">
-                                    {FirstName} {MiddleName} {LastName}
-                                </div>
-                            </tpl>
+                            <div class="muted">
+                                {[parent.Person.get('FullName')]}
+                            </div>
                             <span class="relationship-label">
                                 <tpl if="Class == this.CLASS_GUARDIAN">
                                     <i class="label-icon fa fa-shield glyph-shield" title="Guardian"></i>
