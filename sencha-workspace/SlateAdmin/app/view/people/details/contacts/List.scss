@@ -50,6 +50,10 @@
         &:focus {
             border-bottom-style: solid;
         }
+
+        .label-empty {
+            font-style: italic;
+        }
     }
 
     .label-icon {
