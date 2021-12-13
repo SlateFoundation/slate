@@ -48,7 +48,7 @@
                     valueField: 'label',
                     displayField: 'label',
                     triggerAction: 'all',
-                    autoSelect: false,
+                    autoSelect: true,
                     selectOnFocus: true,
                 });
             }
