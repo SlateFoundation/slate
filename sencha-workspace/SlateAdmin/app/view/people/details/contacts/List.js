@@ -324,7 +324,11 @@
                 relationship.set(value);
             }
 
-            if (relationship.dirty && relationship.isValid()) {
+            if (!relationship.dirty) {
+                return;
+            }
+
+            if (relationship.isValid()) {
                 // when switching between two stock values for forward+inverse, suggest matching change to inverse
                 if (!editor.getIsInverse()) {
                     const originalLabel = relationship.getModified('Label');
