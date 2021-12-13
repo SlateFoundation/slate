@@ -281,7 +281,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'sister' => [
-            'Person' => ['Gender' => 'Male']
+            'Person' => ['Gender' => 'Female']
             ,'InverseRelationship' => [
                 'Label' => [
                     'Male' => 'brother'
