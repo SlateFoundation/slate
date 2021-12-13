@@ -254,11 +254,19 @@
         },
 
         onRelationshipLabelClick: function(relationship, isInverse, targetEl, ev) {
+            this.startRelationshipLabelEdit(relationship, isInverse, targetEl);
+        },
+
+        startRelationshipLabelEdit: function(relationship, isInverse, targetEl) {
             var editor = this.getRelationshipEditor();
+
+            if (!targetEl) {
+                targetEl = this.getNodeByRecord(relationship);
+                targetEl = Ext.fly(targetEl).down(`.${isInverse ? 'inverse' : 'forward'}-relationship .relationship-label`);
+            }
 
             editor.activeRelationship = relationship;
             editor.setIsInverse(isInverse);
-            editor.activeIsInverse = isInverse;
             editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
             editor.offsets = isInverse ? [-6, -6] : [5, -6];
             editor.startEdit(targetEl, {
@@ -296,7 +304,7 @@
         onRelationshipEditorComplete: function(editor, value, startValue) {
             var me = this,
                 relationship = editor.activeRelationship,
-                isInverse = editor.activeIsInverse;
+                isInverse = editor.getIsInverse();
 
             if (isInverse) {
                 const inverseRelationship = relationship.get('InverseRelationship');
@@ -315,6 +323,8 @@
                         }
                     }
                 });
+            } else if (!editor.getIsInverse()) {
+                me.startRelationshipLabelEdit(relationship, true);
             }
         },
 
@@ -334,7 +344,7 @@
                 editorStore = editorField.getStore(),
                 editorModel = editorStore.getModel(),
                 selectedRecord = editorField.getSelection(),
-                relationship, relationshipNode;
+                relationship;
 
             console.info('onPersonEditorComplete(%o, %o, %o)', editor, value, startValue);
 
@@ -371,12 +381,9 @@
             editorField.clearValue();
 
             // activate relationship editor
-            relationshipNode = me.getNodeByRecord(relationship);
-            me.onRelationshipLabelClick(
-                relationship,
-                false,
-                Ext.fly(relationshipNode).down('.forward-relationship .relationship-label')
-            );
+            me.startRelationshipLabelEdit(relationship, false);
+
+            // TODO: auto-fill from template selection
         },
     };
 });

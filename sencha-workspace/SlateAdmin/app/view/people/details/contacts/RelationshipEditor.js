@@ -34,17 +34,26 @@
 
 
     // editor lifecycle methods
+    initComponent: function() {
+        var me = this,
+            labelField;
+
+        me.callParent(arguments);
+
+        labelField = me.field.getLabelField();
+        me.mon(Ext.getBody(), 'mousedown', 'onBodyMouseDown', me);
+        me.mon(labelField, 'select', 'onLabelFieldSelect', me);
+        me.mon(labelField, 'specialkey', 'onFieldSpecialKey', me);
+        me.mon(me.field.getClassField(), 'specialkey', 'onFieldSpecialKey', me);
+    },
+
     startEdit: function() {
         var me = this,
             labelField = me.field.getLabelField();
 
         me.callParent(arguments);
-        me.mon(Ext.getBody(), 'mousedown', 'onBodyMouseDown', me);
-        me.mon(labelField, 'select', 'onLabelFieldSelect', me);
-        me.mon(labelField, 'specialkey', 'onFieldSpecialKey', me);
-        me.mon(me.field.getClassField(), 'specialkey', 'onFieldSpecialKey', me);
 
-        me.toggleCls('text-right', !me.activeIsInverse);
+        me.toggleCls('text-right', !me.getIsInverse());
 
         // HACK: align after start edit for first show
         if (!me.realigned) {
@@ -57,15 +66,6 @@
 
         // focus+select main field
         labelField.focus(true, true);
-    },
-
-    completeEdit: function(remainVisible) {
-        var me = this;
-
-        me.callParent(arguments);
-        me.mun(Ext.getBody(), 'mousedown', 'onBodyMouseDown', me);
-        me.mun(me.field.getClassField(), 'specialkey', 'onFieldSpecialKey', me);
-        me.mun(me.field.getClassField(), 'specialkey', 'onFieldSpecialKey', me);
     },
 
 
