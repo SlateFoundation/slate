@@ -21,7 +21,6 @@
             relationshipEditor: true,
             personEditor: true,
 
-            session: true,
             store: {
                 xclass: 'Slate.store.people.Relationships',
                 remoteSort: true,
@@ -416,7 +415,6 @@
         onPersonEditorComplete: function(editor, value, startValue) {
             var me = this,
                 person = me.getPerson(),
-                session = me.getSession(),
                 editorField = editor.field,
                 editorStore = editorField.getStore(),
                 editorModel = editorStore.getModel(),
@@ -434,9 +432,6 @@
 
                 editorStore.add(value);
             }
-
-            // ensure selected record remains available
-            session.adopt(value);
 
             // create new relationship record
             relationship = me.getStore().add({
