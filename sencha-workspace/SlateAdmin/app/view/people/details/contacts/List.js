@@ -10,14 +10,18 @@
         xtype: 'people-details-contacts-list',
         requires: [
             'SlateAdmin.view.people.details.contacts.RelationshipEditor',
+            'SlateAdmin.widget.field.Person',
             'Slate.store.people.Relationships',
+            'Ext.Editor',
         ],
 
 
         config: {
             person: null,
             relationshipEditor: true,
+            personEditor: true,
 
+            session: true,
             store: {
                 xclass: 'Slate.store.people.Relationships',
                 remoteSort: true,
@@ -37,7 +41,7 @@
         itemSelector: '.x-dataview-item',
         tpl: [`
             <tpl for=".">
-                <div class="x-dataview-item <tpl if="ID < 0">relationship-phantom</tpl>" role="option">
+                <div class="x-dataview-item <tpl if="ID &lt; 0">relationship-phantom</tpl>" role="option">
                     <div class="forward-relationship">
                         <tpl if="ID && !RelatedPerson.phantom">
                             <a href="#{[this.getSearchRoute(values)]}">
@@ -70,11 +74,13 @@
                             </span>
                         </div>
                     </tpl>
-                    <div class="relationship-delete">
-                        <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
-                            <i class="fa fa-minus-circle glyph-danger"></i>
-                        </button>
-                    </div>
+                    <tpl if="ID &gt; 0">
+                        <div class="relationship-delete">
+                            <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
+                                <i class="fa fa-minus-circle glyph-danger"></i>
+                            </button>
+                        </div>
+                    </tpl>
                 </div>
             </tpl>
             <div class="relationship-creator">
@@ -127,8 +133,54 @@
             relationshipEditor.ownerCmp = this;
         },
 
+        applyPersonEditor: function(personEditor, oldPersonEditor) {
+            if (!personEditor || typeof personEditor == 'boolean') {
+                personEditor = {
+                    disabled: !personEditor
+                };
+            }
+
+            if (Ext.isSimpleObject(personEditor)) {
+                Ext.applyIf(personEditor, {
+                    updateEl: false,
+                    allowBlur: true,
+                    alignment: 'l-l?',
+                    autoSize: {
+                        width: 'boundEl',
+                        height: 'field'
+                    },
+                    field: {
+                        xtype: 'slate-personfield',
+                        forceSelection: false,
+                        displayField: 'FullName',
+                        emptyText: 'Select existing contact, or name a new contact',
+                    },
+                });
+            }
+
+            return Ext.factory(personEditor, 'Ext.Editor', oldPersonEditor);
+        },
+
+        updatePersonEditor: function(personEditor) {
+            personEditor.field.on('select', 'onPersonSelect', this);
+
+            personEditor.on({
+                scope: this,
+                beforecomplete: 'onBeforePersonEditorComplete',
+                complete: 'onPersonEditorComplete'
+            });
+
+            personEditor.ownerCmp = this;
+        },
+
 
         // dataview lifecycle
+        afterRender: function() {
+            var me = this;
+
+            me.callParent(arguments);
+            me.mon(me.el, 'click', 'onRelationshipCreatorClick', me, { delegate: '.relationship-creator' });
+        },
 
         // disable built-in focus manipulation that can interfere with editing
         onFocusEnter: Ext.emptyFn,
@@ -217,6 +269,24 @@
             });
         },
 
+        onRelationshipCreatorClick: function(ev, target) {
+            var editor = this.getPersonEditor(),
+                editorStore = editor.field.getStore(),
+                excludedPeopleIds = this.getStore().collect('RelatedPersonID');
+
+            // add currently loaded person to excluded IDs
+            excludedPeopleIds.push(this.getPerson().getId());
+
+            // filter existing related people and currently loaded person from list
+            editorStore.clearFilter(true);
+            editorStore.addFilter(function (comboRecord) {
+                return excludedPeopleIds.indexOf(comboRecord.getId()) == -1;
+            });
+
+            // open and position editor
+            editor.startEdit(target, editor.field.getSelection());
+        },
+
         onBeforeRelationshipEditorComplete: function(editor, value, startValue) {
             console.info('onBeforeRelationshipEditorComplete(%o, %o, %o)', editor, value, startValue);
         },
@@ -244,6 +314,67 @@
                     }
                 });
             }
+        },
+
+        onPersonSelect: function(personField) {
+            personField.up('editor').completeEdit();
+        },
+
+        onBeforePersonEditorComplete: function(editor, value, startValue) {
+            console.info('onBeforePersonEditorComplete(%o, %o, %o)', editor, value, startValue);
+        },
+
+        onPersonEditorComplete: function(editor, value, startValue) {
+            var me = this,
+                person = me.getPerson(),
+                session = me.getSession(),
+                editorField = editor.field,
+                editorStore = editorField.getStore(),
+                editorModel = editorStore.getModel(),
+                selectedRecord = editorField.getSelection(),
+                relationship, relationshipNode;
+
+            console.info('onPersonEditorComplete(%o, %o, %o)', editor, value, startValue);
+
+            if (selectedRecord) {
+                value = selectedRecord;
+            } else if (Ext.isString(value)) {
+                value = editorModel.createFromName(value);
+
+                if (!value.isValid()) {
+                    // TODO: show error somewhere
+                }
+
+                editorStore.add(value);
+            }
+
+            // ensure selected record remains available
+            session.adopt(value);
+
+            // create new relationship record
+            relationship = me.getStore().add({
+                Class: CLASS_RELATIONSHIP,
+                Label: '',
+                Person: person,
+                PersonID: person.getId(),
+                RelatedPerson: value,
+                RelatedPersonID: value.phantom ? null : value.getId(),
+                InverseRelationship: {
+                    Class: CLASS_RELATIONSHIP,
+                    Label: ''
+                }
+            })[0];
+
+            // reset editor for next use
+            editorField.clearValue();
+
+            // activate relationship editor
+            relationshipNode = me.getNodeByRecord(relationship);
+            me.onRelationshipLabelClick(
+                relationship,
+                false,
+                Ext.fly(relationshipNode).down('.forward-relationship .relationship-label')
+            );
         },
     };
 });

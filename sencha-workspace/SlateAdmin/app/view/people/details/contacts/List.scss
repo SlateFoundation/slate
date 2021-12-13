@@ -16,6 +16,10 @@
         display: grid;
         gap: $grid-cell-inner-padding;
         grid-template-columns: 1fr auto 1fr auto;
+
+        &.relationship-phantom {
+            background-color: darken($grid-row-cell-background-color, 10);
+        }
     }
 
     button {
