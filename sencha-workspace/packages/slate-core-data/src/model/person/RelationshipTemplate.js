@@ -26,7 +26,7 @@ Ext.define('Slate.model.person.RelationshipTemplate', {
             name: 'Person'
         },
         {
-            name: 'Inverse'
+            name: 'InverseRelationship'
         }
     ],
 
@@ -43,7 +43,12 @@ Ext.define('Slate.model.person.RelationshipTemplate', {
     },
 
     getInverseLabel: function(gender) {
-        var inverse = this.get('Inverse');
-        return (inverse && inverse[gender || 'Neutral']) || null;
+        var inverse = this.get('InverseRelationship');
+
+        if (!inverse) {
+            return null;
+        }
+
+        return inverse.Label[gender || 'Neutral'] || null;
     }
 });

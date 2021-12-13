@@ -127,7 +127,8 @@
             relationshipEditor.on({
                 scope: this,
                 beforecomplete: 'onBeforeRelationshipEditorComplete',
-                complete: 'onRelationshipEditorComplete'
+                complete: 'onRelationshipEditorComplete',
+                canceledit: 'onRelationshipEditorCancel'
             });
 
             relationshipEditor.ownerCmp = this;
@@ -257,7 +258,7 @@
             this.startRelationshipLabelEdit(relationship, isInverse, targetEl);
         },
 
-        startRelationshipLabelEdit: function(relationship, isInverse, targetEl) {
+        startRelationshipLabelEdit: function(relationship, isInverse, targetEl, values) {
             var editor = this.getRelationshipEditor();
 
             if (!targetEl) {
@@ -269,14 +270,14 @@
             editor.setIsInverse(isInverse);
             editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
             editor.offsets = isInverse ? [-6, -6] : [5, -6];
-            editor.startEdit(targetEl, {
+            editor.startEdit(targetEl, Ext.apply({
                 Class: isInverse
                     ? relationship.get('InverseRelationship').Class
                     : relationship.get('Class'),
                 Label: isInverse
                     ? relationship.get('InverseRelationship').Label
                     : relationship.get('Label')
-            });
+            }, values || {}));
         },
 
         onRelationshipCreatorClick: function(ev, target) {
@@ -304,7 +305,9 @@
         onRelationshipEditorComplete: function(editor, value, startValue) {
             var me = this,
                 relationship = editor.activeRelationship,
-                isInverse = editor.getIsInverse();
+                isInverse = editor.getIsInverse(),
+                currentPersonGender = me.getPerson().get('Gender'),
+                templatesStore = editor.field.getLabelField().getStore();
 
             if (isInverse) {
                 const inverseRelationship = relationship.get('InverseRelationship');
@@ -315,6 +318,35 @@
             }
 
             if (relationship.dirty && relationship.isValid()) {
+                // when switching between two stock values for forward+inverse, suggest matching change to inverse
+                if (!editor.getIsInverse()) {
+                    const originalLabel = relationship.getModified('Label');
+                    const originalTemplate = templatesStore.findRecord('label', originalLabel, 0, false, false, true);
+
+                    if (originalTemplate) {
+                        const originInverseLabel = originalTemplate.getInverseLabel(currentPersonGender);
+                        const matchedTemplate = templatesStore.findRecord('label', value.Label, 0, false, false, true);
+
+                        // if inverse matches original
+                        if (relationship.get('InverseRelationship').Label == originInverseLabel
+                            && matchedTemplate
+                        ) {
+                            const patch = {
+                                Label: matchedTemplate.getInverseLabel(currentPersonGender)
+                            };
+
+                            const templateClass = matchedTemplate.get('InverseRelationship').Class;
+                            if (templateClass) {
+                                patch.Class = templateClass;
+                            }
+
+                            // skip save for now and continue editor to inverse field with inferred changes
+                            Ext.defer(() => me.startRelationshipLabelEdit(relationship, true, null, patch), 10);
+                            return;
+                        }
+                    }
+                }
+
                 me.setLoading('Updating relationship&hellip;');
                 relationship.save({
                     callback: function (savedRecord, operation, success) {
@@ -324,7 +356,40 @@
                     }
                 });
             } else if (!editor.getIsInverse()) {
-                me.startRelationshipLabelEdit(relationship, true);
+                // auto-populate inverse if template selected
+                if (relationship.phantom) {
+                    const matchedTemplate = templatesStore.findRecord('label', value.Label, 0, false, false, true);
+
+                    if (matchedTemplate) {
+                        relationship.set(matchedTemplate.get('Relationship'));
+
+                        const inverseRelationship = relationship.get('InverseRelationship');
+                        if (!inverseRelationship.Label) {
+                            const inverseRelationshipTemplate = matchedTemplate.get('InverseRelationship');
+
+                            inverseRelationship.Label = matchedTemplate.getInverseLabel(currentPersonGender);
+
+                            if (inverseRelationshipTemplate.Class) {
+                                inverseRelationship.Class = inverseRelationshipTemplate.Class;
+                            }
+                        }
+                    }
+                }
+
+                // automatically activate editor on inverse field if a value has been input
+                // defer momentarily to allow current event sequence to finish
+                if (value.Label) {
+                    Ext.defer(() => me.startRelationshipLabelEdit(relationship, true), 10);
+                }
+            }
+        },
+
+        onRelationshipEditorCancel: function(editor, value, startValue) {
+            var relationship = editor.activeRelationship;
+
+            // if any unsaved edits are cancelled on a non-phantom record, reject all unsaved edits
+            if (!relationship.phantom) {
+                editor.activeRelationship.reject();
             }
         },
 
@@ -387,8 +452,6 @@
 
             // activate relationship editor
             me.startRelationshipLabelEdit(relationship, false);
-
-            // TODO: auto-fill from template selection
         },
     };
 });
