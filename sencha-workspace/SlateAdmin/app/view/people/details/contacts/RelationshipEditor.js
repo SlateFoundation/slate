@@ -35,11 +35,13 @@
 
     // editor lifecycle methods
     startEdit: function() {
-        var me = this;
+        var me = this,
+            labelField = me.field.getLabelField();
 
         me.callParent(arguments);
         me.mon(Ext.getBody(), 'mousedown', 'onBodyMouseDown', me);
-        me.mon(me.field.getLabelField(), 'specialkey', 'onFieldSpecialKey', me);
+        me.mon(labelField, 'select', 'onLabelFieldSelect', me);
+        me.mon(labelField, 'specialkey', 'onFieldSpecialKey', me);
         me.mon(me.field.getClassField(), 'specialkey', 'onFieldSpecialKey', me);
 
         me.toggleCls('text-right', !me.activeIsInverse);
@@ -49,6 +51,12 @@
             me.realign(true);
             me.realigned = true;
         }
+
+        // use current value for dirty detection
+        labelField.resetOriginalValue();
+
+        // focus+select main field
+        labelField.focus(true, true);
     },
 
     completeEdit: function(remainVisible) {
@@ -74,6 +82,12 @@
             )
         ) {
             me.completeEdit();
+        }
+    },
+
+    onLabelFieldSelect: function(field) {
+        if (field.dirty) {
+            this.completeEdit();
         }
     },
 
