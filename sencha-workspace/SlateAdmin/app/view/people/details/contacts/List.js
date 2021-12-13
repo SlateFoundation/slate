@@ -73,13 +73,11 @@
                             </span>
                         </div>
                     </tpl>
-                    <tpl if="ID &gt; 0">
-                        <div class="relationship-delete">
-                            <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
-                                <i class="fa fa-minus-circle glyph-danger"></i>
-                            </button>
-                        </div>
-                    </tpl>
+                    <div class="relationship-delete">
+                        <button type="button" class="relationship-delete-btn" data-action="delete-relationship">
+                            <i class="fa fa-minus-circle glyph-danger"></i>
+                        </button>
+                    </div>
                 </div>
             </tpl>
             <div class="relationship-creator">
@@ -224,6 +222,12 @@
         onRelationshipDeleteClick: function(relationship, ev) {
             var me = this,
                 relatedPerson = relationship.get('RelatedPerson');
+
+            // drop phantom with no confirmation
+            if (relationship.phantom) {
+                relationship.drop();
+                return;
+            }
 
             Ext.Msg.confirm('Delete relationship', `Are you sure you want to delete the "${relationship.get('Label')}" relationship with ${relatedPerson.get('FullName')}?`, function (btn) {
                 if (btn != 'yes') {
