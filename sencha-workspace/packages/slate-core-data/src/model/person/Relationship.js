@@ -62,6 +62,22 @@ Ext.define('Slate.model.person.Relationship', {
 
         // dynamic fields
         {
+            name: 'Person',
+            allowNull: true,
+            defaultValue: null,
+            serialize: function(v) {
+                if (v && v.isModel) {
+                    v = v.getChanges();
+                }
+
+                if (!v || Ext.Object.isEmpty(v)) {
+                    return undefined;
+                }
+
+                return v;
+            }
+        },
+        {
             name: 'RelatedPerson',
             allowNull: true,
             defaultValue: null,
@@ -73,7 +89,15 @@ Ext.define('Slate.model.person.Relationship', {
                 return v;
             },
             serialize: function(v) {
-                return v && v.isModel ? v.getChanges() : null;
+                if (v && v.isModel) {
+                    v = v.getChanges();
+                }
+
+                if (!v || Ext.Object.isEmpty(v)) {
+                    return undefined;
+                }
+
+                return v;
             }
         },
         {

@@ -188,6 +188,8 @@
 
         prepareData: function(data) {
             var data = this.callParent(arguments);
+            // chain data object before adding properties so we don't modify the actual record
+            data = Ext.Object.chain(data);
             data.Person = this.getPerson();
             return data;
         },
