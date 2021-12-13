@@ -267,7 +267,7 @@
                 targetEl = Ext.fly(targetEl).down(`.${isInverse ? 'inverse' : 'forward'}-relationship .relationship-label`);
             }
 
-            editor.activeRelationship = relationship;
+            editor.setActiveRelationship(relationship);
             editor.setIsInverse(isInverse);
             editor.alignment = isInverse ? 'tl-tl?' : 'tr-tr?';
             editor.offsets = isInverse ? [-6, -6] : [5, -6];
@@ -305,7 +305,7 @@
 
         onRelationshipEditorComplete: function(editor, value, startValue) {
             var me = this,
-                relationship = editor.activeRelationship,
+                relationship = editor.getActiveRelationship(),
                 isInverse = editor.getIsInverse(),
                 currentPersonGender = me.getPerson().get('Gender'),
                 templatesStore = editor.field.getLabelField().getStore();
@@ -392,11 +392,11 @@
         },
 
         onRelationshipEditorCancel: function(editor, value, startValue) {
-            var relationship = editor.activeRelationship;
+            var relationship = editor.getActiveRelationship();
 
             // if any unsaved edits are cancelled on a non-phantom record, reject all unsaved edits
             if (!relationship.phantom) {
-                editor.activeRelationship.reject();
+                relationship.reject();
             }
         },
 

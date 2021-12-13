@@ -9,6 +9,7 @@
 
 
     config: {
+        activeRelationship: null,
         isInverse: false,
     },
 
