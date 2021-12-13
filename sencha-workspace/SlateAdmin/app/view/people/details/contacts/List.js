@@ -373,6 +373,11 @@
                                 inverseRelationship.Class = inverseRelationshipTemplate.Class;
                             }
                         }
+
+                        const personTemplate = matchedTemplate.get('Person');
+                        if (personTemplate) {
+                            relationship.get('RelatedPerson').set(personTemplate);
+                        }
                     }
                 }
 
