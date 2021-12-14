@@ -8,252 +8,322 @@ class Relationship extends \VersionedRecord
         'mother' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
             ,'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'son'
-                ,'Female' => 'daughter'
-                ,'Neutral' => 'child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'son'
+                    ,'Female' => 'daughter'
+                    ,'Neutral' => 'child'
+                ]
             ]
         ]
         ,'father' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
             ,'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'son'
-                ,'Female' => 'daughter'
-                ,'Neutral' => 'child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'son'
+                    ,'Female' => 'daughter'
+                    ,'Neutral' => 'child'
+                ]
             ]
         ]
         ,'parent' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
-            ,'Inverse' => [
-                'Male' => 'son'
-                ,'Female' => 'daughter'
-                ,'Neutral' => 'child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'son'
+                    ,'Female' => 'daughter'
+                    ,'Neutral' => 'child'
+                ]
             ]
         ]
         ,'guardian' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
-            ,'Inverse' => 'dependent'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Neutral' => 'ward'
+                ]
+            ]
         ]
         ,'grandmother' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'grandson'
-                ,'Female' => 'granddaughter'
-                ,'Neutral' => 'grandchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'grandson'
+                    ,'Female' => 'granddaughter'
+                    ,'Neutral' => 'grandchild'
+                ]
             ]
         ]
         ,'grandfather' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'grandson'
-                ,'Female' => 'granddaughter'
-                ,'Neutral' => 'grandchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'grandson'
+                    ,'Female' => 'granddaughter'
+                    ,'Neutral' => 'grandchild'
+                ]
             ]
         ]
         ,'grandparent' => [
-            'Inverse' => [
-                'Male' => 'grandson'
-                ,'Female' => 'granddaughter'
-                ,'Neutral' => 'grandchild'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'grandson'
+                    ,'Female' => 'granddaughter'
+                    ,'Neutral' => 'grandchild'
+                ]
             ]
         ]
         ,'great grandmother' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'great grandson'
-                ,'Female' => 'great granddaughter'
-                ,'Neutral' => 'great grandchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'great grandson'
+                    ,'Female' => 'great granddaughter'
+                    ,'Neutral' => 'great grandchild'
+                ]
             ]
         ]
         ,'great grandfather' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'great grandson'
-                ,'Female' => 'great granddaughter'
-                ,'Neutral' => 'great grandchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'great grandson'
+                    ,'Female' => 'great granddaughter'
+                    ,'Neutral' => 'great grandchild'
+                ]
             ]
         ]
         ,'great grandparent' => [
-            'Inverse' => [
-                'Male' => 'great grandson'
-                ,'Female' => 'great granddaughter'
-                ,'Neutral' => 'great grandchild'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'great grandson'
+                    ,'Female' => 'great granddaughter'
+                    ,'Neutral' => 'great grandchild'
+                ]
             ]
         ]
         ,'stepmother' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'stepson'
-                ,'Female' => 'stepdaughter'
-                ,'Neutral' => 'stepchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'stepson'
+                    ,'Female' => 'stepdaughter'
+                    ,'Neutral' => 'stepchild'
+                ]
             ]
         ]
         ,'stepfather' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'stepson'
-                ,'Female' => 'stepdaughter'
-                ,'Neutral' => 'stepchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'stepson'
+                    ,'Female' => 'stepdaughter'
+                    ,'Neutral' => 'stepchild'
+                ]
             ]
         ]
         ,'stepparent' => [
-            'Inverse' => [
-                'Male' => 'stepson'
-                ,'Female' => 'stepdaughter'
-                ,'Neutral' => 'stepchild'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'stepson'
+                    ,'Female' => 'stepdaughter'
+                    ,'Neutral' => 'stepchild'
+                ]
             ]
         ]
         ,'foster mother' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
             ,'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'foster son'
-                ,'Female' => 'foster daughter'
-                ,'Neutral' => 'foster child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'foster son'
+                    ,'Female' => 'foster daughter'
+                    ,'Neutral' => 'foster child'
+                ]
             ]
         ]
         ,'foster father' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
             ,'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'foster son'
-                ,'Female' => 'foster daughter'
-                ,'Neutral' => 'foster child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'foster son'
+                    ,'Female' => 'foster daughter'
+                    ,'Neutral' => 'foster child'
+                ]
             ]
         ]
         ,'foster parent' => [
             'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
-            ,'Inverse' => [
-                'Male' => 'foster son'
-                ,'Female' => 'foster daughter'
-                ,'Neutral' => 'foster child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'foster son'
+                    ,'Female' => 'foster daughter'
+                    ,'Neutral' => 'foster child'
+                ]
             ]
         ]
         ,'godmother' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'godson'
-                ,'Female' => 'goddaughter'
-                ,'Neutral' => 'godchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'godson'
+                    ,'Female' => 'goddaughter'
+                    ,'Neutral' => 'godchild'
+                ]
             ]
         ]
         ,'godfather' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'godson'
-                ,'Female' => 'goddaughter'
-                ,'Neutral' => 'godchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'godson'
+                    ,'Female' => 'goddaughter'
+                    ,'Neutral' => 'godchild'
+                ]
             ]
         ]
         ,'godparent' => [
-            'Inverse' => [
-                'Male' => 'godson'
-                ,'Female' => 'goddaughter'
-                ,'Neutral' => 'godchild'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'godson'
+                    ,'Female' => 'goddaughter'
+                    ,'Neutral' => 'godchild'
+                ]
             ]
         ]
         ,'host mother' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'host son'
-                ,'Female' => 'host daughter'
-                ,'Neutral' => 'host child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'host son'
+                    ,'Female' => 'host daughter'
+                    ,'Neutral' => 'host child'
+                ]
             ]
         ]
         ,'host father' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'host son'
-                ,'Female' => 'host daughter'
-                ,'Neutral' => 'host child'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'host son'
+                    ,'Female' => 'host daughter'
+                    ,'Neutral' => 'host child'
+                ]
             ]
         ]
         ,'host parent' => [
-            'Inverse' => [
-                'Male' => 'host son'
-                ,'Female' => 'host daughter'
-                ,'Neutral' => 'host child'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'host son'
+                    ,'Female' => 'host daughter'
+                    ,'Neutral' => 'host child'
+                ]
             ]
         ]
         ,'host grandmother' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'host grandson'
-                ,'Female' => 'host granddaughter'
-                ,'Neutral' => 'host grandchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'host grandson'
+                    ,'Female' => 'host granddaughter'
+                    ,'Neutral' => 'host grandchild'
+                ]
             ]
         ]
         ,'host grandfather' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'host grandson'
-                ,'Female' => 'host granddaughter'
-                ,'Neutral' => 'host grandchild'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'host grandson'
+                    ,'Female' => 'host granddaughter'
+                    ,'Neutral' => 'host grandchild'
+                ]
             ]
         ]
         ,'host grandparent' => [
-            'Inverse' => [
-                'Male' => 'host grandson'
-                ,'Female' => 'host granddaughter'
-                ,'Neutral' => 'host grandchild'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'host grandson'
+                    ,'Female' => 'host granddaughter'
+                    ,'Neutral' => 'host grandchild'
+                ]
             ]
         ]
         ,'aunt' => [
             'Person' => ['Gender' => 'Female']
-            ,'Inverse' => [
-                'Male' => 'nephew'
-                ,'Female' => 'niece'
-                ,'Neutral' => 'nibling'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'nephew'
+                    ,'Female' => 'niece'
+                    ,'Neutral' => 'nibling'
+                ]
             ]
         ]
         ,'uncle' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'nephew'
-                ,'Female' => 'niece'
-                ,'Neutral' => 'nibling'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'nephew'
+                    ,'Female' => 'niece'
+                    ,'Neutral' => 'nibling'
+                ]
             ]
         ]
         ,'pibling' => [
-            'Inverse' => [
-                'Male' => 'nephew'
-                ,'Female' => 'niece'
-                ,'Neutral' => 'nibling'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'nephew'
+                    ,'Female' => 'niece'
+                    ,'Neutral' => 'nibling'
+                ]
             ]
         ]
         ,'sister' => [
-            'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'brother'
-                ,'Female' => 'sister'
-                ,'Neutral' => 'sibling'
+            'Person' => ['Gender' => 'Female']
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'brother'
+                    ,'Female' => 'sister'
+                    ,'Neutral' => 'sibling'
+                ]
             ]
         ]
         ,'brother' => [
             'Person' => ['Gender' => 'Male']
-            ,'Inverse' => [
-                'Male' => 'brother'
-                ,'Female' => 'sister'
-                ,'Neutral' => 'sibling'
+            ,'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'brother'
+                    ,'Female' => 'sister'
+                    ,'Neutral' => 'sibling'
+                ]
             ]
         ]
         ,'sibling' => [
-            'Inverse' => [
-                'Male' => 'brother'
-                ,'Female' => 'sister'
-                ,'Neutral' => 'sibling'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'brother'
+                    ,'Female' => 'sister'
+                    ,'Neutral' => 'sibling'
+                ]
             ]
         ]
         ,'cousin' => [
-            'Inverse' => [
-                'Male' => 'cousin'
-                ,'Female' => 'cousin'
-                ,'Neutral' => 'cousin'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Male' => 'cousin'
+                    ,'Female' => 'cousin'
+                    ,'Neutral' => 'cousin'
+                ]
             ]
         ]
         ,'coach' => [
-            'Inverse' => 'trainee'
+            'InverseRelationship' => [
+                'Label' => [
+                    'Neutral' => 'trainee'
+                ]
+            ]
         ]
     ];
 
@@ -394,14 +464,21 @@ class Relationship extends \VersionedRecord
             $templates[$label] = $options;
 
             // add inverse relationships
-            if (!empty($options['Inverse']) && is_array($options['Inverse'])) {
-                foreach ($options['Inverse'] AS $gender => $relationship) {
+            if (!empty($options['InverseRelationship']) && is_array($options['InverseRelationship'])) {
+                foreach ($options['InverseRelationship']['Label'] AS $gender => $relationship) {
                     $templates[$relationship] = [
                         'Relationship' => [
                             'Label' => $relationship
                         ],
-                        'Inverse' => static::getInverseRelationships($relationship)
+                        'InverseRelationship' => [
+                            'Label' => static::getInverseRelationships($relationship)
+                        ]
                     ];
+
+                    if (!empty($options['Relationship']) && !empty($options['Relationship']['Class'])) {
+                        $templates[$relationship]['InverseRelationship']['Class'] = $options['Relationship']['Class'];
+                    }
+
                     if ($gender == 'Male' || $gender == 'Female') {
                         $templates[$relationship]['Person'] = ['Gender' => $gender];
                     }
@@ -417,10 +494,13 @@ class Relationship extends \VersionedRecord
         $relationships = [];
 
         foreach (static::$templates as $relationshipName => $relationshipData) {
-            $inverseRelationship = is_array($relationshipData['Inverse']) ? array_values($relationshipData['Inverse']) : [$relationshipData['Inverse']];
-            $relationshipGender = !empty($relationshipData['Person']['Gender']) ? $relationshipData['Person']['Gender'] : 'Neutral';
+            $relationshipGender = !empty($relationshipData['Person']['Gender'])
+                ? $relationshipData['Person']['Gender']
+                : 'Neutral';
 
-            if (!empty($relationshipData['Inverse']) && in_array($relationship, $inverseRelationship)) {
+            if (!empty($relationshipData['InverseRelationship'])
+                && in_array($relationship, $relationshipData['InverseRelationship']['Label'])
+            ) {
                 $relationships[$relationshipGender] = $relationshipName;
             }
         }

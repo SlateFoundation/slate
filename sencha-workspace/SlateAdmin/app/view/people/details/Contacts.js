@@ -1,19 +1,17 @@
-/* jslint browser: true, undef: true *//* global Ext*/
 Ext.define('SlateAdmin.view.people.details.Contacts', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-contacts',
     requires: [
+        'Slate.ui.PanelLegend',
+        'SlateAdmin.view.people.details.contacts.List',
+
         'Ext.grid.Panel',
         'Ext.grid.column.Action',
         'Ext.grid.column.Template',
         'Ext.grid.plugin.CellEditing',
         'Ext.grid.feature.Grouping',
-        'Ext.form.field.ComboBox',
-        'SlateAdmin.model.person.Relationship',
-        'SlateAdmin.store.people.RelationshipTemplates',
         'SlateAdmin.model.person.ContactPoint',
         'SlateAdmin.store.people.ContactPointTemplates',
-        'SlateAdmin.widget.field.Person',
         'SlateAdmin.widget.field.contact.Postal',
         'SlateAdmin.widget.grid.ContactPointCellEditor'
     ],
@@ -34,166 +32,20 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
     },
 
     items: [{
-        xtype: 'grid',
-        itemId: 'relationships',
-        title: 'Related People',
-        componentCls: 'slate-people-details-related',
-        bodyBorder: '1 0',
-        store: {
-            model: 'SlateAdmin.model.person.Relationship',
-            pageSize: false,
-            remoteSort: true,
-            autoSync: false
-        },
-        viewConfig: {
-            loadMask: false,
-            autoScroll: false,
-            emptyText: 'No related people',
-            getRowClass: function (record) {
-                var cls = record.get('Class') == 'Emergence\\People\\GuardianRelationship' ? 'relationship-guardian' : 'relationship-nonguardian';
-
-                if (record.phantom) {
-                    cls += ' slate-grid-phantom';
-                }
-
-                if (record.dirty) {
-                    cls += ' slate-grid-dirty';
-                }
-
-                if (!record.get('InverseRelationship')) {
-                    cls += ' relationship-noinverse';
-                }
-
-                return cls;
-            }
-        },
-        plugins: [
-            {
-                ptype: 'cellediting',
-                pluginId: 'cellediting',
-                clicksToEdit: 1
-            }
-        ],
-        columns: {
-            defaults: {
-                menuDisabled: true,
-                sortable: false
-            },
-            items: [
-                {
-                    itemId: 'person',
-                    xtype: 'templatecolumn',
-                    text: 'Name',
-                    dataIndex: 'RelatedPerson',
-                    tdCls: 'relationship-cell-person slate-grid-cell-primary',
-                    flex: 1,
-                    tpl: [
-                        '<tpl if="RelatedPerson && RelatedPerson.isModel">',
-                        '<tpl if="ID && !RelatedPerson.phantom"><a href="#{[this.getSearchRoute(values)]}"></tpl>',
-                        '<tpl for="RelatedPerson.getData()">{FirstName} {MiddleName} {LastName}</tpl>',
-                        '<tpl if="ID && !RelatedPerson.phantom"></a></tpl>',
-                        '<tpl elseif="!RelatedPerson">',
-                        '<i class="fa fa-plus-circle"></i> Add new&hellip;',
-                        '</tpl>',
-                        {
-                            getSearchRoute: function (relationship) {
-                                var path = ['people', 'search', 'related-to-id:' + relationship.PersonID],
-                                    relatedPerson = relationship.RelatedPerson,
-                                    relatedUsername = relatedPerson.get('Username');
-
-                                if (relatedUsername) {
-                                    path.push(relatedUsername);
-                                } else {
-                                    path.push('?id=' + relatedPerson.getId());
-                                }
-
-                                path.push('contacts');
-
-                                return Ext.util.History.encodeRouteArray(path);
-                            }
-                        }
-                    ],
-                    editor: {
-                        xtype: 'slate-personfield',
-                        forceSelection: false,
-                        displayField: 'FullName',
-                        listeners: {
-                            select: function (comboField) {
-                                comboField.up('editor').completeEdit();
-                            }
-                        }
-                    }
-                },
-                {
-                    itemId: 'relationship',
-                    text: 'Relationship',
-                    dataIndex: 'Label',
-                    width: 120,
-                    editor: {
-                        xtype: 'combobox',
-                        store: 'people.RelationshipTemplates',
-                        allowBlank: false,
-                        queryMode: 'local',
-                        valueField: 'label',
-                        displayField: 'label',
-                        triggerAction: 'all',
-                        autoSelect: false,
-                        listeners: {
-                            focus: function (comboField) {
-                                comboField.expand();
-                            },
-                            select: function (comboField) {
-                                comboField.up('editor').completeEdit();
-                            }
-                        }
-                    }
-                },
-                {
-                    itemId: 'inverse',
-                    xtype: 'templatecolumn',
-                    text: 'Inverse',
-                    dataIndex: 'InverseRelationship.Label',
-                    tdCls: 'relationship-cell-inverse',
-                    width: 120,
-                    tpl: [
-                        '<tpl if="InverseRelationship">',
-                        '{InverseRelationship.Label}',
-                        //                    '<tpl else>',
-                        //                        '<em>Unknown</em>',
-                        '</tpl>'
-                    ],
-                    editor: {
-                        xtype: 'textfield'
-                    }
-                },
-                {
-                    xtype: 'actioncolumn',
-                    dataIndex: 'Class',
-                    align: 'end',
-                    items: [
-                        {
-                            action: 'delete',
-                            iconCls: 'relationship-delete glyph-danger',
-                            glyph: 0xf056, // fa-minus-circle
-                            tooltip: 'Delete relationship'
-                        },
-                        {
-                            action: 'guardian',
-                            glyph: 0xf132, // fa-shield
-                            getClass: function (v) {
-                                return [
-                                    'glyph-shield',
-                                    v == 'Emergence\\People\\GuardianRelationship' ? '' : 'glyph-inactive',
-                                ].join(' ');
-                            },
-                            getTip: function (v) {
-                                return (v == 'Emergence\\People\\GuardianRelationship' ? 'Undesignate' : 'Designate') + ' guardian';
-                            }
-                        },
-                    ]
-                }
-            ]
-        }
+        xtype: 'panel',
+        title: 'Relationships',
+        dockedItems: [{
+            dock: 'top',
+            xtype: 'slate-panellegend',
+            data: [{
+                icon: 'shield',
+                iconCls: 'glyph-shield',
+                label: 'Guardian',
+            }],
+        }],
+        items: [{
+            xtype: 'people-details-contacts-list',
+        }],
     }, {
         xtype: 'grid',
         itemId: 'contactPoints',
@@ -229,6 +81,15 @@ Ext.define('SlateAdmin.view.people.details.Contacts', {
                 }
             ]
         },
+        dockedItems: [{
+            dock: 'top',
+            xtype: 'slate-panellegend',
+            data: [{
+                icon: 'star',
+                iconCls: 'glyph-star',
+                label: 'Primary',
+            }],
+        }],
         viewConfig: {
             loadMask: false,
             autoScroll: false,
