@@ -1,0 +1,20 @@
+.panel-legend {
+    box-shadow: 0 1px 0 rgba(black, .1);
+    font-size: .75em;
+}
+
+.panel-legend-list {
+    display: flex;
+    gap: 1em;
+    margin: 0;
+    opacity: (2/3);
+
+    dd::before {
+        content: '=';
+        margin: 0 .25em;
+    }
+}
+
+.panel-legend-item {
+    display: flex;
+}
