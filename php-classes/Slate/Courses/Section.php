@@ -442,6 +442,25 @@ class Section extends \VersionedRecord
       return $result;
     }
 
+    public function findLatestTeacherPost()
+    {
+      $sectionTeacherIds = array_map(function($Teacher) {
+          return $Teacher->ID;
+      }, $this->ActiveTeachers);
+
+      $latestTeacherPost = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
+          'conditions' => [
+              'AuthorID' => [
+                  'operator' => 'IN',
+                  'values' => $sectionTeacherIds
+              ]
+          ],
+          'limit' => 1
+      ]));
+
+      return $latestTeacherPost[0];
+    }
+
     // search SQL generators
     protected static function getTeacherSearchSql($term, $condition)
     {

@@ -39,22 +39,10 @@
             'conditions' => []
         ];
 
-        $sectionTeacherIds = array_map(function($Teacher) {
-            return $Teacher->ID;
-        }, $this->scope['Section']->ActiveTeachers);
+        $latestTeacherPost = $this->scope['Section']->findLatestTeacherPost();
 
-        $latestTeacherPost = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], array_merge_recursive($options, [
-            'conditions' => [
-                'AuthorID' => [
-                    'operator' => 'IN',
-                    'values' => $sectionTeacherIds
-                ]
-            ],
-            'limit' => 1
-        ]));
-
-        if (count($latestTeacherPost)) {
-            $this->scope['latestTeacherPost'] = $latestTeacherPost[0];
+        if ($latestTeacherPost) {
+            $this->scope['latestTeacherPost'] = $latestTeacherPost;
             $options['conditions'][] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
         }
 
