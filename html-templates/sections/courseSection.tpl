@@ -186,7 +186,7 @@
                             Tags
                         </h3>
 
-                        {$tags = $Section->getTags()}
+                        {$tags = $Section->findBlogTags()}
 
                         {* if there's 10 or more, show the first five and collapse the rest *}
                         {if count($tags) >= 10}

@@ -422,7 +422,7 @@ class Section extends \VersionedRecord
         }
     }
 
-    public function getTags()
+    public function findBlogTags()
     {
       $posts = $this->BlogPosts;
       $tags = [];
