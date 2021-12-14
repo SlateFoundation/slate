@@ -186,19 +186,7 @@
                             Tags
                         </h3>
 
-                        {$tags = array(
-                            "lorem ipsum",
-                            "dolor sit amet",
-                            "consectetur",
-                            "adipiscing",
-                            "elit borbi consequat",
-                            "turpis",
-                            "feugiat",
-                            "foo",
-                            "bar",
-                            "baz",
-                            "qux"
-                        );}
+                        {$tags = $Section->getTags()}
 
                         {* if there's 10 or more, show the first five and collapse the rest *}
                         {if count($tags) >= 10}
@@ -212,7 +200,7 @@
                         <ul class="tag-list">
                         {foreach item=tag from=$tagsShown}
                             <li>
-                                <a class="tag" href="#">{$tag} <span class="tag-count">{rand(1, 100)}</span></a>
+                                <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title} <span class="tag-count">{$tag.count}</span></a>
                             </li>
                         {/foreach}
                         </ul>
@@ -227,7 +215,7 @@
                                 <ul class="tag-list">
                                 {foreach item=tag from=$tagsHidden}
                                     <li>
-                                        <a class="tag" href="#">{$tag} <span class="tag-count">{rand(1, 100)}</span></a>
+                                        <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title} <span class="tag-count">{$tag.count}</span></a>
                                     </li>
                                 {/foreach}
                                 </ul>
