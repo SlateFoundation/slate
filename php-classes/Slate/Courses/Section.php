@@ -12,6 +12,7 @@ use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\Locations\Location;
 use Emergence\Connectors\Mapping;
+use Emergence\CMS\BlogPost;
 
 use Slate\Term;
 use Slate\Courses\SectionParticipant;
