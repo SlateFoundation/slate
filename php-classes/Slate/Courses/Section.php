@@ -186,7 +186,13 @@ class Section extends \VersionedRecord
             ,'class' => Mapping::class
             ,'contextClass' => __CLASS__
         ]
-    ];
+        ,'BlogPosts' => [
+            'type' => 'one-many'
+            ,'class' => BlogPost::class
+            ,'contextClass' => __CLASS__
+            ,'foreign' => 'ContextID'
+        ]
+      ];
 
     public static $validators = [
         'Course' => [
@@ -203,6 +209,10 @@ class Section extends \VersionedRecord
         ,'Teachers'
         ,'StudentsCount' => [
             'method' => 'getStudentsCount'
+        ]
+        ,'BlogPosts'
+        ,'Tags' => [
+            'method' => 'getTags'
         ]
     ];
 
@@ -409,6 +419,26 @@ class Section extends \VersionedRecord
         } catch (\TableNotFoundException $e) {
             return [];
         }
+    }
+
+    public function getTags()
+    {
+      $posts = $this->BlogPosts;
+      $tags = [];
+      $result = [];
+
+      foreach ($posts as $post) {
+        $tags = array_merge($tags, $post->Tags);
+      }
+
+      $result = array_reduce($tags, function($result, $tag)
+      {
+          $count = $result[$tag->Handle] != NULL ? $result[$tag->Handle]['count'] : 0;
+          $result[$tag->Handle] = array_merge($tag->getData(), ['count' => count]);
+          return $result;
+      });
+
+      return $result;
     }
 
     // search SQL generators
