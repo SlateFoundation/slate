@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * Custom validator that allows validation by a function specified in the validator configuration.
  *
@@ -18,7 +17,7 @@
  *         }
  *     }
  */
-Ext.define('SlateAdmin.validator.CallbackValidator', {
+Ext.define('Slate.validator.CallbackValidator', {
     extend: 'Ext.data.validator.Validator',
     alias: 'data.validator.callback',
 

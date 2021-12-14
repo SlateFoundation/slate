@@ -27,7 +27,8 @@
         "jarvus-ext-treerecords",
         "jarvus-griderrors",
         "emergence-apikit",
-        "slate-core-data"
+        "slate-core-data",
+        "slate-ui-classic"
     ],
 
     /**
