@@ -435,7 +435,7 @@ class Section extends \VersionedRecord
       $result = array_reduce($tags, function($result, $tag)
       {
           $count = $result[$tag->Handle] != NULL ? $result[$tag->Handle]['count'] : 0;
-          $result[$tag->Handle] = array_merge($tag->getData(), ['count' => count]);
+          $result[$tag->Handle] = array_merge($tag->getData(), ['count' => $count+1]);
           return $result;
       });
 
