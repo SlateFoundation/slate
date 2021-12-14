@@ -23,9 +23,7 @@ Ext.define('SlateAdmin.widget.field.contact.Postal', {
             width: 400,
             floating: true,
             constrain: true,
-            border: true,
             trackResetOnLoad: true,
-            frame: true,
             ownerCt: me.ownerCt,
             layout: 'anchor',
             defaults: {
