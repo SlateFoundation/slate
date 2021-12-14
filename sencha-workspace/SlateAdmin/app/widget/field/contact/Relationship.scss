@@ -1,0 +1,11 @@
+.slate-relationshipfield {
+    background-color: $form-field-background-color;
+
+    .glyph-guardian {
+        color: $muted-color;
+    }
+
+    .x-form-cb-checked .glyph-guardian {
+        color: $glyph-shield-color;
+    }
+}

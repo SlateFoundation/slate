@@ -7,6 +7,29 @@ Ext.define('Slate.model.person.Person', {
     ],
 
 
+    statics: {
+        createFromName: function(fullName) {
+            var person = new this();
+
+            fullName = fullName.trim().split(/\s+/);
+
+            if (fullName.length) {
+                person.set('LastName', fullName.pop());
+            }
+
+            if (fullName.length > 1) {
+                person.set('MiddleName', fullName.pop());
+            }
+
+            if (fullName.length) {
+                person.set('FirstName', fullName.join(' '));
+            }
+
+            return person;
+        }
+    },
+
+
     // model config
     idProperty: 'ID',
     identifier: 'negative',

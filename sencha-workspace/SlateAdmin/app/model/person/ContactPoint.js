@@ -3,9 +3,9 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
     extend: 'Ext.data.Model',
     requires: [
         'SlateAdmin.proxy.Records',
+        'Slate.validator.CallbackValidator',
         'Ext.data.identifier.Negative',
         'Ext.data.validator.Presence',
-        'SlateAdmin.validator.CallbackValidator'
     ],
 
     idProperty: 'ID',

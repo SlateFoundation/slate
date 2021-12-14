@@ -109,7 +109,6 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
     },
 
     onViewClick: function(grid, record) {
-        debugger;
         var personData = record.get('Person'),
             personId = record.get('PersonID'),
             username;
