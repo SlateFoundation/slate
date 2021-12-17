@@ -45,7 +45,8 @@ describe('SlateAdmin: Contacts', () => {
 
         // edit and save address via form
         cy.get('.contact-postal').eq(-2)
-            .contains('.contact-cell-value', '908 N 3rd St, Suite B, Philadelphia, PA 19123')
+            .find('.contact-cell-value .x-grid-cell-inner')
+                .should('have.text', '908 N 3rd St, Suite B, Philadelphia, PA 19123')
                 .click();
 
         cy.focused()
@@ -72,7 +73,8 @@ describe('SlateAdmin: Contacts', () => {
 
         // edit and save address via composite string
         cy.get('.contact-postal').eq(-2)
-            .contains('.contact-cell-value', 'Localhost, 908 N 3rd St, Suite A, Philadelphia, PA 19123')
+            .find('.contact-cell-value .x-grid-cell-inner')
+                .should('have.text', 'Localhost, 908 N 3rd St, Suite A, Philadelphia, PA 19123')
                 .click();
 
         cy.focused()
@@ -83,8 +85,11 @@ describe('SlateAdmin: Contacts', () => {
         cy.get('@saveContactPoint.all').should('have.length', 3);
 
         cy.get('.contact-postal').eq(-2)
-            .contains('.contact-cell-value', 'Localhost, 908 N 3rd St, Suite A, Philly')
+            .find('.contact-cell-value')
             .within(() => {
+                cy.get('.x-grid-cell-inner')
+                    .should('have.text', 'Localhost, 908 N 3rd St, Suite A, Philly');
+
                 cy.root()
                     .should('have.class', 'x-grid-dirty-cell')
                     .trigger('mouseover')
@@ -102,7 +107,8 @@ describe('SlateAdmin: Contacts', () => {
         cy.get('@saveContactPoint.all').should('have.length', 4);
 
         cy.get('.contact-postal').eq(-2)
-            .contains('.contact-cell-value', 'Localhost, 908 N 3rd St, Suite A, Philly, PA')
+            .find('.contact-cell-value .x-grid-cell-inner')
+                .should('have.text', 'Localhost, 908 N 3rd St, Suite A, Philly, PA');
 
 
         // add a second address via form
@@ -165,7 +171,8 @@ describe('SlateAdmin: Contacts', () => {
                 cy.get('.x-grid-cell').eq(1)
                     .should('not.have.class', 'x-grid-dirty-cell');
 
-                cy.contains('.contact-cell-value', 'The White House, 1600 Pennsylvania Avenue NW, Washington, DC 20500');
+                cy.get('.contact-cell-value .x-grid-cell-inner')
+                    .should('have.text', 'The White House, 1600 Pennsylvania Avenue NW, Washington, DC 20500');
 
                 cy.intercept('POST', '/people/save?*').as('savePerson');
 
@@ -208,7 +215,8 @@ describe('SlateAdmin: Contacts', () => {
         cy.get('@saveContactPoint.all').should('have.length', 6);
 
         cy.get('.contact-postal').eq(-2)
-            .contains('.contact-cell-value', 'The White House, 1600 Pennsylvania Avenue NW, Suite 123, Washington, DC 20500');
+            .find('.contact-cell-value .x-grid-cell-inner')
+                .should('have.text', 'The White House, 1600 Pennsylvania Avenue NW, Suite 123, Washington, DC 20500');
 
 
         // save invalid via text field and then overwrite with form
@@ -224,47 +232,55 @@ describe('SlateAdmin: Contacts', () => {
         cy.get('@saveContactPoint.all').should('have.length', 7);
 
         cy.get('.contact-postal').eq(-3)
-            .contains('.contact-cell-value', 'Hello world')
-            .within(() => {
-                cy.root()
-                    .should('have.class', 'x-grid-dirty-cell')
-                    .trigger('mouseover')
-                    .should('have.attr', 'data-errorqtip')
-                        .and('match', /Street number is required/i)
-                        .and('match', /Street name is required/i)
-                        .and('match', /Postal code or city\+state is required/i);
+            .find('.contact-cell-value')
+                .within(() => {
+                    cy.get('.x-grid-cell-inner')
+                        .should('have.text', 'Hello world');
 
-                cy.root()
-                    .click();
+                    cy.root()
+                        .should('have.class', 'x-grid-dirty-cell')
+                        .trigger('mouseover')
+                        .should('have.attr', 'data-errorqtip')
+                            .and('match', /Street number is required/i)
+                            .and('match', /Street name is required/i)
+                            .and('match', /Postal code or city\+state is required/i);
 
-                cy.focused()
-                    .closest('.x-form-trigger-wrap')
-                    .find('.x-form-trigger')
+                    cy.root()
                         .click();
-            });
 
-            cy.get('.contact-postal-picker-form').within(() => {
-                cy.get('input[name=city]')
-                    .click()
-                    .type('{selectall}{backspace}Philadelphia');
+                    cy.focused()
+                        .closest('.x-form-trigger-wrap')
+                        .find('.x-form-trigger')
+                            .click();
+                });
 
-                cy.get('input[name=postal]')
-                    .click()
-                    .type('19123');
+        cy.get('.contact-postal-picker-form').within(() => {
+            cy.get('input[name=city]')
+                .click()
+                .type('{selectall}{backspace}Philadelphia');
 
-                cy.contains('.x-btn-button', 'Save')
-                    .click();
-            });
+            cy.get('input[name=postal]')
+                .click()
+                .type('19123');
 
-            cy.wait('@saveContactPoint');
-            cy.get('@saveContactPoint.all').should('have.length', 8);
+            cy.contains('.x-btn-button', 'Save')
+                .click();
+        });
 
-            cy.get('.contact-postal').eq(-3)
-                .contains('.contact-cell-value', 'Localhost, 908 N 3rd St, Suite A, Philadelphia, PA 19123')
-                .should('not.have.class', 'x-grid-dirty-cell')
-                .trigger('mouseover')
-                .should('have.attr', 'data-errorqtip', '');
+        cy.wait('@saveContactPoint');
+        cy.get('@saveContactPoint.all').should('have.length', 8);
 
+        cy.get('.contact-postal').eq(-3)
+            .find('.contact-cell-value')
+                .within(() => {
+                    cy.get('.x-grid-cell-inner')
+                        .should('have.text', 'Localhost, 908 N 3rd St, Suite A, Philadelphia, PA 19123');
+
+                    cy.root()
+                        .should('not.have.class', 'x-grid-dirty-cell')
+                        .trigger('mouseover')
+                        .should('have.attr', 'data-errorqtip', '');
+                });
     });
 
 });
