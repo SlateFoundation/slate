@@ -32,29 +32,45 @@
 
     <?php
         $this->scope['limit'] = 10;
-        $options = [
-            'limit' => $this->scope['limit'],
-            'offset' => $_GET['offset'] ?: 0,
-            'calcFoundRows' => 'yes',
-            'conditions' => []
-        ];
+        $conditions = [];
 
         $latestTeacherPost = $this->scope['Section']->findLatestTeacherPost();
 
         if ($latestTeacherPost) {
             $this->scope['latestTeacherPost'] = $latestTeacherPost;
-            $options['conditions'][] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
+            $conditions[] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
         }
 
-        $this->scope['blogPosts'] = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this->scope['Section'], $options);
+        $this->scope['blogPosts'] =  $this->scope['Section']->findBlogPosts($conditions, $this->scope['limit'], $_GET['offset'] ?: 0 );
         $this->scope['total'] = DB::foundRows();
+
+        {* if (!empty($_GET['blog_tag'])) {
+          $Tag = Tag::getByHandle($_GET['blog_tag']);
+
+          if (!$Tag) {
+            throw new Exception('tag not found');
+          }
+
+          $this->scope['blogTag'] = $Tag;
+        } else {
+          $Tag = null;
+        } *}
+
     ?>
 
     <div class="sidebar-layout">
         <div class="main-col">
             <div class="col-inner">
                 <header class="page-header">
-                    <h2 class="header-title">{$Section->getTitle()|escape} <small class="muted">Public Feed</small></h2>
+                    <h2 class="header-title">
+                      {$Section->getTitle()|escape}
+                      <small class="muted">
+                        Public Feed
+                        {if $blogTag}
+                          for tag {$blogTag->getTitle()|escape}
+                        {/if}
+                      </small>
+                    </h2>
                     <div class="header-buttons"><a href="{$Section->getURL()}/post" class="button primary">Create a Post</a></div>
                 </header>
 
@@ -188,7 +204,7 @@
                         <ul class="tag-list">
                         {foreach item=tag from=$tagsShown}
                             <li>
-                                <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title} <span class="tag-count">{$tag.count}</span></a>
+                                <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title} <span class="tag-count">{$tag.itemsCount}</span></a>
                             </li>
                         {/foreach}
                         </ul>
