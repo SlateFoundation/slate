@@ -6,6 +6,7 @@ use DB;
 use HandleBehavior;
 use DuplicateKeyException;
 use TableNotFoundException;
+use TagItem;
 
 use Emergence\People\IPerson;
 use Emergence\People\Person;
@@ -424,22 +425,25 @@ class Section extends \VersionedRecord
 
     public function findBlogTags()
     {
-      $posts = $this->BlogPosts;
-      $tags = [];
-      $result = [];
+        return TagItem::getTagsSummary([
+            'Class' => BlogPost::class,
+            'classConditions' => [
+                'ContextClass' => static::getStaticRootClass(),
+                'ContextID' => $this->ID
+            ]
+        ]);
+    }
 
-      foreach ($posts as $post) {
-        $tags = array_merge($tags, $post->Tags);
-      }
+    public function findBlogPosts($conditions, $limit, $offset)
+    {
+      $options = [
+        'limit' => $limit,
+        'offset' => $offset,
+        'calcFoundRows' => 'yes',
+        'conditions' => $conditions
+      ];
 
-      $result = array_reduce($tags, function($result, $tag)
-      {
-          $count = $result[$tag->Handle] != NULL ? $result[$tag->Handle]['count'] : 0;
-          $result[$tag->Handle] = array_merge($tag->getData(), ['count' => $count+1]);
-          return $result;
-      });
-
-      return $result;
+      return BlogPost::getAllPublishedByContextObject($this, $options);
     }
 
     public function findLatestTeacherPost()
