@@ -212,10 +212,10 @@ class Section extends \VersionedRecord
         ,'StudentsCount' => [
             'method' => 'getStudentsCount'
         ]
-        ,'BlogPosts'
+        // TODO: remove this, only for testing
         ,'Tags' => [
-            'method' => 'getTags'
-        ]
+          'method' => 'findBlogTags'
+      ]
     ];
 
     public static $sorters = [
@@ -434,7 +434,7 @@ class Section extends \VersionedRecord
         ]);
     }
 
-    public function findBlogPosts($conditions, $limit, $offset)
+    public function findBlogPosts($conditions, $limit, $offset, $tag)
     {
       $options = [
         'limit' => $limit,
@@ -442,6 +442,24 @@ class Section extends \VersionedRecord
         'calcFoundRows' => 'yes',
         'conditions' => $conditions
       ];
+
+      if ($tag!=null) {
+
+          $tagIDsQuery = 'SELECT ContextID FROM `tag_items` WHERE (`ContextClass` = "%s") AND (`TagID` = %u)';
+          $tagIDsConditions = [
+              'ContextClass' => DB::escape(BlogPost::getStaticRootClass()),
+              'TagID' => $tag->ID
+          ];
+
+          $options = array_merge_recursive($options, [
+              'conditions' => [
+                  'ID' => [
+                      'operator' => 'IN',
+                      'values' => \DB::allValues('ContextID', $tagIDsQuery, $tagIDsConditions)
+                  ]
+              ]
+          ]);
+      }
 
       return BlogPost::getAllPublishedByContextObject($this, $options);
     }
