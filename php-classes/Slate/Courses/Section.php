@@ -212,10 +212,6 @@ class Section extends \VersionedRecord
         ,'StudentsCount' => [
             'method' => 'getStudentsCount'
         ]
-        // TODO: remove this, only for testing
-        ,'Tags' => [
-          'method' => 'findBlogTags'
-      ]
     ];
 
     public static $sorters = [
