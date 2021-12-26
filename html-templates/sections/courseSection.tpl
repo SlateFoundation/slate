@@ -34,26 +34,23 @@
         $this->scope['limit'] = 10;
         $conditions = [];
 
-        $latestTeacherPost = $this->scope['Section']->findLatestTeacherPost();
-
-        if ($latestTeacherPost) {
-            $this->scope['latestTeacherPost'] = $latestTeacherPost;
-            $conditions[] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
-        }
-
         if (!empty($_GET['blog_tag'])) {
             $Tag = Tag::getByHandle($_GET['blog_tag']);
 
             if (!$Tag) {
                 throw new Exception('tag not found');
             }
-            //$conditions[] = sprintf("blogTag", $Tag->ID);
             $this->scope['blogTag'] = $Tag;
         } else {
             $Tag = null;
-        }
 
-        //xdebug_break();
+            $latestTeacherPost = $this->scope['Section']->findLatestTeacherPost();
+
+            if ($latestTeacherPost) {
+                $this->scope['latestTeacherPost'] = $latestTeacherPost;
+                $conditions[] = sprintf('ID != %u', $this->scope['latestTeacherPost']->ID);
+            }
+        }
 
         $this->scope['blogPosts'] =  $this->scope['Section']->findBlogPosts($conditions, $this->scope['limit'], $_GET['offset'] ?: 0, $Tag );
         $this->scope['total'] = DB::foundRows();
