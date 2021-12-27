@@ -1,5 +1,6 @@
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `content_items` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Class` enum('Emergence\\CMS\\Item\\Album','Emergence\\CMS\\Item\\Embed','Emergence\\CMS\\Item\\Media','Emergence\\CMS\\Item\\RichText','Emergence\\CMS\\Item\\Text','Emergence\\CMS\\Item\\Markdown') NOT NULL,
@@ -15,8 +16,8 @@ CREATE TABLE `content_items` (
   `Data` json NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `ContentID` (`ContentID`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 INSERT INTO `content_items` VALUES (1,'Emergence\\CMS\\Item\\Markdown','2021-12-26 02:44:15',3,'2021-12-26 02:44:39',3,NULL,1,3,'Deleted',1,'\"Here is some information about the course\\n - Lorem ipsum dolor sit amet\\n - consectetur adipiscing elit\"');
 INSERT INTO `content_items` VALUES (2,'Emergence\\CMS\\Item\\Markdown','2021-12-26 02:44:39',3,NULL,NULL,NULL,1,3,'Published',1,'\"Here is some information about the course\\n - Lorem ipsum dolor sit amet\\n - consectetur adipiscing elit\"');
 INSERT INTO `content_items` VALUES (3,'Emergence\\CMS\\Item\\Markdown','2021-12-26 02:46:48',4,NULL,NULL,NULL,2,4,'Published',1,'\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \"');

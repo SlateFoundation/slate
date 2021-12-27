@@ -1,5 +1,6 @@
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `tag_items` (
   `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `CreatorID` int(11) DEFAULT NULL,
@@ -9,7 +10,7 @@ CREATE TABLE `tag_items` (
   UNIQUE KEY `TagItem` (`TagID`,`ContextClass`,`ContextID`),
   KEY `CONTEXT` (`ContextClass`,`ContextID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
 INSERT INTO `tag_items` VALUES ('2021-12-26 02:44:16',3,'Emergence\\CMS\\AbstractContent',1,1);
 INSERT INTO `tag_items` VALUES ('2021-12-26 02:56:51',3,'Emergence\\CMS\\AbstractContent',10,1);
 INSERT INTO `tag_items` VALUES ('2021-12-26 02:57:01',3,'Emergence\\CMS\\AbstractContent',11,1);

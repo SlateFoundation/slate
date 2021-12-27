@@ -1,5 +1,6 @@
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `content` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Class` enum('Emergence\\CMS\\Page','Emergence\\CMS\\BlogPost') NOT NULL,
@@ -22,8 +23,8 @@ CREATE TABLE `content` (
   UNIQUE KEY `Handle` (`Handle`),
   KEY `Published` (`Published`),
   KEY `CONTEXT` (`ContextClass`,`ContextID`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 INSERT INTO `content` VALUES (1,'Emergence\\CMS\\BlogPost','2021-12-26 02:44:15',3,'2021-12-26 02:44:39',3,'Slate\\Courses\\Section',2,'1st post from teacher','st_post_from_teacher',3,'Published','2021-12-26 02:44:00','Public',NULL,'OneColumn',NULL);
 INSERT INTO `content` VALUES (2,'Emergence\\CMS\\BlogPost','2021-12-26 02:46:48',4,NULL,NULL,'Slate\\Courses\\Section',2,'Post from student','post_from_student',4,'Published','2021-12-26 02:46:48','Public',NULL,'OneColumn',NULL);
 INSERT INTO `content` VALUES (3,'Emergence\\CMS\\BlogPost','2021-12-26 02:47:16',4,NULL,NULL,'Slate\\Courses\\Section',2,'Post from student','post_from_student-2',4,'Published','2021-12-26 02:47:17','Public',NULL,'OneColumn',NULL);
