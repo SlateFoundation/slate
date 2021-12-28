@@ -39,3 +39,28 @@ INSERT INTO `content` VALUES (11,'Emergence\\CMS\\BlogPost','2021-12-26 02:56:24
 INSERT INTO `content` VALUES (12,'Emergence\\CMS\\BlogPost','2021-12-26 02:57:56',6,NULL,NULL,'Slate\\Courses\\Section',2,'Post from student2','post_from_student2-4',6,'Published','2021-12-26 02:57:57','Public',NULL,'OneColumn',NULL);
 INSERT INTO `content` VALUES (13,'Emergence\\CMS\\BlogPost','2021-12-26 02:58:20',6,NULL,NULL,'Slate\\Courses\\Section',2,'Post from student2','post_from_student2-5',6,'Published','2021-12-26 02:58:20','Public',NULL,'OneColumn',NULL);
 INSERT INTO `content` VALUES (14,'Emergence\\CMS\\BlogPost','2021-12-26 02:58:47',6,NULL,NULL,'Slate\\Courses\\Section',2,'Post from student2','post_from_student2-6',6,'Published','2021-12-26 02:58:48','Public',NULL,'OneColumn',NULL);
+
+CREATE TABLE `history_content` (
+  `RevisionID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ID` int(10) unsigned NOT NULL,
+  `Class` enum('Emergence\\CMS\\Page','Emergence\\CMS\\BlogPost') NOT NULL,
+  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `CreatorID` int(11) DEFAULT NULL,
+  `Modified` timestamp NULL DEFAULT NULL,
+  `ModifierID` int(10) unsigned DEFAULT NULL,
+  `ContextClass` varchar(255) DEFAULT NULL,
+  `ContextID` int(10) unsigned DEFAULT NULL,
+  `Title` varchar(255) NOT NULL,
+  `Handle` varchar(255) NOT NULL,
+  `AuthorID` int(10) unsigned NOT NULL,
+  `Status` enum('Draft','Published','Hidden','Deleted') NOT NULL DEFAULT 'Published',
+  `Published` timestamp NULL DEFAULT NULL,
+  `Visibility` enum('Public','Private') NOT NULL DEFAULT 'Public',
+  `Summary` text,
+  `LayoutClass` enum('OneColumn') DEFAULT 'OneColumn',
+  `LayoutConfig` json DEFAULT NULL,
+  PRIMARY KEY (`RevisionID`),
+  KEY `ID` (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO `history_content` SELECT NULL AS RevisionID, `content`.* FROM `content`;
