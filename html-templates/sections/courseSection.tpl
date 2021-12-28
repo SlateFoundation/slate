@@ -153,13 +153,14 @@
                     </div>
                 {/foreach}
 
+                {if count($tags) > 0}
                 <div class="sidebar-item">
                     <div class="well">
                         <h3 class="well-title">
                             <span class="pull-right muted">
                                 <i class="fa fa-tag"></i>
                             </span>
-                            Tags
+                            Blog Tags
                         </h3>
 
                         {* if there's 10 or more, show the first five and collapse the rest *}
@@ -197,6 +198,7 @@
                         {/if}
                     </div>
                 </div>
+                {/if}
 
                 <div class="sidebar-item">
                     <div class="well">
