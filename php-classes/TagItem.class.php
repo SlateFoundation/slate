@@ -155,7 +155,7 @@ class TagItem extends ActiveRecord
                 ,TagItem::getColumnName('ContextClass')
                 ,DB::escape($options['Class']::getStaticRootClass())
                 ,TagItem::getColumnName('ContextID')
-                ,implode(",",$classIDs)
+                ,!empty($classIDs) ? implode(",",$classIDs) : [-1]
             );
         }
 
