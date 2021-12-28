@@ -148,6 +148,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
           'success' => true
           ,'data' => $Section
           ,'tags' => $Section->findBlogTags()
+          ,'blogTag' => $tag
           ,'latestTeacherPost' => $latestTeacherPost
           ,'blogPosts' => $Section->findBlogPosts($conditions, $limit ?: 4, $offset, $tag )
           ,'total' => DB::foundRows()
