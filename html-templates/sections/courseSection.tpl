@@ -25,7 +25,7 @@
 
 
 {block "content"}
-    {load_templates "blog.tpl"}
+    {load_templates "subtemplates/blog.tpl"}
     {load_templates "subtemplates/paging.tpl"}
 
     {$Section = $data}
