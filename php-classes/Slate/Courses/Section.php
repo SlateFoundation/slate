@@ -447,11 +447,13 @@ class Section extends \VersionedRecord
               'TagID' => $tag->ID
           ];
 
+          $tagItemIDs = DB::allValues('ContextID', $tagIDsQuery, $tagIDsConditions);
+
           $options = array_merge_recursive($options, [
               'conditions' => [
                   'ID' => [
                       'operator' => 'IN',
-                      'values' => \DB::allValues('ContextID', $tagIDsQuery, $tagIDsConditions)
+                      'values' => count($tagItemIDs) ? $tagItemIDs : '0'
                   ]
               ]
           ]);
