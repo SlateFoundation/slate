@@ -22,7 +22,7 @@ Declare a new gitsheet to store contact data by creating this file:
     ```toml
     [gitsheet]
     root = "student-contacts"
-    path = "${{ student.username }}"
+    path = "${{ '{{' }} student.username }}"
 
     [gitsheet.fields.student]
     default = {}
