@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#macro-rendering-error" class="md-skip">
+        <a href="#contacts-spreadsheet" class="md-skip">
           Skip to content
         </a>
       
@@ -700,9 +700,75 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contacts Spreadsheet
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Contacts Spreadsheet
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialize-git-branch" class="md-nav__link">
+    Initialize git branch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spreadsheet-template" class="md-nav__link">
+    Spreadsheet template
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-spreadsheet-into-gitsheet" class="md-nav__link">
+    Load spreadsheet into gitsheet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract-data-from-slate-instance-into-gitsheet" class="md-nav__link">
+    Extract data from Slate instance into gitsheet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-spreadsheet-data-into-slate-data" class="md-nav__link">
+    Merge spreadsheet data into Slate data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-data-from-gitsheets-into-slate-instance" class="md-nav__link">
+    Load data from gitsheets into Slate instance
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -742,6 +808,56 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initialize-git-branch" class="md-nav__link">
+    Initialize git branch
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spreadsheet-template" class="md-nav__link">
+    Spreadsheet template
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-spreadsheet-into-gitsheet" class="md-nav__link">
+    Load spreadsheet into gitsheet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extract-data-from-slate-instance-into-gitsheet" class="md-nav__link">
+    Extract data from Slate instance into gitsheet
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-spreadsheet-data-into-slate-data" class="md-nav__link">
+    Merge spreadsheet data into Slate data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-data-from-gitsheets-into-slate-instance" class="md-nav__link">
+    Load data from gitsheets into Slate instance
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -757,19 +873,66 @@
 </a>
 
 
-<h1 id="macro-rendering-error"><em>Macro Rendering Error</em><a class="headerlink" href="#macro-rendering-error" title="Permanent link"> ¶</a></h1>
-<p><strong>UndefinedError</strong>: &lsquo;student&rsquo; is undefined</p>
-<div class="highlight"><pre><span></span><code>Traceback (most recent call last):
-  File &quot;/hab/cache/hololens/holo/lens-mkdocs/.venv/lib/python3.9/site-packages/mkdocs_macros/plugin.py&quot;, line 449, in render
-    return md_template.render(**page_variables)
-  File &quot;/hab/cache/hololens/holo/lens-mkdocs/.venv/lib/python3.9/site-packages/jinja2/environment.py&quot;, line 1291, in render
-    self.environment.handle_exception()
-  File &quot;/hab/cache/hololens/holo/lens-mkdocs/.venv/lib/python3.9/site-packages/jinja2/environment.py&quot;, line 925, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File &quot;&lt;template&gt;&quot;, line 25, in top-level template code
-  File &quot;/hab/cache/hololens/holo/lens-mkdocs/.venv/lib/python3.9/site-packages/jinja2/environment.py&quot;, line 474, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: &#39;student&#39; is undefined
+<h1 id="contacts-spreadsheet">Contacts Spreadsheet<a class="headerlink" href="#contacts-spreadsheet" title="Permanent link"> ¶</a></h1>
+<h2 id="initialize-git-branch">Initialize git branch<a class="headerlink" href="#initialize-git-branch" title="Permanent link"> ¶</a></h2>
+<p>Initialize a new git repository if needed, or just <code>cd</code> into an existing one:</p>
+<div class="highlight"><pre><span></span><code>git init myschool-slate
+<span class="nb">cd</span> myschool-slate
+</code></pre></div>
+<p>Then check out a fresh branch to track content import content:</p>
+<div class="highlight"><pre><span></span><code>git checkout --orphan gitsheets/imports/contacts
+</code></pre></div>
+<p>Declare a new gitsheet to store contact data by creating this file:</p>
+<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">.gitsheets/student-contacts.toml</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="k">[gitsheet]</span>
+<span class="n">root</span> <span class="o">=</span> <span class="s">&quot;student-contacts&quot;</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s">&quot;${{ student.username }}&quot;</span>
+
+<span class="k">[gitsheet.fields.student]</span>
+<span class="n">default</span> <span class="o">=</span> <span class="p">{}</span>
+</code></pre></div>
+</div>
+</div>
+<p>Finally, stage and commit the gitsheet declaration:</p>
+<div class="highlight"><pre><span></span><code>git add .gitsheets/student-contacts.toml
+git commit -m <span class="s2">&quot;feat: define student-contacts gitsheet&quot;</span>
+</code></pre></div>
+<h2 id="spreadsheet-template">Spreadsheet template<a class="headerlink" href="#spreadsheet-template" title="Permanent link"> ¶</a></h2>
+<p>Populate this template with student and relationship contact details:</p>
+<div class="highlight"><pre><span></span><code>student.name,student.username,student.number,student.email.personal,student.phone.home,student.phone.mobile,guardian1.name,guardian1.relationship,guardian1.email.personal,guardian1.phone.home,guardian1.phone.mobile,guardian1.phone.work,guardian2.name,guardian2.relationship,guardian2.email.personal,guardian2.phone.home,guardian2.phone.mobile,guardian2.phone.work
+John Doe,johndoe7,,johndoe7@gmail.com,,267-111-1234,Michael Doe,Father,michaeldoe7@gmail.com,,267-222-1234,394-231-3245,Jane Doe,Mother,janedoe7@gmail.com,,267-384-2835,325-234-3818
+</code></pre></div>
+<h2 id="load-spreadsheet-into-gitsheet">Load spreadsheet into gitsheet<a class="headerlink" href="#load-spreadsheet-into-gitsheet" title="Permanent link"> ¶</a></h2>
+<p>Use the <code>git sheet upsert</code> command to load the filled CSV from the previous template:</p>
+<div class="highlight"><pre><span></span><code>git sheet upsert <span class="se">\</span>
+    --delete-missing <span class="se">\</span>
+    <span class="s2">&quot;student-contacts&quot;</span> <span class="se">\</span>
+    ~/Downloads/myschool_contacts.csv
+</code></pre></div>
+<p>And then commit the resulting staged records:</p>
+<div class="highlight"><pre><span></span><code>git commit -m <span class="s2">&quot;data: load student contacts from spreadsheet&quot;</span>
+</code></pre></div>
+<h2 id="extract-data-from-slate-instance-into-gitsheet">Extract data from Slate instance into gitsheet<a class="headerlink" href="#extract-data-from-slate-instance-into-gitsheet" title="Permanent link"> ¶</a></h2>
+<p>Install the <code>slate-gitsheets</code> command if needed:</p>
+<div class="highlight"><pre><span></span><code>npm install -g slate-gitsheets
+</code></pre></div>
+<p>Download users from Slate into another branch:</p>
+<div class="highlight"><pre><span></span><code>slate-gitsheets extract-slate <span class="se">\</span>
+    --ref<span class="o">=</span>gitsheets/slate <span class="se">\</span>
+    --host<span class="o">=</span>https://myschool.org/ <span class="se">\</span>
+    --host-name<span class="o">=</span>myschool
+</code></pre></div>
+<h2 id="merge-spreadsheet-data-into-slate-data">Merge spreadsheet data into Slate data<a class="headerlink" href="#merge-spreadsheet-data-into-slate-data" title="Permanent link"> ¶</a></h2>
+<p>Merge data from the <code>student-contacts</code> gitsheet into the Slate <code>users</code> gitsheet:</p>
+<div class="highlight"><pre><span></span><code>slate-gitsheets merge-contacts <span class="se">\</span>
+    --contacts-ref<span class="o">=</span>gitsheets/imports/contacts <span class="se">\</span>
+    --slate-ref<span class="o">=</span>gitsheets/slate
+</code></pre></div>
+<h2 id="load-data-from-gitsheets-into-slate-instance">Load data from gitsheets into Slate instance<a class="headerlink" href="#load-data-from-gitsheets-into-slate-instance" title="Permanent link"> ¶</a></h2>
+<div class="highlight"><pre><span></span><code>slate-gitsheets load-slate <span class="se">\</span>
+    --ref<span class="o">=</span>gitsheets/slate <span class="se">\</span>
+    --host<span class="o">=</span>https://myschool.org/ <span class="se">\</span>
+    --host-name<span class="o">=</span>myschool
 </code></pre></div>
 
               
