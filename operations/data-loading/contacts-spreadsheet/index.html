@@ -746,6 +746,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#review-relationship-labels" class="md-nav__link">
+    Review relationship labels
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extract-data-from-slate-instance-into-gitsheet" class="md-nav__link">
     Extract data from Slate instance into gitsheet
   </a>
@@ -836,6 +843,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#review-relationship-labels" class="md-nav__link">
+    Review relationship labels
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extract-data-from-slate-instance-into-gitsheet" class="md-nav__link">
     Extract data from Slate instance into gitsheet
   </a>
@@ -912,6 +926,12 @@ John Doe,johndoe7,,johndoe7@gmail.com,,267-111-1234,Michael Doe,Father,michaeldo
 <p>And then commit the resulting staged records:</p>
 <div class="highlight"><pre><span></span><code>git commit -m <span class="s2">&quot;data: load student contacts from spreadsheet&quot;</span>
 </code></pre></div>
+<h2 id="review-relationship-labels">Review relationship labels<a class="headerlink" href="#review-relationship-labels" title="Permanent link"> ¶</a></h2>
+<p>Use this command to analyze all the relationship labels used in this dataset:</p>
+<div class="highlight"><pre><span></span><code>git sheet query student-contacts <span class="se">\</span>
+    <span class="p">|</span> jq <span class="s1">&#39;[ .[].guardian1.relationship, .[].guardian2.relationship ] | unique&#39;</span>
+</code></pre></div>
+<p>If any strange values or abbreviations are present, consider using find/replace on the original spreadsheet to normalize this with some more standard values, and then repeat the load step above to add a commit with your changes.</p>
 <h2 id="extract-data-from-slate-instance-into-gitsheet">Extract data from Slate instance into gitsheet<a class="headerlink" href="#extract-data-from-slate-instance-into-gitsheet" title="Permanent link"> ¶</a></h2>
 <p>Install the <code>slate-gitsheets</code> command if needed:</p>
 <div class="highlight"><pre><span></span><code>npm install -g slate-gitsheets
