@@ -61,6 +61,17 @@ And then commit the resulting staged records:
 git commit -m "data: load student contacts from spreadsheet"
 ```
 
+## Review relationship labels
+
+Use this command to analyze all the relationship labels used in this dataset:
+
+```bash
+git sheet query student-contacts \
+    | jq '[ .[].guardian1.relationship, .[].guardian2.relationship ] | unique'
+```
+
+If any strange values or abbreviations are present, consider using find/replace on the original spreadsheet to normalize this with some more standard values, and then repeat the load step above to add a commit with your changes.
+
 ## Extract data from Slate instance into gitsheet
 
 Install the `slate-gitsheets` command if needed:
