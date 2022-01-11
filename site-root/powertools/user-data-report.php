@@ -151,14 +151,16 @@ $reports = [
 
 ?>
 
-<h2>Data report for <?=htmlspecialchars($Person->FullName)?></h2>
+<?php if ($Person) : ?>
+    <h2>Data report for <?=htmlspecialchars($Person->FullName)?></h2>
 
-<dl>
-<?php foreach ($reports as $reportName => $reportFunction) : ?>
-    <?php $records = $reportFunction($Person) ?>
+    <dl>
+    <?php foreach ($reports as $reportName => $reportFunction) : ?>
+        <?php $records = $reportFunction($Person) ?>
 
-    <dt><?=$reportName?></dt>
-    <dd><?=count($records)?></dd>
+        <dt><?=$reportName?></dt>
+        <dd><?=count($records)?></dd>
 
-<?php endforeach ?>
-</dl>
+    <?php endforeach ?>
+    </dl>
+<?php endif ?>

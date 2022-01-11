@@ -406,6 +406,13 @@ class Relationship extends \VersionedRecord
         'InverseRelationship'
     ];
 
+    public static $validators = [
+        'Label' => [
+            'required' => true,
+            'errorMessage' => 'A label is required'
+        ]
+    ];
+
 
     public function validate($deep = true)
     {
