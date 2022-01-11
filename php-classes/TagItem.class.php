@@ -132,7 +132,7 @@ class TagItem extends ActiveRecord
 
         if (!empty($options['overlayTag'])) {
             if (!is_object($OverlayTag = $options['overlayTag']) && !$OverlayTag = Tag::getByHandle($options['overlayTag'])) {
-                throw new Excoption('Overlay tag not found');
+                throw new Exception('Overlay tag not found');
             }
 
             $itemsCountQuery .= sprintf(
@@ -148,12 +148,14 @@ class TagItem extends ActiveRecord
         }
 
         if (isset($classSubquery)) {
+            $classIDs = DB::allValues('ID', $classSubquery, $classParams);
+
             $itemsCountQuery .= sprintf(
                 ' AND TagItem.`%s` = "%s" AND TagItem.`%s` IN (%s)'
                 ,TagItem::getColumnName('ContextClass')
-                ,$options['Class']::getStaticRootClass()
+                ,DB::escape($options['Class']::getStaticRootClass())
                 ,TagItem::getColumnName('ContextID')
-                ,DB::prepareQuery($classSubquery, $classParams)
+                ,count($classIDs) ? implode(",", $classIDs) : '0'
             );
         }
 
