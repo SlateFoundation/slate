@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# script/-test-bootstrap: Check dependencies for testing.
+
+set -e
+cd "$(dirname "$0")/.."
+
+
+echo
+echo "==> studio-bootstrap: verifying hologit"
+
+if ! [ -x "$(command -v git-holo)" ]; then
+    echo "Please install git-holo command with npm: npm install -g hologit"
+    echo "Or with Habitat: hab pkg install --binlink jarvus/hologit"
+    exit 1
+fi
+
+
+echo
+echo "==> bootstrap: verifying Node.js…"
+
+if ! [ -x "$(command -v node)" ]; then
+    echo
+    echo "    Please install Node.js: https://nodejs.org/en/download/"
+    exit 1
+fi
+
+node_version="$(node --version)"
+echo "    Found node version: ${node_version}"
+if ! [[ $node_version =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+    echo
+    echo "    Could not parse node version: ${node_version}"
+    echo "    Please install node v14.x"
+    exit 1
+fi
+
+# check that node >= MAJOR.MINOR
+node_min_major="14"
+node_min_minor="15"
+
+IFS='.' read -ra node_version_split <<< "${node_version#v}"
+if [ "${node_version_split[0]}" -lt "${node_min_major}" ] || [[ "${node_version_split[0]}" -le "${node_min_major}" && "${node_version_split[1]}" -lt "${node_min_minor}" ]]; then
+    echo
+    echo "    Please install Node.js >= ${node_min_major}.${node_min_minor}.x"
+    echo
+    exit 1
+fi
+
+if ! [ -x "$(command -v npm)" ]; then
+    echo "Please install the npm command"
+    exit 1
+fi
+
+if ! [ -x "$(command -v npx)" ]; then
+    echo "Please install the npx command (part of newer npm distributions)"
+    exit 1
+fi

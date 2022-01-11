@@ -6,6 +6,9 @@ set -e
 cd "$(dirname "$0")/.."
 
 
+script/-test-bootstrap
+
+
 temp_path="$(pwd)"
 temp_path="${temp_path:1}"
 temp_path="${temp_path//\//--}"
