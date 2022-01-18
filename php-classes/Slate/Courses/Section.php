@@ -468,7 +468,7 @@ class Section extends \VersionedRecord
           return $Teacher->ID;
       }, $this->ActiveTeachers);
 
-      $latestTeacherPost = \Emergence\CMS\BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
+      $latestTeacherPost = BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
           'conditions' => [
               'AuthorID' => [
                   'operator' => 'IN',
