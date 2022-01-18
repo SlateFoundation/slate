@@ -111,6 +111,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
                 ]));
             case 'students':
                 return static::handleStudentsRequest($Section);
+            case '':
             case false:
                 return static::handleBlogpostRequest($Section, $action);
             default:
