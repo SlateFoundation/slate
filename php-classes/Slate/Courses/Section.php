@@ -441,13 +441,14 @@ class Section extends \VersionedRecord
 
       if ($tag!=null) {
 
-          $tagIDsQuery = 'SELECT ContextID FROM `tag_items` WHERE (`ContextClass` = "%s") AND (`TagID` = %u)';
-          $tagIDsConditions = [
-              'ContextClass' => DB::escape(BlogPost::getStaticRootClass()),
-              'TagID' => $tag->ID
-          ];
-
-          $tagItemIDs = DB::allValues('ContextID', $tagIDsQuery, $tagIDsConditions);
+          $tagItemIDs = DB::allValues(
+              'ContextID',
+              'SELECT ContextID FROM `tag_items` WHERE (`ContextClass` = "%s") AND (`TagID` = %u)',
+              [
+                  DB::escape(BlogPost::getStaticRootClass()),
+                  $tag->ID
+              ]
+          );
 
           $options = array_merge_recursive($options, [
               'conditions' => [
