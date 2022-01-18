@@ -175,7 +175,7 @@
                         <ul class="tag-list">
                         {foreach item=tag from=$tagsShown}
                             <li>
-                                <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title} <span class="tag-count">{$tag.itemsCount}</span></a>
+                                <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title|escape} <span class="tag-count">{$tag.itemsCount}</span></a>
                             </li>
                         {/foreach}
                         </ul>
@@ -190,7 +190,7 @@
                                 <ul class="tag-list">
                                 {foreach item=tag from=$tagsHidden}
                                     <li>
-                                        <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title} <span class="tag-count">{$tag.count}</span></a>
+                                        <a class="tag" href="?blog_tag={$tag.Handle}">{$tag.Title|escape} <span class="tag-count">{$tag.count}</span></a>
                                     </li>
                                 {/foreach}
                                 </ul>
