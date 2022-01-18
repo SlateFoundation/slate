@@ -478,7 +478,7 @@ class Section extends \VersionedRecord
           'limit' => 1
       ]));
 
-      return $latestTeacherPost[0];
+      return count($latestTeacherPost) ? $latestTeacherPost[0] : null;
     }
 
     // search SQL generators
