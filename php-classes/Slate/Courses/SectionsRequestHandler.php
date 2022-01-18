@@ -113,13 +113,13 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
                 return static::handleStudentsRequest($Section);
             case '':
             case false:
-                return static::handleBlogpostRequest($Section, $action);
+                return static::handleSectionRequest($Section, $action);
             default:
                 return parent::handleRecordRequest($Section, $action);
         }
     }
 
-    public static function handleBlogpostRequest(Section $Section, $action)
+    public static function handleSectionRequest(Section $Section, $action)
     {
       $className = static::$recordClass;
 
