@@ -134,7 +134,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
           $tag = Tag::getByHandle($handle);
 
           if (!$tag) {
-              static::throwNotFoundError('tag not found');
+              return static::throwNotFoundError('tag not found');
           }
       } else {
           $latestTeacherPost = $Section->findLatestTeacherPost();
