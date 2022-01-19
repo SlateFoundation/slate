@@ -75,7 +75,7 @@
                 {/if}
 
                 {foreach item=BlogPost from=$blogPosts}
-                    {blogPost $BlogPost headingLevel="h3"}
+                    {blogPost $BlogPost headingLevel="h3" includeSummaryInBody=true}
                 {foreachelse}
                     <p class="empty-text">This class has no posts in its public feed yet.</p>
                 {/foreach}
