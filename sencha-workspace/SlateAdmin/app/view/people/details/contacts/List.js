@@ -35,7 +35,9 @@
 
         // dataview properties
         loadMask: false,
-        emptyText: 'No contacts have been linked or created yet.',
+        emptyText: `
+            <div class="empty-text">No related contacts linked</div>
+        `,
         disableSelection: true,
         itemSelector: '.x-dataview-item',
         tpl: [`
@@ -78,7 +80,7 @@
                     </div>
                 </div>
             </tpl>
-            <div class="relationship-creator">
+            <div class="relationship-creator" data-action="add-related-person" role="button">
                 <i class="fa fa-plus-circle"></i> Add a related person&hellip;
             </div>
             `,{
@@ -175,7 +177,7 @@
             var me = this;
 
             me.callParent(arguments);
-            me.mon(me.el, 'click', 'onRelationshipCreatorClick', me, { delegate: '.relationship-creator' });
+            me.mon(me.el, 'click', 'onRelationshipCreatorClick', me, { delegate: '[data-action="add-related-person"]' });
         },
 
         // disable built-in focus manipulation that can interfere with editing
