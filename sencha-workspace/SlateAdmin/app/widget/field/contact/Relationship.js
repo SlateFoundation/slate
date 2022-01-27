@@ -42,6 +42,8 @@
                 Ext.applyIf(headerCmp, {
                     flex: 1,
 
+                    cls: 'full-name-label muted',
+                    padding: '0 6',
                     width: '100%',
                     tpl: '{FullName:htmlEncode}'
                 });

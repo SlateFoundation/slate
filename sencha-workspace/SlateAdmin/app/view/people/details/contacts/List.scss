@@ -1,5 +1,9 @@
 .contacts-list {
 
+    .empty-text {
+        padding: 1em;
+    }
+
     .x-dataview-item,
     .relationship-creator {
         background-color: $grid-row-cell-background-color;
@@ -78,6 +82,14 @@
         .fa-plus-circle {
             color: $success-color;
             margin-right: .125em;
+        }
+
+        &:hover {
+            background-color: $grid-row-cell-over-background-color;
+        }
+
+        &:focus {
+            background-color: $grid-row-cell-focus-background-color;
         }
     }
 }
