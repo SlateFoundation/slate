@@ -8,4 +8,22 @@
     .x-form-cb-checked .glyph-guardian {
         color: $glyph-shield-color;
     }
+
+    .full-name-label {
+        animation-duration: 250ms;
+        animation-fill-mode: both;
+        animation-name: relationship-editor-name-scoot;
+        animation-timing-function: cubic-bezier(0.190, 1.000, 0.220, 1.000);
+        z-index: 1;
+    }
+}
+
+@keyframes relationship-editor-name-scoot {
+    0% {
+        transform: translateY(10px);
+    }
+
+    100% {
+        transform: none;
+    }
 }
