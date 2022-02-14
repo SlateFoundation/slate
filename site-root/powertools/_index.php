@@ -1,3 +1,3 @@
 <?php
 
-Emergence\RequestHandler\IndexRequestHandler::handleIndexRequest('Staff');
+Emergence\RequestHandler\IndexRequestHandler::handleIndexRequest('Administrator');
