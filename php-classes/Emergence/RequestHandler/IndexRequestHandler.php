@@ -22,7 +22,7 @@ class IndexRequestHandler extends AbstractRequestHandler
     public static function handleIndexRequest($requiredAccountLevel = 'Administrator', $path = null)
     {
         if ($requiredAccountLevel) {
-            $GLOBALS['Session']->requireAccountLevel('Administrator');
+            $GLOBALS['Session']->requireAccountLevel($requiredAccountLevel);
         }
 
         if ($path === null) {
