@@ -359,6 +359,8 @@ abstract class RecordsRequestHandler extends RequestHandler
             return static::throwInvalidRequestError('Save expects "data" field as array of record deltas');
         }
 
+        set_time_limit(0);
+
         $className = static::$recordClass;
         $results = array();
         $failed = array();
