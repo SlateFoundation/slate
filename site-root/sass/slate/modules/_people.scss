@@ -2,39 +2,41 @@
     @include background-size(cover);
 }
 
-$roster-avatar-size: 64px;
-$roster-item-width: $roster-avatar-size * 1.3125;
-$roster-font-size: $font-size * .6875;
-$roster-line-height: $line-height * .8;
-
 .roster {
+    display: grid;
+    grid-gap: 1em .5em;
+    grid-template-columns: repeat(3, 1fr);
     margin: 0;
     padding: 0;
-    
+
     li {
-        display: inline-block;
-        font-size: $roster-font-size;
-        height: $roster-avatar-size + (($roster-line-height * $roster-font-size) * 2.5);
-        line-height: $roster-line-height;
+        font-size: .75em;
+        line-height: 1.25;
         list-style: none;
-        margin-bottom: .75em;
-        overflow: hidden;
+        min-width: 0;
         text-align: center;
-        vertical-align: text-bottom;
-        width: $roster-item-width;
     }
-    
+
     a {
+        display: block;
         text-decoration: none;
-        
+
         &:hover,
         &:focus {
             text-decoration: underline;
         }
     }
-    
+
     .avatar {
+        border-radius: 100%;
+        box-shadow: 0 1px 2px rgba(0,0,0,.1);
         margin: 0 auto .25em;
+    }
+
+    .name {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -43,7 +45,7 @@ $roster-line-height: $line-height * .8;
         color: inherit;
         font-size: 1em;
     }
-    
+
     .well-title {
         color: $heading-color;
         font-size: 1.2em;

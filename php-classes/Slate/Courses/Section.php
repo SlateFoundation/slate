@@ -6,12 +6,14 @@ use DB;
 use HandleBehavior;
 use DuplicateKeyException;
 use TableNotFoundException;
+use TagItem;
 
 use Emergence\People\IPerson;
 use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\Locations\Location;
 use Emergence\Connectors\Mapping;
+use Emergence\CMS\BlogPost;
 
 use Slate\Term;
 use Slate\Courses\SectionParticipant;
@@ -186,7 +188,13 @@ class Section extends \VersionedRecord
             ,'class' => Mapping::class
             ,'contextClass' => __CLASS__
         ]
-    ];
+        ,'BlogPosts' => [
+            'type' => 'one-many'
+            ,'class' => BlogPost::class
+            ,'contextClass' => __CLASS__
+            ,'foreign' => 'ContextID'
+        ]
+      ];
 
     public static $validators = [
         'Course' => [
@@ -409,6 +417,69 @@ class Section extends \VersionedRecord
         } catch (\TableNotFoundException $e) {
             return [];
         }
+    }
+
+    public function findBlogTags()
+    {
+        return TagItem::getTagsSummary([
+            'Class' => BlogPost::class,
+            'classConditions' => [
+                'ContextClass' => static::getStaticRootClass(),
+                'ContextID' => $this->ID
+            ]
+        ]);
+    }
+
+    public function findBlogPosts($conditions, $limit, $offset, $tag)
+    {
+      $options = [
+        'limit' => $limit,
+        'offset' => $offset,
+        'calcFoundRows' => 'yes',
+        'conditions' => $conditions
+      ];
+
+      if ($tag!=null) {
+
+          $tagItemIDs = DB::allValues(
+              'ContextID',
+              'SELECT ContextID FROM `tag_items` WHERE (`ContextClass` = "%s") AND (`TagID` = %u)',
+              [
+                  DB::escape(BlogPost::getStaticRootClass()),
+                  $tag->ID
+              ]
+          );
+
+          $options = array_merge_recursive($options, [
+              'conditions' => [
+                  'ID' => [
+                      'operator' => 'IN',
+                      'values' => count($tagItemIDs) ? $tagItemIDs : '0'
+                  ]
+              ]
+          ]);
+      }
+
+      return BlogPost::getAllPublishedByContextObject($this, $options);
+    }
+
+    public function findLatestTeacherPost()
+    {
+      $sectionTeacherIds = array_map(function($Teacher) {
+          return $Teacher->ID;
+      }, $this->ActiveTeachers);
+
+      $latestTeacherPost = BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
+          'conditions' => [
+              'AuthorID' => [
+                  'operator' => 'IN',
+                  'values' => $sectionTeacherIds
+              ]
+          ],
+          'limit' => 1
+      ]));
+
+      return count($latestTeacherPost) ? $latestTeacherPost[0] : null;
     }
 
     // search SQL generators
