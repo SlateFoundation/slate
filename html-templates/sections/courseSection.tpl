@@ -39,7 +39,7 @@
                       <small class="muted">
                         Public Feed
                         {if $blogTag}
-                          for tag {$blogTag->getTitle()|escape}
+                          for tag <code>{$blogTag->getTitle()|escape}</code>
                         {/if}
                       </small>
                     </h2>
