@@ -2,7 +2,7 @@
 {load_templates "subtemplates/comments.tpl"}
 {load_templates "subtemplates/contextLinks.tpl"}
 
-{template blogPost Post headingLevel=h1 showHeader=true showBody=true showFooter=true showComments=false showCommentsSummary=true showContext=true useSummary=false articleClass='' titlePrefix=''}
+{template blogPost Post headingLevel=h1 showHeader=true showBody=true showFooter=true showComments=false showCommentsSummary=true showContext=true useSummary=false articleClass='' titlePrefix='' includeSummaryInBody=false}
     <article class="blog-post reading-width {$articleClass}">
         {if $showHeader}
             <header class="article-header">
@@ -37,10 +37,16 @@
 
         {if $useSummary && $Post->Summary}
             <section class="section-body summary">
-                <p>{$Post->Summary|escape}</p>
+                <p>{$Post->Summary|escape|linkify}</p>
                 <p><a href="{$Post->getURL()}">Read more&hellip;</a></p>
             </section>
         {elseif $showBody}
+            {if $includeSummaryInBody}
+                <section class="section-body summary">
+                    <p>{$Post->Summary|escape|linkify}</p>
+                </section>
+            {/if}
+
             <section class="section-body">
                 {$Post->renderBody()}
             </section>
