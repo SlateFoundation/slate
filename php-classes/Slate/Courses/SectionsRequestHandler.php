@@ -5,6 +5,7 @@ namespace Slate\Courses;
 use DB;
 use ActiveRecord;
 use DuplicateKeyException;
+use Tag;
 
 use Emergence\People\Person;
 use Emergence\People\User;
@@ -110,9 +111,51 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
                 ]));
             case 'students':
                 return static::handleStudentsRequest($Section);
+            case '':
+            case false:
+                return static::handleSectionRequest($Section, $action);
             default:
                 return parent::handleRecordRequest($Section, $action);
         }
+    }
+
+    public static function handleSectionRequest(Section $Section, $action)
+    {
+      $className = static::$recordClass;
+
+      $limit = isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) ? (integer)$_REQUEST['limit'] : 10;
+      $offset = isset($_REQUEST['offset']) && ctype_digit($_REQUEST['offset']) ? (integer)$_REQUEST['offset'] : 0;
+      $handle = $_REQUEST['blog-tag'];
+
+      $conditions = [];
+      $latestTeacherPost = false;
+      $tag = null;
+
+      if ($handle) {
+          $tag = Tag::getByHandle($handle);
+
+          if (!$tag) {
+              return static::throwNotFoundError('tag not found');
+          }
+      } else {
+          $latestTeacherPost = $Section->findLatestTeacherPost();
+
+          if ($latestTeacherPost) {
+              $conditions[] = sprintf('ID != %u', $latestTeacherPost->ID);
+          }
+      }
+
+      return static::respond(static::getTemplateName($className::$singularNoun), array(
+          'success' => true
+          ,'data' => $Section
+          ,'tags' => $Section->findBlogTags()
+          ,'blogTag' => $tag
+          ,'latestTeacherPost' => $latestTeacherPost
+          ,'blogPosts' => $Section->findBlogPosts($conditions, $limit ?: 4, $offset, $tag )
+          ,'total' => DB::foundRows()
+          ,'limit' => $limit
+          ,'offset' => $offset
+      ));
     }
 
     public static function handleCohortsRequest(Section $Section)

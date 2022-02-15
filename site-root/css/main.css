@@ -3498,53 +3498,84 @@ body {
   text-align: left !important;
 }
 
-/* line 49, ../sass/slate/_common.scss */
+/* line 52, ../sass/slate/_common.scss */
 .text-right {
   text-align: right !important;
 }
 
-/* line 50, ../sass/slate/_common.scss */
+/* line 56, ../sass/slate/_common.scss */
 .text-center {
   text-align: center !important;
 }
 
-/* line 51, ../sass/slate/_common.scss */
+/* line 60, ../sass/slate/_common.scss */
 .text-justify {
   text-align: justify !important;
 }
 
-/* line 52, ../sass/slate/_common.scss */
+/* line 64, ../sass/slate/_common.scss */
 .text-nowrap {
   white-space: nowrap !important;
 }
 
-/* line 53, ../sass/slate/_common.scss */
+/* line 68, ../sass/slate/_common.scss */
 .text-nolead {
   margin-top: 0 !important;
 }
 
-/* line 54, ../sass/slate/_common.scss */
+/* line 72, ../sass/slate/_common.scss */
 .text-notrail {
   margin-bottom: 0 !important;
 }
 
-/* line 56, ../sass/slate/_common.scss */
+/* line 76, ../sass/slate/_common.scss */
 .sidebar-item {
   margin: 1em 0 3em;
 }
-/* line 59, ../sass/slate/_common.scss */
+/* line 79, ../sass/slate/_common.scss */
 .sidebar-item .empty-text {
   margin: .5em 0;
 }
+/* line 83, ../sass/slate/_common.scss */
+.sidebar-item .sidebar-collapsible-toggle {
+  background-color: rgba(51, 51, 51, 0.05);
+  border-radius: .25em;
+  cursor: pointer;
+  font-size: .75em;
+  margin-top: 1em;
+  padding: .25em;
+  text-align: center;
+  text-transform: uppercase;
+}
+/* line 93, ../sass/slate/_common.scss */
+.sidebar-item .sidebar-collapsible-toggle:hover, .sidebar-item .sidebar-collapsible-toggle:focus {
+  background-color: rgba(51, 51, 51, 0.1);
+}
+/* line 99, ../sass/slate/_common.scss */
+.sidebar-item .collapsible-collapse-text {
+  display: none;
+}
+/* line 104, ../sass/slate/_common.scss */
+.sidebar-item .sidebar-collapsible[open] > .sidebar-collapsible-toggle {
+  margin-bottom: 1em;
+}
+/* line 108, ../sass/slate/_common.scss */
+.sidebar-item .sidebar-collapsible[open] .collapsible-expand-text {
+  display: none;
+}
+/* line 112, ../sass/slate/_common.scss */
+.sidebar-item .sidebar-collapsible[open] .collapsible-collapse-text {
+  display: unset;
+}
 
-/* line 64, ../sass/slate/_common.scss */
+/* line 118, ../sass/slate/_common.scss */
 .sidebar-item-title {
   border-bottom: 1px solid #d4d4d4;
   margin: 0;
   padding: 0 0 .5em;
 }
 
-/* line 70, ../sass/slate/_common.scss */
+/* line 124, ../sass/slate/_common.scss */
 .sidebar-group-title {
   background-color: #e6e6e6;
   font-family: Lato, "Lucida Grande", Verdana, "Helvetica Neue", sans-serif;
@@ -3553,37 +3584,37 @@ body {
   padding: .5em .75em;
   text-transform: uppercase;
 }
-/* line 78, ../sass/slate/_common.scss */
+/* line 132, ../sass/slate/_common.scss */
 .sidebar-group-title a {
   color: #327fa8;
   font-size: smaller;
   font-weight: bold;
 }
 
-/* line 86, ../sass/slate/_common.scss */
+/* line 140, ../sass/slate/_common.scss */
 .site.footer.has-image {
   background-color: #444;
   border-top: 2px solid #444;
 }
-/* line 90, ../sass/slate/_common.scss */
+/* line 144, ../sass/slate/_common.scss */
 .site.footer.has-image .footer-info {
   background: rgba(255, 255, 255, 0.9);
   float: right;
   padding: 2em 1.5em;
   width: 250px;
 }
-/* line 97, ../sass/slate/_common.scss */
+/* line 151, ../sass/slate/_common.scss */
 .site.footer.has-image > .inner {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0;
 }
-/* line 104, ../sass/slate/_common.scss */
+/* line 158, ../sass/slate/_common.scss */
 .site.footer.has-image address {
   display: inline-block;
 }
-/* line 108, ../sass/slate/_common.scss */
+/* line 162, ../sass/slate/_common.scss */
 .site.footer.has-image small {
   clear: both;
   display: block;
@@ -4065,49 +4096,60 @@ body {
 .kv-value,
 .kv-list dd {
   margin: 0;
+  padding: 0;
 }
 
-/* line 18, ../sass/slate/modules/_key-value-list.scss */
+/* line 19, ../sass/slate/modules/_key-value-list.scss */
 .kv-key, .kv-list dt {
   color: #949494;
   font-size: smaller;
   text-transform: uppercase;
 }
 
-/* line 24, ../sass/slate/modules/_key-value-list.scss */
+/* line 25, ../sass/slate/modules/_key-value-list.scss */
 .kv-value, .kv-list dd {
   font-weight: bold;
 }
 
-/* line 30, ../sass/slate/modules/_key-value-list.scss */
+/* line 31, ../sass/slate/modules/_key-value-list.scss */
 .kv-list.align-left,
 .kv-list.align-right {
   display: table;
 }
-/* line 34, ../sass/slate/modules/_key-value-list.scss */
+/* line 35, ../sass/slate/modules/_key-value-list.scss */
 .kv-list.align-left .kv-pair, .kv-list.align-left .dli,
 .kv-list.align-right .kv-pair,
 .kv-list.align-right .dli {
   display: table-row;
 }
-/* line 38, ../sass/slate/modules/_key-value-list.scss */
+/* line 39, ../sass/slate/modules/_key-value-list.scss */
 .kv-list.align-left .kv-key, .kv-list.align-left dt,
 .kv-list.align-left .kv-value,
 .kv-list.align-left dd,
+.kv-list.align-left > .kv-key,
+.kv-list.align-left > dt,
+.kv-list.align-left > .kv-value,
+.kv-list.align-left > dd,
 .kv-list.align-right .kv-key,
 .kv-list.align-right dt,
 .kv-list.align-right .kv-value,
-.kv-list.align-right dd {
+.kv-list.align-right dd,
+.kv-list.align-right > .kv-key,
+.kv-list.align-right > dt,
+.kv-list.align-right > .kv-value,
+.kv-list.align-right > dd {
   display: table-cell;
+  padding-bottom: 0;
+  padding-top: 0;
 }
-/* line 43, ../sass/slate/modules/_key-value-list.scss */
+/* line 48, ../sass/slate/modules/_key-value-list.scss */
 .kv-list.align-left .kv-key, .kv-list.align-left dt,
 .kv-list.align-right .kv-key,
 .kv-list.align-right dt {
   padding-right: 1em;
 }
 
-/* line 51, ../sass/slate/modules/_key-value-list.scss */
+/* line 56, ../sass/slate/modules/_key-value-list.scss */
 .kv-list.align-right .kv-key, .kv-list.align-right dt {
   text-align: right;
 }
@@ -4961,49 +5003,56 @@ body {
   background-size: cover;
 }
 
-/* line 10, ../sass/slate/modules/_people.scss */
+/* line 5, ../sass/slate/modules/_people.scss */
 .roster {
+  display: grid;
+  grid-gap: 1em .5em;
+  grid-template-columns: repeat(3, 1fr);
   margin: 0;
   padding: 0;
 }
-/* line 14, ../sass/slate/modules/_people.scss */
+/* line 12, ../sass/slate/modules/_people.scss */
 .roster li {
-  display: inline-block;
-  font-size: 11px;
-  height: 97px;
-  line-height: 1.2;
+  font-size: .75em;
+  line-height: 1.25;
   list-style: none;
-  margin-bottom: .75em;
-  overflow: hidden;
+  min-width: 0;
   text-align: center;
-  vertical-align: text-bottom;
-  width: 84px;
 }
-/* line 27, ../sass/slate/modules/_people.scss */
+/* line 20, ../sass/slate/modules/_people.scss */
 .roster a {
+  display: block;
   text-decoration: none;
 }
-/* line 30, ../sass/slate/modules/_people.scss */
+/* line 24, ../sass/slate/modules/_people.scss */
 .roster a:hover, .roster a:focus {
   text-decoration: underline;
 }
-/* line 36, ../sass/slate/modules/_people.scss */
+/* line 30, ../sass/slate/modules/_people.scss */
 .roster .avatar {
+  border-radius: 100%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   margin: 0 auto .25em;
 }
+/* line 36, ../sass/slate/modules/_people.scss */
+.roster .name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-/* line 42, ../sass/slate/modules/_people.scss */
+/* line 44, ../sass/slate/modules/_people.scss */
 .about-bio h1, .about-bio h2, .about-bio h3, .about-bio h4, .about-bio h5, .about-bio h6 {
   color: inherit;
   font-size: 1em;
 }
-/* line 47, ../sass/slate/modules/_people.scss */
+/* line 49, ../sass/slate/modules/_people.scss */
 .about-bio .well-title {
   color: #333;
   font-size: 1.2em;
 }
 
-/* line 56, ../sass/slate/modules/_people.scss */
+/* line 58, ../sass/slate/modules/_people.scss */
 .profile-contact-info dd {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -5508,6 +5557,37 @@ body {
 /* line 54, ../sass/slate/modules/_splitview.scss */
 .splitview .form-actions > * {
   margin-right: 1em;
+}
+
+/* line 1, ../sass/slate/modules/_tag-list.scss */
+.tag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* line 6, ../sass/slate/modules/_tag-list.scss */
+.tag-list > li {
+  display: inline-block;
+}
+/* line 10, ../sass/slate/modules/_tag-list.scss */
+.tag-list .tag {
+  background-color: rgba(49, 160, 218, 0.05);
+  border-radius: .25em;
+  display: block;
+  font-size: .875em;
+  margin-bottom: .25em;
+  padding: 0 .5em;
+  text-decoration: none;
+}
+/* line 19, ../sass/slate/modules/_tag-list.scss */
+.tag-list .tag:hover, .tag-list .tag:focus {
+  background-color: rgba(49, 160, 218, 0.1);
+}
+/* line 25, ../sass/slate/modules/_tag-list.scss */
+.tag-list .tag-count {
+  color: rgba(51, 51, 51, 0.4);
+  font-size: .75em;
+  font-weight: bold;
 }
 
 /* line 3, ../sass/slate/modules/_todo.scss */
