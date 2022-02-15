@@ -125,7 +125,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
 
       $limit = isset($_REQUEST['limit']) && ctype_digit($_REQUEST['limit']) ? (integer)$_REQUEST['limit'] : 10;
       $offset = isset($_REQUEST['offset']) && ctype_digit($_REQUEST['offset']) ? (integer)$_REQUEST['offset'] : 0;
-      $handle = $_REQUEST['blog_tag'];
+      $handle = $_REQUEST['blog-tag'];
 
       $conditions = [];
       $latestTeacherPost = false;
