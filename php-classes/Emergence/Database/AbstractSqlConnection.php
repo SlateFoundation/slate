@@ -122,6 +122,14 @@ abstract class AbstractSqlConnection implements SqlConnectionInterface
     }
 
     /**
+     * Execute some raw SQL with no processing
+     */
+    public function execute($sql)
+    {
+        return $this->pdo->exec($sql);
+    }
+
+    /**
      * Prepare and execute a query, returning an associative array of the first returned row
      * and immediately closing the result cursor
      */
