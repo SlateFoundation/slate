@@ -25,15 +25,18 @@ class Session extends ActiveRecord
         'ContextClass' => null,
         'ContextID' => null,
         'Handle' => [
-            'unique' => true
+            'unique' => true,
+            'description' => 'The session token that can be used to authenticate requests'
         ],
         'LastRequest' => [
             'type' => 'timestamp',
-            'default' => null
+            'default' => null,
+            'description' => 'Timestamp of last requested authenticated by session'
         ],
         'LastIP' => [
             'type' => 'uint',
-            'default' => null
+            'default' => null,
+            'description' => 'Long integer IP that made last request'
         ],
         'CreatorID' => null
     ];

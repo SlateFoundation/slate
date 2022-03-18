@@ -16,16 +16,17 @@ class ApiDocsRequestHandler extends \RequestHandler
 
     public static function handleRequest()
     {
-        $schemes = ['http'];
+        $hostname = Site::getConfig('primary_hostname');
+
+        $servers = [
+            [ 'url' => "http://{$hostname}/" ]
+        ];
 
         if (Site::getConfig('ssl')) {
-            array_unshift($schemes, 'https');
+            array_unshift($servers, [ 'url' => "https://{$hostname}/" ]);
         }
 
-        $openApiData = OpenAPIReader::readTree([
-            'host' => Site::getConfig('primary_hostname'),
-            'schemes' => $schemes
-        ]);
+        $openApiData = OpenAPIReader::readTree([ 'servers' => $servers ]);
 
         $openApiData = OpenAPIWriter::sort($openApiData);
 

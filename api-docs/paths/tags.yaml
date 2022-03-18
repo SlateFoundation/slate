@@ -1,0 +1,8 @@
+x-recordsRequestHandler: TagsRequestHandler
+get:
+  parameters:
+  - name: prefix
+    in: query
+    description: A handle prefix to match tags against, e.g. `tech` matches `tech.javascript`
+    schema:
+      type: string

@@ -1,4 +1,0 @@
-name: q
-in: query
-type: string
-description: Keyword search query

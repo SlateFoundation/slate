@@ -1,0 +1,7 @@
+name: limit
+in: query
+description: Maximum number of records to return in each response. 0 to disable
+  limiting
+schema:
+  type: integer
+  default: 48

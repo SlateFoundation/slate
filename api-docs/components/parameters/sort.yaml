@@ -1,0 +1,6 @@
+name: sort
+in: query
+description: The name of a `sorter` or field declared on the record model
+  to order results with
+schema:
+  type: string

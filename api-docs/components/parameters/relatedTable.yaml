@@ -1,0 +1,12 @@
+name: relatedTable
+in: query
+description: Provide the names of one or more direct relationship of the requested records
+  and a consolidated array of all unique related records will be returned on the side. Each
+  array will be returned in a property matching the name of the relationship under the
+  top-level property `related`
+style: form
+explode: false
+schema:
+  type: array
+  items:
+    type: string

@@ -1,0 +1,58 @@
+post:
+  tags:
+  - Session
+  summary: Create a new session
+  security: []
+  parameters:
+  - $ref: '#/components/parameters/include'
+  - $ref: '#/components/parameters/format'
+  - $ref: '#/components/parameters/accept'
+  requestBody:
+    required: true
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          required:
+          - _LOGIN[password]
+          - _LOGIN[username]
+          properties:
+            _LOGIN[username]:
+              type: string
+            _LOGIN[password]:
+              type: string
+              format: password
+            _LOGIN[returnMethod]:
+              type: string
+              description: Set to `POST` to return session in response to POST
+                request instead of redirecting to post-login URL
+              default: POST
+              enum:
+              - GET
+              - POST
+  responses:
+    200:
+      description: Login credentials accepted, session created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SessionResponse'
+    401:
+      description: Username or password invalid
+get:
+  tags:
+  - Session
+  summary: Get current Session
+  parameters:
+  - $ref: '#/components/parameters/include'
+  - $ref: '#/components/parameters/format'
+  - $ref: '#/components/parameters/accept'
+  responses:
+    200:
+      description: Session found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SessionResponse'
+    401:
+      description: Sesson not provided, not valid, or expired

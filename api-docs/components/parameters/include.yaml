@@ -1,0 +1,11 @@
+name: include
+in: query
+description: Name(s) of related objects to embed in response. Pass `*` to include
+  all available related objects. Nested objects may be requested using dot notation,
+  e.g. `include=Creator.Modifier`
+style: form
+explode: false
+schema:
+  type: array
+  items:
+    type: string
