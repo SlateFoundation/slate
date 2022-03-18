@@ -9,19 +9,15 @@
 
 {block "content"}
     <?php
-        // we need to keep a reference to the top-level document for resolving JSONSchema refs
-        $GLOBALS['swaggerDocument'] = $this->scope['swaggerDocument'] = &$this->scope;
+        // flatten all $refs in document ahead of rendering
+        $this->scope = Emergence\OpenAPI\Reader::flattenAllRefs($this->scope);
     ?>
 
     {template definition input definitionId=null}
-        <?php
-            $this->scope['swaggerDocument'] = $GLOBALS['swaggerDocument'];
-        ?>
+        {$schema = default($input.schema, $input)}
+        {$definitionId = default($definitionId, Emergence\OpenAPI\Reader::getDefinitionIdFromPath($schema._resolvedRef))}
 
-        {$input = Emergence\OpenAPI\Reader::flattenDefinition($input, $swaggerDocument)}
-        {$definitionId = default($definitionId, Emergence\OpenAPI\Reader::getDefinitionIdFromPath($input._resolvedRef))}
-
-        {if $input.properties}
+        {if $schema.properties}
             <table class="docs-table schema-table">
                 {if $definitionId}
                     <caption>Model: <a href="#{unique_dom_id}models//{$definitionId}{/unique_dom_id}">{$definitionId}</a></caption>
@@ -35,10 +31,10 @@
                 </thead>
 
                 <tbody>
-                {foreach key=property item=propertyData from=$input.properties}
+                {foreach key=property item=propertyData from=$schema.properties}
                     <tr>
                         <td><code>{$property}</code></td>
-                        <td class="text-center">{tif is_array($input.required) && in_array($property, $input.required) ? '&#10003;' : '<span class="muted">&mdash;</span>'}</td>
+                        <td class="text-center">{tif is_array($schema.required) && in_array($property, $schema.required) ? '&#10003;' : '<span class="muted">&mdash;</span>'}</td>
                         <td>{definition $propertyData}</td>
                     </tr>
                     {if $propertyData.description}
@@ -50,17 +46,17 @@
                 </tbody>
             </table>
         {else}
-            {if $input.type == 'array'}
-                [array] {definition $input.items}
+            {if $schema.type == 'array'}
+                [array] {definition $schema.items}
             {else}
-                {$input.type}
-                {if $input.format}
-                    ({$input.format})
+                {$schema.type}
+                {if $schema.format}
+                    ({$schema.format})
                 {/if}
-                {if $input.enum}
+                {if $schema.enum}
                     (enum)
                     <ul>
-                        {foreach item=value from=$input.enum}
+                        {foreach item=value from=$schema.enum}
                             <li><q>{$value|escape}</q></li>
                         {/foreach}
                     </ul>
@@ -85,11 +81,11 @@
                         </ul>
                     </li>
                 {/if}
-                {if count($definitions)}
+                {if count($components.schemas)}
                     <li>
                         <a href="#models">Models</a>
                         <ul>
-                            {foreach key=model item=modelData from=$definitions}
+                            {foreach key=model item=modelData from=$components.schemas}
                                 <li><a href="#{unique_dom_id}models//{$model}{/unique_dom_id}">{$model}</a></li>
                             {/foreach}
                         </ul>
@@ -101,9 +97,7 @@
 
         <div
              class="detail-view endpoint-docs"
-             data-host="{$host|escape}"
-             data-basepath="{$basePath|escape}"
-             data-schemes="{$schemes|implode:','|escape}"
+             data-servers="{foreach implode="," item=server from=$servers}{$server.url|escape}{/foreach}"
              data-handle="{$info['x-handle']|escape}"
              {if $info['x-key-required']}data-key-required{/if}
             >
@@ -135,10 +129,10 @@
                             {foreach key=method item=methodData from=$pathData}
                                 <section class="endpoint-path-method indent" id="{unique_dom_id}paths/{$path}.{$method}{/unique_dom_id}" data-method="{$method}">
                                     <header class="section-header">
-                                        <h4 class="header-title"><a href="#{unique_dom_id}paths/{$path}.{$method}{/unique_dom_id}"><span class="http-method">{$method}</span> {$path}</a></h4>
+                                        <h4 class="header-title"><a href="#{unique_dom_id}paths/{$path}.{$method}{/unique_dom_id}"><span class="http-method">{$method|upper}</span> {$path}</a></h4>
                                     </header>
 
-                                    <div class="markdown indent">{$methodData.description|escape|markdown}</div>
+                                    <div class="markdown indent">{$methodData.description|default:$methodData.summary|escape|markdown}</div>
 
     {*                                 <div class="indent"> *}
                                         <table class="docs-table parameters-table">
@@ -166,23 +160,63 @@
                                             </tbody>
                                         </table>
 
+                                        {if $methodData.requestBody}
+                                            <table class="docs-table request-body-table">
+                                                <caption>Request Body {if $methodData.requestBody.required}(Required &#10003;){/if}</caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Type</th>
+                                                        <th>Schema</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                {foreach key=contentType item=contentData from=$methodData.requestBody.content}
+                                                    <tr {html_attributes_encode $parameterData prefix="data-"}>
+                                                        <td>{$contentType|escape}</td>
+                                                        <td>{definition $contentData}</td>
+                                                    </tr>
+                                                {/foreach}
+                                                </tbody>
+                                            </table>
+                                        {/if}
+
                                         <table class="docs-table responses-table">
                                             <caption>Responses</caption>
                                             <thead>
                                                 <tr>
                                                     <th>Code</th>
                                                     <th>Description</th>
+                                                    <th>Type</th>
                                                     <th>Schema</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
                                             {foreach key=responseCode item=responseData from=$methodData.responses}
-                                                <tr>
-                                                    <td>{$responseCode}</td>
-                                                    <td><div class="markdown response-description">{$responseData.description|escape|markdown}</div></td>
-                                                    <td>{definition $responseData}</td>
-                                                </tr>
+                                                {foreach name=contentTypes key=contentType item=contentData from=$responseData.content}
+                                                    <tr>
+                                                        {if $.foreach.contentTypes.first}
+                                                            <td rowspan="{$.foreach.contentTypes.total}">{$responseCode}</td>
+                                                            <td rowspan="{$.foreach.contentTypes.total}">
+                                                                <div class="markdown response-description">
+                                                                    {$responseData.description|escape|markdown}
+                                                                </div>
+                                                            </td>
+                                                        {/if}
+                                                        <td>{$contentType|escape}</td>
+                                                        <td>{definition $contentData}</td>
+                                                    </tr>
+                                                {foreachelse}
+                                                    <tr>
+                                                        <td>{$responseCode}</td>
+                                                        <td colspan="3">
+                                                            <div class="markdown response-description">
+                                                                {$responseData.description|escape|markdown}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {/foreach}
                                             {/foreach}
                                             </tbody>
                                         </table>
@@ -194,13 +228,13 @@
                 </section>
             {/if}
 
-            {if count($definitions)}
+            {if count($components.schemas)}
                 <section class="page-section" id="models">
                     <header class="section-header">
                         <h2 class="header-title">Models</h2>
                     </header>
 
-                    {foreach key=definition item=definitionData from=$definitions}
+                    {foreach key=definition item=definitionData from=$components.schemas}
                         <section class="endpoint-model" id="{unique_dom_id}models//{$definition}{/unique_dom_id}">
                             <header class="section-header">
                                 <h3 class="header-title"><a href="#{unique_dom_id}models//{$definition}{/unique_dom_id}">{$definition}</a></h3>

@@ -8,21 +8,13 @@ use Symfony\Component\Yaml\Yaml;
 class Writer
 {
     public static $order = [
-        'swagger',
+        'openapi',
         'info',
         'externalDocs',
-        'host',
-        'basePath',
-        'schemes',
-        'consumes',
-        'produces',
-        'securityDefinitions',
+        'servers',
         'security',
-        'tags',
-        'parameters',
         'paths',
-        'definitions',
-        'responses'
+        'components'
     ];
 
 

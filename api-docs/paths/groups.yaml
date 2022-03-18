@@ -1,0 +1,14 @@
+x-recordsRequestHandler: Emergence\People\Groups\GroupsRequestHandler
+get:
+  parameters:
+  - name: parentGroup
+    in: query
+    description: The ID of a parent group to filter groups to, or nothing to get all
+      top-level groups. To retrieve all groups regardless of hierarchy, pass `parentGroup=any`
+    schema:
+      oneOf:
+        - type: string
+          enum:
+            - any
+        - type: integer
+          default: null

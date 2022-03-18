@@ -1,0 +1,4 @@
+type: apiKey
+description: Session token prefixed with Token, e.g. `Token XXXXXXXXXXXXXXXXXXXXXX`
+name: Authorization
+in: header
