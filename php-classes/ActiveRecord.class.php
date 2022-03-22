@@ -2367,13 +2367,17 @@ class ActiveRecord
                 } elseif (is_numeric($value)) {
                     static $offsetTimezone;
 
+                    // when MySQL only supports offset-based timezones, use same offset timezone to render dates without transition-awareness
                     if ($offsetTimezone === null) {
-                        $offsetTimezone = static::getDatabaseOffsetTimezone();
+                        if (version_compare(PHP_VERSION, '5.6.0') >= 0) {
+                            $offsetTimezone = static::getDatabaseOffsetTimezone();
 
-                        if ($offsetTimezone) {
-                            // $offsetTimezone = new DateTimeZone($offsetTimezone);
-                            // work around PHP 5.5 bug (fixed in 5.6): https://stackoverflow.com/a/14069062/964125
-                            $offsetTimezone = DateTime::createFromFormat('O', $offsetTimezone)->getTimezone();
+                            if ($offsetTimezone) {
+                                $offsetTimezone = new DateTimeZone($offsetTimezone);
+                            }
+                        } else {
+                            // PHP <5.6 has various DateTime/DateTimeZone issues, so don't even bother trying to correct issues
+                            $offsetTimezone = false;
                         }
                     }
 
