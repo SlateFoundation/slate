@@ -31,6 +31,11 @@ class Reader
         'type'
     ];
 
+    public static $parameterObjectProperties = [
+        'name',
+        'in'
+    ];
+
 
     public static function readTree(array $base = [], $root = 'api-docs')
     {
@@ -70,12 +75,24 @@ class Reader
             $data['components']['schemas'],
             [__CLASS__, 'isSchemaObject'],
             function (array $keys) {
-                return implode('\\', $keys);
+                return implode('-', $keys);
             }
         );
 
         $data['components']['schemas'] = array_map([__CLASS__, 'normalizeSchemaObject'], $data['components']['schemas']);
         ksort($data['components']['schemas']);
+
+
+        // collapse and normalize parameters
+        $data['components']['parameters'] = static::findObjects(
+            $data['components']['parameters'],
+            [__CLASS__, 'isParameterObject'],
+            function (array $keys) {
+                return implode('-', $keys);
+            }
+        );
+
+        ksort($data['components']['parameters']);
 
 
         return $data;
@@ -124,6 +141,17 @@ class Reader
         return false;
     }
 
+    protected static function isParameterObject(array $object)
+    {
+        foreach (static::$parameterObjectProperties AS $key) {
+            if (array_key_exists($key, $object)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected static function normalizePathObject(array $object, array &$outSubPaths = null, array &$outDefinitions = null)
     {
         if (!empty($object['x-recordsRequestHandler'])) {
@@ -153,9 +181,7 @@ class Reader
         $recordNoun = $recordClass::$singularNoun;
 
         // generate record definition
-        $recordDefinitionName = preg_replace_callback('/(^|\s+)([a-zA-Z])/', function ($matches) {
-            return strtoupper($matches[2]);
-        }, $recordNoun);
+        $recordDefinitionName = str_replace('\\', '-', $recordClass::getRootClass());
 
         $recordDefinition = [];
         static::fillSchemaFromActiveRecord($recordClass, $recordDefinition);
