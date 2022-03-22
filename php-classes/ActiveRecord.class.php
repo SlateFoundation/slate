@@ -2371,7 +2371,9 @@ class ActiveRecord
                         $offsetTimezone = static::getDatabaseOffsetTimezone();
 
                         if ($offsetTimezone) {
-                            $offsetTimezone = new DateTimeZone($offsetTimezone);
+                            // $offsetTimezone = new DateTimeZone($offsetTimezone);
+                            // work around PHP 5.5 bug (fixed in 5.6): https://stackoverflow.com/a/14069062/964125
+                            $offsetTimezone = DateTime::createFromFormat('O', $offsetTimezone)->getTimezone();
                         }
                     }
 
