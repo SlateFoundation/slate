@@ -2,14 +2,14 @@ name: Destroy K8s Preview
 
 on:
   pull_request:
-    branches: [develop]
-    types: [closed]
+    branches: [ develop ]
+    types: [ closed ]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  KUBE_NAMESPACE: ${{ secrets.kube_namespace }}
-  KUBE_CONFIG_DATA: ${{ secrets.kube_config }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
+  KUBE_NAMESPACE: slate
 
   RELEASE_NAME: pr-${{ github.event.number }}
 
@@ -21,13 +21,11 @@ jobs:
 
     - name: Configure kubectl
       run: |
-        set -e
         test -e ~/.kube || mkdir ~/.kube
         printf '%s' "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
 
     - name: Delete PR Deployment
       run: |
-        set -e
         kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
         helm uninstall "${RELEASE_NAME}"
         kubectl delete secret "${RELEASE_NAME}-tls"

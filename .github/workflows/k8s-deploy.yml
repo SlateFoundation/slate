@@ -2,20 +2,20 @@ name: Deploy K8s Preview
 
 on:
   pull_request:
-    branches: [develop]
-    types: [opened, reopened, synchronize]
+    branches: [ develop ]
+    types: [ opened, reopened, synchronize ]
   push:
-    branches: [develop]
+    branches: [ develop ]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  DOCKER_REGISTRY: docker.pkg.github.com
-  DOCKER_PACKAGE: slate-composite
+  DOCKER_REGISTRY: ghcr.io
+  DOCKER_PACKAGE: site-composite
 
-  KUBE_NAMESPACE: ${{ secrets.kube_namespace }}
-  KUBE_CONFIG_DATA: ${{ secrets.kube_config }}
-  KUBE_HOSTNAME: ${{ secrets.kube_hostname }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
+  KUBE_NAMESPACE: slate
+  KUBE_HOSTNAME: slate.sandbox.k8s.jarv.us
 
   DATABASE_NAME: slate
 
@@ -92,6 +92,15 @@ jobs:
         fetch: false
         holobranch: fixtures
 
+    - id: helm-projection
+      name: 'Project holobranch: helm-chart'
+      uses: JarvusInnovations/hologit@actions/projector/v1
+      with:
+        # use HEAD checked out above by checkout action
+        ref: HEAD
+        fetch: false
+        holobranch: helm-chart
+
     - name: Build & push Docker image
       uses: whoan/docker-build-with-cache-action@v5
       with:
@@ -116,11 +125,9 @@ jobs:
 
     - name: Deploy instance via Helm template
       run: |
-        set -e
-
-        docker_image="${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_PACKAGE}:${RELEASE_NAME}"
         release_hostname="${RELEASE_NAME}.${KUBE_HOSTNAME}"
 
+        echo "Ensuring current context is namespace ${KUBE_NAMESPACE}"
         kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
 
         echo "Listing pods existing before deploy"
@@ -130,14 +137,22 @@ jobs:
           | sort \
           | tee ./.pods-before
 
-        echo "Using helm upgrade to apply ./helm-chart to release ${RELEASE_NAME}"
-        helm upgrade "${RELEASE_NAME}" ./helm-chart \
+        echo "Extracting projected helm-chart to temporary directory"
+        temp_dir=$(mktemp -d)
+        git archive --format=tar "${{ steps.helm-projection.outputs.tree }}" | ( cd "${temp_dir}" && tar -xf - )
+
+        echo "Using helm upgrade to apply helm-chart to release ${RELEASE_NAME}"
+        helm upgrade "${RELEASE_NAME}" "${temp_dir}" \
           --install \
-          --set name="${RELEASE_NAME}" \
-          --set namespace="${KUBE_NAMESPACE}" \
-          --set image="${docker_image}" \
-          --set hostname="${release_hostname}" \
-          --set hab.runtime.error.display=true
+          --namespace "${KUBE_NAMESPACE}" \
+          --set site.name="${RELEASE_NAME}" \
+          --set site.title="slate/${RELEASE_NAME}" \
+          --set site.image.repository="${DOCKER_REGISTRY}/${DOCKER_REPOSITORY}/${DOCKER_PACKAGE}" \
+          --set site.image.tag="${RELEASE_NAME}" \
+          --set ingress.enabled=true \
+          --set site.canonicalHostname="${release_hostname}" \
+          --set site.displayErrors=true \
+          --set hab.license=accept-no-persist
 
         echo "Listing pods existing after deploy"
         kubectl get pods \
