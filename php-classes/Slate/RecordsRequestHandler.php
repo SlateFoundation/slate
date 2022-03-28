@@ -238,7 +238,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
      */
     public static function getRequestedIncludeDeactivated($fieldName = 'include_deactivated')
     {
-        // return null if the `include_deactivated` flag was not included with the request
+        // return null if the `include_deactivated` flag was not included with the requestor has no value
         if (empty($_REQUEST[$fieldName])) {
             return null;
         }
