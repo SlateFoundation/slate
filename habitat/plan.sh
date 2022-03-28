@@ -1,4 +1,4 @@
-pkg_name=slate
+pkg_name=site
 pkg_origin=slate
 pkg_maintainer="Jarvus Innovations <hello@jarv.us>"
 pkg_scaffolding=emergence/scaffolding-site

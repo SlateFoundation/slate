@@ -1,4 +1,4 @@
-composite_app_pkg_name=slate
+composite_app_pkg_name=site
 pkg_name="${composite_app_pkg_name}-composite"
 pkg_origin=slate
 pkg_maintainer="Jarvus Innovations <hello@jarv.us>"
