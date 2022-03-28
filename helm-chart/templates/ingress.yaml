@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}
@@ -23,16 +23,22 @@ spec:
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ $.Release.Name }}-site
-          servicePort: 80
+          service:
+            name: {{ $.Release.Name }}-site
+            port:
+              number: 80
   {{- range .Values.ingress.secondaryHostnames }}
   - host: {{ . | quote }}
     http:
       paths:
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ $.Release.Name }}-site
-          servicePort: 80
+          service:
+            name: {{ $.Release.Name }}-site
+            port:
+              number: 80
   {{- end }}
 {{- end }}
