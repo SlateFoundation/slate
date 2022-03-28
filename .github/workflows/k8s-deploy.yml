@@ -123,7 +123,7 @@ jobs:
         test -e ~/.kube || mkdir ~/.kube
         printf '%s' "$KUBE_CONFIG_DATA" | base64 -d > ~/.kube/config
 
-    - name: Prepare helm chart
+    - name: Deploy instance via Helm template
       run: |
         release_hostname="${RELEASE_NAME}.${KUBE_HOSTNAME}"
 
@@ -141,10 +141,6 @@ jobs:
         temp_dir=$(mktemp -d)
         git archive --format=tar "${{ steps.helm-projection.outputs.tree }}" | ( cd "${temp_dir}" && tar -xf - )
 
-    - uses: mxschmitt/action-tmate@v3
-
-    - name: Deploy instance via Helm template
-      run: |
         echo "Using helm upgrade to apply helm-chart to release ${RELEASE_NAME}"
         helm upgrade "${RELEASE_NAME}" "${temp_dir}" \
           --install \
