@@ -2,6 +2,7 @@
 
 namespace Slate\Courses;
 
+use Emergence\People\Person;
 
 class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
 {
@@ -49,6 +50,15 @@ class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
             $conditions['Role'] = [
                 'values' => is_string($_REQUEST['role']) ? explode(',', $_REQUEST['role']) : $_REQUEST['role']
             ];
+        }
+
+        // apply disabled people filter
+        if (!static::getRequestedIncludeDeactivated()) {
+            $disabledPersonIds = Person::getDeactivatedIds();
+
+            if (!empty($disabledPersonIds)) {
+                $conditions[] = 'PersonID NOT IN ('.implode(",",$disabledPersonIds).')';
+            }
         }
 
         return $conditions;
