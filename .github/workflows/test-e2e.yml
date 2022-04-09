@@ -19,6 +19,9 @@ jobs:
     - name: 'Stop default mysql service'
       run: sudo service mysql stop
 
+    - name: 'Match system timezone to application default'
+      run: sudo timedatectl set-timezone America/New_York
+
     - name: 'Initialize Chef Habitat environment'
       uses: JarvusInnovations/habitat-action@action/v1
       timeout-minutes: 5
