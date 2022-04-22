@@ -166,7 +166,8 @@ Ext.define('Slate.ui.Window', {
     initItems: function() {
         var me = this,
             mainView = me.getMainView(),
-            footer = me.getFooter();
+            footer = me.getFooter(),
+            formMonitor;
 
         me.callParent(arguments);
 
@@ -176,6 +177,15 @@ Ext.define('Slate.ui.Window', {
 
         if (footer) {
             me.addDocked(footer);
+
+            // if mainView is a form panel and its footer got moved,
+            // we need to rebind the Ext.form.Basic monitor to the window
+            // so it can catch fields in the footer that we moved outside the Ext.form.Panel
+            if (me.adoptMainViewFooter && mainView.is('form')) {
+                formMonitor = mainView.getForm().monitor;
+                formMonitor.unbind();
+                formMonitor.bind(me);
+            }
         }
     },
 
