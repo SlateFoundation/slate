@@ -126,6 +126,9 @@ class InvitationsRequestHandler extends \RequestHandler
             return static::throwInvalidRequestError('people required');
         }
 
+        // remove script time limit
+        set_time_limit(0);
+
         // pre-flight loop over people to ensure they're all valid
         $people = [];
         foreach ($requestData['people'] AS $invitation) {
