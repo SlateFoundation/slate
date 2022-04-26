@@ -12,7 +12,7 @@ describe('SlateAdmin: Contacts', () => {
 
 
         // set up intercept for contact point save operations
-        cy.intercept('POST', '/contact-points/save?*').as('saveContactPoint');
+        cy.intercept('POST', '/contact-points/save?(\\?*)').as('saveContactPoint');
 
 
         // add and save a work address via composite string
@@ -174,7 +174,7 @@ describe('SlateAdmin: Contacts', () => {
                 cy.get('.contact-cell-value .x-grid-cell-inner')
                     .should('have.text', 'The White House, 1600 Pennsylvania Avenue NW, Washington, DC 20500');
 
-                cy.intercept('POST', '/people/save?*').as('savePerson');
+                cy.intercept('POST', '/people/save?(\\?*)').as('savePerson');
 
                 cy.get('.x-action-col-glyph.glyph-star')
                     .should('have.class', 'glyph-inactive')
