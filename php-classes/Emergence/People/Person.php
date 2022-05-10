@@ -6,6 +6,7 @@ use DB;
 use VersionedRecord;
 use PhotoMedia;
 use Exception;
+use Cache;
 
 use Emergence\Comments\Comment;
 use Emergence\CRM\Message;
@@ -28,6 +29,9 @@ class Person extends VersionedRecord implements IPerson
     public static $singularNoun = 'person';
     public static $pluralNoun = 'people';
     public static $collectionRoute = '/people';
+
+    // cache keys
+    public static $deactivatedPeopleCacheKey = 'deactivated-people-ids';
 
     public static $fields = [
         'FirstName' => [
@@ -435,6 +439,10 @@ class Person extends VersionedRecord implements IPerson
             $this->PrimaryPostal->PersonID = $this->ID;
             $this->PrimaryPostal->save(false);
         }
+
+        if ($this->isFieldDirty('AccountLevel')) {
+            Cache::delete(self::$deactivatedPeopleCacheKey);
+        }
     }
 
     public static function getGroupConditions($handle, $matchedCondition)
@@ -497,5 +505,31 @@ class Person extends VersionedRecord implements IPerson
         return array_map(function($Group) {
             return $Group->ID;
         }, $this->Groups);
+    }
+
+    public static function getDeactivatedIds($forceRefresh = false)
+    {
+
+      if (!$forceRefresh && false !== ($deactivatedIds = Cache::fetch(self::$deactivatedPeopleCacheKey))) {
+            return $deactivatedIds;
+        }
+
+        try {
+            $deactivatedIds = DB::allValues(
+                'ID',
+                '
+                   SELECT ID
+                      FROM `%s`
+                   WHERE AccountLevel = "Disabled"
+                ',
+                [ self::$tableName ]
+            );
+        } catch (Exception $e) {
+            $deactivatedIds = [];
+        }
+
+        Cache::store(self::$deactivatedPeopleCacheKey, $deactivatedIds);
+
+        return $deactivatedIds;
     }
 }
