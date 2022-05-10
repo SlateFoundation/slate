@@ -31,7 +31,7 @@ class Person extends VersionedRecord implements IPerson
     public static $collectionRoute = '/people';
 
     // cache keys
-    public static $deactivatedPeopleCacheKey = "deactivated-people-ids";
+    public static $deactivatedPeopleCacheKey = 'deactivated-people-ids';
 
     public static $fields = [
         'FirstName' => [
