@@ -231,4 +231,24 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
 
         return $Schedule;
     }
+
+    /**
+     * Examine the current request, determine if the inclusion of
+     * deactivate records has been explicitly requested
+     */
+    public static function getRequestedIncludeDeactivated($fieldName = 'include_deactivated')
+    {
+        // return null if the `include_deactivated` flag was not included with the requestor has no value
+        if (empty($_REQUEST[$fieldName])) {
+            return null;
+        }
+
+        // if the flag was explicity set to false, set it to boolean false
+        // so false will be returned.  All other values will return true.
+        if ($_REQUEST[$fieldName] === 'false') {
+            $_REQUEST[$fieldName] = false;
+        }
+
+        return !!$_REQUEST[$fieldName];
+    }
 }
