@@ -45,3 +45,4 @@ INSERT INTO `group_members` VALUES (25,'Emergence\\People\\Groups\\GroupMember',
 INSERT INTO `group_members` VALUES (26,'Emergence\\People\\Groups\\GroupMember','2021-05-28 13:31:48',2,15,26,'Member',NULL,NULL,'2021-05-28 13:31:48',NULL);
 INSERT INTO `group_members` VALUES (29,'Emergence\\People\\Groups\\GroupMember','2021-05-31 01:40:11',2,7,27,'Member',NULL,NULL,'2021-05-31 01:40:11',NULL);
 INSERT INTO `group_members` VALUES (30,'Emergence\\People\\Groups\\GroupMember','2021-05-31 11:30:33',2,7,28,'Member',NULL,NULL,'2021-05-31 11:30:33',NULL);
+INSERT INTO `group_members` VALUES (31,'Emergence\\People\\Groups\\GroupMember','2022-04-25 15:39:59',3,15,34,'Member',NULL,NULL,'2022-04-25 15:39:59',NULL);
