@@ -64,3 +64,16 @@ backups:
 
 hab:
   license: no-accept
+
+resources:
+  ## Example:
+  ## limits:
+  ##    cpu: 250m
+  ##    memory: 256Mi
+  limits: {}
+  ## Examples:
+  ## requests:
+  ##    cpu: 250m
+  ##    memory: 256Mi
+  requests:
+    memory: 300Mi

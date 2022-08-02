@@ -110,3 +110,7 @@ spec:
             - name: {{ .Release.Name }}-database
               mountPath: /hab/svc/{{ .Values.database.svcName }}/data
               subPath: data
+
+          {{- if .Values.resources }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
