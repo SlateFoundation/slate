@@ -6,6 +6,7 @@ class ReCaptcha
 {
     public static $siteKey;
     public static $secretKey;
+    public static $scoreThreshold = 0.5;
 
     protected static $instance;
 
@@ -18,6 +19,7 @@ class ReCaptcha
     {
         if (!static::$instance && static::$secretKey) {
             static::$instance = new \ReCaptcha\ReCaptcha(static::$secretKey);
+            static::$instance->setScoreThreshold(static::$scoreThreshold);
         }
 
         return static::$instance;

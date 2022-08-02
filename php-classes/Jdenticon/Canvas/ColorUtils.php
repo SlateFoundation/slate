@@ -208,19 +208,19 @@ class ColorUtils
         $backPA = $backA * (255 - $foreA);
         $pa = ($forePA + $backPA);
 
-        $b = (
+        $b = (int) (
             ($forePA * (($fore >> 8) & 0xff) + $backPA * (($back >> 8) & 0xff)) /
             $pa);
 
-        $g = (
+        $g = (int) (
             ($forePA * (($fore >> 16) & 0xff) + $backPA * (($back >> 16) & 0xff)) /
             $pa);
 
-        $r = (
+        $r = (int) (
             ($forePA * (($fore >> 24) & 0xff) + $backPA * (($back >> 24) & 0xff)) /
             $pa);
 
-        $a = ($pa / 255);
+        $a = (int) ($pa / 255);
 
         return ($r << 24) | ($g << 16) | ($b << 8) | $a;
     }

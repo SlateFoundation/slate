@@ -7,6 +7,11 @@
 
     {if RemoteSystems\ReCaptcha::$siteKey}
         <script src='https://www.google.com/recaptcha/api.js'></script>
+        <script>
+            function onSubmit(token) {
+                document.getElementById('contact-form').submit();
+            }
+        </script>
     {/if}
 {/block}
 
@@ -15,7 +20,7 @@
 	    <h1 class="header-title title-1">Contact Us</h1>
 	</header>
 
-	<form action="/contact" method="POST" class="contact-form">
+	<form action="/contact" method="POST" class="contact-form" id="contact-form">
 		{if $validationErrors}
 			<div class="notify error">
 				<strong>Please double-check the fields highlighted below.</strong>
@@ -32,18 +37,18 @@
 
             {textarea inputName=Message label=Message error=$validationErrors.Message required=true}
 
-			{if RemoteSystems\ReCaptcha::$siteKey}
-				<div class="field {tif $validationErrors.ReCaptcha ? 'has-error'}">
-					<span class="field-label"></span>
-					<div class="field-control g-recaptcha" data-sitekey="{RemoteSystems\ReCaptcha::$siteKey|escape}"></div>
-				</div>
-				{if $validationErrors.ReCaptcha}
-					<p class="error-text">{$validationErrors.ReCaptcha|escape}</p>
-				{/if}
+			{if $validationErrors.ReCaptcha}
+				<p class="error-text">{$validationErrors.ReCaptcha|escape}</p>
 			{/if}
 
             <div class="submit-area">
-            	<input type="submit" value="Send">
+                {if RemoteSystems\ReCaptcha::$siteKey}
+                    <button class="submit g-recaptcha" type="submit" data-sitekey="{RemoteSystems\ReCaptcha::$siteKey|escape}" data-callback='onSubmit' data-action='submit'>
+                {else}
+                    <button class="submit" type="submit">
+                {/if}
+                    Send
+                </button>
             </div>
 
 		</fieldset>
