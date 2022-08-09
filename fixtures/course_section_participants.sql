@@ -42,3 +42,4 @@ INSERT INTO `course_section_participants` VALUES (22,'Slate\\Courses\\SectionPar
 INSERT INTO `course_section_participants` VALUES (23,'Slate\\Courses\\SectionParticipant','2021-05-29 13:05:58',5,7,8,'Student',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (24,'Slate\\Courses\\SectionParticipant','2021-05-29 13:06:05',5,7,11,'Student',NULL,NULL,NULL);
 INSERT INTO `course_section_participants` VALUES (25,'Slate\\Courses\\SectionParticipant','2022-04-25 15:42:50',3,6,34,'Student',NULL,NULL,NULL);
+INSERT INTO `course_section_participants` VALUES (26,'Slate\\Courses\\SectionParticipant','2022-08-09 21:14:53',1,6,10,'Student',NULL,NULL,NULL);
