@@ -12,7 +12,8 @@ abstract class App implements IApp
     public static $buildsRoot = 'webapp-builds';
     public static $webappsRoute = '/webapps';
     public static $types = [
-        SenchaApp::class
+        SenchaApp::class,
+        IndexApp::class
     ];
 
 

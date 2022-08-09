@@ -12,7 +12,5 @@ interface IApp
     public function render();
     public function getName();
     public function getUrl();
-    public function buildCssMarkup();
-    public function buildJsMarkup();
     public function renderAsset($path);
 }
