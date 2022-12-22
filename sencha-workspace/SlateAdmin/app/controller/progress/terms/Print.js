@@ -133,7 +133,7 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
             url: '/progress/section-term-reports',
             params: Ext.apply({
                 include: 'Student.Advisor,Section.Teachers'
-            }, this.buildFilters()),
+            }, this.buildReportParams()),
             callback: function(success, operation, response) {
                 var downloadLink = document.createElement('a'),
                     rows = response.data.data,
