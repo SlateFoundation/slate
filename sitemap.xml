@@ -2,162 +2,167 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://slatefoundation.github.io/slate/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/email/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/migrations/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/api-docs/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/console-commands/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/cypress/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/data-exporters/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/docs/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/dwoo-plugins/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/event-handlers/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/fixtures/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/helm-chart/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/html-templates/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/php-classes/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/php-config/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/php-migrations/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/phpunit-tests/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/sencha-workspace/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/site-root/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/filesystem-api/site-tasks/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/running-tests/e2e/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://slatefoundation.github.io/slate/development/running-tests/fixtures/</loc>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/workspace-setup/content-editor/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/workspace-setup/local-studio/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/workspace-setup/slate-admin/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/development/workspace-setup/virtual-multisite/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/getting-started/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/operations/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/operations/data-loading/contacts-spreadsheet/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/operations/data-management/name-change/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://slatefoundation.github.io/slate/usage/</loc>
-         <lastmod>2022-03-21</lastmod>
+         <lastmod>2022-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
