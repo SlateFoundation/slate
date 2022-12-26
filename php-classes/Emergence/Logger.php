@@ -115,8 +115,9 @@ class Logger extends \Psr\Log\AbstractLogger
             }
 
             $lines[] =
-                (!empty($frame['class']) ? "$frame[class]$frame[type]" : '')
-                .$frame['function']
+                 (!empty($frame['class']) ? $frame['class'] : '')
+                .(!empty($frame['type']) ? $frame['type'] : '')
+                .(!empty($frame['function']) ? $frame['function'] : '')
                 .(!empty($frame['args']) ? '('.implode(',', array_map(function($arg) {
                     return is_string($arg) || is_numeric($arg) ? var_export($arg, true) : gettype($arg);
                 }, $frame['args'])).')' : '')

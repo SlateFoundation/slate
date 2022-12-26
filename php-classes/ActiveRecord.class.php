@@ -2227,7 +2227,14 @@ class ActiveRecord
                     return $value;
                 }
             }
-        } elseif ($useDefault && isset($fieldOptions['default'])) {
+        } elseif (
+            $useDefault
+            && isset($fieldOptions['default'])
+            && (
+                $fieldOptions['notnull']
+                || !array_key_exists($fieldOptions['columnName'], $this->_record)
+            )
+        ) {
             // return default
             return $fieldOptions['default'];
         } else {

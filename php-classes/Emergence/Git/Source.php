@@ -182,11 +182,11 @@ class Source
     public function setDeployKey(KeyPair $keyPair)
     {
         $privateKeyPath = $this->getPrivateKeyPath();
-        file_put_contents($privateKeyPath, $keyPair->getPrivateKey().PHP_EOL);
+        file_put_contents($privateKeyPath, str_replace("\r\n", "\n", $keyPair->getPrivateKey()).PHP_EOL);
         chmod($privateKeyPath, 0600);
 
         $publicKeyPath = $this->getPublicKeyPath();
-        file_put_contents($publicKeyPath, $keyPair->getPublicKey().PHP_EOL);
+        file_put_contents($publicKeyPath, str_replace("\r\n", "\n", $keyPair->getPublicKey()).PHP_EOL);
         chmod($publicKeyPath, 0600);
 
         $this->deployKey = $keyPair;

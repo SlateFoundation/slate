@@ -1,16 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace Emergence\TestsRW\FS;
-
-use \Site;
-use \SiteFile;
-use \SiteCollection;
-
-class SiteFileTest extends \PHPUnit_Framework_TestCase
+final class SiteFileTest extends PHPUnit\Framework\TestCase
 {
     protected $rootNode;
     protected $parentRootNode;
-    public function setUp()
+    public function setUp(): void
     {
         $this->rootNode = SiteCollection::getOrCreateRootCollection('phpunit-test-data');
         $this->parentRootNode = SiteCollection::getOrCreateRootCollection('phpunit-test-data', true);

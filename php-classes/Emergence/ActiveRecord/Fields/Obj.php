@@ -2,7 +2,7 @@
 
 namespace Emergence\ActiveRecord\Fields;
 
-class Object extends AbstractField
+class Obj extends AbstractField
 {
     public static function getAliases()
     {
