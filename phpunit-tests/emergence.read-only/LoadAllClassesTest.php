@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-class LoadAllClassesTest extends PHPUnit_Framework_TestCase
+final class LoadAllClassesTest extends PHPUnit\Framework\TestCase
 {
     public function testLoad()
     {
