@@ -16,9 +16,6 @@ class IndexApp extends App
     public static $indexFilename = 'index.html';
 
 
-    protected $manifest;
-
-
     public static function load($name)
     {
         $indexNode = Site::resolvePath([static::$buildsRoot, $name, static::$indexFilename]);
