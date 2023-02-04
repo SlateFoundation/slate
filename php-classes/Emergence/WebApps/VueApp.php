@@ -57,11 +57,10 @@ class VueApp extends App
         $html = [];
 
         foreach ($this->indexDoc->getElementsByTagName('link') as $element) {
-            if (
-                ($href = $element->getAttribute('href')) &&
-                !preg_match('/^(https?:\/\/|\/)/i', $href)
-            ) {
-                $element->setAttribute('href', $this->getAssetUrl($href));
+            if ($href = $element->getAttribute('href')) {
+                $href = parse_url($href, PHP_URL_PATH);
+                $href = $this->getAssetUrl($href);
+                $element->setAttribute('href', $href);
             }
 
             $html[] = $this->indexDoc->saveXML($element);
@@ -100,11 +99,10 @@ class VueApp extends App
         $html = [];
 
         foreach ($this->indexDoc->getElementsByTagName('script') as $element) {
-            if (
-                ($src = $element->getAttribute('src')) &&
-                !preg_match('/^(https?:\/\/|\/)/i', $src)
-            ) {
-                $element->setAttribute('src', $this->getAssetUrl($src));
+            if ($src = $element->getAttribute('src')) {
+                $src = parse_url($src, PHP_URL_PATH);
+                $src = $this->getAssetUrl($src);
+                $element->setAttribute('src', $src);
             }
 
             $html[] = $this->indexDoc->saveXML($element, LIBXML_NOEMPTYTAG);
