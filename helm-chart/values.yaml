@@ -5,6 +5,9 @@ site:
   timezone: "America/New_York"
   svcName: site
   displayErrors: false
+  # set to * or an array of hosts
+  # corsOrigins:
+  #   - http://localhost
 
   replicaCount: 1
   strategyType: Recreate
