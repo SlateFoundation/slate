@@ -87,6 +87,11 @@ spec:
                 app_password = {{ .Values.database.password | quote }}
                 bind = "0.0.0.0"
 
+          {{- if .Values.site.corsOrigins }}
+            - name: CORS_ORIGINS
+              value: "{{join "," .Values.site.corsOrigins }}"
+          {{- end }}
+
           {{ if .Values.site.secrets -}}
           envFrom:
           {{- range .Values.site.secrets }}
