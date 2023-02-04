@@ -152,6 +152,7 @@ jobs:
           --set ingress.enabled=true \
           --set site.canonicalHostname="${release_hostname}" \
           --set site.displayErrors=true \
+          --set site.corsOrigins="*" \
           --set hab.license=accept-no-persist
 
         echo "Listing pods existing after deploy"
