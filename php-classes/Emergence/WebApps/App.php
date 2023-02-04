@@ -65,13 +65,15 @@ abstract class App implements IApp
 
     protected function getAsset($path)
     {
-        if (is_string($path)) {
-            $path = Site::splitPath($path);
+        $splitPath = is_string($path) ? Site::splitPath($path) : $path;
+
+        if ($path[0] == '/') {
+            array_unshift($splitPath, 'site-root');
+        } else {
+            array_unshift($splitPath, static::$buildsRoot, $this->name);
         }
 
-        array_unshift($path, static::$buildsRoot, $this->name);
-
-        return Site::resolvePath($path);
+        return Site::resolvePath($splitPath);
     }
 
     protected function getAssetUrl($path)
@@ -86,7 +88,11 @@ abstract class App implements IApp
             throw new Exception('asset not found: '.$path);
         }
 
-        return $this->getUrl()."/{$path}?_sha1={$node->SHA1}";
+        if ($path[0] == '/') {
+            return "{$path}?_sha1={$node->SHA1}";
+        } else {
+            return $this->getUrl()."/{$path}?_sha1={$node->SHA1}";
+        }
     }
 
     public function renderAsset($path)
