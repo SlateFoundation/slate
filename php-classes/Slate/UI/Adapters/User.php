@@ -56,7 +56,8 @@ class User implements \Slate\UI\ILinksSource
             if (static::$logOut) {
                 $userMenu['Log Out'] = [
                     '_icon' => 'logout',
-                    '_href' => '/logout?return='.urlencode($_SERVER['REQUEST_URI'])
+                    '_href' => '/logout?return='.urlencode($_SERVER['REQUEST_URI']),
+                    '_weight' => 1000
                 ];
             }
 
