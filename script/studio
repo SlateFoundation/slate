@@ -9,8 +9,13 @@ cd "$(dirname "$0")/.."
 script/-studio-bootstrap
 
 
-unset DEBUG
-[ -n "${1}" ] && cd "${1}"
+# switch to alternative target directory if desired
+if [ -n "${1}" ]; then
+    echo
+    echo "==> studio: changing into directory ${1}"
+    echo "    Be sure to manually source .studiorc under the desired primary workspace"
+    cd "${1}"
+fi
 
 
 echo
