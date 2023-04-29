@@ -1,0 +1,30 @@
+name: 'Preview: Deploy'
+
+on:
+  pull_request:
+    branches: [ develop ]
+    types: [ opened, reopened, synchronize ]
+  push:
+    branches: [ develop ]
+
+concurrency:
+  group: preview-${{ github.head_ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  packages: write
+  deployments: write
+
+jobs:
+  preview-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: EmergencePlatform/php-runtime@github-actions/deploy-site-preview/v1
+      id: deploy-site-preview
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        kube-config: ${{ secrets.KUBECONFIG_BASE64 }}
+        kube-namespace: slate
+        kube-hostname: slate.sandbox.k8s.jarv.us

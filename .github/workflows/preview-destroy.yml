@@ -1,0 +1,25 @@
+name: 'Preview: Destroy'
+
+on:
+  pull_request:
+    branches: [ develop ]
+    types: [ closed ]
+
+concurrency:
+  group: preview-${{ github.head_ref }}
+  cancel-in-progress: true
+
+permissions:
+  deployments: write
+
+jobs:
+  preview-destroy:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: EmergencePlatform/php-runtime@github-actions/destroy-site-preview/v1
+      id: destroy-site-preview
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        kube-config: ${{ secrets.KUBECONFIG_BASE64 }}
+        kube-namespace: slate

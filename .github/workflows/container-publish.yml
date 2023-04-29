@@ -1,0 +1,19 @@
+name: 'Container: Publish Image'
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  container-publish:
+
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: EmergencePlatform/php-runtime@github-actions/build-site-container/v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
