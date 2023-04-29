@@ -63,6 +63,7 @@ if [ "$(docker ps -aq -f name="${STUDIO_NAME}")" ]; then
 fi
 
 if [ $launch_studio = true ]; then
+    export HAB_DOCKER_STUDIO_IMAGE="ghcr.io/emergenceplatform/studio:latest"
     echo
     echo "==> studio: launching Docker-powered Chef Habitat studio…"
     set +e
