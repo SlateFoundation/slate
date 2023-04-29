@@ -1,0 +1,16 @@
+name: 'Release: Publish PR'
+
+on:
+  pull_request:
+    branches: [ 'releases/v*' ]
+    types: [ closed ]
+
+jobs:
+  release-publish:
+
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: JarvusInnovations/infra-components@channels/github-actions/release-publish/latest
+      with:
+        github-token: ${{ secrets.BOT_GITHUB_TOKEN }}
