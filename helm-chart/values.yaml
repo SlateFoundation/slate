@@ -21,6 +21,11 @@ site:
     tag: latest
     pullPolicy: Always
 
+  memoryLimit: 200M
+  postLimit: 200M
+  executionTimeLimit: 30
+  cacheSize: 512M
+
 database:
   pkg: "core/mysql"
   svcName: mysql
@@ -32,12 +37,6 @@ imagePullSecret: ~
 volumes:
   site: ~
   database: ~
-
-services:
-  http:
-    port: 80
-  # mysql:
-  #   port: 3306
 
 ingress:
   enabled: false
