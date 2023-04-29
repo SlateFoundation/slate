@@ -81,6 +81,14 @@ spec:
                   debug = true
                 {{- end }}
 
+                [limit]
+                  memory = {{ .Values.site.memoryLimit | quote }}
+                  post = {{ .Values.site.postLimit | quote }}
+                  execution_time = {{ .Values.site.executionTimeLimit | quote }}
+
+                [cache]
+                  size = {{ .Values.site.cacheSize | quote }}
+
             - name: HAB_{{ .Values.database.svcName | upper | replace "-" "_"}}
               value: |
                 app_username = {{ .Values.database.username | quote }}
@@ -106,6 +114,9 @@ spec:
           ports:
             - containerPort: 80
               name: http
+              protocol: TCP
+            - containerPort: 3306
+              name: mysql
               protocol: TCP
 
           volumeMounts:

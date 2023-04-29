@@ -10,5 +10,8 @@ spec:
     {{- include "site.selectorLabels" . | nindent 6 }}
   ports:
   - name: http
-    port: {{ .Values.services.http.port }}
+    port: 80
+    protocol: TCP
+  - name: mysql
+    port: 3306
     protocol: TCP
