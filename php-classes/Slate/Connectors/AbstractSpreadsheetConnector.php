@@ -278,6 +278,14 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
             // apply values from spreadsheet
             try {
+                if (!$Record->isA(User::class)) {
+                    throw new RemoteRecordInvalid(
+                        'not-a-user',
+                        sprintf('Matched student to record %s from row #%u, but record class is not user or student...refusing to promote automatically', $Record->getTitle(), $results['analyzed']),
+                        $row
+                    );
+                }
+
                 static::_applyStudentUserChanges($Job, $Record, $row, $results);
             } catch (RemoteRecordInvalid $e) {
                 if ($e->getValueKey()) {
