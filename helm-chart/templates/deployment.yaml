@@ -68,6 +68,8 @@ spec:
                 {{- end }}
 
                 [sites.default]
+                handle = {{ .Values.site.name | quote }}
+
                 {{- if .Values.site.canonicalHostname }}
                   primary_hostname = {{ .Values.site.canonicalHostname | quote }}
                 {{- end }}

@@ -1,0 +1,7 @@
+extra:
+  studio:
+    name: skeleton-v2-studio
+    web_port: 7180
+    static_port: 7181
+    docs_port: 7188
+    mysql_port: 7136

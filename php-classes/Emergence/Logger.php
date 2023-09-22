@@ -15,7 +15,6 @@ class Logger extends \Psr\Log\AbstractLogger
         ,LogLevel::ALERT
         ,LogLevel::CRITICAL
         ,LogLevel::ERROR
-        ,LogLevel::WARNING
     );
     public static $logLevelsEmail = array(
         LogLevel::EMERGENCY
