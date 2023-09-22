@@ -16,5 +16,5 @@ jobs:
 
     - uses: JarvusInnovations/infra-components@channels/github-actions/release-prepare/latest
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.BOT_GITHUB_TOKEN }}
         release-branch: releases/v2
