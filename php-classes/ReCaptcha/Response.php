@@ -95,11 +95,11 @@ class Response
             return new Response(false, array(ReCaptcha::E_INVALID_JSON));
         }
 
-        $hostname = isset($responseData['hostname']) ? $responseData['hostname'] : '';
-        $challengeTs = isset($responseData['challenge_ts']) ? $responseData['challenge_ts'] : '';
-        $apkPackageName = isset($responseData['apk_package_name']) ? $responseData['apk_package_name'] : '';
+        $hostname = isset($responseData['hostname']) ? $responseData['hostname'] : null;
+        $challengeTs = isset($responseData['challenge_ts']) ? $responseData['challenge_ts'] : null;
+        $apkPackageName = isset($responseData['apk_package_name']) ? $responseData['apk_package_name'] : null;
         $score = isset($responseData['score']) ? floatval($responseData['score']) : null;
-        $action = isset($responseData['action']) ? $responseData['action'] : '';
+        $action = isset($responseData['action']) ? $responseData['action'] : null;
 
         if (isset($responseData['success']) && $responseData['success'] == true) {
             return new Response(true, array(), $hostname, $challengeTs, $apkPackageName, $score, $action);
@@ -123,7 +123,7 @@ class Response
      * @param string $action
      * @param array $errorCodes
      */
-    public function __construct($success, array $errorCodes = array(), $hostname = '', $challengeTs = '', $apkPackageName = '', $score = null, $action = '')
+    public function __construct($success, array $errorCodes = array(), $hostname = null, $challengeTs = null, $apkPackageName = null, $score = null, $action = null)
     {
         $this->success = $success;
         $this->hostname = $hostname;
