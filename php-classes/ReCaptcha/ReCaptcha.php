@@ -43,73 +43,73 @@ class ReCaptcha
      * Version of this client library.
      * @const string
      */
-    public const VERSION = 'php_1.3.0';
+    const VERSION = 'php_1.2.4';
 
     /**
      * URL for reCAPTCHA siteverify API
      * @const string
      */
-    public const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
+    const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
     /**
      * Invalid JSON received
      * @const string
      */
-    public const E_INVALID_JSON = 'invalid-json';
+    const E_INVALID_JSON = 'invalid-json';
 
     /**
      * Could not connect to service
      * @const string
      */
-    public const E_CONNECTION_FAILED = 'connection-failed';
+    const E_CONNECTION_FAILED = 'connection-failed';
 
     /**
      * Did not receive a 200 from the service
      * @const string
      */
-    public const E_BAD_RESPONSE = 'bad-response';
+    const E_BAD_RESPONSE = 'bad-response';
 
     /**
      * Not a success, but no error codes received!
      * @const string
      */
-    public const E_UNKNOWN_ERROR = 'unknown-error';
+    const E_UNKNOWN_ERROR = 'unknown-error';
 
     /**
      * ReCAPTCHA response not provided
      * @const string
      */
-    public const E_MISSING_INPUT_RESPONSE = 'missing-input-response';
+    const E_MISSING_INPUT_RESPONSE = 'missing-input-response';
 
     /**
      * Expected hostname did not match
      * @const string
      */
-    public const E_HOSTNAME_MISMATCH = 'hostname-mismatch';
+    const E_HOSTNAME_MISMATCH = 'hostname-mismatch';
 
     /**
      * Expected APK package name did not match
      * @const string
      */
-    public const E_APK_PACKAGE_NAME_MISMATCH = 'apk_package_name-mismatch';
+    const E_APK_PACKAGE_NAME_MISMATCH = 'apk_package_name-mismatch';
 
     /**
      * Expected action did not match
      * @const string
      */
-    public const E_ACTION_MISMATCH = 'action-mismatch';
+    const E_ACTION_MISMATCH = 'action-mismatch';
 
     /**
      * Score threshold not met
      * @const string
      */
-    public const E_SCORE_THRESHOLD_NOT_MET = 'score-threshold-not-met';
+    const E_SCORE_THRESHOLD_NOT_MET = 'score-threshold-not-met';
 
     /**
      * Challenge timeout
      * @const string
      */
-    public const E_CHALLENGE_TIMEOUT = 'challenge-timeout';
+    const E_CHALLENGE_TIMEOUT = 'challenge-timeout';
 
     /**
      * Shared secret for the site.

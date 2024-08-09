@@ -39,6 +39,7 @@ namespace ReCaptcha;
  */
 interface RequestMethod
 {
+
     /**
      * Submit the request with the specified parameters.
      *
