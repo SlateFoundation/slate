@@ -1,0 +1,6 @@
+# PHP 8 base skeleton (successor to skeleton-v2). Pinned to the scaffold
+# branch until EmergencePlatform/skeleton-v3#1 merges; then repoint to
+# refs/heads/main.
+[holosource]
+url = "https://github.com/EmergencePlatform/skeleton-v3.git"
+ref = "refs/heads/main"
