@@ -26,11 +26,11 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
     {
         $templates = ContactPoint\AbstractPoint::getTemplates();
 
-        foreach ($templates AS $label => &$options) {
+        foreach ($templates as $label => &$options) {
             $options['label'] = $label;
         }
 
-        usort($templates, fn(array $a, array $b) => strcmp($a['class'], $b['class']));
+        usort($templates, fn (array $a, array $b) => strcmp($a['class'], $b['class']));
 
         return static::respond('templates', [
             'data' => array_values($templates)
@@ -46,7 +46,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
                 return static::throwNotFoundError('relatedTo person not found');
             }
 
-            $relatedIDs = array_map(fn($Relationship) => $Relationship->RelatedPersonID, $Person->Relationships);
+            $relatedIDs = array_map(fn ($Relationship) => $Relationship->RelatedPersonID, $Person->Relationships);
 
             $relatedIDs[] = $Person->ID;
 
@@ -60,7 +60,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
         $pointClasses = array_filter($pointClasses, class_exists(...));
 
         // sort classes
-        usort($pointClasses, function($a, $b): int {
+        usort($pointClasses, function ($a, $b): int {
             $aWeight = $a::$sortWeight;
             $bWeight = $b::$sortWeight;
 

@@ -6,7 +6,6 @@ namespace Slate\UI;
 
 use Emergence\People\Person;
 
-
 class UserProfile
 {
     public static $sources = [];

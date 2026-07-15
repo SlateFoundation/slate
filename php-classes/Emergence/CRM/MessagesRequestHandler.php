@@ -39,7 +39,7 @@ class MessagesRequestHandler extends \RecordsRequestHandler
 
             $newPeople = [];
 
-            foreach ($_REQUEST['data'] AS $recipientData) {
+            foreach ($_REQUEST['data'] as $recipientData) {
                 if (!empty($recipientData['PersonID']) && is_numeric($recipientData['PersonID'])) {
                     // get by ID
                     if (!$RecipientPerson = Person::getByID($recipientData['PersonID'])) {

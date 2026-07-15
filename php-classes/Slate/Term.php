@@ -4,7 +4,8 @@ namespace Slate;
 
 use Cache;
 use DB;
-use HandleBehavior, NestingBehavior;
+use HandleBehavior;
+use NestingBehavior;
 
 class Term extends \VersionedRecord
 {
@@ -276,7 +277,7 @@ class Term extends \VersionedRecord
 
         // treat "empty" time component as end of day
         if (date('H:i:s', $time) === '00:00:00') {
-            $time += 60*60*24-1;
+            $time += 60 * 60 * 24 - 1;
         }
 
         return $time;
@@ -285,51 +286,51 @@ class Term extends \VersionedRecord
     public function getConcurrentTermIDs()
     {
         return DB::allValues(
-            'ID'
-            ,'SELECT ID FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left DESC'
-            ,[static::$tableName, $this->Left, $this->Right]
+            'ID',
+            'SELECT ID FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left DESC',
+            [static::$tableName, $this->Left, $this->Right]
         );
     }
 
     public function getContainedTermIDs()
     {
         return DB::allValues(
-            'ID'
-            ,'SELECT ID FROM `%s` Term WHERE Term.Left >= %u AND Term.Right <= %u ORDER BY Term.Left DESC'
-            ,[static::$tableName, $this->Left, $this->Right]
+            'ID',
+            'SELECT ID FROM `%s` Term WHERE Term.Left >= %u AND Term.Right <= %u ORDER BY Term.Left DESC',
+            [static::$tableName, $this->Left, $this->Right]
         );
     }
 
     public function getRelatedTermIDs()
     {
         return DB::allValues(
-            'ID'
-            ,'SELECT ID FROM `%1$s` Term WHERE (Term.Left >= %2$u AND Term.Right <= %3$u) OR (Term.Left <= %2$u AND Term.Right >= %3$u) ORDER BY Term.Left DESC'
-            ,[static::$tableName, $this->Left, $this->Right]
+            'ID',
+            'SELECT ID FROM `%1$s` Term WHERE (Term.Left >= %2$u AND Term.Right <= %3$u) OR (Term.Left <= %2$u AND Term.Right >= %3$u) ORDER BY Term.Left DESC',
+            [static::$tableName, $this->Left, $this->Right]
         );
     }
 
     public function getMaster()
     {
         return static::getByQuery(
-            'SELECT * FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left ASC LIMIT 1'
-            ,[static::$tableName, $this->Left, $this->Right]
+            'SELECT * FROM `%s` Term WHERE Term.Left <= %u AND Term.Right >= %u ORDER BY Term.Left ASC LIMIT 1',
+            [static::$tableName, $this->Left, $this->Right]
         );
     }
 
     public function getPreviousSibling()
     {
         return static::getByQuery(
-            'SELECT * FROM `%s` Term WHERE Term.Right < %u AND Term.Right - Term.Left = %u ORDER BY Term.Right DESC LIMIT 1'
-            ,[static::$tableName, $this->Left, $this->Right - $this->Left]
+            'SELECT * FROM `%s` Term WHERE Term.Right < %u AND Term.Right - Term.Left = %u ORDER BY Term.Right DESC LIMIT 1',
+            [static::$tableName, $this->Left, $this->Right - $this->Left]
         );
     }
 
     public function getNextSibling()
     {
         return static::getByQuery(
-            'SELECT * FROM `%s` Term WHERE Term.Left > %u AND Term.Right - Term.Left = %u ORDER BY Term.Left ASC LIMIT 1'
-            ,[static::$tableName, $this->Right, $this->Right - $this->Left]
+            'SELECT * FROM `%s` Term WHERE Term.Left > %u AND Term.Right - Term.Left = %u ORDER BY Term.Left ASC LIMIT 1',
+            [static::$tableName, $this->Right, $this->Right - $this->Left]
         );
     }
 

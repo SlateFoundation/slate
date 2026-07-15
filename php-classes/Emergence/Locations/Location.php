@@ -2,7 +2,8 @@
 
 namespace Emergence\Locations;
 
-use HandleBehavior, NestingBehavior;
+use HandleBehavior;
+use NestingBehavior;
 
 class Location extends \VersionedRecord
 {

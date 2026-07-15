@@ -7,7 +7,6 @@ use VersionedRecord;
 use PhotoMedia;
 use Exception;
 use Cache;
-
 use Emergence\Comments\Comment;
 use Emergence\CRM\Message;
 use Emergence\Connectors\Mapping;
@@ -450,9 +449,9 @@ class Person extends VersionedRecord implements IPerson
             ,$group->Right
         ]);
 
-        $containedGroups = array_map(fn(array $group) => $group['ID'],$containedGroups);
+        $containedGroups = array_map(fn (array $group) => $group['ID'], $containedGroups);
 
-        return $matchedCondition['join']['aliasName'].'.GroupID'.' IN ('.implode(',',$containedGroups).')';
+        return $matchedCondition['join']['aliasName'].'.GroupID'.' IN ('.implode(',', $containedGroups).')';
     }
 
     public static function getRelatedToConditions($identifier, $matchedCondition)
@@ -469,12 +468,14 @@ class Person extends VersionedRecord implements IPerson
             return 'FALSE';
         }
 
-        $relatedIds = DB::allValues('ID',
+        $relatedIds = DB::allValues(
+            'ID',
             '
                 SELECT DISTINCT IF(RelatedPersonID = %2$u, PersonID, RelatedPersonID) AS ID
                   FROM `%1$s`
                  WHERE %2$u IN (PersonID, RelatedPersonID)
-            ',[
+            ',
+            [
                 Relationship::$tableName, // 1
                 $Person->ID // 2
             ]
@@ -489,13 +490,13 @@ class Person extends VersionedRecord implements IPerson
 
     public function getGroupIDs()
     {
-        return array_map(fn($Group) => $Group->ID, $this->Groups);
+        return array_map(fn ($Group) => $Group->ID, $this->Groups);
     }
 
     public static function getDeactivatedIds($forceRefresh = false)
     {
 
-      if (!$forceRefresh && false !== ($deactivatedIds = Cache::fetch(self::$deactivatedPeopleCacheKey))) {
+        if (!$forceRefresh && false !== ($deactivatedIds = Cache::fetch(self::$deactivatedPeopleCacheKey))) {
             return $deactivatedIds;
         }
 

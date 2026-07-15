@@ -91,7 +91,7 @@ class SectionParticipant extends \ActiveRecord
 
         // treat "empty" time component as end of day
         if (date('H:i:s', $time) === '00:00:00') {
-            $time += 60*60*24-1;
+            $time += 60 * 60 * 24 - 1;
         }
 
         return $time;

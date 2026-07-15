@@ -6,7 +6,7 @@ namespace Validators;
 
 class FQDN implements IValidator
 {
-    const HOSTNAME_INVALID = 'hostname_invalid';
+    public const HOSTNAME_INVALID = 'hostname_invalid';
 
     public static function isInvalid($hostname, array $options = [])
     {

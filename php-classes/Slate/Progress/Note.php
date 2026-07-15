@@ -6,7 +6,6 @@ use Emergence\People\IPerson;
 use Emergence\People\User;
 use Slate\Term;
 
-
 class Note extends \Emergence\CRM\Message implements IStudentTermReport
 {
     use StudentReportTrait;

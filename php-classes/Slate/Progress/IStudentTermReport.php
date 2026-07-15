@@ -7,7 +7,6 @@ namespace Slate\Progress;
 use Slate\Term;
 use Emergence\People\IPerson;
 
-
 interface IStudentTermReport extends IStudentReport
 {
     public function getTerm();

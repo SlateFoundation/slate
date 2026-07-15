@@ -4,9 +4,9 @@ namespace Validators;
 
 class PhoneNumber implements IValidator
 {
-    const FICTITIOUS = 'fictitious';
-    const LENGTH_NOT_10 = 'length_not_10';
-    const LENGTH_OUT_OF_RANGE = 'length_out_of_range';
+    public const FICTITIOUS = 'fictitious';
+    public const LENGTH_NOT_10 = 'length_not_10';
+    public const LENGTH_OUT_OF_RANGE = 'length_out_of_range';
 
 
     public static function isInvalid($phone, array $options = [])

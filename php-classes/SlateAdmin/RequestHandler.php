@@ -2,7 +2,6 @@
 
 namespace SlateAdmin;
 
-
 class RequestHandler extends \Emergence\Site\RequestHandler
 {
     public static function handleRequest()

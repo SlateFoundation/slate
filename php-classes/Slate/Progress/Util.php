@@ -2,7 +2,6 @@
 
 namespace Slate\Progress;
 
-
 class Util
 {
     public static function chunkReportsByType(array $reports)
@@ -10,7 +9,7 @@ class Util
         $chunks = [];
         $currentChunk = null;
 
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             if ($currentChunk && $currentChunk['class'] == $Report->Class) {
                 $currentChunk['reports'][] = $Report;
 
@@ -43,7 +42,7 @@ class Util
             $chunks[] = $currentChunk;
         }
 
-        foreach ($chunks AS &$chunk) {
+        foreach ($chunks as &$chunk) {
             $chunk['singularNoun'] = $chunk['class']::getNoun(1);
             $chunk['pluralNoun'] = $chunk['class']::getNoun(2);
             $chunk['noun'] = $chunk['class']::getNoun(count($chunk['reports']));
@@ -56,7 +55,7 @@ class Util
     {
         $groups = [];
 
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             $Student = $Report->getStudent();
 
             if (isset($groups[$Student->ID])) {
@@ -70,7 +69,7 @@ class Util
         }
 
         // sort by Last, First
-        usort($groups, fn(array $g1, array $g2) => strcasecmp($g1['student']->LastName.$g1['student']->FirstName, $g2['student']->LastName.$g2['student']->FirstName));
+        usort($groups, fn (array $g1, array $g2) => strcasecmp($g1['student']->LastName.$g1['student']->FirstName, $g2['student']->LastName.$g2['student']->FirstName));
 
         return $groups;
     }
@@ -79,7 +78,7 @@ class Util
     {
         $groups = [];
 
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             $Term = $Report->getTerm();
 
             if (isset($groups[$Term->Handle])) {
@@ -93,7 +92,7 @@ class Util
         }
 
         // sort by term position
-        usort($groups, fn(array $g1, array $g2) => $g2['term']->Left - $g1['term']->Left);
+        usort($groups, fn (array $g1, array $g2) => $g2['term']->Left - $g1['term']->Left);
 
         return $groups;
     }

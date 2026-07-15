@@ -7,18 +7,14 @@ use HandleBehavior;
 use DuplicateKeyException;
 use TableNotFoundException;
 use TagItem;
-
 use Emergence\People\IPerson;
 use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\Locations\Location;
 use Emergence\Connectors\Mapping;
 use Emergence\CMS\BlogPost;
-
 use Slate\Term;
 use Slate\Courses\SectionParticipant;
-
-
 
 class Section extends \VersionedRecord
 {
@@ -230,7 +226,6 @@ class Section extends \VersionedRecord
         $tableAlias = static::getTableAlias();
         $sortedTermIds = DB::allValues(
             'ID',
-
             'SELECT ID '.
             '  FROM `%s` Term'.
             ' ORDER BY IF('.
@@ -312,7 +307,7 @@ class Section extends \VersionedRecord
             $title .= "\xC2\xA0\xC2\xB7 ".implode(
                 '/',
                 array_map(
-                    fn(IPerson $Teacher) => $Teacher->LastName,
+                    fn (IPerson $Teacher) => $Teacher->LastName,
                     $teachers
                 )
             );
@@ -341,11 +336,11 @@ class Section extends \VersionedRecord
         return static::getByField('Code', $code);
     }
 
-    public static function assignCourses($personID, $courses, $role='Student')
+    public static function assignCourses($personID, $courses, $role = 'Student')
     {
         $assignedCourses = [];
 
-        foreach ($courses AS $courseTitle) {
+        foreach ($courses as $courseTitle) {
             if (!$courseTitle) {
                 continue;
             }
@@ -378,11 +373,12 @@ class Section extends \VersionedRecord
     {
         try {
             return (int)DB::oneValue(
-                'SELECT COUNT(*) FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"'
-                ,[
+                'SELECT COUNT(*) FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"',
+                [
                     SectionParticipant::$tableName
                     ,$this->ID
-                ]);
+                ]
+            );
         } catch (TableNotFoundException) {
             return 0;
         }
@@ -430,52 +426,52 @@ class Section extends \VersionedRecord
 
     public function findBlogPosts($conditions, $limit, $offset, $tag)
     {
-      $options = [
-        'limit' => $limit,
-        'offset' => $offset,
-        'calcFoundRows' => 'yes',
-        'conditions' => $conditions
-      ];
+        $options = [
+          'limit' => $limit,
+          'offset' => $offset,
+          'calcFoundRows' => 'yes',
+          'conditions' => $conditions
+        ];
 
-      if ($tag!=null) {
+        if ($tag != null) {
 
-          $tagItemIDs = DB::allValues(
-              'ContextID',
-              'SELECT ContextID FROM `tag_items` WHERE (`ContextClass` = "%s") AND (`TagID` = %u)',
-              [
-                  DB::escape(BlogPost::getStaticRootClass()),
-                  $tag->ID
-              ]
-          );
+            $tagItemIDs = DB::allValues(
+                'ContextID',
+                'SELECT ContextID FROM `tag_items` WHERE (`ContextClass` = "%s") AND (`TagID` = %u)',
+                [
+                    DB::escape(BlogPost::getStaticRootClass()),
+                    $tag->ID
+                ]
+            );
 
-          $options = array_merge_recursive($options, [
-              'conditions' => [
-                  'ID' => [
-                      'operator' => 'IN',
-                      'values' => count($tagItemIDs) > 0 ? $tagItemIDs : '0'
-                  ]
-              ]
-          ]);
-      }
+            $options = array_merge_recursive($options, [
+                'conditions' => [
+                    'ID' => [
+                        'operator' => 'IN',
+                        'values' => count($tagItemIDs) > 0 ? $tagItemIDs : '0'
+                    ]
+                ]
+            ]);
+        }
 
-      return BlogPost::getAllPublishedByContextObject($this, $options);
+        return BlogPost::getAllPublishedByContextObject($this, $options);
     }
 
     public function findLatestTeacherPost()
     {
-      $sectionTeacherIds = array_map(fn($Teacher) => $Teacher->ID, $this->ActiveTeachers);
+        $sectionTeacherIds = array_map(fn ($Teacher) => $Teacher->ID, $this->ActiveTeachers);
 
-      $latestTeacherPost = BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
-          'conditions' => [
-              'AuthorID' => [
-                  'operator' => 'IN',
-                  'values' => $sectionTeacherIds
-              ]
-          ],
-          'limit' => 1
-      ]));
+        $latestTeacherPost = BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
+            'conditions' => [
+                'AuthorID' => [
+                    'operator' => 'IN',
+                    'values' => $sectionTeacherIds
+                ]
+            ],
+            'limit' => 1
+        ]));
 
-      return count($latestTeacherPost) > 0 ? $latestTeacherPost[0] : null;
+        return count($latestTeacherPost) > 0 ? $latestTeacherPost[0] : null;
     }
 
     // search SQL generators
@@ -489,9 +485,9 @@ class Section extends \VersionedRecord
 
         try {
             $sectionIds = DB::allValues(
-                'CourseSectionID'
-                ,'SELECT CourseSectionID FROM `%s` Participant WHERE Participant.PersonID = %u AND Role = "Teacher"'
-                ,[
+                'CourseSectionID',
+                'SELECT CourseSectionID FROM `%s` Participant WHERE Participant.PersonID = %u AND Role = "Teacher"',
+                [
                     SectionParticipant::$tableName
                     ,$Teacher->ID
                 ]
@@ -523,9 +519,9 @@ class Section extends \VersionedRecord
         }
 
         $courseIds = DB::allValues(
-            'ID'
-            ,'SELECT ID FROM `%s` Course WHERE Course.DepartmentID = %u'
-            ,[
+            'ID',
+            'SELECT ID FROM `%s` Course WHERE Course.DepartmentID = %u',
+            [
                 Course::$tableName
                 ,$Department->ID
             ]

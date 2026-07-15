@@ -6,7 +6,6 @@ use ActiveRecord;
 use Emergence\People\Person;
 use Emergence\People\GuardianRelationship;
 use Emergence\People\Groups\Group;
-
 use Slate\Term;
 use Slate\TermsRequestHandler;
 use Slate\RecordsRequestHandler as SlateRecordsRequestHandler;
@@ -73,7 +72,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
         if (is_array($students = SlateRecordsRequestHandler::getRequestedStudents('list'))) {
             $conditions['ID'] = [
-                'values' => array_map(fn($Student) => $Student->ID, $students)
+                'values' => array_map(fn ($Student) => $Student->ID, $students)
             ];
         }
 
@@ -215,8 +214,8 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
         return static::respond('sections', [
             'data' => Section::getAllByQuery(
-                'SELECT sections.* FROM `%s` participants INNER JOIN `%s` sections ON (participants.CourseSectionID = sections.ID) WHERE sections.Status = "Live" AND participants.PersonID = %u AND sections.TermID IN (%s)'
-                ,[
+                'SELECT sections.* FROM `%s` participants INNER JOIN `%s` sections ON (participants.CourseSectionID = sections.ID) WHERE sections.Status = "Live" AND participants.PersonID = %u AND sections.TermID IN (%s)',
+                [
                     SectionParticipant::$tableName
                     ,Section::$tableName
                     ,$Person->ID

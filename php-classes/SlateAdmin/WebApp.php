@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SlateAdmin;
 
-
 class WebApp extends \Emergence\WebApps\SenchaApp
 {
     public static $plugins = [];

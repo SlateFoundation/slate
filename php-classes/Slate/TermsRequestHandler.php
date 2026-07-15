@@ -23,8 +23,8 @@ class TermsRequestHandler extends \RecordsRequestHandler
         return static::respond('years', [
             'success' => true
             ,'data' => Term::getAllByWhere(
-                ['ParentID IS NULL']
-                ,['order' => ['Left' => 'DESC']]
+                ['ParentID IS NULL'],
+                ['order' => ['Left' => 'DESC']]
             )
         ]);
     }

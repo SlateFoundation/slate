@@ -21,7 +21,7 @@ class LinkUtil
     {
         $links = [];
 
-        foreach ($sources AS $source) {
+        foreach ($sources as $source) {
             if (is_string($source) && is_subclass_of($source, ILinksSource::class)) {
                 $newLinks = $source::getLinks($context);
             } elseif (is_callable($source)) {
@@ -46,7 +46,7 @@ class LinkUtil
     {
         $outputTree = [];
 
-        foreach ($inputTree AS $key => $value) {
+        foreach ($inputTree as $key => $value) {
             if (!$value) {
                 continue;
             }
@@ -73,7 +73,7 @@ class LinkUtil
             if (!empty($value['_tag'])) {
                 $children = [];
 
-                foreach ($value['_tag']->getReadableItems() AS $TagItem) {
+                foreach ($value['_tag']->getReadableItems() as $TagItem) {
                     $children[$TagItem->Context->getHandle()] = [
                         '_href' => $TagItem->Context->getUrl(),
                         '_label' => $TagItem->Context->getTitle()
@@ -112,7 +112,7 @@ class LinkUtil
             $link = [];
             $children = [];
 
-            foreach ($value AS $subKey => $subValue) {
+            foreach ($value as $subKey => $subValue) {
                 if (!$subValue) {
                     continue; // skip falsey values
                 }
@@ -165,7 +165,7 @@ class LinkUtil
 
     public static function mergeTree($existingTree, $inputTree)
     {
-        foreach ($inputTree AS $key => $value) {
+        foreach ($inputTree as $key => $value) {
             if (is_string($key) &&
             is_array($value) &&
             !empty($existingTree[$key]) &&

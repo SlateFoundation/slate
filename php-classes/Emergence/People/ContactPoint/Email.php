@@ -67,9 +67,9 @@ class Email extends AbstractPoint
     public function toHTML()
     {
         return sprintf(
-            '<a class="contact-link contact-email" href="mailto:%s">%s</a>'
-            ,urlencode((string) $this->address)
-            ,htmlspecialchars((string) $this->toString())
+            '<a class="contact-link contact-email" href="mailto:%s">%s</a>',
+            urlencode((string) $this->address),
+            htmlspecialchars((string) $this->toString())
         );
     }
 

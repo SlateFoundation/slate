@@ -3,8 +3,7 @@
 namespace Slate\Progress;
 
 use Emergence\People\IPerson;
-use Emergence\Dwoo\Engine AS DwooEngine;
-
+use Emergence\Dwoo\Engine as DwooEngine;
 
 trait StudentReportTrait
 {

@@ -5,11 +5,9 @@ namespace Slate\Progress;
 use Emergence\People\Person;
 use Emergence\People\User;
 use Emergence\People\Relationship;
-
 use Emergence\CRM\Message;
 use Emergence\CRM\MessageRecipient;
 use Emergence\CRM\GlobalRecipient;
-
 use Slate\People\Student;
 use Slate\Progress\Note;
 use Slate\Courses\SectionParticipant;
@@ -122,12 +120,12 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                 ]
             );
 
-            foreach ($studentInstructors AS $si) {
-                $sectionCodes = array_map(fn($sectionID) => Section::getByID($sectionID)->Course->Code, explode(',', $si['sectionIDs']));
+            foreach ($studentInstructors as $si) {
+                $sectionCodes = array_map(fn ($sectionID) => Section::getByID($sectionID)->Course->Code, explode(',', $si['sectionIDs']));
 
                 $contacts[] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), [
                     'group' => 'Teachers',
-                    'label' => 'Teacher ('.implode(', ',$sectionCodes).')',
+                    'label' => 'Teacher ('.implode(', ', $sectionCodes).')',
                     'recipients' => &$recipients
                 ]);
             }
@@ -219,7 +217,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
                 $tokenName = strtolower((string) $className).'DownloadToken';
 
                 if (!empty($_REQUEST[$tokenName])) {
-                    setcookie($tokenName, $_REQUEST[$tokenName], ['expires' => time()+300, 'path' => '/']);
+                    setcookie($tokenName, $_REQUEST[$tokenName], ['expires' => time() + 300, 'path' => '/']);
                 }
 
                 header('Content-Type: application/pdf');

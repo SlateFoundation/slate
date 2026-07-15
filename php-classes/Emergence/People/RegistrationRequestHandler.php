@@ -4,7 +4,6 @@ namespace Emergence\People;
 
 use LoginRequestHandler;
 
-
 class RegistrationRequestHandler extends \RequestHandler
 {
     // configurables

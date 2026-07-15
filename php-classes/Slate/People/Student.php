@@ -4,7 +4,6 @@ namespace Slate\People;
 
 use Exception;
 use RangeException;
-
 use DB;
 use Emergence\People\Person;
 use Emergence\People\User;
@@ -12,7 +11,6 @@ use Emergence\People\Groups\Group;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 use Slate\Term;
-
 
 class Student extends User
 {
@@ -110,8 +108,8 @@ class Student extends User
     public static function getDistinctAdvisors()
     {
         return Person::getAllByQuery(
-            'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName'
-            ,[
+            'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName',
+            [
                 static::$tableName
             ]
         );
@@ -128,7 +126,7 @@ class Student extends User
             return [];
         }
 
-        $filterResult = (fn($people) => array_values(array_filter($people, fn($Person) => $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled'))));
+        $filterResult = (fn ($people) => array_values(array_filter($people, fn ($Person) => $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled'))));
 
         if ($identifier == 'all') {
             return $filterResult(static::getAllByClass()); // TODO: check if this will find sub-student classes?

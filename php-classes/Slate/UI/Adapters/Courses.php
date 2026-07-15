@@ -64,7 +64,7 @@ class Courses implements \Slate\UI\ILinksSource
 
         // look for course code match first
         if (isset($Course)) {
-            foreach (static::$courseIcons AS $iconKey => $iconCfg) {
+            foreach (static::$courseIcons as $iconKey => $iconCfg) {
                 if (
                     $Course->Code &&
                     !empty($iconCfg['courseCodes']) &&
@@ -94,7 +94,7 @@ class Courses implements \Slate\UI\ILinksSource
                 '_icon' => 'diploma',
                 '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current' ]),
                 '_weight' => $weight++,
-                '_children' => array_map(fn(Section $Section) => [
+                '_children' => array_map(fn (Section $Section) => [
                     '_id' => $Section->Code,
                     '_label' => $Section->getTitle(),
                     '_shortLabel' => $Section->Code,
@@ -117,7 +117,7 @@ class Courses implements \Slate\UI\ILinksSource
                     '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current', 'enrolled_user' => $Ward->Username ]),
                     '_label' => $Ward->FirstNamePossessive . ' Courses',
                     '_weight' => $weight++,
-                    '_children' => array_map(fn(Section $Section) => [
+                    '_children' => array_map(fn (Section $Section) => [
                         '_id' => $Section->Code,
                         '_label' => $Section->getTitle(),
                         '_shortLabel' => $Section->Code,

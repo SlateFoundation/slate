@@ -6,7 +6,6 @@ namespace Slate\UI;
 
 use Slate\Courses\Section;
 
-
 class SectionProfile
 {
     public static $sources = [];

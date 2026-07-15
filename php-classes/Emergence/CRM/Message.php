@@ -174,7 +174,7 @@ class Message extends \VersionedRecord
     {
         $newEmailRecipients = [];
 
-        foreach ($this->Recipients AS $Recipient) {
+        foreach ($this->Recipients as $Recipient) {
             if ($Recipient->Status == 'pending') {
                 $Recipient->Status = 'sent';
                 $newEmailRecipients[] = $Recipient;
@@ -209,7 +209,7 @@ class Message extends \VersionedRecord
             $recipients = $this->Recipients;
         }
 
-        return array_map(function($Recipient) {
+        return array_map(function ($Recipient) {
             if (!$Recipient->EmailContactID || $Recipient->Person->PrimaryEmailID == $Recipient->EmailContactID) {
                 return $Recipient->Person->EmailRecipient;
             }

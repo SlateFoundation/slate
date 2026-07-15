@@ -9,10 +9,8 @@ use Emergence\Connectors\IJob;
 use Emergence\Connectors\Mapping;
 use Emergence\Connectors\Exceptions\RemoteRecordInvalid;
 use Emergence\Util\Capitalizer;
-
 use Exception;
 use Psr\Log\LogLevel;
-
 use Slate\People\Student;
 use Emergence\People\User;
 use Emergence\People\IPerson;
@@ -21,7 +19,6 @@ use Emergence\People\Groups\GroupMember;
 use Emergence\People\ContactPoint\Email;
 use Emergence\People\ContactPoint\Phone;
 use Emergence\People\ContactPoint\Postal;
-
 use Slate\Term;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
@@ -29,7 +26,6 @@ use Slate\Courses\SectionParticipant;
 use Slate\Courses\Department;
 use Slate\Courses\Schedule;
 use Emergence\Locations\Location;
-
 
 class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreadsheetConnector
 {
@@ -263,7 +259,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             if (!$Record) {
-                 $Record = static::_getPerson($Job, $row);
+                $Record = static::_getPerson($Job, $row);
             }
 
 
@@ -641,7 +637,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
             // add teacher
-            foreach ($teachers AS $Teacher) {
+            foreach ($teachers as $Teacher) {
                 $Participant = static::_getOrCreateParticipant($Record, $Teacher, ['Role' => 'Teacher'], $pretend);
                 $logEntry = static::_logParticipant($Job, $Participant);
 
@@ -765,7 +761,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 }
 
                 if (isset($row['EndDate'])) {
-                   if (!$row['EndDate']) {
+                    if (!$row['EndDate']) {
                         $participantData['EndDate'] = null;
                     } elseif (!$participantData['EndDate'] = strtotime($row['EndDate'])) {
                         $results['failed']['invalid-end-date']++;
@@ -845,7 +841,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
 
         // scan current roster for students to remove
-        foreach ($studentsBySection AS $sectionId => $studentIds) {
+        foreach ($studentsBySection as $sectionId => $studentIds) {
             $enrolledStudentIds = DB::allValues(
                 'PersonID',
                 'SELECT PersonID FROM `%s` WHERE CourseSectionID = %u AND Role = "Student"',
@@ -871,7 +867,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
                 $results['enrollments-removed'] += count($removeStudentIds);
 
-                foreach ($removeStudentIds AS $studentId) {
+                foreach ($removeStudentIds as $studentId) {
                     $Job->info('Removed user {user} from section {section} with role Student', [
                         'user' => User::getByID($studentId)->getTitle(),
                         'section' => Section::getByID($sectionId)->getTitle()
@@ -1031,9 +1027,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     {
         $Mapping = static::_getPersonMapping($foreignKey);
 
-            if ($Mapping) {
-                return $Mapping->Context;
-            }
+        if ($Mapping) {
+            return $Mapping->Context;
+        }
 
         return null;
     }
@@ -1093,7 +1089,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         $currentGraduationYear = $Job->getGraduationYear();
 
         $autoCapitalize = $Job->Config['autoCapitalize'];
-        $_formatPronoun = (fn($string, $familyName = false) => $autoCapitalize ? Capitalizer::capitalizePronoun($string, $familyName) : $string);
+        $_formatPronoun = (fn ($string, $familyName = false) => $autoCapitalize ? Capitalizer::capitalizePronoun($string, $familyName) : $string);
 
 
         // apply name
@@ -1267,7 +1263,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
         if ($User->PrimaryEmail) {
             $logEntry = $Job->logRecordDelta($User->PrimaryEmail, [
-                'messageRenderer' => fn($logEntry) => sprintf(
+                'messageRenderer' => fn ($logEntry) => sprintf(
                     '%s user %s primary email to %s',
                     $logEntry['action'] == 'create' ? 'Setting' : 'Changing',
                     $User->getTitle(),
@@ -1452,7 +1448,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         if ($Group) {
             // check if user is already in the determined primary group or a subgroup of it
             $foundGroup = null;
-            foreach ($User->Groups AS $currentGroup) {
+            foreach ($User->Groups as $currentGroup) {
                 if ($currentGroup->Left >= $Group->Left && $currentGroup->Right <= $Group->Right) {
                     $foundGroup = $currentGroup;
                     break;
@@ -1513,7 +1509,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 'AdvisorID' => 'Advisor'
             ],
             'valueRenderers' => [
-                'AdvisorID' => fn($advisorId) => $advisorId ? User::getByID($advisorId)->getTitle() : null
+                'AdvisorID' => fn ($advisorId) => $advisorId ? User::getByID($advisorId)->getTitle() : null
             ]
         ];
     }
@@ -1706,7 +1702,7 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
     protected static function _logParticipant(IJob $Job, SectionParticipant $Participant)
     {
         return $Job->logRecordDelta($Participant, [
-            'messageRenderer' => function($logEntry): string {
+            'messageRenderer' => function ($logEntry): string {
                 $User = $logEntry['record']->Person;
                 $Section = $logEntry['record']->Section;
                 $Role = $logEntry['record']->Role;

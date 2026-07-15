@@ -3,10 +3,8 @@
 namespace Slate;
 
 use OutOfBoundsException;
-
 use Emergence\People\GuardianRelationship;
 use Emergence\Locations\LocationsRequestHandler;
-
 use Slate\Courses\CoursesRequestHandler;
 use Slate\Courses\DepartmentsRequestHandler;
 use Slate\Courses\SectionsRequestHandler;
@@ -93,7 +91,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
         if (!$Session->hasAccountLevel('Staff')) {
             $wardIds = GuardianRelationship::getWardIds($Session->Person);
 
-            $students = array_filter($students, fn($Student) => $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds));
+            $students = array_filter($students, fn ($Student) => $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds));
         }
 
         return $students;

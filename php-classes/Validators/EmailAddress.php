@@ -4,10 +4,10 @@ namespace Validators;
 
 class EmailAddress implements IValidator
 {
-    const PARTS_MISSING = 'parts_missing';
-    const USERNAME_INVALID = 'username_invalid';
-    const DOMAIN_INVALID = 'domain_invalid';
-    const DOMAIN_BLACKLISTED = 'domain_blacklisted';
+    public const PARTS_MISSING = 'parts_missing';
+    public const USERNAME_INVALID = 'username_invalid';
+    public const DOMAIN_INVALID = 'domain_invalid';
+    public const DOMAIN_BLACKLISTED = 'domain_blacklisted';
 
     public static function isInvalid($email, array $options = [])
     {

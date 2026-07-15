@@ -63,9 +63,9 @@ class Phone extends AbstractPoint
         }
 
         return sprintf(
-            '<a class="contact-link contact-phone" href="tel:%s">%s</a>'
-            ,$prefix.$this->number
-            ,htmlspecialchars((string) $this->toString())
+            '<a class="contact-link contact-phone" href="tel:%s">%s</a>',
+            $prefix.$this->number,
+            htmlspecialchars((string) $this->toString())
         );
     }
 

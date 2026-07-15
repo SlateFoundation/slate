@@ -4,8 +4,8 @@ namespace Validators;
 
 class URL implements IValidator
 {
-    const URL_INVALID = 'url_invalid';
-    const SCHEME_NOT_ALLOWED = 'scheme_not_allowed';
+    public const URL_INVALID = 'url_invalid';
+    public const SCHEME_NOT_ALLOWED = 'scheme_not_allowed';
 
     public static $defaultAllowedSchemes = ['http', 'https'];
 

@@ -6,13 +6,11 @@ use Slate;
 use Slate\Term;
 use Slate\Courses\Section;
 use Slate\People\Student;
-
 use DB;
 use JSON;
 use Emergence\People\Person;
 use Emergence\People\PeopleRequestHandler;
 use Emergence\Mailer\Mailer;
-
 
 abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestHandler
 {
@@ -93,11 +91,11 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $emailsCount = 0;
             $recipientsCount = 0;
 
-            foreach ($emails AS $email) {
+            foreach ($emails as $email) {
 
                 // compile reports
                 $reports = [];
-                foreach ($email['reports'] AS $reportId) {
+                foreach ($email['reports'] as $reportId) {
                     $Report = $recordClass::getByID($reportId);
 
                     if ($Report->Status == 'published') {
@@ -106,7 +104,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 }
 
                 $recipientEmails = [];
-                foreach ($email['recipients'] AS $recipientId) {
+                foreach ($email['recipients'] as $recipientId) {
                     $Person = Person::getByID($recipientId);
                     if (!$Person) {
                         continue;
@@ -196,7 +194,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         // group interims by student
         $students = [];
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             if (!isset($students[$Report->StudentID])) {
                 $students[$Report->StudentID] = [
                     'student' => $Report->Student,
@@ -210,7 +208,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
 
         // collect recipients
-        foreach ($students AS &$student) {
+        foreach ($students as &$student) {
             $sentRecipients = $recipientClass::getAllByWhere([
                 'StudentID' => $student['student']->ID,
                 'TermID' => $conditions['TermID']
@@ -242,7 +240,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             }
 
             if (in_array('guardians', $recipients)) {
-                foreach ($student['student']->GuardianRelationships AS $GuardianRelationship) {
+                foreach ($student['student']->GuardianRelationships as $GuardianRelationship) {
                     if (!$GuardianRelationship->RelatedPerson->Email) {
                         continue;
                     }
@@ -312,7 +310,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         $terms = [];
         $students = [];
 
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             if (!in_array($Report->Term, $terms)) {
                 $terms[] = $Report->Term;
             }
@@ -424,7 +422,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $studentIds = [];
 
             try {
-                foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
+                foreach (Student::getAllByListIdentifier($_REQUEST['students']) as $Student) {
                     $studentIds[] = $Student->ID;
                 }
             } catch (\Exception $e) {

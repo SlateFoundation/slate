@@ -67,18 +67,18 @@ class Network extends AbstractPoint
             }
 
             return sprintf(
-                '<a class="contact-link contact-network contact-network-composite network-%s" href="%s">%s on %s</a>'
-                ,$networkClass
-                ,htmlspecialchars((string) $url)
-                ,htmlspecialchars((string) $this->username)
-                ,htmlspecialchars((string) $this->network)
+                '<a class="contact-link contact-network contact-network-composite network-%s" href="%s">%s on %s</a>',
+                $networkClass,
+                htmlspecialchars((string) $url),
+                htmlspecialchars((string) $this->username),
+                htmlspecialchars((string) $this->network)
             );
         }
         return sprintf(
-            '<span class="contact-network-fuzzy network-%1$s">%2$s on <a class="contact-link contact-network contact-network-networkonly network-%1$s" href="http://%3$s">%3$s</a></span>'
-            ,$networkClass
-            ,htmlspecialchars((string) $this->username)
-            ,htmlspecialchars((string) $this->network)
+            '<span class="contact-network-fuzzy network-%1$s">%2$s on <a class="contact-link contact-network contact-network-networkonly network-%1$s" href="http://%3$s">%3$s</a></span>',
+            $networkClass,
+            htmlspecialchars((string) $this->username),
+            htmlspecialchars((string) $this->network)
         );
     }
 

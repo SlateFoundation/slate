@@ -77,7 +77,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     {
         $config = static::aggregateStackedConfig('templates');
 
-        foreach ($config AS &$options) {
+        foreach ($config as &$options) {
             if (is_string($options)) {
                 $options = [
                     'class' => $options
@@ -85,7 +85,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
             }
 
             if (!empty($options['alternateLabels'])) {
-                foreach ($options['alternateLabels'] AS $alternateLabel) {
+                foreach ($options['alternateLabels'] as $alternateLabel) {
                     $config[$alternateLabel] = $options;
                 }
                 unset($options['alternateLabels']);

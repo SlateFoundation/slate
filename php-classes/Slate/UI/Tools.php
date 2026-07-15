@@ -24,7 +24,7 @@ class Tools implements ILinksSource
 
     public static function appendTools(array $tools)
     {
-        foreach ($tools AS $key => $value) {
+        foreach ($tools as $key => $value) {
             if (
                 is_array($value) &&
                 !empty(static::$tools[$key]) &&

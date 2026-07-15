@@ -39,7 +39,7 @@ class Postal extends AbstractPoint
         $this->postal = null;
 
         // TODO: use an online API if available for address normalization
-        foreach ($segments AS $segment) {
+        foreach ($segments as $segment) {
             if (!$this->number && preg_match('/^(\d+)\s+(.*)/', $segment, $matches)) {
                 $this->number = $matches[1];
                 $this->street = $matches[2];
@@ -62,9 +62,9 @@ class Postal extends AbstractPoint
             }
         }
 
-#        if (!$this->number || !$this->street || !($this->postal || ($this->city && $this->state))) {
-#            throw new \Emergence\Exceptions\ValidationException('Could not parse sufficient address data from string');
-#        }
+        #        if (!$this->number || !$this->street || !($this->postal || ($this->city && $this->state))) {
+        #            throw new \Emergence\Exceptions\ValidationException('Could not parse sufficient address data from string');
+        #        }
 
         // update serialization
         $this->Data = $this->serialize();
@@ -112,15 +112,15 @@ class Postal extends AbstractPoint
     public function toHTML()
     {
         return sprintf(
-            '<a class="contact-link contact-postal" data-address-name="%s" data-address-number="%s" data-address-street="%s" data-address-unit="%s" data-address-city="%s" data-address-state="%s" data-address-postal="%s">%s</a>'
-            ,htmlspecialchars((string) $this->name)
-            ,htmlspecialchars((string) $this->number)
-            ,htmlspecialchars((string) $this->street)
-            ,htmlspecialchars((string) $this->unit)
-            ,htmlspecialchars((string) $this->city)
-            ,htmlspecialchars((string) $this->state)
-            ,htmlspecialchars((string) $this->postal)
-            ,nl2br(htmlspecialchars((string) $this->toString()))
+            '<a class="contact-link contact-postal" data-address-name="%s" data-address-number="%s" data-address-street="%s" data-address-unit="%s" data-address-city="%s" data-address-state="%s" data-address-postal="%s">%s</a>',
+            htmlspecialchars((string) $this->name),
+            htmlspecialchars((string) $this->number),
+            htmlspecialchars((string) $this->street),
+            htmlspecialchars((string) $this->unit),
+            htmlspecialchars((string) $this->city),
+            htmlspecialchars((string) $this->state),
+            htmlspecialchars((string) $this->postal),
+            nl2br(htmlspecialchars((string) $this->toString()))
         );
     }
 

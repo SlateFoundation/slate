@@ -32,9 +32,9 @@ class Link extends AbstractPoint
     public function toHTML()
     {
         return sprintf(
-            '<a class="contact-link contact-url" href="%s">%s</a>'
-            ,htmlspecialchars((string) $this->url)
-            ,htmlspecialchars((string) $this->toString())
+            '<a class="contact-link contact-url" href="%s">%s</a>',
+            htmlspecialchars((string) $this->url),
+            htmlspecialchars((string) $this->toString())
         );
     }
 

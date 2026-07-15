@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Slate\Courses;
 
-
 class CoursesRequestHandler extends \RecordsRequestHandler
 {
     public static $recordClass = Course::class;

@@ -1,10 +1,10 @@
 <?php
+
 namespace Slate\Progress;
 
 use DB;
 use Emergence\People\PeopleRequestHandler;
 use Slate\TermsRequestHandler;
-
 
 class ProgressRequestHandler extends \RequestHandler
 {
@@ -45,7 +45,7 @@ class ProgressRequestHandler extends \RequestHandler
         if (!empty($_REQUEST['classes'])) {
             $recordClasses = is_string($_REQUEST['classes']) ? explode(',', $_REQUEST['classes']) : $_REQUEST['classes'];
 
-            foreach ($recordClasses AS $recordClass) {
+            foreach ($recordClasses as $recordClass) {
                 if (!in_array($recordClass, static::$reportClasses)) {
                     return static::throwNotFoundError('class not found');
                 }
@@ -79,12 +79,12 @@ class ProgressRequestHandler extends \RequestHandler
 
         // build cache of timestamps for quick sorting with no modification violations
         $recordTimestamps = [];
-        foreach ($records AS $Record) {
+        foreach ($records as $Record) {
             $recordTimestamps[$Record->getRootClass()][$Record->ID] = $Record->getTimestamp();
         }
 
         // apply unified sorting across all types
-        usort($records, fn($r1, $r2) => $recordTimestamps[$r2->getRootClass()][$r2->ID] - $recordTimestamps[$r1->getRootClass()][$r1->ID]);
+        usort($records, fn ($r1, $r2) => $recordTimestamps[$r2->getRootClass()][$r2->ID] - $recordTimestamps[$r1->getRootClass()][$r1->ID]);
 
         // return results and list of included types
         return static::respond('progress', [

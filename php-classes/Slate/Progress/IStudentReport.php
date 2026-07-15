@@ -6,7 +6,6 @@ namespace Slate\Progress;
 
 use Emergence\People\IPerson;
 
-
 interface IStudentReport
 {
     public static function getNoun($count = 1);

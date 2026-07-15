@@ -4,11 +4,9 @@ namespace Slate\Progress;
 
 use DB;
 use Emergence\People\Person;
-
 use Slate\Courses\Section;
 use Slate\Courses\SectionTermData;
 use Slate\Term;
-
 
 abstract class AbstractSectionTermReport extends AbstractReport implements IStudentTermReport
 {

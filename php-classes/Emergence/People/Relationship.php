@@ -466,13 +466,13 @@ class Relationship extends \VersionedRecord
     {
         $templates = [];
 
-        foreach (static::$templates AS $label => $options) {
+        foreach (static::$templates as $label => $options) {
             $options['Relationship']['Label'] = $label;
             $templates[$label] = $options;
 
             // add inverse relationships
             if (!empty($options['InverseRelationship']) && is_array($options['InverseRelationship'])) {
-                foreach ($options['InverseRelationship']['Label'] AS $gender => $relationship) {
+                foreach ($options['InverseRelationship']['Label'] as $gender => $relationship) {
                     $templates[$relationship] = [
                         'Relationship' => [
                             'Label' => $relationship
