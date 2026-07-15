@@ -28,10 +28,6 @@ class GoogleApps
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
         }
 
-        if (!empty($headers)) {
-            $requestHeaders = array_merge($requestHeaders, $headers);
-        }
-
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge([
             sprintf('Authorization: Bearer %s', static::$apiToken)

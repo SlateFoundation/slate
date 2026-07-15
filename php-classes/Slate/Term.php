@@ -199,7 +199,7 @@ class Term extends \VersionedRecord
 
         try {
             $termIds = static::getClosest()->getConcurrentTermIDs();
-        } catch (TableNotFoundException) {
+        } catch (\TableNotFoundException) {
             $termIds = [];
         }
 
@@ -218,7 +218,7 @@ class Term extends \VersionedRecord
 
         try {
             $termIds = static::getClosest()->getMaster()->getContainedTermIDs();
-        } catch (TableNotFoundException) {
+        } catch (\TableNotFoundException) {
             $termIds = [];
         }
 

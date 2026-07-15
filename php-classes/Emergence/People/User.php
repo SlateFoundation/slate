@@ -266,7 +266,7 @@ class User extends Person implements IUser
                 if (is_callable($options['format'])) {
                     $username = call_user_func($options['format'], $this, $options);
                 } else {
-                    throw new Exception('Unknown format format.');
+                    throw new \Exception('Unknown format format.');
                 }
         }
 

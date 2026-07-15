@@ -43,7 +43,7 @@ class MessageRecipient extends \ActiveRecord
         ],
         'Message' => [
             'type' => 'one-one',
-            'class' => \Message::class
+            'class' => Message::class
         ],
         'EmailContact' => [
             'type' => 'one-one',

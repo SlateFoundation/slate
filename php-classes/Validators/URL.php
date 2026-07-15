@@ -18,11 +18,11 @@ class URL implements IValidator
         $scheme = parse_url((string) $url, PHP_URL_SCHEME);
 
         if ($scheme === false) {
-            return [URL_INVALID => 'Not a valid URL'];
+            return [self::URL_INVALID => 'Not a valid URL'];
         }
 
         if (!in_array(strtolower((string) $scheme), $options['allowedSchemes'])) {
-            return [SCHEME_NOT_ALLOWED => 'URL must start with one of: '.implode(', ', $options['allowedSchemes'])];
+            return [self::SCHEME_NOT_ALLOWED => 'URL must start with one of: '.implode(', ', $options['allowedSchemes'])];
         }
 
         return false;
