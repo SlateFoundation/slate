@@ -27,8 +27,8 @@ class Phone extends AbstractPoint
     {
         $this->number = preg_replace('/\D/', '', (string) $string);
 
-        if (strlen($this->number) === 11 && $this->number[0] == '1') {
-            $this->number = substr($this->number, 1);
+        if (strlen((string) $this->number) === 11 && $this->number[0] == '1') {
+            $this->number = substr((string) $this->number, 1);
         }
 
         // update serialization
