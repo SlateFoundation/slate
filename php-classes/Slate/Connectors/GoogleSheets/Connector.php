@@ -17,11 +17,11 @@ class Connector extends \Slate\Connectors\AbstractSpreadsheetConnector implement
     {
         $config = parent::_getJobConfig($requestData);
 
-        $config['studentsCsv'] = !empty($requestData['studentsCsv']) ? $requestData['studentsCsv'] : null;
-        $config['alumniCsv'] = !empty($requestData['alumniCsv']) ? $requestData['alumniCsv'] : null;
-        $config['staffCsv'] = !empty($requestData['staffCsv']) ? $requestData['staffCsv'] : null;
-        $config['sectionsCsv'] = !empty($requestData['sectionsCsv']) ? $requestData['sectionsCsv'] : null;
-        $config['enrollmentsCsv'] = !empty($requestData['enrollmentsCsv']) ? $requestData['enrollmentsCsv'] : null;
+        $config['studentsCsv'] = empty($requestData['studentsCsv']) ? null : $requestData['studentsCsv'];
+        $config['alumniCsv'] = empty($requestData['alumniCsv']) ? null : $requestData['alumniCsv'];
+        $config['staffCsv'] = empty($requestData['staffCsv']) ? null : $requestData['staffCsv'];
+        $config['sectionsCsv'] = empty($requestData['sectionsCsv']) ? null : $requestData['sectionsCsv'];
+        $config['enrollmentsCsv'] = empty($requestData['enrollmentsCsv']) ? null : $requestData['enrollmentsCsv'];
 
         return $config;
     }

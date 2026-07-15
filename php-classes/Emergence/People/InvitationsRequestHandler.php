@@ -256,9 +256,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
         return str_ireplace(
             array_map(
-                function($key) {
-                    return '{'.$key.'}';
-                },
+                fn(int|string $key) => '{'.$key.'}',
                 array_keys($messageVariables)
             ),
             array_values($messageVariables),
@@ -275,7 +273,8 @@ class InvitationsRequestHandler extends \RequestHandler
         }
 
         $hostname = Site::getConfig('primary_hostname');
-        $messageVariables = array_merge($messageVariables, [
+
+        return array_merge($messageVariables, [
             'schoolName' => Slate::$schoolName,
             'schoolAbbr' => Slate::$schoolAbbr,
             'siteSlogan' => Slate::$siteSlogan,
@@ -286,7 +285,5 @@ class InvitationsRequestHandler extends \RequestHandler
             'websiteHostname' => $hostname,
             'websiteLink' => '<a href="http://'.$hostname.'">'.$hostname.'</a>'
         ]);
-
-        return $messageVariables;
     }
 }

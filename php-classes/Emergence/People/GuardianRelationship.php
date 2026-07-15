@@ -15,7 +15,7 @@ class GuardianRelationship extends Relationship
         if ($wardIds === null) {
             try {
                 $wardIds = array_map(
-                    'intval',
+                    intval(...),
                     DB::allValues(
                         'PersonID',
                         'SELECT PersonID FROM `%s` WHERE %s',
@@ -31,7 +31,7 @@ class GuardianRelationship extends Relationship
                         ]
                     )
                 );
-            } catch (TableNotFoundException $e) {
+            } catch (TableNotFoundException) {
                 $wardIds = [];
             }
         }

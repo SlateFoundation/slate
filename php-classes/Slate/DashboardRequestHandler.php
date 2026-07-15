@@ -13,7 +13,7 @@ class DashboardRequestHandler extends \RequestHandler
         $GLOBALS['Session']->requireAuthentication();
 
         return parent::respond('dashboard', [
-            'links' => LinkUtil::mergeSources(static::$sources, get_called_class())
+            'links' => LinkUtil::mergeSources(static::$sources, static::class)
         ]);
     }
 }

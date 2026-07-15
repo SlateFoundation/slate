@@ -22,14 +22,14 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     public static $collectionRoute = '/contact-points';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
     public static $subClasses = [
-        'Emergence\People\ContactPoint\Email'
-        ,'Emergence\People\ContactPoint\Phone'
-        ,'Emergence\People\ContactPoint\Postal'
-        ,'Emergence\People\ContactPoint\Network'
-        ,'Emergence\People\ContactPoint\Link'
+        \Emergence\People\ContactPoint\Email::class
+        ,\Emergence\People\ContactPoint\Phone::class
+        ,\Emergence\People\ContactPoint\Postal::class
+        ,\Emergence\People\ContactPoint\Network::class
+        ,\Emergence\People\ContactPoint\Link::class
     ];
 
     public static $searchConditions = [
@@ -77,7 +77,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     {
         $config = static::aggregateStackedConfig('templates');
 
-        foreach ($config AS $label => &$options) {
+        foreach ($config AS &$options) {
             if (is_string($options)) {
                 $options = [
                     'class' => $options
@@ -188,7 +188,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
         $instance = new static();
         $instance->loadString((string)$string);
 
-        if ($Person) {
+        if ($Person instanceof \Emergence\People\Person) {
             $instance->Person = $Person;
         }
 
@@ -204,7 +204,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
         $instance = new static();
         $instance->unserialize($string);
 
-        if ($Person) {
+        if ($Person instanceof \Emergence\People\Person) {
             $instance->Person = $Person;
         }
 
@@ -252,7 +252,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     {
         return static::getByWhere([
             'PersonID' => $Person->ID
-            ,'Class' => $class ? $class : get_called_class()
+            ,'Class' => $class ?: static::class
         ]);
     }
 }

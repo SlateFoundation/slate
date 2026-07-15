@@ -4,13 +4,13 @@ namespace Slate;
 
 class TermsRequestHandler extends \RecordsRequestHandler
 {
-    public static $recordClass = 'Slate\\Term';
+    public static $recordClass = \Slate\Term::class;
     public static $browseLimit = false;
     public static $browseOrder = ['Left' => 'ASC'];
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*years':
                 return static::handleYearsRequest();
             default:

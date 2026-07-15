@@ -27,7 +27,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*teachers':
                 return static::respond('teachers', [
                     'data' => Person::getAllByQuery(
@@ -77,7 +77,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
                 ]
             );
 
-            $conditions[] = sprintf('CourseID IN (%s)', count($courseIds) ? join(',', $courseIds) : '0');
+            $conditions[] = sprintf('CourseID IN (%s)', count($courseIds) > 0 ? implode(',', $courseIds) : '0');
             $filterObjects['Department'] = $Department;
         }
 
@@ -91,7 +91,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
                 ]
             );
 
-            $conditions[] = sprintf('ID IN (%s)', count($enrolledSectionIds) ? join(',', $enrolledSectionIds) : '0');
+            $conditions[] = sprintf('ID IN (%s)', count($enrolledSectionIds) > 0 ? implode(',', $enrolledSectionIds) : '0');
             $filterObjects['EnrolledUser'] = $EnrolledUser;
         }
 
@@ -100,7 +100,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
 
     public static function handleRecordRequest(ActiveRecord $Section, $action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case 'cohorts':
                 return static::handleCohortsRequest($Section);
             case 'post':
@@ -145,7 +145,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
           }
       }
 
-      return static::respond(static::getTemplateName($className::$singularNoun), array(
+      return static::respond(static::getTemplateName($className::$singularNoun), [
           'success' => true
           ,'data' => $Section
           ,'tags' => $Section->findBlogTags()
@@ -155,7 +155,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
           ,'total' => DB::foundRows()
           ,'limit' => $limit
           ,'offset' => $offset
-      ));
+      ]);
     }
 
     public static function handleCohortsRequest(Section $Section)
@@ -197,7 +197,7 @@ class SectionsRequestHandler extends \Slate\RecordsRequestHandler
                     $Section->ID, // 3
                     DB::escape($_REQUEST['cohort']) // 4
                 ]);
-            } catch (\TableNotFoundException $e) {
+            } catch (\TableNotFoundException) {
                 $students = [];
             }
         } elseif (!empty($_REQUEST['inactive'])) {

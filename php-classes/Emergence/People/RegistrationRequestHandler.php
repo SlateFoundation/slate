@@ -89,7 +89,7 @@ class RegistrationRequestHandler extends \RequestHandler
             }
 
             // validate
-            if ($User->validate() && empty($additionalErrors)) {
+            if ($User->validate() && $additionalErrors === []) {
                 // save store
                 $User->save();
 
@@ -155,7 +155,7 @@ class RegistrationRequestHandler extends \RequestHandler
         }
 
         return static::respond('recoverPassword', [
-            'error' => isset($error) ? $error : false
+            'error' => $error ?? false
         ]);
     }
 

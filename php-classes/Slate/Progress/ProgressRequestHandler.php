@@ -28,10 +28,8 @@ class ProgressRequestHandler extends \RequestHandler
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
         // get term filter
-        if (!empty($_REQUEST['term'])) {
-            if (!$Term = TermsRequestHandler::getRecordByHandle($_REQUEST['term'])) {
-                return static::throwNotFoundError('term not found');
-            }
+        if (!empty($_REQUEST['term']) && !$Term = TermsRequestHandler::getRecordByHandle($_REQUEST['term'])) {
+            return static::throwNotFoundError('term not found');
         }
 
         // get student filter
@@ -86,9 +84,7 @@ class ProgressRequestHandler extends \RequestHandler
         }
 
         // apply unified sorting across all types
-        usort($records, function ($r1, $r2) use($recordTimestamps) {
-            return $recordTimestamps[$r2->getRootClass()][$r2->ID] - $recordTimestamps[$r1->getRootClass()][$r1->ID];
-        });
+        usort($records, fn($r1, $r2) => $recordTimestamps[$r2->getRootClass()][$r2->ID] - $recordTimestamps[$r1->getRootClass()][$r1->ID]);
 
         // return results and list of included types
         return static::respond('progress', [

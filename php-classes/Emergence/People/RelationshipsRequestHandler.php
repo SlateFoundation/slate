@@ -7,7 +7,7 @@ use ActiveRecord;
 class RelationshipsRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler configuration
-    public static $recordClass = 'Emergence\People\Relationship';
+    public static $recordClass = \Emergence\People\Relationship::class;
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
@@ -16,7 +16,7 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*templates':
                 return static::handleTemplatesRequest();
             default:
@@ -61,7 +61,7 @@ class RelationshipsRequestHandler extends \RecordsRequestHandler
             if ($Relationship->InverseRelationship) {
                 $Relationship->InverseRelationship->setFields($data['InverseRelationship']);
             } else {
-                if (!empty($data['InverseRelationship']['Class'] && in_array($data['InverseRelationship']['Class'], Relationship::getStaticSubclasses()))) {
+                if ($data['InverseRelationship']['Class'] && in_array($data['InverseRelationship']['Class'], Relationship::getStaticSubclasses())) {
                     $inverseClass = $data['InverseRelationship']['Class'];
                 } else {
                     $inverseClass = Relationship::getStaticDefaultClass();

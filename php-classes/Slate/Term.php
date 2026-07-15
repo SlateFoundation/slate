@@ -24,9 +24,9 @@ class Term extends \VersionedRecord
     public static $collectionRoute = '/terms';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'Title' => [
@@ -75,7 +75,7 @@ class Term extends \VersionedRecord
     public static $relationships = [
         'Parent' => [
             'type' => 'one-one'
-            ,'class' => __CLASS__
+            ,'class' => self::class
         ]
     ];
 
@@ -132,8 +132,8 @@ class Term extends \VersionedRecord
     {
         $Term = static::getCurrent();
 
-        if ((time() - strtotime($Term->StartDate)) / (60 * 60 * 24) <= static::$reportingPeriod) {
-            $Term = $Term->getPreviousSibling();
+        if ((time() - strtotime((string) $Term->StartDate)) / (60 * 60 * 24) <= static::$reportingPeriod) {
+            return $Term->getPreviousSibling();
         }
 
         return $Term;
@@ -163,23 +163,21 @@ class Term extends \VersionedRecord
     {
         if ($Term = static::getByHandle($handle)) {
             return $Term;
-        } else {
-            return static::create([
-                'Title' => $handle
-                ,'Handle' => $handle
-            ], $save);
         }
+        return static::create([
+            'Title' => $handle
+            ,'Handle' => $handle
+        ], $save);
     }
 
     public static function getOrCreateByTitle($title, $save = false)
     {
         if ($Term = static::getByField('Title', $title)) {
             return $Term;
-        } else {
-            return static::create([
-                'Title' => $title
-            ], $save);
         }
+        return static::create([
+            'Title' => $title
+        ], $save);
     }
 
     public static function getClosestGraduationYear()
@@ -201,7 +199,7 @@ class Term extends \VersionedRecord
 
         try {
             $termIds = static::getClosest()->getConcurrentTermIDs();
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException) {
             $termIds = [];
         }
 
@@ -220,7 +218,7 @@ class Term extends \VersionedRecord
 
         try {
             $termIds = static::getClosest()->getMaster()->getContainedTermIDs();
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException) {
             $termIds = [];
         }
 
@@ -277,7 +275,7 @@ class Term extends \VersionedRecord
         $time = strtotime($this->EndDate);
 
         // treat "empty" time component as end of day
-        if (date('H:i:s', $time) == '00:00:00') {
+        if (date('H:i:s', $time) === '00:00:00') {
             $time += 60*60*24-1;
         }
 
@@ -347,12 +345,12 @@ class Term extends \VersionedRecord
         foreach ($regexTermArray as $regex => $term) {
             preg_match($regex, $this->Title, $matches);
 
-            if ($matches) {
+            if ($matches !== []) {
                 $fuzzyTitle = $matches[1];
 
-                if ($term == 'Quarter') {
+                if ($term === 'Quarter') {
                     $fuzzyTitle .= ' '.$matches[2];
-                } elseif ($term == 'Semester') {
+                } elseif ($term === 'Semester') {
                     $semester = $matches[2] == 1 ? '1st' : '2nd' ;
                     $fuzzyTitle .=  ' '.$semester.' Semester';
                 }
@@ -360,10 +358,11 @@ class Term extends \VersionedRecord
                 return $fuzzyTitle;
             }
         }
+        return null;
     }
 
     public function getGraduationYear()
     {
-        return (int)substr($this->getMaster()->EndDate, 0, 4);
+        return (int)substr((string) $this->getMaster()->EndDate, 0, 4);
     }
 }

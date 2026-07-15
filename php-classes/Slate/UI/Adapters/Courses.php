@@ -69,7 +69,7 @@ class Courses implements \Slate\UI\ILinksSource
                     $Course->Code &&
                     !empty($iconCfg['courseCodes']) &&
                     is_array($iconCfg['courseCodes']) &&
-                    in_array(strtoupper($Course->Code), $iconCfg['courseCodes'])
+                    in_array(strtoupper((string) $Course->Code), $iconCfg['courseCodes'])
                 ) {
                     return $iconKey;
                 }
@@ -94,38 +94,36 @@ class Courses implements \Slate\UI\ILinksSource
                 '_icon' => 'diploma',
                 '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current' ]),
                 '_weight' => $weight++,
-                '_children' => array_map(function(Section $Section) {
-                    return [
-                        '_id' => $Section->Code,
-                        '_label' => $Section->getTitle(),
-                        '_shortLabel' => $Section->Code,
-                        '_icon' => static::getIcon($Section),
-                        '_href' => $Section->getUrl()
-                    ];
-                }, $_SESSION['User']->CurrentCourseSections)
+                '_children' => array_map(fn(Section $Section) => [
+                    '_id' => $Section->Code,
+                    '_label' => $Section->getTitle(),
+                    '_shortLabel' => $Section->Code,
+                    '_icon' => static::getIcon($Section),
+                    '_href' => $Section->getUrl()
+                ], $_SESSION['User']->CurrentCourseSections)
             ]
         ];
 
         if (!empty($_SESSION['User']->Wards)) {
             foreach ($_SESSION['User']->Wards as $Ward) {
-                if (empty($Ward->CurrentCourseSections) || !$Ward->Username) {
+                if (empty($Ward->CurrentCourseSections)) {
                     continue;
                 }
-
+                if (!$Ward->Username) {
+                    continue;
+                }
                 $linkGroups[$Ward->Username] = [
                     '_icon' => 'diploma',
                     '_href' => Section::$collectionRoute.'?'.http_build_query([ 'term' => '*current', 'enrolled_user' => $Ward->Username ]),
                     '_label' => $Ward->FirstNamePossessive . ' Courses',
                     '_weight' => $weight++,
-                    '_children' => array_map(function(Section $Section) {
-                        return [
-                            '_id' => $Section->Code,
-                            '_label' => $Section->getTitle(),
-                            '_shortLabel' => $Section->Code,
-                            '_icon' => static::getIcon($Section),
-                            '_href' => $Section->getUrl()
-                        ];
-                    }, $Ward->CurrentCourseSections)
+                    '_children' => array_map(fn(Section $Section) => [
+                        '_id' => $Section->Code,
+                        '_label' => $Section->getTitle(),
+                        '_shortLabel' => $Section->Code,
+                        '_icon' => static::getIcon($Section),
+                        '_href' => $Section->getUrl()
+                    ], $Ward->CurrentCourseSections)
                 ];
             }
         }

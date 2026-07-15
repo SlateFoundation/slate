@@ -16,9 +16,9 @@ class Schedule extends \VersionedRecord
     public static $collectionRoute = '/schedules';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'Title' => [
@@ -62,23 +62,21 @@ class Schedule extends \VersionedRecord
     {
         if ($Schedule = static::getByHandle($handle)) {
             return $Schedule;
-        } else {
-            return static::create([
-                'Title' => $handle
-                ,'Handle' => $handle
-            ], $save);
         }
+        return static::create([
+            'Title' => $handle
+            ,'Handle' => $handle
+        ], $save);
     }
 
     public static function getOrCreateByTitle($title, $save = false)
     {
         if ($Schedule = static::getByField('Title', $title)) {
             return $Schedule;
-        } else {
-            return static::create([
-                'Title' => $title
-            ], $save);
         }
+        return static::create([
+            'Title' => $title
+        ], $save);
     }
 
     public function validate($deep = true)

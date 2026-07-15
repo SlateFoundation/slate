@@ -17,9 +17,9 @@ class Person extends VersionedRecord implements IPerson
     public static $classLabel = 'Person / Contact';
 
     // support subclassing
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     // VersionedRecord configuration
     public static $historyTable = 'history_people';
@@ -116,12 +116,12 @@ class Person extends VersionedRecord implements IPerson
         ,'Photos' => [
             'type' => 'context-children'
             ,'class' => PhotoMedia::class
-            ,'contextClass' => __CLASS__
+            ,'contextClass' => self::class
         ]
         ,'Comments' => [
             'type' => 'context-children'
             ,'class' => Comment::class
-            ,'contextClass' => __CLASS__
+            ,'contextClass' => self::class
             ,'order' => ['ID' => 'DESC']
         ]
         ,'PrimaryEmail' => [
@@ -149,7 +149,7 @@ class Person extends VersionedRecord implements IPerson
         ,'Mapping' => [
             'type' => 'context-children'
             ,'class' => Mapping::class
-            ,'contextClass' => __CLASS__
+            ,'contextClass' => self::class
         ]
     ];
 
@@ -246,7 +246,7 @@ class Person extends VersionedRecord implements IPerson
     // Person
     public static function __classLoaded()
     {
-        if (get_called_class() == __CLASS__) {
+        if (static::class == self::class) {
             self::$validators['Gender']['choices'] = self::$fields['Gender']['values'];
         }
 
@@ -268,19 +268,17 @@ class Person extends VersionedRecord implements IPerson
             case 'LastInitial':
                 return strtoupper(substr($this->LastName, 0, 1));
             case 'FirstNamePossessive':
-                if (substr($this->FirstName, -1) == 's') {
+                if (str_ends_with($this->FirstName, 's')) {
                     return $this->FirstName.$rsquo;
-                } else {
-                    return $this->FirstName.$rsquo.'s';
                 }
+                return $this->FirstName.$rsquo.'s';
             case 'FullNamePossessive':
                 $fullName = $this->FullName;
 
-                if (substr($fullName, -1) == 's') {
+                if (str_ends_with($fullName, 's')) {
                     return $fullName.$rsquo;
-                } else {
-                    return $fullName.$rsquo.'s';
                 }
+                return $fullName.$rsquo.'s';
             case 'Email':
                 return $this->PrimaryEmail ? (string)$this->PrimaryEmail : null;
             case 'Phone':
@@ -331,7 +329,7 @@ class Person extends VersionedRecord implements IPerson
 
                 $Existing = $this->isPhantom ? null : ContactPoint\Email::getByString($value, ['PersonID' => $this->ID]);
 
-                $this->PrimaryEmail = $Existing ? $Existing : ContactPoint\Email::fromString($value, $this);
+                $this->PrimaryEmail = $Existing ?: ContactPoint\Email::fromString($value, $this);
                 break;
             case 'Phone':
                 if (!$value) {
@@ -341,7 +339,7 @@ class Person extends VersionedRecord implements IPerson
 
                 $Existing = $this->isPhantom ? null : ContactPoint\Phone::getByString($value, ['PersonID' => $this->ID]);
 
-                $this->PrimaryPhone = $Existing ? $Existing : ContactPoint\Phone::fromString($value, $this);
+                $this->PrimaryPhone = $Existing ?: ContactPoint\Phone::fromString($value, $this);
                 break;
             default:
                 return parent::_setRelationshipValue($relationship, $value);
@@ -366,17 +364,16 @@ class Person extends VersionedRecord implements IPerson
     {
         if ($Person = static::getByFullName($firstName, $lastName)) {
             return $Person;
-        } else {
-            return static::create([
-                'FirstName' => $firstName
-                ,'LastName' => $lastName
-            ], $save);
         }
+        return static::create([
+            'FirstName' => $firstName
+            ,'LastName' => $lastName
+        ], $save);
     }
 
     public static function parseFullName($fullName)
     {
-        $parts = preg_split('/\s+/', trim($fullName), 2);
+        $parts = preg_split('/\s+/', trim((string) $fullName), 2);
 
         if (count($parts) != 2) {
             throw new Exception('Full name must contain a first and last name separated by a space.');
@@ -394,27 +391,21 @@ class Person extends VersionedRecord implements IPerson
         parent::validate($deep);
 
         // investigate dirty PrimaryEmail/PrimaryEmailID
-        if (($this->isFieldDirty('PrimaryEmailID') && $this->PrimaryEmailID) || (!$this->PrimaryEmailID && $this->PrimaryEmail)) {
-            // check if repossessing another's email point
-            if ($this->PrimaryEmail->PersonID && $this->PrimaryEmail->PersonID != $this->ID) {
-                $this->_validator->addError('PrimaryEmailID', 'PrimaryEmail already belongs to another person');
-            }
+        // check if repossessing another's email point
+        if (($this->isFieldDirty('PrimaryEmailID') && $this->PrimaryEmailID || !$this->PrimaryEmailID && $this->PrimaryEmail) && ($this->PrimaryEmail->PersonID && $this->PrimaryEmail->PersonID != $this->ID)) {
+            $this->_validator->addError('PrimaryEmailID', 'PrimaryEmail already belongs to another person');
         }
 
         // investigate dirty PrimaryPhone/PrimaryPhoneID
-        if (($this->isFieldDirty('PrimaryPhoneID') && $this->PrimaryPhoneID) || (!$this->PrimaryPhoneID && $this->PrimaryPhone)) {
-            // check if repossessing another's email point
-            if ($this->PrimaryPhone->PersonID && $this->PrimaryPhone->PersonID != $this->ID) {
-                $this->_validator->addError('PrimaryPhoneID', 'PrimaryPhone already belongs to another person');
-            }
+        // check if repossessing another's email point
+        if (($this->isFieldDirty('PrimaryPhoneID') && $this->PrimaryPhoneID || !$this->PrimaryPhoneID && $this->PrimaryPhone) && ($this->PrimaryPhone->PersonID && $this->PrimaryPhone->PersonID != $this->ID)) {
+            $this->_validator->addError('PrimaryPhoneID', 'PrimaryPhone already belongs to another person');
         }
 
         // investigate dirty PrimaryPostal/PrimaryPostalID
-        if (($this->isFieldDirty('PrimaryPostalID') && $this->PrimaryPostalID) || (!$this->PrimaryPostalID && $this->PrimaryPostal)) {
-            // check if repossessing another's email point
-            if ($this->PrimaryPostal->PersonID && $this->PrimaryPostal->PersonID != $this->ID) {
-                $this->_validator->addError('PrimaryPostalID', 'PrimaryPostal already belongs to another person');
-            }
+        // check if repossessing another's email point
+        if (($this->isFieldDirty('PrimaryPostalID') && $this->PrimaryPostalID || !$this->PrimaryPostalID && $this->PrimaryPostal) && ($this->PrimaryPostal->PersonID && $this->PrimaryPostal->PersonID != $this->ID)) {
+            $this->_validator->addError('PrimaryPostalID', 'PrimaryPostal already belongs to another person');
         }
 
         // save results
@@ -459,13 +450,9 @@ class Person extends VersionedRecord implements IPerson
             ,$group->Right
         ]);
 
-        $containedGroups = array_map(function($group) {
-            return $group['ID'];
-        },$containedGroups);
+        $containedGroups = array_map(fn(array $group) => $group['ID'],$containedGroups);
 
-        $condition = $matchedCondition['join']['aliasName'].'.GroupID'.' IN ('.implode(',',$containedGroups).')';
-
-        return $condition;
+        return $matchedCondition['join']['aliasName'].'.GroupID'.' IN ('.implode(',',$containedGroups).')';
     }
 
     public static function getRelatedToConditions($identifier, $matchedCondition)
@@ -493,7 +480,7 @@ class Person extends VersionedRecord implements IPerson
             ]
         );
 
-        if (!count($relatedIds)) {
+        if (count($relatedIds) === 0) {
             return 'FALSE';
         }
 
@@ -502,9 +489,7 @@ class Person extends VersionedRecord implements IPerson
 
     public function getGroupIDs()
     {
-        return array_map(function($Group) {
-            return $Group->ID;
-        }, $this->Groups);
+        return array_map(fn($Group) => $Group->ID, $this->Groups);
     }
 
     public static function getDeactivatedIds($forceRefresh = false)
@@ -524,7 +509,7 @@ class Person extends VersionedRecord implements IPerson
                 ',
                 [ self::$tableName ]
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             $deactivatedIds = [];
         }
 

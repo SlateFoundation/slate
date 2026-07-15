@@ -28,7 +28,7 @@ class LinkUtil
                 $newLinks = call_user_func($source, $context);
             } elseif ($source instanceof ActiveRecord) {
                 $newLinks = [$source];
-            } elseif (is_array($source) || $source instanceof \Traversable || $source instanceof \stdClass) {
+            } elseif (is_iterable($source) || $source instanceof \stdClass) {
                 $newLinks = $source;
             } else {
                 continue;
@@ -37,7 +37,7 @@ class LinkUtil
             $links = LinkUtil::mergeTree($links, LinkUtil::normalizeTree($newLinks, $context));
         }
 
-        uasort($links, [static::class, 'sortLinks']);
+        uasort($links, static::sortLinks(...));
 
         return $links;
     }
@@ -89,7 +89,7 @@ class LinkUtil
                 }
 
                 if (count($children)) {
-                    $value['_children'] = !empty($value['_children']) ? array_merge($value['_children'], $children) : $children;
+                    $value['_children'] = empty($value['_children']) ? $children : array_merge($value['_children'], $children);
                 }
             }
 
@@ -119,7 +119,7 @@ class LinkUtil
 
                 if (!is_string($subKey)) {
                     $children[] = $subValue;
-                } elseif ($subKey == '_children') {
+                } elseif ($subKey === '_children') {
                     $children = array_merge($children, $subValue);
                 } elseif ($subKey[0] != '_') {
                     $children[$subKey] = $subValue;
@@ -140,15 +140,11 @@ class LinkUtil
             // copy normalized children to link
             if (count($children)) {
                 $link['children'] = static::normalizeTree($children, $context);
-                uasort($link['children'], [static::class, 'sortLinks']);
+                uasort($link['children'], static::sortLinks(...));
             }
 
             // apply weight
-            if (empty($link['weight'])) {
-                $link['weight'] = 0;
-            } else {
-                $link['weight'] = (int)$link['weight'];
-            }
+            $link['weight'] = empty($link['weight']) ? 0 : (int)$link['weight'];
 
             // choose output key for link
             if (isset($link['id'])) {
@@ -170,19 +166,15 @@ class LinkUtil
     public static function mergeTree($existingTree, $inputTree)
     {
         foreach ($inputTree AS $key => $value) {
-            if (
-                is_string($key) &&
-                is_array($value) &&
-                !empty($existingTree[$key]) &&
-                is_array($existingTree[$key])
-            ) {
+            if (is_string($key) &&
+            is_array($value) &&
+            !empty($existingTree[$key]) &&
+            is_array($existingTree[$key])) {
                 $existingTree[$key] = static::mergeTree($existingTree[$key], $value);
+            } elseif (is_string($key)) {
+                $existingTree[$key] = $value;
             } else {
-                if (is_string($key)) {
-                    $existingTree[$key] = $value;
-                } else {
-                    $existingTree[] = $value;
-                }
+                $existingTree[] = $value;
             }
         }
 

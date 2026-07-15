@@ -6,7 +6,7 @@ class Relationship extends \VersionedRecord
 {
     public static $templates = [
         'mother' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'Person' => ['Gender' => 'Female']
             ,'InverseRelationship' => [
                 'Label' => [
@@ -17,7 +17,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'father' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'Person' => ['Gender' => 'Male']
             ,'InverseRelationship' => [
                 'Label' => [
@@ -28,7 +28,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'parent' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'InverseRelationship' => [
                 'Label' => [
                     'Male' => 'son'
@@ -38,7 +38,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'guardian' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'InverseRelationship' => [
                 'Label' => [
                     'Neutral' => 'ward'
@@ -133,7 +133,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'foster mother' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'Person' => ['Gender' => 'Female']
             ,'InverseRelationship' => [
                 'Label' => [
@@ -144,7 +144,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'foster father' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'Person' => ['Gender' => 'Male']
             ,'InverseRelationship' => [
                 'Label' => [
@@ -155,7 +155,7 @@ class Relationship extends \VersionedRecord
             ]
         ]
         ,'foster parent' => [
-            'Relationship' => ['Class' => 'Emergence\\People\\GuardianRelationship']
+            'Relationship' => ['Class' => \Emergence\People\GuardianRelationship::class]
             ,'InverseRelationship' => [
                 'Label' => [
                     'Male' => 'foster son'
@@ -338,9 +338,9 @@ class Relationship extends \VersionedRecord
     public static $collectionRoute = '/relationships';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__, 'Emergence\People\GuardianRelationship'];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class, \Emergence\People\GuardianRelationship::class];
 
     public static $fields = [
         'PersonID' => [
@@ -374,10 +374,10 @@ class Relationship extends \VersionedRecord
         ]
         ,'InverseRelationship' => [
             'type' => 'one-one'
-            ,'class' => __CLASS__
+            ,'class' => self::class
             ,'local' => 'PersonID'
             ,'foreign' => 'RelatedPersonID'
-            ,'conditions' => [__CLASS__, 'getInverseRelationshipConditions']
+            ,'conditions' => [self::class, 'getInverseRelationshipConditions']
         ]
     ];
 
@@ -419,11 +419,11 @@ class Relationship extends \VersionedRecord
         // call parent
         parent::validate($deep);
 
-        if (!$this->Person || !$this->Person->isA('Emergence\People\Person')) {
+        if (!$this->Person || !$this->Person->isA(\Emergence\People\Person::class)) {
             $this->_validator->addError('Person', 'Person is required');
         }
 
-        if (!$this->RelatedPerson || !$this->RelatedPerson->isA('Emergence\People\Person')) {
+        if (!$this->RelatedPerson || !$this->RelatedPerson->isA(\Emergence\People\Person::class)) {
             $this->_validator->addError('RelatedPerson', 'Related person must be a full name or match an existing person');
         }
 
@@ -501,9 +501,9 @@ class Relationship extends \VersionedRecord
         $relationships = [];
 
         foreach (static::$templates as $relationshipName => $relationshipData) {
-            $relationshipGender = !empty($relationshipData['Person']['Gender'])
-                ? $relationshipData['Person']['Gender']
-                : 'Neutral';
+            $relationshipGender = empty($relationshipData['Person']['Gender'])
+                ? 'Neutral'
+                : $relationshipData['Person']['Gender'];
 
             if (!empty($relationshipData['InverseRelationship'])
                 && in_array($relationship, $relationshipData['InverseRelationship']['Label'])

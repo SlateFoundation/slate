@@ -93,9 +93,7 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
         if (!$Session->hasAccountLevel('Staff')) {
             $wardIds = GuardianRelationship::getWardIds($Session->Person);
 
-            $students = array_filter($students, function ($Student) use ($Session, $wardIds) {
-                return $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds);
-            });
+            $students = array_filter($students, fn($Student) => $Student->ID == $Session->PersonID || in_array($Student->ID, $wardIds));
         }
 
         return $students;
@@ -249,6 +247,6 @@ abstract class RecordsRequestHandler extends \RecordsRequestHandler
             $_REQUEST[$fieldName] = false;
         }
 
-        return !!$_REQUEST[$fieldName];
+        return (bool) $_REQUEST[$fieldName];
     }
 }

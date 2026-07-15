@@ -15,12 +15,12 @@ class Network extends AbstractPoint
 
     public static $templates = [
         'Twitter' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'network' => 'twitter.com'
-            ,'pattern' => '/^[A-Za-z0-9_]{1,15}$/'
+            ,'pattern' => '/^\w{1,15}$/'
         ]
         ,'Facebook' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'network' => 'facebook.com'
             ,'pattern' => '/^(\d+|[a-zA-Z\d.]{5,})$/'
         ]
@@ -31,10 +31,10 @@ class Network extends AbstractPoint
 
     public function loadString($string)
     {
-        if (preg_match('/^(.+)\s+on\s+(\S+)$/', $string, $matches)) {
+        if (preg_match('/^(.+)\s+on\s+(\S+)$/', (string) $string, $matches)) {
             $username = $matches[1];
             $network = $matches[2];
-        } elseif (preg_match('/^([^\/]+)\/(.+)$/', $string, $matches)) {
+        } elseif (preg_match('/^([^\/]+)\/(.+)$/', (string) $string, $matches)) {
             $network = $matches[1];
             $username = $matches[2];
         }
@@ -53,13 +53,13 @@ class Network extends AbstractPoint
 
     public function toHTML()
     {
-        $networkClass = preg_replace('/[^a-zA-Z]/', '_', $this->network);
+        $networkClass = preg_replace('/[^a-zA-Z]/', '_', (string) $this->network);
 
         if (array_key_exists($this->network, static::$networkLinkFormats)) {
             $format = static::$networkLinkFormats[$this->network];
 
             if (is_string($format)) {
-                $url = sprintf($format, urlencode($this->username));
+                $url = sprintf($format, urlencode((string) $this->username));
             } elseif (is_callable($format)) {
                 $url = call_user_func($format, $this->username, $this->network);
             } else {
@@ -69,18 +69,17 @@ class Network extends AbstractPoint
             return sprintf(
                 '<a class="contact-link contact-network contact-network-composite network-%s" href="%s">%s on %s</a>'
                 ,$networkClass
-                ,htmlspecialchars($url)
-                ,htmlspecialchars($this->username)
-                ,htmlspecialchars($this->network)
-            );
-        } else {
-            return sprintf(
-                '<span class="contact-network-fuzzy network-%1$s">%2$s on <a class="contact-link contact-network contact-network-networkonly network-%1$s" href="http://%3$s">%3$s</a></span>'
-                ,$networkClass
-                ,htmlspecialchars($this->username)
-                ,htmlspecialchars($this->network)
+                ,htmlspecialchars((string) $url)
+                ,htmlspecialchars((string) $this->username)
+                ,htmlspecialchars((string) $this->network)
             );
         }
+        return sprintf(
+            '<span class="contact-network-fuzzy network-%1$s">%2$s on <a class="contact-link contact-network contact-network-networkonly network-%1$s" href="http://%3$s">%3$s</a></span>'
+            ,$networkClass
+            ,htmlspecialchars((string) $this->username)
+            ,htmlspecialchars((string) $this->network)
+        );
     }
 
     public function serialize()
@@ -90,7 +89,7 @@ class Network extends AbstractPoint
 
     public function unserialize($serialized)
     {
-        list($network, $username) = explode('/', $serialized, 2);
+        [$network, $username] = explode('/', $serialized, 2);
 
         if (!$network || !$username) {
             throw new \Exception('Could not unserialize network/username');

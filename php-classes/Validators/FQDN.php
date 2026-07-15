@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Validators;
 
 class FQDN implements IValidator
@@ -8,7 +10,7 @@ class FQDN implements IValidator
 
     public static function isInvalid($hostname, array $options = [])
     {
-        if (!preg_match('/(?=^.{4,255}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)/', $hostname)) {
+        if (!preg_match('/(?=^.{4,255}$)(^((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,63}$)/', (string) $hostname)) {
             return [self::HOSTNAME_INVALID => 'Hostname must be a fully-qualified domain name'];
         }
 

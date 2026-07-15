@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emergence\Locations;
 
 #use DB;
 
 class LocationsRequestHandler extends \RecordsRequestHandler
 {
-    public static $recordClass = 'Emergence\\Locations\\Location';
+    public static $recordClass = \Emergence\Locations\Location::class;
     public static $browseLimit = false;
     public static $browseOrder = ['Left' => 'ASC'];
 

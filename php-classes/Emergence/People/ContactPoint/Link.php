@@ -8,7 +8,7 @@ class Link extends AbstractPoint
 
     public static $templates = [
         'Website' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'placeholder' => 'http://example.com'
             ,'pattern' => '/^https?:\\/\\/.*$/i'
         ]
@@ -33,8 +33,8 @@ class Link extends AbstractPoint
     {
         return sprintf(
             '<a class="contact-link contact-url" href="%s">%s</a>'
-            ,htmlspecialchars($this->url)
-            ,htmlspecialchars($this->toString())
+            ,htmlspecialchars((string) $this->url)
+            ,htmlspecialchars((string) $this->toString())
         );
     }
 

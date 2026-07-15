@@ -8,8 +8,8 @@ class ValidationException extends \Exception
 
     public function __construct($message = null, $errors = [], $code = 0, Exception $previous = null)
     {
-        if (!count($errors)) {
-            $errors['invalid'] = $message ? $message : 'Value is invalid';
+        if (count($errors) === 0) {
+            $errors['invalid'] = $message ?: 'Value is invalid';
         }
 
         $this->_errors = $errors;

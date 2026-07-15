@@ -12,11 +12,11 @@ class Email extends AbstractPoint
 
     public static $templates = [
         'School Email' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'placeholder' => ''
         ]
         ,'Work Email' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'alternateLabels' => ['Personal Email']
             ,'placeholder' => 'username@example.com'
         ]
@@ -32,12 +32,12 @@ class Email extends AbstractPoint
 
     public function getLocalName()
     {
-        return strstr($this->address, '@', true);
+        return strstr((string) $this->address, '@', true);
     }
 
     public function getDomainName()
     {
-        return substr(strstr($this->address, '@'), 1);
+        return substr(strstr((string) $this->address, '@'), 1);
     }
 
     public function loadString($string)
@@ -58,7 +58,7 @@ class Email extends AbstractPoint
         $string = $this->address;
 
         if ($this->Person && $this->Person->FullName) {
-            $string = sprintf('"%s" <%s>', $this->Person->FullName, $string);
+            return sprintf('"%s" <%s>', $this->Person->FullName, $string);
         }
 
         return $string;
@@ -68,8 +68,8 @@ class Email extends AbstractPoint
     {
         return sprintf(
             '<a class="contact-link contact-email" href="mailto:%s">%s</a>'
-            ,urlencode($this->address)
-            ,htmlspecialchars($this->toString())
+            ,urlencode((string) $this->address)
+            ,htmlspecialchars((string) $this->toString())
         );
     }
 

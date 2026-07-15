@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Slate\Courses;
 
 class SectionTermData extends \VersionedRecord

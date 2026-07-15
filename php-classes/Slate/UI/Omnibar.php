@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Slate\UI;
 
 class Omnibar
@@ -9,6 +11,6 @@ class Omnibar
 
     public static function getLinks()
     {
-        return LinkUtil::mergeSources(static::$sources, get_called_class());
+        return LinkUtil::mergeSources(static::$sources, static::class);
     }
 }

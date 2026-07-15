@@ -80,10 +80,8 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             return static::throwNotFoundError('Person not found');
         }
 
-        if (!$Message && !empty($_REQUEST['messageID'])) {
-            if (!$Message = Message::getByID($_REQUEST['messageID'])) {
-                return static::throwNotFoundError('Message not found');
-            }
+        if (!$Message && !empty($_REQUEST['messageID']) && !$Message = Message::getByID($_REQUEST['messageID'])) {
+            return static::throwNotFoundError('Message not found');
         }
 
 
@@ -125,13 +123,11 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             );
 
             foreach ($studentInstructors AS $si) {
-                $sectionCodes = array_map(function($sectionID) {
-                    return Section::getByID($sectionID)->Course->Code;
-                }, explode(',', $si['sectionIDs']));
+                $sectionCodes = array_map(fn($sectionID) => Section::getByID($sectionID)->Course->Code, explode(',', $si['sectionIDs']));
 
                 $contacts[] = static::_getRecipientFromPerson(Person::getByID($si['instructorID']), [
                     'group' => 'Teachers',
-                    'label' => 'Teacher ('.join(', ',$sectionCodes).')',
+                    'label' => 'Teacher ('.implode(', ',$sectionCodes).')',
                     'recipients' => &$recipients
                 ]);
             }
@@ -192,7 +188,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
             $html = \TemplateResponse::getSource($className::$pdfTemplate, $responseData);
             if ($_REQUEST['export']) {
                 if ($query = $responseData['query']) {
-                    $query = explode(' ', $query);
+                    $query = explode(' ', (string) $query);
                     $personID = false;
 
                     for ($i = 0; $i < count($query) && !$personID; $i++) {
@@ -220,19 +216,18 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
 
                 exec($command);
 
-                $tokenName = strtolower($className).'DownloadToken';
+                $tokenName = strtolower((string) $className).'DownloadToken';
 
                 if (!empty($_REQUEST[$tokenName])) {
-                    setcookie($tokenName, $_REQUEST[$tokenName], time()+300, '/');
+                    setcookie($tokenName, $_REQUEST[$tokenName], ['expires' => time()+300, 'path' => '/']);
                 }
 
                 header('Content-Type: application/pdf');
                 header("Content-Disposition: attachment; filename=\"$filename.pdf\"");
                 readfile($filePath.'.pdf');
                 exit();
-            } else {
-                die($html);
             }
+            die($html);
         }
 
         return parent::respond($responseID, $responseData);
@@ -243,9 +238,9 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         $data = [
             'PersonID' => $Person->ID,
             'FullName' => $Person->FullName,
-            'Email' => !empty($options['email']) ? $options['email'] : ($Person->PrimaryEmail ? $Person->PrimaryEmail->toString() : null),
-            'Label' => !empty($options['label']) ? $options['label'] : null,
-            'RelationshipGroup' => !empty($options['group']) ? $options['group'] : null,
+            'Email' => empty($options['email']) ? ($Person->PrimaryEmail ? $Person->PrimaryEmail->toString() : null) : ($options['email']),
+            'Label' => empty($options['label']) ? null : $options['label'],
+            'RelationshipGroup' => empty($options['group']) ? null : $options['group'],
             'Status' => null
         ];
 

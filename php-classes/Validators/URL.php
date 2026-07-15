@@ -15,13 +15,13 @@ class URL implements IValidator
             'allowedSchemes' => static::$defaultAllowedSchemes
         ], $options);
 
-        $scheme = parse_url($url, PHP_URL_SCHEME);
+        $scheme = parse_url((string) $url, PHP_URL_SCHEME);
 
         if ($scheme === false) {
             return [URL_INVALID => 'Not a valid URL'];
         }
 
-        if (!in_array(strtolower($scheme), $options['allowedSchemes'])) {
+        if (!in_array(strtolower((string) $scheme), $options['allowedSchemes'])) {
             return [SCHEME_NOT_ALLOWED => 'URL must start with one of: '.implode(', ', $options['allowedSchemes'])];
         }
 

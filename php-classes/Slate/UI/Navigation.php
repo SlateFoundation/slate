@@ -15,6 +15,6 @@ class Navigation
             array_unshift($sources, static::$links);
         }
 
-        return LinkUtil::mergeSources($sources, get_called_class());
+        return LinkUtil::mergeSources($sources, static::class);
     }
 }

@@ -70,9 +70,7 @@ class Util
         }
 
         // sort by Last, First
-        usort($groups, function($g1, $g2) {
-            return strcasecmp($g1['student']->LastName.$g1['student']->FirstName, $g2['student']->LastName.$g2['student']->FirstName);
-        });
+        usort($groups, fn(array $g1, array $g2) => strcasecmp($g1['student']->LastName.$g1['student']->FirstName, $g2['student']->LastName.$g2['student']->FirstName));
 
         return $groups;
     }
@@ -95,9 +93,7 @@ class Util
         }
 
         // sort by term position
-        usort($groups, function($g1, $g2) {
-            return $g2['term']->Left - $g1['term']->Left;
-        });
+        usort($groups, fn(array $g1, array $g2) => $g2['term']->Left - $g1['term']->Left);
 
         return $groups;
     }

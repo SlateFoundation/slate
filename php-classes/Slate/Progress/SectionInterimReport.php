@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Slate\Progress;
 
 
@@ -14,8 +16,8 @@ class SectionInterimReport extends AbstractSectionTermReport
     public static $pluralNoun = 'section interim reports';
     public static $collectionRoute = '/progress/section-interim-reports';
 
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'Notes' => [

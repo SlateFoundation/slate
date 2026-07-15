@@ -33,7 +33,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*authors':
                 return static::handleAuthorsRequest();
             case '*emails':
@@ -108,8 +108,10 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 $recipientEmails = [];
                 foreach ($email['recipients'] AS $recipientId) {
                     $Person = Person::getByID($recipientId);
-
-                    if (!$Person || !$Person->PrimaryEmail) {
+                    if (!$Person) {
+                        continue;
+                    }
+                    if (!$Person->PrimaryEmail) {
                         continue;
                     }
 
@@ -120,7 +122,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 $recipientsCount += count($recipientEmails);
 
                 // skip if no recipients
-                if ($recipientsCount == 0) {
+                if ($recipientsCount === 0) {
                     continue;
                 }
 
@@ -130,7 +132,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 // add central achieve recipient
                 // TODO: make this configurable
                 if (Slate::$userEmailDomain) {
-                    if (count($emailData['students']) == 1) {
+                    if (count($emailData['students']) === 1) {
                         $recipientEmails[] = 'progress+'.$emailData['students'][0]->Username.'@'.Slate::$userEmailDomain;
                     } else {
                         $recipientEmails[] = 'progress@'.Slate::$userEmailDomain;
@@ -279,7 +281,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $reportIds = explode(',', $_REQUEST['reports']);
         }
 
-        $reportIds = array_filter($reportIds, 'is_numeric');
+        $reportIds = array_filter($reportIds, is_numeric(...));
 
         if (!count($reportIds)) {
             die('No reports specified');
@@ -359,7 +361,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 ]
             );
 
-            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) ? implode(',', $advisorStudentIds) : 'NULL').')';
+            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) > 0 ? implode(',', $advisorStudentIds) : 'NULL').')';
             $responseData['advisor'] = $Advisor;
         }
 
@@ -429,7 +431,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 return static::throwNotFoundError('Unable to load students list: ' . $e->getMessage());
             }
 
-            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
+            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? implode(',', $studentIds) : '0');
         }
 
 

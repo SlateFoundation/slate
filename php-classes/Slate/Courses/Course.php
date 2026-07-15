@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Slate\Courses;
 
 use HandleBehavior;
@@ -15,9 +17,9 @@ class Course extends \VersionedRecord
     public static $pluralNoun = 'courses';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
     public static $collectionRoute = '/courses';
 
     public static $fields = [

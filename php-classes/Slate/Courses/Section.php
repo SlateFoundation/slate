@@ -35,9 +35,9 @@ class Section extends \VersionedRecord
     public static $collectionRoute = '/sections';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $searchConditions = [
         'Code' => [
@@ -186,12 +186,12 @@ class Section extends \VersionedRecord
         ,'Mappings' => [
             'type' => 'context-children'
             ,'class' => Mapping::class
-            ,'contextClass' => __CLASS__
+            ,'contextClass' => self::class
         ]
         ,'BlogPosts' => [
             'type' => 'one-many'
             ,'class' => BlogPost::class
-            ,'contextClass' => __CLASS__
+            ,'contextClass' => self::class
             ,'foreign' => 'ContextID'
         ]
       ];
@@ -215,8 +215,8 @@ class Section extends \VersionedRecord
     ];
 
     public static $sorters = [
-        'CourseTitle' => [__CLASS__, 'sortCourseTitle'],
-        'CurrentTerm' => [__CLASS__, 'sortCurrentTerm']
+        'CourseTitle' => [self::class, 'sortCourseTitle'],
+        'CurrentTerm' => [self::class, 'sortCurrentTerm']
     ];
 
 
@@ -251,7 +251,7 @@ class Section extends \VersionedRecord
 
         // ASC = current, future, past
         // DESC = past, future, current
-        return 'FIELD('.$tableAlias.'.TermID, '.join(', ', $sortedTermIds).') '.$dir;
+        return 'FIELD('.$tableAlias.'.TermID, '.implode(', ', $sortedTermIds).') '.$dir;
     }
 
     public function save($deep = true)
@@ -282,7 +282,7 @@ class Section extends \VersionedRecord
         // append teachers list
         $teachers = $this->Teachers;
 
-        if (count($teachers)) {
+        if (count($teachers) > 0) {
             static $adviseesByTeacher = null;
             if (!$adviseesByTeacher) {
                 $adviseesByTeacher = DB::valuesTable(
@@ -294,7 +294,7 @@ class Section extends \VersionedRecord
 
             usort(
                 $teachers,
-                function (IPerson $Teacher1, IPerson $Teacher2) use ($adviseesByTeacher) {
+                function (IPerson $Teacher1, IPerson $Teacher2) use ($adviseesByTeacher): int {
                     $advisees1 = @$adviseesByTeacher[$Teacher1->ID];
                     $advisees2 = @$adviseesByTeacher[$Teacher2->ID];
 
@@ -312,9 +312,7 @@ class Section extends \VersionedRecord
             $title .= "\xC2\xA0\xC2\xB7 ".implode(
                 '/',
                 array_map(
-                    function (IPerson $Teacher) {
-                        return $Teacher->LastName;
-                    },
+                    fn(IPerson $Teacher) => $Teacher->LastName,
                     $teachers
                 )
             );
@@ -371,7 +369,7 @@ class Section extends \VersionedRecord
 
         try {
             return SectionParticipant::create($participantData, true);
-        } catch (DuplicateKeyException $e) {
+        } catch (DuplicateKeyException) {
             return SectionParticipant::getByWhere($participantData);
         }
     }
@@ -385,7 +383,7 @@ class Section extends \VersionedRecord
                     SectionParticipant::$tableName
                     ,$this->ID
                 ]);
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException) {
             return 0;
         }
     }
@@ -414,7 +412,7 @@ class Section extends \VersionedRecord
                 SectionParticipant::$tableName,
                 $this->ID
             ]);
-        } catch (\TableNotFoundException $e) {
+        } catch (\TableNotFoundException) {
             return [];
         }
     }
@@ -454,7 +452,7 @@ class Section extends \VersionedRecord
               'conditions' => [
                   'ID' => [
                       'operator' => 'IN',
-                      'values' => count($tagItemIDs) ? $tagItemIDs : '0'
+                      'values' => count($tagItemIDs) > 0 ? $tagItemIDs : '0'
                   ]
               ]
           ]);
@@ -465,9 +463,7 @@ class Section extends \VersionedRecord
 
     public function findLatestTeacherPost()
     {
-      $sectionTeacherIds = array_map(function($Teacher) {
-          return $Teacher->ID;
-      }, $this->ActiveTeachers);
+      $sectionTeacherIds = array_map(fn($Teacher) => $Teacher->ID, $this->ActiveTeachers);
 
       $latestTeacherPost = BlogPost::getAllPublishedByContextObject($this, array_merge_recursive([
           'conditions' => [
@@ -479,7 +475,7 @@ class Section extends \VersionedRecord
           'limit' => 1
       ]));
 
-      return count($latestTeacherPost) ? $latestTeacherPost[0] : null;
+      return count($latestTeacherPost) > 0 ? $latestTeacherPost[0] : null;
     }
 
     // search SQL generators
@@ -500,11 +496,11 @@ class Section extends \VersionedRecord
                     ,$Teacher->ID
                 ]
             );
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException) {
             return 'FALSE';
         }
 
-        if (!count($sectionIds)) {
+        if (count($sectionIds) === 0) {
             return 'FALSE';
         }
 
@@ -535,7 +531,7 @@ class Section extends \VersionedRecord
             ]
         );
 
-        if (!count($courseIds)) {
+        if (count($courseIds) === 0) {
             return 'FALSE';
         }
 
