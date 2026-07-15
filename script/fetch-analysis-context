@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+#
+# Fetch the framework layers Slate is hologit-composed against (see
+# .holo/sources/) into .analysis-context/ so static analysis of Slate's own
+# php-classes/ can resolve every inherited symbol without re-analyzing the
+# framework itself.
+#
+# The static-analysis configs (phpstan.neon, psalm.xml, rector.php) point at
+# these clones as scan/autoload-only directories: symbols are discovered
+# there, but findings are only ever reported for Slate's own code.
+#
+# Layers fetched (same refs .holo/sources/ pins):
+#   skeleton-v3      refs/heads/main      php-classes + composer vendor
+#                                         (emergence/php-core dev-develop etc.)
+#   layer-events     refs/heads/releases/v1
+#   emergence-saml2  refs/tags/v1.0.0
+#   dwoo             1.2 (EmergencePlatform fork) -- template engine classes;
+#                    a skeleton-v3 holosource, not a composer package
+#
+# Hologit composition is a path overlay where Slate's files replace any
+# same-path framework file, so any framework file that Slate overrides is
+# deleted from the context to avoid duplicate class definitions.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+CONTEXT="${ROOT}/.analysis-context"
+
+fetch() {
+    local name="$1" url="$2" ref="$3"
+    local dest="${CONTEXT}/${name}"
+    if [ -d "${dest}/.git" ]; then
+        echo "--- ${name} already fetched"
+        return
+    fi
+    echo "--- fetching ${name} @ ${ref}"
+    git clone --quiet --depth 1 --branch "${ref}" "${url}" "${dest}"
+}
+
+mkdir -p "${CONTEXT}"
+fetch skeleton-v3 https://github.com/EmergencePlatform/skeleton-v3.git main
+fetch layer-events https://github.com/EmergencePlatform/layer-events.git releases/v1
+fetch emergence-saml2 https://github.com/JarvusInnovations/emergence-saml2.git v1.0.0
+fetch dwoo https://github.com/EmergencePlatform/dwoo.git 1.2
+
+# composer vendor tree inside skeleton-v3 supplies emergence/php-core
+# (the ActiveRecord kernel, Site, DB, Cache...) and its dependencies
+if [ ! -d "${CONTEXT}/skeleton-v3/vendor" ]; then
+    echo "--- composer install (skeleton-v3 -> emergence/php-core + deps)"
+    composer install \
+        --working-dir "${CONTEXT}/skeleton-v3" \
+        --prefer-dist --no-progress --no-interaction --ignore-platform-reqs
+fi
+
+# remove framework files that Slate's own layer overrides in composition
+# (Slate's copy wins; keeping both would define the same class twice)
+overridden=0
+while IFS= read -r -d '' file; do
+    for layer in skeleton-v3 layer-events emergence-saml2; do
+        if [ -f "${CONTEXT}/${layer}/${file}" ]; then
+            rm "${CONTEXT}/${layer}/${file}"
+            overridden=$((overridden + 1))
+        fi
+    done
+done < <(cd "${ROOT}" && find php-classes -name '*.php' -print0)
+
+echo "analysis context ready in .analysis-context/ (${overridden} framework files overridden by Slate removed)"

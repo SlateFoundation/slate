@@ -1,0 +1,17 @@
+{
+    "name": "slatefoundation/slate",
+    "description": "Slate product layer for the Emergence platform (hologit-composed on emergence/skeleton-v3); this manifest carries the static-analysis toolchain only and is never projected into composed sites",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3"
+    },
+    "require-dev": {
+        "rector/rector": "^2.5",
+        "phpstan/phpstan": "^2.2",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "vimeo/psalm": "^6.16",
+        "friendsofphp/php-cs-fixer": "^3.95"
+    }
+}
