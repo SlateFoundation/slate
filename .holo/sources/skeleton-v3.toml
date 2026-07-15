@@ -3,4 +3,4 @@
 # refs/heads/main.
 [holosource]
 url = "https://github.com/EmergencePlatform/skeleton-v3.git"
-ref = "refs/heads/php8-holo-scaffold"
+ref = "refs/heads/main"
