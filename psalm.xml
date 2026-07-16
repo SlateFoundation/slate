@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="7"
+    resolveFromConfigFile="true"
+    errorBaseline="psalm-baseline.xml"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="php-classes"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <!-- framework layers Slate is hologit-composed against; run
+         script/fetch-analysis-context to populate. Scanned for symbol
+         resolution only, never analyzed or reported on. -->
+    <extraFiles>
+        <directory name=".analysis-context/skeleton-v3/php-classes"/>
+        <directory name=".analysis-context/skeleton-v3/vendor/emergence/php-core/src"/>
+        <directory name=".analysis-context/skeleton-v3/vendor/emergence/php-core/src-compat"/>
+        <directory name=".analysis-context/layer-events/php-classes"/>
+        <directory name=".analysis-context/emergence-saml2/php-classes"/>
+        <directory name=".analysis-context/dwoo/lib"/>
+    </extraFiles>
+</psalm>

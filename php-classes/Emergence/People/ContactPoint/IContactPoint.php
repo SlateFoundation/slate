@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Emergence\People\ContactPoint;
 
 interface IContactPoint extends \Serializable

@@ -2,7 +2,8 @@
 
 namespace Emergence\Locations;
 
-use HandleBehavior, NestingBehavior;
+use HandleBehavior;
+use NestingBehavior;
 
 class Location extends \VersionedRecord
 {
@@ -16,9 +17,9 @@ class Location extends \VersionedRecord
     public static $collectionRoute = '/locations';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'Title' => [
@@ -55,7 +56,7 @@ class Location extends \VersionedRecord
     public static $relationships = [
         'Parent' => [
             'type' => 'one-one'
-            ,'class' => __CLASS__
+            ,'class' => self::class
         ]
     ];
 
@@ -70,12 +71,11 @@ class Location extends \VersionedRecord
 
         if ($Location = static::getByHandle($handle)) {
             return $Location;
-        } else {
-            return static::create(array_merge($defaults, [
-                'Title' => empty($defaults['Title']) ? $handle : $defaults['Title'],
-                'Handle' => $handle
-            ]), $save);
         }
+        return static::create(array_merge($defaults, [
+            'Title' => empty($defaults['Title']) ? $handle : $defaults['Title'],
+            'Handle' => $handle
+        ]), $save);
     }
 
     public function validate($deep = true)

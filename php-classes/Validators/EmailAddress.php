@@ -4,10 +4,10 @@ namespace Validators;
 
 class EmailAddress implements IValidator
 {
-    const PARTS_MISSING = 'parts_missing';
-    const USERNAME_INVALID = 'username_invalid';
-    const DOMAIN_INVALID = 'domain_invalid';
-    const DOMAIN_BLACKLISTED = 'domain_blacklisted';
+    public const PARTS_MISSING = 'parts_missing';
+    public const USERNAME_INVALID = 'username_invalid';
+    public const DOMAIN_INVALID = 'domain_invalid';
+    public const DOMAIN_BLACKLISTED = 'domain_blacklisted';
 
     public static function isInvalid($email, array $options = [])
     {
@@ -15,13 +15,13 @@ class EmailAddress implements IValidator
             'allowBlacklist' => false
         ], $options);
 
-        $emailParts = explode('@', $email, 2);
+        $emailParts = explode('@', (string) $email, 2);
 
-        if (count($emailParts) != 2) {
+        if (count($emailParts) !== 2) {
             return [self::PARTS_MISSING => 'Email address must be in format username@domain'];
         }
 
-        list($username, $domain) = $emailParts;
+        [$username, $domain] = $emailParts;
 
         if (!preg_match('/^[_a-zA-Z0-9-+]+(\.[_+a-zA-Z0-9-]+)*$/', $username)) {
             return [self::USERNAME_INVALID => 'Username portion of address is invalid'];

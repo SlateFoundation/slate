@@ -131,7 +131,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
         // pre-flight loop over people to ensure they're all valid
         $people = [];
-        foreach ($requestData['people'] AS $invitation) {
+        foreach ($requestData['people'] as $invitation) {
             if (is_numeric($invitation)) {
                 $invitation = [
                     'PersonID' => $invitation,
@@ -154,7 +154,7 @@ class InvitationsRequestHandler extends \RequestHandler
         }
 
         // create and send invitations
-        foreach ($people AS $invitationData) {
+        foreach ($people as $invitationData) {
             // try to find an existing pending invitation first
             $Invitation = $invitationClass::getByWhere([
                 'RecipientID' => $invitationData['Recipient']->ID,
@@ -256,9 +256,7 @@ class InvitationsRequestHandler extends \RequestHandler
 
         return str_ireplace(
             array_map(
-                function($key) {
-                    return '{'.$key.'}';
-                },
+                fn (int|string $key) => '{'.$key.'}',
                 array_keys($messageVariables)
             ),
             array_values($messageVariables),
@@ -275,7 +273,8 @@ class InvitationsRequestHandler extends \RequestHandler
         }
 
         $hostname = Site::getConfig('primary_hostname');
-        $messageVariables = array_merge($messageVariables, [
+
+        return array_merge($messageVariables, [
             'schoolName' => Slate::$schoolName,
             'schoolAbbr' => Slate::$schoolAbbr,
             'siteSlogan' => Slate::$siteSlogan,
@@ -286,7 +285,5 @@ class InvitationsRequestHandler extends \RequestHandler
             'websiteHostname' => $hostname,
             'websiteLink' => '<a href="http://'.$hostname.'">'.$hostname.'</a>'
         ]);
-
-        return $messageVariables;
     }
 }

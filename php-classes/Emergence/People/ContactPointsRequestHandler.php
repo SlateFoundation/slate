@@ -5,7 +5,7 @@ namespace Emergence\People;
 class ContactPointsRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler configuration
-    public static $recordClass = 'Emergence\People\ContactPoint\AbstractPoint';
+    public static $recordClass = \Emergence\People\ContactPoint\AbstractPoint::class;
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
@@ -14,7 +14,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*templates':
                 return static::handleTemplatesRequest();
             default:
@@ -26,13 +26,11 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
     {
         $templates = ContactPoint\AbstractPoint::getTemplates();
 
-        foreach ($templates AS $label => &$options) {
+        foreach ($templates as $label => &$options) {
             $options['label'] = $label;
         }
 
-        usort($templates, function($a, $b) {
-            return strcmp($a['class'], $b['class']);
-        });
+        usort($templates, fn (array $a, array $b) => strcmp($a['class'], $b['class']));
 
         return static::respond('templates', [
             'data' => array_values($templates)
@@ -48,9 +46,7 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
                 return static::throwNotFoundError('relatedTo person not found');
             }
 
-            $relatedIDs = array_map(function($Relationship) {
-                return $Relationship->RelatedPersonID;
-            }, $Person->Relationships);
+            $relatedIDs = array_map(fn ($Relationship) => $Relationship->RelatedPersonID, $Person->Relationships);
 
             $relatedIDs[] = $Person->ID;
 
@@ -61,10 +57,10 @@ class ContactPointsRequestHandler extends \RecordsRequestHandler
         $pointClasses = ContactPoint\AbstractPoint::getStaticSubclasses();
 
         // initialize all classes before sorting to prevent modifying during sort due to initialization
-        $pointClasses = array_filter($pointClasses, 'class_exists');
+        $pointClasses = array_filter($pointClasses, class_exists(...));
 
         // sort classes
-        usort($pointClasses, function($a, $b) {
+        usort($pointClasses, function ($a, $b): int {
             $aWeight = $a::$sortWeight;
             $bWeight = $b::$sortWeight;
 

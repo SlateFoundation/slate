@@ -4,8 +4,8 @@ namespace Validators;
 
 class URL implements IValidator
 {
-    const URL_INVALID = 'url_invalid';
-    const SCHEME_NOT_ALLOWED = 'scheme_not_allowed';
+    public const URL_INVALID = 'url_invalid';
+    public const SCHEME_NOT_ALLOWED = 'scheme_not_allowed';
 
     public static $defaultAllowedSchemes = ['http', 'https'];
 
@@ -15,14 +15,14 @@ class URL implements IValidator
             'allowedSchemes' => static::$defaultAllowedSchemes
         ], $options);
 
-        $scheme = parse_url($url, PHP_URL_SCHEME);
+        $scheme = parse_url((string) $url, PHP_URL_SCHEME);
 
         if ($scheme === false) {
-            return [URL_INVALID => 'Not a valid URL'];
+            return [self::URL_INVALID => 'Not a valid URL'];
         }
 
-        if (!in_array(strtolower($scheme), $options['allowedSchemes'])) {
-            return [SCHEME_NOT_ALLOWED => 'URL must start with one of: '.implode(', ', $options['allowedSchemes'])];
+        if (!in_array(strtolower((string) $scheme), $options['allowedSchemes'])) {
+            return [self::SCHEME_NOT_ALLOWED => 'URL must start with one of: '.implode(', ', $options['allowedSchemes'])];
         }
 
         return false;

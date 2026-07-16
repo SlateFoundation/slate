@@ -1,0 +1,23 @@
+includes:
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    phpVersion: 80300
+    paths:
+        - php-classes
+    # framework layers Slate is hologit-composed against; run
+    # script/fetch-analysis-context to populate. Symbols only -- these
+    # directories are never analyzed or reported on (they carry their own
+    # quality gates).
+    scanDirectories:
+        - .analysis-context/skeleton-v3/php-classes
+        - .analysis-context/skeleton-v3/vendor/emergence/php-core/src
+        - .analysis-context/skeleton-v3/vendor/emergence/php-core/src-compat
+        - .analysis-context/skeleton-v3/vendor/psr/log/Psr
+        - .analysis-context/layer-events/php-classes
+        - .analysis-context/emergence-saml2/php-classes
+        - .analysis-context/dwoo/lib
+    treatPhpDocTypesAsCertain: false

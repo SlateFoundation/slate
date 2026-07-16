@@ -49,7 +49,7 @@ class Department extends \VersionedRecord
     public static $relationships = [
         'Courses' => [
             'type' => 'one-many'
-            ,'class' => 'Slate\\Courses\\Course'
+            ,'class' => \Slate\Courses\Course::class
             ,'foreign' => 'DepartmentID'
         ]
     ];
@@ -59,11 +59,10 @@ class Department extends \VersionedRecord
     {
         if ($Department = static::getByField('Title', $title)) {
             return $Department;
-        } else {
-            return static::create([
-                'Title' => $title
-            ], $save);
         }
+        return static::create([
+            'Title' => $title
+        ], $save);
     }
 
     public function validate($deep = true)

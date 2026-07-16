@@ -5,7 +5,6 @@ namespace Slate\Progress;
 use Slate\Term;
 use Emergence\People\IPerson;
 
-
 trait StudentTermReportTrait
 {
     public function getTerm()

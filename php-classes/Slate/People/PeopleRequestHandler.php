@@ -6,7 +6,6 @@ use ActiveRecord;
 use Emergence\People\Person;
 use Emergence\People\GuardianRelationship;
 use Emergence\People\Groups\Group;
-
 use Slate\Term;
 use Slate\TermsRequestHandler;
 use Slate\RecordsRequestHandler as SlateRecordsRequestHandler;
@@ -25,7 +24,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*advisors':
                 $GLOBALS['Session']->requireAuthentication();
 
@@ -73,9 +72,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
         if (is_array($students = SlateRecordsRequestHandler::getRequestedStudents('list'))) {
             $conditions['ID'] = [
-                'values' => array_map(function ($Student) {
-                    return $Student->ID;
-                }, $students)
+                'values' => array_map(fn ($Student) => $Student->ID, $students)
             ];
         }
 
@@ -122,10 +119,8 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                 if (!$Term = Term::getClosest()) {
                     return static::throwInvalidRequestError('no current term found');
                 }
-            } else {
-                if (!$Term = TermsRequestHandler::getRecordByHandle($_GET['term'])) {
-                    return static::throwNotFoundError('requested term not found');
-                }
+            } elseif (!$Term = TermsRequestHandler::getRecordByHandle($_GET['term'])) {
+                return static::throwNotFoundError('requested term not found');
             }
 
             $sections = Section::getAllByWhere([
@@ -199,7 +194,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
     public static function handleRecordRequest(ActiveRecord $Person, $action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case 'courses':
                 return static::handleCoursesRequest($Person);
             default:
@@ -211,11 +206,7 @@ class PeopleRequestHandler extends \PeopleRequestHandler
     {
         $GLOBALS['Session']->requireAccountLevel('Staff');
 
-        if (!empty($_REQUEST['termID'])) {
-            $Term = Term::getByID($_REQUEST['termID']);
-        } else {
-            $Term = Term::getClosest();
-        }
+        $Term = empty($_REQUEST['termID']) ? Term::getClosest() : Term::getByID($_REQUEST['termID']);
 
         if (!$Term) {
             return static::throwNotFoundError('Term not found');
@@ -223,8 +214,8 @@ class PeopleRequestHandler extends \PeopleRequestHandler
 
         return static::respond('sections', [
             'data' => Section::getAllByQuery(
-                'SELECT sections.* FROM `%s` participants INNER JOIN `%s` sections ON (participants.CourseSectionID = sections.ID) WHERE sections.Status = "Live" AND participants.PersonID = %u AND sections.TermID IN (%s)'
-                ,[
+                'SELECT sections.* FROM `%s` participants INNER JOIN `%s` sections ON (participants.CourseSectionID = sections.ID) WHERE sections.Status = "Live" AND participants.PersonID = %u AND sections.TermID IN (%s)',
+                [
                     SectionParticipant::$tableName
                     ,Section::$tableName
                     ,$Person->ID

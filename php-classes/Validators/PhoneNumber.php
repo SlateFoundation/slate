@@ -4,9 +4,9 @@ namespace Validators;
 
 class PhoneNumber implements IValidator
 {
-    const FICTITIOUS = 'fictitious';
-    const LENGTH_NOT_10 = 'length_not_10';
-    const LENGTH_OUT_OF_RANGE = 'length_out_of_range';
+    public const FICTITIOUS = 'fictitious';
+    public const LENGTH_NOT_10 = 'length_not_10';
+    public const LENGTH_OUT_OF_RANGE = 'length_out_of_range';
 
 
     public static function isInvalid($phone, array $options = [])
@@ -22,24 +22,24 @@ class PhoneNumber implements IValidator
         }
 
         //Strip all non-numeric characters
-        $phone = preg_replace('/\D/', '', $phone);
+        $phone = preg_replace('/\D/', '', (string) $phone);
 
         // validate based on counttry
         switch ($options['country']) {
             case 'US':
             case 'CA':
                 // strip leading 1
-                if ((strlen($phone) == 11) && ($phone[0] == '1')) {
-                    $phone = substr($phone, 1);
+                if ((strlen((string) $phone) === 11) && ($phone[0] == '1')) {
+                    $phone = substr((string) $phone, 1);
                 }
 
-                if (strlen($phone) != 10) {
+                if (strlen((string) $phone) !== 10) {
                     return [self::LENGTH_NOT_10 => 'US/CA phone number must be 10 digits'];
                 }
 
                 break;
             default:
-                if (strlen($phone) < 8 || strlen($phone) > 15) {
+                if (strlen((string) $phone) < 8 || strlen((string) $phone) > 15) {
                     return [self::LENGTH_OUT_OF_RANGE => 'Phone number must be between 8 and 15 digits'];
                 }
 
@@ -47,20 +47,20 @@ class PhoneNumber implements IValidator
         }
 
         // if number is 10 digits, assume it is north american and check for fictitous numbers
-        if (strlen($phone) == 10) {
-            $area = substr($phone, 0, 3);
-            $prefix = substr($phone, 3, 3);
-            $line = substr($phone, 6);
+        if (strlen((string) $phone) === 10) {
+            $area = substr((string) $phone, 0, 3);
+            $prefix = substr((string) $phone, 3, 3);
+            $line = substr((string) $phone, 6);
 
             if (!$options['allowFictitious']) {
                 $fictitious = false;
 
-                if ($area == '800') {
-                    $fictitious = ($prefix == '555' && $line == '0199');
+                if ($area === '800') {
+                    $fictitious = ($prefix === '555' && $line === '0199');
                 } elseif (in_array($area, ['844','855','866','877','888'])) {
-                    $fictitious = ($prefix == '555');
+                    $fictitious = ($prefix === '555');
                 } else {
-                    $fictitious = ($prefix == '555' && substr($line, 0, 2) == '01');
+                    $fictitious = ($prefix === '555' && str_starts_with($line, '01'));
                 }
 
                 if ($fictitious) {

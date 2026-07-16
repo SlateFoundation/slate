@@ -12,9 +12,9 @@ class SectionParticipant extends \ActiveRecord
     public static $updateOnDuplicateKey = true;
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'CourseSectionID' => [
@@ -53,7 +53,7 @@ class SectionParticipant extends \ActiveRecord
     public static $relationships = [
         'Section' => [
             'type' => 'one-one'
-            ,'class' => 'Slate\\Courses\\Section'
+            ,'class' => \Slate\Courses\Section::class
             ,'local' => 'CourseSectionID'
         ]
         ,'Person' => [
@@ -90,8 +90,8 @@ class SectionParticipant extends \ActiveRecord
         }
 
         // treat "empty" time component as end of day
-        if (date('H:i:s', $time) == '00:00:00') {
-            $time += 60*60*24-1;
+        if (date('H:i:s', $time) === '00:00:00') {
+            $time += 60 * 60 * 24 - 1;
         }
 
         return $time;

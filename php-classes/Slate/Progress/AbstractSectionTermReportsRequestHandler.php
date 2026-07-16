@@ -6,13 +6,11 @@ use Slate;
 use Slate\Term;
 use Slate\Courses\Section;
 use Slate\People\Student;
-
 use DB;
 use JSON;
 use Emergence\People\Person;
 use Emergence\People\PeopleRequestHandler;
 use Emergence\Mailer\Mailer;
-
 
 abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestHandler
 {
@@ -33,7 +31,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case '*authors':
                 return static::handleAuthorsRequest();
             case '*emails':
@@ -93,11 +91,11 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $emailsCount = 0;
             $recipientsCount = 0;
 
-            foreach ($emails AS $email) {
+            foreach ($emails as $email) {
 
                 // compile reports
                 $reports = [];
-                foreach ($email['reports'] AS $reportId) {
+                foreach ($email['reports'] as $reportId) {
                     $Report = $recordClass::getByID($reportId);
 
                     if ($Report->Status == 'published') {
@@ -106,10 +104,12 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 }
 
                 $recipientEmails = [];
-                foreach ($email['recipients'] AS $recipientId) {
+                foreach ($email['recipients'] as $recipientId) {
                     $Person = Person::getByID($recipientId);
-
-                    if (!$Person || !$Person->PrimaryEmail) {
+                    if (!$Person) {
+                        continue;
+                    }
+                    if (!$Person->PrimaryEmail) {
                         continue;
                     }
 
@@ -120,7 +120,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 $recipientsCount += count($recipientEmails);
 
                 // skip if no recipients
-                if ($recipientsCount == 0) {
+                if ($recipientsCount === 0) {
                     continue;
                 }
 
@@ -130,7 +130,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 // add central achieve recipient
                 // TODO: make this configurable
                 if (Slate::$userEmailDomain) {
-                    if (count($emailData['students']) == 1) {
+                    if (count($emailData['students']) === 1) {
                         $recipientEmails[] = 'progress+'.$emailData['students'][0]->Username.'@'.Slate::$userEmailDomain;
                     } else {
                         $recipientEmails[] = 'progress@'.Slate::$userEmailDomain;
@@ -194,7 +194,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
         // group interims by student
         $students = [];
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             if (!isset($students[$Report->StudentID])) {
                 $students[$Report->StudentID] = [
                     'student' => $Report->Student,
@@ -208,7 +208,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
 
 
         // collect recipients
-        foreach ($students AS &$student) {
+        foreach ($students as &$student) {
             $sentRecipients = $recipientClass::getAllByWhere([
                 'StudentID' => $student['student']->ID,
                 'TermID' => $conditions['TermID']
@@ -240,7 +240,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             }
 
             if (in_array('guardians', $recipients)) {
-                foreach ($student['student']->GuardianRelationships AS $GuardianRelationship) {
+                foreach ($student['student']->GuardianRelationships as $GuardianRelationship) {
                     if (!$GuardianRelationship->RelatedPerson->Email) {
                         continue;
                     }
@@ -279,7 +279,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $reportIds = explode(',', $_REQUEST['reports']);
         }
 
-        $reportIds = array_filter($reportIds, 'is_numeric');
+        $reportIds = array_filter($reportIds, is_numeric(...));
 
         if (!count($reportIds)) {
             die('No reports specified');
@@ -310,7 +310,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
         $terms = [];
         $students = [];
 
-        foreach ($reports AS $Report) {
+        foreach ($reports as $Report) {
             if (!in_array($Report->Term, $terms)) {
                 $terms[] = $Report->Term;
             }
@@ -359,7 +359,7 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                 ]
             );
 
-            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) ? implode(',', $advisorStudentIds) : 'NULL').')';
+            $conditions[] = 'StudentID IN ('.(count($advisorStudentIds) > 0 ? implode(',', $advisorStudentIds) : 'NULL').')';
             $responseData['advisor'] = $Advisor;
         }
 
@@ -422,14 +422,14 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
             $studentIds = [];
 
             try {
-                foreach (Student::getAllByListIdentifier($_REQUEST['students']) AS $Student) {
+                foreach (Student::getAllByListIdentifier($_REQUEST['students']) as $Student) {
                     $studentIds[] = $Student->ID;
                 }
             } catch (\Exception $e) {
                 return static::throwNotFoundError('Unable to load students list: ' . $e->getMessage());
             }
 
-            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? join(',', $studentIds) : '0');
+            $conditions[] = sprintf('StudentID IN (%s)', count($studentIds) ? implode(',', $studentIds) : '0');
         }
 
 

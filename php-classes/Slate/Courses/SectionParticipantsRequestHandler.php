@@ -22,9 +22,7 @@ class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
             $conditions['CourseSectionID'] = $Section->ID;
             $filterObjects['Section'] = $Section;
         } elseif ($Term = static::getRequestedTerm()) {
-            $courseSectionIds = array_map(function($section) {
-                return $section->ID;
-            }, Section::getAllByWhere([
+            $courseSectionIds = array_map(fn ($section) => $section->ID, Section::getAllByWhere([
                 'TermID' => [
                     'operator' => 'IN',
                     'values' => $Term->getContainedTermIDs()
@@ -57,7 +55,7 @@ class SectionParticipantsRequestHandler extends \Slate\RecordsRequestHandler
             $disabledPersonIds = Person::getDeactivatedIds();
 
             if (!empty($disabledPersonIds)) {
-                $conditions[] = 'PersonID NOT IN ('.implode(",",$disabledPersonIds).')';
+                $conditions[] = 'PersonID NOT IN ('.implode(",", $disabledPersonIds).')';
             }
         }
 

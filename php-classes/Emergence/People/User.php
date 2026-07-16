@@ -6,7 +6,6 @@ use DB;
 use HandleBehavior;
 use Emergence\Logger;
 
-
 class User extends Person implements IUser
 {
     public static $minPasswordLength = 5;
@@ -16,8 +15,8 @@ class User extends Person implements IUser
 
     public static $classLabel = 'User';
 
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
     public static $singularNoun = 'user';
     public static $pluralNoun = 'users';
 
@@ -73,7 +72,7 @@ class User extends Person implements IUser
     public static function __classLoaded()
     {
         // merge User classes into valid Person classes, but not again when child classes are loaded
-        if (get_called_class() == __CLASS__) {
+        if (static::class == self::class) {
             Person::$subClasses = static::$subClasses = array_merge(Person::$subClasses, static::$subClasses);
             self::$validators['AccountLevel']['choices'] = self::$fields['AccountLevel']['values'];
         }
@@ -147,11 +146,10 @@ class User extends Person implements IUser
     {
         $User = static::getByUsername($username);
 
-        if ($User && is_a($User, __CLASS__) && $User->hasAccountLevel('User') && $User->verifyPassword($password)) {
+        if ($User && is_a($User, self::class) && $User->hasAccountLevel('User') && $User->verifyPassword($password)) {
             return $User;
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static function getByFullName($firstName, $lastName, array $conditions = ['AccountLevel' => ['operator' => '!=', 'value' => 'Disabled']])
@@ -176,7 +174,7 @@ class User extends Person implements IUser
         }
 
         // try configured fallback user finders
-        foreach (static::$fallbackUserFinders AS $index => $fallbackUserFinder) {
+        foreach (static::$fallbackUserFinders as $index => $fallbackUserFinder) {
             if (!$fallbackUserFinder) {
                 continue;
             }
@@ -197,15 +195,14 @@ class User extends Person implements IUser
     public function verifyPassword($password)
     {
         if ($this->Password[0] == '$') {
-            return password_verify($password, $this->Password);
-        } elseif (SHA1($password) == $this->Password) {
+            return password_verify((string) $password, $this->Password);
+        }
+        if (SHA1((string) $password) == $this->Password) {
             $wasDirty = $this->isDirty;
             $this->setClearPassword($password);
-
             if (!$wasDirty) {
                 $this->save();
             }
-
             return true;
         }
 
@@ -214,7 +211,7 @@ class User extends Person implements IUser
 
     public function setClearPassword($password)
     {
-        $this->Password = password_hash($password, PASSWORD_DEFAULT);
+        $this->Password = password_hash((string) $password, PASSWORD_DEFAULT);
         $this->TemporaryPassword = null;
 
         if (is_callable(static::$onPasswordSet)) {
@@ -235,9 +232,8 @@ class User extends Person implements IUser
 
         if ($accountLevelIndex === false) {
             return false;
-        } else {
-            return ($this->AccountLevelNumeric >= $accountLevelIndex);
         }
+        return ($this->AccountLevelNumeric >= $accountLevelIndex);
     }
 
     public function getUniqueUsername($options = [])
@@ -269,12 +265,12 @@ class User extends Person implements IUser
                 if (is_callable($options['format'])) {
                     $username = call_user_func($options['format'], $this, $options);
                 } else {
-                    throw new Exception('Unknown format format.');
+                    throw new \Exception('Unknown format format.');
                 }
         }
 
         // use HandleBehavior to transform characters and guarantee uniqueness
-        return HandleBehavior::getUniqueHandle(get_called_class(), $username, $options);
+        return HandleBehavior::getUniqueHandle(static::class, $username, $options);
     }
 
     protected static function _getAccountLevelIndex($accountLevel)
@@ -287,8 +283,8 @@ class User extends Person implements IUser
         $chars = ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's' ,'t', 'u', 'v', 'w', 'x', 'y', 'z'];
         $password = '';
 
-        for ($i=0; $i<$length; $i++) {
-            $password .= $chars[mt_rand(0, count($chars)-1)];
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $chars[mt_rand(0, count($chars) - 1)];
         }
 
         return $password;

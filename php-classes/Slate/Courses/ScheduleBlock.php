@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Slate\Courses;
 
 class ScheduleBlock extends \ActiveRecord
@@ -10,9 +12,9 @@ class ScheduleBlock extends \ActiveRecord
     public static $pluralNoun = 'course schedule blocks';
 
     // required for shared-table subclassing support
-    public static $rootClass = __CLASS__;
-    public static $defaultClass = __CLASS__;
-    public static $subClasses = [__CLASS__];
+    public static $rootClass = self::class;
+    public static $defaultClass = self::class;
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'ScheduleID' => [
@@ -48,7 +50,7 @@ class ScheduleBlock extends \ActiveRecord
     public static $relationships = [
         'Schedule' => [
             'type' => 'one-one'
-            ,'class' => 'Slate\\Courses\\Schedule'
+            ,'class' => \Slate\Courses\Schedule::class
         ]
     ];
 }

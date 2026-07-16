@@ -12,7 +12,7 @@ class Postal extends AbstractPoint
 
     public static $templates = [
         'Home Address' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'alternateLabels' => ['Work Address']
             ,'placeholder' => '123 Street Rd, Unit 123, Exampletown, PA 12345'
         ]
@@ -28,7 +28,7 @@ class Postal extends AbstractPoint
 
     public function loadString($string)
     {
-        $segments = preg_split('/\s*[,\r\n]+\s*/', trim($string));
+        $segments = preg_split('/\s*[,\r\n]+\s*/', trim((string) $string));
 
         $this->name = null;
         $this->number = null;
@@ -39,7 +39,7 @@ class Postal extends AbstractPoint
         $this->postal = null;
 
         // TODO: use an online API if available for address normalization
-        foreach ($segments AS $segment) {
+        foreach ($segments as $segment) {
             if (!$this->number && preg_match('/^(\d+)\s+(.*)/', $segment, $matches)) {
                 $this->number = $matches[1];
                 $this->street = $matches[2];
@@ -62,9 +62,9 @@ class Postal extends AbstractPoint
             }
         }
 
-#        if (!$this->number || !$this->street || !($this->postal || ($this->city && $this->state))) {
-#            throw new \Emergence\Exceptions\ValidationException('Could not parse sufficient address data from string');
-#        }
+        #        if (!$this->number || !$this->street || !($this->postal || ($this->city && $this->state))) {
+        #            throw new \Emergence\Exceptions\ValidationException('Could not parse sufficient address data from string');
+        #        }
 
         // update serialization
         $this->Data = $this->serialize();
@@ -112,15 +112,15 @@ class Postal extends AbstractPoint
     public function toHTML()
     {
         return sprintf(
-            '<a class="contact-link contact-postal" data-address-name="%s" data-address-number="%s" data-address-street="%s" data-address-unit="%s" data-address-city="%s" data-address-state="%s" data-address-postal="%s">%s</a>'
-            ,htmlspecialchars($this->name)
-            ,htmlspecialchars($this->number)
-            ,htmlspecialchars($this->street)
-            ,htmlspecialchars($this->unit)
-            ,htmlspecialchars($this->city)
-            ,htmlspecialchars($this->state)
-            ,htmlspecialchars($this->postal)
-            ,nl2br(htmlspecialchars($this->toString()))
+            '<a class="contact-link contact-postal" data-address-name="%s" data-address-number="%s" data-address-street="%s" data-address-unit="%s" data-address-city="%s" data-address-state="%s" data-address-postal="%s">%s</a>',
+            htmlspecialchars((string) $this->name),
+            htmlspecialchars((string) $this->number),
+            htmlspecialchars((string) $this->street),
+            htmlspecialchars((string) $this->unit),
+            htmlspecialchars((string) $this->city),
+            htmlspecialchars((string) $this->state),
+            htmlspecialchars((string) $this->postal),
+            nl2br(htmlspecialchars((string) $this->toString()))
         );
     }
 
@@ -145,13 +145,13 @@ class Postal extends AbstractPoint
             throw new \Exception('Invalid postal address serialization, unable to decode JSON');
         }
 
-        $this->name = !empty($data['name']) ? $data['name'] : null;
-        $this->number = !empty($data['number']) ? $data['number'] : null;
-        $this->street = !empty($data['street']) ? $data['street'] : null;
-        $this->unit = !empty($data['unit']) ? $data['unit'] : null;
-        $this->city = !empty($data['city']) ? $data['city'] : null;
-        $this->state = !empty($data['state']) ? $data['state'] : null;
-        $this->postal = !empty($data['postal']) ? $data['postal'] : null;
+        $this->name = empty($data['name']) ? null : $data['name'];
+        $this->number = empty($data['number']) ? null : $data['number'];
+        $this->street = empty($data['street']) ? null : $data['street'];
+        $this->unit = empty($data['unit']) ? null : $data['unit'];
+        $this->city = empty($data['city']) ? null : $data['city'];
+        $this->state = empty($data['state']) ? null : $data['state'];
+        $this->postal = empty($data['postal']) ? null : $data['postal'];
     }
 
     public function validate($deep = true)
@@ -167,7 +167,7 @@ class Postal extends AbstractPoint
             $this->_validator->addError('street', 'Street name is required');
         }
 
-        if (!($this->postal || ($this->city && $this->state))) {
+        if (!$this->postal && (!$this->city || !$this->state)) {
             $this->_validator->addError('postal', 'Postal code or city+state is required');
         }
 

@@ -18,7 +18,7 @@ class Message extends \VersionedRecord
     public static $singularNoun = 'message';
     public static $pluralNoun = 'messages';
 
-    public static $subClasses = [__CLASS__];
+    public static $subClasses = [self::class];
 
     public static $fields = [
         'ContextClass' => [
@@ -78,7 +78,7 @@ class Message extends \VersionedRecord
         ],
         'ParentMessage' => [
             'type' => 'one-one',
-            'class' => __CLASS__
+            'class' => self::class
         ],
         'Recipients' => [
             'type' => 'one-many',
@@ -141,7 +141,7 @@ class Message extends \VersionedRecord
                 'PersonID' => $Person->ID,
                 'EmailContactID' => $EmailContactPoint->ID
             ], true);
-        } catch (DuplicateKeyException $e) {
+        } catch (DuplicateKeyException) {
             $MsgRecipient = MessageRecipient::getByWhere([
                 'MessageID' => $this->ID,
                 'PersonID' => $Person->ID
@@ -174,7 +174,7 @@ class Message extends \VersionedRecord
     {
         $newEmailRecipients = [];
 
-        foreach ($this->Recipients AS $Recipient) {
+        foreach ($this->Recipients as $Recipient) {
             if ($Recipient->Status == 'pending') {
                 $Recipient->Status = 'sent';
                 $newEmailRecipients[] = $Recipient;
@@ -198,9 +198,8 @@ class Message extends \VersionedRecord
             $this->save();
 
             return count($newEmailRecipients);
-        } else {
-            throw new \Exception('Failed to inject message into email system:'.PHP_EOL.PHP_EOL.error_get_last());
         }
+        throw new \Exception('Failed to inject message into email system:'.PHP_EOL.PHP_EOL.error_get_last());
     }
 
 
@@ -210,14 +209,12 @@ class Message extends \VersionedRecord
             $recipients = $this->Recipients;
         }
 
-        return array_map(function($Recipient) {
+        return array_map(function ($Recipient) {
             if (!$Recipient->EmailContactID || $Recipient->Person->PrimaryEmailID == $Recipient->EmailContactID) {
                 return $Recipient->Person->EmailRecipient;
-            } else {
-                $Email = \Emergence\People\ContactPoint\Email::getByID($Recipient->EmailContactID);
-
-                return $Email->toRecipientString();
             }
+            $Email = \Emergence\People\ContactPoint\Email::getByID($Recipient->EmailContactID);
+            return $Email->toRecipientString();
         }, $recipients);
     }
 
@@ -232,9 +229,8 @@ class Message extends \VersionedRecord
 
         if ($Sender->ID != $this->AuthorID) {
             return sprintf(static::$forwardPrefixFormat, $Sender->Email, $Sender->FullName).$this->Message;
-        } else {
-            return $this->Message;
         }
+        return $this->Message;
     }
 
     public function getEmailFrom()

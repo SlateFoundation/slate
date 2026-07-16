@@ -1,7 +1,8 @@
 <?php
 
-namespace SlateAdmin;
+declare(strict_types=1);
 
+namespace SlateAdmin;
 
 class WebApp extends \Emergence\WebApps\SenchaApp
 {

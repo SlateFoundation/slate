@@ -4,7 +4,6 @@ namespace Slate\People;
 
 use Exception;
 use RangeException;
-
 use DB;
 use Emergence\People\Person;
 use Emergence\People\User;
@@ -12,7 +11,6 @@ use Emergence\People\Groups\Group;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
 use Slate\Term;
-
 
 class Student extends User
 {
@@ -60,7 +58,7 @@ class Student extends User
             ,'linkClass' => SectionParticipant::class
             ,'linkLocal' => 'PersonID'
             ,'linkForeign' => 'CourseSectionID'
-            ,'conditions' => [__CLASS__, 'getCurrentSectionsConditions']
+            ,'conditions' => [self::class, 'getCurrentSectionsConditions']
         ],
         'CurrentMasterSections' => [
             'type' => 'many-many'
@@ -68,7 +66,7 @@ class Student extends User
             ,'linkClass' => SectionParticipant::class
             ,'linkLocal' => 'PersonID'
             ,'linkForeign' => 'CourseSectionID'
-            ,'conditions' => [__CLASS__, 'getCurrentMasterSectionsConditions']
+            ,'conditions' => [self::class, 'getCurrentMasterSectionsConditions']
         ]
     ];
 
@@ -91,7 +89,7 @@ class Student extends User
         ]
         ,'Advisor' => [
             'qualifiers' => ['advisorid', 'advisor']
-            ,'callback' => [__CLASS__, 'getAdvisorSearchConditions']
+            ,'callback' => [self::class, 'getAdvisorSearchConditions']
         ]
     ];
 
@@ -110,8 +108,8 @@ class Student extends User
     public static function getDistinctAdvisors()
     {
         return Person::getAllByQuery(
-            'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName'
-            ,[
+            'SELECT DISTINCT Advisor.* FROM `%1$s` Student LEFT JOIN `%1$s` Advisor ON Advisor.ID = Student.AdvisorID WHERE Student.AdvisorID IS NOT NULL AND Advisor.ID IS NOT NULL ORDER BY Advisor.LastName, Advisor.FirstName',
+            [
                 static::$tableName
             ]
         );
@@ -128,21 +126,17 @@ class Student extends User
             return [];
         }
 
-        $filterResult = function ($people) use ($includeDisabled) {
-            return array_values(array_filter($people, function($Person) use ($includeDisabled) {
-                return $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled');
-            }));
-        };
+        $filterResult = (fn ($people) => array_values(array_filter($people, fn ($Person) => $Person->isA(Student::class) && ($includeDisabled || $Person->AccountLevel != 'Disabled'))));
 
         if ($identifier == 'all') {
             return $filterResult(static::getAllByClass()); // TODO: check if this will find sub-student classes?
         }
 
-        if (preg_match('/^\d+(,\d+)*$/', $identifier)) {
+        if (preg_match('/^\d+(,\d+)*$/', (string) $identifier)) {
             return $filterResult(static::getAllByWhere('ID IN ('.$identifier.')'));
         }
 
-        list($groupType, $groupHandle) = array_pad(preg_split('/[\s:>]/', $identifier, 2), 2, null);
+        [$groupType, $groupHandle] = array_pad(preg_split('/[\s:>]/', (string) $identifier, 2), 2, null);
 
         switch ($groupType) {
             case 'organization':
@@ -155,7 +149,7 @@ class Student extends User
             case 'section':
 
                 // parse cohort
-                list($groupHandle, $cohort) = array_pad(preg_split('/[\s:>]/', $groupHandle, 2), 2, null);
+                [$groupHandle, $cohort] = array_pad(preg_split('/[\s:>]/', (string) $groupHandle, 2), 2, null);
 
                 if (!$Section = Section::getByHandle($groupHandle)) {
                     throw new RangeException('Section not found');
@@ -180,7 +174,7 @@ class Student extends User
             default:
                 $students = [];
 
-                foreach (preg_split('/\s*[\n,]\s*/', $identifier) as $studentIdentifier) {
+                foreach (preg_split('/\s*[\n,]\s*/', (string) $identifier) as $studentIdentifier) {
                     if (!$User = static::getByUsername($studentIdentifier)) {
                         throw new RangeException('user not found: '.$studentIdentifier);
                     }
@@ -194,7 +188,7 @@ class Student extends User
 
     protected static function getAdvisorSearchConditions($advisor)
     {
-        if (!ctype_digit($advisor)) {
+        if (!ctype_digit((string) $advisor)) {
             if ($advisor = User::getByUsername($advisor)) {
                 $advisor = $advisor->ID;
             } else {
@@ -216,12 +210,12 @@ class Student extends User
             ',
             [
                 Section::$tableName,
-                join(',', Term::getClosestConcurrentTermIDs())
+                implode(',', Term::getClosestConcurrentTermIDs())
             ]
         );
 
         return [
-            sprintf('(Link.CourseSectionID IN(%s))', join(',', $courseSectionsInTerm)),
+            sprintf('(Link.CourseSectionID IN(%s))', implode(',', $courseSectionsInTerm)),
             '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
             '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
         ];
@@ -238,12 +232,12 @@ class Student extends User
             ',
             [
                 Section::$tableName,
-                join(',', Term::getClosestMasterContainedTermIDs())
+                implode(',', Term::getClosestMasterContainedTermIDs())
             ]
         );
 
         return [
-            sprintf('(Link.CourseSectionID IN(%s))', join(',', $courseSectionsInTerm)),
+            sprintf('(Link.CourseSectionID IN(%s))', implode(',', $courseSectionsInTerm)),
             '(Link.StartDate IS NULL OR DATE(Link.StartDate) <= CURRENT_DATE)',
             '(Link.EndDate IS NULL OR DATE(Link.EndDate) >= CURRENT_DATE)'
         ];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class Slate
 {
     public static $schoolName;
@@ -17,7 +19,7 @@ class Slate
         }
 
         if (empty(static::$schoolAbbr)) {
-            static::$schoolAbbr = preg_replace('/[^A-Z]/', '', static::$schoolName);
+            static::$schoolAbbr = preg_replace('/[^A-Z]/', '', (string) static::$schoolName);
         }
     }
 
@@ -44,10 +46,10 @@ class Slate
     {
         if (is_callable(static::$generateUserEmail)) {
             return call_user_func(static::$generateUserEmail, $User, static::$userEmailDomain);
-        } elseif (static::$userEmailDomain && $User->Username) {
-            return $User->Username.'@'.static::$userEmailDomain;
-        } else {
-            return null;
         }
+        if (static::$userEmailDomain && $User->Username) {
+            return $User->Username.'@'.static::$userEmailDomain;
+        }
+        return null;
     }
 }

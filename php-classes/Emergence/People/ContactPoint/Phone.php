@@ -14,7 +14,7 @@ class Phone extends AbstractPoint
 
     public static $templates = [
         'Mobile Phone' => [
-            'class' => __CLASS__
+            'class' => self::class
             ,'alternateLabels' => ['Work Phone', 'Home Phone']
             ,'placeholder' => '(555) 555-0155'
             ,'pattern' => '/^\\(?\d{3}\\)?[^a-zA-Z0-9]*\d{3}[^a-zA-Z0-9]*\d{4}*$/i'
@@ -25,10 +25,10 @@ class Phone extends AbstractPoint
 
     public function loadString($string)
     {
-        $this->number = preg_replace('/\D/', '', $string);
+        $this->number = preg_replace('/\D/', '', (string) $string);
 
-        if (strlen($this->number) == 11 && $this->number[0] == '1') {
-            $this->number = substr($this->number, 1);
+        if (strlen((string) $this->number) === 11 && $this->number[0] == '1') {
+            $this->number = substr((string) $this->number, 1);
         }
 
         // update serialization
@@ -37,15 +37,15 @@ class Phone extends AbstractPoint
 
     public function toString()
     {
-        if (strlen($this->number) == 10) {
-            $area = substr($this->number, 0, 3);
-            $prefix = substr($this->number, 3, 3);
-            $line = substr($this->number, 6);
+        if (strlen((string) $this->number) === 10) {
+            $area = substr((string) $this->number, 0, 3);
+            $prefix = substr((string) $this->number, 3, 3);
+            $line = substr((string) $this->number, 6);
 
             $formatted = "($area) $prefix-$line";
 
             if (static::$alwaysUseCountryCode) {
-                $formatted = "+1 $formatted";
+                return "+1 $formatted";
             }
 
             return $formatted;
@@ -58,14 +58,14 @@ class Phone extends AbstractPoint
     {
         $prefix = '';
 
-        if (strlen($this->number) == 10) {
+        if (strlen((string) $this->number) === 10) {
             $prefix = '+1';
         }
 
         return sprintf(
-            '<a class="contact-link contact-phone" href="tel:%s">%s</a>'
-            ,$prefix.$this->number
-            ,htmlspecialchars($this->toString())
+            '<a class="contact-link contact-phone" href="tel:%s">%s</a>',
+            $prefix.$this->number,
+            htmlspecialchars((string) $this->toString())
         );
     }
 

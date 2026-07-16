@@ -1,7 +1,8 @@
 <?php
 
-namespace Slate\Courses;
+declare(strict_types=1);
 
+namespace Slate\Courses;
 
 class SchedulesRequestHandler extends \RecordsRequestHandler
 {

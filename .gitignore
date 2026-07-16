@@ -1,0 +1,5 @@
+/vendor/
+/.analysis-context/
+.php-cs-fixer.cache
+.rector-cache/
+.psalm-cache/

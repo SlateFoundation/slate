@@ -9,7 +9,7 @@ use Emergence\People\ContactPoints\Email;
 class MessagesRequestHandler extends \RecordsRequestHandler
 {
     // RecordsRequestHandler configuration
-    public static $recordClass = 'Emergence\CRM\Message';
+    public static $recordClass = \Emergence\CRM\Message::class;
     public static $accountLevelBrowse = 'Staff';
     public static $accountLevelRead = 'Staff';
     public static $accountLevelWrite = 'Staff';
@@ -29,7 +29,7 @@ class MessagesRequestHandler extends \RecordsRequestHandler
     public static function handleMessageRecipientsRequest(Message $Message)
     {
         if (in_array($_SERVER['REQUEST_METHOD'], ['POST','PUT'])) {
-            if (0 === strpos($_SERVER['CONTENT_TYPE'], 'application/json')) {
+            if (str_starts_with($_SERVER['CONTENT_TYPE'], 'application/json')) {
                 $_REQUEST = JSON::getRequestData();
             }
 
@@ -39,7 +39,7 @@ class MessagesRequestHandler extends \RecordsRequestHandler
 
             $newPeople = [];
 
-            foreach ($_REQUEST['data'] AS $recipientData) {
+            foreach ($_REQUEST['data'] as $recipientData) {
                 if (!empty($recipientData['PersonID']) && is_numeric($recipientData['PersonID'])) {
                     // get by ID
                     if (!$RecipientPerson = Person::getByID($recipientData['PersonID'])) {

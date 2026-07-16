@@ -4,7 +4,6 @@ namespace Slate\Progress;
 
 use Slate\People\Student;
 
-
 abstract class AbstractReport extends \VersionedRecord implements IStudentReport
 {
     use StudentReportTrait;

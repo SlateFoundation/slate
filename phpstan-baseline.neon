@@ -1,0 +1,1963 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Author\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$AuthorID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Message\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Recipients\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Sent\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Status\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Subject\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Email\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:send\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Dynamic call to static method ActiveRecord\:\:getUserFromEnvironment\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 3
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, int\<0, max\> given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: php-classes/Emergence/CRM/Message.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\CRM\\Message\:\:\$Recipients\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/CRM/MessagesRequestHandler.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Emergence/CRM/MessagesRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 5
+			path: php-classes/Emergence/CRM/MessagesRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$Message of static method Emergence\\CRM\\MessagesRequestHandler\:\:handleMessageRecipientsRequest\(\) expects Emergence\\CRM\\Message, ActiveRecord given\.$#'
+			identifier: argument.type
+			count: 1
+			path: php-classes/Emergence/CRM/MessagesRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/CRM/MessagesRequestHandler.php
+
+		-
+			message: '#^Variable \$EmailContactPoint might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Emergence/CRM/MessagesRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/Exceptions/ValidationException.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/Emergence/Locations/Location.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$Class\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$Data\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$Label\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$Person\.$#'
+			identifier: property.notFound
+			count: 5
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$PersonID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\AbstractPoint\:\:\$isPhantom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 4
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 2
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 2
+			path: php-classes/Emergence/People/ContactPoint/AbstractPoint.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Email\:\:\$Data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Email.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Email\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Email.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Email\:\:\$Person\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Email.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Email\:\:\$isPhantom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Email.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Email implements the Serializable interface, but does not implement __serialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Email.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Email implements the Serializable interface, but does not implement __unserialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Email.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Link\:\:\$Data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Link.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Link implements the Serializable interface, but does not implement __serialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Link.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Link implements the Serializable interface, but does not implement __unserialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Link.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Network\:\:\$Data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Network.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Network implements the Serializable interface, but does not implement __serialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Network.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Network implements the Serializable interface, but does not implement __unserialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Network.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, string given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 2
+			path: php-classes/Emergence/People/ContactPoint/Network.php
+
+		-
+			message: '#^Variable \$network might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Network.php
+
+		-
+			message: '#^Variable \$username might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Network.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Phone\:\:\$Data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Phone.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Phone.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Phone implements the Serializable interface, but does not implement __serialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Phone.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Phone implements the Serializable interface, but does not implement __unserialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Phone.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\ContactPoint\\Postal\:\:\$Data\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Postal.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 7
+			path: php-classes/Emergence/People/ContactPoint/Postal.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Postal implements the Serializable interface, but does not implement __serialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Postal.php
+
+		-
+			message: '#^Non\-abstract class Emergence\\People\\ContactPoint\\Postal implements the Serializable interface, but does not implement __unserialize\(\)\.$#'
+			identifier: class.serializable
+			count: 1
+			path: php-classes/Emergence/People/ContactPoint/Postal.php
+
+		-
+			message: '#^Only booleans are allowed in &&, string\|null given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 3
+			path: php-classes/Emergence/People/ContactPoint/Postal.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, string\|null given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 7
+			path: php-classes/Emergence/People/ContactPoint/Postal.php
+
+		-
+			message: '#^Call to an undefined method ActiveRecord\:\:loadString\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Call to an undefined method ActiveRecord\:\:unserialize\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Call to static method ActiveRecord\:\:getStaticSubClasses\(\) with incorrect case\: getStaticSubclasses$#'
+			identifier: staticMethod.nameCase
+			count: 1
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/People/ContactPointsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/GuardianRelationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Invitation\:\:\$Handle\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Invitation.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:renderTemplate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:sendFromTemplate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 7
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 2
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 7
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Variable \$Invitation might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: php-classes/Emergence/People/InvitationsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$FirstName\.$#'
+			identifier: property.notFound
+			count: 6
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$FullName\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$Groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 8
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$LastName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PreferredName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryEmail\.$#'
+			identifier: property.notFound
+			count: 9
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryEmailID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryPhone\.$#'
+			identifier: property.notFound
+			count: 8
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryPhoneID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryPostal\.$#'
+			identifier: property.notFound
+			count: 5
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryPostalID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$isPhantom\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Call to static method ActiveRecord\:\:getByID\(\) with incorrect case\: getById$#'
+			identifier: staticMethod.nameCase
+			count: 1
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 4
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 5
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 3
+			path: php-classes/Emergence/People/Person.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:sendFromTemplate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\People\\RegistrationRequestHandler\:\:throwNotFoundException\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Call to static method LoginRequestHandler\:\:getReturnURL\(\) with incorrect case\: getReturnUrl$#'
+			identifier: staticMethod.nameCase
+			count: 1
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 9
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 2
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 3
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, string\|null given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: php-classes/Emergence/People/RegistrationRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Relationship\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Relationship\:\:\$Person\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Relationship\:\:\$PersonID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Relationship\:\:\$RelatedPerson\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Relationship\:\:\$RelatedPersonID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Relationship\:\:\$isPhantom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 5
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 3
+			path: php-classes/Emergence/People/Relationship.php
+
+		-
+			message: '#^Access to an undefined property ActiveRecord\:\:\$InverseRelationship\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property ActiveRecord\:\:\$Person\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property ActiveRecord\:\:\$RelatedPerson\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Call to static method ActiveRecord\:\:getStaticSubClasses\(\) with incorrect case\: getStaticSubclasses$#'
+			identifier: staticMethod.nameCase
+			count: 1
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 4
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in &&, mixed given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/People/RelationshipsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$AccountLevel\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$AccountLevelNumeric\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$FirstName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$LastName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Password\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$TemporaryPassword\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Username\.$#'
+			identifier: property.notFound
+			count: 6
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$isDirty\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$isPhantom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\Logger\:\:general_warning\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Call to function array_search\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Call to function sha1\(\) with incorrect case\: SHA1$#'
+			identifier: function.nameCase
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 3
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Emergence/People/User.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/RemoteSystems/GoogleApps.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 2
+			path: php-classes/RemoteSystems/GoogleApps.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Username\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: php-classes/Slate.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\Connectors\\IJob\:\:\$Config\.$#'
+			identifier: property.notFound
+			count: 9
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$About\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$AccountLevel\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Advisor\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$BirthDate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$ContactPoints\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$FirstName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Gender\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$GraduationYear\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$GroupMemberships\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Groups\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$LastName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$MiddleName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$PreferredName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$PrimaryEmail\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$StudentNumber\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$Username\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\User\:\:\$isPhantom\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Course\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Notes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Schedule\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$StudentsCapacity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Term\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$Left\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$Right\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\Connectors\\IJob\:\:getGraduationYear\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\Connectors\\IJob\:\:getMasterTerm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\Connectors\\IJob\:\:logException\(\)\.$#'
+			identifier: method.notFound
+			count: 11
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\Connectors\\IJob\:\:logInvalidRecord\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\Connectors\\IJob\:\:logRecordDelta\(\)\.$#'
+			identifier: method.notFound
+			count: 8
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 61
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Foreach overwrites \$sectionIdentifier with its value variable\.$#'
+			identifier: foreach.valueOverwrite
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 15
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Only booleans are allowed in &&, string\|null given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int\<0, max\> given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Static method Slate\\Connectors\\AbstractSpreadsheetConnector\:\:_applySectionChanges\(\) invoked with 5 parameters, 4 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Static method Slate\\Connectors\\AbstractSpreadsheetConnector\:\:_getOrCreateParticipant\(\) invoked with 4 parameters, 3 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Undefined variable\: \$Record$#'
+			identifier: variable.undefined
+			count: 2
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Undefined variable\: \$Teacher$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Variable \$Mapping might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Slate/Connectors/AbstractSpreadsheetConnector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\Connectors\\IJob\:\:\$Config\.$#'
+			identifier: property.notFound
+			count: 5
+			path: php-classes/Slate/Connectors/GoogleSheets/Connector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\Connectors\\IJob\:\:\$Results\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/GoogleSheets/Connector.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\Connectors\\IJob\:\:\$Status\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Connectors/GoogleSheets/Connector.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\Connectors\\IJob\:\:save\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: php-classes/Slate/Connectors/GoogleSheets/Connector.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 10
+			path: php-classes/Slate/Connectors/GoogleSheets/Connector.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 2
+			path: php-classes/Slate/Connectors/GoogleSheets/Connector.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Connectors\\Job\:\:\$Config\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Connectors/Job.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/Slate/Connectors/Job.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Course\:\:\$Code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Course.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Schedule\:\:\$Title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Schedule.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$FirstName\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$LastName\.$#'
+			identifier: property.notFound
+			count: 3
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$ActiveTeachers\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Code\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Course\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 5
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Schedule\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Teachers\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Call to an undefined static method Slate\\Courses\\Section\:\:getFromHandle\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Courses/Section.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\SectionParticipant\:\:\$EndDate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/SectionParticipant.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\SectionParticipant\:\:\$Section\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Courses/SectionParticipant.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\SectionParticipant\:\:\$StartDate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/SectionParticipant.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Slate/Courses/SectionParticipant.php
+
+		-
+			message: '#^Static property Slate\\Courses\\SectionParticipant\:\:\$updateOnDuplicateKey \(string\) does not accept default value of type true\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: php-classes/Slate/Courses/SectionParticipant.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: php-classes/Slate/Courses/SectionParticipantsRequestHandler.php
+
+		-
+			message: '#^Static property Slate\\Courses\\SectionTermData\:\:\$updateOnDuplicateKey \(string\) does not accept default value of type true\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: php-classes/Slate/Courses/SectionTermData.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$ActiveStudents\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Students\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$Section of static method Slate\\Courses\\SectionsRequestHandler\:\:handleCohortsRequest\(\) expects Slate\\Courses\\Section, ActiveRecord given\.$#'
+			identifier: argument.type
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$Section of static method Slate\\Courses\\SectionsRequestHandler\:\:handleSectionRequest\(\) expects Slate\\Courses\\Section, ActiveRecord given\.$#'
+			identifier: argument.type
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$Section of static method Slate\\Courses\\SectionsRequestHandler\:\:handleStudentsRequest\(\) expects Slate\\Courses\\Section, ActiveRecord given\.$#'
+			identifier: argument.type
+			count: 1
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 3
+			path: php-classes/Slate/Courses/SectionsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/People/PeopleRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: php-classes/Slate/People/PeopleRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Slate/People/PeopleRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in &&, int\<0, max\> given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: php-classes/Slate/People/PeopleRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$Person of static method Slate\\People\\PeopleRequestHandler\:\:handleCoursesRequest\(\) expects Emergence\\People\\Person, ActiveRecord given\.$#'
+			identifier: argument.type
+			count: 1
+			path: php-classes/Slate/People/PeopleRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 2
+			path: php-classes/Slate/People/PeopleRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Slate/People/Student.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/People/Student.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractReport\:\:\$Created\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractReport\:\:\$Creator\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractReport\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractReport\:\:\$Status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractReport\:\:\$Student\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Dynamic call to static method ActiveRecord\:\:getNoun\(\)\.$#'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Static property Slate\\Progress\\AbstractReport\:\:\$updateOnDuplicateKey \(string\) does not accept default value of type true\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: php-classes/Slate/Progress/AbstractReport.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractSectionTermReport\:\:\$Section\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReport.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\AbstractSectionTermReport\:\:\$Term\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Progress/AbstractSectionTermReport.php
+
+		-
+			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:sendFromTemplate\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 6
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 10
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 2
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, int\<0, max\> given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in a ternary operator condition, int\<0, max\> given\.$#'
+			identifier: ternary.condNotBoolean
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<array\{id\: mixed, name\: mixed, email\: mixed, relationship\: mixed, status\: mixed\}\>\) to function array_filter does not contain falsy values, the array will always stay the same\.$#'
+			identifier: arrayFilter.same
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 4
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Variable \$Section might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\IPerson\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Author\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Context\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Created\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Modified\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Sent\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Progress\\Note\:\:\$Subject\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$EndDate\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$StartDate\.$#'
+			identifier: property.notFound
+			count: 2
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Call to an undefined method Emergence\\People\\IPerson\:\:getRootClass\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Call to sprintf contains an invalid placeholder\.$#'
+			identifier: argument.sprintf
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 2
+			path: php-classes/Slate/Progress/Note.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$FullName\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Emergence\\People\\Person\:\:\$PrimaryEmail\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Call to static method getSource\(\) on an unknown class TemplateResponse\.$#'
+			identifier: class.notFound
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 10
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 2
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Undefined variable\: \$filename$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Variable \$Message might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Variable \$Person might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Variable \$Student might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: php-classes/Slate/Progress/NotesRequestHandler.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Slate/Progress/ProgressRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 4
+			path: php-classes/Slate/Progress/ProgressRequestHandler.php
+
+		-
+			message: '#^Elseif condition is always true\.$#'
+			identifier: elseif.alwaysTrue
+			count: 1
+			path: php-classes/Slate/Progress/ProgressRequestHandler.php
+
+		-
+			message: '#^Parameter \#1 \$array of function usort contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: php-classes/Slate/Progress/ProgressRequestHandler.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: php-classes/Slate/Progress/ProgressRequestHandler.php
+
+		-
+			message: '#^Variable \$Term might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: php-classes/Slate/Progress/ProgressRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Progress/SectionInterimReport.php
+
+		-
+			message: '#^Static property Slate\\Progress\\SectionInterimReportRecipient\:\:\$updateOnDuplicateKey \(string\) does not accept default value of type true\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: php-classes/Slate/Progress/SectionInterimReportRecipient.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Progress/SectionTermReport.php
+
+		-
+			message: '#^Static property Slate\\Progress\\SectionTermReportRecipient\:\:\$updateOnDuplicateKey \(string\) does not accept default value of type true\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: php-classes/Slate/Progress/SectionTermReportRecipient.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Progress/Util.php
+
+		-
+			message: '#^Only booleans are allowed in &&, array\<string, mixed\>\|null given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
+			path: php-classes/Slate/Progress/Util.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, array\<string, mixed\>\|null given\.$#'
+			identifier: if.condNotBoolean
+			count: 2
+			path: php-classes/Slate/Progress/Util.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Slate/RecordsRequestHandler.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 9
+			path: php-classes/Slate/RecordsRequestHandler.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 4
+			path: php-classes/Slate/RecordsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$EndDate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Term.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$Left\.$#'
+			identifier: property.notFound
+			count: 7
+			path: php-classes/Slate/Term.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$Right\.$#'
+			identifier: property.notFound
+			count: 7
+			path: php-classes/Slate/Term.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$StartDate\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Term.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Term\:\:\$Title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/Term.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/Term.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/Slate/TermsRequestHandler.php
+
+		-
+			message: '#^Short ternary operator is not allowed\. Use null coalesce operator if applicable or consider using long ternary\.$#'
+			identifier: ternary.shortNotAllowed
+			count: 1
+			path: php-classes/Slate/TermsRequestHandler.php
+
+		-
+			message: '#^Access to an undefined property ActiveRecord\:\:\$Course\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/UI/Adapters/Courses.php
+
+		-
+			message: '#^Access to an undefined property ActiveRecord\:\:\$Department\.$#'
+			identifier: property.notFound
+			count: 1
+			path: php-classes/Slate/UI/Adapters/Courses.php
+
+		-
+			message: '#^Access to an undefined property Slate\\Courses\\Section\:\:\$Code\.$#'
+			identifier: property.notFound
+			count: 4
+			path: php-classes/Slate/UI/Adapters/Courses.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Slate/UI/Adapters/Courses.php
+
+		-
+			message: '#^Call to method ActiveRecord\:\:getURL\(\) with incorrect case\: getUrl$#'
+			identifier: method.nameCase
+			count: 2
+			path: php-classes/Slate/UI/Adapters/Courses.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 4
+			path: php-classes/Slate/UI/Adapters/Courses.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/Slate/UI/Adapters/GoogleApps.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: php-classes/Slate/UI/Adapters/ManageSlate.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/Slate/UI/Adapters/User.php
+
+		-
+			message: '#^Only booleans are allowed in &&, mixed given on the right side\.$#'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: php-classes/Slate/UI/Adapters/User.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 12
+			path: php-classes/Slate/UI/LinkUtil.php
+
+		-
+			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: php-classes/Slate/UI/LinkUtil.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Slate/UI/LinkUtil.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int\<0, max\> given\.$#'
+			identifier: if.condNotBoolean
+			count: 2
+			path: php-classes/Slate/UI/LinkUtil.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 1
+			path: php-classes/Slate/UI/Navigation.php
+
+		-
+			message: '#^Call to static method Slate\\UI\\Tools\:\:appendTools\(\) with incorrect case\: appendtools$#'
+			identifier: staticMethod.nameCase
+			count: 2
+			path: php-classes/Slate/UI/Tools.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 4
+			path: php-classes/Slate/UI/Tools.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Validators/EmailAddress.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Validators/PhoneNumber.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: php-classes/Validators/PhoneNumber.php
+
+		-
+			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
+			identifier: function.strict
+			count: 1
+			path: php-classes/Validators/URL.php

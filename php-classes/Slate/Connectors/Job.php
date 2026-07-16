@@ -11,11 +11,11 @@ class Job extends \Emergence\Connectors\Job
     {
         if (!$this->masterTerm) {
             if (empty($this->Config['masterTerm'])) {
-                throw new Exception('masterTerm required');
+                throw new \Exception('masterTerm required');
             }
 
             if (!$this->masterTerm = Term::getByHandle($this->Config['masterTerm'])) {
-                throw new Exception('masterTerm not found');
+                throw new \Exception('masterTerm not found');
             }
         }
 

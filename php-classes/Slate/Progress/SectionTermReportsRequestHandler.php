@@ -1,7 +1,8 @@
 <?php
 
-namespace Slate\Progress;
+declare(strict_types=1);
 
+namespace Slate\Progress;
 
 class SectionTermReportsRequestHandler extends AbstractSectionTermReportsRequestHandler
 {
