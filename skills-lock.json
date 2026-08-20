@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "hologit": {
+      "source": "JarvusInnovations/hologit",
+      "sourceType": "github",
+      "skillPath": "skills/hologit/SKILL.md",
+      "computedHash": "4485918b70a7ae86bdb6a119f0f0cc6248af4a936ce5ec5d8a8b4bf53ce05dce"
+    }
+  }
+}
