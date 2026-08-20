@@ -1,0 +1,17 @@
+# Compiles the Sencha "pages" app (Site.Common + Site.page.* + Site.widget.*)
+# into site-root/js/pages/, which every rendered page loads via
+# {jsmin "pages/common.js"} and bootstraps with Ext.require("Site.Common").
+# Without this the browser throws "Ext is not defined" on every page.
+[hololens]
+container = "ghcr.io/hologit/lenses/sencha-pages:latest"
+
+[hololens.input]
+root = "sencha-workspace"
+files = [
+    "ext/**",
+    "pages/**",
+]
+
+[hololens.output]
+root = "site-root/js/pages"
+merge = "overlay"
