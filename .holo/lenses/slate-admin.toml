@@ -1,5 +1,5 @@
 [hololens]
-package = "holo/lens-sencha-app"
+container = "ghcr.io/hologit/lenses/sencha-app:latest"
 
 [hololens.sencha]
 app = "SlateAdmin"
