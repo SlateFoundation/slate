@@ -1,0 +1,18 @@
+[holomapping]
+holosource = "extjs"
+files = [
+    "**/*",
+    "!build/",
+    "!**/rtl/**",
+    "!**/test/**",
+    "!classic/theme-aria/**",
+    "!classic/theme-classic/**",
+    "!classic/theme-classic-sandbox/**",
+    "!classic/theme-gray/**",
+    "!modern/theme-blackberry/**",
+    "!modern/theme-cupertino/**",
+    "!modern/theme-device-base/**",
+    "!modern/theme-ios/**",
+    "!modern/theme-mountainview/**",
+    "!modern/theme-windows/**"
+]
