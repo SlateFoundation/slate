@@ -366,11 +366,11 @@ class Relationship extends \VersionedRecord
     public static $relationships = [
         'Person' => [
             'type' => 'one-one'
-            ,'class' => 'Person'
+            ,'class' => Person::class
         ]
         ,'RelatedPerson' => [
             'type' => 'one-one'
-            ,'class' => 'Person'
+            ,'class' => Person::class
         ]
         ,'InverseRelationship' => [
             'type' => 'one-one'

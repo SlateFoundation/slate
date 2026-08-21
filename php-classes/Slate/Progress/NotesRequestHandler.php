@@ -183,7 +183,7 @@ class NotesRequestHandler extends \Emergence\CRM\MessagesRequestHandler
         $className = static::$recordClass;
 
         if ($responseMode == 'pdf') {
-            $html = \TemplateResponse::getSource($className::$pdfTemplate, $responseData);
+            $html = \Emergence\Dwoo\Engine::getSource($className::$pdfTemplate, $responseData);
             if ($_REQUEST['export']) {
                 if ($query = $responseData['query']) {
                     $query = explode(' ', (string) $query);
