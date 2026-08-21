@@ -1,0 +1,19 @@
+# Compile site-root/sass with real Ruby Compass (1.0.3), exactly as the
+# legacy VFS did — inline-image()/inline-font-files() and the sha1
+# asset_cache_buster in config.rb need Compass's Ruby file helpers, which
+# no dart-sass port provides. Ported from emergence-skeleton (v1)'s
+# compass.toml when the sass sources moved into this repo's composition.
+[hololens]
+container = "ghcr.io/hologit/lenses/compass:v2"
+
+[hololens.input]
+root = "site-root"
+files = [
+    "sass/**",
+    "fonts/**",
+    "img/**"
+]
+
+[hololens.output]
+root = "site-root/css"
+merge = "overlay"
