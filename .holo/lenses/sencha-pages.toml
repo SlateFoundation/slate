@@ -3,7 +3,7 @@
 # {jsmin "pages/common.js"} and bootstraps with Ext.require("Site.Common").
 # Without this the browser throws "Ext is not defined" on every page.
 [hololens]
-container = "ghcr.io/hologit/lenses/sencha-pages:latest"
+container = "ghcr.io/hologit/lenses/sencha-pages:v2"
 
 [hololens.input]
 root = "sencha-workspace"
