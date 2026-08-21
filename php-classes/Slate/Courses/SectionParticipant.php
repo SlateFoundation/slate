@@ -58,7 +58,7 @@ class SectionParticipant extends \ActiveRecord
         ]
         ,'Person' => [
             'type' => 'one-one'
-            ,'class' => 'Person'
+            ,'class' => \Emergence\People\Person::class
         ]
     ];
 

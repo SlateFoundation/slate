@@ -58,7 +58,7 @@ abstract class AbstractPoint extends \VersionedRecord implements IContactPoint
     public static $relationships = [
         'Person' => [
             'type' => 'one-one'
-            ,'class' => 'Person'
+            ,'class' => Person::class
         ]
     ];
 
