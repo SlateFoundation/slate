@@ -22,7 +22,6 @@ Ext.define('SlateAdmin.Application', {
 
     controllers: [
         'Viewport',
-        'Login',
 
         'People',
         'people.Invite',
