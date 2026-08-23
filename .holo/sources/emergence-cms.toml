@@ -1,0 +1,7 @@
+# EmergenceContentEditor source layer (app + emergence-cms package +
+# emr-skeleton-theme + its sencha-app build lens) — replaces the prebuilt
+# webapp-builds/ copies the site leaves had vendored
+# (JarvusInnovations/emergence-knowledgebase#22).
+[holosource]
+url = "https://github.com/JarvusInnovations/emergence-cms"
+ref = "refs/heads/master"
