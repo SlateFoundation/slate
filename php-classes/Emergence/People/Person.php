@@ -443,7 +443,7 @@ class Person extends VersionedRecord implements IPerson
             return 'FALSE';
         }
 
-        $containedGroups = DB::allRecords('SELECT ID FROM %s WHERE `Left` BETWEEN %u AND %u', [
+        $containedGroups = DB::allRecords('SELECT ID FROM `%s` WHERE `Left` BETWEEN %u AND %u', [
             Groups\Group::$tableName
             ,$group->Left
             ,$group->Right
