@@ -170,7 +170,17 @@ module.exports = {
         "no-shadow": "error",
         "no-shadow-restricted-names": "error",
         "no-spaced-func": "error",
-        "no-sync": "error",
+        // no-sync is a Node.js rule; in this browser codebase it false-positives
+        // on method names that happen to end in "Sync" (e.g. suspendValueSync)
+        "no-sync": "off",
+        // Ext handler/template-method signatures document the full event args;
+        // unused trailing params are intentional API documentation
+        "no-unused-vars": [
+            "error",
+            {
+                "args": "none"
+            }
+        ],
         "no-ternary": "off",
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
@@ -241,7 +251,16 @@ module.exports = {
         "space-unary-ops": "error",
         "spaced-comment": [
             "error",
-            "always"
+            "always",
+            {
+                "line": {
+                    // Sencha Cmd conditional-compilation markers are functional
+                    // and must not gain a space
+                    "markers": ["<debug>", "</debug>"],
+                    // allow //----- divider lines in Cmd-generated scaffolding
+                    "exceptions": ["-"]
+                }
+            }
         ],
         "strict": [
             "error",
