@@ -25,7 +25,7 @@ Ext.define('SlateAdmin.store.courses.SectionCohorts', {
                     return Ext.Array.map(response.data, function(cohort) {
                         return {
                             'Cohort': cohort
-                        }
+                        };
                     });
                 }
             }

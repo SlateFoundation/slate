@@ -74,7 +74,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
             cohortsStore = me.getCoursesSectionCohortsStore();
 
         // configure proxy and load store
-        participantsStore.getProxy().setExtraParam('course_section', section.get('Code'))
+        participantsStore.getProxy().setExtraParam('course_section', section.get('Code'));
         participantsStore.load();
 
         // configure proxy url for cohort field

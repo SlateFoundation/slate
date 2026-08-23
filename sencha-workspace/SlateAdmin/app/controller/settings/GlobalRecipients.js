@@ -107,8 +107,7 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
 
     onViewClick: function(grid, record) {
         var personData = record.get('Person'),
-            personId = record.get('PersonID'),
-            username;
+            personId = record.get('PersonID');
 
         if (!personData && !personId) {
             Ext.Msg.alert('Cannot view profile', 'No person is currently selected');

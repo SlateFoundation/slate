@@ -109,7 +109,6 @@ Ext.define('SlateAdmin.controller.People', {
             click: 'onSearchClick'
         },
         'people-navpanel #groups': {
-            //select: onGroupSelect
             itemclick: 'onGroupSelect'
         },
         'people-grid': {

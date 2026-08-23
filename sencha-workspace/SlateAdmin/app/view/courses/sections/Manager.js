@@ -106,8 +106,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         var me = this,
             detailCt = me.detailCt,
             detailTabs = me.detailTabs,
-            activeTab = detailTabs.getActiveTab(),
-            loadedSection;
+            activeTab = detailTabs.getActiveTab();
 
         if (oldSection) {
 //            oldSection.un('afterCommit', 'onSectionCommit', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way

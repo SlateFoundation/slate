@@ -184,7 +184,7 @@
         onFocusLeave: Ext.emptyFn,
 
         prepareData: function(data) {
-            var data = this.callParent(arguments);
+            data = this.callParent(arguments);
             // chain data object before adding properties so we don't modify the actual record
             data = Ext.Object.chain(data);
             data.Person = this.getPerson();
@@ -207,7 +207,9 @@
             // delegate clicks on editable bits
             var isInverse = Boolean(ev.getTarget('.inverse-relationship'));
 
-            if ((targetEl = ev.getTarget('.relationship-label'))) {
+            targetEl = ev.getTarget('.relationship-label');
+
+            if (targetEl) {
                 this.onRelationshipLabelClick(relationship, isInverse, targetEl, ev);
                 return false;
             }

@@ -30,7 +30,7 @@ Ext.define('SlateAdmin.controller.DeveloperTools', {
                 console.groupCollapsed('layout run #%s complete (%s items)', runCompleteCount, Ext.Object.getSize(this.items));
 
                 if (breakOnLayout) {
-                    debugger;
+                    debugger; // eslint-disable-line no-debugger -- intentional: ?breakonlayout dev tool, stripped from production builds
                 }
 
                 if (traceOnLayout) {

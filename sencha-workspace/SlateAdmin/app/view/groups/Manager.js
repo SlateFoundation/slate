@@ -1,4 +1,4 @@
-//TODO:  move to view.settings wih other settings managers
+// TODO: move to view.settings with other settings managers
 Ext.define('SlateAdmin.view.groups.Manager', {
     extend: 'Ext.tree.Panel',
     xtype: 'groups-manager',

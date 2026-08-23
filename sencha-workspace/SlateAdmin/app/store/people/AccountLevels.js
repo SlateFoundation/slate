@@ -19,7 +19,7 @@ Ext.define('SlateAdmin.store.people.AccountLevels', {
                 return Ext.Array.map(data.data, function(value) {
                     return {
                         value: value
-                    }
+                    };
                 });
             }
         }
