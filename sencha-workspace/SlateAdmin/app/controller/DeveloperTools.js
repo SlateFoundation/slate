@@ -18,7 +18,6 @@ Ext.define('SlateAdmin.controller.DeveloperTools', {
         console.warn('DeveloperTools controller active');
 
         var me = this,
-            app = me.application,
             breakOnLayout = location.search.match(/breakonlayout/),
             traceOnLayout = location.search.match(/traceonlayout/),
             runCompleteCount = 0;

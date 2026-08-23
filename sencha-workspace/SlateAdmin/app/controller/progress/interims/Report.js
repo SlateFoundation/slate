@@ -429,8 +429,8 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
             me.fireEvent('beforereportdelete', report);
 
             report.erase({
-                callback: function(report, operation, success) {
-                    var student = report.get('student'),
+                callback: function(deletedReport, operation, success) {
+                    var student = deletedReport.get('student'),
                         studentsSelModel = me.getStudentsGrid().getSelectionModel();
 
                     managerCt.setLoading(false);
@@ -441,7 +441,7 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
                         me.syncStudent(student);
                         student.endEdit();
 
-                        me.fireEvent('reportdelete', report);
+                        me.fireEvent('reportdelete', deletedReport);
 
                         // reselect current student
                         studentsSelModel.deselectAll();
@@ -490,8 +490,8 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
         me.fireEvent('beforereportsave', report);
 
         report.save({
-            callback: function(report, operation, success) {
-                var student = report.get('student');
+            callback: function(savedReport, operation, success) {
+                var student = savedReport.get('student');
 
                 managerCt.setLoading(false);
 
@@ -500,9 +500,9 @@ Ext.define('SlateAdmin.controller.progress.interims.Report', {
                     me.syncStudent(student);
                     student.endEdit();
 
-                    editorForm.loadRecord(report);
+                    editorForm.loadRecord(savedReport);
 
-                    me.fireEvent('reportsave', report);
+                    me.fireEvent('reportsave', savedReport);
 
                     if (!me.getStudentsGrid().getSelectionModel().selectNext()) {
                         me.syncFormButtons();

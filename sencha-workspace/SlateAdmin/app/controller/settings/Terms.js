@@ -82,8 +82,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     },
 
     onCreateChildClick: function(managerPanel, parentRecord) {
-        var managerPanel = this.getManagerPanel(),
-            cellEditing = managerPanel.getPlugin('cellediting'),
+        var cellEditing = managerPanel.getPlugin('cellediting'),
             location = parentRecord.insertChild(0, {
                 StartDate: parentRecord.get('StartDate'),
                 EndDate: parentRecord.get('EndDate'),

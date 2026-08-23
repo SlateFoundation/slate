@@ -51,8 +51,8 @@ Ext.define('SlateAdmin.controller.Settings', {
     // controller methods
     syncState: function() {
         var path = ['settings'],
-            title = 'Settings',
-            activeLink = this.getNavPanel().getActiveLink();
+            title = 'Settings';
+
         Ext.util.History.pushState(path, title);
     }
 });

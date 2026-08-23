@@ -123,7 +123,6 @@
         updateRelationshipEditor: function (relationshipEditor) {
             relationshipEditor.on({
                 scope: this,
-                beforecomplete: 'onBeforeRelationshipEditorComplete',
                 complete: 'onRelationshipEditorComplete',
                 canceledit: 'onRelationshipEditorCancel'
             });
@@ -208,7 +207,7 @@
             // delegate clicks on editable bits
             var isInverse = Boolean(ev.getTarget('.inverse-relationship'));
 
-            if (targetEl = ev.getTarget('.relationship-label')) {
+            if ((targetEl = ev.getTarget('.relationship-label'))) {
                 this.onRelationshipLabelClick(relationship, isInverse, targetEl, ev);
                 return false;
             }
@@ -305,10 +304,6 @@
 
             // open and position editor
             editor.startEdit(target, editor.field.getSelection());
-        },
-
-        onBeforeRelationshipEditorComplete: function(editor, value, startValue) {
-            console.info('onBeforeRelationshipEditorComplete(%o, %o, %o)', editor, value, startValue);
         },
 
         onRelationshipEditorComplete: function(editor, value, startValue) {
