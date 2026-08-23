@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.controller.settings.Groups', {
     extend: 'Ext.app.Controller',
 

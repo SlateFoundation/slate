@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.widget.field.contact.Postal', {
     extend: 'Ext.form.field.Picker',
     xtype: 'slate-postalfield',

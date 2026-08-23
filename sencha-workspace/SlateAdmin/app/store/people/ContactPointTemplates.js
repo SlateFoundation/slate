@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.people.ContactPointTemplates', {
     extend: 'Ext.data.Store',
     alias: 'store.contactpointtemplates',

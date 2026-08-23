@@ -1,4 +1,3 @@
-/* jslint browser: true, undef: true *//* global Ext*/
 /**
  * people.Contacts controller
  */

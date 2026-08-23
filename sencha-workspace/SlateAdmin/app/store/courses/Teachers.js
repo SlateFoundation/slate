@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.store.courses.Teachers', {
     extend: 'Ext.data.Store',
 

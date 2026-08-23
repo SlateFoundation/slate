@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.people.details.Profile', {
     extend: 'SlateAdmin.view.people.details.AbstractDetails',
     xtype: 'people-details-profile',

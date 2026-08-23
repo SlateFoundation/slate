@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 
 /**
  * Container for people section's grid and details view.

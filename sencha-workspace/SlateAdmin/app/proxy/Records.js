@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 /**
  * Slate records proxy
  */

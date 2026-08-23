@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 
 /**
  * Container for course sections' grid and details view.

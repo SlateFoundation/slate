@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.widget.field.State', {
     extend: 'Ext.form.field.ComboBox',
     xtype: 'slate-statefield',

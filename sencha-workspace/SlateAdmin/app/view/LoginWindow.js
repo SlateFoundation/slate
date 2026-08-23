@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.LoginWindow', {
     extend: 'Ext.Window',
     xtype: 'slateadmin-loginwindow',

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.controller.settings.Departments', {
     extend: 'Ext.app.Controller',
 

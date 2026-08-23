@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.courses.NavPanel', {
     extend: 'Ext.form.Panel',
     xtype: 'courses-navpanel',
