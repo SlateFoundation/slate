@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.controller.Courses', {
     extend: 'Ext.app.Controller',
     requires: [
@@ -165,7 +164,6 @@ Ext.define('SlateAdmin.controller.Courses', {
     showSection: function(section, tab) {
         var me = this,
             ExtHistory = Ext.util.History,
-            sectionsResultStore = me.getCoursesSectionsResultStore(),
             sectionsManager = me.getSectionsManager();
 
         ExtHistory.suspendState();
@@ -393,7 +391,6 @@ Ext.define('SlateAdmin.controller.Courses', {
     syncState: function() {
         var me = this,
             sectionsManager = me.getSectionsManager(),
-            selModel = me.getSectionsGrid().getSelectionModel(),
             detailTabs = sectionsManager.detailTabs,
             sectionRecord = sectionsManager.getSelectedSection(),
             extraParams = me.getCoursesSectionsResultStore().getProxy().extraParams,
@@ -559,7 +556,6 @@ Ext.define('SlateAdmin.controller.Courses', {
 
     executeSearch: function() {
         var me = this,
-            sectionsResultStore = me.getCoursesSectionsResultStore(),
             formValues = me.getNavPanel().getForm().getValues(),
             queryTerms = [];
 

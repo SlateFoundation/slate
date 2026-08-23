@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 
 /**
  * @abstract
@@ -34,6 +33,5 @@ Ext.define('SlateAdmin.view.courses.sections.details.AbstractDetails', {
      * @param {SlateAdmin.model.course.Section} section The section being loaded
      * @param {SlateAdmin.model.course.Section} [oldSection] The previously loaded section
      */
-    onSectionLoaded: function(section, oldSection) {
-    }
+    onSectionLoaded: Ext.emptyFn
 });

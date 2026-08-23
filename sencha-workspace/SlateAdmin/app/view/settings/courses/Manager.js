@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.settings.courses.Manager', {
     extend: 'Ext.grid.Panel',
     xtype: 'courses-manager',

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.settings.courses.Form', {
     extend: 'Ext.window.Window',
     xtype: 'courses-form-window',

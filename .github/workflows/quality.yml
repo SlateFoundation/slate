@@ -55,3 +55,24 @@ jobs:
         run: vendor/bin/php-cs-fixer check --diff
         env:
           PHP_CS_FIXER_IGNORE_ENV: '1'
+
+  eslint:
+    name: ESLint (SlateAdmin)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      # Correctness rules gate at error level; legacy-style rules are
+      # warnings via sencha-workspace/SlateAdmin/.eslintrc.js (see its
+      # ratchet note). Warnings are reported but don't fail the job.
+      - name: ESLint
+        run: >
+          npx --yes eslint@8.57.0
+          'sencha-workspace/SlateAdmin/app/**/*.js'
+          'sencha-workspace/SlateAdmin/overrides/**/*.js'
+          'sencha-workspace/SlateAdmin/app.js'

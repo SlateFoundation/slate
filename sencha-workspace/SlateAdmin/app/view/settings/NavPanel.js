@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.settings.NavPanel', {
     extend: 'SlateAdmin.view.LinksNavPanel',
     xtype: 'settings-navpanel',

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.Main', {
     extend: 'Ext.container.Container',
     xtype: 'slateadmin-main',

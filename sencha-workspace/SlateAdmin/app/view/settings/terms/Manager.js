@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.view.settings.terms.Manager', {
     extend: 'Ext.tree.Panel',
     xtype: 'terms-manager',

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 
 /**
  * @abstract
@@ -34,6 +33,5 @@ Ext.define('SlateAdmin.view.people.details.AbstractDetails', {
      * @param {Slate.model.person.Person} person The person being loaded
      * @param {Slate.model.person.Person} [oldPerson] The previously loaded person
      */
-    onPersonLoaded: function(person, oldPerson) {
-    }
+    onPersonLoaded: Ext.emptyFn
 });

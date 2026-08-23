@@ -88,8 +88,7 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
     },
 
     onCreateChildClick: function(managerPanel, parentRecord) {
-        var managerPanel = this.getManagerPanel(),
-            cellEditing = managerPanel.getPlugin('cellediting'),
+        var cellEditing = managerPanel.getPlugin('cellediting'),
             location = parentRecord.insertChild(0, {
                 ParentID: parentRecord.getId(),
                 leaf: true
@@ -110,8 +109,7 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
 
     onViewClick: function(grid, record) {
         var personData = record.get('Person'),
-            personId = record.get('PersonID'),
-            username;
+            personId = record.get('PersonID');
 
         if (!personData && !personId) {
             Ext.Msg.alert('Cannot view profile', 'No person is currently selected');

@@ -109,7 +109,6 @@ Ext.define('SlateAdmin.controller.People', {
             click: 'onSearchClick'
         },
         'people-navpanel #groups': {
-            //select: onGroupSelect
             itemclick: 'onGroupSelect'
         },
         'people-grid': {
@@ -503,8 +502,7 @@ Ext.define('SlateAdmin.controller.People', {
      * @return {void}
      */
     onBeforeCsvExportColumnsMenuShow: function(menu) {
-        var me = this,
-            columnsPlaceholder = menu.down('#columnsPlaceholder'),
+        var columnsPlaceholder = menu.down('#columnsPlaceholder'),
             selectedFieldKeys = ['FirstName', 'LastName', 'Username', 'StudentNumber', 'GraduationYear', 'Advisor', 'PrimaryEmail'];
 
         if (menu.loaded) {

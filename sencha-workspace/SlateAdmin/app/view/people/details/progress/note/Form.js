@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.people.details.progress.note.Form',{
     extend: 'Ext.form.Panel',
     xtype: 'people-details-progress-note-form',

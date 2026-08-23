@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, white: false, laxbreak: true *//*global Ext,Slate*/
 Ext.define('SlateAdmin.view.courses.sections.Grid', {
     extend: 'Ext.grid.Panel',
     xtype: 'courses-sections-grid',

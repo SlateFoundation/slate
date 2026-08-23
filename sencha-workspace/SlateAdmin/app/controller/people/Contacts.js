@@ -1,4 +1,3 @@
-/* jslint browser: true, undef: true *//* global Ext*/
 /**
  * people.Contacts controller
  */
@@ -270,14 +269,12 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
             loadedPerson = me.getContactsPanel().getLoadedPerson(),
             pointsStore = me.getContactsGrid().getStore(),
             templatesStore = me.getPeopleContactPointTemplatesStore(),
-            pointClasses = templatesStore.collect('class'),
-            pointClassesLen = pointClasses.length, i = 0, pointClass, phantomIndex;
+            pointClasses = templatesStore.collect('class');
 
         pointsStore.beginUpdate();
 
-        for (; i < pointClassesLen; i++) {
-            pointClass = pointClasses[i];
-            phantomIndex = pointsStore.findBy(function (record) {
+        Ext.Array.each(pointClasses, function (pointClass) {
+            var phantomIndex = pointsStore.findBy(function (record) {
                 return record.phantom && record.get('Class') == pointClass;
             });
 
@@ -287,8 +284,8 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
                     PersonID: loadedPerson.getId()
                 });
             }
-        }
+        });
 
         pointsStore.endUpdate();
-    },
+    }
 });

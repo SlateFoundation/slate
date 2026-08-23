@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.model.course.Department', {
     extend: 'Ext.data.Model',
     requires: [

@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true, laxcomma:true *//*global Ext*/
 /**
  * The Main Application definition
  */
@@ -19,11 +18,9 @@ Ext.define('SlateAdmin.Application', {
      * @cfg {String} name="SlateAdmin"
      */
     name: 'SlateAdmin',
-    //suspendLayoutUntilInitialRoute: true, // TODO: find a way to achive this optimization with the built-in routing of ExtJS 5
 
     controllers: [
         'Viewport',
-        'Login',
 
         'People',
         'people.Invite',

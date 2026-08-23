@@ -1,4 +1,3 @@
-/*jslint browser: true, undef: true *//*global Ext*/
 Ext.define('SlateAdmin.controller.Progress', {
     extend: 'Ext.app.Controller',
 
@@ -51,8 +50,7 @@ Ext.define('SlateAdmin.controller.Progress', {
     // controller methods
     syncState: function () {
         var path = ['progress'],
-            title = 'Progress',
-            activeLink = this.getNavPanel().getActiveLink();
+            title = 'Progress';
 
         Ext.util.History.pushState(path, title);
     }
