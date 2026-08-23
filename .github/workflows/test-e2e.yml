@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
 
     # TODO: wrap the next three steps an an emergence-studio action
     - name: 'Stop default mysql service'
@@ -101,28 +101,28 @@ jobs:
         sudo chmod ugo+r /hab/svc/php-runtime/var/logs/crash.log || true
 
     - name: Upload crash log
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: crash-log
         path: /hab/svc/php-runtime/var/logs/crash.log
 
     - name: Upload supervisor log
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: supervisor-log
         path: /hab/sup/default/sup.log
 
     - name: Upload Cypress screenshots
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       if: failure()
       with:
         name: cypress-screenshots
         path: ${{ github.workspace }}.cypress-workspace/cypress/screenshots
 
     - name: Upload Cypress videos
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       if: always()
       with:
         name: cypress-videos
