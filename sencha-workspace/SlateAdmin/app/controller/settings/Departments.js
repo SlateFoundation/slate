@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.settings.Departments', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
     // controller config
     views: [
         'settings.departments.Manager'
@@ -49,10 +54,8 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/departments');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());
 
@@ -73,7 +76,8 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
             });
         }
 
-        Ext.util.History.pushState('settings/departments', 'Departments &mdash; Settings');
+        this.redirectTo('settings/departments');
+        SlateAdmin.util.PageTitle.setTitle('Departments — Settings');
     },
 
     onCreateDepartmentClick: function() {
@@ -118,7 +122,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.pushState(['course-sections', 'search', 'department:' + rec.get('Handle')]);
+        this.redirectTo(['course-sections', 'search', 'department:' + rec.get('Handle')]);
     }
 
 });

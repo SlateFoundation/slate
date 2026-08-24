@@ -7,7 +7,8 @@ Ext.define('SlateAdmin.controller.People', {
         'Ext.window.MessageBox',
 
         /* globals SlateAdmin */
-        'SlateAdmin.API'
+        'SlateAdmin.API',
+        'SlateAdmin.util.PageTitle'
     ],
 
     // controller config
@@ -191,12 +192,11 @@ Ext.define('SlateAdmin.controller.People', {
      */
     showPerson: function(person, tab) {
         var me = this,
-            ExtHistory = Ext.util.History,
             store = me.getPeoplePeopleStore(),
             proxy = store.getProxy(),
             manager = me.getManager();
 
-        ExtHistory.suspendState();
+        me.suspendStateSync();
         Ext.suspendLayouts();
 
         // queue store to load
@@ -227,7 +227,7 @@ Ext.define('SlateAdmin.controller.People', {
                 delete proxy.extraParams.q;
 
                 me.selectPerson(person, function() {
-                    ExtHistory.resumeState();
+                    me.resumeStateSync();
                     Ext.resumeLayouts(true);
                 });
             });
@@ -250,12 +250,11 @@ Ext.define('SlateAdmin.controller.People', {
      */
     showResults: function(query, person, tab) {
         var me = this,
-            ExtHistory = Ext.util.History,
             store = me.getPeoplePeopleStore(),
             proxy = store.getProxy(),
             manager = me.getManager();
 
-        ExtHistory.suspendState();
+        me.suspendStateSync();
         Ext.suspendLayouts();
 
         // decode query string for processing
@@ -294,7 +293,7 @@ Ext.define('SlateAdmin.controller.People', {
                 }
 
                 me.selectPerson(person, function() {
-                    ExtHistory.resumeState(false);
+                    me.resumeStateSync(false);
                     Ext.resumeLayouts(true);
                 });
             });
@@ -303,10 +302,9 @@ Ext.define('SlateAdmin.controller.People', {
 
     showCreatePerson: function() {
         var me = this,
-            ExtHistory = Ext.util.History,
             manager = me.getManager();
 
-        ExtHistory.suspendState();
+        me.suspendStateSync();
         Ext.suspendLayouts();
 
         me.getNavPanel().expand();
@@ -314,7 +312,7 @@ Ext.define('SlateAdmin.controller.People', {
         manager.detailTabs.setActiveTab('profile');
 
         me.selectPerson(me.getPersonModel().create(), function() {
-            ExtHistory.resumeState(false);
+            me.resumeStateSync(false);
             Ext.resumeLayouts(true);
         });
     },
@@ -343,7 +341,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (ev.getKey() == ev.ENTER) {
             if (query) {
-                Ext.util.History.pushState(['people', 'search', query]);
+                this.redirectTo(['people', 'search', query]);
             } else {
                 this.getAdvancedSearchForm().getForm().reset();
             }
@@ -671,6 +669,28 @@ Ext.define('SlateAdmin.controller.People', {
         }
     },
 
+    // controller-local replacement for the retired Ext.util.History
+    // suspend/flush counter: while a route handler choreographs UI state,
+    // selection events' syncState calls collapse into one trailing sync
+    // (or are discarded when resumed with flush=false)
+    stateSyncSuspended: 0,
+
+    suspendStateSync: function() {
+        this.stateSyncSuspended++;
+    },
+
+    resumeStateSync: function(flush) {
+        var me = this;
+
+        if (me.stateSyncSuspended && !--me.stateSyncSuspended) {
+            if (flush !== false && me.stateSyncPending) {
+                me.syncState();
+            }
+
+            me.stateSyncPending = false;
+        }
+    },
+
     /**
      * Sets the title and path (url) based on the selection in the grid and the active tab in details panel.
      * @return {void}
@@ -685,9 +705,16 @@ Ext.define('SlateAdmin.controller.People', {
             title = 'People',
             activeTab = null;
 
+        if (me.stateSyncSuspended) {
+            me.stateSyncPending = true;
+            return;
+        }
+
+        me.stateSyncPending = false;
+
         if (extraParams && extraParams.q) {
             path.push('search', extraParams.q);
-            title = '&ldquo;' + extraParams.q + '&rdquo;';
+            title = '\u201c' + extraParams.q + '\u201d';
         } else if (personRecord) {
             path.push(personRecord.phantom ? 'create' : 'lookup');
         }
@@ -705,11 +732,12 @@ Ext.define('SlateAdmin.controller.People', {
 
             if (activeTab) {
                 path.push(activeTab.getItemId());
-                title = activeTab.title + ' &mdash; ' + title;
+                title = activeTab.title + ' \u2014 ' + title;
             }
         }
 
-        Ext.util.History.pushState(path, title);
+        me.redirectTo(path);
+        SlateAdmin.util.PageTitle.setTitle(title);
     },
 
     /**
@@ -881,14 +909,14 @@ Ext.define('SlateAdmin.controller.People', {
 
         if (!query && rootGroupSelected) {
             // if there's no query and root group is selected, redirect to people/all
-            Ext.util.History.pushState('people/all');
+            me.redirectTo('people/all');
             return;
         }
 
         searchField.setValue(query);
 
         if (execute) {
-            Ext.util.History.pushState(query ? ['people', 'search', query] : 'people');
+            me.redirectTo(query ? ['people', 'search', query] : 'people');
         }
     },
 

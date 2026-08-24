@@ -1,6 +1,10 @@
 Ext.define('SlateAdmin.view.LinksNavPanel', {
     extend: 'Ext.Panel',
     xtype: 'links-navpanel',
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.Routing'
+    ],
 
     config: {
         activeLink: null
@@ -37,7 +41,7 @@ Ext.define('SlateAdmin.view.LinksNavPanel', {
 
     applyActiveLink: function(link) {
         if (Ext.isArray(link)) {
-            link = Ext.util.History.encodeRouteArray(link);
+            link = SlateAdmin.util.Routing.encodeRouteArray(link);
         }
 
         if (Ext.isString(link) && this.rendered) {

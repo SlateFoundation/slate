@@ -1,7 +1,10 @@
 Ext.define('SlateAdmin.controller.Courses', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Ext.window.MessageBox'
+        'Ext.window.MessageBox',
+
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
     ],
 
 
@@ -163,10 +166,9 @@ Ext.define('SlateAdmin.controller.Courses', {
     // route handlers
     showSection: function(section, tab) {
         var me = this,
-            ExtHistory = Ext.util.History,
             sectionsManager = me.getSectionsManager();
 
-        ExtHistory.suspendState();
+        me.suspendStateSync();
         Ext.suspendLayouts();
 
         // decode query string for processing
@@ -187,7 +189,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             }
 
             me.selectSection(section, function() {
-                ExtHistory.resumeState();
+                me.resumeStateSync();
                 Ext.resumeLayouts(true);
             });
         }, 10);
@@ -195,11 +197,10 @@ Ext.define('SlateAdmin.controller.Courses', {
 
     showCreateSection: function() {
         var me = this,
-            ExtHistory = Ext.util.History,
             sectionsManager = me.getSectionsManager(),
             selectedSection = sectionsManager.getSelectedSection();
 
-        ExtHistory.suspendState();
+        me.suspendStateSync();
         Ext.suspendLayouts();
 
         // activate manager
@@ -211,13 +212,12 @@ Ext.define('SlateAdmin.controller.Courses', {
             me.selectSection(me.getCourseSectionModel().create());
         }
 
-        ExtHistory.resumeState();
+        me.resumeStateSync();
         Ext.resumeLayouts(true);
     },
 
     showResults: function(query, section, tab) {
         var me = this,
-            ExtHistory = Ext.util.History,
             termsStore = me.getTermsStore(),
             sectionsManager = me.getSectionsManager(),
             sectionsResultStore = me.getCoursesSectionsResultStore(),
@@ -250,7 +250,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             query = '';
         }
 
-        ExtHistory.suspendState();
+        me.suspendStateSync();
         Ext.suspendLayouts();
 
         // decode query string for processing
@@ -281,7 +281,7 @@ Ext.define('SlateAdmin.controller.Courses', {
                 }
 
                 me.selectSection(section, function() {
-                    ExtHistory.resumeState();
+                    me.resumeStateSync();
                     Ext.resumeLayouts(true);
                 });
             });
@@ -291,7 +291,15 @@ Ext.define('SlateAdmin.controller.Courses', {
 
     // event handlers
     onNavPanelBeforeExpand: function(navPanel) {
-        Ext.util.History.pushState('course-sections', 'Course Sections');
+        // a scripted expand during this module's own route handling must not
+        // clobber deeper state (e.g. #course-sections/lookup/...) with the module root
+        var moduleRoot = Ext.util.History.getToken().split('/')[0];
+
+        if (moduleRoot != 'course-sections' && moduleRoot != 'courses') {
+            this.redirectTo('course-sections');
+        }
+
+        SlateAdmin.util.PageTitle.setTitle('Course Sections');
     },
 
     onNavFieldSpecialKey: function(field, ev) {
@@ -388,6 +396,21 @@ Ext.define('SlateAdmin.controller.Courses', {
         }
     },
 
+    // controller-local replacement for the retired Ext.util.History
+    // suspend/flush counter: while a route handler choreographs UI state,
+    // selection events' syncState calls collapse into one trailing sync
+    stateSyncSuspended: 0,
+
+    suspendStateSync: function() {
+        this.stateSyncSuspended++;
+    },
+
+    resumeStateSync: function() {
+        if (this.stateSyncSuspended && !--this.stateSyncSuspended && this.stateSyncPending) {
+            this.syncState();
+        }
+    },
+
     syncState: function() {
         var me = this,
             sectionsManager = me.getSectionsManager(),
@@ -399,9 +422,16 @@ Ext.define('SlateAdmin.controller.Courses', {
             title = 'Course Sections',
             activeTab = null;
 
+        if (me.stateSyncSuspended) {
+            me.stateSyncPending = true;
+            return;
+        }
+
+        me.stateSyncPending = false;
+
         if (extraParams && extraParams.q) {
             path.push('search', extraParams.q);
-            title = '&ldquo;' + extraParams.q + '&rdquo;';
+            title = '\u201c' + extraParams.q + '\u201d';
         } else if(isLookup) {
             path.push('lookup');
         }
@@ -414,14 +444,15 @@ Ext.define('SlateAdmin.controller.Courses', {
 
             if (activeTab) {
                 path.push(activeTab.getItemId());
-                title = activeTab.title + ' &mdash; ' + title;
+                title = activeTab.title + ' \u2014 ' + title;
             }
         } else if (sectionRecord) {
             path.push('create');
             title = 'Create section';
         }
 
-        Ext.util.History.pushState(path, title);
+        me.redirectTo(path);
+        SlateAdmin.util.PageTitle.setTitle(title);
     },
 
     /**
@@ -571,7 +602,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             }
         });
 
-        Ext.util.History.pushState(['course-sections', 'search', queryTerms.join(' ') || '*']);
+        me.redirectTo(['course-sections', 'search', queryTerms.join(' ') || '*']);
     }
 
 

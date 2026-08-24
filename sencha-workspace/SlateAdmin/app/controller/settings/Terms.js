@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.settings.Terms', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
     // controller config
     views: [
         'settings.terms.Manager'
@@ -55,10 +60,8 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/terms');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManagerPanel());
 
@@ -70,7 +73,8 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     onManagerPanelActivate: function(managerPanel) {
         this.getTermsStore().loadIfDirty();
 
-        Ext.util.History.pushState('settings/terms', 'Terms &mdash; Settings');
+        this.redirectTo('settings/terms');
+        SlateAdmin.util.PageTitle.setTitle('Terms — Settings');
     },
 
     onCreateClick: function() {
@@ -122,7 +126,7 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     },
 
     onBrowseCoursesClick: function(grid, record) {
-        Ext.util.History.pushState(['course-sections', 'search', 'term:' + record.get('Handle')]);
+        this.redirectTo(['course-sections', 'search', 'term:' + record.get('Handle')]);
     },
 
     onBeforeStoreLoad: function() {

@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.settings.Groups', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
 
     // controller config
     views: [
@@ -55,10 +60,8 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/groups');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManagerPanel());
 
@@ -69,7 +72,8 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     // event handlers
     onManagerPanelActivate: function(managerPanel) {
         this.getPeopleGroupsStore().loadIfDirty();
-        Ext.util.History.pushState('settings/groups', 'Groups &mdash; Settings');
+        this.redirectTo('settings/groups');
+        SlateAdmin.util.PageTitle.setTitle('Groups — Settings');
     },
 
     onCreateClick: function() {
@@ -122,7 +126,7 @@ Ext.define('SlateAdmin.controller.settings.Groups', {
     },
 
     onBrowseMembersClick: function(grid,rec) {
-        Ext.util.History.pushState(['people', 'search', 'group:' + rec.get('Handle')]);
+        this.redirectTo(['people', 'search', 'group:' + rec.get('Handle')]);
     },
 
     onBeforeStoreLoad: function() {

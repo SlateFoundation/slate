@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.settings.Locations', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
     // controller config
     views: [
         'settings.locations.Manager'
@@ -61,10 +66,8 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/locations');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManagerPanel());
 
@@ -76,7 +79,8 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
     onManagerPanelActivate: function() {
         this.getLocationsStore().loadIfDirty();
 
-        Ext.util.History.pushState('settings/locations', 'Locations &mdash; Settings');
+        this.redirectTo('settings/locations');
+        SlateAdmin.util.PageTitle.setTitle('Locations — Settings');
     },
 
     onCreateClick: function() {
@@ -116,7 +120,7 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
             return;
         }
 
-        Ext.util.History.pushState(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
+        this.redirectTo(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
     },
 
     onDeleteClick: function(grid, record) {
@@ -136,7 +140,7 @@ Ext.define('SlateAdmin.controller.settings.Locations', {
     },
 
     onBrowseCoursesClick: function(grid, record) {
-        Ext.util.History.pushState(['course-sections', 'search', 'location:' + record.get('Handle')]);
+        this.redirectTo(['course-sections', 'search', 'location:' + record.get('Handle')]);
     },
 
     onBeforeStoreLoad: function() {

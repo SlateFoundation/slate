@@ -126,10 +126,8 @@ Ext.define('SlateAdmin.controller.progress.terms.Report', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('progress/terms/report');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManagerCt());
 
