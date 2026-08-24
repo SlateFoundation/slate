@@ -1,31 +1,30 @@
-
 /**
  * @abstract
  * A base class for panels that can be added to {@link SlateAdmin.view.courses.sections.Manager}'s details tabpanel.
- * 
+ *
  * Provides workflow for loading the selected section's record just-in-time.
- * 
+ *
  * Concrete classes should implement {@link #method-onSectionLoaded}
  */
 Ext.define('SlateAdmin.view.courses.sections.details.AbstractDetails', {
-    extend: 'Ext.panel.Panel',
+    extend: 'SlateAdmin.view.AbstractRecordDetails',
     xtype: 'courses-sections-detailspanel',
-    
+
     config: {
         loadedSection: null
     },
-    
+
+    recordLoadedHook: 'onSectionLoaded',
+    recordLoadedEvent: 'sectionloaded',
+
     /**
      * @private
      */
     updateLoadedSection: function(section, oldSection) {
-        var me = this;
-        
-        me.onSectionLoaded(section, oldSection);
-        me.fireEvent('sectionloaded', me, section, oldSection);
+        this.syncLoadedRecord(section, oldSection);
     },
-    
-    
+
+
     /**
      * Called when the tab is activated or a new section is selected.
      * @template

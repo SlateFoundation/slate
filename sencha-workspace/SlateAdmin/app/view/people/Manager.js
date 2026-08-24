@@ -1,11 +1,10 @@
-
 /**
  * Container for people section's grid and details view.
  *
  * Handles propagating changes to {@link #cfg-selectedPerson} to active {@link SlateAdmin.view.people.details.AbstractDetails details tab}
  */
 Ext.define('SlateAdmin.view.people.Manager', {
-    extend: 'Ext.container.Container',
+    extend: 'SlateAdmin.view.AbstractRecordManager',
     xtype: 'people-manager',
     requires: [
         'SlateAdmin.view.people.Grid',
@@ -21,20 +20,9 @@ Ext.define('SlateAdmin.view.people.Manager', {
         selectedPerson: null
     },
 
-    /**
-     * Reference to the detailCt {@link Ext.container.Container} subomponent
-     */
-    detailCt: null,
-
-    /**
-     * Reference to the detailHeader {@link Ext.panel.Panel} subomponent
-     */
-    detailHeader: null,
-
-    /**
-     * Reference to the detailTabs {@link Ext.tab.Panel} subcomponent
-     */
-    detailTabs: null,
+    selectedRecordGetter: 'getSelectedPerson',
+    tabRecordGetter: 'getLoadedPerson',
+    tabRecordSetter: 'setLoadedPerson',
 
 
     // container config
@@ -99,25 +87,6 @@ Ext.define('SlateAdmin.view.people.Manager', {
 
     // people-manager methods
     // @private
-    initComponent: function() {
-        var me = this,
-            detailCt,
-            detailTabs;
-
-        me.callParent(arguments);
-
-        me.detailCt = detailCt = me.down('#detailCt');
-        me.detailHeader = detailCt.down('#detailHeader');
-        me.detailTabs = detailTabs = detailCt.down('#detailTabs');
-
-        detailTabs.on({
-            scope: me,
-            beforetabchange: 'onBeforeTabChange',
-            enable: 'onDetailTabsEnable'
-        });
-    },
-
-    // @private
     updateSelectedPerson: function(person, oldPerson) {
         var me = this,
             detailCt = me.detailCt,
@@ -153,47 +122,5 @@ Ext.define('SlateAdmin.view.people.Manager', {
         me.fireEvent('selectedpersonchange', me, person, oldPerson);
 
         Ext.resumeLayouts(true);
-    },
-
-    // @private
-    onBeforeTabChange: function(detailTabs, activeTab) {
-        var me = this,
-            selectedPerson = me.getSelectedPerson(),
-            tabLoadedPerson = activeTab.getLoadedPerson();
-
-        if (!selectedPerson || me.disabled) {
-            return;
-        }
-
-        if (!tabLoadedPerson || tabLoadedPerson.getId() != selectedPerson.getId()) {
-            activeTab.setLoadedPerson(selectedPerson);
-        }
-    },
-
-    // @private
-    onDetailTabsEnable: function() {
-        var me = this,
-            activeTab = me.detailTabs.getActiveTab(),
-            selectedPerson = me.getSelectedPerson(),
-            tabLoadedPerson = activeTab && activeTab.getLoadedPerson();
-
-        if (!selectedPerson || !activeTab) {
-            return;
-        }
-
-        if (!tabLoadedPerson || tabLoadedPerson.getId() != selectedPerson.getId()) {
-            activeTab.setLoadedPerson(selectedPerson);
-        }
-    },
-
-    /**
-     * Update detail header based on {@link #cfg-selectedPerson}
-     */
-    syncDetailHeader: function() {
-        var me = this,
-            detailHeader = me.detailHeader,
-            person = this.getSelectedPerson();
-
-        detailHeader.update(person ? person.getData() : '');
     }
 });

@@ -1,4 +1,3 @@
-
 /**
  * @abstract
  * A base class for panels that can be added to {@link SlateAdmin.view.people.Manager}'s details tabpanel.
@@ -8,21 +7,21 @@
  * Concrete classes should implement {@link #method-onPersonLoaded}
  */
 Ext.define('SlateAdmin.view.people.details.AbstractDetails', {
-    extend: 'Ext.panel.Panel',
+    extend: 'SlateAdmin.view.AbstractRecordDetails',
     xtype: 'people-detailspanel',
 
     config: {
         loadedPerson: null
     },
 
+    recordLoadedHook: 'onPersonLoaded',
+    recordLoadedEvent: 'personloaded',
+
     /**
      * @private
      */
     updateLoadedPerson: function(person, oldPerson) {
-        var me = this;
-
-        me.onPersonLoaded(person, oldPerson);
-        me.fireEvent('personloaded', me, person, oldPerson);
+        this.syncLoadedRecord(person, oldPerson);
     },
 
 
