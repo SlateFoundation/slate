@@ -8,7 +8,9 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
     extend: 'Ext.container.Container',
     xtype: 'courses-sections-manager',
     requires: [
-        'SlateAdmin.view.courses.sections.Grid'
+        'SlateAdmin.view.courses.sections.Grid',
+        'SlateAdmin.view.courses.sections.details.Profile',
+        'SlateAdmin.view.courses.sections.details.Participants'
     ],
 
 
@@ -76,7 +78,15 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
             itemId: 'detailTabs',
             defaults: {
                 bodyBorder: '1 0'
-            }
+            },
+            // detail tabs in explicit order — previously injected by each
+            // module controller on beforerender, which made tab order an
+            // accident of controller registration order in Application.js
+            items: [{
+                xtype: 'courses-sections-details-profile'
+            },{
+                xtype: 'courses-sections-details-participants'
+            }]
         }]
     }],
 

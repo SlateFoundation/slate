@@ -8,7 +8,11 @@ Ext.define('SlateAdmin.view.people.Manager', {
     extend: 'Ext.container.Container',
     xtype: 'people-manager',
     requires: [
-        'SlateAdmin.view.people.Grid'
+        'SlateAdmin.view.people.Grid',
+        'SlateAdmin.view.people.details.Profile',
+        'SlateAdmin.view.people.details.Courses',
+        'SlateAdmin.view.people.details.Contacts',
+        'SlateAdmin.view.people.details.Progress'
     ],
 
 
@@ -76,7 +80,19 @@ Ext.define('SlateAdmin.view.people.Manager', {
             itemId: 'detailTabs',
             defaults: {
                 bodyBorder: '1 0'
-            }
+            },
+            // detail tabs in explicit order — previously injected by each
+            // module controller on beforerender, which made tab order an
+            // accident of controller registration order in Application.js
+            items: [{
+                xtype: 'people-details-profile'
+            },{
+                xtype: 'people-details-courses'
+            },{
+                xtype: 'people-details-contacts'
+            },{
+                xtype: 'people-details-progress'
+            }]
         }]
     }],
 

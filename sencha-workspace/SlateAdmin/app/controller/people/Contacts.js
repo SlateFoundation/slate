@@ -30,20 +30,12 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
     ],
 
     refs: {
-        contactsPanel: {
-            selector: 'people-details-contacts',
-            autoCreate: true,
-
-            xtype: 'people-details-contacts'
-        },
+        contactsPanel: 'people-details-contacts',
         relationshipsList: 'people-details-contacts-list',
         contactsGrid: 'people-details-contacts grid#contactPoints'
     },
 
     control: {
-        'people-manager #detailTabs': {
-            beforerender: 'onBeforeTabsRender'
-        },
         'people-details-contacts': {
             personloaded: 'onPersonLoaded'
         },
@@ -57,10 +49,6 @@ Ext.define('SlateAdmin.controller.people.Contacts', {
 
 
     // event handlers
-    onBeforeTabsRender: function (detailTabs) {
-        detailTabs.add(this.getContactsPanel());
-    },
-
     onPersonLoaded: function (contactsPanel, person) {
         var me = this,
             contactPointTemplatesStore = me.getPeopleContactPointTemplatesStore(),

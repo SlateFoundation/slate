@@ -14,12 +14,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
     ],
 
     refs: {
-        profilePanel: {
-            selector: 'courses-sections-details-profile',
-            autoCreate: true,
-
-            xtype: 'courses-sections-details-profile'
-        },
+        profilePanel: 'courses-sections-details-profile',
         profileForm: 'courses-sections-details-profile form',
         cancelBtn: 'courses-sections-details-profile button[action=cancel]',
         saveBtn: 'courses-sections-details-profile button[action=save]',
@@ -31,9 +26,6 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
     control: {
         'courses-sections-manager': {
             selectedsectionchange: 'onSelectedSectionChange'
-        },
-        'courses-sections-manager #detailTabs': {
-            beforerender: 'onBeforeTabsRender'
         },
         'courses-sections-details-profile': {
             sectionloaded: 'onSectionLoaded'
@@ -66,10 +58,6 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
                 me.getProfileForm().down('field[readOnly=false][disabled=false]').focus();
             }, 100);
         }
-    },
-
-    onBeforeTabsRender: function(detailTabs) {
-        detailTabs.add(this.getProfilePanel());
     },
 
     onSectionLoaded: function(profilePanel, section) {

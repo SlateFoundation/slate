@@ -23,12 +23,7 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
     ],
 
     refs: {
-        participantsPanel: {
-            selector: 'courses-sections-details-participants',
-            autoCreate: true,
-
-            xtype: 'courses-sections-details-participants'
-        },
+        participantsPanel: 'courses-sections-details-participants',
         participantsGrid: 'courses-sections-details-participants grid',
         roleField: 'courses-sections-details-participants #roleField',
         personField: 'courses-sections-details-participants #personField'
@@ -36,9 +31,6 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
 
     control: {
-        'courses-sections-manager #detailTabs': {
-            beforerender: 'onBeforeTabsRender'
-        },
         'courses-sections-details-participants': {
             sectionloaded: 'onSectionLoaded'
         },
@@ -64,10 +56,6 @@ Ext.define('SlateAdmin.controller.courses.Participants', {
 
 
     // event handlers
-    onBeforeTabsRender: function(detailTabs) {
-        detailTabs.add(this.getParticipantsPanel());
-    },
-
     onSectionLoaded: function(participantsPanel, section) {
         var me = this,
             participantsStore = me.getParticipantsGrid().getStore(),

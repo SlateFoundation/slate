@@ -15,20 +15,12 @@ Ext.define('SlateAdmin.controller.people.Courses', {
     ],
 
     refs: {
-        coursesPanel: {
-            selector: 'people-details-courses',
-            autoCreate: true,
-
-            xtype: 'people-details-courses'
-        },
+        coursesPanel: 'people-details-courses',
         coursesGrid: 'people-details-courses grid',
         personCoursesTermSelector: 'people-details-courses #courseTermSelector'
     },
 
     control: {
-        'people-manager #detailTabs': {
-            beforerender: 'onBeforeTabsRender'
-        },
         'people-details-courses': {
             personloaded: 'onPersonLoaded'
         },
@@ -39,10 +31,6 @@ Ext.define('SlateAdmin.controller.people.Courses', {
 
 
     // event handlers
-    onBeforeTabsRender: function(detailTabs) {
-        detailTabs.add(this.getCoursesPanel());
-    },
-
     onPersonLoaded: function(coursesPanel, person) {
         var me = this,
             personSectionsStore = me.getCoursesGrid().getStore(),

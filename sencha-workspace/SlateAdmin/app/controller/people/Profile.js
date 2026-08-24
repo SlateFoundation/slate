@@ -26,12 +26,7 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     ],
 
     refs: {
-        profilePanel: {
-            selector: 'people-details-profile',
-            autoCreate: true,
-
-            xtype: 'people-details-profile'
-        },
+        profilePanel: 'people-details-profile',
         profileForm: 'people-details-profile form',
         cancelBtn: 'people-details-profile button[action=cancel]',
         saveBtn: 'people-details-profile button[action=save]',
@@ -47,9 +42,6 @@ Ext.define('SlateAdmin.controller.people.Profile', {
     },
 
     control: {
-        'people-manager #detailTabs': {
-            beforerender: 'onBeforeTabsRender'
-        },
         'people-details-profile': {
             personloaded: 'onPersonLoaded'
         },
@@ -76,15 +68,6 @@ Ext.define('SlateAdmin.controller.people.Profile', {
 
 
     // event handlers
-
-    /**
-     * Event Handler. Adds the profile panel to the details tab panel
-     * @param {Ext.tab.Panel} detailsTabs The details tab panel defined in SlateAdmin.view.people.Manager
-     * @return {void}
-     */
-    onBeforeTabsRender: function(detailTabs) {
-        detailTabs.add(this.getProfilePanel());
-    },
 
     /**
      * Event Handler. Handles personloaded event defined by SlateAdmin.view.people.details.AbstractDetails which fires when
