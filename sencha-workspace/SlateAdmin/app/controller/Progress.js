@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.Progress', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
     // controller config
     views: [
         'progress.NavPanel'
@@ -43,15 +48,19 @@ Ext.define('SlateAdmin.controller.Progress', {
 
     // event handlers
     onNavPanelBeforeExpand: function (navPanel) {
-        Ext.util.History.pushState('progress', 'Student Progress');
+        // a scripted expand during this module's own route handling must not
+        // clobber deeper state (e.g. #progress/interims/report) with the module root
+        if (Ext.util.History.getToken().split('/')[0] != 'progress') {
+            this.redirectTo('progress');
+        }
+
+        SlateAdmin.util.PageTitle.setTitle('Student Progress');
     },
 
 
     // controller methods
     syncState: function () {
-        var path = ['progress'],
-            title = 'Progress';
-
-        Ext.util.History.pushState(path, title);
+        this.redirectTo('progress');
+        SlateAdmin.util.PageTitle.setTitle('Progress');
     }
 });

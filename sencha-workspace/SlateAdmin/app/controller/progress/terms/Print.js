@@ -87,10 +87,8 @@ Ext.define('SlateAdmin.controller.progress.terms.Print', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('progress/terms/print');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getContainer());
 
