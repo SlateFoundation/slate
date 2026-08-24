@@ -2,128 +2,109 @@ name: 'Test: End-to-end'
 
 on: pull_request
 
+permissions:
+  contents: write # hologit lens-cache push to origin (HOLO_CACHE_TO)
+
 env:
-  HAB_LICENSE: accept-no-persist
-  HOLO_CACHE_TO: origin
   HOLO_CACHE_FROM: origin
+  HOLO_CACHE_TO: origin
 
 jobs:
   test-e2e:
-
     runs-on: ubuntu-latest
     steps:
 
     - uses: actions/checkout@v7
-
-    # TODO: wrap the next three steps an an emergence-studio action
-    - name: 'Stop default mysql service'
-      run: sudo service mysql stop
-
-    - name: 'Match system timezone to application default'
-      run: sudo timedatectl set-timezone America/New_York
-
-    - name: 'Initialize Chef Habitat environment'
-      uses: JarvusInnovations/habitat-action@action/v1
-      timeout-minutes: 5
-      env:
-        HAB_NGINX: |
-          [http.listen]
-          port = 5580
-        HAB_MYSQL: |
-          app_username = 'appadmin'
-          app_password = 'appadmin'
-          bind = '0.0.0.0'
-        HAB_PHP_RUNTIME: |
-          [sites.default.holo]
-          gitDir = '${{ github.workspace }}/.git'
       with:
-        deps: |
-          jarvus/hologit
-        supervisor: |
-          core/mysql
-          emergence/php-runtime --bind="database:mysql.default"
-          emergence/nginx --bind="backend:php-runtime.default"
+        fetch-depth: 0
 
-    - name: Waiting for MySQL
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+
+    - name: Install hologit
+      run: npm install -g hologit
+
+    # The PHP-8 runtime image context lives beside the skeleton it pairs
+    # with; only docker/ is used from this checkout — the cypress workspace
+    # is composed via hologit from the pinned skeleton-v3 holosource instead
+    - name: Checkout skeleton-v3 (runtime image context)
+      uses: actions/checkout@v7
+      with:
+        repository: EmergencePlatform/skeleton-v3
+        path: .skeleton-v3
+
+    - name: Project site tree (emergence-site, lensed)
       run: |
-        until nc -z localhost 3306; do
-          sleep 0.5
-          echo -n "."
+        TREE="$(git holo project emergence-site --fetch --lens | tail -1)"
+        echo "projected: ${TREE}"
+        mkdir -p .skeleton-v3/docker/.build/site
+        git archive "${TREE}" | tar -x -C .skeleton-v3/docker/.build/site
+
+    # composer_auth: composer update resolves php-core from a VCS repo and
+    # gets rate-limited without a GitHub token
+    - name: Build site image
+      run: |
+        printf '{"github-oauth": {"github.com": "%s"}}\n' '${{ secrets.GITHUB_TOKEN }}' > "${RUNNER_TEMP}/composer-auth.json"
+        docker build --secret id=composer_auth,src="${RUNNER_TEMP}/composer-auth.json" -t slate-e2e .skeleton-v3/docker
+
+    # ASSUME_HTTPS=0: this container serves plain HTTP; port 80 because the
+    # app's absolute redirects drop nonstandard ports, which would break
+    # Cypress same-origin checks
+    - name: Start site container
+      run: |
+        docker run -d --name slate-e2e -p 127.0.0.1:80:80 \
+          -e SITE_HANDLE=emergence-site -e ASSUME_HTTPS=0 slate-e2e
+        echo -n 'waiting for first boot (bundled MySQL init)'
+        for i in $(seq 1 36); do
+          sleep 5
+          code="$(curl -s -o /dev/null -w '%{http_code}' http://localhost/ || true)"
+          [ "${code}" = 200 ] && exit 0
+          echo -n .
         done
+        echo 'site container failed to serve'
+        docker logs slate-e2e
+        exit 1
 
-    - name: Waiting for Emergence runtime
+    - name: Project cypress workspace
       run: |
-        until nc -z localhost 9123; do
-          sleep 0.5
-          echo -n "."
-        done
+        WS_TREE="$(git holo project cypress-workspace | tail -1)"
+        echo "projected: ${WS_TREE}"
+        mkdir -p "${RUNNER_TEMP}/cypress-workspace"
+        git archive "${WS_TREE}" | tar -x -C "${RUNNER_TEMP}/cypress-workspace"
 
-    - name: Configure command-line client access
+    - name: Run Cypress
+      working-directory: ${{ runner.temp }}/cypress-workspace
       run: |
-        sudo chmod ugo+xr \
-          /hab/svc/mysql/config \
-          /hab/svc/mysql/config/client.cnf \
-          /hab/svc/php-runtime/config \
-          /hab/svc/php-runtime/config/fpm-exec
-
-        ln -sf /hab/svc/mysql/config/client.cnf ~/.my.cnf
-
-    - name: Load site projection into emergence runtime
-      env:
-        HOLO_CACHE_FROM: origin
-        HOLO_CACHE_TO: origin
-      run: |
-        SITE_TREE="$(hab pkg exec jarvus/hologit git-holo project emergence-site)"
-        [ -n "${SITE_TREE}" ] || exit 1
-        hab pkg exec emergence/php-runtime emergence-php-load "${SITE_TREE}"
-
-    - name: Set up Cypress workspace
-      run: |
-        CYPRESS_TREE="$(hab pkg exec jarvus/hologit git-holo project cypress-workspace)"
-        [ -n "${CYPRESS_TREE}" ] || exit 1
-        mkdir "${GITHUB_WORKSPACE}.cypress-workspace"
-        git archive --format=tar "${CYPRESS_TREE}" | (cd "${GITHUB_WORKSPACE}.cypress-workspace" && tar xf -)
-
-    - name: Run Cypress tests
-      uses: cypress-io/github-action@v2
-      env:
-        GIT_DIR: ${{ github.workspace }}/.git
-        GIT_WORK_TREE: ${{ github.workspace }}
-      with:
-        browser: chrome
-        env: STUDIO_CONTAINER=,STUDIO_SSH=
-        working-directory: ${{ github.workspace }}.cypress-workspace
-
-    - name: Open access to crash log
-      if: always()
-      run: |
-        sudo chmod ugo+rX /hab/svc/php-runtime/{var,var/logs} || true
-        sudo chmod ugo+r /hab/svc/php-runtime/var/logs/crash.log || true
-
-    - name: Upload crash log
-      uses: actions/upload-artifact@v7
-      if: always()
-      with:
-        name: crash-log
-        path: /hab/svc/php-runtime/var/logs/crash.log
-
-    - name: Upload supervisor log
-      uses: actions/upload-artifact@v7
-      if: always()
-      with:
-        name: supervisor-log
-        path: /hab/sup/default/sup.log
+        npm ci --no-audit --no-fund
+        npx cypress run \
+          --config 'baseUrl=http://localhost,retries=2' \
+          --env "SITE_CONTAINER=slate-e2e,SITE_REPO=${GITHUB_WORKSPACE},TEST_USER=teacher"
 
     - name: Upload Cypress screenshots
       uses: actions/upload-artifact@v7
       if: failure()
       with:
         name: cypress-screenshots
-        path: ${{ github.workspace }}.cypress-workspace/cypress/screenshots
+        path: ${{ runner.temp }}/cypress-workspace/cypress/screenshots
+        if-no-files-found: ignore
 
     - name: Upload Cypress videos
       uses: actions/upload-artifact@v7
       if: always()
       with:
         name: cypress-videos
-        path: ${{ github.workspace }}.cypress-workspace/cypress/videos
+        path: ${{ runner.temp }}/cypress-workspace/cypress/videos
+        if-no-files-found: ignore
+
+    - name: Collect site crash log
+      if: failure()
+      run: docker exec slate-e2e cat /tmp/logs/crash.log > "${RUNNER_TEMP}/crash.log" || true
+
+    - name: Upload site crash log
+      uses: actions/upload-artifact@v7
+      if: failure()
+      with:
+        name: site-crash-log
+        path: ${{ runner.temp }}/crash.log
+        if-no-files-found: ignore
