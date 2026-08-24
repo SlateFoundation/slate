@@ -9,6 +9,8 @@
         extend: 'Ext.view.View',
         xtype: 'people-details-contacts-list',
         requires: [
+            /* globals SlateAdmin */
+            'SlateAdmin.util.Routing',
             'SlateAdmin.view.people.details.contacts.RelationshipEditor',
             'SlateAdmin.widget.field.Person',
             'Slate.store.people.Relationships',
@@ -99,7 +101,7 @@
 
                     path.push('contacts');
 
-                    return Ext.util.History.encodeRouteArray(path);
+                    return SlateAdmin.util.Routing.encodeRouteArray(path);
                 }
             }
         ],
