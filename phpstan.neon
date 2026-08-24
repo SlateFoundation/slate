@@ -16,7 +16,8 @@ parameters:
         - .analysis-context/skeleton-v3/php-classes
         - .analysis-context/skeleton-v3/vendor/emergence/php-core/src
         - .analysis-context/skeleton-v3/vendor/emergence/php-core/src-compat
-        - .analysis-context/skeleton-v3/vendor/psr/log/Psr
+        # psr/log >= 2 ships src/ (1.x shipped Psr/)
+        - .analysis-context/skeleton-v3/vendor/psr/log/src
         - .analysis-context/layer-events/php-classes
         - .analysis-context/emergence-saml2/php-classes
         - .analysis-context/dwoo/lib

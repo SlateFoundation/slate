@@ -1633,12 +1633,6 @@ parameters:
 			path: php-classes/Slate/Progress/NotesRequestHandler.php
 
 		-
-			message: '#^Call to static method getSource\(\) on an unknown class TemplateResponse\.$#'
-			identifier: class.notFound
-			count: 1
-			path: php-classes/Slate/Progress/NotesRequestHandler.php
-
-		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 10
