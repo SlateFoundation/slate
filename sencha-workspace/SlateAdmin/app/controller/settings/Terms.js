@@ -1,12 +1,14 @@
 Ext.define('SlateAdmin.controller.settings.Terms', {
-    extend: 'Ext.app.Controller',
+    extend: 'SlateAdmin.controller.settings.AbstractTreeManagerController',
 
-    requires: [
-        /* globals SlateAdmin */
-        'SlateAdmin.util.PageTitle'
-    ],
 
     // controller config
+    managerRoute: 'settings/terms',
+    managerTitle: 'Terms — Settings',
+    loadingMessage: 'Loading terms&hellip;',
+    deleteConfirmTitle: 'Deleting Term',
+    deleteConfirmMessage: 'Are you sure you want to delete this term?',
+
     views: [
         'settings.terms.Manager'
     ],
@@ -29,14 +31,13 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
         }
     },
 
-
-	control: {
+    control: {
         managerPanel: {
             activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
             createtermclick: 'onCreateChildClick',
-            deletetermclick: 'onDeleteTermClick'
+            deletetermclick: 'onDeleteRecordClick'
         },
         'terms-manager button[action=create-term]': {
             click: 'onCreateClick'
@@ -53,87 +54,27 @@ Ext.define('SlateAdmin.controller.settings.Terms', {
     },
 
 
-    // route handlers
-    showManager: function() {
-        var me = this,
-            navPanel = me.getSettingsNavPanel();
-
-        Ext.suspendLayouts();
-
-        navPanel.setActiveLink('settings/terms');
-        navPanel.expand();
-
-        me.application.getController('Viewport').loadCard(me.getManagerPanel());
-
-        Ext.resumeLayouts(true);
-    },
-
-
     // event handlers
-    onManagerPanelActivate: function(managerPanel) {
+    onManagerPanelActivate: function() {
         this.getTermsStore().loadIfDirty();
-
-        this.redirectTo('settings/terms');
-        SlateAdmin.util.PageTitle.setTitle('Terms — Settings');
-    },
-
-    onCreateClick: function() {
-        var me = this,
-            managerPanel = me.getManagerPanel(),
-            record = managerPanel.getRootNode().insertChild(0, { leaf: true });
-
-        managerPanel.getPlugin('cellediting').startEdit(record, 0);
-    },
-
-    onCreateChildClick: function(managerPanel, parentRecord) {
-        var cellEditing = managerPanel.getPlugin('cellediting'),
-            location = parentRecord.insertChild(0, {
-                StartDate: parentRecord.get('StartDate'),
-                EndDate: parentRecord.get('EndDate'),
-                ParentID: parentRecord.getId(),
-                leaf: true
-            });
-
-        managerPanel.expandRecord(parentRecord, function() {
-            Ext.defer(cellEditing.startEdit, 50, cellEditing, [location, 0]);
-        });
-    },
-
-    onCellEditorEdit: function(editor, e) {
-        var record = e.record;
-
-        if (record.isValid()) {
-            record.save();
-        }
-    },
-
-    onDeleteTermClick: function(grid, record) {
-        var parentNode = record.parentNode;
-
-        grid.setSelection(record);
-
-        Ext.Msg.confirm('Deleting Term', 'Are you sure you want to delete this term?', function(btn) {
-            if (btn != 'yes') {
-                return;
-            }
-
-            record.erase({
-                success: function() {
-                    parentNode.set('leaf', 0 == parentNode.childNodes.length);
-                }
-            });
-        });
+        this.syncManagerState();
     },
 
     onBrowseCoursesClick: function(grid, record) {
         this.redirectTo(['course-sections', 'search', 'term:' + record.get('Handle')]);
     },
 
-    onBeforeStoreLoad: function() {
-        this.getManagerPanel().setLoading('Loading terms&hellip;');
-    },
 
-    onStoreLoad: function() {
-        this.getManagerPanel().setLoading(false);
+    // controller methods
+    buildNodeData: function(parentRecord) {
+        if (!parentRecord) {
+            return {};
+        }
+
+        // child terms start spanning their parent's dates
+        return {
+            StartDate: parentRecord.get('StartDate'),
+            EndDate: parentRecord.get('EndDate')
+        };
     }
 });

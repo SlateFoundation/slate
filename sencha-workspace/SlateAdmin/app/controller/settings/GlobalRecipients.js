@@ -1,12 +1,14 @@
 Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
-    extend: 'Ext.app.Controller',
+    extend: 'SlateAdmin.controller.settings.AbstractManagerController',
 
-    requires: [
-        /* globals SlateAdmin */
-        'SlateAdmin.util.PageTitle'
-    ],
 
     // controller config
+    managerRoute: 'settings/global-recipients',
+    managerTitle: 'Global Recipients — Settings',
+    loadingMessage: 'Loading global recipients&hellip;',
+    deleteConfirmTitle: 'Deleting Global Recipient',
+    deleteConfirmMessage: 'Are you sure you want to delete this global recipient?',
+
     views: [
         'settings.globalrecipients.Manager'
     ],
@@ -25,8 +27,7 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
-
-        manager: {
+        managerPanel: {
             selector: 'globalrecipients-manager',
             autoCreate: true,
 
@@ -34,14 +35,13 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
         }
     },
 
-
     control: {
-        'globalrecipients-manager': {
+        managerPanel: {
             show: 'onManagerShow',
             beforeedit: 'onCellEditorBeforeEdit',
             edit: 'onCellEditorEdit',
             viewclick: 'onViewClick',
-            deleteclick: 'onDeleteClick'
+            deleteclick: 'onDeleteRecordClick'
         },
         'globalrecipients-manager button[action=create]': {
             click: 'onCreateClick'
@@ -49,44 +49,17 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
     },
 
 
-    // route handlers
-    showManager: function() {
-        var me = this,
-            navPanel = me.getSettingsNavPanel();
-
-        Ext.suspendLayouts();
-
-        navPanel.setActiveLink('settings/global-recipients');
-        navPanel.expand();
-
-        me.application.getController('Viewport').loadCard(me.getManager());
-
-        Ext.resumeLayouts(true);
-    },
-
-
     // event handlers
     onManagerShow: function(managerPanel) {
-        var store = this.getPeopleGlobalRecipientsStore();
-
-        if (!store.isLoaded()) {
-            managerPanel.setLoading('Loading global recipients&hellip;');
-            store.load({
-                callback: function() {
-                    managerPanel.setLoading(false);
-                }
-            });
-        }
-
-        this.redirectTo('settings/global-recipients');
-        SlateAdmin.util.PageTitle.setTitle('Global Recipients — Settings');
+        this.ensureStoreLoaded(this.getPeopleGlobalRecipientsStore(), managerPanel);
+        this.syncManagerState();
     },
 
     onCreateClick: function() {
         var me = this,
             globalRecipient = me.getPeopleGlobalRecipientsStore().insert(0, {})[0];
 
-        this.getManager().getPlugin('cellediting').startEdit(globalRecipient, 0);
+        me.getManagerPanel().getPlugin('cellediting').startEdit(globalRecipient, 0);
     },
 
     onCellEditorBeforeEdit: function(editor, context) {
@@ -96,16 +69,9 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
 
         // pre-load combo store with selected person
         var personData = context.record.get('Person');
+
         if (personData) {
             context.column.getEditor().getStore().loadRawData([personData]);
-        }
-    },
-
-    onCellEditorEdit: function(editor, e) {
-        var record = e.record;
-
-        if (record.isValid()) {
-            record.save();
         }
     },
 
@@ -119,15 +85,5 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
         }
 
         this.redirectTo(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
-    },
-
-    onDeleteClick: function(grid, record) {
-        grid.setSelection(record);
-
-        Ext.Msg.confirm('Deleting Global Recipient', 'Are you sure you want to delete this global recipient?', function(btn) {
-            if (btn == 'yes') {
-                record.erase();
-            }
-        });
     }
 });
