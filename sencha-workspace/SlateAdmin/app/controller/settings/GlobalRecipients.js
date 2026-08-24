@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
     // controller config
     views: [
         'settings.globalrecipients.Manager'
@@ -51,10 +56,8 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/global-recipients');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());
 
@@ -75,7 +78,8 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
             });
         }
 
-        Ext.util.History.pushState('settings/global-recipients', 'Global Recipients &mdash; Settings');
+        this.redirectTo('settings/global-recipients');
+        SlateAdmin.util.PageTitle.setTitle('Global Recipients — Settings');
     },
 
     onCreateClick: function() {
@@ -114,7 +118,7 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
             return;
         }
 
-        Ext.util.History.pushState(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
+        this.redirectTo(['people', 'lookup', personData.Username || '?id=' + (personData.ID || personId), 'profile']);
     },
 
     onDeleteClick: function(grid, record) {

@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.Settings', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
 
     // controller config
     views: [
@@ -44,15 +49,19 @@ Ext.define('SlateAdmin.controller.Settings', {
 
     // event handlers
     onNavPanelBeforeExpand: function(navPanel) {
-        Ext.util.History.pushState('settings', 'Settings');
+        // a scripted expand during this module's own route handling must not
+        // clobber deeper state (e.g. #settings/locations) with the module root
+        if (Ext.util.History.getToken().split('/')[0] != 'settings') {
+            this.redirectTo('settings');
+        }
+
+        SlateAdmin.util.PageTitle.setTitle('Settings');
     },
 
 
     // controller methods
     syncState: function() {
-        var path = ['settings'],
-            title = 'Settings';
-
-        Ext.util.History.pushState(path, title);
+        this.redirectTo('settings');
+        SlateAdmin.util.PageTitle.setTitle('Settings');
     }
 });

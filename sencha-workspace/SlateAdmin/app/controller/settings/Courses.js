@@ -1,6 +1,11 @@
 Ext.define('SlateAdmin.controller.settings.Courses', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle'
+    ],
+
 
     // controller config
     views: [
@@ -63,10 +68,8 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
         Ext.suspendLayouts();
 
-        Ext.util.History.suspendState();
         navPanel.setActiveLink('settings/courses');
         navPanel.expand();
-        Ext.util.History.resumeState(false); // false to discard any changes to state
 
         me.application.getController('Viewport').loadCard(me.getManager());
 
@@ -87,7 +90,8 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
             });
         }
 
-        Ext.util.History.pushState('settings/courses', 'Courses &mdash; Settings');
+        this.redirectTo('settings/courses');
+        SlateAdmin.util.PageTitle.setTitle('Courses — Settings');
     },
 
     onCreateCourseClick: function() {
@@ -145,7 +149,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
     onBrowseCoursesClick: function(grid,rec) {
-        Ext.util.History.pushState(['course-sections', 'search', 'course:' + rec.get('Code')]);
+        this.redirectTo(['course-sections', 'search', 'course:' + rec.get('Code')]);
     },
 
     setFormValidity: function(form) {
