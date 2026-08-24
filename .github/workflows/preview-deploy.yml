@@ -1,11 +1,12 @@
 name: 'Preview: Deploy'
 
+# PR-preview deploys have been failing on every run since the
+# emergence-cms-layer modernization removed the skeleton-v2 holosource the
+# helm-chart holobranch composites from — and the chart targets the retired
+# Habitat runtime images besides. Manual-only until previews are rebuilt on
+# the container runtime; see #385.
 on:
-  pull_request:
-    branches: [ develop ]
-    types: [ opened, reopened, synchronize ]
-  push:
-    branches: [ develop ]
+  workflow_dispatch:
 
 concurrency:
   group: preview-${{ github.head_ref }}
