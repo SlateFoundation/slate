@@ -73,6 +73,7 @@ jobs:
       - name: ESLint
         run: >
           npx --yes eslint@8.57.0
+          --no-error-on-unmatched-pattern
           'sencha-workspace/SlateAdmin/app/**/*.js'
           'sencha-workspace/SlateAdmin/overrides/**/*.js'
           'sencha-workspace/SlateAdmin/app.js'
