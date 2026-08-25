@@ -14,7 +14,7 @@ use Slate\People\Merge\FollowUpAction;
  * record's Canvas user into the surviving (target) record's Canvas user,
  * then normalizes the survivor's SIS identity and verifies it resolves
  * correctly. Registered against ActionExecutorRegistry for
- * Connector::ACTION_TYPE_USER_MERGE (see Connector::register()) and run
+ * MergeSupport::ACTION_TYPE_USER_MERGE (see MergeSupport::register()) and run
  * only via the explicit POST /people/merge/actions/<id>/execute endpoint --
  * never automatically.
  *

@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Slate\Connectors\Canvas;
 
-use RemoteSystems\CanvasApiException;
-
 /**
  * The seam UserMergeExecutor calls through for every Canvas REST request it
- * needs. CanvasClient is the real implementation (thin wrapper over
- * RemoteSystems\Canvas); tests substitute a fake implementing this same
- * interface so the executor's procedure can be verified without a live
- * Canvas API.
+ * needs. CanvasClient is the real implementation (builds the REST calls
+ * itself, configured off the real RemoteSystems\Canvas connector package
+ * when one is composed into the site -- see its docblock); tests
+ * substitute a fake implementing this same interface so the executor's
+ * procedure can be verified without a live Canvas API.
  */
 interface CanvasClientInterface
 {

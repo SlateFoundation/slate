@@ -11,7 +11,7 @@ use Emergence\People\Person;
  * Derives the canvas-user-merge follow-up action when a merge touches
  * Canvas mappings on both the source and target person. Registered against
  * MappingActionDeriverRegistry for the 'canvas' connector key (see
- * Connector::register()) and invoked by
+ * MergeSupport::register()) and invoked by
  * Slate\People\Merge\Merge::mergeConnectorMappings() inside the merge
  * transaction, on the pre-mutation mapping arrays -- so this always sees
  * both sides' original rows, even though mergeConnectorMappings itself
@@ -69,7 +69,7 @@ class UserMergeActionDeriver
         }
 
         return [[
-            'type' => Connector::ACTION_TYPE_USER_MERGE,
+            'type' => MergeSupport::ACTION_TYPE_USER_MERGE,
             'payload' => [
                 'sourceCanvasUserID' => $sourceCanvasUserID,
                 'destinationCanvasUserID' => $destinationCanvasUserID,
