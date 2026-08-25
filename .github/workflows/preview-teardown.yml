@@ -1,0 +1,58 @@
+name: 'Preview: Teardown'
+
+# Tears down the per-PR preview instance deployed by preview-deploy.yml.
+#
+# This is a separate workflow on pull_request_target (not a closed-type job
+# in preview-deploy.yml) because this repo auto-deletes merged head branches,
+# and GitHub cancels a plain pull_request run when its head branch disappears
+# — so a same-workflow teardown gets cancelled by the very merge that
+# triggers it (observed live on PR #397). pull_request_target runs in the
+# base-repo context and survives the branch deletion. It never checks out PR
+# code, so exposing repo secrets to it is safe.
+
+on:
+  pull_request_target:
+    types: [closed]
+
+concurrency:
+  group: preview-teardown-pr-${{ github.event.pull_request.number }}
+
+permissions:
+  deployments: write # deactivate the per-PR GitHub deployment environment
+
+env:
+  KUBE_NAMESPACE: slate
+  ENVIRONMENT_NAME: pr-${{ github.event.pull_request.number }}
+
+jobs:
+
+  teardown:
+    # fork PRs never got a preview deployed (see preview-deploy.yml)
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Configure kubectl
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
+      run: |
+        mkdir -p ~/.kube
+        printf '%s' "${KUBE_CONFIG_DATA}" | base64 -d > ~/.kube/config
+        chmod 600 ~/.kube/config
+        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
+
+    - name: Delete preview instance
+      run: |
+        kubectl delete deployment,service,ingress \
+          -l app.kubernetes.io/instance="${ENVIRONMENT_NAME}" \
+          --ignore-not-found
+        # cert-manager's ingress-shim removes its Certificate with the
+        # ingress but leaves the issued secret behind
+        kubectl delete secret "${ENVIRONMENT_NAME}-tls" --ignore-not-found
+
+    - name: Deactivate GitHub deployment environment
+      uses: bobheadxi/deployments@v1
+      with:
+        step: deactivate-env
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: ${{ env.ENVIRONMENT_NAME }}
