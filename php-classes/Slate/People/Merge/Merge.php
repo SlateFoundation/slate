@@ -84,6 +84,12 @@ class Merge
         }
 
         if ($PriorAudit = MergeAudit::getByPreviousSource($sourceID)) {
+            // a repeated execute request may supply a candidateID that
+            // wasn't linked on the original call (e.g. the first execute
+            // happened outside the candidate queue) -- link it now so the
+            // pair still ends up merged rather than stuck open forever
+            static::linkCandidate($candidateID, $PriorAudit);
+
             return $PriorAudit;
         }
 
@@ -192,6 +198,10 @@ class Merge
             ], true);
 
             $auditID = static::recordID($Audit);
+
+            // transition the resolved candidate pair (if any) to merged,
+            // inside the same transaction as everything else it depends on
+            static::linkCandidate($candidateID, $Audit);
 
             // spawn follow-up actions, linked to the now-existing audit
             foreach ($followUpActionSpecs as $spec) {
@@ -734,5 +744,29 @@ class Merge
     protected static function recordID(MergeAudit $Record): int
     {
         return (int) $Record->getValue('ID');
+    }
+
+    /**
+     * Transitions the queued candidate pair $candidateID (when supplied and
+     * still findable) to merged, linked to $Audit -- the only path by which
+     * a candidate pair ever reaches Candidate::STATUS_MERGED. A no-op when
+     * $candidateID is null/empty or the record can't be found (a stale or
+     * bogus ID shouldn't block or fail the merge itself).
+     *
+     * @param mixed $candidateID
+     */
+    protected static function linkCandidate($candidateID, MergeAudit $Audit): void
+    {
+        if ($candidateID === null || $candidateID === '') {
+            return;
+        }
+
+        $Candidate = Candidate::getByID($candidateID);
+        if ($Candidate === null) {
+            return;
+        }
+
+        $Candidate->markMerged($Audit);
+        $Candidate->save();
     }
 }
