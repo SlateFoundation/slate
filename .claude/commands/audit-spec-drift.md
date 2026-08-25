@@ -1,0 +1,1 @@
+Use the spec-drift-auditor agent to do a comprehensive audit of how well the codebase implementation matches the specs/ directory. Report unimplemented spec features, undocumented implementation details, and conflicts between specs and code.
