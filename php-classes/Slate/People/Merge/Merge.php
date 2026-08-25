@@ -227,6 +227,14 @@ class Merge
     // ------------------------------------------------------------------
 
     /**
+     * A mapping conflict (same Connector+ExternalKey, differing
+     * ExternalIdentifier on both sides) is skipped for a connector with a
+     * registered MappingActionDeriverRegistry deriver: that connector
+     * resolves the divergence itself via a follow-up action (see
+     * mergeConnectorMappings/deriveMappingActions), so surfacing it here
+     * would force the operator to destroy one side's mapping for no
+     * reason -- exactly the case the deriver exists to handle instead.
+     *
      * @return array<int, array{field: string, sourceValue: mixed, targetValue: mixed, resolutionKey: string}>
      */
     public static function getIdentityConflicts(Person $Source, Person $Target): array
@@ -262,6 +270,14 @@ class Merge
             $sourceConnector = $SM->getValue('Connector');
             $sourceExternalKey = $SM->getValue('ExternalKey');
             $sourceIdentifier = $SM->getValue('ExternalIdentifier');
+
+            if (MappingActionDeriverRegistry::get($sourceConnector) !== null) {
+                // a deriver-owned connector resolves cross-account
+                // divergence through a follow-up action (see
+                // mergeConnectorMappings/deriveMappingActions), not by
+                // forcing the operator to destroy one side's mapping here
+                continue;
+            }
 
             foreach ($targetByKey[$sourceConnector.':'.$sourceExternalKey] ?? [] as $TM) {
                 $targetIdentifier = $TM->getValue('ExternalIdentifier');
@@ -593,6 +609,22 @@ class Merge
      * Moves connector mappings, dropping exact (Connector, ExternalKey,
      * ExternalIdentifier) duplicates, and derives follow-up actions (via
      * MappingActionDeriverRegistry) for connectors present on both sides.
+     *
+     * A source mapping whose (Connector, ExternalKey) exists on the target
+     * with a *different* identifier is a genuine cross-account divergence,
+     * not a duplicate. For a connector with no registered deriver this was
+     * already forced through getIdentityConflicts's conflict/resolution
+     * path before this method ever runs, so at most one side's row still
+     * exists here and it's simply moved. For a connector *with* a
+     * registered deriver, getIdentityConflicts deliberately left both
+     * rows in place -- the deriver has captured both identifiers into a
+     * follow-up action's payload (deriveMappingActions below, called with
+     * these same pre-mutation $sourceMappings/$targetMappings so it still
+     * sees both sides), and moving the source's row here would leave the
+     * target with two ExternalKey='user[id]'-style mappings for one
+     * connector. It's retired (destroyed) instead, counted as deduped: the
+     * merge audit's source snapshot and the action payload are what
+     * preserve the retired identifier now.
      */
     public static function mergeConnectorMappings(Person $Source, Person $Target, bool $dryRun): array
     {
@@ -611,17 +643,20 @@ class Merge
         }
 
         foreach ($sourceMappings as $SM) {
+            $sourceConnector = $SM->getValue('Connector');
             $sourceIdentifier = $SM->getValue('ExternalIdentifier');
             $duplicate = null;
+            $divergentTarget = null;
 
-            foreach ($targetByKey[$SM->getValue('Connector').':'.$SM->getValue('ExternalKey')] ?? [] as $TM) {
+            foreach ($targetByKey[$sourceConnector.':'.$SM->getValue('ExternalKey')] ?? [] as $TM) {
                 if ($TM->getValue('ExternalIdentifier') === $sourceIdentifier) {
                     $duplicate = $TM;
                     break;
                 }
+                $divergentTarget = $TM;
             }
 
-            if ($duplicate !== null) {
+            if ($duplicate !== null || ($divergentTarget !== null && MappingActionDeriverRegistry::get($sourceConnector) !== null)) {
                 $deduped++;
                 if (!$dryRun) {
                     $SM->destroy();
