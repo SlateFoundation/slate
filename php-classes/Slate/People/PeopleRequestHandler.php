@@ -11,6 +11,7 @@ use Slate\TermsRequestHandler;
 use Slate\RecordsRequestHandler as SlateRecordsRequestHandler;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
+use Slate\People\Merge\MergeRequestHandler;
 
 class PeopleRequestHandler extends \PeopleRequestHandler
 {
@@ -41,6 +42,11 @@ class PeopleRequestHandler extends \PeopleRequestHandler
                 return static::handleStudentsRequest();
             case '*student-lists':
                 return static::handleStudentListsRequest();
+            case 'merge':
+                // note: no leading '*' -- unlike the other collection-level
+                // keywords here, the path is a literal contract in
+                // specs/api/person-merge.md (`/people/merge/...`)
+                return MergeRequestHandler::handleRequest();
             default:
                 return parent::handleRecordsRequest($action);
         }
