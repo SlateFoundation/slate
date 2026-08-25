@@ -41,12 +41,6 @@ Ext.define('SlateAdmin.view.mergequeue.CandidatesGrid', {
                 { value: 'all', text: 'All' }
             ]
         }
-    }, {
-        xtype: 'tbfill'
-    }, {
-        xtype: 'tbtext',
-        itemId: 'resultCount',
-        text: ''
     }],
 
     columns: {
