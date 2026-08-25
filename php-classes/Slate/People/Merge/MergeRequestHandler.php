@@ -27,6 +27,8 @@ class MergeRequestHandler extends \RequestHandler
                 return static::handlePreviewRequest();
             case 'actions':
                 return FollowUpActionsRequestHandler::handleRequest();
+            case 'candidates':
+                return CandidatesRequestHandler::handleRequest();
             case '':
             case false:
                 return static::handleExecuteRequest();
