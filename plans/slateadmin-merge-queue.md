@@ -14,9 +14,11 @@ upstream-specs:
 ## Scope
 
 The SlateAdmin surface for the merge system: a candidates queue grid, a
-side-by-side compare view fed by the preview endpoint, and the decision
-actions (merge either direction, dismiss, defer). Out of scope: any server
-behavior — this plan consumes the two APIs as shipped.
+side-by-side compare view fed by the preview endpoint, the decision actions
+(merge either direction, dismiss, defer), and the follow-up actions queue
+(pending external work, execute-in-place where available, manual outcome
+logging). Out of scope: any server behavior — this plan consumes the APIs as
+shipped.
 
 ## Implements
 
@@ -37,6 +39,10 @@ behavior — this plan consumes the two APIs as shipped.
 - Actions: merge A→B / B→A (confirm dialog restating impact), dismiss and
   defer with required notes; queue refreshes and advances to the next open
   pair.
+- Follow-up actions queue: pending actions grid (type, connector, linked
+  merge, executability), an execute button where an executor exists (confirm
+  dialog restating the action), and manual complete/skip with required notes;
+  completed/failed history visible per merge.
 - Cypress spec covering the queue → compare → decide loop against fixtures.
 
 ## Validation
@@ -46,6 +52,8 @@ behavior — this plan consumes the two APIs as shipped.
       preview
 - [ ] A merge with a conflict cannot be submitted until a resolution is picked
 - [ ] Dismiss/defer require notes and update the row without a reload
+- [ ] Follow-up queue lists pending actions; execute appears only for
+      executor-backed types; manual outcomes require notes
 - [ ] Cypress spec for the full loop passes in CI
 
 ## Risks / unknowns

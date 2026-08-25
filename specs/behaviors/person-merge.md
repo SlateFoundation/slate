@@ -47,10 +47,36 @@ explicitly by the operator. On execute:
   snapshot of the source's identity fields, per-table counts of rows moved,
   the executing user, and timestamp. The audit record is sufficient to answer
   "where did this record's data come from" indefinitely.
-- **External systems are not touched.** The merge result enumerates implied
-  external actions (e.g. "merge the two LMS users", "retire the duplicate
-  email account") derived from the connector mappings involved. Slate never
-  executes those itself — see principles.
+- **External systems are not touched by the merge itself.** Cross-system
+  effects implied by the merge (e.g. "merge the two LMS users", "retire the
+  duplicate email account") are spawned as **follow-up actions** (below)
+  within the same transaction — never executed as a side effect.
+
+### Follow-up actions
+
+A merge's cross-system implications persist as **follow-up action records** —
+a durable work queue of what still needs doing outside Slate's rows, workable
+by an operator, an agent, or a connector-provided executor:
+
+- Each action records: the merge audit it belongs to, an action type, the
+  external system / owning connector, a structured payload (e.g. the two
+  external user IDs and the required direction), and a status.
+- **Status lifecycle**: `pending` → `completed`, `skipped`, or `failed`.
+  Every transition carries an outcome note recording who or what acted
+  (operator, agent, connector executor) and the result; a `failed` action is
+  retryable back through `pending`.
+- **Executors.** An action is *executable in place* when its owning connector
+  implements an executor for its type. An executor encodes the whole correct
+  procedure — precondition checks, parameter derivation from the connector
+  mappings, the external call(s), post-call cleanup, and verification — and
+  runs only on an explicit, separately-authorized request, recording its
+  outcome like any other actor. Actions with no executor are checklist items
+  with the same lifecycle.
+- Initial executor: the LMS (Canvas) connector's user-merge action — derive
+  the surviving external user from the surviving Slate record, execute the
+  external merge, normalize any stale SIS identity the external merge drags
+  onto the survivor, and verify the connector's own user lookup resolves to
+  the survivor before marking `completed`.
 
 ### Duplicate candidates
 
@@ -78,6 +104,10 @@ decision made once is never re-litigated:
   registry) reports no unregistered tables; the check runs in CI.
 - A mid-merge failure (forced in a test) leaves both records unchanged.
 - A dismissed candidate pair stays dismissed across a detector re-run.
+- A merge involving connector mappings spawns the implied follow-up actions
+  atomically with the merge; a failed merge spawns none.
+- A failed executor run marks the action `failed` with the error recorded and
+  leaves it retryable.
 
 ## Principles
 
@@ -94,3 +124,7 @@ decision made once is never re-litigated:
 - **A decision is data.** "Not a duplicate" is as valuable as "merged" —
   dismissals persist with a reason so no future detector run or operator
   re-opens a settled question.
+- **Follow-through is data.** What still needs doing after a merge — and what
+  happened when someone did it — persists as action records with a lifecycle,
+  never as scrollback or a human's memory. Follow-up work must be fully
+  discoverable and workable from the queue alone.
