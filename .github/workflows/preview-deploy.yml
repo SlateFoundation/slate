@@ -8,11 +8,15 @@ name: 'Preview: Deploy'
 # manifests to the sandbox cluster: one deployment/service/ingress per PR at
 # https://pr-<n>.slate.sandbox.k8s.jarv.us/, with the fixtures holobranch
 # seeded and migrations run the way the old deploy-site-preview action did.
-# Closing the PR tears the instance down. Not a required check.
+# Closing the PR tears the instance down — via preview-teardown.yml, which
+# triggers on pull_request_target because this repo auto-deletes merged head
+# branches and GitHub cancels a plain pull_request run when its head branch
+# disappears (observed live on PR #397: the merge cancelled its own teardown).
+# Not a required check.
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, closed]
+    types: [opened, reopened, synchronize]
 
 concurrency:
   group: preview-${{ github.head_ref }}
@@ -35,7 +39,7 @@ jobs:
 
   deploy:
     # fork PRs get no repo secrets, so there is no cluster to deploy to
-    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
 
@@ -302,31 +306,3 @@ jobs:
         env_url: 'https://${{ steps.environment.outputs.hostname }}/'
         logs: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
 
-  teardown:
-    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Configure kubectl
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
-      run: |
-        mkdir -p ~/.kube
-        printf '%s' "${KUBE_CONFIG_DATA}" | base64 -d > ~/.kube/config
-        chmod 600 ~/.kube/config
-        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
-
-    - name: Delete preview instance
-      run: |
-        kubectl delete deployment,service,ingress \
-          -l app.kubernetes.io/instance="${ENVIRONMENT_NAME}"
-        # cert-manager's ingress-shim removes its Certificate with the
-        # ingress but leaves the issued secret behind
-        kubectl delete secret "${ENVIRONMENT_NAME}-tls" --ignore-not-found
-
-    - name: Deactivate GitHub deployment environment
-      uses: bobheadxi/deployments@v1
-      with:
-        step: deactivate-env
-        token: ${{ secrets.GITHUB_TOKEN }}
-        env: ${{ env.ENVIRONMENT_NAME }}

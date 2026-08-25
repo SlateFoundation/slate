@@ -34,10 +34,15 @@ issue #385.
 
 ## Approach
 
-- Single workflow on `pull_request` `[opened, reopened, synchronize,
-  closed]`; `deploy` job for open/sync, `teardown` job for close; shared
-  `preview-<branch>` concurrency group with cancel-in-progress so closing a
-  PR also cancels an in-flight deploy.
+- `preview-deploy.yml` on `pull_request` `[opened, reopened, synchronize]`
+  (deploy), `preview-teardown.yml` on `pull_request_target` `[closed]`
+  (teardown); deploy keeps a `preview-<branch>` concurrency group with
+  cancel-in-progress. Teardown was originally a `closed`-type job in the
+  same workflow, but the repo auto-deletes merged head branches and GitHub
+  cancels a plain `pull_request` run when its head branch disappears — the
+  merge of #397 cancelled its own teardown live. `pull_request_target` runs
+  in base-repo context and survives the deletion; it never checks out PR
+  code, so secrets exposure is safe.
 - Build arc copied from `test-e2e.yml`: hologit projection of
   `emergence-site` (lensed, cached via `HOLO_CACHE_FROM/TO=origin`, guarded
   tree assertion) extracted into the skeleton-v3 `docker/` context, composer
