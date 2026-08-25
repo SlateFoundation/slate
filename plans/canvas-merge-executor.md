@@ -72,18 +72,40 @@ executor needs (`RemoteSystems\Canvas`) under the same static-config/
 general-purpose Canvas SDK -- a deviation from the "reuse the existing Canvas
 integration" framing in the task brief, since there was nothing to reuse.
 
-A `canvas` connector mapping's `ExternalKey` is defined as the Canvas user ID
-(not a fixed constant like `'id'`), with `ExternalIdentifier` carrying the
-Canvas login's SIS ID. This is load-bearing, not incidental:
-`Merge::getIdentityConflicts()` treats two mappings sharing the same
-`(Connector, ExternalKey)` with differing `ExternalIdentifier` as a conflict
-requiring operator resolution, and resolving it discards the losing side's
-mapping *before* follow-up actions are derived (confirmed by
-`person-merge-engine`'s own note that mapping-identity conflicts are
-intentionally gated through that same mechanism). With a shared constant key,
-two independent Canvas accounts on both sides of a merge would always trigger
-that conflict path and the `canvas-user-merge` action could never spawn.
-Keying on the Canvas user ID avoids the collision.
+**Correction from review against production data** (the first pass here
+got this backwards): review against a real production deployment's
+`connector_mappings` table found that `canvas` mappings actually use
+`ExternalKey = 'user[id]'` -- a **constant**, matching the sibling `gsuite`
+connector's own convention -- with `ExternalIdentifier` carrying the numeric
+Canvas user id. The first pass had these flipped (`ExternalKey` = the Canvas
+user id, `ExternalIdentifier` = a SIS-matched value), reasoning that a
+constant key would always collide with `Merge::getIdentityConflicts()`'s
+mapping-conflict path (same `(Connector, ExternalKey)`, differing
+`ExternalIdentifier` → conflict requiring operator resolution, which
+discards the losing side's mapping before follow-up actions are derived).
+That reasoning was right about the mechanism and wrong about the fix: against
+real data, a constant `ExternalKey` is exactly what always happens for two
+Canvas-mapped people, so the engine itself needed to change rather than the
+mapping convention.
+
+`Merge.php` now special-cases a connector with a registered
+`MappingActionDeriverRegistry` deriver in both places that convention
+touches:
+
+- `getIdentityConflicts()` skips emitting a mapping conflict for such a
+  connector entirely -- the divergence is the deriver's to resolve via a
+  follow-up action, not the operator's to resolve by destroying a mapping.
+- `mergeConnectorMappings()` retires (destroys, counted as deduped) rather
+  than moves a source mapping whose `(Connector, ExternalKey)` exists on the
+  target with a different identifier, when that connector has a registered
+  deriver -- moving it would leave the target with two `user[id]`-style
+  mappings for one connector. `deriveMappingActions()` still runs against
+  the pre-mutation mapping arrays, so it captures both original identifiers
+  regardless of this retirement.
+
+A connector with no registered deriver is untouched by either change and
+keeps the exact original conflict/resolution behavior -- covered by
+`UserMergeActionDeriverTest::testConnectorWithoutARegisteredDeriverStillGetsTheConflictResolutionPath`.
 
 All five Validation checklist items have a corresponding PHPUnit test in
 `phpunit-tests/slate.read-write/Connectors/Canvas/`
