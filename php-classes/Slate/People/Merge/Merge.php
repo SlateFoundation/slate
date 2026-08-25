@@ -386,7 +386,7 @@ class Merge
                 'SELECT COUNT(*) FROM `%s` WHERE `%s` = %u AND (%s)',
                 [$table, $column, $sourceID, $condition]
             );
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException) {
             return ['moved' => 0, 'deduped' => 0];
         }
 
@@ -409,7 +409,7 @@ class Merge
 
         try {
             return static::applyGenericEntryQueries($entry, $table, $column, $condition, $sourceID, $targetID);
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException) {
             // framework tables create on first use, so an absent table just
             // means zero rows -- e.g. a leaf without the module enabled
             return ['moved' => 0, 'deduped' => 0];
@@ -468,7 +468,7 @@ class Merge
                         'UPDATE `%s` SET `%s` = %u WHERE `%s` = %u',
                         [$entry['table'], $entry['contactPointColumn'], $targetCPID, $entry['contactPointColumn'], $sourceCPID]
                     );
-                } catch (TableNotFoundException $e) {
+                } catch (TableNotFoundException) {
                     break; // absent table == zero rows to remap
                 }
             }
