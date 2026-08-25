@@ -1,5 +1,6 @@
 ---
-status: planned
+status: done
+pr: 401
 depends: [person-merge-engine, duplicate-candidates]
 specs:
   - specs/behaviors/person-merge.md
@@ -66,4 +67,22 @@ shipped.
 Intended for execution by the agent already working the SlateAdmin cleanup
 campaign — conventions here follow that campaign's post-rework patterns.
 
+Implemented in PR #401. None of the Validation boxes above are checked:
+implementation is code-complete and ESLint-clean (0 errors against the
+required-check command, confirmed via `--format json` severity check), but
+this session had no way to run the live app or the docker/hologit e2e
+harness, so none of the runtime behaviors were actually observed — only
+traced through code review against the API/behavior specs. See PR #401's
+description for the exact per-requirement mapping and the Cypress spec's
+header comment (`cypress/integration/SlateAdmin/merge-queue.js`, left
+`describe.skip`) for what a reviewer with harness access should confirm
+before checking these boxes.
+
 ## Follow-ups
+
+- Run the real e2e harness against this branch, un-skip
+  `cypress/integration/SlateAdmin/merge-queue.js`, and check off the
+  Validation boxes above once each is actually observed passing.
+- Consider progressive disclosure in the compare view (impact/conflicts/
+  follow-ups sections currently all render up front) if real preview
+  payloads turn out dense enough to warrant it — see Risks/unknowns above.
