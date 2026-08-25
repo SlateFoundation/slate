@@ -6,19 +6,31 @@ use DB;
 use Emergence\Connectors\Mapping;
 use Emergence\People\Person;
 use Slate\Connectors\Canvas\Connector;
+use Slate\Connectors\Canvas\UserMergeActionDeriver;
 use Slate\People\Merge\ActionExecutorRegistry;
 use Slate\People\Merge\FollowUpAction;
 use Slate\People\Merge\MappingActionDeriverRegistry;
 use Slate\People\Merge\Merge;
 use Slate\People\Merge\MergeAudit;
+use Slate\People\Merge\MergeConflictException;
 use Slate\People\Student;
 
 /**
  * Covers the direction-derivation checklist item in
- * plans/canvas-merge-executor.md's Validation section: a merge touching
- * Canvas mappings on both records spawns a canvas-user-merge action with
- * the correct direction (survivor = the person the merge's Target
- * represents).
+ * plans/canvas-merge-executor.md's Validation section, against the
+ * production connector_mappings convention: a `canvas` mapping's
+ * ExternalKey is the constant 'user[id]' and its ExternalIdentifier is the
+ * numeric Canvas user id (see UserMergeActionDeriver::EXTERNAL_KEY and the
+ * plan's Notes for the production-data finding that corrected an earlier,
+ * flipped convention).
+ *
+ * Also covers the Merge::getIdentityConflicts()/mergeConnectorMappings()
+ * special-casing a deriver-owned connector required: cross-account
+ * divergence spawns a follow-up action instead of forcing a
+ * conflict-resolution choice, the source's divergent mapping is retired
+ * (not moved) so the target ends with exactly one canvas mapping, and a
+ * connector with no registered deriver is unaffected -- it keeps the
+ * original conflict/resolution path exactly.
  *
  * Requires a live DB via the full Emergence/Slate runtime (see
  * .analysis-context/php-core/handlers/phpunit.php) -- not runnable outside
@@ -67,19 +79,22 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
         ActionExecutorRegistry::reset();
     }
 
-    public function testMergeSpawnsCanvasUserMergeActionWithCorrectDirection()
+    protected function createCanvasMapping(int $personID, string $canvasUserID): void
     {
         Mapping::create([
-            'ContextClass' => Person::getRootClass(), 'ContextID' => static::$Source->ID,
+            'ContextClass' => Person::getRootClass(), 'ContextID' => $personID,
             'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
-            'ExternalKey' => '5001', 'ExternalIdentifier' => static::$Source->Username,
+            'ExternalKey' => UserMergeActionDeriver::EXTERNAL_KEY, 'ExternalIdentifier' => $canvasUserID,
         ], true);
-        Mapping::create([
-            'ContextClass' => Person::getRootClass(), 'ContextID' => static::$Target->ID,
-            'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
-            'ExternalKey' => '5002', 'ExternalIdentifier' => static::$Target->Username,
-        ], true);
+    }
 
+    public function testMergeSpawnsCanvasUserMergeActionWithCorrectDirectionAndNoMappingConflict()
+    {
+        $this->createCanvasMapping(static::$Source->ID, '1384');
+        $this->createCanvasMapping(static::$Target->ID, '2716');
+
+        // no MergeConflictException, no resolutions needed -- the deriver
+        // owns this divergence, per Merge::getIdentityConflicts()
         $Audit = Merge::execute(static::$Source, static::$Target);
 
         $actions = FollowUpAction::getAllByWhere([
@@ -92,18 +107,57 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Connector::CONNECTOR_KEY, $Action->Connector);
         $this->assertEquals(FollowUpAction::STATUS_PENDING, $Action->Status);
         $this->assertTrue($Action->hasExecutor, 'canvas-user-merge should have a registered executor once Connector::register() has run');
-        $this->assertEquals('5001', $Action->Payload['sourceCanvasUserID']);
-        $this->assertEquals('5002', $Action->Payload['destinationCanvasUserID']);
-        $this->assertEquals(static::$Target->Username, $Action->Payload['survivorUsername']);
+        $this->assertEquals('1384', $Action->Payload['sourceCanvasUserID']);
+        $this->assertEquals('2716', $Action->Payload['destinationCanvasUserID']);
+    }
+
+    public function testSourcesDivergentMappingIsRetiredNotMovedLeavingTargetWithExactlyOneCanvasMapping()
+    {
+        $this->createCanvasMapping(static::$Source->ID, '1384');
+        $this->createCanvasMapping(static::$Target->ID, '2716');
+
+        Merge::execute(static::$Source, static::$Target);
+
+        $targetMappings = Mapping::getAllByWhere([
+            'ContextClass' => Person::getRootClass(),
+            'ContextID' => static::$Target->ID,
+            'Connector' => Connector::CONNECTOR_KEY,
+        ]);
+        $this->assertCount(1, $targetMappings);
+        $this->assertEquals('2716', $targetMappings[0]->ExternalIdentifier, "the target's own mapping should be untouched, not overwritten by the source's");
+
+        $sourceMappings = Mapping::getAllByWhere([
+            'ContextClass' => Person::getRootClass(),
+            'ContextID' => static::$Source->ID,
+            'Connector' => Connector::CONNECTOR_KEY,
+        ]);
+        $this->assertCount(0, $sourceMappings, "the source's divergent mapping should be retired, not left behind");
+    }
+
+    public function testIdenticalCanvasIdentifiersOnBothSidesSpawnsNoActionSinceTheEngineAlreadyDedupes()
+    {
+        $this->createCanvasMapping(static::$Source->ID, '1384');
+        $this->createCanvasMapping(static::$Target->ID, '1384');
+
+        $Audit = Merge::execute(static::$Source, static::$Target);
+
+        $actions = FollowUpAction::getAllByWhere([
+            'MergeAuditID' => $Audit->ID,
+            'Type' => Connector::ACTION_TYPE_USER_MERGE,
+        ]);
+        $this->assertCount(0, $actions);
+
+        $targetMappings = Mapping::getAllByWhere([
+            'ContextClass' => Person::getRootClass(),
+            'ContextID' => static::$Target->ID,
+            'Connector' => Connector::CONNECTOR_KEY,
+        ]);
+        $this->assertCount(1, $targetMappings, 'the exact duplicate should have been deduped, leaving exactly one');
     }
 
     public function testNoActionSpawnedWhenOnlyOneSideHasACanvasMapping()
     {
-        Mapping::create([
-            'ContextClass' => Person::getRootClass(), 'ContextID' => static::$Target->ID,
-            'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
-            'ExternalKey' => '5002', 'ExternalIdentifier' => static::$Target->Username,
-        ], true);
+        $this->createCanvasMapping(static::$Target->ID, '2716');
 
         $Audit = Merge::execute(static::$Source, static::$Target);
 
@@ -114,34 +168,35 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $actions);
     }
 
-    public function testPicksMappingMatchingUsernameWhenPersonHasMultipleCanvasMappings()
+    public function testConnectorWithoutARegisteredDeriverStillGetsTheConflictResolutionPath()
     {
-        // a stray/incorrect mapping alongside the real one on the source --
-        // the deriver must pick the row whose SIS identifier matches the
-        // person's own username, not just the first one found
+        // a divergent mapping on an unrelated connector with no deriver
+        // registered -- must still halt execute until resolved, exactly
+        // like before this connector's special-case existed
         Mapping::create([
             'ContextClass' => Person::getRootClass(), 'ContextID' => static::$Source->ID,
-            'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
-            'ExternalKey' => '9999', 'ExternalIdentifier' => 'someone-elses-sis-id',
-        ], true);
-        Mapping::create([
-            'ContextClass' => Person::getRootClass(), 'ContextID' => static::$Source->ID,
-            'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
-            'ExternalKey' => '5001', 'ExternalIdentifier' => static::$Source->Username,
+            'Source' => 'manual', 'Connector' => 'no-deriver-test-connector',
+            'ExternalKey' => 'id', 'ExternalIdentifier' => 'source-external-id',
         ], true);
         Mapping::create([
             'ContextClass' => Person::getRootClass(), 'ContextID' => static::$Target->ID,
-            'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
-            'ExternalKey' => '5002', 'ExternalIdentifier' => static::$Target->Username,
+            'Source' => 'manual', 'Connector' => 'no-deriver-test-connector',
+            'ExternalKey' => 'id', 'ExternalIdentifier' => 'target-external-id',
         ], true);
 
-        $Audit = Merge::execute(static::$Source, static::$Target);
+        try {
+            Merge::execute(static::$Source, static::$Target);
+            $this->fail('Expected MergeConflictException for the connector with no registered deriver');
+        } catch (MergeConflictException $e) {
+            $this->assertEquals('mapping:no-deriver-test-connector:id', $e->conflicts[0]['resolutionKey']);
+        }
 
-        $actions = FollowUpAction::getAllByWhere([
-            'MergeAuditID' => $Audit->ID,
-            'Type' => Connector::ACTION_TYPE_USER_MERGE,
+        // unresolved: no audit written
+        $this->assertNull(MergeAudit::getByPreviousSource(static::$Source->ID));
+
+        $Audit = Merge::execute(static::$Source, static::$Target, [
+            'mapping:no-deriver-test-connector:id' => 'target-external-id',
         ]);
-        $this->assertCount(1, $actions);
-        $this->assertEquals('5001', $actions[0]->Payload['sourceCanvasUserID']);
+        $this->assertNotNull($Audit);
     }
 }

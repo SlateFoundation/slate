@@ -59,7 +59,6 @@ class UserMergeExecutorTest extends \PHPUnit_Framework_TestCase
             'Payload' => [
                 'sourceCanvasUserID' => '5001',
                 'destinationCanvasUserID' => '5002',
-                'survivorUsername' => static::$Target->Username,
             ],
         ], true);
     }
