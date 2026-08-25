@@ -185,7 +185,7 @@ Ext.define('SlateAdmin.controller.Courses', {
 
             // activate tab
             if (section && tab) {
-                sectionsManager.detailTabs.setActiveTab(tab);
+                sectionsManager.setActiveDetailTab(tab);
             }
 
             me.selectSection(section, function() {
@@ -277,7 +277,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             me.doSearch(false, function() {
                 // activate tab
                 if (section && tab) {
-                    sectionsManager.detailTabs.setActiveTab(tab);
+                    sectionsManager.setActiveDetailTab(tab);
                 }
 
                 me.selectSection(section, function() {
@@ -414,7 +414,6 @@ Ext.define('SlateAdmin.controller.Courses', {
     syncState: function() {
         var me = this,
             sectionsManager = me.getSectionsManager(),
-            detailTabs = sectionsManager.detailTabs,
             sectionRecord = sectionsManager.getSelectedSection(),
             extraParams = me.getCoursesSectionsResultStore().getProxy().extraParams,
             isLookup = sectionRecord && !sectionRecord.phantom,
@@ -440,7 +439,7 @@ Ext.define('SlateAdmin.controller.Courses', {
             path.push(sectionRecord.get('Code'));
             title = sectionRecord.get('Title');
 
-            activeTab = detailTabs.getActiveTab() || detailTabs.items.getAt(0);
+            activeTab = sectionsManager.getActiveDetailTab();
 
             if (activeTab) {
                 path.push(activeTab.getItemId());

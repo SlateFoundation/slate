@@ -52,7 +52,7 @@ Ext.define('SlateAdmin.controller.courses.Profile', {
 
         // switch to the profile tab and focus first field if this is a phantom
         if (section && section.phantom) {
-            manager.detailTabs.setActiveTab(me.getProfilePanel());
+            manager.setActiveDetailTab(me.getProfilePanel());
 
             Ext.defer(function() {
                 me.getProfileForm().down('field[readOnly=false][disabled=false]').focus();

@@ -6,8 +6,8 @@ Ext.define('SlateAdmin.controller.People', {
     requires: [
         'Ext.window.MessageBox',
 
-        /* globals Slate, SlateAdmin */
-        'Slate.API',
+        /* globals SlateAdmin */
+        'SlateAdmin.util.PageTitle',
         'SlateAdmin.util.PageTitle'
     ],
 
@@ -91,30 +91,12 @@ Ext.define('SlateAdmin.controller.People', {
         grid: 'people-grid',
         exportResultsBtn: 'people-grid #exportResultsBtn',
         sendInvitationsBtn: 'people-grid #sendInvitationsBtn',
-        selectionCountCmp: 'people-grid #selectionCount',
-        exportColumnsMenu: 'people-grid menu#csvExportColumns'
+        selectionCountCmp: 'people-grid #selectionCount'
     },
 
     control: {
         navPanel: {
             beforeexpand: 'onNavPanelBeforeExpand'
-        },
-        'people-navpanel jarvus-searchfield': {
-            specialkey: 'onSearchSpecialKey',
-            clear: 'onSearchClear'
-        },
-        'people-navpanel people-advancedsearchform field': {
-            specialkey: 'onAdvancedSearchFormSpecialKey'
-        },
-        'people-navpanel button[action=search]': {
-            click: 'onSearchClick'
-        },
-        'people-navpanel #groups': {
-            itemclick: 'onGroupSelect'
-        },
-        'people-grid': {
-            select: { fn: 'onPersonSelect', buffer: 10 },
-            deselect: { fn: 'onPersonDeselect', buffer: 10 }
         },
         manager: {
             activate: 'onManagerActivate',
@@ -123,25 +105,10 @@ Ext.define('SlateAdmin.controller.People', {
         'people-manager #detailTabs': {
             tabchange: 'onDetailTabChange'
         },
-        'people-grid button#exportResultsBtn menuitem[exportFormat]': {
-            click: 'onExportFormatButtonClick'
-        },
-        'people-grid menu#csvExportColumns': {
-            beforeshow: 'onBeforeCsvExportColumnsMenuShow'
+        'people-grid': {
+            select: { fn: 'onPersonSelect', buffer: 10 },
+            deselect: { fn: 'onPersonDeselect', buffer: 10 }
         }
-//            'people-grid #exportResultsBtn': {
-//                click: 'onExportResultsClick'
-//            },
-//            'people-grid #exportResultsBtn menu': {
-//                afterrender: 'onExportMenuRendered',
-//                exportfieldsrefill: 'onExportFieldsRefill'
-//            },
-//            'people-grid #exportResultsBtn #exportTypeMenu menucheckitem': {
-//                checkchange: 'onExportTypeChange'
-//            },
-//            'people-grid #exportResultsBtn #exportFieldsMenu menucheckitem': {
-//                checkchange: 'onExportFieldsChange'
-//            }
     },
 
     // controller template methods
@@ -180,6 +147,8 @@ Ext.define('SlateAdmin.controller.People', {
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(me.getManager());
         Ext.resumeLayouts(true);
+
+        SlateAdmin.util.PageTitle.setTitle('People');
     },
 
     /**
@@ -211,27 +180,23 @@ Ext.define('SlateAdmin.controller.People', {
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(manager);
 
-        // resume layouts and insert a small delay to allow layouts to flush before triggering store load so loading mask can size correctly
         Ext.resumeLayouts(true);
-        Ext.defer(function() {
-            Ext.suspendLayouts();
 
-            // execute search (suppressed by doSearch if query hasn't changed) and select user
-            me.doSearch(false, function() {
-                // activate tab
-                if (person && tab) {
-                    manager.detailTabs.setActiveTab(tab);
-                }
+        // execute search (suppressed by doSearch if query hasn't changed) and select user
+        me.doSearch(false, function() {
+            // activate tab
+            if (person && tab) {
+                manager.setActiveDetailTab(tab);
+            }
 
-                // query has been performed so we can remove the q param so syncState() doesn't use it to change our path
-                delete proxy.extraParams.q;
+            // query has been performed, so clear the q param so syncState()
+            // doesn't use it to change our path
+            proxy.setExtraParam('q', null);
 
-                me.selectPerson(person, function() {
-                    me.resumeStateSync();
-                    Ext.resumeLayouts(true);
-                });
+            me.selectPerson(person, function() {
+                me.resumeStateSync();
             });
-        }, 10);
+        });
     },
 
     /**
@@ -274,30 +239,27 @@ Ext.define('SlateAdmin.controller.People', {
 
         // sync search field and form
         me.getSearchField().setValue(query);
-        me.syncAdvancedSearchForm();
+        me.application.getController('people.Search').syncAdvancedSearchForm();
 
         // activate manager
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(manager);
 
-        // resume layouts and insert a small delay to allow layouts to flush before triggering store load so loading mask can size correctly
         Ext.resumeLayouts(true);
-        Ext.defer(function() {
-            Ext.suspendLayouts();
 
-            // execute search (suppressed by doSearch if query hasn't changed) and select user
-            me.doSearch(false, function() {
-                // activate tab
-                if (person && tab) {
-                    manager.detailTabs.setActiveTab(tab);
-                }
+        SlateAdmin.util.PageTitle.setTitle(query ? '\u201c' + query + '\u201d' : 'People');
 
-                me.selectPerson(person, function() {
-                    me.resumeStateSync(false);
-                    Ext.resumeLayouts(true);
-                });
+        // execute search (suppressed by doSearch if query hasn't changed) and select user
+        me.doSearch(false, function() {
+            // activate tab
+            if (person && tab) {
+                manager.setActiveDetailTab(tab);
+            }
+
+            me.selectPerson(person, function() {
+                me.resumeStateSync(false);
             });
-        }, 10);
+        });
     },
 
     showCreatePerson: function() {
@@ -309,7 +271,9 @@ Ext.define('SlateAdmin.controller.People', {
 
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(manager);
-        manager.detailTabs.setActiveTab('profile');
+        manager.setActiveDetailTab('profile');
+
+        SlateAdmin.util.PageTitle.setTitle('Create Person');
 
         me.selectPerson(me.getPersonModel().create(), function() {
             me.resumeStateSync(false);
@@ -326,69 +290,6 @@ Ext.define('SlateAdmin.controller.People', {
      */
     onNavPanelBeforeExpand: function() {
         this.syncState();
-    },
-
-    /**
-     * Event Handler. Handles the inherited specialkey event of Jarvus.ext.form.field.Search .
-     * If the key pressed is ENTER the query will be performed. If the key pressed is ENTER and the
-     * search field is blank, the advanced search form will be reset.
-     * @param {Jarvus.ext.form.field.Search} field The search field
-     * @param {Ext.event.Event} ev The event object
-     * @return {void}
-     */
-    onSearchSpecialKey: function(field, ev) {
-        var query = field.getValue().trim();
-
-        if (ev.getKey() == ev.ENTER) {
-            if (query) {
-                this.redirectTo(['people', 'search', query]);
-            } else {
-                this.getAdvancedSearchForm().getForm().reset();
-            }
-        }
-    },
-
-    /**
-     * Event Handler. Resets the advanced search form and selects the root node of the navpanel's treepanel.
-     * @param {Jarvus.ext.form.field.Search} field The search field
-     * @param {Ext.event.Event} ev The event object
-     * @return {void}
-     */
-    onSearchClear: function(field, ev) {
-        this.getAdvancedSearchForm().getForm().reset();
-        this.getGroupsTree().getSelectionModel().select(0, false, true);
-    },
-
-    /**
-     * Event Handler. Handles the specialkey event of fields contained in SlateAdmin.view.people.AdvancedSearchForm.
-     * If the key pressed is ENTER, syncQueryField will be called which updates the query string field
-     * from the advanced search form.
-     * @param {Ext.form.field.Base} field The advanced search form field
-     * @param {Ext.event.Event} ev The event object
-     * @return {void}
-     */
-    onAdvancedSearchFormSpecialKey: function(field, ev) {
-        if (ev.getKey() == ev.ENTER) {
-            this.syncQueryField(true);
-        }
-    },
-
-    /**
-     * Event Handler. Handles the click event of the navpanel search button.  Calls syncQueryField to update
-     * the query string field from the advanced search form.
-     * @return {void}
-     */
-    onSearchClick: function() {
-        this.syncQueryField(true);
-    },
-
-    /**
-     * Event Handler. Handles the navpanel's treepanel select event.  Calls syncQueryField where the selected
-     * group is added to the query string.
-     * @return {void}
-     */
-    onGroupSelect: function() {
-        this.syncQueryField(true);
     },
 
     /**
@@ -465,183 +366,6 @@ Ext.define('SlateAdmin.controller.People', {
         this.syncState();
     },
 
-    /**
-     * Event Handler.  Exports data in the requested format.
-     * @param {Ext.menu.Item} menuItem The menuitem specifying the desired format
-     * @return {void}
-     */
-    onExportFormatButtonClick: function(menuItem) {
-        var me = this,
-            exportColumnsMenu = me.getExportColumnsMenu(),
-            exportFormat = menuItem.exportFormat,
-            params = Ext.applyIf({
-                format: exportFormat
-            }, me.getPeoplePeopleStore().getProxy().extraParams),
-            url;
-
-        if (exportFormat == 'json') {
-            params.include = '*';
-        } else if (exportFormat == 'csv') {
-            params.columns = Ext.Array.pluck(exportColumnsMenu.query('menuitem[checked]'), 'itemId').join(',');
-        }
-
-        url = Slate.API.buildUrl('/people?' + Ext.Object.toQueryString(params));
-
-        if (exportFormat == 'json') {
-            window.open(url, '_blank');
-        } else {
-            location.href = url;
-        }
-    },
-
-    /**
-     * Generates the column options for the CVS export sub menu from the results of a server request to /people/*fields.
-     * @param {Ext.menu.Menu} menu The CSV export column selection menu
-     * @return {void}
-     */
-    onBeforeCsvExportColumnsMenuShow: function(menu) {
-        var columnsPlaceholder = menu.down('#columnsPlaceholder'),
-            selectedFieldKeys = ['FirstName', 'LastName', 'Username', 'StudentNumber', 'GraduationYear', 'Advisor', 'PrimaryEmail'];
-
-        if (menu.loaded) {
-            return;
-        }
-
-        menu.loaded = true;
-
-        columnsPlaceholder.show();
-
-        Slate.API.request({
-            method: 'GET',
-            url: '/people/*fields',
-            success: function(response) {
-                var recordData = response.data,
-                    fields = recordData.fields,
-                    dynamicFields = recordData.dynamicFields,
-                    menuItems = [],
-                    key, keyBits;
-
-                for (key in fields) {
-
-                    // QUESTION: are we worried about the possibility that the JS Object prototype has been overwritten?
-                    if (!fields.hasOwnProperty(key)) {
-                        continue;
-                    }
-
-                    if (key == 'RevisionID') {
-                        continue;
-                    }
-
-                    keyBits = key.match(/(\w+)ID(s?)/);
-                    if (keyBits && dynamicFields.hasOwnProperty(keyBits[1]+keyBits[2])) {
-                        continue;
-                    }
-
-                    menuItems.push({
-                        xtype: 'menucheckitem',
-                        itemId: key,
-                        text: fields[key].label,
-                        checked: Ext.Array.contains(selectedFieldKeys, key),
-                        fieldType: 'field'
-                    });
-                }
-
-                for (key in dynamicFields) {
-                    if (!dynamicFields.hasOwnProperty(key)) {
-                        continue;
-                    }
-
-                    menuItems.push({
-                        xtype: 'menucheckitem',
-                        itemId: key,
-                        text: dynamicFields[key].label,
-                        checked: Ext.Array.contains(selectedFieldKeys, key),
-                        fieldType: 'dynamicField'
-                    });
-                }
-
-                Ext.suspendLayouts();
-                menu.insert(menu.items.indexOf(columnsPlaceholder)+1, menuItems);
-                columnsPlaceholder.hide();
-                Ext.resumeLayouts(true);
-            }
-        });
-    },
-
-//    onExportMenuRendered: function(exportMenu) {
-//        var grid = exportMenu.up('people-grid'),
-//            exportItems = grid.getExportItems();
-//
-//        if(!exportItems) {
-//            exportMenu.setLoading(true);
-//
-//            Ext.Ajax.request({
-//                url: '/people/json/reportFields',
-//                method: 'GET',
-//                success: function(response) {
-//                    var r = Ext.decode(response.responseText);
-//                    grid.setExportItems(r.data);
-//
-//                    grid.fireEvent('exportfieldsloaded');
-//
-//                    exportMenu.setLoading(false);
-//                }
-//            });
-//        }
-//    },
-//
-//    onExportFieldsRefill: function(exportFields) {
-//        var me = this,
-//            grid = me.getPeopleGrid(),
-//            exportMenu = me.getExportResultsBtn().menu;
-//
-//        if(grid.exportFieldsLoaded) {
-//            grid.checkExportItems(exportFields);
-//        } else {
-//            grid.on('exportfieldsloaded', function() {
-//                grid.checkExportItems(exportMenu.pendingCheckedFields);
-//
-//                exportMenu.pendingCheckedFields = false;
-//            }, null, {single: true});
-//        }
-//    },
-//
-//    onExportTypeChange: function(field) {
-//        field.up('menu').fireEvent('exportformatchange');
-//    },
-//
-//    onExportFieldsChange: function(checkItem) {
-//        checkItem.up('menu').fireEvent('exportformatchange');
-//    },
-//
-//    onExportResultsClick: function(exportButton, evt) {
-//        var checkItemsMenu = exportButton.menu,
-//            grid = exportButton.up('people-grid'),
-//            responseMode = checkItemsMenu.down('#exportTypeMenu menucheckitem[checked=true]').value,
-//            exportItems = grid.getExportItems(),
-//            checkedItems = checkItemsMenu.query('#exportFieldsMenu menucheckitem[checked=true]'),
-//            loadedQuery = Ext.getStore('People').getProxy().extraParams,
-//            queryParam = {
-//                q: loadedQuery ? loadedQuery.q : ''
-//            };
-//
-//            if(exportItems && checkedItems.length != exportItems.length) {
-//                var exportFields = [];
-//
-//                for(var i=0; i<checkedItems.length; i++) {
-//                    exportFields.push(checkedItems[i].value);
-//                }
-//                queryParam.exportFields = exportFields.join(',');
-//            }
-//
-//            grid.setLoading('Exporting Students &hellip;');
-//
-//            Jarvus.util.CookieSniffer.downloadFile('/people/' + responseMode + '?' + Ext.Object.toQueryString(queryParam, true), function(){
-//                grid.setLoading(false);
-//            });
-//    },
-
-
     // controller methods
 
     /**
@@ -689,55 +413,6 @@ Ext.define('SlateAdmin.controller.People', {
 
             me.stateSyncPending = false;
         }
-    },
-
-    /**
-     * Sets the title and path (url) based on the selection in the grid and the active tab in details panel.
-     * @return {void}
-     */
-    syncState: function() {
-        var me = this,
-            manager = me.getManager(),
-            detailTabs = manager.detailTabs,
-            personRecord = manager.getSelectedPerson(),
-            extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
-            path = ['people'],
-            title = 'People',
-            activeTab = null;
-
-        if (me.stateSyncSuspended) {
-            me.stateSyncPending = true;
-            return;
-        }
-
-        me.stateSyncPending = false;
-
-        if (extraParams && extraParams.q) {
-            path.push('search', extraParams.q);
-            title = '\u201c' + extraParams.q + '\u201d';
-        } else if (personRecord) {
-            path.push(personRecord.phantom ? 'create' : 'lookup');
-        }
-
-        if (personRecord && !personRecord.phantom) {
-            if (personRecord.get('Username')) {
-                path.push(personRecord.get('Username'));
-            } else {
-                path.push('?id='+personRecord.get('ID'));
-            }
-
-            title = personRecord.getFullName();
-
-            activeTab = detailTabs.getActiveTab() || detailTabs.items.getAt(0);
-
-            if (activeTab) {
-                path.push(activeTab.getItemId());
-                title = activeTab.title + ' \u2014 ' + title;
-            }
-        }
-
-        me.redirectTo(path);
-        SlateAdmin.util.PageTitle.setTitle(title);
     },
 
     /**
@@ -796,212 +471,111 @@ Ext.define('SlateAdmin.controller.People', {
     },
 
     /**
-     * Updates the advanced search form from the query string field
-     * Inverse of {@link #method-syncQueryField}
+     * Sets the title and path (url) based on the selection in the grid and the active tab in details panel.
      * @return {void}
      */
-    syncAdvancedSearchForm: function() {
+    syncState: function() {
         var me = this,
-            form = me.getAdvancedSearchForm().getForm(),
-            fields = form.getFields().items,
-            fieldsLen = fields.length, fieldIndex = 0, field, fieldName,
-            groupsTreePanel = me.getGroupsTree(),
-            rootGroupNode = groupsTreePanel.getStore().getRootNode(),
-            query = me.getSearchField().getValue(),
-            terms = query.split(/\s+/),
-            termsLen = terms.length, termIndex = 0, term,
-            values = {};
+            manager = me.getManager(),
+            personRecord = manager.getSelectedPerson(),
+            extraParams = me.getPeoplePeopleStore().getProxy().extraParams,
+            path = ['people'],
+            title = 'People',
+            activeTab = null;
 
-        // build map of keyed search terms
-        for (; termIndex < termsLen; termIndex++) {
-            term = terms[termIndex].split(/:/, 2);
-            if (term.length == 2) {
-                values[term[0]] = term[1];
-            }
-        }
-
-        Ext.suspendLayouts();
-
-        // sync advanced search fields from query term values
-        for (; fieldIndex < fieldsLen; fieldIndex++) {
-            field = fields[fieldIndex];
-            fieldName = field.getName();
-
-            if (fieldName in values) {
-                field.setValue(values[fieldName]);
-            } else {
-                field.reset();
-            }
-        }
-
-        // sync group selection
-        if (values.group) {
-            rootGroupNode.expand(false, function() {
-                var groupNode = rootGroupNode.findChild('Handle', values.group, true);
-
-                if (groupNode) {
-                    groupsTreePanel.selectRecord(groupNode, false, true); // true to suppress select event because we're bringing the tree in-sync with an existing selection rather than making a new one
-                }
-            });
-        } else {
-            groupsTreePanel.selectRecord(rootGroupNode, false, true); // true to suppress select event because we're bringing the tree in-sync with an existing selection rather than making a new one
-        }
-
-        Ext.resumeLayouts(true);
-    },
-
-    /**
-     * Updates the query string field from the advanced search form.
-     * Inverse of {@link #method-syncAdvancedSearchForm}
-     * @param {Boolean} [execute=false] If true, will perform the query by adding the query string to Ext.util.History
-     * @return {void}
-     */
-    syncQueryField: function(execute) {
-        var me = this,
-            searchField = me.getSearchField(),
-            form = me.getAdvancedSearchForm().getForm(),
-            selectedGroups = me.getGroupsTree().getSelectionModel().getSelection(),
-            rootGroupSelected = false,
-            fields = form.getFields().items,
-            fieldsLen = fields.length, fieldIndex = 0, field, fieldName, fieldValue,
-            query = searchField.getValue(),
-            terms = query.split(/\s+/),
-            termsLen = terms.length, termIndex = 0, term, splitTerm,
-            fieldNames = [],
-            unmatchedTerms = [],
-            queuedTerms = [];
-
-        // build list of field names and queued terms from advanced search form
-        for (; fieldIndex < fieldsLen; fieldIndex++) {
-            field = fields[fieldIndex];
-            fieldName = field.getName();
-            fieldValue = field.getSubmitValue();
-
-            fieldNames.push(fieldName);
-
-            if (fieldValue) {
-                queuedTerms.push(fieldName + ':' + (fieldValue.match(/\s+/) ? '"' + fieldValue + '"' : fieldValue));
-            }
-        }
-
-        // add selected group
-        fieldNames.push('group');
-        if (selectedGroups.length > 0 && (fieldValue = selectedGroups[0].get('Handle'))) {
-            if (fieldValue !== 'slate-internal-people-root-node') {
-                // push group if it is not the root node
-                queuedTerms.push('group:'+fieldValue);
-            } else {
-                rootGroupSelected = true;
-            }
-        }
-
-        // scan query for terms that don't match a field
-        for (; termIndex < termsLen; termIndex++) {
-            term = terms[termIndex];
-            splitTerm = term.split(/:/, 2);
-            if (splitTerm.length != 2 || !Ext.Array.contains(fieldNames, splitTerm[0])) {
-                unmatchedTerms.push(term);
-            }
-        }
-
-        // build a query string that combines the unmatched terms with field values
-        query = Ext.String.trim(Ext.Array.merge(unmatchedTerms, queuedTerms).join(' '));
-
-        if (!query && rootGroupSelected) {
-            // if there's no query and root group is selected, redirect to people/all
-            me.redirectTo('people/all');
+        if (me.stateSyncSuspended) {
+            me.stateSyncPending = true;
             return;
         }
 
-        searchField.setValue(query);
+        me.stateSyncPending = false;
 
-        if (execute) {
-            me.redirectTo(query ? ['people', 'search', query] : 'people');
+        if (extraParams && extraParams.q) {
+            path.push('search', extraParams.q);
+            title = '\u201c' + extraParams.q + '\u201d';
+        } else if (personRecord) {
+            path.push(personRecord.phantom ? 'create' : 'lookup');
         }
+
+        if (personRecord && !personRecord.phantom) {
+            if (personRecord.get('Username')) {
+                path.push(personRecord.get('Username'));
+            } else {
+                path.push('?id='+personRecord.get('ID'));
+            }
+
+            title = personRecord.getFullName();
+
+            activeTab = manager.getActiveDetailTab();
+
+            if (activeTab) {
+                path.push(activeTab.getItemId());
+                title = activeTab.title + ' \u2014 ' + title;
+            }
+        }
+
+        me.redirectTo(path);
+        SlateAdmin.util.PageTitle.setTitle(title);
     },
 
     /**
      * Selects a person (or clears selection) and updates grid+manager state without firing any select/deselect events
-     * @param {String} person The username of selected person or an "id=value" query string identifying the person by id
-     * @param {function} callback The callback function to perform
+     * @param {String|Slate.model.person.Person} person A username, an "?id=value" query string, or a person record
+     * @param {Function} callback The callback function to perform
      * @return {void}
      */
     selectPerson: function(person, callback) {
         var me = this,
-            manager = me.getManager(),
-            grid = me.getGrid(),
-            store = grid.getStore(),
-            selModel = grid.getSelectionModel(),
-            personRecord, queryParts, fieldName, fieldValue,
-            _finishSelectPerson;
+            store = me.getGrid().getStore(),
+            handle = null;
 
-        _finishSelectPerson = function() {
-            if (personRecord) {
-                selModel.select(personRecord, false, true);
+        // resolve string handles against the loaded result set first
+        if (Ext.isString(person)) {
+            if (person.charAt(0) != '?') {
+                handle = person;
+                person = store.getAt(store.findExact('Username', person));
+            } else if (person.indexOf('?id=') === 0) {
+                handle = person.substr(4);
+                person = store.getById(parseInt(handle, 10));
             } else {
-                selModel.deselectAll(true);
+                Ext.Msg.alert('Error', 'Unknown person field: ' + person.substr(1).split('=', 2)[0]);
+                person = null;
+                handle = null;
             }
-
-            manager.setSelectedPerson(personRecord || null);
-            me.syncGridStatus();
-            me.syncState();
-            Ext.callback(callback, me);
-        };
-
-        if (!person) {
-           _finishSelectPerson();
-        } else if (Ext.isString(person) && person.charAt(0) != '?') {
-            personRecord = store.getAt(store.findExact('Username', person));
-
-            if (personRecord) {
-                _finishSelectPerson();
-            } else {
-                // TODO: check if query params impacts this?
-                store.load({
-                    url: '/people/'+person,
-                    callback: function(records, operation, success) {
-                        if (!success || !records.length) {
-                            Ext.Msg.alert('Error', 'Could not find the group/person you requested');
-                        } else {
-                            personRecord = records[0];
-                        }
-
-                        _finishSelectPerson();
-                    }
-                });
-            }
-        } else if (Ext.isString(person)) {
-            queryParts = person.substr(1).split('=',2);
-            fieldName = queryParts[0];
-            fieldValue = queryParts[1];
-
-            if (fieldName == 'id') {
-                personRecord = store.getById(parseInt(fieldValue, 10));
-
-                if (personRecord) {
-                    _finishSelectPerson();
-                } else {
-                    // TODO: check if query params impacts this?
-                    store.load({
-                        url: '/people/'+fieldValue,
-                        callback: function(records, operation, success) {
-                            if (!success || !records.length) {
-                                Ext.Msg.alert('Error', 'Could not find the person you requested');
-                            } else {
-                                personRecord = records[0];
-                            }
-
-                            _finishSelectPerson();
-                        }
-                    });
-                }
-            } else {
-                Ext.Msg.alert('Error', 'Unknown person field: '+fieldName);
-                _finishSelectPerson();
-            }
-        } else {
-            personRecord = person;
-            _finishSelectPerson();
         }
+
+        if (person || !handle) {
+            me.finishSelectPerson(person || null, callback);
+            return;
+        }
+
+        // not in the result set — load the individual record by handle/id
+        store.load({
+            url: '/people/' + handle,
+            callback: function(records, operation, success) {
+                if (!success || !records.length) {
+                    Ext.Msg.alert('Error', 'Could not find the group/person you requested');
+                }
+
+                me.finishSelectPerson(records && records[0] || null, callback);
+            }
+        });
+    },
+
+    // @private
+    finishSelectPerson: function(personRecord, callback) {
+        var me = this,
+            selModel = me.getGrid().getSelectionModel();
+
+        if (personRecord) {
+            selModel.select(personRecord, false, true);
+        } else {
+            selModel.deselectAll(true);
+        }
+
+        me.getManager().setSelectedPerson(personRecord);
+        me.syncGridStatus();
+        me.syncState();
+        Ext.callback(callback, me);
     }
 });

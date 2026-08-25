@@ -16,6 +16,7 @@ Ext.define('SlateAdmin.view.AbstractRecordManager', {
 
     // subclass contract
     selectedRecordGetter: null, // e.g. 'getSelectedPerson'
+    selectedRecordEvent: null, // e.g. 'selectedpersonchange'
     tabRecordGetter: null, // e.g. 'getLoadedPerson' (on each detail tab)
     tabRecordSetter: null, // e.g. 'setLoadedPerson'
 
@@ -91,6 +92,66 @@ Ext.define('SlateAdmin.view.AbstractRecordManager', {
     // component methods
     getSelectedRecord: function() {
         return this[this.selectedRecordGetter]();
+    },
+
+    /**
+     * Activate a detail tab by itemId — the manager's public API for
+     * controllers, replacing direct detailTabs reach-through
+     */
+    setActiveDetailTab: function(itemId) {
+        this.detailTabs.setActiveTab(itemId);
+    },
+
+    /**
+     * The active detail tab, falling back to the first tab
+     */
+    getActiveDetailTab: function() {
+        var detailTabs = this.detailTabs;
+
+        return detailTabs.getActiveTab() || detailTabs.items.getAt(0);
+    },
+
+    /**
+     * Shared body for the subclasses' updateSelectedX handlers: syncs the
+     * detail header, pushes the record into the active tab, disables
+     * non-active tabs while the record is phantom, and fires the module's
+     * selection-change event
+     */
+    syncSelectedRecord: function(record, oldRecord) {
+        var me = this,
+            detailCt = me.detailCt,
+            detailTabs = me.detailTabs,
+            tabBar = detailTabs.getTabBar(),
+            activeTab = detailTabs.getActiveTab(),
+            tabRecord;
+
+        Ext.suspendLayouts();
+        me.syncDetailHeader();
+
+        if (record) {
+            if (!activeTab) {
+                activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will load the record
+            } else if (!(tabRecord = activeTab[me.tabRecordGetter]()) || tabRecord.getId() != record.getId()) {
+                activeTab[me.tabRecordSetter](record);
+            }
+
+            detailCt.setDisabled(!activeTab);
+
+            Ext.Array.each(tabBar.query(':not([active])'), function (tab) {
+                tab.setDisabled(record.phantom);
+            });
+
+            // ensure active tab is set, since it would be supressed while disabled
+            if (activeTab) {
+                tabBar.setActiveTab(activeTab.tab);
+            }
+        } else {
+            detailCt.disable();
+        }
+
+        me.fireEvent(me.selectedRecordEvent, me, record, oldRecord);
+
+        Ext.resumeLayouts(true);
     },
 
     /**

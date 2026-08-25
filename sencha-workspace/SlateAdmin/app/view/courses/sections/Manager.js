@@ -20,6 +20,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
     },
 
     selectedRecordGetter: 'getSelectedSection',
+    selectedRecordEvent: 'selectedsectionchange',
     tabRecordGetter: 'getLoadedSection',
     tabRecordSetter: 'setLoadedSection',
 
@@ -83,40 +84,7 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
     // courses-sections-manager methods
     // @private
     updateSelectedSection: function(section, oldSection) {
-        var me = this,
-            detailCt = me.detailCt,
-            detailTabs = me.detailTabs,
-            activeTab = detailTabs.getActiveTab();
-
-        if (oldSection) {
-//            oldSection.un('afterCommit', 'onSectionCommit', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
-        }
-
-        Ext.suspendLayouts();
-        me.syncDetailHeader();
-
-        if (section) {
-//            section.on('afterCommit', 'onSectionCommit', me); // TODO: models don't have events anymore in ExtJS 5, this will have to be done another way
-
-            if (!activeTab) {
-                activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedSection
-            } else {
-                activeTab.setLoadedSection(section);
-            }
-
-            if (activeTab && detailCt.isDisabled()) {
-                detailCt.enable();
-
-                // ensure active tab is set, since it would be supressed while disabled
-                detailTabs.tabBar.setActiveTab(activeTab.tab);
-            }
-        } else {
-            detailCt.disable();
-        }
-
-        me.fireEvent('selectedsectionchange', me, section, oldSection);
-
-        Ext.resumeLayouts(true);
+        this.syncSelectedRecord(section, oldSection);
     },
 
     // @private
