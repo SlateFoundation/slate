@@ -7,6 +7,12 @@
       "skillPath": "skills/hologit/SKILL.md",
       "computedHash": "4485918b70a7ae86bdb6a119f0f0cc6248af4a936ce5ec5d8a8b4bf53ce05dce"
     },
+    "jarvus-extjs": {
+      "source": "JarvusInnovations/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/jarvus-extjs/SKILL.md",
+      "computedHash": "99e214038917751f624bbd13c963bca65359c7127ef6c383a71eb7048c6a18f8"
+    },
     "specops": {
       "source": "JarvusInnovations/specops",
       "sourceType": "github",
