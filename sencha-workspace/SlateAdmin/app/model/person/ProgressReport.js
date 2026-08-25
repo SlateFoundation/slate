@@ -34,7 +34,7 @@ Ext.define('SlateAdmin.model.person.ProgressReport', {
     ],
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/progress'
     },
 

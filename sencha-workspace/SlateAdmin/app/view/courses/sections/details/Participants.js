@@ -7,7 +7,7 @@ Ext.define('SlateAdmin.view.courses.sections.details.Participants', {
         'Ext.grid.column.Action',
         'Ext.grid.column.Date',
         'Ext.form.field.ComboBox',
-        'SlateAdmin.proxy.API',
+        'Slate.proxy.API',
         'SlateAdmin.widget.field.Person',
         'SlateAdmin.model.course.SectionParticipant'
     ],

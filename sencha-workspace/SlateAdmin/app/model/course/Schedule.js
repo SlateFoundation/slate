@@ -1,7 +1,7 @@
 Ext.define('SlateAdmin.model.course.Schedule', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'Slate.proxy.Records'
     ],
 
 
@@ -58,7 +58,7 @@ Ext.define('SlateAdmin.model.course.Schedule', {
     ],
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/schedules'
     }
 });

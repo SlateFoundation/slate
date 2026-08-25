@@ -1,7 +1,7 @@
 Ext.define('SlateAdmin.store.courses.SectionCohorts', {
     extend: 'Ext.data.Store',
     requires: [
-        'SlateAdmin.proxy.API'
+        'Slate.proxy.API'
     ],
 
 
@@ -18,7 +18,7 @@ Ext.define('SlateAdmin.store.courses.SectionCohorts', {
         }],
 
         proxy: {
-            type: 'slateapi',
+            type: 'slate-api',
             reader: {
                 type: 'json',
                 transform: function(response) {

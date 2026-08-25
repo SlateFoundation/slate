@@ -8,7 +8,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
         'Ext.form.FieldSet',
         'Ext.form.field.Text',
         'Ext.form.field.ComboBox',
-        'SlateAdmin.proxy.API'
+        'Slate.proxy.API'
     ],
 
     layout: 'auto',
@@ -52,7 +52,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             store: {
                 fields: ['GraduationYear'],
                 proxy: {
-                    type: 'slateapi',
+                    type: 'slate-api',
                     url: '/people/*graduation-years',
                     reader: {
                         type: 'json',
@@ -92,7 +92,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     }
                 ],
                 proxy: {
-                    type: 'slateapi',
+                    type: 'slate-api',
                     url: '/people/*advisors',
                     summary: true,
                     reader: {
@@ -124,7 +124,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
                     }
                 ],
                 proxy: {
-                    type: 'slateapi',
+                    type: 'slate-api',
                     url: '/people/*advisors',
                     summary: true,
                     reader: {
@@ -144,7 +144,7 @@ Ext.define('SlateAdmin.view.people.AdvancedSearchForm', {
             store: {
                 fields: ['Handle', 'Title'],
                 proxy: {
-                    type: 'slateapi',
+                    type: 'slate-api',
                     summary: true,
                     url: window.SiteEnvironment && window.SiteEnvironment.user ? '/people/' + window.SiteEnvironment.user.Username + '/courses' : '/sections',
                     reader: {

@@ -1,7 +1,7 @@
 Ext.define('SlateAdmin.model.course.Department', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records'
+        'Slate.proxy.Records'
     ],
 
 
@@ -61,7 +61,7 @@ Ext.define('SlateAdmin.model.course.Department', {
     ],
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/departments'
     }
 });

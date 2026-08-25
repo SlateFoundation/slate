@@ -46,7 +46,7 @@ Ext.define('SlateAdmin.model.person.progress.NoteRecipient', {
     ],
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         startParam: null,
         limitParam: null,
         api: {

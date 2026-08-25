@@ -3,7 +3,7 @@ Ext.define('SlateAdmin.store.courses.Courses', {
 
     model: 'SlateAdmin.model.course.Course',
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/courses',
         startParam: false,
         limitParam: false

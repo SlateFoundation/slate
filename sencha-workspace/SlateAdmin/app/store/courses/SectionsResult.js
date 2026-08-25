@@ -7,7 +7,7 @@ Ext.define('SlateAdmin.store.courses.SectionsResult', {
 //    buffered: true, // buffering isn't getting along with grouping
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/sections',
         startParam: false,
         limitParam: false,

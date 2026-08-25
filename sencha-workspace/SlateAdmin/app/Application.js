@@ -4,7 +4,7 @@
 Ext.define('SlateAdmin.Application', {
     extend: 'Ext.app.Application',
     requires: [
-        'SlateAdmin.API',
+        'Slate.API',
 
         // Jarvus enhancements
         'Jarvus.override.data.RequireLoadedStores',

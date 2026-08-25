@@ -59,7 +59,7 @@ Ext.define('SlateAdmin.model.person.progress.ProgressNote', {
         }
     ],
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/notes',
         include: ['Author']
     }

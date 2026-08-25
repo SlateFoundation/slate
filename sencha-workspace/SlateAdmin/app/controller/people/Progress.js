@@ -3,8 +3,9 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     requires: [
         'Ext.window.MessageBox',
 
-        /* global SlateAdmin */
-        'SlateAdmin.API'
+        /* globals Slate, SlateAdmin */
+        'Slate.API',
+        'SlateAdmin.util.Downloads'
     ],
 
 
@@ -305,7 +306,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
                 msg: 'Preparing PDF, please wait, this may take a minute&hellip;'
             });
 
-            SlateAdmin.API.downloadFile('/progress?' + Ext.Object.toQueryString(params), function () {
+            SlateAdmin.util.Downloads.downloadFile('/progress?' + Ext.Object.toQueryString(params), function () {
                 reportsPanel.setLoading(false);
             });
         });
@@ -314,7 +315,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     onListLaunchBrowserClick: function() {
         var params = this.getPeopleProgressReportsStore().getProxy().getExtraParams();
 
-        window.open(SlateAdmin.API.buildUrl('/progress?' + Ext.Object.toQueryString(params)));
+        window.open(Slate.API.buildUrl('/progress?' + Ext.Object.toQueryString(params)));
     },
 
     onProgressRecordClick: function (view, record) {
@@ -454,7 +455,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
             return recipientData;
         });
 
-        SlateAdmin.API.request({
+        Slate.API.request({
             url: '/notes/' + record.get('ID') + '/recipients',
             method: 'POST',
             jsonData: {
