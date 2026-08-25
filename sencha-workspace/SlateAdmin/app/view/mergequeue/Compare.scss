@@ -1,0 +1,85 @@
+.mergequeue-persons-row {
+    padding-bottom: 12px;
+}
+
+.mergequeue-person-panel {
+    padding: 8px 12px;
+
+    .mergequeue-person-name {
+        margin: 0;
+    }
+
+    .mergequeue-person-role {
+        font-size: .85em;
+        font-style: italic;
+    }
+}
+
+.mergequeue-person-source {
+    border-right: 1px dashed #ccc;
+}
+
+.mergequeue-section {
+    padding: 8px 0 16px;
+
+    &:not(:first-child) {
+        border-top: 1px solid #eee;
+    }
+}
+
+.mergequeue-impact-table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+        padding: 2px 8px;
+        text-align: left;
+    }
+
+    tr.zero-impact {
+        color: #999;
+    }
+}
+
+.mergequeue-conflicts-list,
+.mergequeue-followups-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mergequeue-conflict-row {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    padding: 4px 0;
+
+    .conflict-field {
+        font-weight: bold;
+        min-width: 140px;
+    }
+
+    .conflict-option {
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        cursor: pointer;
+        padding: 4px 8px;
+
+        &.selected {
+            background-color: #dff0d8;
+            border-color: #5cb85c;
+        }
+    }
+}
+
+.badge {
+    background-color: #eee;
+    border-radius: 3px;
+    font-size: .75em;
+    padding: 1px 6px;
+
+    &.badge-success {
+        background-color: #dff0d8;
+    }
+}
