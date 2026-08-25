@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Shim so the bundled CLI can be invoked as `scripts/specops <command>`.
+exec node "$(dirname "$0")/specops.mjs" "$@"

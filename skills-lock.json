@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/hologit/SKILL.md",
       "computedHash": "4485918b70a7ae86bdb6a119f0f0cc6248af4a936ce5ec5d8a8b4bf53ce05dce"
+    },
+    "specops": {
+      "source": "JarvusInnovations/specops",
+      "sourceType": "github",
+      "skillPath": "skills/specops/SKILL.md",
+      "computedHash": "e6442065c240ae62abfa266aa66094fb1dbe028aad96e4246f859bfa23d8a8df"
     }
   }
 }
