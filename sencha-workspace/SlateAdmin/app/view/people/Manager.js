@@ -21,6 +21,7 @@ Ext.define('SlateAdmin.view.people.Manager', {
     },
 
     selectedRecordGetter: 'getSelectedPerson',
+    selectedRecordEvent: 'selectedpersonchange',
     tabRecordGetter: 'getLoadedPerson',
     tabRecordSetter: 'setLoadedPerson',
 
@@ -88,39 +89,6 @@ Ext.define('SlateAdmin.view.people.Manager', {
     // people-manager methods
     // @private
     updateSelectedPerson: function(person, oldPerson) {
-        var me = this,
-            detailCt = me.detailCt,
-            detailTabs = me.detailTabs,
-            tabBar = detailTabs.getTabBar(),
-            activeTab = detailTabs.getActiveTab(),
-            loadedPerson;
-
-        Ext.suspendLayouts();
-        me.syncDetailHeader();
-
-        if (person) {
-            if (!activeTab) {
-                activeTab = detailTabs.setActiveTab(0); // onBeforeTabChange will call setLoadedPerson
-            } else if (!(loadedPerson = activeTab.getLoadedPerson()) || loadedPerson.getId() != person.getId()) {
-                activeTab.setLoadedPerson(person);
-            }
-
-            detailCt.setDisabled(!activeTab);
-
-            Ext.Array.each(tabBar.query(':not([active])'), function (tab) {
-                tab.setDisabled(person.phantom);
-            });
-
-            // ensure active tab is set, since it would be supressed while disabled
-            if (activeTab) {
-                tabBar.setActiveTab(activeTab.tab);
-            }
-        } else {
-            detailCt.disable();
-        }
-
-        me.fireEvent('selectedpersonchange', me, person, oldPerson);
-
-        Ext.resumeLayouts(true);
+        this.syncSelectedRecord(person, oldPerson);
     }
 });

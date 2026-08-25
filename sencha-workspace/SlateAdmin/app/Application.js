@@ -23,6 +23,8 @@ Ext.define('SlateAdmin.Application', {
         'Viewport',
 
         'People',
+        'people.Search',
+        'people.Export',
         'people.Invite',
         'people.Profile',
         'people.Courses',
