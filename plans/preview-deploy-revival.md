@@ -3,6 +3,8 @@ status: in-progress
 depends: []
 specs: []
 issues: [385]
+awaits:
+  - "KUBECONFIG_BASE64 repo secret refresh — the stored deployer credential 401s against the sandbox cluster; an admin must mint a fresh token for the slate/deployer service account and update the secret"
 ---
 
 # Plan: Rebuild PR preview deploys on the container runtime
@@ -59,14 +61,14 @@ issue #385.
 
 ## Validation
 
-- [x] Workflow runs on PR open/sync and is green end-to-end
-- [x] Preview serves the Slate home page over HTTPS at
+- [ ] Workflow runs on PR open/sync and is green end-to-end
+- [ ] Preview serves the Slate home page over HTTPS at
       `https://pr-<n>.slate.sandbox.k8s.jarv.us/`
-- [x] Login form renders (fixtures + migrations applied)
-- [x] Pushing a new commit to the PR rolls the preview to the new image
-- [x] Closing the PR deletes the deployment/service/ingress/TLS secret and
+- [ ] Login form renders (fixtures + migrations applied)
+- [ ] Pushing a new commit to the PR rolls the preview to the new image
+- [ ] Closing the PR deletes the deployment/service/ingress/TLS secret and
       deactivates the GitHub deployment environment
-- [x] Required checks (`test-e2e`, `Static analysis`, `ESLint (SlateAdmin)`)
+- [ ] Required checks (`test-e2e`, `Static analysis`, `ESLint (SlateAdmin)`)
       unaffected and green
 
 ## Risks / unknowns
