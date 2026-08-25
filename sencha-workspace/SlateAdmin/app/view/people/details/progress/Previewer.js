@@ -2,7 +2,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     extend: 'Ext.window.Window',
     xtype: 'people-details-progress-previewer',
     requires: [
-        /* globals Slate, SlateAdmin */
+        /* globals Slate */
         'Slate.API',
         'SlateAdmin.widget.PrintPreview'
     ],
