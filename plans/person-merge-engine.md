@@ -11,9 +11,11 @@ specs:
 ## Scope
 
 The server side of person merging: the merge registry, the transactional merge
-operation with audit, and the `GET /people/merge/preview` + `POST /people/merge`
-endpoints. Out of scope: candidate detection/queue (`duplicate-candidates`) and
-the SlateAdmin UI (`slateadmin-merge-queue`).
+operation with audit, the follow-up action store + executor framework, and the
+`/people/merge/*` endpoints (preview, execute, actions list/execute/patch).
+Out of scope: candidate detection/queue (`duplicate-candidates`), concrete
+executors (`canvas-merge-executor`), and the SlateAdmin UI
+(`slateadmin-merge-queue`).
 
 ## Implements
 
@@ -40,8 +42,14 @@ the SlateAdmin UI (`slateadmin-merge-queue`).
   external actions from the mappings touched.
 - **Audit table**: new record class for merge audits (per-table counts JSON,
   source snapshot JSON, executor, linked candidate ID).
-- **Endpoints**: request handler for the two routes per the API spec.
-- Migration(s) under `php-migrations/` for the audit table.
+- **Follow-up actions**: record class per the behavior spec (audit link, type,
+  connector, payload JSON, status, outcome log), spawned inside the merge
+  transaction from the mappings touched; executor interface connectors
+  implement per action type, dispatched by the execute endpoint (404 when no
+  executor).
+- **Endpoints**: request handlers for the routes per the API spec — preview,
+  execute, and the actions list / execute / manual-outcome PATCH.
+- Migration(s) under `php-migrations/` for the audit and action tables.
 
 ## Validation
 
@@ -55,6 +63,10 @@ the SlateAdmin UI (`slateadmin-merge-queue`).
 - [ ] Audit record written with per-table counts and source snapshot
 - [ ] Repeated execute for an already-merged pair returns the prior audit
       record
+- [ ] A merge involving mappings spawns follow-up actions atomically; a rolled-
+      back merge spawns none
+- [ ] Manual outcome PATCH enforces the lifecycle (notes required; `completed`
+      terminal); execute on an executor-less action type 404s
 
 ## Risks / unknowns
 
