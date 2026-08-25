@@ -5,7 +5,7 @@ namespace Slate\TestsRW\Connectors\Canvas;
 use DB;
 use Emergence\Connectors\Mapping;
 use Emergence\People\Person;
-use Slate\Connectors\Canvas\Connector;
+use Slate\Connectors\Canvas\MergeSupport;
 use Slate\Connectors\Canvas\UserMergeActionDeriver;
 use Slate\People\Merge\ActionExecutorRegistry;
 use Slate\People\Merge\FollowUpAction;
@@ -59,7 +59,7 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
         // registered explicitly rather than relying on
         // php-config/Slate.config.d/canvas-merge-executor.php having run,
         // so this suite doesn't depend on full app bootstrap
-        Connector::register();
+        MergeSupport::register();
     }
 
     protected function tearDown(): void
@@ -83,7 +83,7 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
     {
         Mapping::create([
             'ContextClass' => Person::getRootClass(), 'ContextID' => $personID,
-            'Source' => 'manual', 'Connector' => Connector::CONNECTOR_KEY,
+            'Source' => 'manual', 'Connector' => MergeSupport::CONNECTOR_KEY,
             'ExternalKey' => UserMergeActionDeriver::EXTERNAL_KEY, 'ExternalIdentifier' => $canvasUserID,
         ], true);
     }
@@ -99,14 +99,14 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
 
         $actions = FollowUpAction::getAllByWhere([
             'MergeAuditID' => $Audit->ID,
-            'Type' => Connector::ACTION_TYPE_USER_MERGE,
+            'Type' => MergeSupport::ACTION_TYPE_USER_MERGE,
         ]);
         $this->assertCount(1, $actions);
 
         $Action = $actions[0];
-        $this->assertEquals(Connector::CONNECTOR_KEY, $Action->Connector);
+        $this->assertEquals(MergeSupport::CONNECTOR_KEY, $Action->Connector);
         $this->assertEquals(FollowUpAction::STATUS_PENDING, $Action->Status);
-        $this->assertTrue($Action->hasExecutor, 'canvas-user-merge should have a registered executor once Connector::register() has run');
+        $this->assertTrue($Action->hasExecutor, 'canvas-user-merge should have a registered executor once MergeSupport::register() has run');
         $this->assertEquals('1384', $Action->Payload['sourceCanvasUserID']);
         $this->assertEquals('2716', $Action->Payload['destinationCanvasUserID']);
     }
@@ -121,7 +121,7 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
         $targetMappings = Mapping::getAllByWhere([
             'ContextClass' => Person::getRootClass(),
             'ContextID' => static::$Target->ID,
-            'Connector' => Connector::CONNECTOR_KEY,
+            'Connector' => MergeSupport::CONNECTOR_KEY,
         ]);
         $this->assertCount(1, $targetMappings);
         $this->assertEquals('2716', $targetMappings[0]->ExternalIdentifier, "the target's own mapping should be untouched, not overwritten by the source's");
@@ -129,7 +129,7 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
         $sourceMappings = Mapping::getAllByWhere([
             'ContextClass' => Person::getRootClass(),
             'ContextID' => static::$Source->ID,
-            'Connector' => Connector::CONNECTOR_KEY,
+            'Connector' => MergeSupport::CONNECTOR_KEY,
         ]);
         $this->assertCount(0, $sourceMappings, "the source's divergent mapping should be retired, not left behind");
     }
@@ -143,14 +143,14 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
 
         $actions = FollowUpAction::getAllByWhere([
             'MergeAuditID' => $Audit->ID,
-            'Type' => Connector::ACTION_TYPE_USER_MERGE,
+            'Type' => MergeSupport::ACTION_TYPE_USER_MERGE,
         ]);
         $this->assertCount(0, $actions);
 
         $targetMappings = Mapping::getAllByWhere([
             'ContextClass' => Person::getRootClass(),
             'ContextID' => static::$Target->ID,
-            'Connector' => Connector::CONNECTOR_KEY,
+            'Connector' => MergeSupport::CONNECTOR_KEY,
         ]);
         $this->assertCount(1, $targetMappings, 'the exact duplicate should have been deduped, leaving exactly one');
     }
@@ -163,7 +163,7 @@ class UserMergeActionDeriverTest extends \PHPUnit_Framework_TestCase
 
         $actions = FollowUpAction::getAllByWhere([
             'MergeAuditID' => $Audit->ID,
-            'Type' => Connector::ACTION_TYPE_USER_MERGE,
+            'Type' => MergeSupport::ACTION_TYPE_USER_MERGE,
         ]);
         $this->assertCount(0, $actions);
     }

@@ -5,7 +5,7 @@ namespace Slate\TestsRW\Connectors\Canvas;
 use DB;
 use Emergence\People\Person;
 use Exception;
-use Slate\Connectors\Canvas\Connector;
+use Slate\Connectors\Canvas\MergeSupport;
 use Slate\Connectors\Canvas\UserMergeExecutor;
 use Slate\People\Merge\FollowUpAction;
 use Slate\People\Merge\MergeAudit;
@@ -54,8 +54,8 @@ class UserMergeExecutorTest extends \PHPUnit_Framework_TestCase
 
         static::$Action = FollowUpAction::create([
             'MergeAuditID' => static::$Audit->ID,
-            'Type' => Connector::ACTION_TYPE_USER_MERGE,
-            'Connector' => Connector::CONNECTOR_KEY,
+            'Type' => MergeSupport::ACTION_TYPE_USER_MERGE,
+            'Connector' => MergeSupport::CONNECTOR_KEY,
             'Payload' => [
                 'sourceCanvasUserID' => '5001',
                 'destinationCanvasUserID' => '5002',

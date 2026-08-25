@@ -2,7 +2,7 @@
 
 namespace Slate\TestsRW\Connectors\Canvas;
 
-use RemoteSystems\CanvasApiException;
+use Slate\Connectors\Canvas\CanvasApiException;
 use Slate\Connectors\Canvas\CanvasClientInterface;
 
 /**
