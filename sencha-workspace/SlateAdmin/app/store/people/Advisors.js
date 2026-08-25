@@ -3,7 +3,7 @@ Ext.define('SlateAdmin.store.people.Advisors', {
 
     model: 'Slate.model.person.Person',
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/people/*advisors',
         startParam: false,
         limitParam: false

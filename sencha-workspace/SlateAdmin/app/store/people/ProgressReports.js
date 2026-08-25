@@ -6,7 +6,7 @@ Ext.define('SlateAdmin.store.people.ProgressReports', {
 
     model: 'SlateAdmin.model.person.ProgressReport',
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/progress',
         summary: true,
         include: ['Timestamp', 'Author', 'Term']

@@ -6,8 +6,8 @@ Ext.define('SlateAdmin.controller.People', {
     requires: [
         'Ext.window.MessageBox',
 
-        /* globals SlateAdmin */
-        'SlateAdmin.API',
+        /* globals Slate, SlateAdmin */
+        'Slate.API',
         'SlateAdmin.util.PageTitle'
     ],
 
@@ -485,7 +485,7 @@ Ext.define('SlateAdmin.controller.People', {
             params.columns = Ext.Array.pluck(exportColumnsMenu.query('menuitem[checked]'), 'itemId').join(',');
         }
 
-        url = SlateAdmin.API.buildUrl('/people?' + Ext.Object.toQueryString(params));
+        url = Slate.API.buildUrl('/people?' + Ext.Object.toQueryString(params));
 
         if (exportFormat == 'json') {
             window.open(url, '_blank');
@@ -511,7 +511,7 @@ Ext.define('SlateAdmin.controller.People', {
 
         columnsPlaceholder.show();
 
-        SlateAdmin.API.request({
+        Slate.API.request({
             method: 'GET',
             url: '/people/*fields',
             success: function(response) {

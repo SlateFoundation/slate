@@ -1,7 +1,7 @@
 Ext.define('SlateAdmin.model.person.ContactPoint', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records',
+        'Slate.proxy.Records',
         'Slate.validator.CallbackValidator',
         'Ext.data.identifier.Negative',
         'Ext.data.validator.Presence',
@@ -81,7 +81,7 @@ Ext.define('SlateAdmin.model.person.ContactPoint', {
     },
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/contact-points',
         startParam: false,
         limitParam: false,

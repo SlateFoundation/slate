@@ -2,7 +2,7 @@ Ext.define('SlateAdmin.store.people.ContactPointTemplates', {
     extend: 'Ext.data.Store',
     alias: 'store.contactpointtemplates',
     requires: [
-        'SlateAdmin.proxy.API'
+        'Slate.proxy.API'
     ],
 
     idProperty: 'label',
@@ -28,7 +28,7 @@ Ext.define('SlateAdmin.store.people.ContactPointTemplates', {
     ],
 
     proxy: {
-        type: 'slateapi',
+        type: 'slate-api',
         url: '/contact-points/*templates',
         pageParam: false,
         startParam: false,

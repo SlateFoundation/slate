@@ -1,7 +1,7 @@
 Ext.define('SlateAdmin.model.course.SectionTermData', {
     extend: 'Ext.data.Model',
     requires: [
-        'SlateAdmin.proxy.Records',
+        'Slate.proxy.Records',
         'Ext.data.identifier.Negative'
     ],
 
@@ -69,7 +69,7 @@ Ext.define('SlateAdmin.model.course.SectionTermData', {
     ],
 
     proxy: {
-        type: 'slaterecords',
+        type: 'slate-records',
         url: '/section-data'
     }
 });

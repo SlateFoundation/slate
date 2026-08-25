@@ -2,8 +2,8 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
     extend: 'Ext.window.Window',
     xtype: 'people-details-progress-previewer',
     requires: [
-        /* global SlateAdmin */
-        'SlateAdmin.API',
+        /* globals Slate, SlateAdmin */
+        'Slate.API',
         'SlateAdmin.widget.PrintPreview'
     ],
 
@@ -52,7 +52,7 @@ Ext.define('SlateAdmin.view.people.details.progress.Previewer',{
             msg: 'Loading '+noun+'&hellip;'
         });
 
-        this.setUrl(SlateAdmin.API.buildUrl(report.getUrl()));
+        this.setUrl(Slate.API.buildUrl(report.getUrl()));
     },
 
     updateUrl: function(url) {
