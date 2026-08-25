@@ -281,7 +281,9 @@ jobs:
           echo "::error::preview did not serve at https://${PREVIEW_HOSTNAME}/ (last status: ${code})"
           exit 1
         fi
-        if ! curl -sf "https://${PREVIEW_HOSTNAME}/login" | grep -q '_LOGIN'; then
+        # no -f: the framework's auth prompt correctly serves the login form
+        # with a 401 status
+        if ! curl -s "https://${PREVIEW_HOSTNAME}/login" | grep -q '_LOGIN'; then
           echo "::error::login form not found on preview"
           exit 1
         fi
