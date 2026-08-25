@@ -25,6 +25,12 @@ jobs:
     - name: Install hologit
       run: npm install -g hologit
 
+    # hologit lens jobs record their results as commits
+    - name: Configure git identity
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+
     # The PHP-8 runtime image context lives beside the skeleton it pairs
     # with; only docker/ is used from this checkout — the cypress workspace
     # is composed via hologit from the pinned skeleton-v3 holosource instead
