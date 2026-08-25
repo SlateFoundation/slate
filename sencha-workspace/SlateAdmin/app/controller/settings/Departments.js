@@ -1,12 +1,14 @@
 Ext.define('SlateAdmin.controller.settings.Departments', {
-    extend: 'Ext.app.Controller',
+    extend: 'SlateAdmin.controller.settings.AbstractManagerController',
 
-    requires: [
-        /* globals SlateAdmin */
-        'SlateAdmin.util.PageTitle'
-    ],
 
     // controller config
+    managerRoute: 'settings/departments',
+    managerTitle: 'Departments — Settings',
+    loadingMessage: 'Loading departments&hellip;',
+    deleteConfirmTitle: 'Deleting Department',
+    deleteConfirmMessage: 'Are you sure you want to delete this department?',
+
     views: [
         'settings.departments.Manager'
     ],
@@ -25,7 +27,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
-        manager: {
+        managerPanel: {
             selector: 'departments-manager',
             autoCreate: true,
 
@@ -33,13 +35,12 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
         }
     },
 
-
     control: {
-        'departments-manager': {
+        managerPanel: {
             show: 'onManagerShow',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
-            deletedepartmentclick: 'onDeleteDepartmentClick'
+            deletedepartmentclick: 'onDeleteRecordClick'
         },
         'departments-manager button[action=create-department]': {
             click: 'onCreateDepartmentClick'
@@ -47,42 +48,15 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
     },
 
 
-    // route handlers
-    showManager: function() {
-        var me = this,
-            navPanel = me.getSettingsNavPanel();
-
-        Ext.suspendLayouts();
-
-        navPanel.setActiveLink('settings/departments');
-        navPanel.expand();
-
-        me.application.getController('Viewport').loadCard(me.getManager());
-
-        Ext.resumeLayouts(true);
-    },
-
-
     // event handlers
     onManagerShow: function(managerPanel) {
-        var store = Ext.getStore('courses.Departments');
-
-        if (!store.isLoaded()) {
-            managerPanel.setLoading('Loading departments&hellip;');
-            store.load({
-                callback: function() {
-                    managerPanel.setLoading(false);
-                }
-            });
-        }
-
-        this.redirectTo('settings/departments');
-        SlateAdmin.util.PageTitle.setTitle('Departments — Settings');
+        this.ensureStoreLoaded(this.getCoursesDepartmentsStore(), managerPanel);
+        this.syncManagerState();
     },
 
     onCreateDepartmentClick: function() {
         var me = this,
-            manager = me.getManager();
+            managerPanel = me.getManagerPanel();
 
         Ext.Msg.prompt('Create Department', 'Enter a name for the new department:', function(btn, text) {
             var department;
@@ -98,31 +72,14 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
                 department.save({
                     success: function(rec) {
                         me.getCoursesDepartmentsStore().add(department);
-                        manager.getView().focusRow(rec);
+                        managerPanel.getView().focusRow(rec);
                     }
                 });
             }
         });
     },
 
-    onCellEditorEdit: function(editor, e) {
-        var rec = e.record;
-
-        if (rec.isValid()) {
-            rec.save();
-        }
-    },
-
-    onDeleteDepartmentClick: function(grid,rec) {
-        Ext.Msg.confirm('Deleting Department', 'Are you sure you want to delete this department?', function(btn) {
-            if (btn == 'yes') {
-                rec.erase();
-            }
-        });
-    },
-
-    onBrowseCoursesClick: function(grid,rec) {
-        this.redirectTo(['course-sections', 'search', 'department:' + rec.get('Handle')]);
+    onBrowseCoursesClick: function(grid, record) {
+        this.redirectTo(['course-sections', 'search', 'department:' + record.get('Handle')]);
     }
-
 });

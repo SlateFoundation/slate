@@ -25,6 +25,12 @@ jobs:
     - name: Install hologit
       run: npm install -g hologit
 
+    # hologit lens jobs record their results as commits
+    - name: Configure git identity
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+
     # The PHP-8 runtime image context lives beside the skeleton it pairs
     # with; only docker/ is used from this checkout — the cypress workspace
     # is composed via hologit from the pinned skeleton-v3 holosource instead
@@ -36,7 +42,12 @@ jobs:
 
     - name: Project site tree (emergence-site, lensed)
       run: |
-        TREE="$(git holo project emergence-site --fetch --lens | tail -1)"
+        git holo project emergence-site --fetch --lens | tee /tmp/holo-project.out
+        TREE="$(tail -1 /tmp/holo-project.out)"
+        if [ -z "${TREE}" ] || ! git cat-file -e "${TREE}^{tree}" 2>/dev/null; then
+          echo "::error::hologit projection failed or produced no tree (got: '${TREE}')"
+          exit 1
+        fi
         echo "projected: ${TREE}"
         mkdir -p .skeleton-v3/docker/.build/site
         git archive "${TREE}" | tar -x -C .skeleton-v3/docker/.build/site

@@ -27,12 +27,7 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     refs: {
         peopleManager: 'people-manager',
 
-        progressPanel: {
-            selector: 'people-details-progress',
-            autoCreate: true,
-
-            xtype: 'people-details-progress'
-        },
+        progressPanel: 'people-details-progress',
         progressList: 'people-details-progress dataview',
         classesSelector: 'people-details-progress #classesSelector',
         termSelector: 'people-details-progress #termSelector',
@@ -57,9 +52,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     control: {
-        'people-manager #detailTabs': {
-            beforerender: 'onBeforeTabsRender'
-        },
         'people-details-progress': {
             personloaded: 'onPersonLoaded'
         },
@@ -109,10 +101,6 @@ Ext.define('SlateAdmin.controller.people.Progress', {
     },
 
     // event handlers
-    onBeforeTabsRender: function (detailTabs) {
-        detailTabs.add(this.getProgressPanel());
-    },
-
     onPersonLoaded: function (progressPanel, person) {
         var me = this,
             progressProxy = me.getPeopleProgressReportsStore().getProxy();

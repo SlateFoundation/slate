@@ -5,10 +5,12 @@
  * Handles propagating changes to {@link #cfg-selectedSection} to active {@link SlateAdmin.view.courses.details.AbstractDetails details tab}
  */
 Ext.define('SlateAdmin.view.courses.sections.Manager', {
-    extend: 'Ext.container.Container',
+    extend: 'SlateAdmin.view.AbstractRecordManager',
     xtype: 'courses-sections-manager',
     requires: [
-        'SlateAdmin.view.courses.sections.Grid'
+        'SlateAdmin.view.courses.sections.Grid',
+        'SlateAdmin.view.courses.sections.details.Profile',
+        'SlateAdmin.view.courses.sections.details.Participants'
     ],
 
 
@@ -17,20 +19,9 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
         selectedSection: null
     },
 
-    /**
-     * Reference to the detailCt {@link Ext.container.Container} subomponent
-     */
-    detailCt: null,
-
-    /**
-     * Reference to the detailHeader {@link Ext.panel.Panel} subomponent
-     */
-    detailHeader: null,
-
-    /**
-     * Reference to the detailTabs {@link Ext.tab.Panel} subcomponent
-     */
-    detailTabs: null,
+    selectedRecordGetter: 'getSelectedSection',
+    tabRecordGetter: 'getLoadedSection',
+    tabRecordSetter: 'setLoadedSection',
 
 
     // container config
@@ -76,31 +67,20 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
             itemId: 'detailTabs',
             defaults: {
                 bodyBorder: '1 0'
-            }
+            },
+            // detail tabs in explicit order — previously injected by each
+            // module controller on beforerender, which made tab order an
+            // accident of controller registration order in Application.js
+            items: [{
+                xtype: 'courses-sections-details-profile'
+            },{
+                xtype: 'courses-sections-details-participants'
+            }]
         }]
     }],
 
 
     // courses-sections-manager methods
-    // @private
-    initComponent: function() {
-        var me = this,
-            detailCt,
-            detailTabs;
-
-        me.callParent(arguments);
-
-        me.detailCt = detailCt = me.down('#detailCt');
-        me.detailHeader = detailCt.down('#detailHeader');
-        me.detailTabs = detailTabs = detailCt.down('#detailTabs');
-
-        detailTabs.on({
-            scope: me,
-            beforetabchange: 'onBeforeTabChange',
-            enable: 'onDetailTabsEnable'
-        });
-    },
-
     // @private
     updateSelectedSection: function(section, oldSection) {
         var me = this,
@@ -140,52 +120,10 @@ Ext.define('SlateAdmin.view.courses.sections.Manager', {
     },
 
     // @private
-    onBeforeTabChange: function(detailTabs, activeTab) {
-        var me = this,
-            selectedSection = me.getSelectedSection(),
-            tabLoadedSection = activeTab.getLoadedSection();
-
-        if (!selectedSection || me.disabled) {
-            return;
-        }
-
-        if (!tabLoadedSection || tabLoadedSection.getId() != selectedSection.getId()) {
-            activeTab.setLoadedSection(selectedSection);
-        }
-    },
-
-    // @private
-    onDetailTabsEnable: function(detailTabs) {
-        var me = this,
-            activeTab = me.detailTabs.getActiveTab(),
-            selectedSection = me.getSelectedSection(),
-            tabLoadedSection = activeTab && activeTab.getLoadedSection();
-
-        if (!selectedSection || !activeTab) {
-            return;
-        }
-
-        if (!tabLoadedSection || tabLoadedSection.getId() != selectedSection.getId()) {
-            activeTab.setLoadedSection(selectedSection);
-        }
-    },
-
-    // @private
     onSectionCommit: function() {
         var me = this;
 
         me.syncDetailHeader();
         me.fireEvent('sectioncommit', me, me.getSelectedSection());
-    },
-
-    /**
-     * Update detail header based on {@link #cfg-selectedSection}
-     */
-    syncDetailHeader: function() {
-        var me = this,
-            detailHeader = me.detailHeader,
-            section = this.getSelectedSection();
-
-        detailHeader.update(section ? section.getData() : '');
     }
 });

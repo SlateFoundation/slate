@@ -1,13 +1,14 @@
 Ext.define('SlateAdmin.controller.settings.Courses', {
-    extend: 'Ext.app.Controller',
-
-    requires: [
-        /* globals SlateAdmin */
-        'SlateAdmin.util.PageTitle'
-    ],
+    extend: 'SlateAdmin.controller.settings.AbstractManagerController',
 
 
     // controller config
+    managerRoute: 'settings/courses',
+    managerTitle: 'Courses — Settings',
+    loadingMessage: 'Loading courses&hellip;',
+    deleteConfirmTitle: 'Deleting Course',
+    deleteConfirmMessage: 'Are you sure you want to delete this course?',
+
     views: [
         'settings.courses.Manager',
         'settings.courses.Form'
@@ -27,7 +28,7 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
     refs: {
         settingsNavPanel: 'settings-navpanel',
-        manager: {
+        managerPanel: {
             selector: 'courses-manager',
             autoCreate: true,
 
@@ -41,12 +42,12 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
         }
     },
 
-	control: {
-        'courses-manager': {
+    control: {
+        managerPanel: {
             show: 'onManagerShow',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
-            deletecourseclick: 'onDeleteCourseClick'
+            deletecourseclick: 'onDeleteRecordClick'
         },
         'courses-manager button[action=create-course]': {
             click: 'onCreateCourseClick'
@@ -61,37 +62,10 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
     },
 
 
-    // route handlers
-    showManager: function() {
-        var me = this,
-            navPanel = me.getSettingsNavPanel();
-
-        Ext.suspendLayouts();
-
-        navPanel.setActiveLink('settings/courses');
-        navPanel.expand();
-
-        me.application.getController('Viewport').loadCard(me.getManager());
-
-        Ext.resumeLayouts(true);
-    },
-
-
     // event handlers
     onManagerShow: function(managerPanel) {
-        var store = Ext.getStore('courses.Courses');
-
-        if (!store.isLoaded()) {
-            managerPanel.setLoading('Loading courses&hellip;');
-            store.load({
-                callback: function() {
-                    managerPanel.setLoading(false);
-                }
-            });
-        }
-
-        this.redirectTo('settings/courses');
-        SlateAdmin.util.PageTitle.setTitle('Courses — Settings');
+        this.ensureStoreLoaded(this.getCoursesCoursesStore(), managerPanel);
+        this.syncManagerState();
     },
 
     onCreateCourseClick: function() {
@@ -107,14 +81,14 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
 
         saveButton.disable();
 
-        win.show(null,function() {
+        win.show(null, function() {
             titleField.focus();
         });
     },
 
     onSaveCourseClick: function() {
         var me = this,
-            manager = me.getManager(),
+            managerPanel = me.getManagerPanel(),
             win = me.getCoursesFormWindow(),
             form = win.down('form'),
             course = me.getCourseCourseModel().create(form.getValues());
@@ -126,32 +100,18 @@ Ext.define('SlateAdmin.controller.settings.Courses', {
                 success: function(rec) {
                     win.close();
                     me.getCoursesCoursesStore().add(course);
-                    manager.getView().focusRow(rec);
+                    managerPanel.getView().focusRow(rec);
                 }
             });
         }
     },
 
-    onDeleteCourseClick: function(grid,rec) {
-        Ext.Msg.confirm('Deleting Course', 'Are you sure you want to delete this course?', function(btn) {
-            if (btn == 'yes') {
-                rec.erase();
-            }
-        });
+    onBrowseCoursesClick: function(grid, record) {
+        this.redirectTo(['course-sections', 'search', 'course:' + record.get('Code')]);
     },
 
-    onCellEditorEdit: function(editor, e) {
-        var rec = e.record;
 
-        if (rec.isValid()) {
-            rec.save();
-        }
-    },
-
-    onBrowseCoursesClick: function(grid,rec) {
-        this.redirectTo(['course-sections', 'search', 'course:' + rec.get('Code')]);
-    },
-
+    // controller methods
     setFormValidity: function(form) {
         var saveButton = form.up('window').down('button[action="save"]');
 
