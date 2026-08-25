@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR}/.claude/skills/specops/scripts/specops\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
