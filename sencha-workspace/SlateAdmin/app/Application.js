@@ -35,6 +35,10 @@ Ext.define('SlateAdmin.Application', {
         'courses.Profile',
         'courses.Participants',
 
+        'MergeQueue',
+        'mergequeue.Compare',
+        'mergequeue.Actions',
+
         'Settings',
         'settings.Groups',
         'settings.Courses',
