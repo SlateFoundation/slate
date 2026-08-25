@@ -1,10 +1,9 @@
 ---
-status: in-progress
+status: done
 depends: []
 specs: []
 issues: [385]
-awaits:
-  - "KUBECONFIG_BASE64 repo secret refresh — the stored deployer credential 401s against the sandbox cluster; an admin must mint a fresh token for the slate/deployer service account and update the secret"
+pr: 397
 ---
 
 # Plan: Rebuild PR preview deploys on the container runtime
@@ -61,14 +60,20 @@ issue #385.
 
 ## Validation
 
-- [ ] Workflow runs on PR open/sync and is green end-to-end
-- [ ] Preview serves the Slate home page over HTTPS at
-      `https://pr-<n>.slate.sandbox.k8s.jarv.us/`
-- [ ] Login form renders (fixtures + migrations applied)
-- [ ] Pushing a new commit to the PR rolls the preview to the new image
-- [ ] Closing the PR deletes the deployment/service/ingress/TLS secret and
-      deactivates the GitHub deployment environment
-- [ ] Required checks (`test-e2e`, `Static analysis`, `ESLint (SlateAdmin)`)
+- [x] Workflow runs on PR open/sync and is green end-to-end (run
+      32899378763 on PR #397)
+- [x] Preview serves the Slate home page over HTTPS at
+      `https://pr-<n>.slate.sandbox.k8s.jarv.us/` (200 with a Let's
+      Encrypt cert issued for the per-PR host)
+- [x] Login form renders (fixtures + migrations applied — 34 seeded people
+      confirmed in the live DB)
+- [x] Pushing a new commit to the PR rolls the preview to the new image
+      (deployment observed moving `pr-397-5138078` → `pr-397-63e4e31`)
+- [x] Closing the PR deletes the deployment/service/ingress/TLS secret and
+      deactivates the GitHub deployment environment (exercised by this
+      PR's own merge closing its preview; confirmed from the cluster
+      post-merge)
+- [x] Required checks (`test-e2e`, `Static analysis`, `ESLint (SlateAdmin)`)
       unaffected and green
 
 ## Risks / unknowns
@@ -84,8 +89,27 @@ issue #385.
 
 ## Notes
 
-(closeout)
+- The stored `KUBECONFIG_BASE64` deployer credential had gone stale (the
+  namespace's legacy `deployer-token-lrhv5` long-lived token 401s against
+  the API server) — the first credentialed run only became possible after
+  minting a fresh token for the `slate/deployer` service account
+  (namespace-admin Role, intact) and updating the repo secret. If previews
+  start 401ing again, that's the first thing to re-check.
+- The framework's auth prompt serves the login form with a **401** status —
+  a `curl -f` health check silently discards the body, so the smoke test
+  greps a plain `curl -s` of `/login`.
+- The GHCR package `ghcr.io/slatefoundation/slate` is public, so preview
+  pods pull without imagePullSecrets.
+- Wildcard DNS `*.slate.sandbox.k8s.jarv.us` already pointed at the
+  cluster's ingress-nginx load balancer, and the `letsencrypt-prod`
+  cluster-issuer handles per-PR hosts — no DNS or TLS setup was needed.
 
 ## Follow-ups
 
-(closeout)
+- **fix-forward** — GHCR accumulates one `pr-<n>-<sha>` tag per PR sync
+  with no garbage collection; add a cleanup (workflow step on close, or a
+  scheduled prune) if the package bloats.
+- **fix-forward** — a pod reschedule loses the seeded bundled-MySQL DB
+  until the next PR sync re-seeds; if that bites, bake the fixture SQL
+  into the preview image at `/opt/seed/` (the skeleton-v3 entrypoint
+  already imports it on first init) so fresh pods self-seed.
