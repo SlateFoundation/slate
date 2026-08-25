@@ -1,31 +1,330 @@
 name: 'Preview: Deploy'
 
-# PR-preview deploys have been failing on every run since the
-# emergence-cms-layer modernization removed the skeleton-v2 holosource the
-# helm-chart holobranch composites from — and the chart targets the retired
-# Habitat runtime images besides. Manual-only until previews are rebuilt on
-# the container runtime; see #385.
+# Rebuilt on the container runtime (#385). The retired arc projected a
+# Habitat helm-chart from the removed skeleton-v2 holosource and deployed
+# retired emergence/php-runtime images; this workflow instead reuses
+# test-e2e's proven build (skeleton-v3 docker/ context + lensed
+# emergence-site projection), pushes the image to GHCR, and applies plain
+# manifests to the sandbox cluster: one deployment/service/ingress per PR at
+# https://pr-<n>.slate.sandbox.k8s.jarv.us/, with the fixtures holobranch
+# seeded and migrations run the way the old deploy-site-preview action did.
+# Closing the PR tears the instance down. Not a required check.
+
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
 
 concurrency:
   group: preview-${{ github.head_ref }}
   cancel-in-progress: true
 
 permissions:
-  contents: write
-  packages: write
-  deployments: write
+  contents: write # hologit lens-cache push to origin (HOLO_CACHE_TO)
+  packages: write # push preview images to GHCR
+  deployments: write # per-PR GitHub deployment environments
+
+env:
+  HOLO_CACHE_FROM: origin
+  HOLO_CACHE_TO: origin
+  KUBE_NAMESPACE: slate
+  PREVIEW_DOMAIN: slate.sandbox.k8s.jarv.us
+  ENVIRONMENT_NAME: pr-${{ github.event.pull_request.number }}
+  SITE_HANDLE: emergence-site
 
 jobs:
-  preview-deploy:
+
+  deploy:
+    # fork PRs get no repo secrets, so there is no cluster to deploy to
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
 
-    - uses: EmergencePlatform/php-runtime@github-actions/deploy-site-preview/v1
-      id: deploy-site-preview
+    - uses: actions/checkout@v7
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        kube-config: ${{ secrets.KUBECONFIG_BASE64 }}
-        kube-namespace: slate
-        kube-hostname: slate.sandbox.k8s.jarv.us
+        fetch-depth: 0
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+
+    - name: Install hologit
+      run: npm install -g hologit
+
+    # hologit lens jobs record their results as commits
+    - name: Configure git identity
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+    # The PHP-8 runtime image context lives beside the skeleton it pairs
+    # with; only docker/ is used from this checkout — the site tree is
+    # composed via hologit from the pinned skeleton-v3 holosource instead
+    - name: Checkout skeleton-v3 (runtime image context)
+      uses: actions/checkout@v7
+      with:
+        repository: EmergencePlatform/skeleton-v3
+        path: .skeleton-v3
+
+    # per-commit image tag so every PR sync forces a fresh rollout
+    - name: Determine environment
+      id: environment
+      env:
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        echo "hostname=${ENVIRONMENT_NAME}.${PREVIEW_DOMAIN}" >> "${GITHUB_OUTPUT}"
+        echo "image=ghcr.io/${GITHUB_REPOSITORY,,}:${ENVIRONMENT_NAME}-${HEAD_SHA::7}" >> "${GITHUB_OUTPUT}"
+
+    - name: Start GitHub deployment
+      uses: bobheadxi/deployments@v1
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: ${{ env.ENVIRONMENT_NAME }}
+        ref: ${{ github.head_ref }}
+        transient: true
+        logs: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+        override: true
+
+    - name: Project site tree (emergence-site, lensed)
+      run: |
+        git holo project emergence-site --fetch --lens | tee /tmp/holo-project.out
+        TREE="$(tail -1 /tmp/holo-project.out)"
+        if [ -z "${TREE}" ] || ! git cat-file -e "${TREE}^{tree}" 2>/dev/null; then
+          echo "::error::hologit projection failed or produced no tree (got: '${TREE}')"
+          exit 1
+        fi
+        echo "projected: ${TREE}"
+        mkdir -p .skeleton-v3/docker/.build/site
+        git archive "${TREE}" | tar -x -C .skeleton-v3/docker/.build/site
+
+    - name: Log in to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    # composer_auth: composer update resolves php-core from a VCS repo and
+    # gets rate-limited without a GitHub token
+    - name: Build and push site image
+      env:
+        IMAGE: ${{ steps.environment.outputs.image }}
+      run: |
+        printf '{"github-oauth": {"github.com": "%s"}}\n' '${{ secrets.GITHUB_TOKEN }}' > "${RUNNER_TEMP}/composer-auth.json"
+        docker build --secret id=composer_auth,src="${RUNNER_TEMP}/composer-auth.json" -t "${IMAGE}" .skeleton-v3/docker
+        docker push "${IMAGE}"
+
+    - name: Configure kubectl
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
+      run: |
+        mkdir -p ~/.kube
+        printf '%s' "${KUBE_CONFIG_DATA}" | base64 -d > ~/.kube/config
+        chmod 600 ~/.kube/config
+        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
+
+    # Plain manifests, no chart: the container is self-contained (bundled
+    # MySQL in the pod filesystem — transient by design; a reschedule loses
+    # the seeded DB until the next push re-seeds). ASSUME_HTTPS stays at its
+    # default (1) because TLS terminates at the ingress. Readiness gates on
+    # HTTP 200 / — first boot initializes the bundled MySQL, so give it a
+    # generous failureThreshold.
+    - name: Deploy preview instance
+      env:
+        IMAGE: ${{ steps.environment.outputs.image }}
+        PREVIEW_HOSTNAME: ${{ steps.environment.outputs.hostname }}
+      run: |
+        kubectl apply -f - <<EOF
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: ${ENVIRONMENT_NAME}
+          labels:
+            app.kubernetes.io/name: slate-preview
+            app.kubernetes.io/instance: ${ENVIRONMENT_NAME}
+        spec:
+          replicas: 1
+          strategy:
+            type: Recreate
+          selector:
+            matchLabels:
+              app.kubernetes.io/instance: ${ENVIRONMENT_NAME}
+          template:
+            metadata:
+              labels:
+                app.kubernetes.io/name: slate-preview
+                app.kubernetes.io/instance: ${ENVIRONMENT_NAME}
+            spec:
+              containers:
+              - name: site
+                image: ${IMAGE}
+                env:
+                - name: SITE_HANDLE
+                  value: ${SITE_HANDLE}
+                ports:
+                - name: http
+                  containerPort: 80
+                readinessProbe:
+                  httpGet:
+                    path: /
+                    port: http
+                  initialDelaySeconds: 10
+                  periodSeconds: 5
+                  failureThreshold: 60
+                resources:
+                  requests:
+                    cpu: 100m
+                    memory: 512Mi
+                  limits:
+                    memory: 2Gi
+        ---
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: ${ENVIRONMENT_NAME}
+          labels:
+            app.kubernetes.io/name: slate-preview
+            app.kubernetes.io/instance: ${ENVIRONMENT_NAME}
+        spec:
+          selector:
+            app.kubernetes.io/instance: ${ENVIRONMENT_NAME}
+          ports:
+          - name: http
+            port: 80
+            targetPort: http
+        ---
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: ${ENVIRONMENT_NAME}
+          labels:
+            app.kubernetes.io/name: slate-preview
+            app.kubernetes.io/instance: ${ENVIRONMENT_NAME}
+          annotations:
+            kubernetes.io/ingress.class: nginx
+            cert-manager.io/cluster-issuer: letsencrypt-prod
+            nginx.ingress.kubernetes.io/proxy-body-size: '0'
+            nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+        spec:
+          rules:
+          - host: ${PREVIEW_HOSTNAME}
+            http:
+              paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: ${ENVIRONMENT_NAME}
+                    port:
+                      name: http
+          tls:
+          - hosts:
+            - ${PREVIEW_HOSTNAME}
+            secretName: ${ENVIRONMENT_NAME}-tls
+        EOF
+
+    - name: Wait for rollout
+      run: kubectl rollout status deployment "${ENVIRONMENT_NAME}" --timeout=600s
+
+    # Same seed the retired deploy-site-preview action performed (drop DB,
+    # stream the fixtures holobranch, run migrations), updated for the
+    # container runtime the way the e2e cypress harness does it: MyISAM DDL
+    # rewritten to InnoDB (the bundled MySQL 8 disables MyISAM) and
+    # migrations via the image's console-run tool
+    - name: Seed fixtures and run migrations
+      run: |
+        POD_NAME="$(kubectl get pod \
+          -l app.kubernetes.io/instance="${ENVIRONMENT_NAME}" \
+          --field-selector=status.phase=Running \
+          -o jsonpath='{.items[0].metadata.name}')"
+        echo "Using pod: ${POD_NAME}"
+
+        FIXTURES_TREE="$(git holo project fixtures | tail -1)"
+        echo "Projected fixtures tree: ${FIXTURES_TREE}"
+
+        echo "Resetting database..."
+        kubectl exec -i "${POD_NAME}" -- mysql --socket=/run/mysqld/mysqld.sock -uroot \
+          -e "DROP DATABASE IF EXISTS \`${SITE_HANDLE}\`; CREATE DATABASE \`${SITE_HANDLE}\` CHARACTER SET utf8mb4;"
+
+        echo "Loading fixtures..."
+        (
+          echo "SET autocommit=0;"
+          echo "SET unique_checks=0;"
+          echo "SET foreign_key_checks=0;"
+          for fixture_file in $(git ls-tree -r --name-only "${FIXTURES_TREE}"); do
+            git cat-file -p "${FIXTURES_TREE}:${fixture_file}"
+          done
+          echo "COMMIT;"
+        ) \
+          | sed 's/ENGINE=MyISAM/ENGINE=InnoDB/g' \
+          | kubectl exec -i "${POD_NAME}" -- mysql --socket=/run/mysqld/mysqld.sock -uroot "${SITE_HANDLE}"
+
+        echo "Running migrations..."
+        kubectl exec "${POD_NAME}" -- php /opt/emergence/tools/console-run.php migrations:execute --all
+
+    # first deploy of a new PR host also waits on Let's Encrypt issuance
+    - name: Smoke-test preview
+      env:
+        PREVIEW_HOSTNAME: ${{ steps.environment.outputs.hostname }}
+      run: |
+        echo -n "waiting for https://${PREVIEW_HOSTNAME}/"
+        code=''
+        for i in $(seq 1 60); do
+          code="$(curl -s -o /dev/null -w '%{http_code}' "https://${PREVIEW_HOSTNAME}/" || true)"
+          [ "${code}" = 200 ] && break
+          echo -n .
+          sleep 5
+        done
+        echo
+        if [ "${code}" != 200 ]; then
+          echo "::error::preview did not serve at https://${PREVIEW_HOSTNAME}/ (last status: ${code})"
+          exit 1
+        fi
+        if ! curl -sf "https://${PREVIEW_HOSTNAME}/login" | grep -q '_LOGIN'; then
+          echo "::error::login form not found on preview"
+          exit 1
+        fi
+        echo "preview serving: https://${PREVIEW_HOSTNAME}/"
+
+    - name: Finish GitHub deployment
+      uses: bobheadxi/deployments@v1
+      if: ${{ always() }}
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        env: ${{ env.ENVIRONMENT_NAME }}
+        ref: ${{ github.head_ref }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+        env_url: 'https://${{ steps.environment.outputs.hostname }}/'
+        logs: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
+  teardown:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Configure kubectl
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG_BASE64 }}
+      run: |
+        mkdir -p ~/.kube
+        printf '%s' "${KUBE_CONFIG_DATA}" | base64 -d > ~/.kube/config
+        chmod 600 ~/.kube/config
+        kubectl config set-context --current --namespace="${KUBE_NAMESPACE}"
+
+    - name: Delete preview instance
+      run: |
+        kubectl delete deployment,service,ingress \
+          -l app.kubernetes.io/instance="${ENVIRONMENT_NAME}"
+        # cert-manager's ingress-shim removes its Certificate with the
+        # ingress but leaves the issued secret behind
+        kubectl delete secret "${ENVIRONMENT_NAME}-tls" --ignore-not-found
+
+    - name: Deactivate GitHub deployment environment
+      uses: bobheadxi/deployments@v1
+      with:
+        step: deactivate-env
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: ${{ env.ENVIRONMENT_NAME }}
