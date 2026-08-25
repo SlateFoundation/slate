@@ -37,7 +37,7 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
 
     control: {
         managerPanel: {
-            show: 'onManagerShow',
+            activate: 'onManagerPanelActivate',
             beforeedit: 'onCellEditorBeforeEdit',
             edit: 'onCellEditorEdit',
             viewclick: 'onViewClick',
@@ -50,7 +50,7 @@ Ext.define('SlateAdmin.controller.settings.GlobalRecipients', {
 
 
     // event handlers
-    onManagerShow: function(managerPanel) {
+    onManagerPanelActivate: function(managerPanel) {
         this.ensureStoreLoaded(this.getPeopleGlobalRecipientsStore(), managerPanel);
         this.syncManagerState();
     },

@@ -37,7 +37,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
 
     control: {
         managerPanel: {
-            show: 'onManagerShow',
+            activate: 'onManagerPanelActivate',
             edit: 'onCellEditorEdit',
             browsecoursesclick: 'onBrowseCoursesClick',
             deletedepartmentclick: 'onDeleteRecordClick'
@@ -49,7 +49,7 @@ Ext.define('SlateAdmin.controller.settings.Departments', {
 
 
     // event handlers
-    onManagerShow: function(managerPanel) {
+    onManagerPanelActivate: function(managerPanel) {
         this.ensureStoreLoaded(this.getCoursesDepartmentsStore(), managerPanel);
         this.syncManagerState();
     },
