@@ -1,9 +1,10 @@
 ---
-status: planned
+status: done
 depends: [person-merge-engine]
 specs:
   - specs/behaviors/person-merge.md
   - specs/api/person-merge.md
+pr: 399
 ---
 
 # Plan: Canvas user-merge follow-up executor
@@ -62,5 +63,42 @@ user-merge action. Out of scope: the executor framework itself
   canonical one.
 
 ## Notes
+
+No Canvas connector existed in this repo to extend -- it was extracted into
+a standalone `slate-connector-canvas` repo in 2017 (see `be0569d4`/
+`f50a092c` in git history). This plan rebuilds just the request plumbing the
+executor needs (`RemoteSystems\Canvas`) under the same static-config/
+`executeRequest` convention as the sibling `GoogleApps` client, rather than a
+general-purpose Canvas SDK -- a deviation from the "reuse the existing Canvas
+integration" framing in the task brief, since there was nothing to reuse.
+
+A `canvas` connector mapping's `ExternalKey` is defined as the Canvas user ID
+(not a fixed constant like `'id'`), with `ExternalIdentifier` carrying the
+Canvas login's SIS ID. This is load-bearing, not incidental:
+`Merge::getIdentityConflicts()` treats two mappings sharing the same
+`(Connector, ExternalKey)` with differing `ExternalIdentifier` as a conflict
+requiring operator resolution, and resolving it discards the losing side's
+mapping *before* follow-up actions are derived (confirmed by
+`person-merge-engine`'s own note that mapping-identity conflicts are
+intentionally gated through that same mechanism). With a shared constant key,
+two independent Canvas accounts on both sides of a merge would always trigger
+that conflict path and the `canvas-user-merge` action could never spawn.
+Keying on the Canvas user ID avoids the collision.
+
+All five Validation checklist items have a corresponding PHPUnit test in
+`phpunit-tests/slate.read-write/Connectors/Canvas/`
+(`UserMergeActionDeriverTest`, `UserMergeExecutorTest`), but -- like
+`person-merge-engine` before it -- PHPUnit has no runner in this sandbox: the
+suite needs the full composed Emergence/Slate runtime plus a live MySQL
+connection (`handlers/phpunit.php` in `emergence/php-core`), available only
+inside a Habitat studio or the CI container build. The boxes below are left
+unchecked because no test was actually *executed*; what was verified,
+matching `.github/workflows/quality.yml` exactly (PHP 8.3 + Composer +
+`script/fetch-analysis-context`, via Docker): `php -l`, `rector process
+--dry-run`, `phpstan analyse`, `psalm --taint-analysis`, and `php-cs-fixer
+check --diff` all pass clean with zero changes to `phpstan-baseline.neon` or
+`psalm-baseline.xml`. A reviewer with access to a composed live image + MySQL
+(as `person-merge-engine`'s review pass had) should run the suite and check
+off what passes.
 
 ## Follow-ups
