@@ -54,26 +54,36 @@ executors (`canvas-merge-executor`), and the SlateAdmin UI
 
 ## Validation
 
-- [ ] Fixture merge moves every registered table's rows; zero rows remain
+- [x] Fixture merge moves every registered table's rows; zero rows remain
       keyed to the source
 - [ ] Registry completeness check passes and runs in CI
-- [ ] Preview reports impact counts matching what execute then moves
-- [ ] Identity conflict (differing Student Numbers) halts execute without
+- [x] Preview reports impact counts matching what execute then moves
+- [x] Identity conflict (differing Student Numbers) halts execute without
       `resolutions`; succeeds with them
-- [ ] Forced mid-merge failure rolls back — both records unchanged
-- [ ] Audit record written with per-table counts and source snapshot
-- [ ] Repeated execute for an already-merged pair returns the prior audit
+- [x] Forced mid-merge failure rolls back — both records unchanged
+- [x] Audit record written with per-table counts and source snapshot
+- [x] Repeated execute for an already-merged pair returns the prior audit
       record
 - [ ] A merge involving mappings spawns follow-up actions atomically; a rolled-
       back merge spawns none
 - [ ] Manual outcome PATCH enforces the lifecycle (notes required; `completed`
       terminal); execute on an executor-less action type 404s
 
-All nine criteria above are implemented and have a corresponding PHPUnit
-test in `phpunit-tests/slate.read-write/People/Merge/` (`MergeTest`,
-`FollowUpActionTest`, `RegistryCompletenessTest`), but none could be
-*executed* — see Notes — so every box stays unchecked rather than claiming
-verification the environment couldn't produce.
+All nine criteria have a corresponding PHPUnit test in
+`phpunit-tests/slate.read-write/People/Merge/` (`MergeTest`,
+`FollowUpActionTest`, `RegistryCompletenessTest`), but the suite itself has
+no runner in CI or the review sandbox (see Notes). The checked boxes were
+verified for real at review time by an end-to-end harness executed inside the
+composed live image against a scratch MySQL 8 — 23 assertions covering
+fixtures → preview → conflict enforcement → execute → tombstone/dedupe/
+mapping-move → idempotent re-execute → forced-failure rollback. That run also
+caught and fixed a fatal MySQL 1093 in the dedupe DELETE (self-referencing
+EXISTS subquery, rewritten to a derived-table self-JOIN), added
+absent-table tolerance to the registry walk, and moved MergeAudit/
+FollowUpAction table creation ahead of the transaction (lazy DDL auto-create
+would implicitly commit mid-merge on a site's first merge). The unchecked
+boxes (completeness scan in CI, action spawn/lifecycle specifics) still await
+a PHPUnit runner.
 
 ## Risks / unknowns
 

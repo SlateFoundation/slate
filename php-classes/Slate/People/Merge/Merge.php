@@ -4,6 +4,7 @@ namespace Slate\People\Merge;
 
 use DB;
 use Exception;
+use TableNotFoundException;
 use Emergence\People\Person;
 use Emergence\People\Relationship;
 use Emergence\People\ContactPoint\AbstractPoint;
@@ -90,6 +91,16 @@ class Merge
         static::validateResolutions($conflicts, $resolutions);
 
         $sourceSnapshot = static::snapshotIdentity($Source);
+
+        // ensure the audit/action tables exist BEFORE the transaction opens:
+        // their lazy first-use auto-create is DDL, which implicitly commits
+        // in MySQL and would silently break the rollback guarantee on the
+        // first-ever merge in a site's life
+        foreach ([MergeAudit::class, FollowUpAction::class] as $recordClass) {
+            if (!(bool) DB::oneValue('SHOW TABLES LIKE "%s"', [$recordClass::$tableName])) {
+                DB::multiQuery(\SQL::getCreateTable($recordClass));
+            }
+        }
 
         DB::nonQuery('START TRANSACTION');
 
@@ -370,10 +381,14 @@ class Merge
         [$column, $condition] = static::buildColumnAndCondition($entry);
         $table = $entry['table'];
 
-        $total = (int) DB::oneValue(
-            'SELECT COUNT(*) FROM `%s` WHERE `%s` = %u AND (%s)',
-            [$table, $column, $sourceID, $condition]
-        );
+        try {
+            $total = (int) DB::oneValue(
+                'SELECT COUNT(*) FROM `%s` WHERE `%s` = %u AND (%s)',
+                [$table, $column, $sourceID, $condition]
+            );
+        } catch (TableNotFoundException $e) {
+            return ['moved' => 0, 'deduped' => 0];
+        }
 
         $deduped = 0;
         if (array_key_exists('uniqueColumns', $entry) && count($entry['uniqueColumns']) > 0) {
@@ -392,13 +407,30 @@ class Merge
         [$column, $condition] = static::buildColumnAndCondition($entry);
         $table = $entry['table'];
 
+        try {
+            return static::applyGenericEntryQueries($entry, $table, $column, $condition, $sourceID, $targetID);
+        } catch (TableNotFoundException $e) {
+            // framework tables create on first use, so an absent table just
+            // means zero rows -- e.g. a leaf without the module enabled
+            return ['moved' => 0, 'deduped' => 0];
+        }
+    }
+
+    protected static function applyGenericEntryQueries(array $entry, string $table, string $column, string $condition, int $sourceID, int $targetID): array
+    {
         $deduped = 0;
         if (array_key_exists('uniqueColumns', $entry) && count($entry['uniqueColumns']) > 0) {
-            $existsSql = static::buildDuplicateExistsSql($table, $column, $targetID, $condition, $entry['uniqueColumns']);
+            // MySQL forbids a DELETE whose subquery reads the target table
+            // (error 1093), so unlike planGenericEntry's EXISTS this joins a
+            // materialized derived table of the target person's rows
+            $matchers = array_map(
+                fn ($col) => sprintf('tgt.`%1$s` <=> src.`%1$s`', $col),
+                $entry['uniqueColumns']
+            );
 
             DB::nonQuery(
-                'DELETE src FROM `%s` src WHERE src.`%s` = %u AND (%s) AND EXISTS (%s)',
-                [$table, $column, $sourceID, $condition, $existsSql]
+                'DELETE src FROM `%s` src JOIN (SELECT * FROM `%s` WHERE `%s` = %u AND (%s)) tgt ON %s WHERE src.`%s` = %u AND (%s)',
+                [$table, $table, $column, $targetID, $condition, implode(' AND ', $matchers), $column, $sourceID, $condition]
             );
             $deduped = DB::affectedRows();
         }
@@ -431,10 +463,14 @@ class Merge
             }
 
             foreach ($remap as $sourceCPID => $targetCPID) {
-                DB::nonQuery(
-                    'UPDATE `%s` SET `%s` = %u WHERE `%s` = %u',
-                    [$entry['table'], $entry['contactPointColumn'], $targetCPID, $entry['contactPointColumn'], $sourceCPID]
-                );
+                try {
+                    DB::nonQuery(
+                        'UPDATE `%s` SET `%s` = %u WHERE `%s` = %u',
+                        [$entry['table'], $entry['contactPointColumn'], $targetCPID, $entry['contactPointColumn'], $sourceCPID]
+                    );
+                } catch (TableNotFoundException $e) {
+                    break; // absent table == zero rows to remap
+                }
             }
         }
     }
