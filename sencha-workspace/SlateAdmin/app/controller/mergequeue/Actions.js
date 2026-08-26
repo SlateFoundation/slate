@@ -108,10 +108,12 @@ Ext.define('SlateAdmin.controller.mergequeue.Actions', {
     },
 
     // event handlers
-    onStatusSelect: function(field, records) {
-        var value = records && records.length ? records[0].get('value') : 'pending';
+    onStatusSelect: function(field, record) {
+        // single-select combo select carries one record in Ext 6.2 classic,
+        // not an array (see MergeQueue.onStatusSelect)
+        record = Ext.isArray(record) ? record[0] : record;
 
-        this.redirectTo(['merge-queue', 'actions', value]);
+        this.redirectTo(['merge-queue', 'actions', record ? record.get('value') : 'pending']);
     },
 
     onExecuteClick: function(grid, record) {

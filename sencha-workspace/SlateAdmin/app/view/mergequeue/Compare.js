@@ -90,6 +90,9 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
     return {
         extend: 'Ext.panel.Panel',
         xtype: 'mergequeue-compare',
+        requires: [
+            'Slate.ui.Placeholder'
+        ],
 
 
         // mergequeue-compare config
@@ -108,6 +111,12 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
             align: 'stretch'
         },
         items: [{
+            // shown instead of the compare surfaces until a pair is selected
+            xtype: 'slate-placeholder',
+            itemId: 'placeholderCmp',
+            flex: 1,
+            html: 'Select a candidate pair from the queue to compare the records and decide.'
+        }, {
             xtype: 'container',
             itemId: 'personsRow',
             cls: 'mergequeue-persons-row',
@@ -122,12 +131,22 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
                 cls: 'mergequeue-person-panel mergequeue-person-source',
                 tpl: personTpl
             }, {
-                xtype: 'button',
-                itemId: 'flipBtn',
-                action: 'flip-direction',
-                glyph: 0xf0ec, // fa-exchange
-                tooltip: 'Flip merge direction',
-                margin: '20 10 0 10'
+                // vbox-centered wrapper so the hbox's align:stretch can't
+                // stretch the button into a full-height slab
+                xtype: 'container',
+                layout: {
+                    type: 'vbox',
+                    pack: 'center'
+                },
+                margin: '0 10',
+                items: [{
+                    xtype: 'button',
+                    itemId: 'flipBtn',
+                    action: 'flip-direction',
+                    cls: 'mergequeue-flip-btn',
+                    glyph: 0xf0ec, // fa-exchange
+                    tooltip: 'Flip merge direction'
+                }]
             }, {
                 xtype: 'component',
                 itemId: 'targetCmp',
@@ -201,9 +220,28 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
             me.setPreviewData(null);
             me.setResolutions({});
             me.syncActionButtons();
+            me.syncEmptyState();
             Ext.resumeLayouts(true);
 
             me.fireEvent('candidatechange', me, candidate, oldCandidate);
+        },
+
+        /**
+         * Show the placeholder instead of the compare surfaces until a
+         * candidate pair is selected
+         */
+        syncEmptyState: function() {
+            var me = this,
+                empty = !me.getCandidate();
+
+            if (!me.placeholderCmp) {
+                return;
+            }
+
+            me.placeholderCmp.setHidden(!empty);
+            me.personsRow.setHidden(empty);
+            me.sectionsCt.setHidden(empty);
+            me.actionsBar.setHidden(empty);
         },
 
         // @private
@@ -321,6 +359,10 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
 
             me.callParent(arguments);
 
+            me.placeholderCmp = me.down('#placeholderCmp');
+            me.personsRow = me.down('#personsRow');
+            me.sectionsCt = me.down('#sectionsCt');
+            me.actionsBar = me.down('#actionsBar');
             me.sourceCmp = me.down('#sourceCmp');
             me.targetCmp = me.down('#targetCmp');
             me.impactCmp = me.down('#impactCmp');
@@ -333,6 +375,7 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
             // render whatever settled during construction, since config
             // updaters that fired before the refs above existed were no-ops
             me.updatePreviewData(me.getPreviewData());
+            me.syncEmptyState();
         },
 
         // @private

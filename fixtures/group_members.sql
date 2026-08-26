@@ -46,3 +46,9 @@ INSERT INTO `group_members` VALUES (26,'Emergence\\People\\Groups\\GroupMember',
 INSERT INTO `group_members` VALUES (29,'Emergence\\People\\Groups\\GroupMember','2021-05-31 01:40:11',2,7,27,'Member',NULL,NULL,'2021-05-31 01:40:11',NULL);
 INSERT INTO `group_members` VALUES (30,'Emergence\\People\\Groups\\GroupMember','2021-05-31 11:30:33',2,7,28,'Member',NULL,NULL,'2021-05-31 11:30:33',NULL);
 INSERT INTO `group_members` VALUES (31,'Emergence\\People\\Groups\\GroupMember','2022-04-25 15:39:59',3,15,34,'Member',NULL,NULL,'2022-04-25 15:39:59',NULL);
+
+-- Merge-demo cast (see people.sql): 40/41 share group 5 (dedupe on merge);
+-- 41's group 2 row moves to 40
+INSERT INTO `group_members` VALUES (40,'Emergence\\People\\Groups\\GroupMember','2023-08-15 09:00:00',2,5,40,'Member',NULL,NULL,'2023-08-15 09:00:00',NULL);
+INSERT INTO `group_members` VALUES (41,'Emergence\\People\\Groups\\GroupMember','2019-09-01 09:00:00',2,5,41,'Member',NULL,NULL,'2019-09-01 09:00:00',NULL);
+INSERT INTO `group_members` VALUES (42,'Emergence\\People\\Groups\\GroupMember','2019-09-01 09:00:00',2,2,41,'Member',NULL,NULL,'2019-09-01 09:00:00',NULL);
