@@ -143,6 +143,7 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
                     xtype: 'button',
                     itemId: 'flipBtn',
                     action: 'flip-direction',
+                    cls: 'mergequeue-flip-btn',
                     glyph: 0xf0ec, // fa-exchange
                     tooltip: 'Flip merge direction'
                 }]

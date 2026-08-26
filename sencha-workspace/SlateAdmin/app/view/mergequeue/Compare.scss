@@ -19,6 +19,22 @@
     border-right: 1px dashed #ccc;
 }
 
+// glyph-only button: the theme's icon-el margins (0 -2px 0 4px) and the
+// empty text element's padding are spacing for a glyph that PRECEDES text
+// -- with no text they skew the glyph off-center (measured 12px left gap
+// vs 6px right before this)
+.x-btn.mergequeue-flip-btn {
+    padding: 6px 8px;
+
+    .x-btn-inner {
+        display: none;
+    }
+
+    .x-btn-button .x-btn-icon-el.x-btn-glyph {
+        margin: 0;
+    }
+}
+
 .mergequeue-section {
     padding: 8px 0 16px;
 
