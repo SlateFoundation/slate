@@ -4,6 +4,8 @@ Ext.define('SlateAdmin.proxy.mergequeue.FollowUpActions', {
 
     config: {
         url: '/people/merge/actions',
-        include: ['MergeAudit']
+        // nested include so the actions grid's Linked Merge column can
+        // render person names, not just the audit ID
+        include: ['MergeAudit.SourcePerson', 'MergeAudit.TargetPerson']
     }
 });
