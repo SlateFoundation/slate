@@ -1,0 +1,3 @@
+[holomapping]
+root = "docs-lenses"
+files = "mkdocs.toml"
