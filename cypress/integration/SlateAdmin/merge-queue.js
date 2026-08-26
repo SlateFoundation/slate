@@ -1,66 +1,58 @@
 /**
  * SlateAdmin: Merge queue
  *
- * SKIPPED for now -- see plans/slateadmin-merge-queue.md. This spec was
- * written and reviewed for correctness against the house Cypress
- * conventions (see .agents/skills/jarvus-extjs/references/testing.md) but
- * could not be executed against the real docker/hologit e2e harness in the
- * session that authored it, and depends on a few things that session could
- * only partially verify:
+ * Covers the queue -> compare -> decide loop, seeded through the real
+ * detector path an operator would use (there's no direct create-candidate
+ * API -- candidates are only ever written by detectors or
+ * Merge::execute(), see Candidate.php).
  *
- * - `cy.loginAs('admin', 'admin')`: the merge endpoints are Administrator-
- *   gated (unlike the rest of this suite, which runs as TEST_USER=teacher,
- *   a Staff account). The fixture `admin` user's password was confirmed
- *   independently (bcrypt-verified against fixtures/people.sql) to be
- *   'admin', but cy.loginAs() posting that credential end-to-end against
- *   the live container was not exercised here.
- * - `merge_candidates`/`merge_audits`/`merge_followup_actions` have no
- *   migration or fixture SQL (see fixtures/*.sql) -- Emergence's
- *   ActiveRecord auto-creates a class's table on first live query, which
- *   should make the tables appear the first time these tests hit the
- *   candidates endpoint. That auto-create path was not observed running.
- * - `/powertools/duplicate-detection.php` is assumed web-reachable the
- *   same way other `site-root/powertools/*.php` scripts are (an
- *   established Emergence convention), invoked here as a stand-in "seed a
- *   candidate pair" step since there's no other API for it (candidates are
- *   only ever written by detectors or Merge::execute() -- see Candidate.php).
- *
- * To un-skip: run the real e2e harness locally (see testing.md), confirm
- * the seeding block below actually produces an open candidate pair, adjust
- * selectors/URLs as needed, then flip `describe.skip` back to `describe`.
+ * Verified end-to-end against a live container built from this branch
+ * (see PR #401's review): `admin`/`admin` login works against the merge
+ * endpoints' Administrator gate (unlike the rest of this suite, which runs
+ * as TEST_USER=teacher, a Staff account); the merge_candidates/
+ * merge_audits/merge_followup_actions tables have no migration or fixture
+ * SQL but Emergence's ActiveRecord auto-creates them on first live query,
+ * confirmed working; and `/powertools/duplicate-detection.php` is
+ * web-reachable and idempotent as described. The seeding block below
+ * reflects the fixes that verification surfaced -- see the `before()`
+ * comments.
  *
  * @see specs/behaviors/person-merge.md
  * @see specs/api/person-merge.md
  */
-describe.skip('SlateAdmin: Merge queue', () => {
+describe('SlateAdmin: Merge queue', () => {
     let candidateId;
 
-    // reset database, then seed one open duplicate-candidate pair -- there
-    // is no direct create-candidate API, so this drives the real detector
-    // path an operator would use (site-root/powertools/duplicate-detection.php)
+    // reset database, then seed one open duplicate-candidate pair by
+    // driving the real detector path an operator would use
+    // (site-root/powertools/duplicate-detection.php)
     before(() => {
         cy.resetDatabase();
         cy.loginAs('admin', 'admin');
 
+        // /people/save expects the records-proxy write envelope (an array
+        // of record deltas under `data`), not flat fields -- and needs
+        // ?format=json or the server 500s trying to render a
+        // peopleSaved.tpl that doesn't exist in the composed site
+        const duplicatePersonPayload = {
+            data: [{
+                Class: 'Emergence\\People\\Person',
+                FirstName: 'MergeQueueE2E',
+                LastName: 'DuplicatePerson'
+            }]
+        };
+
         cy.request({
             method: 'POST',
-            url: '/people/save',
+            url: '/people/save?format=json',
             form: true,
-            body: {
-                'Class': 'Emergence\\People\\Person',
-                'FirstName': 'MergeQueueE2E',
-                'LastName': 'DuplicatePerson'
-            }
+            body: duplicatePersonPayload
         });
         cy.request({
             method: 'POST',
-            url: '/people/save',
+            url: '/people/save?format=json',
             form: true,
-            body: {
-                'Class': 'Emergence\\People\\Person',
-                'FirstName': 'MergeQueueE2E',
-                'LastName': 'DuplicatePerson'
-            }
+            body: duplicatePersonPayload
         });
 
         cy.request({
@@ -72,7 +64,7 @@ describe.skip('SlateAdmin: Merge queue', () => {
             }
         });
 
-        cy.request('/people/merge/candidates?status=open&format=json')
+        cy.request('/people/merge/candidates?status=open&include=Person1,Person2&format=json')
             .its('body.data')
             .then((candidates) => {
                 const match = candidates.find((candidate) =>
