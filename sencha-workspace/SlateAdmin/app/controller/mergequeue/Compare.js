@@ -129,7 +129,7 @@ Ext.define('SlateAdmin.controller.mergequeue.Compare', {
                 compareCt.setLoading(false);
 
                 if (compareCt.getCandidate() === candidate) {
-                    compareCt.setPreviewData(response.data);
+                    compareCt.setPreviewData(response.data.data);
                 }
             },
             failure: function(response) {
@@ -168,7 +168,7 @@ Ext.define('SlateAdmin.controller.mergequeue.Compare', {
 
                 me.onDecisionComplete(candidate, {
                     Status: 'merged',
-                    MergeAuditID: response.data && response.data.ID
+                    MergeAuditID: response.data.data && response.data.data.ID
                 });
             },
             failure: function(response) {
@@ -232,7 +232,7 @@ Ext.define('SlateAdmin.controller.mergequeue.Compare', {
             success: function(response) {
                 compareCt.setLoading(false);
                 Ext.toast('Candidate pair ' + status);
-                me.onDecisionComplete(candidate, response.data);
+                me.onDecisionComplete(candidate, response.data.data);
             },
             failure: function(response) {
                 compareCt.setLoading(false);

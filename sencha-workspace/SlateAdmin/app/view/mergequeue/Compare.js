@@ -97,8 +97,7 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
             candidate: null,
             reversed: false,
             previewData: null,
-            resolutions: null,
-            loading: false
+            resolutions: null
         },
 
         // panel config
@@ -266,11 +265,6 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
             me.syncActionButtons();
         },
 
-        // @private
-        updateLoading: function(loading) {
-            this.setLoading(loading ? 'Loading preview&hellip;' : false);
-        },
-
         /**
          * True once every conflict reported by the loaded preview has a
          * chosen resolution.
@@ -279,7 +273,13 @@ Ext.define('SlateAdmin.view.mergequeue.Compare', function() {
             var previewData = this.getPreviewData(),
                 resolutions = this.getResolutions() || {};
 
-            if (!previewData || !previewData.conflicts) {
+            // no preview loaded yet is NOT resolved -- only an actually-loaded
+            // preview reporting no conflicts counts as nothing left to pick
+            if (!previewData) {
+                return false;
+            }
+
+            if (!previewData.conflicts) {
                 return true;
             }
 
