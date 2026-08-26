@@ -23,8 +23,18 @@ Key mechanics:
 
 - The support commands run in **`SITE_CONTAINER` mode**: `cy.resetDatabase()` drops and
   reloads the fixture database via `docker exec` into the site container, so every spec
-  file starts from the same known state. (Reset per spec file in a `before()`, not per
-  test — it's seconds, not milliseconds.)
+  file starts from the same known state. Resets cost seconds, not milliseconds — default
+  to one per spec file — but where the reset goes depends on how the spec's tests
+  interact with **test retries** (CI runs `retries=2`, and Cypress re-runs `beforeEach`
+  but NOT `before` hooks on a retry attempt):
+  - read-only or convergent tests: reset once in `before()`;
+  - tests that mutate server state non-convergently: reset in `beforeEach()`, so a
+    retried attempt starts from fixture state instead of compounding the failed
+    attempt's mutations into garbage errors ("Found 6, expected 3") that hide the real
+    failure;
+  - chain suites whose tests build on earlier tests' mutations: a middle test can never
+    be safely retried — declare `describe('...', { retries: 0 }, () => ...)` with a
+    comment so the true first failure surfaces.
 - The site must be served on **port 80** — the backend issues absolute redirects that
   drop non-standard ports.
 - `cy.loginAs()` posts the real login form (`TEST_USER` env; fixture users include a

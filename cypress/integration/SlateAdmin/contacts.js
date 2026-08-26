@@ -1,7 +1,11 @@
 describe('SlateAdmin: Contacts', () => {
 
-    // reset database before tests
-    before(() => {
+    // reset database before every attempt: this spec's single test mutates
+    // contact rows non-convergently, and Cypress re-runs beforeEach (but NOT
+    // before) hooks on each retry attempt — with a before() reset, a retry
+    // starts from the failed attempt's mutated state and every added row
+    // compounds ("Found 6, expected 3" instead of the real failure)
+    beforeEach(() => {
         cy.resetDatabase();
     });
 

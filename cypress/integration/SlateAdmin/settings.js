@@ -1,7 +1,12 @@
 describe('SlateAdmin: Settings managers', () => {
 
-    // reset database before tests
-    before(() => {
+    // reset database before every attempt: each test creates and deletes
+    // fixed-name records ("E2E Term", "E2E Dept"), so a mid-test transient
+    // failure leaves them behind and a retry then hits duplicates (findRecord
+    // matches the leftover; the "removed" assertions fail on the copy).
+    // Cypress re-runs beforeEach (but NOT before) hooks on each retry
+    // attempt, so this keeps every attempt starting from fixture state
+    beforeEach(() => {
         cy.resetDatabase();
     });
 
