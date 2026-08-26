@@ -48,14 +48,14 @@ shipped.
 
 ## Validation
 
-- [ ] Queue lists open candidates and filters by status
-- [ ] Compare view shows both records, impact counts, and conflicts from
+- [x] Queue lists open candidates and filters by status
+- [x] Compare view shows both records, impact counts, and conflicts from
       preview
-- [ ] A merge with a conflict cannot be submitted until a resolution is picked
-- [ ] Dismiss/defer require notes and update the row without a reload
+- [x] A merge with a conflict cannot be submitted until a resolution is picked
+- [x] Dismiss/defer require notes and update the row without a reload
 - [ ] Follow-up queue lists pending actions; execute appears only for
       executor-backed types; manual outcomes require notes
-- [ ] Cypress spec for the full loop passes in CI
+- [x] Cypress spec for the full loop passes in CI
 
 ## Risks / unknowns
 
@@ -67,22 +67,43 @@ shipped.
 Intended for execution by the agent already working the SlateAdmin cleanup
 campaign — conventions here follow that campaign's post-rework patterns.
 
-Implemented in PR #401. None of the Validation boxes above are checked:
-implementation is code-complete and ESLint-clean (0 errors against the
-required-check command, confirmed via `--format json` severity check), but
-this session had no way to run the live app or the docker/hologit e2e
-harness, so none of the runtime behaviors were actually observed — only
-traced through code review against the API/behavior specs. See PR #401's
-description for the exact per-requirement mapping and the Cypress spec's
-header comment (`cypress/integration/SlateAdmin/merge-queue.js`, left
-`describe.skip`) for what a reviewer with harness access should confirm
-before checking these boxes.
+Implemented in PR #401. Initial implementation was code-complete and
+ESLint-clean but unverified at runtime (no way to run the live app or the
+e2e harness in that session). External review (@themightychris) built the
+container from the branch and found three real, live-confirmed bugs: a
+cold-deep-link crash in both route handlers (statusField read before the
+manager existed), a response-envelope bug (`response.data` is the full
+`{success, data}` body, not the payload — broke the whole decide loop and
+let the Merge button enable on an empty preview), and a missing `include`
+on the queue proxies (blank Person1/Person2/MergeAudit columns). All three
+were fixed, plus the two `/people/save` seeding bugs the reviewer found
+un-skipping the Cypress spec. The e2e re-run then caught a fourth bug the
+same way (an uncaught TypeError from pushing a numeric candidate ID into a
+route array) — fixed, and the spec went green in CI. The checked boxes
+above reflect that live-container pass plus the un-skipped spec now passing
+in CI on every run.
+
+The one unchecked box (follow-up queue: execute/manual-outcome flows) has
+no automated or manual coverage yet — the Cypress spec's follow-up-actions
+test only confirms the screen is reachable and deep-linkable; seeding an
+actual pending `FollowUpAction` needs connector-mapping fixture data that
+was out of scope here (see Follow-ups). Also worth a note for whoever picks
+that up: the "conflicts from preview" and "conflict gating" boxes above are
+verified against the seeded fixture pair, which has zero identity
+conflicts (two plain `Person` records, same name) — the conflict-list
+rendering and resolution-picker UI are exercised on their empty-state path
+only; a pair with a real conflict (e.g. differing Student Numbers) hasn't
+been walked live or in Cypress.
 
 ## Follow-ups
 
-- Run the real e2e harness against this branch, un-skip
-  `cypress/integration/SlateAdmin/merge-queue.js`, and check off the
-  Validation boxes above once each is actually observed passing.
+- Seed a pending `FollowUpAction` (needs connector-mapping fixture data)
+  and extend the Cypress spec to cover execute-in-place and the manual
+  complete/skip flows, then check off the remaining Validation box.
+- Walk the compare view against a candidate pair with a real identity
+  conflict (differing Student Numbers, or competing connector mappings) to
+  exercise the conflict-list/resolution-picker UI beyond its empty-state
+  path.
 - Consider progressive disclosure in the compare view (impact/conflicts/
   follow-ups sections currently all render up front) if real preview
   payloads turn out dense enough to warrant it — see Risks/unknowns above.
