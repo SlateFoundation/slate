@@ -376,10 +376,17 @@ class Merge
         return static::applyGenericEntry($entry, static::personID($Source), static::personID($Target));
     }
 
-    protected static function buildColumnAndCondition(array $entry): array
+    /**
+     * @param string $alias table alias to qualify the condition's column
+     *  references with -- required wherever the condition lands in a scope
+     *  with more than one table (see applyGenericEntryQueries's DELETE)
+     */
+    protected static function buildColumnAndCondition(array $entry, string $alias = ''): array
     {
+        $prefix = $alias === '' ? '' : $alias.'.';
+
         if (array_key_exists('contextClass', $entry)) {
-            return ['ContextID', sprintf('ContextClass = "%s"', DB::escape($entry['contextClass']))];
+            return ['ContextID', sprintf('%s`ContextClass` = "%s"', $prefix, DB::escape($entry['contextClass']))];
         }
 
         return [$entry['column'], '1'];
@@ -454,9 +461,15 @@ class Merge
                 $entry['uniqueColumns']
             );
 
+            // the outer WHERE has both `src` and the derived `tgt` in scope,
+            // so its condition must be src-qualified or MySQL rejects the
+            // whole statement as ambiguous (error 1052) -- parse-time, rows
+            // or no rows, which broke EVERY merge until #402
+            [, $srcCondition] = static::buildColumnAndCondition($entry, 'src');
+
             DB::nonQuery(
                 'DELETE src FROM `%s` src JOIN (SELECT * FROM `%s` WHERE `%s` = %u AND (%s)) tgt ON %s WHERE src.`%s` = %u AND (%s)',
-                [$table, $table, $column, $targetID, $condition, implode(' AND ', $matchers), $column, $sourceID, $condition]
+                [$table, $table, $column, $targetID, $condition, implode(' AND ', $matchers), $column, $sourceID, $srcCondition]
             );
             $deduped = DB::affectedRows();
         }
