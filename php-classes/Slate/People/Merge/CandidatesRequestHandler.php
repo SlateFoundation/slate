@@ -31,7 +31,7 @@ class CandidatesRequestHandler extends \Slate\RecordsRequestHandler
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ? $action : $action = static::shiftPath()) {
+        switch ($action ?: $action = static::shiftPath()) {
             case 'detect':
                 return static::handleDetectRequest();
 
