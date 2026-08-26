@@ -31,7 +31,14 @@ class CandidatesRequestHandler extends \Slate\RecordsRequestHandler
 
     public static function handleRecordsRequest($action = false)
     {
-        switch ($action ?: $action = static::shiftPath()) {
+        // plain if, not a ternary: Rector's TernaryToElvisRector and
+        // PHPStan's ternary.shortNotAllowed strict rule forbid each other's
+        // preferred spelling of the inline-assignment form
+        if ($action === false || $action === '') {
+            $action = static::shiftPath();
+        }
+
+        switch ($action) {
             case 'detect':
                 return static::handleDetectRequest();
 
