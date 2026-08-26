@@ -55,14 +55,13 @@ describe('SlateAdmin: Merge queue', () => {
             body: duplicatePersonPayload
         });
 
+        // seed candidates through the JSON detection endpoint the admin
+        // console's Run Detection button uses (the powertool page remains
+        // as the browser-facing alternative over the same runner)
         cy.request({
             method: 'POST',
-            url: '/powertools/duplicate-detection.php',
-            form: true,
-            body: {
-                run: 1
-            }
-        });
+            url: '/people/merge/candidates/detect?format=json'
+        }).its('body.data.totalMatches').should('be.greaterThan', 0);
 
         cy.request('/people/merge/candidates?status=open&include=Person1,Person2&format=json')
             .its('body.data')
@@ -87,6 +86,23 @@ describe('SlateAdmin: Merge queue', () => {
         // not a skeleton of empty surfaces
         cy.contains('.slate-placeholder', 'Select a candidate pair').should('be.visible');
         cy.get('.mergequeue-persons-row').should('not.be.visible');
+
+        // the Run Detection button locks, re-runs the detectors, and
+        // refreshes the queue in place (idempotent -- same rows return)
+        cy.withExt().then(({ extQuerySelector }) => {
+            cy.wrap(null).then(() => {
+                extQuerySelector('mergequeue-candidates-grid button[action=run-detection]').el.dom.click();
+            });
+
+            cy.wrap(null, { timeout: 15000 }).should(() => {
+                const btn = extQuerySelector('mergequeue-candidates-grid button[action=run-detection]');
+
+                expect(btn.isDisabled(), 'button re-enabled after run').to.be.false;
+                expect(extQuerySelector('mergequeue-candidates-grid').getStore().getCount(), 'queue refreshed').to.be.greaterThan(0);
+            });
+        });
+
+        cy.contains('.x-toast', 'duplicate match');
 
         cy.withExt().then(({ extQuerySelector }) => {
             cy.wrap(null).should(() => {

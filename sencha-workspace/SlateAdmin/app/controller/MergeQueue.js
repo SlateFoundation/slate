@@ -15,8 +15,14 @@
 Ext.define('SlateAdmin.controller.MergeQueue', {
     extend: 'Ext.app.Controller',
     requires: [
+        'Ext.window.MessageBox',
+        'Ext.window.Toast',
+
         /* globals SlateAdmin */
-        'SlateAdmin.util.PageTitle'
+        'SlateAdmin.util.PageTitle',
+
+        /* global Slate */
+        'Slate.API'
     ],
 
     // controller config
@@ -82,6 +88,9 @@ Ext.define('SlateAdmin.controller.MergeQueue', {
         },
         statusField: {
             select: 'onStatusSelect'
+        },
+        'mergequeue-candidates-grid button[action=run-detection]': {
+            click: 'onRunDetectionClick'
         }
     },
 
@@ -183,6 +192,50 @@ Ext.define('SlateAdmin.controller.MergeQueue', {
         }
 
         Ext.resumeLayouts(true);
+    },
+
+    /**
+     * Event handler. Runs every duplicate detector on demand (see the API
+     * spec: idempotent, decided pairs never resurrected), locking the
+     * button and masking the queue until the refreshed list lands
+     */
+    onRunDetectionClick: function(btn) {
+        var me = this,
+            grid = me.getGrid(),
+            store = me.getMergequeueCandidatesStore();
+
+        btn.disable();
+        grid.setLoading('Running duplicate detection&hellip;');
+
+        Slate.API.request({
+            url: '/people/merge/candidates/detect',
+            method: 'POST',
+            headers: {
+                Accept: 'application/json'
+            },
+            success: function(response) {
+                var totalMatches = (response.data.data && response.data.data.totalMatches) || 0;
+
+                store.load({
+                    callback: function() {
+                        grid.setLoading(false);
+                        btn.enable();
+                        Ext.toast(totalMatches + ' duplicate match(es) found across all detectors');
+                    }
+                });
+            },
+            failure: function(response) {
+                grid.setLoading(false);
+                btn.enable();
+                Ext.Msg.alert(
+                    'Detection failed',
+                    Ext.util.Format.htmlEncode(
+                        (response.data && response.data.message)
+                        || 'Please try again. If this problem persists, contact support.'
+                    )
+                );
+            }
+        });
     },
 
     onStatusSelect: function(field, record) {

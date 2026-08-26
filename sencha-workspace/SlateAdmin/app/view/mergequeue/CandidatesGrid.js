@@ -41,6 +41,14 @@ Ext.define('SlateAdmin.view.mergequeue.CandidatesGrid', {
                 { value: 'all', text: 'All' }
             ]
         }
+    }, {
+        xtype: 'tbfill'
+    }, {
+        xtype: 'button',
+        action: 'run-detection',
+        text: 'Run Detection',
+        glyph: 0xf021, // fa-refresh
+        tooltip: 'Run every duplicate detector now and refresh the queue'
     }],
 
     columns: {

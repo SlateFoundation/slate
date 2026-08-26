@@ -86,3 +86,10 @@ before checking these boxes.
 - Consider progressive disclosure in the compare view (impact/conflicts/
   follow-ups sections currently all render up front) if real preview
   payloads turn out dense enough to warrant it — see Risks/unknowns above.
+- Detection stays operator-triggered (Run Detection button ->
+  POST /people/merge/candidates/detect). When a scheduled cadence is
+  wanted, the intended seam is in-container named cron events
+  (daily/hourly/weekly) fired to event-handlers -- the tree-layer-
+  composable pattern precedented in the menunet codebase -- so scheduled
+  activities are introduced purely through tree layers with no external
+  plumbing per activity.

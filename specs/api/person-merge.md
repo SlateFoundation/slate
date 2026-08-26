@@ -50,6 +50,18 @@ Record a decision without merging: set status to `dismissed` or `deferred`
 with a required `notes` string. Transitioning out of `merged` is not allowed;
 re-opening a `dismissed`/`deferred` pair back to `open` is (with notes).
 
+### `POST /people/merge/candidates/detect`
+
+Run every registered duplicate detector and upsert findings into the
+candidate queue (idempotent — see the behavior spec: open pairs re-score,
+decided pairs are never resurrected). Detection is operator-triggered on
+demand; there is no scheduled cadence yet (a future in-container named cron
+event — the tree-layer-composable pattern precedented in menunet's
+event-handlers — is the intended seam when one is wanted). Response `data`:
+`matchesByDetector` (slug → raw match count) and `totalMatches`. Raw match
+counts are not the same as candidates opened — already-decided pairs count
+as matches but stay untouched.
+
 ### `GET /people/merge/actions?status=<pending|completed|skipped|failed>`
 
 List follow-up actions (default `pending`), each with its merge audit link,

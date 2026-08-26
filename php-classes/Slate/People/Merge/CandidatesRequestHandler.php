@@ -11,8 +11,8 @@ use Exception;
  * MergeRequestHandler's admin-only check.
  *
  * There is no create/delete route here -- candidates are only ever written
- * by detectors (Candidate::upsertPair(), run via
- * CandidateDetectionRunner/site-root/powertools/duplicate-detection.php)
+ * by detectors (Candidate::upsertPair(), run via CandidateDetectionRunner
+ * from POST .../detect or site-root/powertools/duplicate-detection.php)
  * and by Merge::execute() (Candidate::markMerged()); the `merged` status is
  * unreachable through this handler by design.
  *
@@ -28,6 +28,38 @@ class CandidatesRequestHandler extends \Slate\RecordsRequestHandler
     public static $accountLevelAPI = 'Administrator';
 
     public static $browseOrder = ['Score' => 'DESC', 'ID' => 'DESC'];
+
+    public static function handleRecordsRequest($action = false)
+    {
+        switch ($action ? $action : $action = static::shiftPath()) {
+            case 'detect':
+                return static::handleDetectRequest();
+
+            default:
+                return parent::handleRecordsRequest($action);
+        }
+    }
+
+    /**
+     * POST /people/merge/candidates/detect -- run every registered detector
+     * and upsert findings (idempotent, see CandidateDetectionRunner)
+     */
+    public static function handleDetectRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return static::throwInvalidRequestError('detect requires POST');
+        }
+
+        $summary = CandidateDetectionRunner::run();
+
+        return static::respond('detectionRun', [
+            'success' => true,
+            'data' => [
+                'matchesByDetector' => $summary,
+                'totalMatches' => array_sum($summary),
+            ],
+        ]);
+    }
 
     protected static function buildBrowseConditions(array $conditions = [], array &$filterObjects = [])
     {
