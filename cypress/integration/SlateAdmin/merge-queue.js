@@ -236,21 +236,27 @@ describe('SlateAdmin: Merge queue', () => {
         // merge the Avery Kim pair (fixture people 50/51, both canvas-mapped)
         // through the API -- the UI merge path is covered above; this test
         // targets the deriver -> follow-up-action -> actions-queue pipeline
-        cy.request('/people/merge/candidates?status=open&format=json').its('body.data').then((candidates) => {
+        // status=all + the Status guard keep this test convergent under
+        // Cypress retries: if a prior attempt's merge landed but a later
+        // assertion failed, the retry proceeds to the assertions instead of
+        // failing to find the already-merged pair in the open queue
+        cy.request('/people/merge/candidates?status=all&format=json').its('body.data').then((candidates) => {
             const pair = candidates.find((candidate) => candidate.Person1ID === 50 && candidate.Person2ID === 51);
 
             expect(pair, 'Avery Kim candidate').to.exist;
 
-            cy.request({
-                method: 'POST',
-                url: '/people/merge?format=json',
-                body: {
-                    sourceID: 51,
-                    targetID: 50,
-                    resolutions: {},
-                    candidateID: pair.ID
-                }
-            });
+            if (pair.Status === 'open') {
+                cy.request({
+                    method: 'POST',
+                    url: '/people/merge?format=json',
+                    body: {
+                        sourceID: 51,
+                        targetID: 50,
+                        resolutions: {},
+                        candidateID: pair.ID
+                    }
+                });
+            }
         });
 
         cy.visit('/manage#merge-queue/actions');
