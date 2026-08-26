@@ -92,14 +92,15 @@ describe('SlateAdmin: Merge queue', () => {
         });
 
         // switching the status filter reloads under a different URL --
-        // fire the real 'select' event a user's combo pick would fire,
-        // rather than reaching for a native <select> (this is a picker
-        // field, not a native select element)
+        // fire the real 'select' event a user's combo pick would fire: in
+        // Ext 6.2 classic a single-select combo passes ONE record, not an
+        // array (an array-shaped test event here once validated a handler
+        // the real UI never reached)
         cy.withExt().then(({ extQuerySelector }) => {
             cy.wrap(null).then(() => {
                 const statusField = extQuerySelector('mergequeue-candidates-grid #statusField');
 
-                statusField.fireEvent('select', statusField, [statusField.getStore().findRecord('value', 'all')]);
+                statusField.fireEvent('select', statusField, statusField.getStore().findRecord('value', 'all'));
             });
         });
 
@@ -165,6 +166,24 @@ describe('SlateAdmin: Merge queue', () => {
         cy.request(`/people/merge/candidates/${candidateId}?format=json`)
             .its('body.data.Status')
             .should('eq', 'dismissed');
+
+        // the decided pair must be surfaceable again through the status
+        // filter -- the roundtrip an operator relies on to revisit decisions
+        cy.withExt().then(({ extQuerySelector }) => {
+            cy.wrap(null).then(() => {
+                const statusField = extQuerySelector('mergequeue-candidates-grid #statusField');
+
+                statusField.fireEvent('select', statusField, statusField.getStore().findRecord('value', 'dismissed'));
+            });
+        });
+
+        cy.location('hash', { timeout: 10000 }).should('eq', '#merge-queue/candidates/dismissed');
+
+        cy.withExt().then(({ extQuerySelector }) => {
+            cy.wrap(null, { timeout: 10000 }).should(() => {
+                expect(extQuerySelector('mergequeue-candidates-grid').getStore().getById(candidateId), 'dismissed row surfaced under its filter').to.be.ok;
+            });
+        });
     });
 
     it('Fixture cast produces a candidate from every detector', () => {

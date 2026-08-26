@@ -185,10 +185,13 @@ Ext.define('SlateAdmin.controller.MergeQueue', {
         Ext.resumeLayouts(true);
     },
 
-    onStatusSelect: function(field, records) {
-        var value = records && records.length ? records[0].get('value') : 'open';
+    onStatusSelect: function(field, record) {
+        // a single-select combo's select event carries one record in Ext
+        // 6.2 classic, not an array -- the array handling cost the filter
+        // its function entirely (every pick redirected to the default)
+        record = Ext.isArray(record) ? record[0] : record;
 
-        this.redirectTo(['merge-queue', 'candidates', value]);
+        this.redirectTo(['merge-queue', 'candidates', record ? record.get('value') : 'open']);
     },
 
     // controller-local replacement for the retired Ext.util.History

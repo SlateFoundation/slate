@@ -52,19 +52,27 @@
 .mergequeue-conflict-row {
     align-items: center;
     display: flex;
+    // long option values (emails, external identifiers) must wrap instead
+    // of stretching the panel's inner width and forcing the sibling impact
+    // table into horizontal scroll
+    flex-wrap: wrap;
     gap: 8px;
     padding: 4px 0;
 
     .conflict-field {
         font-weight: bold;
         min-width: 140px;
+        overflow-wrap: anywhere;
     }
 
     .conflict-option {
         border: 1px solid #ccc;
         border-radius: 3px;
         cursor: pointer;
+        max-width: 100%;
+        overflow-wrap: anywhere;
         padding: 4px 8px;
+        text-align: left;
 
         &.selected {
             background-color: #dff0d8;
