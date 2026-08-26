@@ -19,6 +19,7 @@ concurrency:
 
 permissions:
   deployments: write # deactivate the per-PR GitHub deployment environment
+  packages: write # delete this PR's preview image versions from GHCR
 
 env:
   KUBE_NAMESPACE: slate
@@ -49,6 +50,49 @@ jobs:
         # cert-manager's ingress-shim removes its Certificate with the
         # ingress but leaves the issued secret behind
         kubectl delete secret "${ENVIRONMENT_NAME}-tls" --ignore-not-found
+
+    # preview-deploy.yml pushes ghcr.io/<repo>:pr-<n>-<shortsha> on every PR
+    # sync and nothing else ever deletes them — clean up this PR's tags here.
+    # Only versions whose tags ALL carry the exact "pr-<n>-" prefix are
+    # deleted; anything else (release tags, other PRs' previews, untagged
+    # layers/attestations) is left alone. A PR that never deployed a preview
+    # (or a repeat teardown) finds no package or no matching versions — both
+    # are fine, not failures.
+    - name: Delete preview image versions from GHCR
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PACKAGE_ORG: ${{ github.repository_owner }}
+        PACKAGE_NAME: ${{ github.event.repository.name }}
+        TAG_PREFIX: pr-${{ github.event.pull_request.number }}-
+      run: |
+        set -euo pipefail
+
+        if ! versions="$(gh api --paginate \
+          "/orgs/${PACKAGE_ORG}/packages/container/${PACKAGE_NAME}/versions?per_page=100" \
+          2>/dev/null)"; then
+          echo "container package not found — nothing to clean up"
+          exit 0
+        fi
+
+        version_ids="$(jq -r --arg prefix "${TAG_PREFIX}" '
+          .[]
+          | select(
+              (.metadata.container.tags | length) > 0
+              and all(.metadata.container.tags[]; startswith($prefix))
+            )
+          | .id
+        ' <<< "${versions}")"
+
+        if [ -z "${version_ids}" ]; then
+          echo "no ${TAG_PREFIX}* image versions to clean up"
+          exit 0
+        fi
+
+        for version_id in ${version_ids}; do
+          echo "deleting package version ${version_id}"
+          gh api --method DELETE \
+            "/orgs/${PACKAGE_ORG}/packages/container/${PACKAGE_NAME}/versions/${version_id}"
+        done
 
     - name: Deactivate GitHub deployment environment
       uses: bobheadxi/deployments@v1
