@@ -1,7 +1,8 @@
 ---
-status: in-progress
+status: done
 depends: []
 specs: []
+pr: 404
 ---
 
 # Plan: Make e2e specs safe under Cypress test retries
@@ -46,12 +47,18 @@ Classify each spec:
 
 ## Validation checklist
 
-- [ ] Full composed suite passes locally against a container built from
+- [x] Full composed suite passes locally against a container built from
       this branch (all specs, 0 failures)
 - [ ] `test-e2e` CI check green on the PR
-- [ ] Testing reference documents the retry-aware reset placement rules
+- [x] Testing reference documents the retry-aware reset placement rules
 
 ## Notes
+
+- The `test-e2e` box stays unchecked at closeout: opened during a GitHub
+  Actions outage (checks queue indefinitely). Local full-suite run: 10
+  specs, 23/23 passing. An injected-failure A/B additionally reproduced the
+  compounding pathology on the old `before()` spec ("Found 5, expected 3"
+  on attempts 2-3) and showed the fixed spec passing on attempt 2.
 
 - Cypress hook-retry semantics are the crux: `beforeEach` re-runs per
   attempt, `before` does not. A `before()` reset is only safe when the
