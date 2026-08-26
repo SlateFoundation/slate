@@ -83,6 +83,11 @@ describe('SlateAdmin: Merge queue', () => {
         cy.get('.x-grid-item', { timeout: 20000 });
         cy.contains('.x-grid-item', 'DuplicatePerson');
 
+        // before any selection the compare side shows the placeholder,
+        // not a skeleton of empty surfaces
+        cy.contains('.slate-placeholder', 'Select a candidate pair').should('be.visible');
+        cy.get('.mergequeue-persons-row').should('not.be.visible');
+
         cy.withExt().then(({ extQuerySelector }) => {
             cy.wrap(null).should(() => {
                 const record = extQuerySelector('mergequeue-candidates-grid').getStore().getById(candidateId);
@@ -119,6 +124,33 @@ describe('SlateAdmin: Merge queue', () => {
 
                 expect(compareCt.getPreviewData(), 'preview loaded').to.be.ok;
                 expect(compareCt.getPreviewData().impact, 'impact counts present').to.be.an('array');
+            });
+
+            // selecting replaced the placeholder with the compare surfaces
+            cy.get('.slate-placeholder').should('not.be.visible');
+            cy.get('.mergequeue-persons-row').should('be.visible');
+
+            // flipping the direction swaps source/target and re-fetches the
+            // preview for the new direction
+            cy.wrap(null).then(() => {
+                const compareCt = extQuerySelector('mergequeue-compare');
+
+                cy.wrap(compareCt.getPreviewData().source.ID).as('originalSourceID');
+                cy.wrap(compareCt.getPreviewData().target.ID).as('originalTargetID');
+
+                extQuerySelector('mergequeue-compare button[action=flip-direction]').el.dom.click();
+            });
+
+            cy.get('@originalSourceID').then((originalSourceID) => {
+                cy.get('@originalTargetID').then((originalTargetID) => {
+                    cy.wrap(null, { timeout: 10000 }).should(() => {
+                        const previewData = extQuerySelector('mergequeue-compare').getPreviewData();
+
+                        expect(previewData, 'flipped preview loaded').to.be.ok;
+                        expect(previewData.source.ID, 'source is the old target').to.eq(originalTargetID);
+                        expect(previewData.target.ID, 'target is the old source').to.eq(originalSourceID);
+                    });
+                });
             });
         });
     });
