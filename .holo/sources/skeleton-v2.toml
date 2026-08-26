@@ -1,0 +1,7 @@
+# docs-only dependency: the docs-site holobranch composites the docs shell
+# from skeleton-v2's docs-skeleton projection, which has no skeleton-v3
+# equivalent. Pinned to the frozen legacy skeleton's last release -- every
+# runtime composition moved to skeleton-v3 (see emergence-site).
+[holosource]
+url = "https://github.com/JarvusInnovations/emergence-skeleton-v2"
+ref = "refs/tags/v2.12.9"
