@@ -1,0 +1,16 @@
+# Overrides the mkdocs lens config that arrives through the composed
+# docs-skeleton layer (skeleton-v2 -> skeleton-v1 at frozen pins), which
+# still targets the retired Habitat depot's holo/lens-mkdocs package.
+# Mirrors emergence-skeleton@develop's migrated container-lens config.
+[hololens]
+container = "ghcr.io/hologit/lenses/mkdocs:latest"
+requirements = [
+    "fontawesome_markdown",
+    "mkdocs-awesome-pages-plugin",
+    "mkdocs-macros-plugin",
+    "mkdocs-material",
+    "markdown<3.4",
+]
+
+[hololens.output]
+merge = "replace"
