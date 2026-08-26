@@ -167,11 +167,101 @@ describe('SlateAdmin: Merge queue', () => {
             .should('eq', 'dismissed');
     });
 
-    it('Follow-up actions queue is reachable and deep-linkable by status', () => {
+    it('Fixture cast produces a candidate from every detector', () => {
         cy.loginAs('admin', 'admin');
-        cy.visit('/manage#merge-queue/actions/all');
 
-        cy.get('.x-grid', { timeout: 20000 });
+        cy.request('/people/merge/candidates?status=open&format=json').its('body.data').should((candidates) => {
+            const detectors = candidates.map((candidate) => candidate.Detector);
+
+            ['identical-name', 'shared-contact-point', 'identical-student-number', 'mapping-anomaly'].forEach((slug) => {
+                expect(detectors, slug + ' candidate present').to.include(slug);
+            });
+        });
+    });
+
+    it('Merge with conflict resolution: resolve StudentNumber, merge, audit recorded', () => {
+        cy.loginAs('admin', 'admin');
+
+        // the Dana Okafor pair (fixture people 42/43): identical names,
+        // differing StudentNumbers -- the compare view must demand a
+        // resolution before enabling merge
+        cy.request('/people/merge/candidates?status=open&format=json').its('body.data').then((candidates) => {
+            const pair = candidates.find((candidate) => candidate.Person1ID === 42 && candidate.Person2ID === 43);
+
+            expect(pair, 'Dana Okafor candidate').to.exist;
+
+            cy.visit(`/manage#merge-queue/candidates/open/${pair.ID}`);
+
+            cy.contains('.mergequeue-person-panel', 'Dana Okafor', { timeout: 20000 });
+
+            // exactly one conflict rendered, merge gated on it
+            cy.get('.mergequeue-conflict-row').should('have.length', 1);
+            cy.withExt().then(({ extQuerySelector }) => {
+                cy.wrap(null).should(() => {
+                    expect(extQuerySelector('mergequeue-compare button[action=merge-candidate]').isDisabled(), 'merge gated on conflict').to.be.true;
+                });
+            });
+
+            // pick the target's number through the real delegated-click path
+            cy.get('.mergequeue-conflict-row button.conflict-option').last().click();
+
+            cy.withExt().then(({ extQuerySelector }) => {
+                cy.wrap(null).should(() => {
+                    expect(extQuerySelector('mergequeue-compare button[action=merge-candidate]').isDisabled(), 'merge enabled after resolution').to.be.false;
+                }).then(() => {
+                    extQuerySelector('mergequeue-compare button[action=merge-candidate]').el.dom.click();
+                });
+            });
+
+            cy.contains('.x-message-box .x-btn', 'Yes').click();
+
+            // row leaves the open queue in place, no reload
+            cy.withExt().then(({ extQuerySelector }) => {
+                cy.wrap(null, { timeout: 15000 }).should(() => {
+                    expect(extQuerySelector('mergequeue-candidates-grid').getStore().getById(pair.ID), 'merged row removed from open queue').to.be.null;
+                });
+            });
+
+            // server-side truth: candidate merged with an audit attached
+            cy.request(`/people/merge/candidates/${pair.ID}?format=json`).its('body.data').should((candidate) => {
+                expect(candidate.Status).to.eq('merged');
+                expect(candidate.MergeAuditID, 'audit recorded').to.be.a('number');
+            });
+        });
+    });
+
+    it('Merging a canvas-mapped pair spawns an executable follow-up action', () => {
+        cy.loginAs('admin', 'admin');
+
+        // merge the Avery Kim pair (fixture people 50/51, both canvas-mapped)
+        // through the API -- the UI merge path is covered above; this test
+        // targets the deriver -> follow-up-action -> actions-queue pipeline
+        cy.request('/people/merge/candidates?status=open&format=json').its('body.data').then((candidates) => {
+            const pair = candidates.find((candidate) => candidate.Person1ID === 50 && candidate.Person2ID === 51);
+
+            expect(pair, 'Avery Kim candidate').to.exist;
+
+            cy.request({
+                method: 'POST',
+                url: '/people/merge?format=json',
+                body: {
+                    sourceID: 51,
+                    targetID: 50,
+                    resolutions: {},
+                    candidateID: pair.ID
+                }
+            });
+        });
+
+        cy.visit('/manage#merge-queue/actions');
+
+        cy.get('.x-grid-item', { timeout: 20000 });
         cy.title().should('contain', 'Follow-up Actions');
+
+        // the spawned canvas-user-merge action renders with its executor
+        // flag and the linked merge's person names
+        cy.contains('.x-grid-item', 'canvas');
+        cy.contains('.x-grid-item', 'Executor');
+        cy.contains('.x-grid-item', 'Avery Kim');
     });
 });
