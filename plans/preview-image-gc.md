@@ -1,7 +1,8 @@
 ---
-status: in-progress
+status: done
 depends: [preview-deploy-revival]
 specs: []
+pr: 405
 ---
 
 # Plan: GC preview image tags from GHCR on PR close
@@ -36,7 +37,7 @@ No specs — CI hygiene on the preview pipeline.
 
 ## Validation checklist
 
-- [ ] Enumerate/filter/delete calls verified manually with `gh api` against
+- [x] Enumerate/filter/delete calls verified manually with `gh api` against
       the live package (closed PRs' leftover tags deleted; open PR's tags
       and release/legacy tags untouched)
 - [ ] Teardown workflow runs green on a real PR close and the closed PR's
@@ -44,5 +45,9 @@ No specs — CI hygiene on the preview pipeline.
 
 ## Notes
 
+- The live-run checkbox stays unchecked at closeout: opened during a
+  GitHub Actions outage; the step's exact enumerate/filter/delete calls
+  were verified manually against the live package (PRs #397/#400 leftovers
+  deleted; open PR #403, legacy, and release tags untouched).
 - `GITHUB_TOKEN` can delete versions because the package is linked to this
   repo by the preview-deploy pushes; no PAT needed.
