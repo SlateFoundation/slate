@@ -27,3 +27,9 @@ INSERT INTO `tag_items` VALUES ('2021-12-26 02:57:01',3,'Emergence\\CMS\\Abstrac
 INSERT INTO `tag_items` VALUES ('2021-12-26 02:57:56',6,'Emergence\\CMS\\AbstractContent',12,2);
 INSERT INTO `tag_items` VALUES ('2021-12-26 02:58:20',6,'Emergence\\CMS\\AbstractContent',13,2);
 INSERT INTO `tag_items` VALUES ('2021-12-26 02:58:47',6,'Emergence\\CMS\\AbstractContent',14,2);
+
+-- Merge-demo cast (see people.sql): 40/41 share tag 1 -- the dedupe DELETE
+-- this exercises is the one #402 fixed; 41's tag 2 row moves on merge
+INSERT INTO `tag_items` VALUES ('2023-08-15 09:00:00',2,'Emergence\\People\\Person',40,1);
+INSERT INTO `tag_items` VALUES ('2019-09-01 09:00:00',2,'Emergence\\People\\Person',41,1);
+INSERT INTO `tag_items` VALUES ('2019-09-01 09:00:00',2,'Emergence\\People\\Person',41,2);

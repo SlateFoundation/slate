@@ -29,8 +29,12 @@ CREATE TABLE `people` (
   `GraduationYear` year(4) DEFAULT NULL,
   `NameSuffix` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `Username` (`Username`),
-  UNIQUE KEY `StudentNumber` (`StudentNumber`)
+  UNIQUE KEY `Username` (`Username`)
+  -- no UNIQUE KEY on StudentNumber: the merge-demo cast below includes a
+  -- deliberate constraint-bypass duplicate (44/45), simulating the
+  -- legacy-import/pre-constraint-era rows the identical-student-number
+  -- detector exists to surface; the model layer still validates uniqueness
+  -- on new saves
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `people` VALUES (1,'Emergence\\People\\User','2019-01-02 03:04:05',NULL,NULL,NULL,'System','Slate',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,'system','$2y$10$Ap2JdhW3.PK9j9NGhhnvQO6aU55rNiKB/fgcpiEvtWDNUkj54T7uS','Developer',NULL,NULL,NULL,NULL,NULL);
@@ -99,5 +103,34 @@ CREATE TABLE `history_people` (
   PRIMARY KEY (`RevisionID`),
   KEY `ID` (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- ============================================================================
+-- Merge-demo cast (IDs 40-51): near-duplicate pairs crafted so the duplicate
+-- detectors (run via /powertools/duplicate-detection.php) populate the
+-- SlateAdmin merge queue with one candidate per detector plus both conflict
+-- types. See cypress/integration/SlateAdmin/merge-queue.js.
+--   40/41 Jordan Rivers   identical-name; shared group + tags = merge impact
+--   42/43 Dana Okafor     identical-name Students w/ differing StudentNumber
+--                         = StudentNumber conflict in the compare view
+--   44/45 Riley Park(er)  identical-student-number (constraint bypassed)
+--   46/47 Morgan/Mo Ellis shared-contact-point (same email, names differ)
+--   48/49 Jamie Torres    mapping-anomaly (48 disabled + mapped, 0 contacts)
+--                         + gsuite mapping conflict in the compare view
+--   50/51 Avery Kim       identical-name; both canvas-mapped = merge spawns
+--                         a deriver-owned canvas-user-merge follow-up action
+-- ============================================================================
+INSERT INTO `people` VALUES (40,'Emergence\\People\\User','2023-08-15 09:00:00',2,NULL,NULL,'Jordan','Rivers',NULL,NULL,NULL,NULL,NULL,NULL,NULL,40,NULL,NULL,'jrivers',NULL,'Staff',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (41,'Emergence\\People\\Person','2019-09-01 09:00:00',2,NULL,NULL,'Jordan','Rivers',NULL,NULL,NULL,NULL,NULL,NULL,NULL,41,NULL,NULL,NULL,NULL,'Contact',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (42,'Slate\\People\\Student','2023-08-20 09:00:00',2,NULL,NULL,'Dana','Okafor',NULL,NULL,'Female',NULL,NULL,NULL,NULL,42,NULL,NULL,'dokafor',NULL,'Student',NULL,'30042',5,2027,NULL);
+INSERT INTO `people` VALUES (43,'Slate\\People\\Student','2021-09-01 09:00:00',2,NULL,NULL,'Dana','Okafor',NULL,NULL,'Female',NULL,NULL,NULL,NULL,43,NULL,NULL,'dokafor2',NULL,'Student',NULL,'30043',5,2027,NULL);
+INSERT INTO `people` VALUES (44,'Slate\\People\\Student','2023-08-20 09:05:00',2,NULL,NULL,'Riley','Park',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'rpark',NULL,'Student',NULL,'30440',5,2026,NULL);
+INSERT INTO `people` VALUES (45,'Slate\\People\\Student','2020-09-01 09:05:00',2,NULL,NULL,'Riley','Parker',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'rparker',NULL,'Student',NULL,'30440',5,2026,NULL);
+INSERT INTO `people` VALUES (46,'Emergence\\People\\User','2023-08-21 09:00:00',2,NULL,NULL,'Morgan','Ellis',NULL,NULL,NULL,NULL,NULL,NULL,NULL,46,NULL,NULL,'mellis',NULL,'Staff',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (47,'Emergence\\People\\Person','2018-09-01 09:00:00',2,NULL,NULL,'Mo','Ellis',NULL,NULL,NULL,NULL,NULL,NULL,NULL,47,NULL,NULL,NULL,NULL,'Contact',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (48,'Emergence\\People\\Person','2017-09-01 09:00:00',2,NULL,NULL,'Jamie','Torres',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Disabled',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (49,'Emergence\\People\\User','2023-08-22 09:00:00',2,NULL,NULL,'Jamie','Torres',NULL,NULL,NULL,NULL,NULL,NULL,NULL,49,NULL,NULL,'jtorres',NULL,'Staff',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (50,'Emergence\\People\\User','2023-08-23 09:00:00',2,NULL,NULL,'Avery','Kim',NULL,NULL,NULL,NULL,NULL,NULL,NULL,50,NULL,NULL,'akim',NULL,'Staff',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `people` VALUES (51,'Emergence\\People\\Person','2019-01-15 09:00:00',2,NULL,NULL,'Avery','Kim',NULL,NULL,NULL,NULL,NULL,NULL,NULL,51,NULL,NULL,NULL,NULL,'Contact',NULL,NULL,NULL,NULL,NULL);
 
 INSERT INTO `history_people` SELECT NULL AS RevisionID, `people`.* FROM `people`;

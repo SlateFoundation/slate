@@ -58,4 +58,18 @@ CREATE TABLE `history_contact_points` (
   KEY `ID` (`ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+-- Merge-demo cast contact points (see people.sql). 46/47 deliberately share
+-- the same email Data -- the shared-contact-point detector's signal. 48 has
+-- none (half of the mapping-anomaly signal).
+INSERT INTO `contact_points` VALUES (40,'Emergence\\People\\ContactPoint\\Email','2023-08-15 09:00:00',2,NULL,NULL,40,'Email','jordan.rivers@example.org');
+INSERT INTO `contact_points` VALUES (41,'Emergence\\People\\ContactPoint\\Email','2019-09-01 09:00:00',2,NULL,NULL,41,'Legacy Email','jrivers.legacy@example.org');
+INSERT INTO `contact_points` VALUES (42,'Emergence\\People\\ContactPoint\\Email','2023-08-20 09:00:00',2,NULL,NULL,42,'School Email','dana.okafor@example.org');
+INSERT INTO `contact_points` VALUES (43,'Emergence\\People\\ContactPoint\\Email','2021-09-01 09:00:00',2,NULL,NULL,43,'School Email','d.okafor@example.org');
+INSERT INTO `contact_points` VALUES (46,'Emergence\\People\\ContactPoint\\Email','2023-08-21 09:00:00',2,NULL,NULL,46,'Email','morgan.ellis@family.example.net');
+INSERT INTO `contact_points` VALUES (47,'Emergence\\People\\ContactPoint\\Email','2018-09-01 09:00:00',2,NULL,NULL,47,'Family Email','morgan.ellis@family.example.net');
+INSERT INTO `contact_points` VALUES (49,'Emergence\\People\\ContactPoint\\Email','2023-08-22 09:00:00',2,NULL,NULL,49,'Email','jamie.torres@example.org');
+INSERT INTO `contact_points` VALUES (50,'Emergence\\People\\ContactPoint\\Email','2023-08-23 09:00:00',2,NULL,NULL,50,'Email','avery.kim@example.org');
+INSERT INTO `contact_points` VALUES (51,'Emergence\\People\\ContactPoint\\Email','2019-01-15 09:00:00',2,NULL,NULL,51,'Legacy Email','akim.old@example.org');
+
 INSERT INTO `history_contact_points` SELECT NULL AS RevisionID, `contact_points`.* FROM `contact_points`;
