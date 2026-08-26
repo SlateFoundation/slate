@@ -89,12 +89,16 @@ Ext.define('SlateAdmin.controller.mergequeue.Actions', {
         Ext.suspendLayouts();
 
         proxy.setExtraParam('status', status);
-        me.getStatusField().setValue(status);
 
         navPanel.setActiveLink('merge-queue/actions');
         navPanel.expand();
 
         me.application.getController('Viewport').loadCard(me.getManager());
+
+        // statusField lives inside the manager grid -- only reachable once
+        // loadCard (just above) has constructed it via the autoCreate
+        // getManager() call (see MergeQueue.showCandidates for the same fix)
+        me.getStatusField().setValue(status);
 
         Ext.resumeLayouts(true);
 
@@ -149,7 +153,7 @@ Ext.define('SlateAdmin.controller.mergequeue.Actions', {
             },
             success: function(response) {
                 grid.setLoading(false);
-                me.applyActionUpdate(grid, record, response.data);
+                me.applyActionUpdate(grid, record, response.data.data);
             },
             failure: function(response) {
                 grid.setLoading(false);
@@ -201,7 +205,7 @@ Ext.define('SlateAdmin.controller.mergequeue.Actions', {
             },
             success: function(response) {
                 grid.setLoading(false);
-                me.applyActionUpdate(grid, record, response.data);
+                me.applyActionUpdate(grid, record, response.data.data);
             },
             failure: function(response) {
                 grid.setLoading(false);

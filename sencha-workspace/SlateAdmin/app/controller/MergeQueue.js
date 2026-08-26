@@ -114,11 +114,16 @@ Ext.define('SlateAdmin.controller.MergeQueue', {
         Ext.suspendLayouts();
 
         proxy.setExtraParam('status', status);
-        me.getStatusField().setValue(status);
 
         me.getNavPanel().setActiveLink('merge-queue');
         me.getNavPanel().expand();
         me.application.getController('Viewport').loadCard(me.getManager());
+
+        // the statusField ref lives inside the manager's CandidatesGrid --
+        // only reachable once loadCard (just above) has constructed it via
+        // the autoCreate getManager() call; on a cold deep link this ran for
+        // the first time on the previous line
+        me.getStatusField().setValue(status);
 
         Ext.resumeLayouts(true);
 
