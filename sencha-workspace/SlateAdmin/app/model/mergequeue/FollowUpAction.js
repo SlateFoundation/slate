@@ -6,6 +6,10 @@
  */
 Ext.define('SlateAdmin.model.mergequeue.FollowUpAction', {
     extend: 'Ext.data.Model',
+    requires: [
+        'SlateAdmin.proxy.mergequeue.FollowUpActions'
+    ],
+
     idProperty: 'ID',
 
     fields: [
@@ -30,8 +34,5 @@ Ext.define('SlateAdmin.model.mergequeue.FollowUpAction', {
         { name: 'hasExecutor', type: 'boolean', persist: false }
     ],
 
-    proxy: {
-        type: 'slate-records',
-        url: '/people/merge/actions'
-    }
+    proxy: 'mergequeue-followupactions'
 });

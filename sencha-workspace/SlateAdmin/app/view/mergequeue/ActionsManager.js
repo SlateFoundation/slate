@@ -83,12 +83,16 @@ Ext.define('SlateAdmin.view.mergequeue.ActionsManager', {
             xtype: 'templatecolumn',
             flex: 1,
             tpl: [
-                '<tpl if="MergeAudit.SourcePerson">',
-                '    {MergeAudit.SourcePerson.FirstName:htmlEncode} {MergeAudit.SourcePerson.LastName:htmlEncode}',
-                '    &rarr;',
-                '    {MergeAudit.TargetPerson.FirstName:htmlEncode} {MergeAudit.TargetPerson.LastName:htmlEncode}',
+                '<tpl if="MergeAudit">',
+                '    <tpl if="MergeAudit.SourcePerson">',
+                '        {MergeAudit.SourcePerson.FirstName:htmlEncode} {MergeAudit.SourcePerson.LastName:htmlEncode}',
+                '        &rarr;',
+                '        {MergeAudit.TargetPerson.FirstName:htmlEncode} {MergeAudit.TargetPerson.LastName:htmlEncode}',
+                '    <tpl else>',
+                '        Merge #{MergeAudit.ID}',
+                '    </tpl>',
                 '<tpl else>',
-                '    Merge #{MergeAudit.ID}',
+                '    &mdash;',
                 '</tpl>'
             ]
         }, {

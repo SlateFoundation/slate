@@ -1,7 +1,9 @@
 /**
  * Follow-up action queue, defaulting to pending actions. Status is a proxy
  * extraParam (see mergequeue.Actions controller) matching the endpoint's
- * ?status= query param.
+ * ?status= query param. The url/include contract lives on the proxy class
+ * (one file per endpoint, referenced by alias) -- this store only adds its
+ * own extraParams.
  */
 Ext.define('SlateAdmin.store.mergequeue.FollowUpActions', {
     extend: 'Ext.data.Store',
@@ -13,8 +15,7 @@ Ext.define('SlateAdmin.store.mergequeue.FollowUpActions', {
     config: {
         pageSize: 0,
         proxy: {
-            type: 'slate-records',
-            url: '/people/merge/actions',
+            type: 'mergequeue-followupactions',
             extraParams: {
                 status: 'pending'
             }

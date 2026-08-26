@@ -5,6 +5,10 @@
  */
 Ext.define('SlateAdmin.model.mergequeue.Candidate', {
     extend: 'Ext.data.Model',
+    requires: [
+        'SlateAdmin.proxy.mergequeue.Candidates'
+    ],
+
     idProperty: 'ID',
 
     fields: [
@@ -31,8 +35,5 @@ Ext.define('SlateAdmin.model.mergequeue.Candidate', {
         { name: 'Person2', type: 'auto' }
     ],
 
-    proxy: {
-        type: 'slate-records',
-        url: '/people/merge/candidates'
-    }
+    proxy: 'mergequeue-candidates'
 });
