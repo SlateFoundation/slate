@@ -299,7 +299,9 @@ Ext.define('SlateAdmin.controller.MergeQueue', {
         me.stateSyncPending = false;
 
         if (candidate) {
-            path.push(candidate.getId());
+            // getId() returns a number (ID field type: 'integer') --
+            // redirectTo/encodeRouteArray requires string segments
+            path.push(String(candidate.getId()));
         }
 
         me.redirectTo(path);
