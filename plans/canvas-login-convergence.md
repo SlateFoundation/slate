@@ -1,8 +1,9 @@
 ---
-status: in-progress
+status: done
 depends: [canvas-merge-executor]
 specs:
   - specs/behaviors/person-merge.md
+pr: 407
 ---
 
 # Plan: Canvas merge executor login convergence
@@ -84,24 +85,24 @@ Out of scope:
 
 ## Validation
 
-- [ ] Happy path with email login IDs: survivor ends with the source's and
+- [x] Happy path with email login IDs: survivor ends with the source's and
       its own login, username stamped on exactly the sign-in login,
       verified, outcome note records the plan
-- [ ] Sign-in login that came from the source user is chosen and stamped
-- [ ] A stale SIS ID on a non-sign-in login is cleared before the username
+- [x] Sign-in login that came from the source user is chosen and stamped
+- [x] A stale SIS ID on a non-sign-in login is cleared before the username
       is stamped (the fake rejects the reverse order)
-- [ ] Unreachable end states (no primary email; no email login and no
+- [x] Unreachable end states (no primary email; no email login and no
       rename target; username held by another Canvas user) fail with no
       `merge_into` call recorded
 - [ ] A failure after `merge_into` leaves the action retryable, and
       re-executing skips the merge and completes
-- [ ] Re-executing a completed action makes no writes and succeeds
-- [ ] A source already merged into a different Canvas user fails without
+- [x] Re-executing a completed action makes no writes and succeeds
+- [x] A source already merged into a different Canvas user fails without
       writes
-- [ ] Primary-email comparison is case-insensitive and trims whitespace
-- [ ] The connector dry-run hook runs in pretend mode when present, and an
+- [x] Primary-email comparison is case-insensitive and trims whitespace
+- [x] The connector dry-run hook runs in pretend mode when present, and an
       exception from it fails verification
-- [ ] `php -l`, rector (dry-run), phpstan, psalm (taint) and php-cs-fixer
+- [x] `php -l`, rector (dry-run), phpstan, psalm (taint) and php-cs-fixer
       pass with no baseline changes
 
 ## Risks / unknowns
@@ -118,4 +119,48 @@ Out of scope:
 
 ## Notes
 
+- **What was executed.** `UserMergeConvergenceTest` (17 cases, DB-free, it
+  drives `UserMergeExecutor::converge()` directly) ran locally under
+  PHPUnit 10.5 / PHP 8.3 through a scratch bootstrap that autoloads
+  `php-classes/` plus `.analysis-context/` and aliases the legacy
+  `PHPUnit_Framework_TestCase`: 17/17 pass. Swapping the stamp ahead of
+  the clears makes the three ordering-sensitive cases fail, so the fake's
+  uniqueness enforcement does gate the write order. The quality gate
+  (`php -l`, rector dry-run, phpstan, psalm taint, php-cs-fixer) passed
+  clean in a PHP 8.3 container matching `quality.yml`, with no baseline
+  changes.
+- **What was not executed.** `UserMergeExecutorTest` (the DB-backed
+  `execute()` + action-lifecycle cases) needs a composed site with MySQL
+  and was only linted. That's why the "failure after `merge_into` leaves
+  the action retryable" box stays unchecked: the resume half is covered by
+  the DB-free `testResumesAfterAFailureFollowingTheMerge`, but the
+  action-status half only runs in the DB-backed class. No CI job runs
+  `phpunit-tests/` at all.
+- **Resumption is detected from Canvas, not from Slate.** The executor
+  keeps no progress record of its own. It reads `merged_into_user_id` on the
+  source and re-plans from the survivor's live logins, so a run that died
+  at any point converges on the next execute, including a run that
+  died after Canvas finished a `merge_into` whose response was lost.
+- **The plan is recorded in outcome notes, not as structured data.** The
+  follow-up action model has no preview/dry-run surface. The pre-merge plan
+  appears in every failure note and the applied plan in the success note.
+- **Connector dry-run hook.** `UserMergeExecutor::$connectorClass` names the
+  real connector class as a string. `pushUser()` is only invoked when
+  reflection shows a public static method whose third parameter is
+  `$pretend`, and it's always called with `true` and a `NullLogger`.
+  In pretend mode the connector only issues GETs.
+
 ## Follow-ups
+
+- Tracked as: an executor preview/dry-run, so an operator can read the
+  Canvas plan before triggering the irreversible merge. Needs a new
+  surface on the follow-up action model (e.g. `GET
+  /people/merge/actions/<id>/plan` backed by an optional executor
+  interface method), specced first.
+- Tracked as: `FollowUpActionsRequestHandler::handleExecuteActionRequest`
+  on a `completed` action. The executor re-run is a verified no-op, but
+  `recordOutcome()` rejects any transition out of `completed` and the
+  handler's failure path then throws uncaught. The UI only offers execute
+  on `pending` actions, so this only affects direct API calls.
+- Tracked as: no CI job runs the `phpunit-tests/` suites, and they still
+  extend the PHPUnit 5-era `PHPUnit_Framework_TestCase`.
