@@ -3,6 +3,7 @@ status: done
 depends: [canvas-merge-executor]
 specs:
   - specs/behaviors/person-merge.md
+  - specs/api/person-merge.md
 pr: 407
 ---
 
@@ -26,16 +27,17 @@ never get past the "source already merged" precondition, and the SIS-ID
 verification had passed while the person was locked out.
 
 In scope: the executor, the `CanvasClientInterface`/`CanvasClient` calls it
-needs, the fake Canvas client and executor tests.
+needs, the fake Canvas client and executor tests, and what the execute
+endpoint does with an action that is already `completed`.
 
 Out of scope:
 
 - The Canvas connector's launch-time user sync tolerating multiple logins
   per user -- lives in the separately distributed connector package, being
   changed in parallel against the same contract.
-- Executor registration and the execute endpoint -- unchanged (explicit
-  `POST /people/merge/actions/<id>/execute` only, registered from the
-  registry classes' `config.d`).
+- Executor registration and how an executor is invoked -- unchanged
+  (explicit `POST /people/merge/actions/<id>/execute` only, registered from
+  the registry classes' `config.d`).
 - A dry-run/preview of an executor's plan before execution -- the follow-up
   action model has no preview surface; see Follow-ups.
 
@@ -103,6 +105,8 @@ Out of scope:
 - [x] Primary-email comparison is case-insensitive and trims whitespace
 - [x] The connector dry-run hook runs in pretend mode when present, and an
       exception from it fails verification
+- [x] Executing an already-`completed` action through the endpoint returns
+      it unchanged, without invoking the executor or recording an outcome
 - [x] `php -l`, rector (dry-run), phpstan, psalm (taint) and php-cs-fixer
       pass with no baseline changes
 
@@ -138,6 +142,12 @@ Out of scope:
   the DB-free `testResumesAfterAFailureFollowingTheMerge`, but the
   action-status half only runs in the DB-backed class. No CI job runs
   `phpunit-tests/` at all.
+- **The execute endpoint on a completed action.** `recordOutcome()` rejects
+  any transition out of `completed`, and the handler's failure path then
+  threw uncaught, so a direct API call answered 500. The endpoint now
+  returns a completed action as it stands, before the executor is
+  reached. Covered by `SlateAdmin/merge-queue.js`, which answered 500
+  against the unfixed handler and passes against the fix.
 - **Resumption is detected from Canvas, not from Slate.** The executor
   keeps no progress record of its own. It reads `merged_into_user_id` on the
   source and re-plans from the survivor's live logins, so a run that died
@@ -159,10 +169,5 @@ Out of scope:
   surface on the follow-up action model (e.g. `GET
   /people/merge/actions/<id>/plan` backed by an optional executor
   interface method), specced first.
-- Tracked as: `FollowUpActionsRequestHandler::handleExecuteActionRequest`
-  on a `completed` action. The executor re-run is a verified no-op, but
-  `recordOutcome()` rejects any transition out of `completed` and the
-  handler's failure path then throws uncaught. The UI only offers execute
-  on `pending` actions, so this only affects direct API calls.
 - Tracked as: no CI job runs the `phpunit-tests/` suites, and they still
   extend the PHPUnit 5-era `PHPUnit_Framework_TestCase`.
