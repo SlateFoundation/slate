@@ -1,8 +1,9 @@
 ---
-status: planned
+status: done
 depends: []
 specs:
   - specs/behaviors/section-enrollment-import.md
+pr: 409
 ---
 
 # Plan: Enrollment imports keep a participant's higher role
@@ -53,7 +54,7 @@ Slate (deployments map them today; unchanged), any UI.
 
 ## Validation
 
-- [ ] Unit test of `ParticipantRole` covers every ordered pair of roles, plus
+- [x] Unit test of `ParticipantRole` covers every ordered pair of roles, plus
       unknown and missing roles, and the enum/rank link
 - [ ] E2E: a participant raised to Assistant stays Assistant after an import
       that lists them as a student; a second import changes nothing; a plain
@@ -62,7 +63,7 @@ Slate (deployments map them today; unchanged), any UI.
       current term
 - [ ] Integration test: the row's start and end dates are applied to a
       participant whose higher role is kept
-- [ ] CI's static analysis (lint, Rector, PHPStan, Psalm, PHP-CS-Fixer) passes
+- [x] CI's static analysis (lint, Rector, PHPStan, Psalm, PHP-CS-Fixer) passes
       locally exactly as `quality.yml` runs it
 - [ ] `test-e2e` and `quality` checks green on the PR
 
@@ -74,3 +75,37 @@ Slate (deployments map them today; unchanged), any UI.
 - **Deliberate demotion by sheet.** A school that relied on the import to
   demote someone must now change the role by hand. That is the intended
   behavior.
+
+## Notes
+
+- **Unit test**: run locally with PHPUnit 11 on PHP 8.3 in a throwaway
+  container, using a local bootstrap that aliases `PHPUnit_Framework_TestCase`
+  and autoloads over `.analysis-context/`: 8 tests, 66 assertions, OK.
+  Changing `>` to `>=` in `outranks()` makes it fail.
+- **E2E box left unchecked** for one clause only. On PR #409 the spec passed
+  3 of 3 on its first attempt in CI, but that was during term time. It hasn't
+  run in the summer gap. It never reads the current term (the master term
+  handle comes from the loaded fixtures), so it should pass there too.
+- **Integration test box left unchecked**: `EnrollmentImportRolesTest` is
+  written but has not run. No CI workflow runs `phpunit-tests/`, and building
+  the site image locally needs a GitHub token for Composer, which this work
+  didn't use.
+- **CI box left unchecked**: `Static analysis` and `ESLint` pass.
+  `test-e2e` fails only in `SlateAdmin/course-sections.js` and
+  `SlateAdmin/progress.js`, the current-term failures #408 fixes. Every other
+  spec passes, this plan's included.
+- **Pruning decision**: a person whose higher role was kept is still recorded
+  in the per-section list. The prune query only reads Student rows, so this
+  never exposes them. It keeps the section counted as listed by the sheet, so
+  absent students are still pruned from a section the sheet lists only
+  through a kept role, as they were before.
+- **Dates**: stock `$enrollmentColumns` maps no start/end date columns, so
+  over HTTP the dates half of the rule can only be exercised by a deployment
+  that maps them. The integration test does this with a subclass.
+
+## Follow-ups
+
+- Tracked as: the unchecked E2E and CI boxes close when #408 merges and
+  `test-e2e` is re-run on this branch.
+- Tracked as: `phpunit-tests/` has no runner in CI (existing gap, shared with
+  the person-merge plans).
