@@ -76,8 +76,9 @@ Out of scope:
   Failures after the merge are rethrown with the plan, the failed step, and
   a note that re-executing resumes.
 - `CanvasClientInterface`/`CanvasClient`: add `getUserByLoginID()`
-  (`GET /users/hex:sis_login_id:<hex>`); move the SIS-ID lookup to Canvas's
-  `hex:` ID encoding so usernames/emails containing `.` resolve.
+  (`GET /users/sis_login_id:<escaped>`); escape `.` in SIS-ID and login-ID
+  lookups as `%2E`, per Canvas's documented URI escaping, so usernames and
+  emails containing `.` resolve.
 - `FakeCanvasClient` becomes a small stateful Canvas simulation: `merge_into`
   moves logins and sets `merged_into_user_id`, a merged user's logins 404,
   SIS IDs and login IDs are unique across the tenant (a claim before a free
@@ -107,9 +108,10 @@ Out of scope:
 
 ## Risks / unknowns
 
-- **Canvas `hex:` ID encoding** -- relied on for SIS-ID and login-ID
-  lookups; if a tenant rejected it, verification would fail after the
-  merge (resumable, not destructive).
+- **SIS-ID and login-ID lookups by escaped path** -- not exercised against
+  a real tenant. A lookup Canvas rejects fails the pre-merge check before
+  anything is written; one that wrongly finds nothing would fail
+  verification after the merge (resumable, not destructive).
 - **Reserved SIS IDs on deleted logins** are invisible to the API: stamping
   the username can still be rejected by Canvas post-merge. The failure is
   recorded with the step, and re-execution resumes once support frees it.
