@@ -41,6 +41,13 @@ class FakeCanvasClient implements CanvasClientInterface
         return $this->usersBySisID[$sisUserID] ?? null;
     }
 
+    public function getUserByLoginID(string $loginID): ?array
+    {
+        $this->calls[] = ['getUserByLoginID', $loginID];
+
+        return null;
+    }
+
     public function mergeUserInto(string $sourceUserID, string $destinationUserID): array
     {
         $this->calls[] = ['mergeUserInto', $sourceUserID, $destinationUserID];
