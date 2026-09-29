@@ -23,6 +23,7 @@ use Slate\Term;
 use Slate\Courses\Course;
 use Slate\Courses\Section;
 use Slate\Courses\SectionParticipant;
+use Slate\Courses\ParticipantRole;
 use Slate\Courses\Department;
 use Slate\Courses\Schedule;
 use Emergence\Locations\Location;
@@ -821,6 +822,17 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
 
                     // save and log participant
                     $Participant = static::_getOrCreateParticipant($Section, $Student, $participantData, $pretend);
+
+                    if ($Participant->getValue('Role') !== $participantData['Role']) {
+                        $results['enrollments-role-kept']++;
+                        $Job->notice('Kept existing role {role} for user {user} in section {section} instead of lowering it to {importedRole}', [
+                            'role' => $Participant->getValue('Role'),
+                            'user' => $Student->getTitle(),
+                            'section' => $Section->getTitle(),
+                            'importedRole' => $participantData['Role']
+                        ]);
+                    }
+
                     $logEntry = static::_logParticipant($Job, $Participant);
 
                     if (!$pretend) {
@@ -833,7 +845,10 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                         $results['enrollments-updated']++;
                     }
 
-                    // record enrollment in cache for pruning phase
+                    // record enrollment in cache for pruning phase; a participant
+                    // whose higher role was kept is recorded too, which marks the
+                    // section as listed by the sheet but never exposes them to
+                    // pruning, which only removes participants with role Student
                     $studentsBySection[$Section->ID][] = $Student->ID;
                 }
             }
@@ -1692,6 +1707,9 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
                 'Section' => $Section,
                 'Person' => $User
             ]);
+        } elseif (isset($data['Role'])) {
+            // an import never lowers a role: keep an existing role that outranks the imported one
+            $data['Role'] = ParticipantRole::resolveImported($Participant->getValue('Role'), $data['Role']);
         }
 
         $Participant->setFields($data);
