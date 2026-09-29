@@ -19,28 +19,41 @@ describe('SlateAdmin: Progress reports', () => {
         });
 
         cy.withExt().then(({ Ext, extQuerySelector }) => {
-            // select the 1st-Quarter term (stable across fixture years)
+            // when the fixture terms do provide a current/reporting term the
+            // manager selects it and loads its sections on its own — let
+            // that load settle first, or it lands on top of the steps below
             cy.wrap(null).should(() => {
                 expect(Ext.getStore('Terms').isLoaded(), 'terms loaded').to.be.true;
+                expect(extQuerySelector('progress-interims-sectionsgrid').getStore().isLoading(), 'initial sections load settled').to.be.false;
             }).then(() => {
+                // select the 1st-Quarter term (stable across fixture years)
                 const termSelector = extQuerySelector('progress-interims-sectionsgrid #termSelector'),
                     term = Ext.getStore('Terms').findBy((record) => (/1st Quarter$/).test(record.get('Title')));
 
                 termSelector.setSelection(Ext.getStore('Terms').getAt(term));
             });
 
-            // section list loads for the term
+            // section list loads for the selected term
             cy.wrap(null).should(() => {
-                expect(extQuerySelector('progress-interims-sectionsgrid').getStore().getCount(), 'sections').to.be.greaterThan(0);
+                const sectionsStore = extQuerySelector('progress-interims-sectionsgrid').getStore(),
+                    termSelector = extQuerySelector('progress-interims-sectionsgrid #termSelector');
+
+                expect(sectionsStore.isLoading(), 'sections loading').to.be.false;
+                expect(sectionsStore.getProxy().getExtraParams().term, 'sections term').to.eq(termSelector.getValue());
+                expect(sectionsStore.getCount(), 'sections').to.be.greaterThan(0);
             }).then(() => {
                 const sectionsGrid = extQuerySelector('progress-interims-sectionsgrid');
 
                 sectionsGrid.getSelectionModel().select(0);
             });
 
-            // students load; select the first
+            // students and their reports load; select the first student
             cy.wrap(null).should(() => {
-                expect(extQuerySelector('progress-interims-studentsgrid').getStore().getCount(), 'students').to.be.greaterThan(0);
+                const studentsStore = extQuerySelector('progress-interims-studentsgrid').getStore();
+
+                expect(studentsStore.isLoading(), 'students loading').to.be.false;
+                expect(Ext.getStore('progress.interims.Reports').isLoading(), 'reports loading').to.be.false;
+                expect(studentsStore.getCount(), 'students').to.be.greaterThan(0);
             }).then(() => {
                 extQuerySelector('progress-interims-studentsgrid').getSelectionModel().select(0);
             });
@@ -71,11 +84,19 @@ describe('SlateAdmin: Progress reports', () => {
 
         cy.wait('@saveReport').its('response.statusCode').should('eq', 200);
 
-        // verify the draft persisted server-side
-        cy.request('/progress/section-interim-reports?format=json').its('body.data').should((reports) => {
-            expect(reports.length).to.be.greaterThan(0);
-            expect(reports[0].Status).to.eq('draft');
-            expect(reports[0].Notes).to.contain('E2E interim note');
+        // verify the draft persisted server-side, asking for the term it was
+        // written under — without one the list defaults to the current term
+        cy.withExt().then(({ extQuerySelector }) => {
+            cy.wrap(null).then(() => extQuerySelector('progress-interims-sectionsgrid #termSelector').getValue()).then((termHandle) => {
+                cy.request({
+                    url: '/progress/section-interim-reports',
+                    qs: { format: 'json', term: termHandle }
+                }).its('body.data').should((reports) => {
+                    expect(reports.length).to.be.greaterThan(0);
+                    expect(reports[0].Status).to.eq('draft');
+                    expect(reports[0].Notes).to.contain('E2E interim note');
+                });
+            });
         });
     });
 
