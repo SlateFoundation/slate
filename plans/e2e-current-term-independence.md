@@ -1,7 +1,8 @@
 ---
-status: planned
+status: done
 depends: []
 specs: []
+pr: 408
 ---
 
 # Plan: Make e2e specs pass whether or not the fixtures have a current term
@@ -49,12 +50,12 @@ differs by state:
 
 ## Validation
 
-- [ ] Both specs pass with retries off while a current term exists
-- [ ] Both specs pass with retries off in the summer gap (fixture years
+- [x] Both specs pass with retries off while a current term exists
+- [x] Both specs pass with retries off in the summer gap (fixture years
       forced so that no term contains today)
-- [ ] Full composed suite passes locally against a container built from
+- [x] Full composed suite passes locally against a container built from
       this branch
-- [ ] `test-e2e` CI check green on the PR
+- [x] `test-e2e` CI check green on the PR
 
 ## Risks / unknowns
 
@@ -63,8 +64,29 @@ differs by state:
 
 ## Notes
 
-(at closeout)
+- **What was run.** Against a container built the way `test-e2e.yml` builds
+  it: both specs failed before the change with the same errors as CI; after
+  it they passed 5 of 5 runs with a current term and 3 of 3 in the summer
+  gap, retries off. The full composed suite passed 10 specs, 25 of 25 tests.
+  The site image was built from a branch carrying unrelated PHP changes;
+  the specs and fixtures were this branch's.
+- **Producing the summer gap.** The fixture loader projects the working
+  tree, so forcing `@year_curr` in an uncommitted edit of
+  `fixtures/terms.2_data.sql` is enough to put every term in the past. The
+  loaded database confirmed no term contained today.
+- **The progress spec had three date assumptions, not one.** Settling the
+  load race exposed the last: the server-side check listed reports without
+  naming a term, and that list defaults to the current term.
+- **Both default-term behaviors re-enter their own handlers.** The sections
+  manager rewrites the URL to add the term filter, which dispatches the
+  route again; the progress manager selects the term, which fires the
+  change that loads the sections. A spec that acts as soon as rows appear
+  can land inside either.
 
 ## Follow-ups
 
-(at closeout)
+- Tracked as: the shared `jarvus-extjs` testing reference notes that fixture
+  terms are date-relative but not that a spec must pass both with and
+  without a current term, nor how to produce the summer gap locally.
+- None needed for the screens: the default-term behavior is correct, and a
+  person cannot act inside the windows these specs were landing in.
