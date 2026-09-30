@@ -22,3 +22,7 @@ parameters:
         - .analysis-context/emergence-saml2/php-classes
         - .analysis-context/dwoo/lib
     treatPhpDocTypesAsCertain: false
+    # analysis-only declarations for framework classes whose API PHPStan
+    # cannot see (e.g. __callStatic facades); never loaded at run time
+    stubFiles:
+        - phpstan-stubs/Mailer.stub

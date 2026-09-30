@@ -26,6 +26,27 @@ as areas get specced.
 - **Testing**: PHPUnit (`phpunit-tests/`), Cypress e2e (`cypress/`), PHPStan +
   Psalm static analysis.
 
+## Static analysis baseline
+
+PHPStan runs at a fixed level against the framework layers fetched by
+`script/fetch-analysis-context`, with pre-existing findings recorded in
+`phpstan-baseline.neon`.
+
+- **The baseline only shrinks.** A change may remove entries, never add
+  them. New code is fixed, not baselined.
+- **Fatal kinds are never baselined.** A finding that fails at run time on
+  PHP 8 is fixed wherever it appears: a class that does not exist (including
+  a caught one), an invalid binary, unary or assignment operation, a
+  non-numeric operand to arithmetic, or a `sprintf`-family format that does
+  not match its arguments. `script/check-phpstan-baseline` enforces this in
+  CI.
+- **Framework facades are typed for analysis.** Where the framework calls
+  through `__callStatic` (the mailer facade, `Emergence\Mailer\Mailer`),
+  a PHPStan stub under `phpstan-stubs/` declares the forwarded methods and
+  their return types, so callers are checked instead of seeing `mixed`. The
+  stub follows the framework's interface (`IMailer`); it is analysis-only
+  and never loaded at run time.
+
 ## Branching
 
 `develop` is the integration branch; feature branches PR into it.

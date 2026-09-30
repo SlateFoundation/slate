@@ -61,12 +61,6 @@ parameters:
 			path: php-classes/Emergence/CRM/Message.php
 
 		-
-			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:send\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: php-classes/Emergence/CRM/Message.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 1
@@ -421,18 +415,6 @@ parameters:
 			path: php-classes/Emergence/People/Invitation.php
 
 		-
-			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:renderTemplate\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: php-classes/Emergence/People/InvitationsRequestHandler.php
-
-		-
-			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:sendFromTemplate\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: php-classes/Emergence/People/InvitationsRequestHandler.php
-
-		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 7
@@ -563,12 +545,6 @@ parameters:
 			identifier: ternary.shortNotAllowed
 			count: 3
 			path: php-classes/Emergence/People/Person.php
-
-		-
-			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:sendFromTemplate\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: php-classes/Emergence/People/RegistrationRequestHandler.php
 
 		-
 			message: '#^Call to an undefined static method Emergence\\People\\RegistrationRequestHandler\:\:throwNotFoundException\(\)\.$#'
@@ -1477,12 +1453,6 @@ parameters:
 			path: php-classes/Slate/Progress/AbstractSectionTermReport.php
 
 		-
-			message: '#^Call to an undefined static method Emergence\\Mailer\\Mailer\:\:sendFromTemplate\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: php-classes/Slate/Progress/AbstractSectionTermReportsRequestHandler.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 6
@@ -1594,12 +1564,6 @@ parameters:
 			message: '#^Call to an undefined method Emergence\\People\\IPerson\:\:getRootClass\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: php-classes/Slate/Progress/Note.php
-
-		-
-			message: '#^Call to sprintf contains an invalid placeholder\.$#'
-			identifier: argument.sprintf
-			count: 1
 			path: php-classes/Slate/Progress/Note.php
 
 		-

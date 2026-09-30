@@ -1,0 +1,34 @@
+<?php
+
+namespace Emergence\Mailer;
+
+/**
+ * Analysis-only stub for the framework's mailer facade, which forwards every
+ * static call to the configured IMailer implementation through
+ * __callStatic. Declaring the forwarded methods lets PHPStan check callers
+ * and see each result's type instead of `mixed`.
+ *
+ * Signatures follow IMailer; send() also takes the $options array every
+ * implementation accepts.
+ *
+ * @method static bool send($to, $subject, $body, $from = false, $options = [])
+ * @method static bool sendFromTemplate($to, $template, $data = [], $options = [])
+ * @method static array{from: string|null, subject: string|null, body: string} renderTemplate($template, $data = [])
+ */
+class Mailer
+{
+    /** @var class-string */
+    public static $defaultImplementation;
+
+    /** @var string|null */
+    public static $defaultFrom;
+
+    /**
+     * @param string $name
+     * @param array<mixed> $args
+     * @return mixed
+     */
+    public static function __callStatic($name, $args)
+    {
+    }
+}

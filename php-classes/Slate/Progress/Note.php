@@ -128,7 +128,7 @@ class Note extends \Emergence\CRM\Message implements IStudentTermReport
         $User = static::getUserFromEnvironment();
 
         return static::getAllByWhere([
-            sprintf('Created BETWEEN "%s" AND "%S"', $Term->StartDate, $Term->EndDate),
+            sprintf('Created BETWEEN "%s" AND "%s"', $Term->StartDate, $Term->EndDate),
             'Status != "deleted"',
             'Status != "draft-private" OR AuthorID = '.($User ? $User->ID : 0)
         ], ['order' => ['ID' => 'DESC']]);

@@ -45,6 +45,9 @@ jobs:
       - name: Rector (dry-run)
         run: vendor/bin/rector process --dry-run --no-progress-bar
 
+      - name: PHPStan baseline admits no fatal kinds
+        run: script/check-phpstan-baseline
+
       - name: PHPStan
         run: vendor/bin/phpstan analyse --no-progress --memory-limit=1G
 

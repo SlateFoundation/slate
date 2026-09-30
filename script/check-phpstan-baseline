@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# Fail if phpstan-baseline.neon ignores a kind of finding that fails at run
+# time on PHP 8. Those are fixed where they appear, never baselined (see
+# specs/architecture.md, "Static analysis baseline"):
+#
+#   class.notFound             a class that does not exist, including one
+#                              named in a catch
+#   binaryOp.invalid           an operator applied to types it cannot take
+#   unaryOp.invalid            (int + array, string . array ...)
+#   assignOp.invalid
+#   *.leftNonNumeric           a non-numeric operand to arithmetic
+#   *.rightNonNumeric          (strict rules: plus, minus, mul, div, mod, pow)
+#   *.nonNumeric               (unary minus/plus, increment, decrement)
+#   argument.sprintf           a sprintf-family format that does not match
+#                              its arguments or has an invalid placeholder
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASELINE="${1:-${SCRIPT_DIR}/../phpstan-baseline.neon}"
+
+FATAL='^[[:space:]]*identifier:[[:space:]]*(class\.notFound|binaryOp\.invalid|unaryOp\.invalid|assignOp\.invalid|[A-Za-z]+\.(left|right)NonNumeric|[A-Za-z]+\.nonNumeric|argument\.sprintf)[[:space:]]*$'
+
+if matches="$(grep -nE "${FATAL}" "${BASELINE}")"; then
+    echo "phpstan-baseline.neon ignores findings that fail at run time; fix them instead:" >&2
+    echo "${matches}" >&2
+    exit 1
+fi
+
+echo "phpstan-baseline.neon ignores no fatal kinds"
