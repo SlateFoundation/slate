@@ -1,10 +1,11 @@
 ---
-status: in-progress
+status: done
 depends: [report-emails-record-each-send]
 specs:
   - specs/architecture.md
 upstream-specs:
   - skeleton-v3:php-classes/Emergence/Mailer/IMailer.php
+pr: 413
 ---
 
 # Plan: Type the mailer facade for analysis and stop baselining fatal kinds
@@ -57,16 +58,16 @@ among the fatal kinds (see Follow-ups).
 
 ## Validation
 
-- [ ] The baseline has five fewer facade entries and one fewer
+- [x] The baseline has five fewer facade entries and one fewer
       `argument.sprintf` entry, and gains none
-- [ ] `script/check-phpstan-baseline` passes on the new baseline and fails on
+- [x] `script/check-phpstan-baseline` passes on the new baseline and fails on
       the old one
-- [ ] With the baseline removed, PHPStan reports no fatal kinds anywhere in
+- [x] With the baseline removed, PHPStan reports no fatal kinds anywhere in
       `php-classes/`
-- [ ] CI's static analysis (lint, the baseline check, Rector, PHPStan, Psalm,
+- [x] CI's static analysis (lint, the baseline check, Rector, PHPStan, Psalm,
       PHP-CS-Fixer) passes locally exactly as `quality.yml` runs it, at the
       same PHPStan level
-- [ ] `quality` and `test-e2e` checks green on the PR
+- [x] `quality` and `test-e2e` checks green on the PR
 
 ## Risks / unknowns
 
@@ -74,3 +75,39 @@ among the fatal kinds (see Follow-ups).
   hand. It is small and says where it comes from.
 - **Guard coverage.** The guard matches identifiers, so a fatal finding that
   PHPStan files under another identifier would get past it.
+
+## Notes
+
+- **A stub, not an override.** The facade lives in skeleton-v3. Copying it
+  into Slate's `php-classes/` would replace the framework's file at run time
+  through hologit composition, so the annotations go in an analysis-only
+  PHPStan stub instead. `renderTemplate` is declared too, which removed a
+  fifth entry.
+- **Typing the facade surfaced nothing new.** With `bool` returns, PHPStan at
+  level 5 reports no new findings, including on the `(bool)` cast #410 kept
+  in the report emails handler.
+- **Fatal kinds confirmed by probe.** A throwaway file checked against
+  PHPStan 2.2.5 gave the identifiers the guard matches: `class.notFound`
+  (for a caught class too), `binaryOp.invalid` (including `12 - string`),
+  `assignOp.invalid`, `unaryOp.invalid` and `argument.sprintf`. The
+  strict-rules non-numeric identifiers come from its source.
+- **Baseline**: 326 entries down to 320, with 36 lines removed and none
+  added. A PHPStan run with no baseline at all reports no fatal kind in
+  `php-classes/`.
+- **Other findings a full run shows** that fail at run time but are not
+  among the kinds this plan covers (each still baselined):
+  - calls to static methods that do not exist:
+    `RegistrationRequestHandler::throwNotFoundException`,
+    `Emergence\Logger::general_warning` and `Section::getFromHandle`
+  - undefined variables, e.g. `$filename` in `NotesRequestHandler::respond`
+- **Static analysis**: run locally in a PHP 8.3 container. Lint, the
+  baseline check, Rector, PHPStan, Psalm and PHP-CS-Fixer all exit 0. The
+  baseline check exits 1 on `develop`'s baseline. On PR #413, `quality`,
+  `test-e2e`, `ESLint` and the preview deploy all pass.
+
+## Follow-ups
+
+- Tracked as: extend `script/check-phpstan-baseline` with
+  `staticMethod.notFound` and `method.notFound` once the undefined static
+  calls listed in Notes are fixed and calls through interfaces that do not
+  declare the method (e.g. `IJob::logException`) are typed.
