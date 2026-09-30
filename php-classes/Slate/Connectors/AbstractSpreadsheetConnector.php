@@ -1175,6 +1175,15 @@ class AbstractSpreadsheetConnector extends \Emergence\Connectors\AbstractSpreads
         if (!empty($row['GraduationYear'])) {
             $User->GraduationYear = $importedGraduationYear = $row['GraduationYear'];
         } elseif (!empty($row['Grade'])) {
+            if (!is_numeric($row['Grade'])) {
+                throw new RemoteRecordInvalid(
+                    'grade-not-numeric',
+                    sprintf('Grade "%s" is not a number, so no graduation year can be computed for user %s', $row['Grade'], $User->getTitle()),
+                    $row,
+                    $row['Grade']
+                );
+            }
+
             $User->GraduationYear = $importedGraduationYear = $currentGraduationYear + (12 - $row['Grade']);
         }
 
