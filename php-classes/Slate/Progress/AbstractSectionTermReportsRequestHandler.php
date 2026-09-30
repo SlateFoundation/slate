@@ -143,11 +143,12 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                     $recipientEmailStrings[] = is_string($recipientEmail) ? $recipientEmail : $recipientEmail->toRecipientString();
                 }
 
-                // send email
-                $sent = Mailer::sendFromTemplate(implode(', ', $recipientEmailStrings), static::getTemplateName($recordClass::$pluralNoun), $emailData);
-                $emailsCount += $sent;
+                // send email; mailers have returned a bool or an API response
+                // array, so read the result only as success or failure
+                $sent = (bool) Mailer::sendFromTemplate(implode(', ', $recipientEmailStrings), static::getTemplateName($recordClass::$pluralNoun), $emailData);
 
-                // save receipts
+                // save receipts before anything else can fail, so a sent
+                // email is never left unrecorded and offered for resending
                 foreach ($recipientEmails as $recipientEmail) {
                     if (is_string($recipientEmail)) {
                         continue;
@@ -159,10 +160,14 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                                 'StudentID' => $Student->ID,
                                 'TermID' => $Term->ID,
                                 'EmailContactID' => $recipientEmail->ID,
-                                'Status' => $sent > 0 ? 'sent' : 'failed'
+                                'Status' => $sent ? 'sent' : 'failed'
                             ], true);
                         }
                     }
+                }
+
+                if ($sent) {
+                    $emailsCount++;
                 }
             }
 
