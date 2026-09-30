@@ -116,13 +116,12 @@ abstract class AbstractSectionTermReportsRequestHandler extends \RecordsRequestH
                     $recipientEmails[] = $Person->PrimaryEmail;
                 }
 
-                // filter out any unavailable recipients
-                $recipientsCount += count($recipientEmails);
-
-                // skip if no recipients
-                if ($recipientsCount === 0) {
+                // skip this email if none of its recipients has an address
+                if (count($recipientEmails) === 0) {
                     continue;
                 }
+
+                $recipientsCount += count($recipientEmails);
 
                 // prepare template data
                 $emailData = static::getEmailTemplateData($reports);
