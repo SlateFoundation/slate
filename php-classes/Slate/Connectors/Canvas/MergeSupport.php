@@ -11,7 +11,9 @@ use Slate\People\Merge\MappingActionDeriverRegistry;
  * Wires the Canvas connector into the person-merge follow-up-action
  * extension points (Slate\People\Merge\MappingActionDeriverRegistry and
  * Slate\People\Merge\ActionExecutorRegistry). Call register() once during
- * app bootstrap -- see php-config/Slate.config.d/canvas-merge-executor.php.
+ * app bootstrap -- see the canvas.php files under
+ * php-config/Slate/People/Merge/*.config.d/, which run it as each registry
+ * class loads.
  *
  * Deliberately named MergeSupport, not Connector: a real, separately
  * distributed Canvas connector package (extracted from this repo back in

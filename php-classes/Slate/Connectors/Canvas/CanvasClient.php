@@ -17,7 +17,7 @@ namespace Slate\Connectors\Canvas;
  * last -- see MergeSupport's docblock for the full story and the matching
  * fix on the Slate\Connectors\Canvas\Connector side.
  *
- * Instead, this class builds the executor's four REST calls directly with
+ * Instead, this class builds the executor's REST calls directly with
  * curl, reading the already-configured host + token off the real
  * `\RemoteSystems\Canvas` class's public static properties, accessed
  * dynamically through a variable class name (never a literal
@@ -51,7 +51,19 @@ class CanvasClient implements CanvasClientInterface
     public function getUserBySisID(string $sisUserID): ?array
     {
         try {
-            $user = $this->request('GET', 'users/sis_user_id:'.rawurlencode($sisUserID));
+            $user = $this->request('GET', 'users/'.$this->buildSisID('sis_user_id', $sisUserID));
+        } catch (CanvasApiException $e) {
+            return $this->nullOn404($e);
+        }
+
+        /** @var array<string, mixed> $user */
+        return $user;
+    }
+
+    public function getUserByLoginID(string $loginID): ?array
+    {
+        try {
+            $user = $this->request('GET', 'users/'.$this->buildSisID('sis_login_id', $loginID));
         } catch (CanvasApiException $e) {
             return $this->nullOn404($e);
         }
@@ -89,6 +101,19 @@ class CanvasClient implements CanvasClientInterface
 
         /** @var array<string, mixed> $result */
         return $result;
+    }
+
+    /**
+     * Builds a Canvas SIS ID path segment (`<prefix>:<escaped value>`) the
+     * way Canvas documents it: the value percent-escaped for a URI, with
+     * `.` escaped too. Login IDs are email addresses and usernames may
+     * contain dots, and a literal `.` in the path can be read as a format
+     * suffix; rawurlencode() leaves it alone, so it is escaped here.
+     * (Canvas's older `hex:` encoding of these IDs is deprecated.)
+     */
+    protected function buildSisID(string $prefix, string $value): string
+    {
+        return $prefix.':'.str_replace('.', '%2E', rawurlencode($value));
     }
 
     /**

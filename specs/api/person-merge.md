@@ -73,7 +73,9 @@ and outcome log.
 Run the owning connector's executor for the action. 404 when the action's
 type has no executor. Response: the action with its new status and outcome
 note. A failure marks the action `failed` with the error recorded;
-re-invoking retries.
+re-invoking retries. An action that is already `completed` is returned
+unchanged: `completed` is terminal, so the executor is not invoked and no
+outcome is recorded.
 
 ### `PATCH /people/merge/actions/<id>`
 
