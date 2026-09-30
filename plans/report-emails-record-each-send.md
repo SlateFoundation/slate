@@ -1,8 +1,9 @@
 ---
-status: planned
+status: done
 depends: []
 specs:
   - specs/behaviors/progress-report-emails.md
+pr: 410
 ---
 
 # Plan: Report emails record each send, whatever the mailer returns
@@ -51,12 +52,12 @@ the running total rather than this email's recipients.
 
 - [ ] `*emails` returns 200 and a count equal to the number of emails the
       mailer accepted when the mailer returns an array, `true` or `false`
-- [ ] After a POST, each emailed recipient's status in the `*emails` preview
+- [x] After a POST, each emailed recipient's status in the `*emails` preview
       is `sent` or `failed`, never still `proposed`, and agrees with
       `emailsCount`
-- [ ] CI's static analysis (lint, Rector, PHPStan, Psalm, PHP-CS-Fixer)
+- [x] CI's static analysis (lint, Rector, PHPStan, Psalm, PHP-CS-Fixer)
       passes locally exactly as `quality.yml` runs it
-- [ ] `test-e2e` and `quality` checks green on the PR
+- [x] `test-e2e` and `quality` checks green on the PR
 
 ## Risks / unknowns
 
@@ -66,3 +67,30 @@ the running total rather than this email's recipients.
   writes alone.
 - **Stale screens.** The endpoint sends whatever it is POSTed; a second
   browser tab opened before the first send can resend. Unchanged here.
+
+## Notes
+
+- **The rows were already per email.** The status rows were written inside
+  the per-email loop before this change. What skipped them was the
+  `$emailsCount += $sent` line between the send and the writes, so the fix
+  is ordering plus the bool read, not a restructure.
+- **First box left unchecked** for the array and `true` cases. On PR #410,
+  `test-e2e` covers only a mailer returning `false`: the CI image has no
+  sendmail. The array case rests on PHP's `(bool)` of a non-empty array.
+  It has not run against a Postmark-backed site.
+- **Static analysis**: run locally in a PHP 8.3 container against the
+  analysis context `script/fetch-analysis-context` builds (skeleton-v3
+  `main`). Lint, Rector, PHPStan, Psalm and PHP-CS-Fixer all exit 0.
+- **E2E**: the new test resets the database in its own body, because it
+  creates a report and recipient rows that a retry would trip over. On
+  PR #410 `test-e2e`, `quality`, `ESLint` and the preview deploy all pass.
+- **Upstream**: EmergencePlatform/skeleton-v3#33 makes every `IMailer::send`
+  return `bool`. This plan does not depend on it.
+
+## Follow-ups
+
+- Tracked as: the `$recipientsCount === 0` skip test compares the running
+  total, so after the first email with recipients, an email whose
+  recipients have no address is not skipped (see this plan's Scope).
+- Tracked as: the endpoint does not refuse recipients already `sent`, so a
+  stale second screen can resend (see Risks).
