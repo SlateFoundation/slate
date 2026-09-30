@@ -1,9 +1,10 @@
 ---
-status: in-progress
+status: done
 depends: [report-emails-record-each-send]
 specs:
   - specs/behaviors/progress-report-emails.md
   - specs/behaviors/spreadsheet-row-values.md
+pr: 412
 ---
 
 # Plan: Progress notes record each send; report emails and imports skip only what is bad
@@ -76,18 +77,18 @@ server-side refusal to resend report rows already `sent`, and
 
 ## Validation
 
-- [ ] `Message::send` no longer changes `error_reporting`, saves each
+- [x] `Message::send` no longer changes `error_reporting`, saves each
       recipient straight after a successful send, and reports the mailer's
       error message on failure
-- [ ] After a note send, the stored recipient status and note status agree
+- [x] After a note send, the stored recipient status and note status agree
       with the response (E2E)
-- [ ] A report email whose recipients have no address is skipped even after
+- [x] A report email whose recipients have no address is skipped even after
       an email that had recipients (E2E)
-- [ ] A students import with a non-numeric grade completes and fails only
+- [x] A students import with a non-numeric grade completes and fails only
       those rows under `grade-not-numeric` (E2E)
-- [ ] CI's static analysis (lint, Rector, PHPStan, Psalm, PHP-CS-Fixer)
+- [x] CI's static analysis (lint, Rector, PHPStan, Psalm, PHP-CS-Fixer)
       passes locally exactly as `quality.yml` runs it
-- [ ] `test-e2e` and `quality` checks green on the PR
+- [x] `test-e2e` and `quality` checks green on the PR
 
 ## Risks / unknowns
 
@@ -97,3 +98,45 @@ server-side refusal to resend report rows already `sent`, and
 - **Crash inside the save.** A process killed between the mailer accepting
   a note and the recipient saves can still resend. The window is now those
   saves alone.
+
+## Notes
+
+- **Both branches of a note send ran in CI.** The runtime image has no
+  sendmail, so the new E2E suite stands one in (inside the site container,
+  SITE_CONTAINER mode only) that either accepts and keeps each message or
+  refuses it. That made the success path testable: on PR #412 the note is
+  recorded `sent` and mailed exactly once, a second add of the same recipient
+  mails nobody, and a refused send leaves the recipient `pending`. The
+  report email skip test sees `emailsCount` 1 and exactly one message sent.
+- **Not run against the old code.** The new tests were written to fail on
+  the old behavior (a second email counted and mailed; a non-numeric grade
+  ending the job with a `TypeError`), but were only run against the fixed
+  code.
+- **No PHPUnit test.** The row check is covered by the E2E student import.
+  `phpunit-tests/` suites need the live runtime and no CI job runs them
+  (existing gap, see earlier plans).
+- **The `error_get_last()` concatenation was not a PHPStan finding.** The
+  function returns `array|null`, and PHPStan reports a binary operation only
+  when every member of the union fails, so it passed analysis. No baseline
+  entry changed in this PR.
+- **Real API mailers not exercised.** The Postmark and Mailgun paths return
+  `bool` upstream now. `Message::send` still reads the result as truthy, so
+  an older mailer's response array also counts as success.
+- **Static analysis**: run locally in a PHP 8.3 container against the
+  context that `script/fetch-analysis-context` builds. Lint, Rector,
+  PHPStan, Psalm and PHP-CS-Fixer all exit 0. On PR #412, `test-e2e`,
+  `Static analysis`, `ESLint` and the preview deploy all pass.
+
+## Follow-ups
+
+- Tracked as: `Message::send` passes its `Reply-To` and `X-MessageID`
+  headers as the mailer's `$options` list, and `PHPMailer` reads headers
+  only from `$options['Headers']`, so those headers are dropped (existing
+  behavior, untouched here).
+- Tracked as: `MessagesRequestHandler::handleMessageRecipientsRequest`
+  leaves `$EmailContactPoint` undefined for a recipient posted with a
+  `PersonID` and no `Email`, and `addRecipient` then fails with a
+  `TypeError` (SlateAdmin always sends `Email`).
+- Tracked as: the report `*emails` endpoint still does not refuse
+  recipients already `sent`, carried over from
+  [`report-emails-record-each-send`](report-emails-record-each-send.md).
