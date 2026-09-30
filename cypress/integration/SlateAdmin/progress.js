@@ -100,6 +100,81 @@ describe('SlateAdmin: Progress reports', () => {
         });
     });
 
+    // Sending report emails records each email's outcome as it goes, and the
+    // count in the response agrees with it. The CI image has no sendmail, so
+    // there the mailer reports failure and the row must say `failed`; with a
+    // working transport it must say `sent`. Either way it must not be left
+    // `proposed`, which is what let a failed request resend its first email.
+    // @see specs/behaviors/progress-report-emails.md
+    it('Sending report emails records each recipient status', () => {
+        const studentId = 4; // fixture `student`, primary email slate+student@example.org
+
+        // this test creates a report and recipient rows that a retry would
+        // trip over, so each attempt starts from the fixtures (a reset in
+        // the test body re-runs on retry; the file's before() does not)
+        cy.resetDatabase();
+        cy.loginAs();
+
+        cy.request('/sections/MATH-001?format=json').its('body.data').then((section) => {
+            cy.request('/terms?format=json').its('body.data').then((terms) => {
+                const term = terms.find(candidate => candidate.ID === section.TermID);
+
+                expect(term, 'section term').to.be.ok;
+
+                // publish an interim report for the student in that section
+                cy.request({
+                    method: 'POST',
+                    url: '/progress/section-interim-reports/save?format=json',
+                    body: {
+                        data: [{
+                            StudentID: studentId,
+                            SectionID: section.ID,
+                            TermID: term.ID,
+                            Status: 'published',
+                            Notes: 'E2E emailed interim note'
+                        }]
+                    }
+                }).then(({ body }) => {
+                    expect(body.success, 'report saved').to.be.true;
+
+                    const reportId = body.data[0].ID;
+
+                    // before sending, the student is only a proposed recipient
+                    cy.request({
+                        url: '/progress/section-interim-reports/*emails',
+                        qs: { format: 'json', term: term.Handle, recipients: 'student' }
+                    }).its('body.data').then((emails) => {
+                        const email = emails.find(candidate => candidate.student.ID === studentId);
+
+                        expect(email.recipients[0].status, 'status before sending').to.eq('proposed');
+                    });
+
+                    cy.request({
+                        method: 'POST',
+                        url: '/progress/section-interim-reports/*emails?format=json',
+                        body: [{ reports: [reportId], recipients: [studentId] }]
+                    }).then((response) => {
+                        expect(response.status).to.eq(200);
+                        expect(response.body.success).to.be.true;
+                        expect(response.body.recipientsCount, 'recipients').to.eq(1);
+                        expect(response.body.emailsCount, 'emails accepted').to.be.oneOf([0, 1]);
+
+                        const expectedStatus = response.body.emailsCount === 1 ? 'sent' : 'failed';
+
+                        cy.request({
+                            url: '/progress/section-interim-reports/*emails',
+                            qs: { format: 'json', term: term.Handle, recipients: 'student' }
+                        }).its('body.data').then((emails) => {
+                            const email = emails.find(candidate => candidate.student.ID === studentId);
+
+                            expect(email.recipients[0].status, 'status after sending').to.eq(expectedStatus);
+                        });
+                    });
+                });
+            });
+        });
+    });
+
     it('Print container loads a printout', () => {
         cy.loginAs();
         cy.visit('/manage#progress/interims/print');
