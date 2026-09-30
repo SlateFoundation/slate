@@ -28,7 +28,7 @@ class SectionParticipant extends \ActiveRecord
         ]
         ,'Role' => [
             'type' => 'enum'
-            ,'values' => ['Observer','Student','Assistant','Teacher']
+            ,'values' => ParticipantRole::RANKED
         ]
         ,'StartDate' => [
             'type' => 'timestamp'
