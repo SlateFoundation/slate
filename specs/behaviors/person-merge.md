@@ -72,11 +72,70 @@ by an operator, an agent, or a connector-provided executor:
   runs only on an explicit, separately-authorized request, recording its
   outcome like any other actor. Actions with no executor are checklist items
   with the same lifecycle.
-- Initial executor: the LMS (Canvas) connector's user-merge action — derive
-  the surviving external user from the surviving Slate record, execute the
-  external merge, normalize any stale SIS identity the external merge drags
-  onto the survivor, and verify the connector's own user lookup resolves to
-  the survivor before marking `completed`.
+- Initial executor: the LMS (Canvas) connector's user-merge action — see
+  [Canvas user-merge executor](#canvas-user-merge-executor).
+
+### Canvas user-merge executor
+
+Merges the retired record's Canvas user into the surviving record's Canvas
+user (the survivor is always the Canvas user the surviving Slate record maps
+to), then converges the survivor's Canvas logins so the person can still
+sign in and the launch-time user sync still recognizes them.
+
+**Login convergence contract.** After the external merge the surviving Canvas
+user holds the logins of both users. The executor brings them to this end
+state, which the Canvas connector's launch-time user sync also relies on:
+
+1. The *sign-in login* is the active login on the surviving Canvas user whose
+   login ID equals the surviving Slate person's primary email (compared
+   case-insensitively, ignoring surrounding whitespace). Canvas login IDs are
+   email addresses, and Slate signs people in to Canvas by primary email.
+2. The surviving person's username is the SIS ID of exactly one login on the
+   surviving Canvas user, preferably the sign-in login.
+3. Every other login on the surviving Canvas user is kept, with any SIS ID
+   cleared. No login is ever deleted: Canvas keeps a deleted login's SIS ID
+   reserved, and only Canvas support can release it.
+4. Writes are ordered so an identifier is freed before it is claimed: SIS IDs
+   are cleared from other logins before one is stamped onto the sign-in
+   login.
+
+**Procedure.**
+
+- **Plan before merging.** Before the irreversible external merge, the
+  executor reads both Canvas users and both users' logins and computes the
+  complete post-merge plan: which login becomes the sign-in login, which
+  logins have their SIS ID cleared, whether the sign-in login is stamped
+  with the username, and whether an existing login must be renamed to the
+  primary email to become the sign-in login. A rename is only planned for a
+  login that already carries the survivor's username (as its SIS ID or its
+  login ID), and only when no other Canvas user holds the primary email as a
+  login ID.
+- **Fail before merging when the end state is unreachable** — e.g. the
+  surviving person has no primary email or username, neither Canvas user has
+  an active login carrying the primary email and there is no safe rename
+  target, or another Canvas user already holds the username as an SIS ID or
+  the primary email as a login ID. The failure note says what an
+  administrator must change (in Slate or in Canvas) before retrying, and the
+  external merge is not attempted.
+- **Record the plan.** The outcome note of every run states the plan: what
+  was (or, on a pre-merge failure, would have been) merged, which login is
+  the sign-in login, and which SIS IDs were cleared, stamped, or renamed. A
+  failure after the external merge names the step that failed and states
+  that re-executing the action resumes from there.
+- **Resumable and idempotent.** A retired Canvas user already merged into
+  the expected survivor is not merged again — the executor re-plans from the
+  survivor's current logins and continues with convergence and
+  verification. A retired Canvas user already merged into some *other*
+  Canvas user fails without writing anything. Re-executing an action whose
+  end state already holds makes no writes and succeeds after verification.
+- **Verify what sign-in depends on.** The action is `completed` only when
+  all of these hold against the live Canvas state: the username's SIS-ID
+  lookup resolves to the surviving Canvas user; an active login on the
+  surviving Canvas user has the survivor's primary email as its login ID;
+  and exactly one login on the surviving Canvas user carries the username as
+  its SIS ID. When the Canvas connector's user sync is available on the site,
+  it is also run for the surviving person in its read-only (pretend) mode,
+  and an error from it fails verification.
 
 ### Duplicate candidates
 
@@ -108,6 +167,11 @@ decision made once is never re-litigated:
   atomically with the merge; a failed merge spawns none.
 - A failed executor run marks the action `failed` with the error recorded and
   leaves it retryable.
+- Against a simulated Canvas whose login IDs are email addresses, the Canvas
+  user-merge executor converges the survivor to the login convergence
+  contract; an unreachable end state fails without the external merge being
+  attempted; a run that failed after the external merge completes when
+  re-executed; and re-executing a completed merge makes no writes.
 
 ## Principles
 

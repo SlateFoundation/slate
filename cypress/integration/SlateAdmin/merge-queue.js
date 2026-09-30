@@ -337,4 +337,40 @@ describe('SlateAdmin: Merge queue', () => {
         cy.contains('.x-grid-item', 'Executor');
         cy.contains('.x-grid-item', 'Avery Kim');
     });
+
+    it('Executing a completed follow-up action returns it unchanged', () => {
+        cy.loginAs('admin', 'admin');
+
+        // works on the action the previous test's merge spawned; status=all
+        // + the Status guard keep this convergent under Cypress retries
+        cy.request('/people/merge/actions?status=all&format=json').its('body.data').then((actions) => {
+            const action = actions.find((candidate) => candidate.Connector === 'canvas');
+
+            expect(action, 'canvas follow-up action').to.exist;
+
+            if (action.Status !== 'completed') {
+                cy.request({
+                    method: 'PATCH',
+                    url: `/people/merge/actions/${action.ID}?format=json`,
+                    body: {
+                        status: 'completed',
+                        notes: 'Merged by hand in the Canvas admin console (e2e)'
+                    }
+                }).its('body.data.Status').should('eq', 'completed');
+            }
+
+            cy.request(`/people/merge/actions/${action.ID}?format=json`).its('body.data').then((completed) => {
+                // no Canvas tenant is configured here, so an executor run
+                // would fail -- a completed action must not reach it
+                cy.request({
+                    method: 'POST',
+                    url: `/people/merge/actions/${action.ID}/execute?format=json`
+                }).then((response) => {
+                    expect(response.status).to.eq(200);
+                    expect(response.body.data.Status).to.eq('completed');
+                    expect(response.body.data.OutcomeLog, 'outcome log').to.deep.equal(completed.OutcomeLog);
+                });
+            });
+        });
+    });
 });

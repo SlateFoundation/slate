@@ -15,6 +15,9 @@ namespace Slate\Connectors\Canvas;
 interface CanvasClientInterface
 {
     /**
+     * A user merged away by merge_into still resolves here, carrying the
+     * surviving user's ID as `merged_into_user_id`.
+     *
      * @return array<string, mixed>|null null when Canvas returns 404 (the
      *                                    user doesn't exist)
      *
@@ -31,6 +34,17 @@ interface CanvasClientInterface
     public function getUserBySisID(string $sisUserID): ?array;
 
     /**
+     * Looks up the Canvas user holding a login whose login ID (Canvas's
+     * `unique_id`, e.g. an email address) is the given value.
+     *
+     * @return array<string, mixed>|null null when Canvas returns 404 (no
+     *                                    user holds this login ID)
+     *
+     * @throws CanvasApiException on any other error response
+     */
+    public function getUserByLoginID(string $loginID): ?array;
+
+    /**
      * @return array<string, mixed>
      *
      * @throws CanvasApiException on any error response
@@ -40,7 +54,8 @@ interface CanvasClientInterface
     /**
      * @return array<int, array<string, mixed>>
      *
-     * @throws CanvasApiException on any error response
+     * @throws CanvasApiException on any error response -- including a 404
+     *                            for a user merged away by merge_into
      */
     public function getUserLogins(string $userID): array;
 

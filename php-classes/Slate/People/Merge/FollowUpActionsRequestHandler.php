@@ -74,11 +74,22 @@ class FollowUpActionsRequestHandler extends \Slate\RecordsRequestHandler
             return static::throwNotFoundError(sprintf('No executor is registered for action type "%s"', $Action->Type));
         }
 
+        // completed is terminal: don't invoke the executor or record an
+        // outcome, return the action as it stands
+        if ($Action->Status === FollowUpAction::STATUS_COMPLETED) {
+            return static::respond('followupActionExecuted', [
+                'success' => true,
+                'data' => $Action,
+            ]);
+        }
+
         try {
             $note = $Executor->execute($Action);
             $Action->recordOutcome(FollowUpAction::STATUS_COMPLETED, $note, 'executor:'.$Action->Connector, $GLOBALS['Session']->Person);
         } catch (Exception $e) {
-            $Action->recordOutcome(FollowUpAction::STATUS_FAILED, $e->getMessage(), 'executor:'.$Action->Connector, $GLOBALS['Session']->Person);
+            // an outcome note is required, and an exception's message can be empty
+            $note = $e->getMessage() !== '' ? $e->getMessage() : $e::class;
+            $Action->recordOutcome(FollowUpAction::STATUS_FAILED, $note, 'executor:'.$Action->Connector, $GLOBALS['Session']->Person);
         }
 
         $Action->save();
