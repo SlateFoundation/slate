@@ -1597,12 +1597,6 @@ parameters:
 			path: php-classes/Slate/Progress/Note.php
 
 		-
-			message: '#^Call to sprintf contains an invalid placeholder\.$#'
-			identifier: argument.sprintf
-			count: 1
-			path: php-classes/Slate/Progress/Note.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 1
