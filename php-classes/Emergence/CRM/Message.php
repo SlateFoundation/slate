@@ -176,7 +176,6 @@ class Message extends \VersionedRecord
 
         foreach ($this->Recipients as $Recipient) {
             if ($Recipient->Status == 'pending') {
-                $Recipient->Status = 'sent';
                 $newEmailRecipients[] = $Recipient;
             }
         }
@@ -184,7 +183,7 @@ class Message extends \VersionedRecord
         if (!count($newEmailRecipients)) {
             return 0;
         }
-        error_reporting(E_ALL);
+
         $success = \Emergence\Mailer\Mailer::send(
             $this->getEmailRecipientsList($newEmailRecipients),
             $this->getEmailSubject(),
@@ -193,13 +192,22 @@ class Message extends \VersionedRecord
             $this->getEmailHeaders()
         );
 
-        if ($success) {
-            $this->Status = 'sent';
-            $this->save();
-
-            return count($newEmailRecipients);
+        if (!$success) {
+            throw new \Exception('Failed to inject message into email system:'.PHP_EOL.PHP_EOL.(error_get_last()['message'] ?? ''));
         }
-        throw new \Exception('Failed to inject message into email system:'.PHP_EOL.PHP_EOL.error_get_last());
+
+        // record each recipient before anything else can fail, so a message
+        // that went out is never left pending and offered for resending;
+        // saved shallowly so related records are not revalidated here
+        foreach ($newEmailRecipients as $Recipient) {
+            $Recipient->Status = 'sent';
+            $Recipient->save(false);
+        }
+
+        $this->Status = 'sent';
+        $this->save();
+
+        return count($newEmailRecipients);
     }
 
 

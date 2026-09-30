@@ -1,3 +1,110 @@
+const mailDir = '/tmp/e2e-mail';
+
+// run a shell script as root in the site container (SITE_CONTAINER mode)
+function siteShell(script) {
+    return cy.exec(`echo '${btoa(script)}' | base64 -d | docker exec -i ${Cypress.env('SITE_CONTAINER')} sh`);
+}
+
+// Stand in a sendmail for PHP's mail(): `accept` writes each message to
+// mailDir and exits 0, `refuse` exits 1. The runtime image ships none, so
+// without this every send fails. Refuses to replace a real sendmail.
+function useMailTransport(mode) {
+    const body = mode === 'accept' ? `cat > "$(mktemp ${mailDir}/XXXXXX)"` : 'cat > /dev/null; exit 1';
+
+    return siteShell(`
+        set -e
+        if [ -e /usr/sbin/sendmail ] && ! grep -q e2e-mail-transport /usr/sbin/sendmail; then
+            echo 'a real sendmail is installed' >&2
+            exit 1
+        fi
+        rm -rf ${mailDir}
+        mkdir -m 1777 ${mailDir}
+        printf '#!/bin/sh\\n# e2e-mail-transport\\n%s\\n' '${body}' > /usr/sbin/sendmail
+        chmod 755 /usr/sbin/sendmail
+    `);
+}
+
+function removeMailTransport() {
+    return siteShell(`
+        if grep -q e2e-mail-transport /usr/sbin/sendmail 2>/dev/null; then
+            rm /usr/sbin/sendmail
+        fi
+        rm -rf ${mailDir}
+    `);
+}
+
+// yields how many messages the `accept` transport has taken
+function mailCount() {
+    return siteShell(`ls ${mailDir} | wc -l`).then(({ stdout }) => parseInt(stdout.trim(), 10));
+}
+
+// publish an interim report for a student in MATH-001; yields its ID and term
+function publishInterimReport(studentId) {
+    return cy.request('/sections/MATH-001?format=json').its('body.data').then((section) => {
+        return cy.request('/terms?format=json').its('body.data').then((terms) => {
+            const term = terms.find(candidate => candidate.ID === section.TermID);
+
+            expect(term, 'section term').to.be.ok;
+
+            return cy.request({
+                method: 'POST',
+                url: '/progress/section-interim-reports/save?format=json',
+                body: {
+                    data: [{
+                        StudentID: studentId,
+                        SectionID: section.ID,
+                        TermID: term.ID,
+                        Status: 'published',
+                        Notes: 'E2E emailed interim note'
+                    }]
+                }
+            }).then(({ body }) => {
+                expect(body.success, 'report saved').to.be.true;
+
+                return { reportId: body.data[0].ID, term };
+            });
+        });
+    });
+}
+
+// create a progress note about a person, as SlateAdmin's editor does; yields its ID
+function createNote(personId) {
+    return cy.request({
+        method: 'POST',
+        url: '/notes/save?format=json',
+        body: {
+            data: [{
+                Class: 'Slate\\Progress\\Note',
+                ContextClass: 'Emergence\\People\\Person',
+                ContextID: personId,
+                Subject: 'E2E progress note',
+                Message: '<p>E2E progress note body</p>',
+                MessageFormat: 'html'
+            }]
+        }
+    }).then(({ body }) => {
+        expect(body.success, 'note saved').to.be.true;
+
+        return body.data[0].ID;
+    });
+}
+
+// add recipients to a note, which sends it; yields the raw response
+function sendNote(noteId, recipients) {
+    return cy.request({
+        method: 'POST',
+        url: `/notes/${noteId}/recipients?format=json`,
+        body: { data: recipients },
+        failOnStatusCode: false
+    });
+}
+
+function noteRecipientStatuses(noteId) {
+    return cy.request(`/notes/${noteId}/recipients?format=json`)
+        .its('body.data')
+        .then(recipients => recipients.map(recipient => recipient.Status));
+}
+
 describe('SlateAdmin: Progress reports', () => {
 
     // reset database before tests
@@ -115,61 +222,36 @@ describe('SlateAdmin: Progress reports', () => {
         cy.resetDatabase();
         cy.loginAs();
 
-        cy.request('/sections/MATH-001?format=json').its('body.data').then((section) => {
-            cy.request('/terms?format=json').its('body.data').then((terms) => {
-                const term = terms.find(candidate => candidate.ID === section.TermID);
+        publishInterimReport(studentId).then(({ reportId, term }) => {
+            // before sending, the student is only a proposed recipient
+            cy.request({
+                url: '/progress/section-interim-reports/*emails',
+                qs: { format: 'json', term: term.Handle, recipients: 'student' }
+            }).its('body.data').then((emails) => {
+                const email = emails.find(candidate => candidate.student.ID === studentId);
 
-                expect(term, 'section term').to.be.ok;
+                expect(email.recipients[0].status, 'status before sending').to.eq('proposed');
+            });
 
-                // publish an interim report for the student in that section
+            cy.request({
+                method: 'POST',
+                url: '/progress/section-interim-reports/*emails?format=json',
+                body: [{ reports: [reportId], recipients: [studentId] }]
+            }).then((response) => {
+                expect(response.status).to.eq(200);
+                expect(response.body.success).to.be.true;
+                expect(response.body.recipientsCount, 'recipients').to.eq(1);
+                expect(response.body.emailsCount, 'emails accepted').to.be.oneOf([0, 1]);
+
+                const expectedStatus = response.body.emailsCount === 1 ? 'sent' : 'failed';
+
                 cy.request({
-                    method: 'POST',
-                    url: '/progress/section-interim-reports/save?format=json',
-                    body: {
-                        data: [{
-                            StudentID: studentId,
-                            SectionID: section.ID,
-                            TermID: term.ID,
-                            Status: 'published',
-                            Notes: 'E2E emailed interim note'
-                        }]
-                    }
-                }).then(({ body }) => {
-                    expect(body.success, 'report saved').to.be.true;
+                    url: '/progress/section-interim-reports/*emails',
+                    qs: { format: 'json', term: term.Handle, recipients: 'student' }
+                }).its('body.data').then((emails) => {
+                    const email = emails.find(candidate => candidate.student.ID === studentId);
 
-                    const reportId = body.data[0].ID;
-
-                    // before sending, the student is only a proposed recipient
-                    cy.request({
-                        url: '/progress/section-interim-reports/*emails',
-                        qs: { format: 'json', term: term.Handle, recipients: 'student' }
-                    }).its('body.data').then((emails) => {
-                        const email = emails.find(candidate => candidate.student.ID === studentId);
-
-                        expect(email.recipients[0].status, 'status before sending').to.eq('proposed');
-                    });
-
-                    cy.request({
-                        method: 'POST',
-                        url: '/progress/section-interim-reports/*emails?format=json',
-                        body: [{ reports: [reportId], recipients: [studentId] }]
-                    }).then((response) => {
-                        expect(response.status).to.eq(200);
-                        expect(response.body.success).to.be.true;
-                        expect(response.body.recipientsCount, 'recipients').to.eq(1);
-                        expect(response.body.emailsCount, 'emails accepted').to.be.oneOf([0, 1]);
-
-                        const expectedStatus = response.body.emailsCount === 1 ? 'sent' : 'failed';
-
-                        cy.request({
-                            url: '/progress/section-interim-reports/*emails',
-                            qs: { format: 'json', term: term.Handle, recipients: 'student' }
-                        }).its('body.data').then((emails) => {
-                            const email = emails.find(candidate => candidate.student.ID === studentId);
-
-                            expect(email.recipients[0].status, 'status after sending').to.eq(expectedStatus);
-                        });
-                    });
+                    expect(email.recipients[0].status, 'status after sending').to.eq(expectedStatus);
                 });
             });
         });
@@ -193,6 +275,96 @@ describe('SlateAdmin: Progress reports', () => {
                 const preview = extQuerySelector('progress-interims-print-container slate-printpreview');
 
                 expect(preview.iframeEl.dom.src, 'printout URL').to.contain('section-interim-reports');
+            });
+        });
+    });
+
+    // These tests stand a sendmail into the site container so a send can be
+    // made to succeed or fail on purpose, so they need SITE_CONTAINER mode.
+    // @see specs/behaviors/progress-report-emails.md
+    describe('with a controlled mail transport', () => {
+        const studentId = 4, // fixture `student`, primary email slate+student@example.org
+            noEmailPersonId = 27; // fixture `student4`, no email address
+
+        before(function () {
+            if (!Cypress.env('SITE_CONTAINER')) {
+                this.skip();
+            }
+        });
+
+        // each test creates records a retry would trip over, so each attempt
+        // starts from the fixtures
+        beforeEach(() => {
+            cy.resetDatabase();
+            cy.loginAs();
+        });
+
+        afterEach(() => {
+            if (Cypress.env('SITE_CONTAINER')) {
+                removeMailTransport();
+            }
+        });
+
+        it('A progress note that is sent records its recipients as sent, once', () => {
+            useMailTransport('accept');
+
+            createNote(studentId).then((noteId) => {
+                sendNote(noteId, [{ PersonID: studentId, Email: 'slate+student@example.org' }]).then((response) => {
+                    expect(response.status).to.eq(200);
+                    expect(response.body.success).to.be.true;
+                    expect(response.body.data.map(recipient => recipient.Status)).to.deep.eq(['sent']);
+                });
+
+                mailCount().should('eq', 1);
+                noteRecipientStatuses(noteId).should('deep.eq', ['sent']);
+                cy.request(`/notes/${noteId}?format=json`).its('body.data.Status').should('eq', 'sent');
+
+                // adding the same recipient again mails nobody
+                sendNote(noteId, [{ PersonID: studentId, Email: 'slate+student@example.org' }]).then((response) => {
+                    expect(response.status).to.eq(200);
+                    expect(response.body.success).to.be.true;
+                });
+
+                mailCount().should('eq', 1);
+                noteRecipientStatuses(noteId).should('deep.eq', ['sent']);
+            });
+        });
+
+        it('A progress note that fails to send leaves its recipients pending', () => {
+            useMailTransport('refuse');
+
+            createNote(studentId).then((noteId) => {
+                sendNote(noteId, [{ PersonID: studentId, Email: 'slate+student@example.org' }]).then((response) => {
+                    expect(response.status === 200 && response.body.success === true, 'send reported as failed').to.be.false;
+
+                    // the error carries the mailer's message, not "Array"
+                    expect(JSON.stringify(response.body)).not.to.match(/email system:(\\n|\s)*Array/);
+                });
+
+                noteRecipientStatuses(noteId).should('deep.eq', ['pending']);
+                cy.request(`/notes/${noteId}?format=json`).its('body.data.Status').should('not.eq', 'sent');
+            });
+        });
+
+        it('A report email whose recipients have no address is skipped, even after one that had', () => {
+            useMailTransport('accept');
+
+            publishInterimReport(studentId).then(({ reportId }) => {
+                cy.request({
+                    method: 'POST',
+                    url: '/progress/section-interim-reports/*emails?format=json',
+                    body: [
+                        { reports: [reportId], recipients: [studentId] },
+                        { reports: [reportId], recipients: [noEmailPersonId] }
+                    ]
+                }).then((response) => {
+                    expect(response.status).to.eq(200);
+                    expect(response.body.success).to.be.true;
+                    expect(response.body.recipientsCount, 'recipients').to.eq(1);
+                    expect(response.body.emailsCount, 'emails accepted').to.eq(1);
+                });
+
+                mailCount().should('eq', 1);
             });
         });
     });
