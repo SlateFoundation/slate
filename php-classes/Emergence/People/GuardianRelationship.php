@@ -25,7 +25,7 @@ class GuardianRelationship extends Relationship
                                 ' AND ',
                                 static::mapConditions([
                                     'Class' => static::class,
-                                    'RelatedPersonID' => $Guardian->ID,
+                                    'RelatedPersonID' => (int) $Guardian->ID,
                                 ])
                             )
                         ]
