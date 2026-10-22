@@ -4,4 +4,4 @@
 # runtime composition moved to skeleton-v3 (see emergence-site).
 [holosource]
 url = "https://github.com/JarvusInnovations/emergence-skeleton-v2"
-ref = "refs/tags/v2.12.9"
+ref = "refs/tags/v2.14.0"
